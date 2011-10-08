@@ -1,0 +1,33 @@
+imax 1
+jmax *
+kmax *
+shapes *  *    muTauSM.root  $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+
+observation
+
+bin                                     muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0            muTau_SM0
+process                                  SM120                  VBF120                ZTT                  QCD                    W                   ZJ                   ZL                   TT                   VV
+process                                 -1                        0                    1                   2                     3                    4                    5                    6                     7
+rate                                    56.6079                4.99268              16810.8               5855.35               4841.9             176.439              545.775                528.268              105.396
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+lumi                             lnN   1.045                   1.045                   -                     -                     -                    -                     -                    -                  -           luminosity
+CMS_eff_m                        lnN   1.020                   1.020                 1.020                   -                     -                  1.020                 1.020                1.020             1.020          muon ID /HLT
+CMS_eff_t                        lnN   1.060                   1.060                 1.060                   -                     -                    -                     -                  1.060             1.060          Tau IDf
+CMS_htt_zttNorm                  lnN     -                        -                  1.033                   -                     -                  1.033                 1.033                  -                  -           ZTT Scale  
+CMS_htt_ttbarNorm                lnN     -                        -                    -                     -                     -                    -                     -                  1.102                -           TTbar background  
+CMS_htt_DiBosonNorm              lnN     -                        -                    -                     -                     -                    -                     -                    -               1.300          DiBoson background 
+CMS_scale_t                    shape   1.000                     1.000                1.000                  -                   1.000                1.000                 1.000                1.000             1.000          shape
+CMS_htt_muTau_QCDNorm      gmN  5524     -                        -                    -                    1.060                  -                    -                     -                    -                  -           QCD Background
+CMS_htt_muTau_QCDSyst            lnN     -                        -                    -                    1.019                  -                    -                     -                    -                  -           QCD Background
+CMS_htt_muTau_SM0_WNorm    gmN  8680     -                        -                    -                      -                  0.55972                -                     -                    -                  -           W Backghround 
+CMS_htt_muTau_SM0_WSyst          lnN     -                        -                    -                      -                  1.062                  -                     -                    -                  -           W Backghround 
+CMS_htt_muTau_SM0_ZJetFakeTau    lnN     -                        -                    -                      -                    -                  1.119                   -                    -                  -           Z(jet->tau) background
+CMS_htt_muTau_SM0_ZLeptonFakeTau lnN     -                        -                    -                      -                    -                    -                   1.258                  -                  -           Z(l->tau)   background
+CMS_scale_j                      lnN   0.96                     0.96                  0.96                    -                    -                  0.96                   0.96                 0.96              0.96          PDF VBF
+pdf_qqbar                        lnN     -                      1.03                   -                      -                    -                    -                     -                    -                  -           PDF VBF
+pdf_gg                           ln    1.03                       -                    -                      -                    -                    -                     -                    -                  -           PDF VBF
+QCDscale_ggH                     lnN   1.12                       -                    -                      -                    -                    -                     -                    -                  -           PDF VBF
+QCDscale_qqH                     lnN      -                     1.035                  -                      -                    -                    -                     -                    -                  -           PDF VBF
+UEPS                             lnN   0.96                     0.96                   -                      -                    -                    -                     -                    -                  -           PDF VBF
