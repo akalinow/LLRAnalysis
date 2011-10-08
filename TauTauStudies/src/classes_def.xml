@@ -1,0 +1,7 @@
+<lcgdict>
+ 
+ <class name="edm::Wrapper<pat::Muon>"/>
+ <class name="edm::Wrapper<pat::Electron>"/>
+ <class name="edm::Wrapper<pat::Tau>"/>
+
+</lcgdict>
