@@ -360,7 +360,8 @@ process.elecPtEtaIDCounter = cms.EDFilter(
 process.elecPtEtaRelID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("selectedPatElectronsTriggerMatchUserEmbedded"),
-    cut = cms.string("pt>14 && abs(eta)<2.5 && !isEBEEGap && "+simpleCutsWP95),
+    cut = cms.string("pt>14 && abs(eta)<2.5 && !isEBEEGap && "+
+                     simpleCutsWP95),
     filter = cms.bool(False)
     )
 
@@ -522,7 +523,7 @@ process.skim = cms.Sequence(
 massSearchReplaceAnyInputTag(process.skim,
                              "offlinePrimaryVertices",
                              "selectedPrimaryVertices",
-                             verbose=True)
+                             verbose=False)
 process.selectedPrimaryVertices.src = cms.InputTag('offlinePrimaryVertices')
 
 if not runOnMC:

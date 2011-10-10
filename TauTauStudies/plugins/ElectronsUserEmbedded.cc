@@ -144,6 +144,9 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     reco::isodeposit::AbsVetos vetos2011Charged; 
     reco::isodeposit::AbsVetos vetos2011Neutral;  
     reco::isodeposit::AbsVetos vetos2011Photons;
+    reco::isodeposit::AbsVetos vetos2011EECharged; 
+    reco::isodeposit::AbsVetos vetos2011EENeutral;  
+    reco::isodeposit::AbsVetos vetos2011EEPhotons;
 
     vetos2010Charged.push_back(new reco::isodeposit::ConeVeto(reco::isodeposit::Direction(aElectron.eta(),aElectron.phi()),0.01));
     vetos2010Charged.push_back(new reco::isodeposit::ThresholdVeto(0.5));
@@ -158,6 +161,13 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     vetos2011Neutral.push_back(new reco::isodeposit::ThresholdVeto(0.5));
     vetos2011Photons.push_back(new reco::isodeposit::ConeVeto(reco::isodeposit::Direction(aElectron.eta(),aElectron.phi()),0.01));
     vetos2011Photons.push_back(new reco::isodeposit::ThresholdVeto(0.5));
+
+    vetos2011EECharged.push_back(new reco::isodeposit::ConeVeto(reco::isodeposit::Direction(aElectron.eta(),aElectron.phi()),0.015));
+    vetos2011EECharged.push_back(new reco::isodeposit::ThresholdVeto(0.0));
+    vetos2011EENeutral.push_back(new reco::isodeposit::ConeVeto(reco::isodeposit::Direction(aElectron.eta(),aElectron.phi()),0.01));
+    vetos2011EENeutral.push_back(new reco::isodeposit::ThresholdVeto(0.5));
+    vetos2011EEPhotons.push_back(new reco::isodeposit::ConeVeto(reco::isodeposit::Direction(aElectron.eta(),aElectron.phi()),0.08));
+    vetos2011EEPhotons.push_back(new reco::isodeposit::ThresholdVeto(0.5));
   
   
     float chIso03v1 = 
@@ -204,6 +214,28 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     float phIsoPU04v2 = 
       aElectron.isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4, vetos2011Photons).first;
 
+    float chIso03EEv2 = 
+      aElectron.isoDeposit(pat::PfChargedHadronIso)->depositAndCountWithin(0.3, vetos2011EECharged).first;
+    float nhIso03EEv2 = 
+      aElectron.isoDeposit(pat::PfNeutralHadronIso)->depositAndCountWithin(0.3, vetos2011EENeutral).first;
+    float phIso03EEv2 = 
+      aElectron.isoDeposit(pat::PfGammaIso)->depositAndCountWithin(0.3, vetos2011EEPhotons).first;
+    float nhIsoPU03EEv2 = 
+      aElectron.isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.3, vetos2011EENeutral).first;
+    float phIsoPU03EEv2 = 
+      aElectron.isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.3, vetos2011EEPhotons).first;
+
+    float chIso04EEv2 = 
+      aElectron.isoDeposit(pat::PfChargedHadronIso)->depositAndCountWithin(0.4, vetos2011EECharged).first;
+    float nhIso04EEv2 = 
+      aElectron.isoDeposit(pat::PfNeutralHadronIso)->depositAndCountWithin(0.4, vetos2011EENeutral).first;
+    float phIso04EEv2 = 
+      aElectron.isoDeposit(pat::PfGammaIso)->depositAndCountWithin(0.4, vetos2011EEPhotons).first;
+    float nhIsoPU04EEv2 = 
+      aElectron.isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4, vetos2011EENeutral).first;
+    float phIsoPU04EEv2 = 
+      aElectron.isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4, vetos2011EEPhotons).first;
+
 
     aElectron.addUserFloat("PFRelIso04v1",(chIso04v1+nhIso04v1+phIso04v1)/aElectron.pt());
     aElectron.addUserFloat("PFRelIso03v1",(chIso03v1+nhIso03v1+phIso03v1)/aElectron.pt());
@@ -214,6 +246,14 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     aElectron.addUserFloat("PFRelIso03v2",(chIso03v2+nhIso03v2+phIso03v2)/aElectron.pt());
     aElectron.addUserFloat("PFRelIsoDB04v2",(chIso04v2+std::max(nhIso04v2+phIso04v2-0.5*0.5*(nhIsoPU04v2+phIsoPU04v2),0.0))/aElectron.pt());
     aElectron.addUserFloat("PFRelIsoDB03v2",(chIso03v2+std::max(nhIso03v2+phIso03v2-0.5*0.5*(nhIsoPU03v2+phIsoPU03v2),0.0))/aElectron.pt());
+    aElectron.addUserFloat("PFRelIsoDB04v3",
+			   (aElectron.isEB())*(chIso04v2+std::max(nhIso04v2+phIso04v2-0.5*0.5*(nhIsoPU04v2+phIsoPU04v2),0.0))/aElectron.pt()+
+			   (aElectron.isEE())*(chIso04EEv2+std::max(nhIso04EEv2+phIso04EEv2-0.5*0.5*(nhIsoPU04EEv2+phIsoPU04EEv2),0.0))/aElectron.pt()
+			   );
+    aElectron.addUserFloat("PFRelIsoDB03v3",
+			   (int(aElectron.isEB()))*(chIso03v2+std::max(nhIso03v2+phIso03v2-0.5*0.5*(nhIsoPU03v2+phIsoPU03v2),0.0))/aElectron.pt()+
+			   (int(aElectron.isEE()))*(chIso03EEv2+std::max(nhIso03EEv2+phIso03EEv2-0.5*0.5*(nhIsoPU03EEv2+phIsoPU03EEv2),0.0))/aElectron.pt()
+			   );
 
     // cleaning
     for(unsigned int i = 0; i <vetos2010Charged.size(); i++){
@@ -229,6 +269,13 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     for(unsigned int i = 0; i <vetos2011Neutral.size(); i++){
       delete vetos2011Neutral[i];
       delete vetos2011Photons[i];
+    }
+    for(unsigned int i = 0; i <vetos2011EECharged.size(); i++){
+      delete vetos2011EECharged[i];
+    }
+    for(unsigned int i = 0; i <vetos2011EENeutral.size(); i++){
+      delete vetos2011EENeutral[i];
+      delete vetos2011EEPhotons[i];
     }
 
     aElectron.addUserFloat("isInRun",iEvent.run());

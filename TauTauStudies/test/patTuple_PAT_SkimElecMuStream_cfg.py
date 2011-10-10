@@ -1,57 +1,14 @@
 from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
-process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
-process.MessageLogger.cerr.FwkReport.reportEvery = 2000
-
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
-
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-from Configuration.PyReleaseValidation.autoCond import autoCond
-process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
-
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
-#process.jec = cms.ESSource("PoolDBESSource",
-#      DBParameters = cms.PSet(
-#        messageLevel = cms.untracked.int32(0)
-#        ),
-#      timetype = cms.string('runnumber'),
-#      toGet = cms.VPSet(
-#      cms.PSet(
-#            record = cms.string('JetCorrectionsRecord'),
-#            tag    = cms.string('JetCorrectorParametersCollection_Jec11V2_AK5PF'),
-#            label  = cms.untracked.string('AK5PF')
-#            )
-#      ),
-#      connect = cms.string('sqlite:Jec11V2.db')
-#)
-#process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
-
-process.load('RecoJets.Configuration.RecoPFJets_cff')
-
-process.kt6PFJets.doRhoFastjet = True
-process.kt6PFJets.Rho_EtaMax = cms.double(4.4)
-process.kt6PFJets.Ghost_EtaMax = cms.double(5.0)
-process.ak5PFJets.doAreaFastjet = True
-
-## re-run kt4PFJets within lepton acceptance to compute rho
-process.load('RecoJets.JetProducers.kt4PFJets_cfi')
-process.kt6PFJetsCentral = process.kt4PFJets.clone( rParam = 0.6, doRhoFastjet = True )
-process.kt6PFJetsCentral.Rho_EtaMax = cms.double(2.5)
-process.kt6PFJetsNeutral = process.kt4PFJets.clone( rParam = 0.6, doRhoFastjet = True, src="pfAllNeutral" )
-
-process.fjSequence = cms.Sequence(process.kt6PFJets+process.ak5PFJets+process.kt6PFJetsCentral)
-
-process.source.fileNames = cms.untracked.vstring(
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/mc/Summer11/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/AODSIM/PU_S4_START42_V11-v1/0000/0E47FBF8-0295-E011-818F-0030487E3026.root'
-    'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/data/Run2011A/MuEG/AOD/05Aug2011-v1/0000/EA148FB5-ABBF-E011-8C96-E0CB4E19F9A4.root'
-    )
-
 
 postfix           = "PFlow"
 runOnMC           = True
+
+from Configuration.PyReleaseValidation.autoCond import autoCond
+process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
 
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START42_V13::All')
@@ -59,32 +16,27 @@ if runOnMC:
 else:
     process.GlobalTag.globaltag = cms.string('GR_R_42_V19::All')
 
-process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-process.printTree1 = cms.EDAnalyzer("ParticleListDrawer",
-                                    src = cms.InputTag("genParticles"),
-                                    maxEventsToPrint  = cms.untracked.int32(1)
-                                    )
+process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
+process.MessageLogger.cerr.FwkReport.reportEvery = 2000
 
-process.primaryVertexFilter = cms.EDFilter(
-    "GoodVertexFilter",
-    vertexCollection = cms.InputTag('offlinePrimaryVertices'),
-    minimumNDOF = cms.uint32(4) ,
-    maxAbsZ = cms.double(24),
-    maxd0 = cms.double(2)
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+
+process.source.fileNames = cms.untracked.vstring(
+    'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/mc/Summer11/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/AODSIM/PU_S4_START42_V11-v1/0000/0E47FBF8-0295-E011-818F-0030487E3026.root'
+    #'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/data/Run2011A/MuEG/AOD/05Aug2011-v1/0000/EA148FB5-ABBF-E011-8C96-E0CB4E19F9A4.root'
     )
 
-process.scrapping = cms.EDFilter(
-    "FilterOutScraping",
-    applyfilter = cms.untracked.bool(True),
-    debugOn = cms.untracked.bool(False),
-    numtrack = cms.untracked.uint32(10),
-    thresh = cms.untracked.double(0.25)
-    )
+#process.source.eventsToProcess = cms.untracked.VEventRange(
+#    '1:1080'
+#    )
+
+
+################### filters log  ####################
 
 process.allEventsFilter = cms.EDFilter(
     "AllEventsFilter"
     )
-process.vertexScrapingFilter = cms.EDFilter(
+process.primaryVertexFilter = cms.EDFilter(
     "AllEventsFilter"
     )
 process.atLeastElecMuFilter = cms.EDFilter(
@@ -106,6 +58,61 @@ process.atLeastOneDiTauFilter = cms.EDFilter(
     "AllEventsFilter"
     )
 
+################### gen listing  ####################
+
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.printTree1 = cms.EDAnalyzer(
+    "ParticleListDrawer",
+    src = cms.InputTag("genParticles"),
+    maxEventsToPrint  = cms.untracked.int32(1)
+    )
+
+
+################### jet sequence ####################
+
+process.load('RecoJets.Configuration.RecoPFJets_cff')
+
+process.kt6PFJets.doRhoFastjet  = True
+process.kt6PFJets.Rho_EtaMax    = cms.double(4.4)
+process.kt6PFJets.Ghost_EtaMax  = cms.double(5.0)
+process.ak5PFJets.doAreaFastjet = True
+
+## re-run kt4PFJets within lepton acceptance to compute rho
+process.load('RecoJets.JetProducers.kt4PFJets_cfi')
+
+process.kt6PFJetsCentral = process.kt4PFJets.clone(
+    rParam = 0.6,
+    doRhoFastjet = True )
+process.kt6PFJetsCentral.Rho_EtaMax   = cms.double(1.9)
+process.kt6PFJetsCentral.Ghost_EtaMax = cms.double(2.5)
+
+process.kt6PFJetsNeutral = process.kt4PFJets.clone(
+    rParam = 0.6,
+    doRhoFastjet = True,
+    src="pfAllNeutral" )
+process.kt6PFJetsNeutral.Rho_EtaMax   = cms.double(1.9)
+process.kt6PFJetsNeutral.Ghost_EtaMax = cms.double(2.5)
+
+process.fjSequence = cms.Sequence(process.kt6PFJets+process.ak5PFJets+process.kt6PFJetsCentral)
+
+
+################### vertex sequence ####################
+
+process.selectedPrimaryVertices = cms.EDFilter(
+    "VertexSelector",
+    src = cms.InputTag('offlinePrimaryVertices'),
+    cut = cms.string("isValid & ndof >= 4 & z > -24 & z < +24 & position.Rho < 2."),
+    filter = cms.bool(False)                                          
+)
+
+process.primaryVertexCounter = cms.EDFilter(
+    "VertexCountFilter",
+    src = cms.InputTag('selectedPrimaryVertices'),
+    minNumber = cms.uint32(1),
+    maxNumber = cms.uint32(999),
+    )
+
+################### pat specific ####################
 
 from PhysicsTools.PatAlgos.tools.coreTools import *
 
@@ -173,19 +180,26 @@ if runOnMC:
     process.patJetGenJetMatch.matched = cms.InputTag("ak5GenJetsNoNu")
 
 
-addPFMuonIsolation(process,process.patMuons)
+########################  pat::muon  #############################
 
+addPFMuonIsolation(process,process.patMuons)
 addTriggerMatchingMuon(process,isMC=runOnMC)
 getattr(process,"patMuons").embedTrack = True
 
-from LLRAnalysis.Utilities.electrons import *
-addCutBasedID(process)
-addPFElectronIsolation(process,process.patElectrons)
 
-getattr(process,"patElectrons").embedTrack = True
+######################## pat::electron ###########################
+
+addPFElectronIsolation(process,process.patElectrons)
+getattr(process,"patElectrons").embedTrack    = True
 getattr(process,"patElectrons").embedGsfTrack = True
 addTriggerMatchingElectron(process,isMC=runOnMC)
 
+######################## pat::jet ################################
+
+getattr(process,"selectedPatJets").cut = cms.string('pt>10 && abs(eta)<5.0')
+
+
+######################## pat::trigger ############################
 
 from PhysicsTools.PatAlgos.tools.trigTools import *
 switchOnTrigger( process )
@@ -194,9 +208,35 @@ process.patTriggerEvent.processName = '*'
 if hasattr(process,"patTrigger"):
     process.patTrigger.processName = '*'
 
-###########################################################################################
-simpleCutsWP95 = "(userFloat('nHits')<=1  && ( (isEB && userFloat('sihih')<0.01 && userFloat('dPhi')<0.8 && userFloat('dEta')<0.007 && userFloat('HoE')<0.15) || (isEE && userFloat('sihih')<0.03 && userFloat('dPhi')<0.7 && userFloat('dEta')<0.01 && userFloat('HoE')<0.07) ))"
-simpleCutsWP80 = "(userFloat('nHits')==0 && userInt('antiConv')>0.5 &&  ( (pt>=20 && ( (isEB && userFloat('sihih')<0.01 && userFloat('dPhi')<0.06 && userFloat('dEta')<0.004 && userFloat('HoE')<0.04) || (isEE && userFloat('sihih')<0.03 && userFloat('dPhi')<0.03 && userFloat('dEta')<0.007 && userFloat('HoE')<0.025) )) || (pt<20 && (fbrem>0.15 || (abs(superClusterPosition.Eta)<1. && eSuperClusterOverP>0.95) ) && ( (isEB && userFloat('sihih')<0.01 && userFloat('dPhi')<0.03 && userFloat('dEta')<0.004 && userFloat('HoE')<0.025) || (isEE && userFloat('sihih')<0.03 && userFloat('dPhi')<0.02 && userFloat('dEta')<0.005 && userFloat('HoE')<0.025) ) )  ) )"
+
+######################## embedding ###############################
+
+simpleCutsWP95 = "(userFloat('nHits')<=1"+ \
+                 " && (" + \
+                 " (isEB && userFloat('sihih')<0.010 && userFloat('dPhi')<0.80 && "+ \
+                 "          userFloat('dEta') <0.007 && userFloat('HoE') <0.15)"   + \
+                 " || "  + \
+                 " (isEE && userFloat('sihih')<0.030 && userFloat('dPhi')<0.70 && "+ \
+                 "          userFloat('dEta') <0.010 && userFloat('HoE') <0.07)"   + \
+                 "     )"+ \
+                 ")"
+simpleCutsWP80 = "(userFloat('nHits')==0 && userInt('antiConv')>0.5 "+ \
+                 " && ("   + \
+                 " (pt>=20 && ("    + \
+                 "               (isEB && userFloat('sihih')<0.010 && userFloat('dPhi')<0.06 && "  + \
+                 "                        userFloat('dEta')< 0.004 && userFloat('HoE') <0.04)"     + \
+                 "               ||"+ \
+                 "               (isEE && userFloat('sihih')<0.030 && userFloat('dPhi')<0.030 && " + \
+                 "                        userFloat('dEta') <0.007 && userFloat('HoE') <0.025) )) "+ \
+                 "     || "+ \
+                 " (pt<20 && (fbrem>0.15 || (abs(superClusterPosition.Eta)<1. && eSuperClusterOverP>0.95) ) && ( "+ \
+                 "               (isEB && userFloat('sihih')<0.010 && userFloat('dPhi')<0.030 && " + \
+                 "                        userFloat('dEta') <0.004 && userFloat('HoE') <0.025) "   + \
+                 "               ||"+ \
+                 "               (isEE && userFloat('sihih')<0.030 && userFloat('dPhi')<0.020 &&"  + \
+                 "                        userFloat('dEta') <0.005 && userFloat('HoE') <0.025) ))" + \
+                 "    )"   + \
+                 ")"
 
 
 process.selectedPatMuonsTriggerMatchUserEmbedded = cms.EDProducer(
@@ -211,6 +251,8 @@ process.selectedPatElectronsTriggerMatchUserEmbedded = cms.EDProducer(
     vertexTag = cms.InputTag("offlinePrimaryVertices"),
     isMC = cms.bool(runOnMC)
     )
+
+####################### pairing ##################################
 
 process.atLeastOneElecMu = cms.EDProducer(
     "CandViewShallowCloneCombiner",
@@ -252,7 +294,16 @@ process.muPtEtaRelID = cms.EDFilter(
 process.muPtEtaID = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("selectedPatMuonsTriggerMatchUserEmbedded"),
-    cut = cms.string(process.muPtEta.cut.value()+" &&  isTrackerMuon && isGlobalMuon && numberOfMatches>=2 && globalTrack.isNonnull && globalTrack.hitPattern.numberOfValidMuonHits>=1 && globalTrack.hitPattern.numberOfValidPixelHits>=1 && globalTrack.hitPattern.numberOfValidTrackerHits>10 && globalTrack.normalizedChi2<10 && globalTrack.ptError/globalTrack.pt<0.1 && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2"),
+    cut = cms.string(process.muPtEta.cut.value()+
+                     " && isTrackerMuon && isGlobalMuon"+
+                     " && numberOfMatches>=2"+
+                     " && globalTrack.isNonnull"+
+                     " && globalTrack.hitPattern.numberOfValidMuonHits>=1"+
+                     " && globalTrack.hitPattern.numberOfValidPixelHits>=1"+
+                     " && globalTrack.hitPattern.numberOfValidTrackerHits>10"+
+                     " && globalTrack.normalizedChi2<10"+
+                     " && globalTrack.ptError/globalTrack.pt<0.1"+
+                     " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2"),
     filter = cms.bool(False)
     )
 process.atLeastOneElecMumuPtEtaID = process.atLeastOneElecMu.clone(
@@ -284,7 +335,9 @@ process.elecPtEtaCounter = cms.EDFilter(
 process.elecPtEtaID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("selectedPatElectronsTriggerMatchUserEmbedded"),
-    cut = cms.string(process.elecPtEta.cut.value()+" && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+simpleCutsWP80),
+    cut = cms.string(process.elecPtEta.cut.value()+
+                     " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+
+                     simpleCutsWP80),
     filter = cms.bool(False)
     )
 process.atLeastOneElecMuelecPtEtaID = process.atLeastOneElecMu.clone(
@@ -300,12 +353,17 @@ process.elecPtEtaIDCounter = cms.EDFilter(
 process.elecPtEtaRelID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("selectedPatElectronsTriggerMatchUserEmbedded"),
-    cut = cms.string("pt>9 && abs(eta)<2.5 && !isEBEEGap && "+simpleCutsWP95),
+    cut = cms.string("pt>9 && abs(eta)<2.5 && !isEBEEGap && "+
+                     simpleCutsWP95),
     filter = cms.bool(False)
     )
 
+###################### final sequences ##############################
+
 process.atLeastOneGoodVertexSequence = cms.Sequence(
-    process.primaryVertexFilter*process.vertexScrapingFilter
+    process.selectedPrimaryVertices*
+    process.primaryVertexCounter*
+    process.primaryVertexFilter
     )
 
 process.alLeastOneElecMuSequence = cms.Sequence(
@@ -323,7 +381,8 @@ process.elecLegSequence = cms.Sequence(
     process.elecPtEtaRelID
     )
 
-getattr(process,"selectedPatJets").cut = cms.string('pt>10 && abs(eta)<5.0')
+
+####################### x-cleaning of jets #########################
 
 process.deltaRJetMuons = cms.EDProducer(
     "DeltaRNearestMuonComputer",
@@ -353,8 +412,9 @@ process.jetCleaningSequence = cms.Sequence(
     process.deltaRJetMuons*process.selectedPatJetsNoMuons*process.deltaRJetElectrons*process.selectedPatJetsNoMuonsNoElectrons
     )
 
+########################## path ###############################
 
-process.pat = cms.Sequence(
+process.skim = cms.Sequence(
     process.allEventsFilter+
     process.atLeastOneGoodVertexSequence*
     process.fjSequence*
@@ -369,11 +429,19 @@ process.pat = cms.Sequence(
     process.printTree1
     )
 
+massSearchReplaceAnyInputTag(process.skim,
+                             "offlinePrimaryVertices",
+                             "selectedPrimaryVertices",
+                             verbose=False)
+process.selectedPrimaryVertices.src = cms.InputTag('offlinePrimaryVertices')
 
 if not runOnMC:
     process.pat.remove(process.printTree1)
 
-process.p = cms.Path(process.pat)
+process.p = cms.Path(process.skim)
+
+
+########################## output ###############################
 
 from PhysicsTools.PatAlgos.patEventContent_cff import patEventContentNoCleaning
 process.out.outputCommands = cms.untracked.vstring('drop *',
@@ -397,6 +465,7 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_kt6PFJetsNeutral_rho_*',
     'keep *_muPtEtaID_*_*',
     'keep *_muPtEtaRelID_*_*',
+    'keep *_muons_*_*',
     'keep *_elecPtEtaID_*_*',
     'keep *_elecPtEtaRelID_*_*',
     'keep *_addPileupInfo_*_*',

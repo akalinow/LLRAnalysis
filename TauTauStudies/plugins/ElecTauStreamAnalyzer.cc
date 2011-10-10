@@ -190,6 +190,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("chIsoLeg1v1",&chIsoLeg1v1_,"chIsoLeg1v1/F");
   tree_->Branch("nhIsoLeg1v1",&nhIsoLeg1v1_,"nhIsoLeg1v1/F");
   tree_->Branch("phIsoLeg1v1",&phIsoLeg1v1_,"phIsoLeg1v1/F");
+  tree_->Branch("elecIsoLeg1v1",&elecIsoLeg1v1_,"elecIsoLeg1v1/F");
+  tree_->Branch("muIsoLeg1v1",&muIsoLeg1v1_,"muIsoLeg1v1/F");
   tree_->Branch("chIsoPULeg1v1",&chIsoPULeg1v1_,"chIsoPULeg1v1/F");
   tree_->Branch("nhIsoPULeg1v1",&nhIsoPULeg1v1_,"nhIsoPULeg1v1/F");
   tree_->Branch("phIsoPULeg1v1",&phIsoPULeg1v1_,"phIsoPULeg1v1/F");
@@ -197,9 +199,19 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("chIsoLeg1v2",&chIsoLeg1v2_,"chIsoLeg1v2/F");
   tree_->Branch("nhIsoLeg1v2",&nhIsoLeg1v2_,"nhIsoLeg1v2/F");
   tree_->Branch("phIsoLeg1v2",&phIsoLeg1v2_,"phIsoLeg1v2/F");
+  tree_->Branch("elecIsoLeg1v2",&elecIsoLeg1v2_,"elecIsoLeg1v2/F");
+  tree_->Branch("muIsoLeg1v2",&muIsoLeg1v2_ ,"muIsoLeg1v2/F");  
   tree_->Branch("chIsoPULeg1v2",&chIsoPULeg1v2_,"chIsoPULeg1v2/F");
   tree_->Branch("nhIsoPULeg1v2",&nhIsoPULeg1v2_,"nhIsoPULeg1v2/F");
   tree_->Branch("phIsoPULeg1v2",&phIsoPULeg1v2_,"phIsoPULeg1v2/F");
+
+  tree_->Branch("chIsoEELeg1v2"  ,&chIsoEELeg1v2_,  "chIsoEELeg1v2/F");
+  tree_->Branch("nhIsoEELeg1v2"  ,&nhIsoEELeg1v2_,  "nhIsoEELeg1v2/F");
+  tree_->Branch("phIsoEELeg1v2"  ,&phIsoEELeg1v2_,  "phIsoEELeg1v2/F");
+  tree_->Branch("elecIsoEELeg1v2",&elecIsoEELeg1v2_,"elecIsoEELeg1v2/F");
+  tree_->Branch("muIsoEELeg1v2"  ,&muIsoEELeg1v2_ , "muIsoEELeg1v2/F");  
+  tree_->Branch("nhIsoEEPULeg1v2",&nhIsoEEPULeg1v2_,"nhIsoEEPULeg1v2/F");
+  tree_->Branch("phIsoEEPULeg1v2",&phIsoEEPULeg1v2_,"phIsoEEPULeg1v2/F");
 
   tree_->Branch("chIsoLeg2",&chIsoLeg2_,"chIsoLeg2/F");
   tree_->Branch("nhIsoLeg2",&nhIsoLeg2_,"nhIsoLeg2/F");
@@ -307,11 +319,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   const pat::JetCollection* jets = jetsHandle.product();
 
   edm::Handle<pat::JetCollection> newJetsHandle;
-  iEvent.getByLabel(newJetsTag_,newJetsHandle);
-  if( !newJetsHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No newJets label available \n";
-  const pat::JetCollection* newJets = newJetsHandle.product();
+  const pat::JetCollection* newJets = 0;
+  if(newJetsTag_.label()!=""){
+    iEvent.getByLabel(newJetsTag_,newJetsHandle);
+    if( !newJetsHandle.isValid() )  
+      edm::LogError("DataNotAvailable")
+	<< "No newJets label available \n";
+    newJets = newJetsHandle.product();
+  }
 
   edm::Handle<reco::PFCandidateCollection> pfHandle;
   iEvent.getByLabel("particleFlow",pfHandle);
@@ -907,6 +922,11 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   isodeposit::AbsVetos vetos2011ChargedLeg1; 
   isodeposit::AbsVetos vetos2011NeutralLeg1; 
   isodeposit::AbsVetos vetos2011PhotonLeg1;
+  // isoDeposit definition: 2011 for EE
+  isodeposit::AbsVetos vetos2011EEChargedLeg1; 
+  isodeposit::AbsVetos vetos2011EENeutralLeg1;  
+  isodeposit::AbsVetos vetos2011EEPhotonLeg1;
+
  
   vetos2010ChargedLeg1.push_back(new isodeposit::ConeVeto(reco::isodeposit::Direction(leg1->eta(),leg1->phi()),0.01));
   vetos2010ChargedLeg1.push_back(new isodeposit::ThresholdVeto(0.5));
@@ -922,12 +942,24 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   vetos2011PhotonLeg1.push_back( new isodeposit::ConeVeto(isodeposit::Direction(leg1->eta(),leg1->phi()),0.01));
   vetos2011PhotonLeg1.push_back( new isodeposit::ThresholdVeto(0.5));
 
+  vetos2011EEChargedLeg1.push_back(new isodeposit::ConeVeto(reco::isodeposit::Direction(leg1->eta(),leg1->phi()),0.015));
+  vetos2011EEChargedLeg1.push_back(new isodeposit::ThresholdVeto(0.0));
+  vetos2011EENeutralLeg1.push_back(new isodeposit::ConeVeto(reco::isodeposit::Direction(leg1->eta(),leg1->phi()),0.01));
+  vetos2011EENeutralLeg1.push_back(new isodeposit::ThresholdVeto(0.5));
+  vetos2011EEPhotonLeg1.push_back(new isodeposit::ConeVeto(reco::isodeposit::Direction(leg1->eta(),leg1->phi()),0.08));
+  vetos2011EEPhotonLeg1.push_back(new isodeposit::ThresholdVeto(0.5));
+  
+
   chIsoLeg1v1_   = 
     leg1->isoDeposit(pat::PfChargedHadronIso)->depositAndCountWithin(0.4,vetos2010ChargedLeg1).first;
-  nhIsoLeg1v1_ = 
+  nhIsoLeg1v1_   = 
     leg1->isoDeposit(pat::PfNeutralHadronIso)->depositAndCountWithin(0.4,vetos2010NeutralLeg1).first;
-  phIsoLeg1v1_ = 
+  phIsoLeg1v1_   = 
     leg1->isoDeposit(pat::PfGammaIso)->depositAndCountWithin(0.4,vetos2010PhotonLeg1).first;
+  elecIsoLeg1v1_ = 
+    leg1->isoDeposit(pat::User3Iso)->depositAndCountWithin(0.4,vetos2010ChargedLeg1).first;
+  muIsoLeg1v1_   = 
+    leg1->isoDeposit(pat::User2Iso)->depositAndCountWithin(0.4,vetos2010ChargedLeg1).first;
   chIsoPULeg1v1_ = 
     leg1->isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4,vetos2010ChargedLeg1).first;
   nhIsoPULeg1v1_ = 
@@ -937,10 +969,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
   chIsoLeg1v2_   = 
     leg1->isoDeposit(pat::PfChargedHadronIso)->depositAndCountWithin(0.4,vetos2011ChargedLeg1).first;
-  nhIsoLeg1v2_ = 
+  nhIsoLeg1v2_   = 
     leg1->isoDeposit(pat::PfNeutralHadronIso)->depositAndCountWithin(0.4,vetos2011NeutralLeg1).first;
-  phIsoLeg1v2_ = 
+  phIsoLeg1v2_   = 
     leg1->isoDeposit(pat::PfGammaIso)->depositAndCountWithin(0.4,vetos2011PhotonLeg1).first;
+  elecIsoLeg1v2_ = 
+    leg1->isoDeposit(pat::User3Iso)->depositAndCountWithin(0.4,vetos2011ChargedLeg1).first;
+  muIsoLeg1v2_   = 
+    leg1->isoDeposit(pat::User2Iso)->depositAndCountWithin(0.4,vetos2011ChargedLeg1).first;
   chIsoPULeg1v2_ = 
     leg1->isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4,vetos2011ChargedLeg1).first;
   nhIsoPULeg1v2_ = 
@@ -948,6 +984,23 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   phIsoPULeg1v2_ = 
     leg1->isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4,vetos2011PhotonLeg1).first;
   
+  chIsoEELeg1v2_   = 
+    leg1->isoDeposit(pat::PfChargedHadronIso)->depositAndCountWithin(0.4, vetos2011EEChargedLeg1).first;
+  nhIsoEELeg1v2_   = 
+    leg1->isoDeposit(pat::PfNeutralHadronIso)->depositAndCountWithin(0.4, vetos2011EENeutralLeg1).first;
+  phIsoEELeg1v2_   = 
+    leg1->isoDeposit(pat::PfGammaIso)->depositAndCountWithin(0.4, vetos2011EEPhotonLeg1).first;
+  nhIsoEEPULeg1v2_ = 
+    leg1->isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4, vetos2011EENeutralLeg1).first;
+  phIsoEEPULeg1v2_ = 
+    leg1->isoDeposit(pat::PfAllParticleIso)->depositAndCountWithin(0.4, vetos2011EEPhotonLeg1).first;
+  elecIsoEELeg1v2_     = 
+    leg1->isoDeposit(pat::User3Iso)->depositAndCountWithin(0.4,vetos2011EEChargedLeg1).first;
+  muIsoEELeg1v2_       = 
+    leg1->isoDeposit(pat::User2Iso)->depositAndCountWithin(0.4,vetos2011EEChargedLeg1).first;
+
+
+
   // loop over pfElectrons to make sure we don't have low-mass DY events
   for(unsigned int i = 0 ; i < pfCandidates->size() ; i++){
     const reco::PFCandidate cand = (*pfCandidates)[i];
@@ -982,6 +1035,13 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   for(unsigned int i = 0; i <vetos2011NeutralLeg1.size(); i++){
     delete vetos2011NeutralLeg1[i];
     delete vetos2011PhotonLeg1[i];
+  }
+  for(unsigned int i = 0; i <vetos2011EEChargedLeg1.size(); i++){
+    delete vetos2011EEChargedLeg1[i];
+  }
+  for(unsigned int i = 0; i <vetos2011EENeutralLeg1.size(); i++){
+    delete vetos2011EENeutralLeg1[i];
+    delete vetos2011EEPhotonLeg1[i];
   }
   
 
@@ -1041,9 +1101,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     // newJet redone using possibly different JEC ==> it may not contain infos on bTag
     // so I use it together with jet
-    pat::Jet* newJet = newJetMatched( jet , newJets );
+    pat::Jet* newJet = 0;
+    if(newJets!=0) newJetMatched( jet , newJets );
     if(!newJet){
-      cout << "No jet from the new collection can be matched ==> using old one..." << endl;
+      if(verbose_) cout << "No jet from the new collection can be matched ==> using old one..." << endl;
       newJet = jet;
     }
     

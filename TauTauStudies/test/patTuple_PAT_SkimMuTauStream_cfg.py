@@ -22,8 +22,12 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source.fileNames = cms.untracked.vstring(
-    'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/mc/Summer11/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/AODSIM/PU_S4_START42_V11-v1/0000/0E47FBF8-0295-E011-818F-0030487E3026.root'
-    #'file:pickevents.root'
+    #'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/mc/Summer11/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/AODSIM/PU_S4_START42_V11-v1/0000/0E47FBF8-0295-E011-818F-0030487E3026.root'
+    'file:./root/pickevents_1.root',
+    'file:./root/pickevents_2.root',
+    'file:./root/pickevents_3.root',
+    'file:./root/pickevents_4.root',
+    'file:./root/pickevents_5.root',
     )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -502,7 +506,7 @@ process.skim = cms.Sequence(
 massSearchReplaceAnyInputTag(process.skim,
                              "offlinePrimaryVertices",
                              "selectedPrimaryVertices",
-                             verbose=True)
+                             verbose=False)
 process.selectedPrimaryVertices.src = cms.InputTag('offlinePrimaryVertices')
 
 

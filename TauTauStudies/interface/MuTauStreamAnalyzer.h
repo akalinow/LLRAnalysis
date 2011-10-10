@@ -104,9 +104,9 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   
   unsigned long run_,event_,lumi_;
   float sumEt_;
-  float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_;
+  float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_,elecIsoLeg1v1_,muIsoLeg1v1_;
   float chIsoPULeg1v1_,nhIsoPULeg1v1_,phIsoPULeg1v1_;
-  float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_;
+  float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_,elecIsoLeg1v2_,muIsoLeg1v2_;
   float chIsoPULeg1v2_,nhIsoPULeg1v2_,phIsoPULeg1v2_;
   float chIsoLeg2_,nhIsoLeg2_,phIsoLeg2_;
   float dxy1_,dxy2_;
