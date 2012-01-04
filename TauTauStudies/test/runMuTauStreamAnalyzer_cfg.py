@@ -219,4 +219,5 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("treeMuTauStream.root")
                                    )
 
-process.outpath = cms.EndPath(process.out)
+#MB process.outpath = cms.EndPath(process.out)
+process.outpath = cms.EndPath()
