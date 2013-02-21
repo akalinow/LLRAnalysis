@@ -53,125 +53,122 @@ def publishSkim( stream, tasks ):
                 f.write('#skim efficiency: '+str(SKIM)+'/'+str(READ)+' = '+str(SKIM/READ)+'\n')
                 f.write('CMSSW.datasetpath='+datasetpath+'\n')
                 f.write('CMSSW.total_number_of_events= -1\n')
-                f.write('CMSSW.events_per_job = 5000\n')
+                f.write('CMSSW.events_per_job = 2000\n')
                 f.write('\n')
     f.close()
 
 ###########################################
 ###########################################
 
-tasksMu    = [
-    'DYToTauTau-Mu-20-PUS3',
-    'DYToMuMu-20-PUS3',
-    'VBFH115-Mu-powheg-PUS4',
-    'VBFH125-Mu-powheg-PUS4',
-    'VBFH135-Mu-powheg-PUS4',
-    'GGFH115-Mu-powheg-PUS1',
-    'GGFH135-Mu-powheg-PUS4',
-    'GGFH125-Mu-powheg-PUS4',
-    'GGFH125-Mu-powheg-PUS4',
-    'VBFH125-Mu-powheg-PUS4',
-    'TT-Mu-pythia-PUS3',
-    'DYJets-Mu-50-madgraph-PUS4',
-    'WW-Mu-pythia-PUS4',
-    'WZ-Mu-pythia-PUS4',
-    'ZZ-Mu-pythia-PUS4',
-    'WJets-Mu-madgraph-PUS4'
-    'T-Mu-t-PUS1_skim',
-    'Tbar-Mu-t-PUS1_skim',
-    'WZIncl-Mu-pythia-PUS4_skim',
-    'TTJets-Mu-madgraph-PUS4_skim',
-    'GGFH105-Mu-powheg-PUS1_skim',
-    'GGFH110-Mu-powheg-PUS1_skim',
-    'GGFH115-Mu-powheg-PUS1_skim',
-    'GGFH120-Mu-powheg-PUS1_skim',
-    'GGFH125-Mu-powheg-PUS4_skim-v2'
-    'GGFH130-Mu-powheg-PUS4_skim-v2',
-    'GGFH135-Mu-powheg-PUS4_skim-v2',
-    'GGFH140-Mu-powheg-PUS4_skim-v2',
-    'VBFH105-Mu-powheg-PUS4_skim-v2',
-    'VBFH110-Mu-powheg-PUS4_skim-v2',
-    'VBFH115-Mu-powheg-PUS4_skim',
-    'VBFH120-Mu-powheg-PUS4_skim',
-    'VBFH120-Mu-powheg-PUS4_skim',
-    'VBFH125-Mu-powheg-PUS4_skim-v2',
-    'VBFH130-Mu-powheg-PUS4_skim-v2',
-    'VBFH135-Mu-powheg-PUS4_skim-v2',
-    'VBFH140-Mu-powheg-PUS4_skim-v2'
+
+
+
+tasksMuTauSummer12 = [
+
     ]
 
-tasksElec  = [
-    'DYToEE-20-PUS3',
-    'DYToTauTau-20-PUS3',
-    'TT-pythia-PUS3',
-    'GGFH115-powheg-PUS1',
-    'GGFH125-powheg-PUS4',
-    'GGFH135-powheg-PUS4',
-    'VBFH115-powheg-PUS4',
-    'VBFH125-powheg-PUS4'
-    'VBFH135-powheg-PUS4',
-    'WJets-madgraph-PUS4',
-    'DYJets-50-madgraph-PUS4',
-    'WW-pythia-PUS4',
-    'WZ-pythia-PUS4',
-    'ZZ-pythia-PUS4',
-    'T-t-PUS1_skim',
-    'Tbar-t-PUS1_skim',
-    'WZIncl-pythia-PUS4_skim',
-    'TTJets-madgraph-PUS4_skim',
-    'GGFH105-powheg-PUS1_skim',
-    'GGFH110-powheg-PUS1_skim',
-    'GGFH115-powheg-PUS1_skim',
-    'GGFH120-powheg-PUS1_skim',
-    'GGFH125-powheg-PUS4_skim-v4',
-    'GGFH130-powheg-PUS4_skim-v2',
-    'GGFH135-powheg-PUS4_skim-v4',
-    'GGFH140-powheg-PUS4_skim-v2',
-    'VBFH105-powheg-PUS4_skim-v2',
-    'VBFH110-powheg-PUS4_skim-v2',
-    'VBFH115-powheg-PUS4_skim',
-    'VBFH120-powheg-PUS4_skim-v2',
-    'VBFH125-powheg-PUS4_skim-v4',
-    'VBFH130-powheg-PUS4_skim-v2',
-    'VBFH135-powheg-PUS4_skim-v4',
-    'VBFH140-powheg-PUS4_skim-v2',
-    'Run2011-05AugReReco_skim',
-    'Run2011-PromptReco-v6_skim/'
-    ]
+tasksElecTauSummer12 = [
+##     #'Run2012A-ElecTau-ReReco13Jul2012-v1-iter3_skim', 
+## #'Run2012B-ElecTau-ReReco13Jul2012-v1-iter3_skim', 
+'Run2012C-ElecTau-ReReco24Aug2012-v1-iter3_skim', 
+## #'Run2012C-ElecTau-PromptReco-v2-iter3_skim',
+## #'Run2012C-ElecTau-PromptReco-v2p2-198934-203002_skim',
 
-tasksElecMu =[
-    'DYJets-ElecMu-50-madgraph-PUS4_skim',
-    'T-ElecMu-s-PUS4_skim',
-    'T-ElecMu-t-PUS4_skim',
-    'T-ElecMu-tW-PUS4_skim',
-    'Tbar-ElecMu-s-PUS4_skim',
-    'Tbar-ElecMu-t-PUS4_skim',
-    'Tbar-ElecMu-tW-PUS4_skim',
-    'TTJets-ElecMu-madgraph-PUS4_skim',
-    'WJets-ElecMu-madgraph-PUS4_skim',
-    'WW-ElecMu-madgraph-PUS4_skim',
-    'WW-ElecMu-pythia-PUS4_skim',
-    'WZ-ElecMu-pythia-PUS4_skim',
-    'ZZ-ElecMu-pythia-PUS4_skim',
-    'GGFH105-ElecMu-powheg-PUS1_skim',
-    'GGFH110-ElecMu-powheg-PUS1_skim',
-    'GGFH115-ElecMu-powheg-PUS1_skim',
-    'GGFH120-ElecMu-powheg-PUS1_skim',
-    'GGFH125-ElecMu-powheg-PUS4_skim',
-    'GGFH130-ElecMu-powheg-PUS4_skim',
-    'GGFH135-ElecMu-powheg-PUS4_skim',
-    'GGFH140-ElecMu-powheg-PUS4_skim',
-    'VBFH105-ElecMu-powheg-PUS4_skim',
-    'VBFH110-ElecMu-powheg-PUS4_skim',
-    'VBFH115-ElecMu-powheg-PUS4_skim',
-    'VBFH120-ElecMu-powheg-PUS4_skim',
-    'VBFH125-ElecMu-powheg-PUS4_skim',,
-    'VBFH130-ElecMu-powheg-PUS4_skim',
-    'VBFH135-ElecMu-powheg-PUS4_skim',
-    'VBFH140-ElecMu-powheg-PUS4_skim'
+############################
+#####Embedded ETau
+##########################
+
+##     #'Run2012A-ElecTau-53X-ReReco13Jul2012-v1-Embedded-EleJet-iter3_skim', 
+##     #'Run2012B-ElecTau-53X-ReReco13Jul2012-v1-Embedded-EleJet-iter3_skim', 
+##     #'Run2012C-ElecTau-53X-PromptReco-v2-Embedded-EleJet-iter3_skim',
+##     #'Run2012C-ElecTau-53X-ReReco24Aug2012-Embedded-EleJet-iter3_skim',
+##     #'Run2012C-ElecTau-53X-PromptReco-v2p2-198934-203002-Embedded-EleJet_skim',
+
+
+#global dbs
+## #'Run2012A-ElecTau-53X-ReReco13Jul2012-v1-Embedded-EleJet-iter4_skim', 
+## #'Run2012A-ElecTau-53X-recover_06Aug2012-Embedded-EleJet-iter4_skim', 
+## 'Run2012B-ElecTau-53X-ReReco13Jul2012-v1-Embedded-EleJet-iter5_skim', 
+## #'Run2012C-ElecTau-53X-ReReco24Aug2012-Embedded-EleJet-iter4_skim', 
+## #'Run2012C-ElecTau-53X-PromptReco-v2-Embedded-EleJet-iter4_skim',
+
+
+## ##52X
+
+## #'Run2012A-ElecTau-PromptReco-v1-Embedded-EleJet_skim',
+##     #'Run2012B-ElecTau-PromptReco-v1-p1-Embedded-EleJet_skim',   
+## #'Run2012B-ElecTau-PromptReco-v1-p2-Embedded-EleJet_skim', 
+##     #'Run2012B-ElecTau-PromptReco-v1-p3-Embedded-EleJet_skim',
+
+
+    ###Not to publish
+    ###'Run2012C-ElecTau-ReReco24Aug2012-Embedded-EleJet_skim', 
+
+
+#################################################################
+###################MC
+#################################################################
+
+
+#########################################################################
+##Signal
+
+##     #'SUSYGGH80-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH90-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH100-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH110-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH120-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH130-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH140-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH160-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH180-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH200-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH250-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH300-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH350-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH400-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH450-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH500-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH600-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH700-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH800-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH900-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYGGH1000-ElecTau-pythia-tauola-iter1_skim',
+
+###
+
+##     #'SUSYBBH80-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH90-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH100-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH110-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH120-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH130-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH140-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH160-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH180-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH200-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH250-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH350-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH400-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH450-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH500-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH600-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH700-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH800-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH900-ElecTau-pythia-tauola-iter1_skim',
+##     #'SUSYBBH1000-ElecTau-pythia-tauola-iter1_skim',
+
+#########################################################################
+##Embedded MC
+#########################################################################
+## #'DYJets-ElecTau-8TeV-50-madgraph-PUS7-Embedded_skim'
+
+
     ]
 
 
-#publishSkim( "MuTauStream_patch2",  tasksMu )
-#publishSkim( "ElecTauStream_patch3",  tasksElec   )
-publishSkim( "ElecMuStream",  tasksElecMu   )
+
+
+#publishSkim( "MuTauStream_30Mar2012_patch50X_v4",  tasksMuTauSummer12)
+publishSkim( "ElecTauStream_07Oct2012-part6",tasksElecTauSummer12)
+

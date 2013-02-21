@@ -9,24 +9,26 @@
 
 #include <cstdio>
 #include <map>
+#include <vector>
 
 using namespace std;
 
 MEtRescalerProducer::MEtRescalerProducer(const edm::ParameterSet & iConfig){
 
-  metTag_  = iConfig.getParameter<edm::InputTag>("metTag");
-  jetTag_  = iConfig.getParameter<edm::InputTag>("jetTag");
+  metTag_      = iConfig.getParameter<edm::InputTag>("metTag");
+  jetTag_      = iConfig.getParameter<edm::InputTag>("jetTag");
   electronTag_ = iConfig.getParameter<edm::InputTag>("electronTag");
-  muonTag_   = iConfig.getParameter<edm::InputTag>("muonTag");
-  tauTag_  = iConfig.getParameter<edm::InputTag>("tauTag");
+  muonTag_     = iConfig.getParameter<edm::InputTag>("muonTag");
+  tauTag_      = iConfig.getParameter<edm::InputTag>("tauTag");
 
   unClusterShift_  = iConfig.getParameter<double>("unClusterShift");
-  tauShift_   = iConfig.getParameter<double>("tauShift");
-  muonShift_  = iConfig.getParameter<double>("muonShift");
-  electronShift_  = iConfig.getParameter<double>("electronShift");
+  tauShift_        = iConfig.getParameter<std::vector<double> >("tauShift");
+  muonShift_       = iConfig.getParameter<std::vector<double> >("muonShift");
+  electronShift_   = iConfig.getParameter<std::vector<double> >("electronShift");
   jetThreshold_    = iConfig.getParameter<double>("jetThreshold");
+  numOfSigmas_     = iConfig.getParameter<double>("numOfSigmas");
 
-  verbose_    = iConfig.getParameter<bool>("verbose");
+  verbose_     = iConfig.getParameter<bool>("verbose");
   
  
   // convention: jet - elec - mu - tau - uncluster
@@ -35,11 +37,11 @@ MEtRescalerProducer::MEtRescalerProducer(const edm::ParameterSet & iConfig){
   for(int i = 0; i < 3 ; i++){
     if(unClusterShift_<1e-06 && i!=1) continue;
     for(int j = 0; j < 3 ; j++){
-      if(electronShift_<1e-06 && j!=1) continue;
+      if(electronShift_[0]<1e-06 && j!=1) continue;
       for(int k = 0; k < 3 ; k++){
-	if(muonShift_<1e-06 && k!=1) continue;
+	if(muonShift_[0]<1e-06 && k!=1) continue;
 	for(int l = 0; l < 3 ; l++){
-	  if(tauShift_<1e-06 && l!=1) continue;
+	  if(tauShift_[0]<1e-06 && l!=1) continue;
 	  for(int m = 0; m < 3 ; m++){
 	    if(unClusterShift_<1e-06 && m!=1) continue;
 	    char buffer[5];
@@ -94,11 +96,11 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
   for(int i = 0; i < 3 ; i++){
     if(unClusterShift_<1e-06 && i!=1) continue;
     for(int j = 0; j < 3 ; j++){
-      if(electronShift_<1e-06 && j!=1) continue;
+      if(electronShift_[0]<1e-06 && j!=1) continue;
       for(int k = 0; k < 3 ; k++){
-	if(muonShift_<1e-06 && k!=1) continue;
+	if(muonShift_[0]<1e-06 && k!=1) continue;
 	for(int l = 0; l < 3 ; l++){
-	  if(tauShift_<1e-06 && l!=1) continue;
+	  if(tauShift_[0]<1e-06 && l!=1) continue;
 	  for(int m = 0; m < 3 ; m++){
 	    if(unClusterShift_<1e-06 && m!=1) continue;
 	    char buffer[5];
@@ -117,12 +119,15 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 
 	    // electron
 	    for(unsigned int it = 0; electrons!=0 && it<electrons->size(); it++){
-	      if(j==0) dPx += (*electrons)[it].px() * electronShift_;
-	      else     dPx -= (*electrons)[it].px() * electronShift_;
-	      if(j==0) dPy += (*electrons)[it].py() * electronShift_;
-	      else     dPy -= (*electrons)[it].py() * electronShift_;
-	      if(j==0) dSumEt += (*electrons)[it].pt() * electronShift_;
-	      else     dSumEt -= (*electrons)[it].pt() * electronShift_;
+	      float electronShift = TMath::Abs((*electrons)[it].eta())<1.44 ? electronShift_[0] : electronShift_[1];
+	      electronShift *= numOfSigmas_;
+
+	      if(j==0) dPx += (*electrons)[it].px() * electronShift;
+	      else     dPx -= (*electrons)[it].px() * electronShift;
+	      if(j==0) dPy += (*electrons)[it].py() * electronShift;
+	      else     dPy -= (*electrons)[it].py() * electronShift;
+	      if(j==0) dSumEt += (*electrons)[it].pt() * electronShift;
+	      else     dSumEt -= (*electrons)[it].pt() * electronShift;
 
 	      unClusterEnergy -= (*electrons)[it].p4();
 	      if(verbose_){
@@ -134,12 +139,15 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 	    }
 	    // muon
 	    for(unsigned int it = 0; muons!=0 && it<muons->size(); it++){
-	      if(k==0) dPx += (*muons)[it].px() * muonShift_;
-	      else     dPx -= (*muons)[it].px() * muonShift_;
-	      if(k==0) dPy += (*muons)[it].py() * muonShift_;
-	      else     dPy -= (*muons)[it].py() * muonShift_;
-	      if(k==0) dSumEt += (*muons)[it].pt() * muonShift_;
-	      else     dSumEt -= (*muons)[it].pt() * muonShift_;
+	      float muonShift = TMath::Abs((*muons)[it].eta())<1.44 ? muonShift_[0] : muonShift_[1];
+	      muonShift *= numOfSigmas_;
+
+	      if(k==0) dPx += (*muons)[it].px() * muonShift;
+	      else     dPx -= (*muons)[it].px() * muonShift;
+	      if(k==0) dPy += (*muons)[it].py() * muonShift;
+	      else     dPy -= (*muons)[it].py() * muonShift;
+	      if(k==0) dSumEt += (*muons)[it].pt() * muonShift;
+	      else     dSumEt -= (*muons)[it].pt() * muonShift;
 
 	      unClusterEnergy -= (*muons)[it].p4();
 	      if(verbose_){
@@ -151,12 +159,15 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 	    }
 	    // tau
 	    for(unsigned int it = 0; taus!=0 && it<taus->size(); it++){
-	      if(l==0) dPx += (*taus)[it].px() * tauShift_;
-	      else     dPx -= (*taus)[it].px() * tauShift_;
-	      if(l==0) dPy += (*taus)[it].py() * tauShift_;
-	      else     dPy -= (*taus)[it].py() * tauShift_;
-	      if(l==0) dSumEt += (*taus)[it].pt() * tauShift_;
-	      else     dSumEt -= (*taus)[it].pt() * tauShift_;
+	      float tauShift = TMath::Abs((*taus)[it].eta())<1.44 ? tauShift_[0] : tauShift_[1];	    
+	      tauShift *= numOfSigmas_;
+
+	      if(l==0) dPx += (*taus)[it].px() * tauShift;
+	      else     dPx -= (*taus)[it].px() * tauShift;
+	      if(l==0) dPy += (*taus)[it].py() * tauShift;
+	      else     dPy -= (*taus)[it].py() * tauShift;
+	      if(l==0) dSumEt += (*taus)[it].pt() * tauShift;
+	      else     dSumEt -= (*taus)[it].pt() * tauShift;
 
 	      unClusterEnergy -= (*taus)[it].p4();
 	      if(verbose_){
@@ -170,7 +181,9 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 	    // jet
 	    for(unsigned int it = 0; it<jets->size(); it++){
 
-	      bool overlaps = (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").pt() < jetThreshold_ ;
+	      bool overlaps = 
+		((*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").pt() < jetThreshold_) ||
+		(TMath::Abs((*jets)[it].eta()) > 4.5);
 	      for(unsigned int jt = 0; electrons!=0 && jt<electrons->size(); jt++){
 		if(Geom::deltaR((*jets)[it].p4(),(*electrons)[jt].p4())<0.5)
 		  overlaps = true;
@@ -196,6 +209,7 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 		JetCorrectionUncertainty* deltaJEC = new JetCorrectionUncertainty(param);
 		deltaJEC->setJetEta((*jets)[it].eta()); deltaJEC->setJetPt((*jets)[it].pt());
 		float jetShift  = deltaJEC->getUncertainty( true );
+		jetShift *= numOfSigmas_;
 		if(i==0) dPx += (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").px() * jetShift;
 		else     dPx -= (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").px() * jetShift;
 		if(i==0) dPy += (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").py() * jetShift;
@@ -204,6 +218,7 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 		else     dSumEt -= (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").pt() * jetShift;
 
 		unClusterEnergy -= (*jets)[it].correctedJet("Uncorrected","none","patJetCorrFactors").p4();
+		delete deltaJEC;
 		if(verbose_){
 		  cout << "Shifting jet #" << it << " => dPx= " << dPx
 		       << " , dPy= " << dPy
@@ -215,12 +230,14 @@ void MEtRescalerProducer::produce(edm::Event & iEvent, const edm::EventSetup & i
 	    }
 
 	    // uncluster energy
-	    if(m==0) dPx += unClusterEnergy.Px() * unClusterShift_;
-	    else     dPx -= unClusterEnergy.Px() * unClusterShift_;
-	    if(m==0) dPy += unClusterEnergy.Py() * unClusterShift_;
-	    else     dPy -= unClusterEnergy.Py() * unClusterShift_;
-	    if(m==0) dSumEt += (-1)*unClusterEnergy.Pt() * unClusterShift_;
-	    else     dSumEt -=  (-1)*unClusterEnergy.Pt() * unClusterShift_;
+	    float unClusterShift  = unClusterShift_;
+	    unClusterShift *= numOfSigmas_;
+	    if(m==0) dPx += unClusterEnergy.Px() * unClusterShift;
+	    else     dPx -= unClusterEnergy.Px() * unClusterShift;
+	    if(m==0) dPy += unClusterEnergy.Py() * unClusterShift;
+	    else     dPy -= unClusterEnergy.Py() * unClusterShift;
+	    if(m==0) dSumEt += (-1)*unClusterEnergy.Pt() * unClusterShift;
+	    else     dSumEt -= (-1)*unClusterEnergy.Pt() * unClusterShift;
 
 	    if(verbose_ && i==0 && j==0 && k==0 && l==0 && m==0){
 	      cout << "Uncluster energy (pT,phi)= " << unClusterEnergy.Pt() << "," << unClusterEnergy.Phi() << ")"
