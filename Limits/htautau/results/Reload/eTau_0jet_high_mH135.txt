@@ -1,0 +1,36 @@
+imax 1
+jmax *
+kmax *
+shapes *  *    eTauSM.root  $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+
+observation 802
+
+bin                                  eTau_0jet_high          eTau_0jet_high              eTau_0jet_high           eTau_0jet_high            eTau_0jet_high              eTau_0jet_high            eTau_0jet_high             eTau_0jet_high             eTau_0jet_high         eTau_0jet_high
+process                                VH                ggH                      qqH                  ZTT                   QCD                    W                   ZJ                    ZL                    TT                VV
+process                                 -2                -1                       0                   1                     2                     3                    4                     5                     6                7
+rate                                           5.3523985              8.9874674              2.2981587              429.9118              18.402267              290.53676              1.2180165              66.530411              60.169103              6.7725888
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+lumi                             lnN   1.045             1.045                   1.045                 -                      -                     -                    -                     -                    -                  -           luminosity
+CMS_eff_e                        lnN   1.010             1.010                   1.010               1.010                    -                     -                  1.010                 1.010                1.010             1.010          muon ID /HLT
+CMS_eff_t                        lnN   1.060             1.060                   1.060               1.060                    -                     -                    -                     -                  1.060             1.060          Tau IDf
+CMS_htt_zttNorm                  lnN     -                 -                        -                1.033                    -                     -                  1.033                 1.033                  -                  -           ZTT Scale  
+CMS_htt_ztt_extrap_0jet_high        lnN     -                 -                        -                1.01739                     -                     -                   1.01739                   1.01739             -                  -           ZTT Extrapolation  
+CMS_htt_ttbarNorm                lnN     -                 -                        -                  -                      -                     -                    -                     -                  1.075                -           TTbar background  
+CMS_htt_DiBosonNorm              lnN     -                 -                        -                  -                      -                     -                    -                     -                    -               1.30           DiBoson background 
+CMS_htt_WNorm                    lnN     -                 -                        -                  -                      -                   1.066                  -                     -                    -                  -           W Background 
+#CMS_htt_eTau_0jet_high_WNorm gmN  1210     -                 -                        -                  -                      -                   0.3355                    -                     -                    -                  -           W Background 
+#CMS_htt_eTau_0jet_high_QCDNorm gmN 128    -                 -                        -                  -                     -0.1173                    -                    -                     -                    -                  -           QCD Background
+CMS_htt_eTau_0jet_high_QCDSyst    lnN     -                 -                        -                  -                    1.02                    -                    -                     -                    -                  -           QCD Background
+CMS_htt_eTau_ZJetFakeTau         lnN     -                 -                        -                  -                      -                     -                  1.10                    -                    -                  -           Z(jet->tau) background
+CMS_htt_eTau_ZLeptonFakeTau      lnN     -                 -                        -                  -                      -                     -                    -                    1.10                  -                  -           Z(l->tau)   background
+CMS_scale_t                    shape   1.00               1.00                    1.00                1.00                    -                    1.00                1.00                    -                   1.00                -           shape tau	      
+CMS_scale_j                      lnN     0.05                   0.58                   0.03                   -                   -                   -                   -                   -                   1.02                   0.98                   JEC uncertainty
+CMS_scale_met                    lnN   1.05               1.05                    1.05                 -                      -                    -                   1.05                   1.05                 1.02               1.06         met scale
+pdf_qqbar                        lnN     -                 -                      1.03                 -                      -                    -                     -                     -                    -                  -           PDF VBF
+pdf_vh                           lnN   1.03                -                        -                  -                      -                    -                     -                     -                    -                  -           PDF VH
+pdf_gg                           lnN     -               1.03                       -                  -                      -                    -                     -                     -                    -                  -           PDF GGF
+QCDscale_ggH                     lnN     -               1.12                       -                  -                      -                    -                     -                     -                    -                  -           QCD scale GGF
+QCDscale_qqH                     lnN     -                 -                     1.035                 -                      -                    -                     -                     -                    -                  -           QCD scale VBF
+UEPS                             lnN   0.96              0.96                     0.96                 -                      -                    -                     -                     -                    -                  -           UE and PS

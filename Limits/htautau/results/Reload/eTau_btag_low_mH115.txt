@@ -1,0 +1,36 @@
+imax 1
+jmax *
+kmax *
+shapes *  *    eTauSM.root  $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+
+observation 365
+
+bin                                  eTau_btag_low          eTau_btag_low              eTau_btag_low           eTau_btag_low            eTau_btag_low              eTau_btag_low            eTau_btag_low         eTau_btag_low         eTau_btag_low
+process                                VH                ggH                      qqH                  ZTT                   QCD                    W                   ZLL               TT                VV
+process                                 -2                -1                       0                   1                     2                     3                    4                 6                 7
+rate                                           0.93236105              0.20767088              0.57940083              139.50041              173.29921              64.980819              30.119627              19.266394              1.8040851
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+lumi                             lnN   1.045             1.045                   1.045                 -                     -                     -                    -                -                  -           luminosity
+CMS_eff_e                        lnN   1.010             1.010                   1.010               1.010                   -                     -                  1.010            1.010             1.010          muon ID /HLT
+CMS_eff_t                        lnN   1.060             1.060                   1.060               1.060                   -                     -                    -              1.060             1.060          Tau IDf
+CMS_htt_zttNorm                  lnN     -                 -                        -                1.033                   -                     -                  1.033              -                  -           ZTT Scale  
+CMS_htt_ztt_extrap_btag_low      lnN     -                 -                        -                 1.04765                    -                     -                   1.04765               -                  -           ZTT Extrapolation  
+CMS_htt_ttbarNorm                lnN     -                 -                        -                  -                     -                     -                    -              1.26                 -           TTbar background  
+CMS_htt_DiBosonNorm              lnN     -                 -                        -                  -                     -                     -                    -                -               1.990          DiBoson background 
+CMS_htt_WNorm                    lnN     -                 -                        -                  -                     -                   1.066                  -                -                  -           W Background 
+CMS_htt_W_extrap_btag_low        lnN     -                 -                        -                  -                     -                   1.10                   -                -                  -           W Background 
+CMS_htt_eTau_btag_low_WNorm   gmN   270     -                 -                        -                  -                     -                    0.2410                   -                -                  -           W Background 
+CMS_htt_eTau_btag_low_QCDNorm gmN   190     -                 -                        -                  -                    0.9121                    -                    -                -                  -           QCD Background Extrapolation
+CMS_htt_eTau_btag_low_QCDSyst        lnN     -                 -                        -                  -                    1.10                   -                    -                -                  -           QCD Background Systematics
+CMS_htt_ZLL                      lnN     -                 -                        -                  -                     -                     -                  1.26              -                  -           Z(jet->tau) background
+CMS_scale_t                    shape   1.00              1.00                     1.00               1.00                    -                     -                   -               -                 -           shape tau	      
+CMS_scale_j                      lnN                        1.39                   1.39                   0.10                   -                   -                   -                   -                   0.91                   0.96                   JEC uncertainty
+CMS_scale_met                    lnN   1.05              1.05                     1.05                 -                     -                     -                  1.05             1.10               1.10          met scale
+pdf_qqbar                        lnN     -                 -                      1.03                 -                     -                     -                    -                -                  -           PDF VBF
+pdf_vh                           lnN   1.03                -                        -                  -                     -                     -                    -                -                  -           PDF VH
+pdf_gg                           lnN     -               1.03                       -                  -                     -                     -                    -                -                  -           PDF GGF
+QCDscale_ggHlin                  lnN     -               1.12                       -                  -                     -                     -                    -                -                  -           QCD scale GGF in boosted
+QCDscale_qqH                     lnN     -                 -                      1.04                 -                     -                     -                    -                -                  -           QCD scale VBF
+UEPS                             lnN   1.04              1.04                     1.04                 -                     -                     -                    -                -                  -           UE and PS

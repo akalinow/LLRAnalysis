@@ -22,8 +22,8 @@
 #include "TCut.h"
 
 #define VERBOSE true
-#define SAVE true
-
+#define SAVE    true
+#define addVH   false
 
 
 
@@ -35,7 +35,7 @@ void plotElecTau( Int_t mH_ = 120,
 		  TString variable_ = "diTauVisMass",
 		  TString XTitle_ = "full mass",
 		  TString Unities_ = "GeV",
-		  Int_t nBins_ = 100, Float_t xMin_=0, Float_t xMax_=400,
+		  Int_t nBins_ = 40, Float_t xMin_=0, Float_t xMax_=200,
 		  Float_t magnifySgn_ = 1.0,
 		  Float_t hltEff_ = 1.004*0.986, // elecID*elecIso,
 		  Int_t logy_ = 0 ) 
@@ -45,7 +45,7 @@ void plotElecTau( Int_t mH_ = 120,
   ifstream is;
 
   char* c = new char[10];
-  is.open(Form("bins/bins_eTau_mH%d_%s_%s.txt",mH_,selection_.c_str(),variable_.Data())); 
+  is.open(Form("bins/bins_eTau_%s.txt",variable_.Data())); 
   if(nBins_<0 &&  !is.good()){
     cout << "Bins file not found" << endl;
     return;
@@ -67,7 +67,7 @@ void plotElecTau( Int_t mH_ = 120,
   cout << "Making histograms with " << nBins << " bins:" << endl;
 
   is.close();
-  is.open(Form("bins/bins_eTau_mH%d_%s_%s.txt",mH_,selection_.c_str(),variable_.Data())); 
+  is.open(Form("bins/bins_eTau_%s.txt",variable_.Data())); 
   
   nBinsFromFile = 0;
 
@@ -90,13 +90,23 @@ void plotElecTau( Int_t mH_ = 120,
   }
 
   // Luminosity analyzed  
-  float Lumi                     = (-47.4 + 204.6 + 887 + 361.7 + 531.5)*1.00;
-  float WcorrectionFactorOS      = 1.04;  
-  float WcorrectionFactorSS      = 0.88;  
-  float EtoTauCorrectionFactor   = 0.80;
-  float JtoTauCorrectionFactor   = 0.80;
-  float VbfExtrapolationFactor   = 1.03;
+
+  // Lumi used before sync
+  //float Lumi                      = (159.+887.+361.7+531.5)*1.00;
+  float Lumi = (-47.4 + 215.3 + 930.7 + 410.6 + (450.6+212.7) )* 1.00 ;
+
+  float WcorrectionFactorOS      = 0.94;  
+  float WcorrectionFactorSS      = 1.13;  
+  float EtoTauCorrectionFactor   = 1.00;
+  float JtoTauCorrectionFactor   = 1.00;
+  float VbfExtrapolationFactorZ  = 1.05;
+  float VbfExtrapolationFactorW  = 1.26;
   
+  bool useMt      = true;
+  string antiWcut = useMt ? "MtLeg1" : "-(pZeta-1.5*pZetaVis)" ;
+  float antiWsgn  = useMt ? 40. :  20. ; 
+  float antiWsdb  = useMt ? 60. :  40. ; 
+
   TCanvas *c1 = new TCanvas("c1","",5,30,650,600);
   c1->SetGrid(0,0);
   c1->SetFillStyle(4000);
@@ -118,6 +128,7 @@ void plotElecTau( Int_t mH_ = 120,
   TH1F* hSgn   = new TH1F( "hSgn " ,"vbf+ggf"           , nBins , bins);
   TH1F* hSgn1  = new TH1F( "hSgn1" ,"vbf"               , nBins , bins);
   TH1F* hSgn2  = new TH1F( "hSgn2" ,"ggf"               , nBins , bins);
+  TH1F* hSgn3  = new TH1F( "hSgn3" ,"vh"                , nBins , bins);
   TH1F* hData  = new TH1F( "hData" ,"Observed"          , nBins , bins);
   TH1F* hW     = new TH1F( "hW"    ,"W+jets"            , nBins , bins);
   TH1F* hEWK   = new TH1F( "hEWK"  ,"EWK"               , nBins , bins);
@@ -133,19 +144,21 @@ void plotElecTau( Int_t mH_ = 120,
 
   // Open the files
   TFile *fData              
-    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleRun2011-Elec-All_run_Open_ElecTauStream.root", "READ");  
+    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleRun2011A-ElecTau-All_run_Open_ElecTauStream.root", "READ");  
   TFile *fSignalVBF         
-    = new TFile(Form("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleVBFH%d-powheg-PUS4_run_Open_ElecTauStream.root",mH_) ,"READ");  
+    = new TFile(Form("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleVBFH%d-ElecTau-powheg-PUS4_run_Open_ElecTauStream.root",mH_) ,"READ");  
   TFile *fSignalGGH         
-    = new TFile(Form("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleGGFH%d-powheg-PUS4_run_Open_ElecTauStream.root",mH_),"READ");  
+    = new TFile(Form("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleGGFH%d-ElecTau-powheg-PUS4_run_Open_ElecTauStream.root",mH_),"READ");
+  TFile *fSignalVH         
+    = new TFile(Form("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/MuTauStream_13Oct2011//nTupleVH%d-MuTau-pythia-PUS4_run_Open_MuTauStream.root",mH_),"READ");  
   TFile *fBackgroundDY
-    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleDYJets-50-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
+    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleDYJets-ElecTau-50-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
   TFile *fBackgroundWJets   
-    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleWJets-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
+    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleWJets-ElecTau-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
   TFile *fBackgroundTTbar  
-    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleTTJets-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
+    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleTTJets-ElecTau-madgraph-PUS4_run_Open_ElecTauStream.root","READ"); 
   TFile *fBackgroundOthers  
-    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStreamSummer11_fAna//nTupleOthers-PUS4_run_Open_ElecTauStream.root","READ"); 
+    = new TFile("/data_CMS/cms/lbianchini/VbfJetsStudy/OpenNtuples/ElecTauStream_13Oct2011//nTupleOthers-ElecTau-PUS4_run_Open_ElecTauStream.root","READ"); 
 
   // choose the analysis: Nominal "", jet up/Down "JetUp/Down" , elec up/down "MuUp/Down" , tau up/down "TauUp/Down"
   TString tree = "outTreePtOrd"+analysis_;
@@ -153,6 +166,7 @@ void plotElecTau( Int_t mH_ = 120,
   TTree *data                = (TTree*)fData->Get("outTreePtOrd");
   TTree *signalVBF           = (TTree*)fSignalVBF->Get(tree);
   TTree *signalGGH           = (TTree*)fSignalGGH->Get(tree);
+  TTree *signalVH            = addVH ? (TTree*)fSignalVH->Get(tree) : 0;
 
   // split the DY->ll into l=e/mu and l=tau (MC level)
   TFile* dummy1 = new TFile("dummy1.root","RECREATE");
@@ -164,30 +178,31 @@ void plotElecTau( Int_t mH_ = 120,
   TTree *backgroundDYJtoTau  = ((TTree*)fBackgroundDY->Get(tree))->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> e+e- jet->tau
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"      << endl;
-  cout << backgroundDYEtoTau->GetEntries() << " come from DY->ee, e->tau"  << endl;
+  cout << backgroundDYEtoTau->GetEntries()  << " come from DY->ee, e->tau"  << endl;
   cout << backgroundDYJtoTau->GetEntries()  << " come from DY->ee, jet->tau"<< endl;
 
   TTree *backgroundTTbar     = (TTree*)fBackgroundTTbar->Get(tree);
   TTree *backgroundWJets     = (TTree*)fBackgroundWJets->Get(tree);
   TTree *backgroundOthers    = (TTree*)fBackgroundOthers->Get(tree);
  
-  TCut lpt("ptL1>18");
-  TCut tpt("ptL2>21");
+  TCut lpt("ptL1>20 && tightestCutBasedWP>0");
+  TCut tpt("ptL2>20");
   TCut tiso("tightestHPSDBWP>0");
   TCut liso("combRelIsoLeg1DBeta<0.10");
-  TCut lveto("elecFlag==0");
+  TCut lveto("(elecFlag!=1 && elecFlag!=2)");
   TCut SS("diTauCharge!=0");
   TCut OS("diTauCharge==0");
-  TCut oneJet("pt1>30");
-  TCut twoJets("pt1>30 && pt2>30");
-  TCut vbf("pt1>30 && pt2>30 && eta1*eta2<0 && Mjj>350 && Deta>3.5 && ptVeto<30");
-  TCut novbf("pt2<30 || (pt1>30 && pt2>30 && ptVeto<30 && !(eta1*eta2<0 && Mjj>350 && Deta>3.5))");
+  TCut oneJet("nJets30>=1");
+  TCut twoJets("nJets30>=2");
+  TCut vbf("pt1>30 && pt2>30 && eta1*eta2<0 && Mjj>400 && Deta>4.0 && isVetoInJets!=1");
+  TCut novbf("pt1<30");
+  TCut boost("pt1>150 && pt2<30");
+  TCut bTag("nJets30<=1 && nJets20BTagged>=1");
+  TCut nobTag("nJets30<=1 && nJets20BTagged==0");
   TCut hltevent("HLTx==1 && (run>=163269 || run==1)");
   TCut hltmatch("HLTmatch==1");
-  TCut bTag("pt2<30 && ((pt1>20 && jetsBtagHE1>3.3) || (pt2>20 && jetsBtagHE2>3.3))");
-  TCut nobTag("pt2<30 && jetsBtagHE1<3.3 && jetsBtagHE2<3.3");
-  TCut pZ("(pZetaCorr-1.5*pZetaVisCorr)>-20");
-  TCut apZ("(pZetaCorr-1.5*pZetaVisCorr)<-40");
+  TCut pZ( Form("((%s)<%f)",antiWcut.c_str(),antiWsgn));
+  TCut apZ(Form("((%s)>%f)",antiWcut.c_str(),antiWsdb));
 
   TCut sbin; TCut sbinPZetaRel; TCut sbinSS; TCut sbinPZetaRelSS; TCut sbinPZetaRev; TCut sbinPZetaRevSS;
 
@@ -231,6 +246,14 @@ void plotElecTau( Int_t mH_ = 120,
     sbinSS         =  lpt && tpt && tiso && liso && lveto && SS && pZ  && hltevent && hltmatch && novbf;
     sbinPZetaRelSS =  lpt && tpt && tiso && liso && lveto && SS        && hltevent && hltmatch && novbf;
   }
+  else if(selection_.find("boost")!=string::npos){
+    sbin           =  lpt && tpt && tiso && liso && lveto && OS && pZ  && hltevent && hltmatch && boost;
+    sbinPZetaRev   =  lpt && tpt && tiso && liso && lveto && OS && apZ && hltevent && hltmatch && boost;
+    sbinPZetaRel   =  lpt && tpt && tiso && liso && lveto && OS        && hltevent && hltmatch && boost;
+    sbinPZetaRevSS =  lpt && tpt && tiso && liso && lveto && SS && apZ && hltevent && hltmatch && boost;
+    sbinSS         =  lpt && tpt && tiso && liso && lveto && SS && pZ  && hltevent && hltmatch && boost;
+    sbinPZetaRelSS =  lpt && tpt && tiso && liso && lveto && SS        && hltevent && hltmatch && boost;
+  }
   else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
     sbin           =  lpt && tpt && tiso && liso && lveto && OS && pZ  && hltevent && hltmatch && bTag;
     sbinPZetaRel   =  lpt && tpt && tiso && liso && lveto && OS        && hltevent && hltmatch && bTag;
@@ -250,30 +273,35 @@ void plotElecTau( Int_t mH_ = 120,
 
   // estimate the W+jets in the selection bin using pZeta extrapolation
 
-  TH1F* hWMt = new TH1F("hWMt","",200,-200,200);
-  cout << "Histogramming the pZeta variable every " << hWMt->GetBinWidth(1) << " GeV" << endl;
+  TH1F* hWMt = new TH1F("hWMt","",1,-10,10);
 
   ///////////////////////////////////////// Doing OS first...
   hWMt->Reset();
-  backgroundWJets->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRel);
-  cout << "Using  " << hWMt->Integral() << " entries from the W+jets OS sample" << endl;
-  float OSWinSignalRegionMC = hWMt->Integral(91,200)*Lumi*hltEff_/1000.;
-  float scaleFactorOS = (hWMt->Integral(0,80))/(hWMt->Integral(91,200));
-  cout << "Extrapolation factor for W OS : P(pZetaCorr<-40)/P(pZetaCorr>-20) ==> " << scaleFactorOS << endl;
+  backgroundWJets->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRel&&pZ));
+  cout << "Using  " << hWMt->GetEntries() << " entries from the W+jets OS sample" << endl;
+  float OSWinSignalRegionMC   = hWMt->Integral()*Lumi*hltEff_/1000.;
+  hWMt->Reset();
+  backgroundWJets->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau)"*(sbinPZetaRel&&apZ));
+  float OSWinSidebandRegionMC = hWMt->Integral()*Lumi*hltEff_/1000.;
+  float scaleFactorOS = OSWinSidebandRegionMC/OSWinSignalRegionMC;
+
+  if(useMt)
+    cout << "Extrapolation factor for W OS : P(MtCorr>" << antiWsdb << ")/P(MtCorr<" << antiWsgn << ") ==> " << scaleFactorOS << endl;
+  else
+    cout << "Extrapolation factor for W OS : P(pZetaCorr<- "<< antiWsdb << ")/P(pZetaCorr>"<< antiWsgn << ") ==> " << scaleFactorOS << endl;    
  
   hWMt->Reset();
   cout << "Estimating cobtribution from ttbar and others in OS low pZeta tail..." << endl;
-  backgroundTTbar->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRel);
-  hWMt->Scale(Lumi*hltEff_/1000.);
-  float ttbarExtrOS = hWMt->Integral(0,80);
+  backgroundTTbar->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRel&&apZ));
+  float ttbarExtrOS  = hWMt->Integral()*Lumi*hltEff_/1000.;
   cout << "Contribution from ttbar in OS is " << ttbarExtrOS << endl;
   hWMt->Reset();
-  backgroundOthers->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRel);
-  hWMt->Scale(Lumi*hltEff_/1000.);
-  float othersExtrOS = hWMt->Integral(0,80);
+  backgroundOthers->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRel&&apZ));
+  float othersExtrOS = hWMt->Integral()*Lumi*hltEff_/1000.;
   cout << "Contribution from single-t and di-boson in OS is " << othersExtrOS << endl;
+
   float OSWinSignalRegionDATA = data->GetEntries(sbinPZetaRev);
-  cout << "Selected events in data in low pZeta tail " << OSWinSignalRegionDATA << endl;
+  cout << "Selected events in data in low pZeta/low Mt tail " << OSWinSignalRegionDATA << endl;
   OSWinSignalRegionDATA -= ttbarExtrOS;
   OSWinSignalRegionDATA -= othersExtrOS;
   OSWinSignalRegionDATA /= scaleFactorOS;
@@ -287,25 +315,31 @@ void plotElecTau( Int_t mH_ = 120,
 
   ///////////////////////////////////////// Doing SS last...
   hWMt->Reset();
-  backgroundWJets->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRelSS);
-  cout << "Using  " << hWMt->Integral() << " entries from the SS W+jets sample" << endl;
-  float SSWinSignalRegionMC = hWMt->Integral(91,200)*Lumi*hltEff_/1000.;
-  float scaleFactorSS = (hWMt->Integral(0,80))/(hWMt->Integral(91,200));
-  cout << "Extrapolation factor for W SS : P(pZetaCorr<-40)/P(pZetaCorr>-20) ==> " << scaleFactorSS << endl;
+  backgroundWJets->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRelSS&&pZ));
+  cout << "Using  " << hWMt->GetEntries() << " entries from the SS W+jets sample" << endl;
+  float SSWinSignalRegionMC   = hWMt->Integral()*Lumi*hltEff_/1000.;
+  hWMt->Reset();
+  backgroundWJets->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRelSS&&apZ));
+  float SSWinSidebandRegionMC = hWMt->Integral()*Lumi*hltEff_/1000.;
+  float scaleFactorSS = SSWinSidebandRegionMC/SSWinSignalRegionMC;
+ 
+  if(useMt)
+    cout << "Extrapolation factor for W SS : P(MtCorr>" << antiWsdb << ")/P(MtCorr<" << antiWsgn << ") ==> " << scaleFactorSS << endl;
+  else
+    cout << "Extrapolation factor for W SS : P(pZetaCorr<- "<< antiWsdb << ")/P(pZetaCorr>"<< antiWsgn << ") ==> " << scaleFactorSS << endl;    
 
   hWMt->Reset();
   cout << "Estimating cobtribution from ttbar and others in SS low pZeta tail..." << endl;
-  backgroundTTbar->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRelSS);
-  hWMt->Scale(Lumi*hltEff_/1000.);
-  float ttbarExtrSS = hWMt->Integral(0,80);
+  backgroundTTbar->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRelSS&&apZ));
+  float ttbarExtrSS = hWMt->Integral()*Lumi*hltEff_/1000.;
   cout << "Contribution from ttbar in SS is " << ttbarExtrSS << endl;
   hWMt->Reset();
-  backgroundOthers->Draw("(pZetaCorr-1.5*pZetaVisCorr)>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinPZetaRelSS);
-  hWMt->Scale(Lumi*hltEff_/1000.);
-  float othersExtrSS = hWMt->Integral(0,80);
+  backgroundOthers->Draw("etaL1>>hWMt","(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*(sbinPZetaRelSS&&apZ));
+  float othersExtrSS = hWMt->Integral()*Lumi*hltEff_/1000.;
   cout << "Contribution from single-t and di-boson in SS is " << othersExtrSS << endl;
+
   float SSWinSignalRegionDATA = data->GetEntries(sbinPZetaRevSS);
-  cout << "Selected events in data in low pZeta tail " << SSWinSignalRegionDATA << endl;
+  cout << "Selected events in data in low pZeta/low Mt tail " << SSWinSignalRegionDATA << endl;
   SSWinSignalRegionDATA -= ttbarExtrSS;
   SSWinSignalRegionDATA -= othersExtrSS;
   SSWinSignalRegionDATA /= scaleFactorSS;
@@ -323,6 +357,8 @@ void plotElecTau( Int_t mH_ = 120,
   samples.push_back("Data");
   samples.push_back("ggH115");
   samples.push_back("qqH115");
+  if(signalVH)
+    samples.push_back("VH115");
   samples.push_back("Others");
   samples.push_back("TTbar");
   samples.push_back("SS");
@@ -338,6 +374,7 @@ void plotElecTau( Int_t mH_ = 120,
   tMap["Data"]      = data;
   tMap["ggH115"]    = signalGGH;
   tMap["qqH115"]    = signalVBF;
+  tMap["VH115"]     = signalVH;
   tMap["DYToTauTau"]= backgroundDYTauTau;
   tMap["DYEtoTau"]  = backgroundDYEtoTau;
   tMap["DYJtoTau"]  = backgroundDYJtoTau;
@@ -380,7 +417,8 @@ void plotElecTau( Int_t mH_ = 120,
       backgroundWJets->Draw(variable_+">>hHelp", "(sampleWeight*puWeight*HLTweightTau*HLTweightElec)"*sbinSS);
       cout << "We expect " << hHelp->Integral()*Lumi/1000*hltEff_ << " SS events from W+jets (from " << hHelp->GetEntries() << " entries)" << endl;
       float sFWSS = 
-	( selection_.find("novbf")!=string::npos || selection_.find("nobTag")!=string::npos ) ? SSWinSignalRegionDATA/SSWinSignalRegionMC : WcorrectionFactorSS; // from the extrapolation factor DATA/MC
+	( selection_.find("novbf")!=string::npos || selection_.find("nobTag")!=string::npos || selection_.find("inclusive")!=string::npos) ? SSWinSignalRegionDATA/SSWinSignalRegionMC : WcorrectionFactorSS; // from the extrapolation factor DATA/MC
+      if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sFWSS *= VbfExtrapolationFactorW;
       hHelp->Scale(sFWSS*Lumi/1000*hltEff_);
       cout << "We estimate " << hHelp->Integral() << " SS events from W+jets by extrapolating" << endl;
       cout << " ==> removing W+jets from SS...." << endl;
@@ -404,10 +442,20 @@ void plotElecTau( Int_t mH_ = 120,
       cout << "We expect " << hHelp->Integral()*Lumi/1000*hltEff_ << " SS events from DY->ee, jet->tau" << endl;
       hHelp->Scale(JtoTauCorrectionFactor*Lumi/1000*hltEff_);
       cout << "We estimate " << hHelp->Integral() << " SS events from DY->ee, jet->tau" << endl;
-      cout << " ==> removing DY->ee, e->jet from SS...." << endl;
+      cout << " ==> removing DY->ee, jet->tau from SS...." << endl;
       h1->Add(hHelp, -1 );
       if(hHelp->GetEntries()>0) error2OnQCD +=  pow(hHelp->Integral()/hHelp->GetEntries(),2)*hHelp->GetEntries();   // error on MC DY->ee, e->tau events
-      cout << sqrt(error2OnQCD) << " <== W + TTb + DY(1)" << endl;      
+      cout << sqrt(error2OnQCD) << " <== W + TTb + DY(1)" << endl;
+
+      hHelp->Reset();
+      backgroundDYEtoTau->Draw(variable_+">>hHelp", "(sampleWeight*puWeight*HLTweightTau)"*sbinSS);
+      cout << "We expect " << hHelp->Integral()*Lumi/1000*hltEff_ << " SS events from DY->ee, e->tau" << endl;
+      hHelp->Scale(EtoTauCorrectionFactor*Lumi/1000*hltEff_);
+      cout << "We estimate " << hHelp->Integral() << " SS events from DY->ee, e->tau" << endl;
+      cout << " ==> removing DY->ee, e->tau from SS...." << endl;
+      h1->Add(hHelp, -1 );
+      if(hHelp->GetEntries()>0) error2OnQCD +=  pow(hHelp->Integral()/hHelp->GetEntries(),2)*hHelp->GetEntries();   // error on MC DY->ee, e->tau events
+      cout << sqrt(error2OnQCD) << " <== W + TTb + DY(1) + DY(2)" << endl;       
 
       //  OS/SS ratio
       h1->Scale(1.06);
@@ -436,8 +484,9 @@ void plotElecTau( Int_t mH_ = 120,
 
       // if W+jets, scale by extrapolation
       float sFWOS = 
-	( selection_.find("novbf")!=string::npos || selection_.find("nobTag")!=string::npos ) ? OSWinSignalRegionDATA/OSWinSignalRegionMC : WcorrectionFactorOS;
+	( selection_.find("novbf")!=string::npos || selection_.find("nobTag")!=string::npos || selection_.find("inclusive")!=string::npos) ? OSWinSignalRegionDATA/OSWinSignalRegionMC : WcorrectionFactorOS;
       if((it->first).find("WJets")!=string::npos){
+	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sFWOS *= VbfExtrapolationFactorW;
 	h1->Scale( sFWOS );
 	hW->Add(h1,1.0);
       }
@@ -445,13 +494,13 @@ void plotElecTau( Int_t mH_ = 120,
       // if DY->tautau, and vbf scale by ratio data/MC
       if((it->first).find("DYToTauTau")!=string::npos && selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 	cout << "DY->tautau will be rescaled by 1.03 according to the Z->mumu+vbf/Z->mumu ratio" << endl;
-	h1->Scale(VbfExtrapolationFactor);
+	h1->Scale(VbfExtrapolationFactorZ);
       }
 
       // if DY->ee, e->tau, scale by fake-rate
       if((it->first).find("DYEtoTau")!=string::npos){
 	float sF = EtoTauCorrectionFactor;
-	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sF *= VbfExtrapolationFactor;
+	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sF *= VbfExtrapolationFactorZ;
 	h1->Scale( sF );
 	hZmm->Add(h1,1.0);
       }
@@ -459,7 +508,7 @@ void plotElecTau( Int_t mH_ = 120,
       // if DY->ee, jet->tau, scale by fake-rate
       if((it->first).find("DYJtoTau")!=string::npos){
 	float sF = JtoTauCorrectionFactor;
-	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sF *= VbfExtrapolationFactor;
+	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sF *= VbfExtrapolationFactorZ;
 	h1->Scale( sF );
 	hZmj->Add(h1,1.0);
       }
@@ -506,6 +555,15 @@ void plotElecTau( Int_t mH_ = 120,
       hSgn2->Scale(magnifySgn_);
       h1->Scale(magnifySgn_);
       hSgn2->SetLineWidth(2);
+      h1->SetFillColor(kBlack);
+      h1->SetFillStyle(3005);
+      h1->SetLineColor(kBlack);
+    }
+    if((it->first).find("VH115")!=string::npos){
+      hSgn3->Add(h1,1.0);
+      hSgn3->Scale(magnifySgn_);
+      h1->Scale(magnifySgn_);
+      hSgn3->SetLineWidth(2);
       h1->SetFillColor(kBlack);
       h1->SetFillStyle(3005);
       h1->SetLineColor(kBlack);
@@ -585,6 +643,19 @@ void plotElecTau( Int_t mH_ = 120,
   fout->Write();
   fout->Close();
 
+  delete hQCD; delete hZmm; delete hZmj; delete hTTb; delete hZtt; delete hW;
+  delete hVV; delete hSgn1; delete hSgn2; delete hData; delete hParameters;
+  delete hWMt; delete aStack;
+  delete fout;
+  fSignalGGH->Close();       delete fSignalGGH; 
+  fSignalVBF->Close();       delete fSignalVBF;
+  fBackgroundOthers->Close();delete fBackgroundOthers;
+  fBackgroundTTbar->Close(); delete fBackgroundTTbar;
+  fBackgroundWJets->Close(); delete fBackgroundWJets;
+  fData->Close();            delete fData; 
+  dummy1->Close();           delete dummy1;
+  fBackgroundDY->Close();    delete fBackgroundDY;
+
 }
 
 
@@ -594,38 +665,67 @@ void plotElecTau( Int_t mH_ = 120,
 
 void plotElecTauAll(){
 
+  vector<string> variables;
+  vector<int> mH;
+  
+  //variables.push_back("diTauVisMass");
+  variables.push_back("diTauNSVfitMass");
+  
+  mH.push_back(105);
+  mH.push_back(110);
+  mH.push_back(115);
+  mH.push_back(120);
+  mH.push_back(125);
+  mH.push_back(130);
+  mH.push_back(135);
+  mH.push_back(140);
+  
+  for(unsigned int i = 0 ; i < variables.size(); i++){
+    for(unsigned j = 0; j < mH.size(); j++){
 
-  plotElecTau(120,"vbf",""         ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","TauUp"    ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","TauDown"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","JetUp"    ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","JetDown"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","ElecUp"    ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"vbf","ElecDown"  ,"diTauVisMass","mass","GeV",-1);
+      plotElecTau(mH[j],"vbf",""         ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","TauUp"    ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","TauDown"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","JetUp"    ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","JetDown"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","ElecUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"vbf","ElecDown" ,variables[i],"mass","GeV",-1);
 
-  plotElecTau(120,"novbf",""       ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","TauUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","TauDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","JetUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","JetDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","ElecUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"novbf","ElecDown","diTauVisMass","mass","GeV",-1);
+      plotElecTau(mH[j],"novbf",""        ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","TauUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","TauDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","JetUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","JetDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","ElecUp"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"novbf","ElecDown",variables[i],"mass","GeV",-1);
 
-  plotElecTau(120,"twoJets",""       ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","TauUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","TauDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","JetUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","JetDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","ElecUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"twoJets","ElecDown","diTauVisMass","mass","GeV",-1);
+      plotElecTau(mH[j],"boost",""        ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","TauUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","TauDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","JetUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","JetDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","ElecUp"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"boost","ElecDown",variables[i],"mass","GeV",-1);
 
-  plotElecTau(120,"oneJet",""       ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","TauUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","TauDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","JetUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","JetDown","diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","ElecUp"  ,"diTauVisMass","mass","GeV",-1);
-  plotElecTau(120,"oneJet","ElecDown","diTauVisMass","mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets",""        ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","TauUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","TauDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","JetUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","JetDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","ElecUp"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"twoJets","ElecDown",variables[i],"mass","GeV",-1);
+      
+      plotElecTau(mH[j],"oneJet",""        ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","TauUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","TauDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","JetUp"   ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","JetDown" ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","ElecUp"  ,variables[i],"mass","GeV",-1);
+      plotElecTau(mH[j],"oneJet","ElecDown",variables[i],"mass","GeV",-1);
 
+    }
+  }
+  
+  
 
 }
