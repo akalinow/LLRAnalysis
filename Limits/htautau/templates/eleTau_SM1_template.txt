@@ -1,0 +1,41 @@
+imax 1
+jmax *
+kmax *
+shapes *  *    XXX.root  $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC 
+
+
+observation XXX
+
+
+bin                                             eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1            eleTau_SM1
+process                                          SMXXX                 VBFYYY                ZTT                  QCD                   W                   ZJ                   ZL                    TT                  VV
+process                                            -1                     0                   1                    2                    3                    4                    5                     6                   7
+rate          
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+lumi                                       lnN    1.045                  1.045                1.045                  -                  1.045                1.045                 1.045                1.045                 -          luminosity
+CMS_eff_m                                  lnN    1.020                  1.020                1.020                  -                    -                  1.020                 1.020                1.020                1.020       eleon ID /HLT
+CMS_eff_t                                  lnN    1.060                  1.060                1.060                  -                    -                    -                    -                   1.060                1.060       Tau IDf
+CMS_scale_t                              shape    1.00                   1.00                 1.00                   -                  1.00                 1.00                  1.00                 1.00                 1.00        shape(Ignore small ones that cause instabilities) 
+CMS_htt_zttNorm                            lnN       -                     -                  1.033                  -                    -                  1.033                 1.033                   -                  -          ZTT Scale  
+CMS_htt_ztt_extrap_vbf                     lnN       -                     -                  1.080                  -                    -                  1.080                 1.080                   -                  -          ZTT Extrapolation  
+CMS_htt_ttbarNorm                          lnN       -                     -                     -                   -                    -                    -                    -                    1.12                 -          TTbar Background X-section uncertainty  
+CMS_htt_DiBosonNorm                        lnN       -                     -                     -                   -                    -                    -                    -                      -                 1.30        DiBoson background
+CMS_htt_eleTau_SM1_QCDNorm             gmN  XXX       -                     -                     -                  YYY                   -                    -                    -                      -                  -          QCD Background Normal. from sideband
+CMS_htt_eleTau_SM1_QCDSyst                  lnN       -                     -                     -                  XXX                   -                    -                    -                      -                  -          QCD Background Systematics
+CMS_htt_eleTau_SM1_WNorm               gmN  XXX       -                     -                     -                   -                   YYY                   -                    -                      -                  -          W Backghround Normalization: limited MC statistics
+CMS_htt_eleTau_SM1_WSyst                    lnN       -                     -                     -                   -                  1.14                   -                    -                      -                  -          W Background Systematics: extrap. factor (X) vbf extrapolation 1.14 = 1.06 + 1.08 
+CMS_htt_eleTau_ZJetFakeTau                  lnN       -                     -                     -                   -                    -                   1.12                  -                      -                  -          Z(jet->tau) Systematics: from tnp
+CMS_htt_eleTau_SM1_ZJetFakeTauNorm     KKK  XXX       -                     -                     -                   -                    -                   YYY                   -                      -                  -          Z(jet->tau) Normalization: limited MC statistics
+CMS_htt_eleTau_ZLeptonFakeTau               lnN       -                     -                     -                   -                    -                    -                   1.20                    -                  -          Z(l->tau)   background
+CMS_htt_eleTau_SM1_ZLeptonFakeTauNorm  KKK  XXX       -                     -                     -                   -                    -                    -                   YYY                     -                  -          Z(l->tau) Normalization: limited MC statistics
+CMS_scale_j                              shape      1.0                   1.0                   1.0                  -                  1.0                   1.0                  1.0                   1.0                  1.0        shape and norm from jets
+pdf_qqbar                                  lnN       -                    1.03                   -                   -                    -                    -                    -                      -                  -          PDF VBF
+pdf_gg                                     lnN     1.03                    -                     -                   -                    -                    -                    -                      -                  -          PDF GGH
+QCDscale_ggH2in                            lnN     1.30                    -                     -                   -                    -                    -                    -                      -                  -          QCD scale 
+QCDscale_qqH                               lnN      -                     1.30                   -                   -                    -                    -                    -                      -                  -          QCD scale VBF
+UEPS                                       lnN     1.04                   1.04                   -                   -                    -                    -                    -                      -                  -          UEPS VBF
+
