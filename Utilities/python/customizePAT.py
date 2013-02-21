@@ -52,10 +52,10 @@ def addSelectedPFlowParticle(process,verbose=False):
         ( process.pfNoCharged+process.pfAllNeutral)
         )
     process.pfPileUp.Enable              = True
-    process.pfPileUp.checkClosestZVertex = False
+    process.pfPileUp.checkClosestZVertex = True
     process.pfPileUp.Vertices            = "offlinePrimaryVertices"
-    process.pfAllMuons.src               = "particleFlow"
-    process.pfAllElectrons.src           = "particleFlow"
+    process.pfAllMuons.src               = "pfNoPileUp"
+    process.pfAllElectrons.src           = "pfNoPileUp"
     
     
 ###################a#################################################
