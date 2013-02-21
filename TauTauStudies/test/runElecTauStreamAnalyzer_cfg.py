@@ -177,5 +177,4 @@ process.out = cms.OutputModule(
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("treeElecTauStream.root")
                                    )
-#MB process.outpath = cms.EndPath(process.out)
 process.outpath = cms.EndPath()

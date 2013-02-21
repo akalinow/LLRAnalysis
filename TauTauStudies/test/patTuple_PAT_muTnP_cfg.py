@@ -1,36 +1,29 @@
 from PhysicsTools.PatAlgos.patTemplate_cfg import *
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
-process.MessageLogger.cerr.FwkReport.reportEvery = 2000
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-from Configuration.PyReleaseValidation.autoCond import autoCond
-process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 process.source.fileNames = cms.untracked.vstring(
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat//store/mc/Summer11/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6//AODSIM/PU_S3_START42_V11-v1//0000/E430E306-347C-E011-A75A-00261834B5C6.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/mc/Summer11/DYToMuMu_M-120_TuneZ2_7TeV-pythia6-tauola/AODSIM/PU_S3_START42_V11-v2/0000/2EE73A4A-8288-E011-9561-1CC1DE1CEFC8.root',
-    'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/data/Run2011A/SingleMu/AOD//May10ReReco-v1/0000/FEC692C5-B67B-E011-A46E-1CC1DE1CED22.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/data/Run2011A/SingleMu/AOD//May10ReReco-v1/0000/FE7A9E7C-AE7B-E011-9FEE-1CC1DE1D208E.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/data/Run2011A/SingleMu/AOD//May10ReReco-v1/0000/FE412F53-627B-E011-9245-0018FEFA56AE.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/data/Run2011A/SingleMu/AOD//May10ReReco-v1/0000/FE1E1891-E47C-E011-9983-001E0B5FA5A8.root',
-    )
+    'file:/data_CMS/cms/ivo/RootFiles/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball_START52_V9/4C6532AF-CF96-E111-8563-003048D47752.root'
+    #'file:/data_CMS/cms/ivo/RootFiles/SingleMu2012B/CAA8ABDD-72AD-E111-9601-0030486780A8.root'
+)
 
 postfix           = "PFlow"
 runOnMC           = True
 FileName          = "treeMuTnP.root"
 
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START42_V13::All')
+    process.GlobalTag.globaltag = cms.string('START52_V9::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_R_42_V19::All')
-
-
+    process.GlobalTag.globaltag = cms.string('GR_R_52_V7::All')
+    
 process.primaryVertexFilter = cms.EDFilter(
     "GoodVertexFilter",
     vertexCollection = cms.InputTag('offlinePrimaryVertices'),
@@ -61,19 +54,66 @@ addSelectedPFlowParticle(process)
 from PhysicsTools.PatAlgos.tools.metTools import *
 addPfMET(process, postfix)
 
-addPFMuonIsolation(process,process.patMuons)
+###### Isolation sequence ############################################################
+from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFMuonIso, setupPFElectronIso
+process.muIsoSequence       = setupPFMuonIso(process,'muons')
+from CommonTools.ParticleFlow.pfParticleSelection_cff import pfParticleSelectionSequence
+process.pfParticleSelectionSequence = pfParticleSelectionSequence
 
-addTriggerMatchingMuon(process,isMC=runOnMC)
-process.muonTriggerMatchHLTMuons.matchedCuts = cms.string('(path("HLT_IsoMu17_v*",0,0) || path("HLT_IsoMu24_v*",0,0) || filter("hltSingleMuIsoL3IsoFiltered12") || filter("hltSingleMuIsoL3IsoFiltered15")) && type("TriggerMuon")')
+process.patMuons.isoDeposits = cms.PSet(
+    pfAllParticles   = cms.InputTag("muPFIsoDepositPUPFIso"),      # all PU   CH+MU+E
+    pfChargedHadrons = cms.InputTag("muPFIsoDepositChargedPFIso"), # all noPU CH
+    pfNeutralHadrons = cms.InputTag("muPFIsoDepositNeutralPFIso"), # all NH
+    pfPhotons        = cms.InputTag("muPFIsoDepositGammaPFIso"),   # all PH
+    user = cms.VInputTag(
+    cms.InputTag("muPFIsoDepositChargedAllPFIso"),                 # all noPU CH+MU+E
+    )
+    )
+process.patMuons.isolationValues = cms.PSet(
+    pfAllParticles   = cms.InputTag("muPFIsoValuePU04PFIso"),
+    pfChargedHadrons = cms.InputTag("muPFIsoValueCharged04PFIso"),
+    pfNeutralHadrons = cms.InputTag("muPFIsoValueNeutral04PFIso"),
+    pfPhotons        = cms.InputTag("muPFIsoValueGamma04PFIso"),
+    user = cms.VInputTag(
+    cms.InputTag("muPFIsoValueChargedAll04PFIso"),
+    )
+    )
+
+######################## Trigger requirements ############################
+import HLTrigger.HLTfilters.hltHighLevel_cfi
+process.HLTFilter = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
+process.HLTFilter.TriggerResultsTag = cms.InputTag("TriggerResults", "", "HLT")
+process.HLTFilter.HLTPaths = [
+    # single electron triggers (Summer'12 MC, produced with CMSSW_5_2_x)
+    'HLT_IsoMu24_eta2p1_v11',
+    # single electron triggers (all of 2012 Run A)
+    'HLT_IsoMu24_eta2p1_v11',
+    'HLT_IsoMu24_eta2p1_v12',
+    # single electron triggers (all of 2012 Run B)
+    'HLT_IsoMu24_eta2p1_v13',
+]
+process.HLTFilter.throw = cms.bool(False)
+
+######################## pat::trigger ############################
+from PhysicsTools.PatAlgos.tools.trigTools import *
+switchOnTrigger( process )
+process.patTriggerEvent.processName = '*'
 
 if hasattr(process,"patTrigger"):
     process.patTrigger.processName = '*'
 
-process.selectedPatMuonsTriggerMatchUserEmbedded = cms.EDProducer(
+########################  pat::muon  #############################
+
+getattr(process,"patMuons").embedTrack = True
+
+
+######################## pat::electrons ############################
+process.selectedPatMuonsUserEmbedded = cms.EDProducer(
     "MuonsUserEmbedded",
-    muonTag = cms.InputTag("selectedPatMuonsTriggerMatch"),
+    muonTag = cms.InputTag("selectedPatMuons"),
     vertexTag = cms.InputTag("offlinePrimaryVertices"),
-    isMC = cms.bool(runOnMC)
+    isMC = cms.bool(runOnMC),
+    fitUnbiasedVertex  = cms.bool(False)
     )
 
 #####################################################################################
@@ -85,14 +125,18 @@ if not runOnMC:
     process.sequence.remove(process.probeMcMatch)
     process.muTnP.isMC = cms.bool(False)
     process.muTnP.makeMCUnbiasTree = cms.bool(False)
-    process.addUserVariables.isMC = cms.bool(False)
+    process.addUserVariablesTag.isMC = cms.bool(False)
+    process.addUserVariablesProbe.isMC = cms.bool(False)
 
 
 process.pat = cms.Sequence(
     process.allEventsFilter+
     process.primaryVertexFilter*
+    process.pfParticleSelectionSequence*
+    process.muIsoSequence*
     process.patDefaultSequence*
-    process.selectedPatMuonsTriggerMatchUserEmbedded*
+    process.HLTFilter*
+    process.selectedPatMuonsUserEmbedded*
     process.sequence
     )
 

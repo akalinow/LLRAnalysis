@@ -9,6 +9,7 @@ public:
   double efficiency(double m, double m0, double sigma, double alpha, double n, double norm) const ;
   double ratio(double pt, bool EB=true) const ;
   double dataEfficiency(double pt, bool EB=true) const ;
+  double mcEfficiency(double pt, bool EB=true) const ;
 } ;
 
 double ratioEfficiencyElec::efficiency(double m, double m0, double sigma, double alpha, double n, double norm) const 
@@ -96,4 +97,20 @@ double ratioEfficiencyElec::dataEfficiency(double pt, bool EB) const
 }
 
 
+double ratioEfficiencyElec::mcEfficiency(double pt, bool EB) const
+{
+  double ratio_ = 0 ;
+  if (pt<15) return ratio_ ;
 
+  double meanMC,sigmaMC,alphaMC,nMC,normMC ;
+
+  if (EB) {
+    meanMC=14.8362 ; sigmaMC=0.62036 ; alphaMC=1.18952 ; nMC=1.33197 ; normMC=0.995733 ;
+  } else {
+    meanMC=14.4009 ; sigmaMC=0.723322 ; alphaMC= 0.699329  ; nMC=1.74205  ; normMC=1 ;
+  }
+  double effMC = efficiency(pt,meanMC,sigmaMC,alphaMC,nMC,normMC) ;
+
+  ratio_ = effMC ;
+  return ratio_ ;
+}
