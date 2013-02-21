@@ -11,13 +11,19 @@
 <use   name="DataFormats/HepMCCandidate"/>
 <use   name="DataFormats/GsfTrackReco"/>
 <use   name="DataFormats/Math"/>
+<use   name="DataFormats/Provenance"/>
 <use   name="CommonTools/UtilAlgos"/>
 <use   name="GeneratorInterface/LHEInterface"/>
 <use   name="PhysicsTools/HepMCCandAlgos"/>
 <use   name="AnalysisDataFormats/TauAnalysis"/>
+<use   name="TrackingTools/TransientTrack"/>
+<use   name="TrackingTools/Records"/>
+<use   name="RecoVertex/VertexPrimitives"/>
+<use   name="RecoVertex/PrimaryVertexProducer"/>
 <use   name="boost"/>
 <use   name="rootcore"/>
 <use   name="rootrflx"/>
+<use   name="roottmva"/>
 <export>
   <lib   name="1"/>
 </export>
