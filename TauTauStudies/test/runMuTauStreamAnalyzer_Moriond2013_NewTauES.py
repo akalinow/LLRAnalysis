@@ -24,7 +24,7 @@ else:
     print "Running on Data"
         
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V10::All')
+    process.GlobalTag.globaltag = cms.string('START53_V18::All')
 else:
     process.GlobalTag.globaltag = cms.string('GR_P_V41_AN1::All')
     
@@ -43,7 +43,8 @@ process.source = cms.Source(
     #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_1_1_QFt.root',
     #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_2_1_QDr.root',
     #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_3_1_IXG.root',
-    'file:./patTuples_MuTauStream.root'
+    #'file:./patTuples_MuTauStream.root'
+    'file:/afs/cern.ch/user/m/mbluj/public/forChristian/patTuples_LepTauStream.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/ndaci/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/HTT_PAT_MuTau_Oct02_MC_VBF_HToTauTau_M-125/1580e1ad29bd5f6cf6006f65f956c13c/patTuples_MuTauStream_9_8_FTF.root'
     )
@@ -60,9 +61,9 @@ process.allEventsFilter = cms.EDFilter(
 
 ###################################################################################
 
-#process.load("RecoMET.METProducers.mvaPFMET_cff")
-#process.load("RecoMET.METProducers.mvaPFMET_leptons_cff")
-#process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff")
+#----------------------------------------------------------------------------------
+# produce MVA MET
+
 process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_cff")
 
 if runOnMC:
@@ -70,27 +71,142 @@ if runOnMC:
 else:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
     
-
 process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
 # use the following for the most isolated tau
 #process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('UserIsoTaus') )
+
+#process.pfMEtMVA.srcVertices = cms.InputTag("selectedPrimaryVertices")
+process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
 
 process.load("PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi")
 process.patPFMetByMVA = process.patMETs.clone(
     metSource = cms.InputTag('pfMEtMVA'),
     addMuonCorrections = cms.bool(False),
-    genMETSource = cms.InputTag('genMetTrue')
+    genMETSource = cms.InputTag('genMetTrue'),
+    addGenMET = cms.bool(False)
+)
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
+# produce No-PU MET
+
+process.load("JetMETCorrections.METPUSubtraction.noPileUpPFMET_cff")
+
+doSmearJets = None
+if runOnMC:
+    doSmearJets = True
+else:
+    doSmearJets = False
+
+from PhysicsTools.PatUtils.tools.runNoPileUpMEtUncertainties import runNoPileUpMEtUncertainties
+runNoPileUpMEtUncertainties(
+    process,
+    electronCollection = cms.InputTag('elecPtEtaRelIDRelIso'),
+    photonCollection = '',
+    muonCollection = cms.InputTag('muPtEtaRelIDRelIso'),
+    tauCollection = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso'),
+    doApplyChargedHadronSubtraction = False,
+    doSmearJets = doSmearJets,
+    jecUncertaintyTag = "SubTotalMC",
+    addToPatDefaultSequence = False
+)
+
+if runOnMC:
+    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3")
+else:
+    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
+
+process.producePFMEtNoPileUp = cms.Sequence(process.pfNoPileUpMEtUncertaintySequence)
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
+# produce Type-1 corrected PFMET
+
+process.load("PhysicsTools.PatUtils.patPFMETCorrections_cff")
+
+doSmearJets = None
+if runOnMC:
+    doSmearJets = True
+else:
+    doSmearJets = False
+
+process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
+sysShiftCorrParameter = None
+if runOnMC:
+    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_mc
+else:
+    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_data
+
+from PhysicsTools.PatUtils.tools.runType1PFMEtUncertainties import runType1PFMEtUncertainties
+runType1PFMEtUncertainties(
+    process,
+    electronCollection = cms.InputTag('elecPtEtaRelIDRelIso'),
+    photonCollection = '',
+    muonCollection = cms.InputTag('muPtEtaRelIDRelIso'),
+    tauCollection = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso'),
+    jetCollection = cms.InputTag('selectedPatJets'),        
+    doSmearJets = doSmearJets,
+    jecUncertaintyTag = "SubTotalMC",
+    makeType1corrPFMEt = True,
+    makeType1p2corrPFMEt = False,
+    doApplyType0corr = True,
+    sysShiftCorrParameter = sysShiftCorrParameter,
+    doApplySysShiftCorr = True,
+    addToPatDefaultSequence = False
+)
+
+if runOnMC:
+    process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
+else:
+    # CV: apply data/MC residual correction to "unclustered energy"
+    process.calibratedPFCandidates = cms.EDProducer("PFCandResidualCorrProducer",
+        src = cms.InputTag('particleFlow'),
+        residualCorrLabel = cms.string("ak5PFResidual"),
+        residualCorrEtaMax = cms.double(9.9),
+        extraCorrFactor = cms.double(1.05)
+    )                                                        
+    process.pfCandidateToVertexAssociation.PFCandidateCollection = cms.InputTag('calibratedPFCandidates')
+    process.patPFJetMETtype1p2Corr.type2ResidualCorrLabel = cms.string("ak5PFResidual")
+    process.patPFJetMETtype1p2Corr.type2ResidualCorrEtaMax = cms.double(9.9)
+    process.pfCandMETresidualCorr = process.pfCandMETcorr.clone(                
+        residualCorrLabel = cms.string("ak5PFResidual"),
+        residualCorrEtaMax = cms.double(9.9),
+        residualCorrOffset = cms.double(1.),
+        extraCorrFactor = cms.double(1.05)
     )
+    process.producePatPFMETCorrections.replace(process.pfCandMETcorr, process.pfCandMETcorr + process.pfCandMETresidualCorr)
+    process.patType1CorrectedPFMet.srcType1Corrections.append(cms.InputTag('pfCandMETresidualCorr'))
 
-#process.pfMEtMVA.srcVertices = cms.InputTag("selectedPrimaryVertices")
-process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
-process.patPFMetByMVA.addGenMET = cms.bool(False)
+process.produceType1corrPFMEt = cms.Sequence(process.pfType1MEtUncertaintySequence)    
+#----------------------------------------------------------------------------------
 
-# load the PU JetID sequence
-process.load("RecoJets.JetProducers.pujetidsequence_cff")
-process.puJetId.algos.label = 'full_5x'
+#----------------------------------------------------------------------------------
+# produce CaloMEtNoHF (MC corrected by data/MC difference in CaloMET response)
 
-process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSqeuence *
+# CV: TO BE IMPLEMENTED <- FIXME
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
+# produce PU Jet Ids
+
+from RecoJets.JetProducers.PileupJetID_cfi import pileupJetIdProducer, stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
+process.puJetId = pileupJetIdProducer.clone(
+    produceJetIds = cms.bool(True),
+    jetids = cms.InputTag(""),
+    runMvas = cms.bool(False),
+    jets = cms.InputTag("ak5PFJets"),
+    vertexes = cms.InputTag("offlinePrimaryVertices"),
+    algos = cms.VPSet(cutbased)
+)
+process.puJetMva = process.puJetId.clone(
+    produceJetIds = cms.bool(False),
+    runMvas = cms.bool(True),
+    algos = stdalgos
+)
+process.puJetIdSequence = cms.Sequence(process.puJetId + process.puJetMva)
+#----------------------------------------------------------------------------------
+
+process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSequence *
                                         (process.pfMEtMVAsequence*process.patPFMetByMVA))
 
 ###################################################################################
@@ -795,8 +911,10 @@ process.seqNominal = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
+    #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceType1corrPFMEt*
+    process.producePFMEtNoPileUp*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTau*process.selectedDiTau*process.selectedDiTauCounter*
@@ -956,7 +1074,7 @@ process.seqRawNominal = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRaw*process.selectedDiTauRaw*process.selectedDiTauRawCounter*
@@ -968,7 +1086,7 @@ process.seqRawJetUp = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     process.rescaledMETRawjet *
     #process.pfMEtMVACov*
@@ -981,7 +1099,7 @@ process.seqRawJetDown = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     process.rescaledMETRawjet *
     #process.pfMEtMVACov*
@@ -994,7 +1112,7 @@ process.seqRawMEtResolutionUp = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResolutionUp*process.selectedDiTauRawMEtResolutionUp*process.selectedDiTauRawMEtResolutionUpCounter*
@@ -1006,7 +1124,7 @@ process.seqRawMEtResolutionDown = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResolutionDown*process.selectedDiTauRawMEtResolutionDown*process.selectedDiTauRawMEtResolutionDownCounter*
@@ -1018,7 +1136,7 @@ process.seqRawMEtResponseUp = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResponseUp*process.selectedDiTauRawMEtResponseUp*process.selectedDiTauRawMEtResponseUpCounter*
@@ -1030,7 +1148,7 @@ process.seqRawMEtResponseDown = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResponseDown*process.selectedDiTauRawMEtResponseDown*process.selectedDiTauRawMEtResponseDownCounter*
@@ -1041,7 +1159,7 @@ process.seqRawMuUp = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuUp*process.muPtEtaIDIsoMuUpCounter) *
@@ -1055,7 +1173,7 @@ process.seqRawMuDown = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
     (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuDown*process.muPtEtaIDIsoMuDownCounter) *
@@ -1070,7 +1188,7 @@ process.seqRawTauUp = cms.Sequence(
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauUp*process.tauPtEtaIDAgMuAgElecIsoTauUpCounter)*
@@ -1084,7 +1202,7 @@ process.seqRawTauDown = cms.Sequence(
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
-    process.puJetIdSqeuence *
+    process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauDown*process.tauPtEtaIDAgMuAgElecIsoTauDownCounter)*
