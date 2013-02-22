@@ -75,7 +75,6 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
 
   bool isMC_;
   bool verbose_;
-  bool isETMAna_;
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
@@ -118,8 +117,6 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genTausP4_;
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* METP4_;
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* caloMETP4_;
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* caloMETNoHFP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genMETP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genVP4_;
   int genDecay_;
@@ -132,13 +129,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* vetoTausP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* pfElectrons_; 
 
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1ETMP4_;
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* trgTaus_;
-  std::vector<int>* trgTauId_;
-
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1IsoElectrons_;
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1NonIsoElectrons_;
-
+  
   unsigned long run_,event_,lumi_;
   int index_;
   float sumEt_;
@@ -206,9 +197,6 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int isTriggerElectron_;
   int tightestAntiEWP_;
   int tightestAntiEMVAWP_;
-  int tightestAntiEMVA3WP_;
-  float AntiEMVA3raw_;
-  int AntiEMVA3category_;
   int tightestCiCWP_;
   int tightestHPSWP_;
   int tightestHPSDBWP_;
