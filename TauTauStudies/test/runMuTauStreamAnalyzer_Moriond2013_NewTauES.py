@@ -191,7 +191,27 @@ process.produceType1corrPFMEt = cms.Sequence(process.pfType1MEtUncertaintySequen
 #----------------------------------------------------------------------------------
 # produce CaloMEtNoHF (MC corrected by data/MC difference in CaloMET response)
 
-# CV: TO BE IMPLEMENTED <- FIXME
+process.produceCaloMEtNoHF = cms.Sequence()
+
+process.load("LLRAnalysis/TauTauStudies/sumCaloTowersInEtaSlices_cfi")
+if runOnMC:
+    process.metNoHFresidualCorrected.residualCorrLabel = cms.string("ak5CaloResidual")
+    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.05)
+    process.metNoHFresidualCorrected.isMC = cms.bool(True)
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
+    process.metNoHFresidualCorrectedUp = process.metNoHFresidualCorrected.clone(
+        extraGlobalSF = cms.double(1.10)
+    )
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedUp
+    process.metNoHFresidualCorrectedDown = process.metNoHFresidualCorrected.clone(
+        extraGlobalSF = cms.double(1.0)
+    )
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedDown
+else:
+    process.metNoHFresidualCorrected.residualCorrLabel = cms.string("")
+    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.0)
+    process.metNoHFresidualCorrected.isMC = cms.bool(False)
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
 #----------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------
@@ -923,6 +943,7 @@ process.seqNominal = cms.Sequence(
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceType1corrPFMEt*
     process.producePFMEtNoPileUp*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTau*process.selectedDiTau*process.selectedDiTauCounter*
