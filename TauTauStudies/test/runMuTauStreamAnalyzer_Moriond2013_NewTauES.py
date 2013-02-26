@@ -17,6 +17,8 @@ runOnMC     = True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
+runUserIsoTau = False
+applyTauESCorr= True
 
 if runOnMC:
     print "Running on MC"
@@ -44,7 +46,7 @@ process.source = cms.Source(
     #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_2_1_QDr.root',
     #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_3_1_IXG.root',
     #'file:./patTuples_MuTauStream.root'
-    'file:/afs/cern.ch/user/m/mbluj/public/forChristian/patTuples_LepTauStream.root'
+    'file:patTuples_LepTauStream.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/ndaci/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/HTT_PAT_MuTau_Oct02_MC_VBF_HToTauTau_M-125/1580e1ad29bd5f6cf6006f65f956c13c/patTuples_MuTauStream_9_8_FTF.root'
     )
@@ -70,8 +72,12 @@ if runOnMC:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3")
 else:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
-    
-process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
+
+if runUserIsoTau :
+    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoMuons'), cms.InputTag('UserIsoTaus') )
+else :
+    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoMuons'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
+#process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
 # use the following for the most isolated tau
 #process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('UserIsoTaus') )
 
@@ -226,34 +232,44 @@ else:
 #----------------------------------------------------------------------------------
 # produce PU Jet Ids
 
-from RecoJets.JetProducers.PileupJetID_cfi import pileupJetIdProducer, stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
-process.puJetId = pileupJetIdProducer.clone(
-    produceJetIds = cms.bool(True),
-    jetids = cms.InputTag(""),
-    runMvas = cms.bool(False),
-    jets = cms.InputTag("ak5PFJets"),
-    vertexes = cms.InputTag("offlinePrimaryVertices"),
-    algos = cms.VPSet(cutbased)
-)
-process.puJetMva = process.puJetId.clone(
-    produceJetIds = cms.bool(False),
-    jetids = cms.InputTag("puJetId"),
-    runMvas = cms.bool(True),
-    algos = stdalgos
-)
-process.puJetIdSequence = cms.Sequence(process.puJetId + process.puJetMva)
+from RecoJets.JetProducers.PileupJetID_cfi import stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
+process.puJetMva = cms.EDProducer('PileupJetIdProducer',
+                                  produceJetIds = cms.bool(True),
+                                  jetids = cms.InputTag(""),
+                                  runMvas = cms.bool(True),
+                                  jets = cms.InputTag("ak5PFJets"),
+                                  vertexes = cms.InputTag("offlinePrimaryVertices"),
+                                  algos = cms.VPSet(stdalgos),
+                                  rho     = cms.InputTag("kt6PFJets","rho"),
+                                  jec     = cms.string("AK5PF"),
+                                  applyJec = cms.bool(True),
+                                  inputIsCorrected = cms.bool(False),
+                                  residualsFromTxt = cms.bool(False),
+                                  residualsTxt     = cms.FileInPath("RecoJets/JetProducers/data/dummy.txt"),
+                                  )
+
+process.puJetIdSequence = cms.Sequence(process.puJetMva)
+
 #----------------------------------------------------------------------------------
 
 process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSequence *
                                         (process.pfMEtMVAsequence*process.patPFMetByMVA))
 
-###################################################################################
+############################Leptons for MVA MET ################################################
 process.muPtEtaRelIDRelIso = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("muonsForVeto"),#muPtEtaRelID?//muons for veto?
     cut = cms.string("pt>10 && abs(eta)<2.4"+
                      " && isTrackerMuon"),
     filter = cms.bool(False)
+    )
+
+process.UserIsoMuons = cms.EDProducer( #Most isolated muon
+    "UserIsolatedPatMuon",
+    MuonTag = cms.InputTag("muPtEtaID"),
+    isMC = cms.bool(runOnMC),
+    verbose = cms.untracked.bool(False),
+    userIso = cms.untracked.string("PFRelIsoDB04v2")
     )
 
 process.elecPtEtaRelIDRelIso = cms.EDFilter(
@@ -265,10 +281,23 @@ process.elecPtEtaRelIDRelIso = cms.EDFilter(
     filter = cms.bool(False)
     )
 
+process.UserIsoElectrons = cms.EDProducer( #Most isolated electron
+        "UserIsolatedPatElectron",
+        ElectronTag = cms.InputTag("elecPtEtaID"),
+        isMC = cms.bool(runOnMC),
+        verbose = cms.untracked.bool(False),
+        userIso = cms.untracked.string("PFRelIsoDB04v3")
+        )
+
+patTauTagForMet = "tauPtEtaIDAgMuAgElec"
+if applyTauESCorr:
+    patTauTagForMet = "tauPtEtaIDAgMuAgElecScaled"
+
 process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( #Selection as like Phil's
     "PATTauSelector",
     #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    src = cms.InputTag(patTauTagForMet),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
                      " && tauID('byIsolationMVAraw')>0.7"),
     filter = cms.bool(False)
@@ -276,18 +305,32 @@ process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( #Selection as like Phil's
 process.UserIsoTaus = cms.EDProducer( #Most isolated tau
     "UserIsolatedPatTau",
     #patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    #patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    patTauTag = cms.InputTag(patTauTagForMet),
     isMC = cms.bool(runOnMC),
     verbose = cms.untracked.bool(False),
     useIsoMVA = cms.untracked.bool(True)
     )
 
-process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
-                                        process.elecPtEtaRelIDRelIso*
-                                        process.tauPtEtaIDAgMuAgElecRelIso
-                                        #*process.UserIsoTaus # uncomment to use most isolated tau
+#process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
+#                                        process.elecPtEtaRelIDRelIso*
+#                                        process.tauPtEtaIDAgMuAgElecRelIso
+#                                        #*process.UserIsoTaus # uncomment to use most isolated tau
+#                                        )
+if runUserIsoTau :
+    process.TausForMVAMEt = cms.Sequence(process.UserIsoTaus)
+else :
+    process.TausForMVAMEt = cms.Sequence(process.tauPtEtaIDAgMuAgElecRelIso)
+process.LeptonsForMVAMEt = cms.Sequence(process.UserIsoMuons*
+                                        process.UserIsoElectrons*
+                                        process.TausForMVAMEt
                                         )
-
+#Needed for CV's no-PU MET for now
+process.LeptonsForType1MEt = cms.Sequence(process.muPtEtaRelIDRelIso*
+                                          process.elecPtEtaRelIDRelIso*
+                                          process.tauPtEtaIDAgMuAgElecRelIso
+                                          )
+process.LeptonsForMVAMEt += process.LeptonsForType1MEt
 ###################################################################################
 
 process.rescaledMET = cms.EDProducer(
@@ -389,7 +432,7 @@ process.metRecoilCorrector = cms.EDProducer(
     inputFileNamehiggs  = cms.FileInPath("LLRAnalysis/Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_higgs53X_20pv_njet.root"),
     numOfSigmas         = cms.double(1.0),
     minJetPt            = cms.double(30.0),
-    verbose             = cms.bool(True),
+    verbose             = cms.bool(False),
     isMC                = cms.bool(runOnMC),
     )
 
@@ -675,11 +718,15 @@ process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec")
     #verbose         = cms.bool(True)
     )
+patTauTag = "tauPtEtaIDAgMuAgElec"
+if applyTauESCorr:
+    patTauTag = "tauPtEtaIDAgMuAgElecScaled"
 
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
     #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    src = cms.InputTag(patTauTag),
     cut = cms.string("pt>20 && abs(eta)<2.3"+
                      " && tauID('byLooseIsolationMVA')>-0.5"
                      ),
@@ -688,7 +735,8 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
 process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
     #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
+    src = cms.InputTag(patTauTag),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
                      " && tauID('byLooseIsolationMVA')>-0.5"
                      ),
@@ -790,6 +838,7 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
+    doIsoMVAOrdering = cms.untracked.bool(runUserIsoTau),
     doMuIsoMVA     = cms.bool( False ),
     inputFileName0 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-BarrelPt5To10_V0_BDTG.weights.xml"),
     inputFileName1 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-EndcapPt5To10_V0_BDTG.weights.xml"),
@@ -951,9 +1000,9 @@ process.seqNominal = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
-    process.produceType1corrPFMEt*
-    process.producePFMEtNoPileUp*
-    process.produceCaloMEtNoHF*
+    #process.produceType1corrPFMEt*
+    #process.producePFMEtNoPileUp*
+    #process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTau*process.selectedDiTau*process.selectedDiTauCounter*
