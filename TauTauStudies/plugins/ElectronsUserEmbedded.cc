@@ -31,15 +31,15 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
   electronTag_ = iConfig.getParameter<edm::InputTag>("electronTag");
   vertexTag_   = iConfig.getParameter<edm::InputTag>("vertexTag");
   isMC_        = iConfig.getParameter<bool>("isMC");
-  doMVAMIT_    = iConfig.getParameter<bool>("doMVAMIT");
+  doMVAMIT_    = iConfig.getUntrackedParameter<bool>("doMVAMIT",false);
   doMVADaniele_= iConfig.getParameter<bool>("doMVADaniele");
 
-  edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
-  edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
-  edm::FileInPath inputFileName2 = iConfig.getParameter<edm::FileInPath>("inputFileName2");
-  edm::FileInPath inputFileName3 = iConfig.getParameter<edm::FileInPath>("inputFileName3");
-  edm::FileInPath inputFileName4 = iConfig.getParameter<edm::FileInPath>("inputFileName4");
-  edm::FileInPath inputFileName5 = iConfig.getParameter<edm::FileInPath>("inputFileName5");
+  //edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
+  //edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
+  //edm::FileInPath inputFileName2 = iConfig.getParameter<edm::FileInPath>("inputFileName2");
+  //edm::FileInPath inputFileName3 = iConfig.getParameter<edm::FileInPath>("inputFileName3");
+  //edm::FileInPath inputFileName4 = iConfig.getParameter<edm::FileInPath>("inputFileName4");
+  //edm::FileInPath inputFileName5 = iConfig.getParameter<edm::FileInPath>("inputFileName5");
 
   edm::FileInPath inputFileName0v2 = iConfig.getParameter<edm::FileInPath>("inputFileName0v2");
   edm::FileInPath inputFileName1v2 = iConfig.getParameter<edm::FileInPath>("inputFileName1v2");
@@ -57,7 +57,7 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
 
   //edm::FileInPath inputFileNameMVADaniele 
   //= iConfig.getParameter<edm::FileInPath>("inputFileNameMVADaniele");
-  
+  /*//Arun : MIT MVA is not used anymore 
   if(doMVAMIT_){
     fMVA_ = new ElectronIDMVA();
     fMVA_->Initialize("BDTG method",
@@ -69,6 +69,7 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
 		      inputFileName5.fullPath().data(),                
 		      ElectronIDMVA::kNoIPInfo);
   }
+  */
   if(doMVADaniele_){
 
     //fMVADaniele_ = new ElectronMVAEstimator(inputFileNameMVADaniele.fullPath().data());
@@ -273,8 +274,8 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
 	&& aElectron.dr03HcalTowerSumEt()/aElectron.pt() < 0.20
 	));
 
-    if(doMVAMIT_)
-      mva = fMVA_->MVAValue(aGsf, lazyTools);
+    //if(doMVAMIT_) //Arun: It is not used anymore
+    //mva = fMVA_->MVAValue(aGsf, lazyTools);
     if(doMVADaniele_){
       //mva2 = fMVADaniele_->mva(*aGsf, vertexes->size());
       //MBmva2 = myMVATrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
@@ -292,7 +293,7 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     aElectron.addUserFloat("mvaPOGTrig"   ,mva2);
     aElectron.addUserFloat("mvaPOGNonTrig",mva3);
 
-
+    /* //Arun : These isolations are not needed at all
     // iso deposits   
     reco::isodeposit::AbsVetos vetos2012EBPFIdCharged; 
     reco::isodeposit::AbsVetos vetos2012EBPFIdNeutral;  
@@ -516,6 +517,7 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     for(unsigned int i = 0; i <vetos2012EENoPFIdPhotons.size(); i++){
       delete vetos2012EENoPFIdPhotons[i];
     }
+    */ //end of isolation
    
     aElectron.addUserInt("pfId",pfId);
     aElectron.addUserFloat("isInRun",iEvent.run());
