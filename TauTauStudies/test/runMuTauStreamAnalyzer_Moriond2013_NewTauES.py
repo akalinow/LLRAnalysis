@@ -82,7 +82,7 @@ process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
 process.pfMEtMVA.inputFileNames = cms.PSet(
     DPhi = cms.FileInPath('JetMETCorrections/METPUSubtraction/data/gbrmetphi_53_Dec2012.root'),
     CovU2 = cms.FileInPath('JetMETCorrections/METPUSubtraction/data/gbru2cov_53_Dec2012_highqt.root'),
-    U = cms.FileInPath('JetMETCorrections/METPUSubtraction/data/gbrmet_53_Dec2012_highqt.root '),
+    U = cms.FileInPath('JetMETCorrections/METPUSubtraction/data/gbrmet_53_Dec2012_highqt.root'),
     CovU1 = cms.FileInPath('JetMETCorrections/METPUSubtraction/data/gbru1cov_53_Dec2012_highqt.root')
 )
 
@@ -163,6 +163,15 @@ runType1PFMEtUncertainties(
     addToPatDefaultSequence = False
 )
 
+# CV: collections of MET and jets used as input for SysShiftMETcorrInputProducer
+#     are not fully consistent, but we anyway use parametrization of MET x/y shift as function of Nvtx
+process.pfMEtSysShiftCorr.srcMEt = cms.InputTag('patMETs')
+process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
+
+##from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
+##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
+##process.producePatPFMETCorrections.remove(process.patPFMet)
+
 if runOnMC:
     process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
 else:
@@ -228,6 +237,7 @@ process.puJetId = pileupJetIdProducer.clone(
 )
 process.puJetMva = process.puJetId.clone(
     produceJetIds = cms.bool(False),
+    jetids = cms.InputTag("puJetId"),
     runMvas = cms.bool(True),
     algos = stdalgos
 )
@@ -1330,5 +1340,5 @@ process.TFileService = cms.Service(
 
 process.outpath = cms.EndPath()
 
-processDumpFile = open('runMuTauStreamAnalyzerFullAnalysis_Recoil.dump', 'w')
+processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
 print >> processDumpFile, process.dumpPython()
