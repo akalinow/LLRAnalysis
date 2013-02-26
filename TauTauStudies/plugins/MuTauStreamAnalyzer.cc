@@ -64,10 +64,12 @@
 /////// for jet-ID ///////////////////////////
 
 //#include "CMGTools/External/interface/PileupJetIdentifier.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+//#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 ///METCovMatrix/////
-#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+//#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+#include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 
 #include <vector>
 #include <utility>
@@ -99,7 +101,7 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
-  
+  doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
 
   doMuIsoMVA_        = iConfig.getParameter<bool>("doMuIsoMVA");
   if( doMuIsoMVA_ ){
@@ -946,16 +948,17 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-
+    float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVAraw");
+    float sortVariable = (doIsoMVAOrdering_) ? isoMVA : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
-    if(tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 ||
+    if(/*tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 ||*/
        tau_i->tauID("byLooseIsolationMVA")>0.5)
-      sortedDiTausLooseIso.insert( make_pair( sumPt, i ) );
-    sortedDiTaus.insert( make_pair( sumPt, i ) );
+      sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
+    sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
-      sortedDiTausOS.insert( make_pair( sumPt, i ) );
+      sortedDiTausOS.insert( make_pair( sortVariable, i ) );
     else
-      sortedDiTausSS.insert( make_pair( sumPt, i ) );
+      sortedDiTausSS.insert( make_pair( sortVariable, i ) );
   }
   if( sortedDiTausOS.size()>0 ) 
     index = (sortedDiTausOS.begin())->second ;

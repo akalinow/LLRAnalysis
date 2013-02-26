@@ -80,6 +80,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
+  bool doIsoMVAOrdering_;
   bool doMuIsoMVA_;
   MuonMVAEstimator *fMuonIsoMVA_;
 
