@@ -289,29 +289,24 @@ process.UserIsoElectrons = cms.EDProducer( #Most isolated electron
         userIso = cms.untracked.string("PFRelIsoDB04v3")
         )
 
-patTauTagForMet = "tauPtEtaIDAgMuAgElec"
-if applyTauESCorr:
-    patTauTagForMet = "tauPtEtaIDAgMuAgElecScaled"
-
 process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( #Selection as like Phil's
     "PATTauSelector",
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
-    src = cms.InputTag(patTauTagForMet),
+    src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
                      " && tauID('byIsolationMVAraw')>0.7"),
     filter = cms.bool(False)
     )
 process.UserIsoTaus = cms.EDProducer( #Most isolated tau
     "UserIsolatedPatTau",
-    #patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    #patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
-    patTauTag = cms.InputTag(patTauTagForMet),
+    patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     isMC = cms.bool(runOnMC),
     verbose = cms.untracked.bool(False),
     useIsoMVA = cms.untracked.bool(True)
     )
-
+if applyTauESCorr:
+    process.tauPtEtaIDAgMuAgElecRelIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+    process.UserIsoTaus.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+    
 #process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
 #                                        process.elecPtEtaRelIDRelIso*
 #                                        process.tauPtEtaIDAgMuAgElecRelIso
@@ -718,15 +713,10 @@ process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec")
     #verbose         = cms.bool(True)
     )
-patTauTag = "tauPtEtaIDAgMuAgElec"
-if applyTauESCorr:
-    patTauTag = "tauPtEtaIDAgMuAgElecScaled"
 
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
-    src = cms.InputTag(patTauTag),
+    src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>20 && abs(eta)<2.3"+
                      " && tauID('byLooseIsolationMVA')>-0.5"
                      ),
@@ -734,14 +724,15 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     )
 process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled"),
-    src = cms.InputTag(patTauTag),
+    src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
                      " && tauID('byLooseIsolationMVA')>-0.5"
                      ),
     filter = cms.bool(False)
     )
+if applyTauESCorr:
+    process.tauPtEtaIDAgMuAgElecIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+    process.tauPtEtaIDAgMuAgElecIsoPtRel.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
 
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
     "CandViewCountFilter",
