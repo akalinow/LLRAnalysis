@@ -119,6 +119,7 @@ runNoPileUpMEtUncertainties(
     photonCollection = '',
     muonCollection = cms.InputTag('muPtEtaRelIDRelIso'),
     tauCollection = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso'),
+    jetCollection = cms.InputTag('selectedPatJets'),     
     doApplyChargedHadronSubtraction = False,
     doSmearJets = doSmearJets,
     jecUncertaintyTag = "SubTotalMC",
