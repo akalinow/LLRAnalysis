@@ -70,7 +70,8 @@
 /////// for jet-ID ///////////////////////////
 
 //#include "CMGTools/External/interface/PileupJetIdentifier.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+//#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 ///METCovMatrix/////
 #include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
