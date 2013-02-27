@@ -22,7 +22,7 @@ CaloMEtFromEtaSliceSumsProducer::CaloMEtFromEtaSliceSumsProducer(const edm::Para
   
   residualCorrLabel_ = cfg.getParameter<std::string>("residualCorrLabel");
   residualCorrEtaMax_ = cfg.getParameter<double>("residualCorrEtaMax");
-  extraGlobalSF_ = cfg.getParameter<double>("extraGlobalSF");
+  extraCorrFactor_ = cfg.getParameter<double>("extraCorrFactor");
   
   isMC_  = cfg.getParameter<bool>("isMC");
 
@@ -82,10 +82,11 @@ void CaloMEtFromEtaSliceSumsProducer::produce(edm::Event& evt, const edm::EventS
       if ( residualCorrector && fabs((*binningEntry)->binCenter_) < residualCorrEtaMax_ ) {
 	reco::Candidate::PolarLorentzVector binCenterP4(15., (*binningEntry)->binCenter_, 0., 0.);
 	residualCorrFactor = residualCorrector->correction(reco::Candidate::LorentzVector(binCenterP4.px(), binCenterP4.py(), binCenterP4.pz(), binCenterP4.E()));
-	if ( isMC_ && residualCorrFactor != 0. ) residualCorrFactor = 1./residualCorrFactor;
-	if ( verbosity_ ) {
-	  std::cout << "eta = " << (*binningEntry)->binCenter_ << ": residualCorrFactor = " << residualCorrFactor << std::endl;
-	}
+      }
+      residualCorrFactor *= extraCorrFactor_;
+      if ( isMC_ && residualCorrFactor != 0. ) residualCorrFactor = 1./residualCorrFactor;
+      if ( verbosity_ ) {
+	std::cout << "eta = " << (*binningEntry)->binCenter_ << ": residualCorrFactor = " << residualCorrFactor << std::endl;
       }
       sumPx += (residualCorrFactor*binEnergySum->mex);
       sumPy += (residualCorrFactor*binEnergySum->mey);

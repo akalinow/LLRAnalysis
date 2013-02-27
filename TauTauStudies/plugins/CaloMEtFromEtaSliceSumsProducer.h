@@ -12,7 +12,7 @@
  *
  * \version $Revision: 1.1.2.1 $
  *
- * $Id: CaloMEtFromEtaSliceSumsProducer.h,v 1.1.2.1 2013/02/18 16:19:18 veelken Exp $
+ * $Id: CaloMEtFromEtaSliceSumsProducer.h,v 1.1.2.1 2013/02/21 18:07:47 paganini Exp $
  *
  */
 
@@ -63,7 +63,7 @@ class CaloMEtFromEtaSliceSumsProducer : public edm::EDProducer
 
   std::string residualCorrLabel_;
   double residualCorrEtaMax_;
-  double extraGlobalSF_;
+  double extraCorrFactor_;
 
   bool isMC_;
 

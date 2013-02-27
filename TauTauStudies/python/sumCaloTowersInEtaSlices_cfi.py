@@ -50,9 +50,9 @@ metNoHFresidualCorrected = cms.EDProducer("CaloMEtFromEtaSliceSumsProducer",
     residualCorrLabel = cms.string("ak5CaloResidual"), # apply data/MC residual correction
     ##residualCorrLabel = cms.string(""), # do not apply data/MC residual correction                                    
     residualCorrEtaMax = cms.double(9.9),
-    extraGlobalSF = cms.double(1.0),
+    extraCorrFactor = cms.double(1.0),                                       
     isMC = cms.bool(True),
-    verbosity = cms.int32(1)                                          
+    verbosity = cms.int32(0)                                          
 )                                          
 for idxEtaBinForResidualCorr in range(numEtaBinsForResidualCorr):
     binEdgeLow = etaBinsForResidualCorr[idxEtaBinForResidualCorr]
