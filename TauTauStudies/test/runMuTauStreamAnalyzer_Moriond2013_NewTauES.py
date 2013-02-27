@@ -38,18 +38,10 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/MuTauStream-04May2012-Reload_DYJets-MuTau-50-madgraph-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_9_1_CS7.root'
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/TauPlusX/MuTauStream-04May2012-Reload-05AugReReco/d7ab9a49aa7555b45f2fd6a9510b15e8/patTuples_MuTauStream_9_2_bFX.root'
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/DoubleMu/MuTauStream-04May2012-Reload-RunBPromptReco-v1-Embedded/f5416ddeffc52a24fc875c17bf3889c0/patTuples_MuTauStream_8_3_C7R.root'
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_1_1_QFt.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_2_1_QDr.root',
-    #'rfio:/dpm/in2p3.fr/home/cms/trivcat/store/user/bianchi/VBF_HToTauTau_M-130_7TeV-powheg-pythia6-tauola/MuTauStream-04May2012-Reload_VBFH130-MuTau-powheg-PUS6_skim/f2017a8682c2724bef5e6ba529285334/patTuples_MuTauStream_3_1_IXG.root',
-    #'file:./patTuples_MuTauStream.root'
-    'file:patTuples_LepTauStream.root'
-    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
-    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/ndaci/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/HTT_PAT_MuTau_Oct02_MC_VBF_HToTauTau_M-125/1580e1ad29bd5f6cf6006f65f956c13c/patTuples_MuTauStream_9_8_FTF.root'
+        'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
     )
-    )
+)
+
 #process.source.skipEvents = cms.untracked.uint32(90)
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -204,20 +196,20 @@ process.produceCaloMEtNoHF = cms.Sequence()
 process.load("LLRAnalysis/TauTauStudies/sumCaloTowersInEtaSlices_cfi")
 if runOnMC:
     process.metNoHFresidualCorrected.residualCorrLabel = cms.string("ak5CaloResidual")
-    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.05)
+    process.metNoHFresidualCorrected.extraCorrFactor = cms.double(1.05)
     process.metNoHFresidualCorrected.isMC = cms.bool(True)
     process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
     process.metNoHFresidualCorrectedUp = process.metNoHFresidualCorrected.clone(
-        extraGlobalSF = cms.double(1.10)
+        extraCorrFactor = cms.double(1.10)
     )
     process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedUp
     process.metNoHFresidualCorrectedDown = process.metNoHFresidualCorrected.clone(
-        extraGlobalSF = cms.double(1.0)
+        extraCorrFactor = cms.double(1.0)
     )
     process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedDown
 else:
     process.metNoHFresidualCorrected.residualCorrLabel = cms.string("")
-    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.0)
+    process.metNoHFresidualCorrected.extraCorrFactor = cms.double(1.0)
     process.metNoHFresidualCorrected.isMC = cms.bool(False)
     process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
 #----------------------------------------------------------------------------------
@@ -982,9 +974,9 @@ process.seqNominal = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
-    #process.produceType1corrPFMEt*
-    #process.producePFMEtNoPileUp*
-    #process.produceCaloMEtNoHF*
+    process.produceType1corrPFMEt*
+    process.producePFMEtNoPileUp*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTau*process.selectedDiTau*process.selectedDiTauCounter*
@@ -1368,6 +1360,12 @@ process.TFileService = cms.Service(
 #                             "genTauDecaysToHadrons",
 #                             verbose=False)
 
+# before starting to process 1st event, print event content
+##process.printEventContent = cms.EDAnalyzer("EventContentAnalyzer")
+##process.filterFirstEvent = cms.EDFilter("EventCountFilter",
+##    numEvents = cms.int32(1)
+##)
+##process.printFirstEventContentPath = cms.Path(process.filterFirstEvent + process.printEventContent)
 
 process.outpath = cms.EndPath()
 
