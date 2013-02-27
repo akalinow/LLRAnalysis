@@ -74,7 +74,8 @@
 #include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 ///METCovMatrix/////
-#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+//#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+#include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 
 #include <vector>
 #include <utility>

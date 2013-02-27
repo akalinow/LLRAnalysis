@@ -31,15 +31,8 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
   electronTag_ = iConfig.getParameter<edm::InputTag>("electronTag");
   vertexTag_   = iConfig.getParameter<edm::InputTag>("vertexTag");
   isMC_        = iConfig.getParameter<bool>("isMC");
-  doMVAMIT_    = iConfig.getUntrackedParameter<bool>("doMVAMIT",false);
-  doMVADaniele_= iConfig.getParameter<bool>("doMVADaniele");
+  doMVA_       = iConfig.getParameter<bool>("doMVADaniele");
 
-  //edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
-  //edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
-  //edm::FileInPath inputFileName2 = iConfig.getParameter<edm::FileInPath>("inputFileName2");
-  //edm::FileInPath inputFileName3 = iConfig.getParameter<edm::FileInPath>("inputFileName3");
-  //edm::FileInPath inputFileName4 = iConfig.getParameter<edm::FileInPath>("inputFileName4");
-  //edm::FileInPath inputFileName5 = iConfig.getParameter<edm::FileInPath>("inputFileName5");
 
   edm::FileInPath inputFileName0v2 = iConfig.getParameter<edm::FileInPath>("inputFileName0v2");
   edm::FileInPath inputFileName1v2 = iConfig.getParameter<edm::FileInPath>("inputFileName1v2");
@@ -55,24 +48,7 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
   edm::FileInPath inputFileName4v3 = iConfig.getParameter<edm::FileInPath>("inputFileName4v3");
   edm::FileInPath inputFileName5v3 = iConfig.getParameter<edm::FileInPath>("inputFileName5v3");
 
-  //edm::FileInPath inputFileNameMVADaniele 
-  //= iConfig.getParameter<edm::FileInPath>("inputFileNameMVADaniele");
-  /*//Arun : MIT MVA is not used anymore 
-  if(doMVAMIT_){
-    fMVA_ = new ElectronIDMVA();
-    fMVA_->Initialize("BDTG method",
-		      inputFileName0.fullPath().data(),
-		      inputFileName1.fullPath().data(),
-		      inputFileName2.fullPath().data(),
-		      inputFileName3.fullPath().data(),
-		      inputFileName4.fullPath().data(),
-		      inputFileName5.fullPath().data(),                
-		      ElectronIDMVA::kNoIPInfo);
-  }
-  */
-  if(doMVADaniele_){
-
-    //fMVADaniele_ = new ElectronMVAEstimator(inputFileNameMVADaniele.fullPath().data());
+  if(doMVA_){
 
     Bool_t manualCat = true;
 
@@ -114,9 +90,8 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
 }
 
 ElectronsUserEmbedded::~ElectronsUserEmbedded(){
-  if(doMVAMIT_) delete fMVA_;
-  if(doMVADaniele_){
-    delete myMVATrig_; //delete fMVADaniele_;
+  if(doMVA_){
+    delete myMVATrig_;
     delete myMVANonTrig_;
   }
   
@@ -274,10 +249,7 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
 	&& aElectron.dr03HcalTowerSumEt()/aElectron.pt() < 0.20
 	));
 
-    //if(doMVAMIT_) //Arun: It is not used anymore
-    //mva = fMVA_->MVAValue(aGsf, lazyTools);
-    if(doMVADaniele_){
-      //mva2 = fMVADaniele_->mva(*aGsf, vertexes->size());
+    if(doMVA_){
       //MBmva2 = myMVATrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
       //MBmva3 = myMVANonTrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
       mva2 = myMVATrig_->mvaValue( *aGsf , (*vertexes)[0], *transientTrackBuilder, lazyTools, false);

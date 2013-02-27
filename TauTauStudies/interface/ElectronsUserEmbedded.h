@@ -16,8 +16,6 @@
 #include "DataFormats/RecoCandidate/interface/IsoDeposit.h"
 #include "DataFormats/PatCandidates/interface/Isolation.h"
 
-#include "HiggsAnalysis/HiggsToWW2Leptons/interface/ElectronIDMVA.h"
-//#include "LLRAnalysis/Utilities/interface/ElectronMVAEstimator.h"
 #include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
 
 
@@ -38,10 +36,7 @@ class ElectronsUserEmbedded : public edm::EDProducer{
   edm::InputTag electronTag_;
   edm::InputTag vertexTag_;
   bool isMC_;
-  bool doMVAMIT_;
-  bool doMVADaniele_;
-  ElectronIDMVA* fMVA_;
-  //ElectronMVAEstimator* fMVADaniele_;
+  bool doMVA_;
   EGammaMvaEleEstimator* myMVATrig_;
   EGammaMvaEleEstimator* myMVANonTrig_;
 

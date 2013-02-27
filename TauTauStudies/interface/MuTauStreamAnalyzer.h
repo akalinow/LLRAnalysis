@@ -12,7 +12,6 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-#include "Muon/MuonAnalysisTools/interface/MuonMVAEstimator.h"
 
 
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
@@ -81,8 +80,6 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float minJetID_;
   float deltaRLegJet_;
   bool doIsoMVAOrdering_;
-  bool doMuIsoMVA_;
-  MuonMVAEstimator *fMuonIsoMVA_;
 
   std::vector< double >* jetsBtagHE_;
   std::vector< double >* jetsBtagHP_;
@@ -140,7 +137,6 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   int validityCA_,validityICA_;
   float x1CollApprox_,x2CollApprox_;
   float sumEt_;
-  float isoLeg1MVA_;
   float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_,elecIsoLeg1v1_,muIsoLeg1v1_;
   float chIsoPULeg1v1_,nhIsoPULeg1v1_,phIsoPULeg1v1_;
   float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_,elecIsoLeg1v2_,muIsoLeg1v2_;

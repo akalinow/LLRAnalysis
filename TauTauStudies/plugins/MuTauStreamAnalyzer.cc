@@ -103,28 +103,6 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
   doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
 
-  doMuIsoMVA_        = iConfig.getParameter<bool>("doMuIsoMVA");
-  if( doMuIsoMVA_ ){
-//     fMuonIsoMVA_ = new MuonMVAEstimator();
-//     edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
-//     edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
-//     edm::FileInPath inputFileName2 = iConfig.getParameter<edm::FileInPath>("inputFileName2");
-//     edm::FileInPath inputFileName3 = iConfig.getParameter<edm::FileInPath>("inputFileName3");
-//     edm::FileInPath inputFileName4 = iConfig.getParameter<edm::FileInPath>("inputFileName4");
-//     edm::FileInPath inputFileName5 = iConfig.getParameter<edm::FileInPath>("inputFileName5");   
-//     vector<string> muoniso_weightfiles;
-//     muoniso_weightfiles.push_back(inputFileName0.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName1.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName2.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName3.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName4.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName5.fullPath().data());   
-//     fMuonIsoMVA_->initialize("MuonIso_BDTG_IsoRings",
-// 			     MuonMVAEstimator::kIsoRings,
-// 			     kTRUE,
-// 			     muoniso_weightfiles);
-  }
-  
 }
 
 void MuTauStreamAnalyzer::beginJob(){
@@ -357,7 +335,6 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("nhIsoPULeg1v2",&nhIsoPULeg1v2_,"nhIsoPULeg1v2/F");
   tree_->Branch("phIsoPULeg1v2",&phIsoPULeg1v2_,"phIsoPULeg1v2/F");
 
-  tree_->Branch("isoLeg1MVA",&isoLeg1MVA_,"isoLeg1MVA/F");
 
 
   tree_->Branch("chIsoLeg2",&chIsoLeg2_,"chIsoLeg2/F");
@@ -449,7 +426,6 @@ MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
   delete metSgnMatrix_;
-  if( doMuIsoMVA_ && fMuonIsoMVA_!=0) delete fMuonIsoMVA_;
 }
 
 void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup){
@@ -1386,25 +1362,6 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
        (leg1->track()->hitPattern()).trackerLayersWithMeasurement()>5) ? 1 : 0;
 
     isPFMuon_   = leg1->userInt("isPFMuon");
-    isoLeg1MVA_ = -99;
-    if(doMuIsoMVA_ && fMuonIsoMVA_!=0 && vertexes->size()){
-      
-      const reco::GsfElectronCollection dummyGsfColl;
-      const reco::MuonCollection dummyRecoMuon;
-      
-      const reco::Muon* aMuon = static_cast<const reco::Muon*>(leg1); 
-      // Mu-Iso MVA
-      isoLeg1MVA_ = isMC_ ?
-	fMuonIsoMVA_->mvaValue( *aMuon, (*vertexes)[0], 
-				*pfCandidates, rhoFastJet_, 
-				MuonEffectiveArea::kMuEAFall11MC, 
-				dummyGsfColl, dummyRecoMuon) :
-	fMuonIsoMVA_->mvaValue( *aMuon, (*vertexes)[0], 
-				*pfCandidates, rhoFastJet_, 
-				MuonEffectiveArea::kMuEAData2011, 
-				dummyGsfColl, dummyRecoMuon) ;
-      //cout << "Muon Iso MVA = " << isoLeg1MVA_ << endl;
-    }
     
     // isoDeposit definition: 2011
     isodeposit::AbsVetos vetos2011ChargedLeg1; 
