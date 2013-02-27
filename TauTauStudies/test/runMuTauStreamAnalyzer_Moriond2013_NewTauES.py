@@ -38,7 +38,7 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
+        'file:patTuples_LepTauStream.root'
     )
 )
 
@@ -254,7 +254,9 @@ process.UserIsoMuons = cms.EDProducer( #Most isolated muon
     MuonTag = cms.InputTag("muPtEtaID"),
     isMC = cms.bool(runOnMC),
     verbose = cms.untracked.bool(False),
-    userIso = cms.untracked.string("PFRelIsoDB04v2")
+    userIso = cms.untracked.string("PFRelIsoDB04v2"),
+    pt = cms.double(20),
+    eta = cms.double(2.1)
     )
 
 process.elecPtEtaRelIDRelIso = cms.EDFilter(
@@ -267,12 +269,14 @@ process.elecPtEtaRelIDRelIso = cms.EDFilter(
     )
 
 process.UserIsoElectrons = cms.EDProducer( #Most isolated electron
-        "UserIsolatedPatElectron",
-        ElectronTag = cms.InputTag("elecPtEtaID"),
-        isMC = cms.bool(runOnMC),
-        verbose = cms.untracked.bool(False),
-        userIso = cms.untracked.string("PFRelIsoDB04v3")
-        )
+    "UserIsolatedPatElectron",
+    ElectronTag = cms.InputTag("elecPtEtaID"),
+    isMC = cms.bool(runOnMC),
+    verbose = cms.untracked.bool(False),
+    userIso = cms.untracked.string("PFRelIsoDB04v3"),
+    pt = cms.double(24),
+    eta = cms.double(2.1)
+    )
 
 process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( #Selection as like Phil's
     "PATTauSelector",
@@ -286,7 +290,9 @@ process.UserIsoTaus = cms.EDProducer( #Most isolated tau
     patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     isMC = cms.bool(runOnMC),
     verbose = cms.untracked.bool(False),
-    useIsoMVA = cms.untracked.bool(True)
+    useIsoMVA = cms.untracked.bool(True),
+    pt = cms.double(19),
+    eta = cms.double(2.3)
     )
 if applyTauESCorr:
     process.tauPtEtaIDAgMuAgElecRelIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
@@ -302,15 +308,9 @@ if runUserIsoTau :
 else :
     process.TausForMVAMEt = cms.Sequence(process.tauPtEtaIDAgMuAgElecRelIso)
 process.LeptonsForMVAMEt = cms.Sequence(process.UserIsoMuons*
-                                        process.UserIsoElectrons*
+                                        #process.UserIsoElectrons*
                                         process.TausForMVAMEt
                                         )
-#Needed for CV's no-PU MET for now
-process.LeptonsForType1MEt = cms.Sequence(process.muPtEtaRelIDRelIso*
-                                          process.elecPtEtaRelIDRelIso*
-                                          process.tauPtEtaIDAgMuAgElecRelIso
-                                          )
-process.LeptonsForMVAMEt += process.LeptonsForType1MEt
 ###################################################################################
 
 process.rescaledMET = cms.EDProducer(
@@ -813,13 +813,7 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
     doIsoMVAOrdering = cms.untracked.bool(runUserIsoTau),
-    doMuIsoMVA     = cms.bool( False ),
-    inputFileName0 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-BarrelPt5To10_V0_BDTG.weights.xml"),
-    inputFileName1 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-EndcapPt5To10_V0_BDTG.weights.xml"),
-    inputFileName2 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-BarrelPt10ToInf_V0_BDTG.weights.xml"),
-    inputFileName3 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-EndcapPt10ToInf_V0_BDTG.weights.xml"),                 
-    inputFileName4 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-Tracker_V0_BDTG.weights.xml"),
-    inputFileName5 = cms.FileInPath("Muon/MuonAnalysisTools/data/MuonIsoMVA_sixie-Global_V0_BDTG.weights.xml"),
+    doMuIsoMVA     = cms.untracked.bool( False ),
     )
 
 if usePFMEtMVA:
