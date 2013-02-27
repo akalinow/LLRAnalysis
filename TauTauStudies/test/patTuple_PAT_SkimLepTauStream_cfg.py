@@ -23,15 +23,15 @@ runOnEmbed  = False
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
 
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V15::All')
+    process.GlobalTag.globaltag = cms.string('START53_V18::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V39_AN3::All')
+    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN3::All')
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(2000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source.fileNames = cms.untracked.vstring(
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/FE414F4B-F6D2-E111-A4E9-003048674048.root' #12.5k
@@ -1147,7 +1147,7 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_kt6PFJetsForRhoComputationVoronoi_rho_*',
     'keep *_muPtEtaID_*_*',
     'keep *_muPtEtaRelID_*_*',
-    #MB 'keep *_muons_*_*',
+    'keep *_muons_*_*',
     'keep *_elecPtEtaID_*_*',
     'keep *_elecPtEtaRelID_*_*',
     'keep *_electronsForVeto_*_*',
