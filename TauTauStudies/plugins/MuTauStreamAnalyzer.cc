@@ -359,6 +359,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("decayMode",&decayMode_,"decayMode/I");
   tree_->Branch("genDecayMode",&genDecayMode_,"genDecayMode/I");
   tree_->Branch("genPolarization",&genPolarization_,"genPolarization/I");
+  tree_->Branch("tightestAntiECutWP",&tightestAntiECutWP_,"tightestAntiECutWP/I"); 
+  tree_->Branch("tightestAntiMuWP",&tightestAntiMuWP_,"tightestAntiMuWP/I"); 
   tree_->Branch("tightestHPSWP",&tightestHPSWP_,"tightestHPSWP/I");
   tree_->Branch("tightestHPSDBWP",&tightestHPSDBWP_,"tightestHPSDBWP/I");
   tree_->Branch("tightestHPSMVAWP",&tightestHPSMVAWP_,"tightestHPSMVAWP/I");
@@ -1323,6 +1325,16 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     if(leg2->tauID("byMediumIsolationMVA")>0.5) tightestHPSMVAWP_++;
     if(leg2->tauID("byTightIsolationMVA") >0.5) tightestHPSMVAWP_++;
     hpsMVA_  = leg2->tauID("byIsolationMVAraw");
+
+    tightestAntiMuWP_ = 0;  
+    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1;  
+    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2;  
+    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3;  
+ 
+    tightestAntiECutWP_ = 0; 
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1; 
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2; 
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3; 
 
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
      

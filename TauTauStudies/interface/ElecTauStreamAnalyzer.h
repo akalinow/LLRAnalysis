@@ -78,6 +78,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
+  bool doIsoMVAOrdering_;
 
   std::vector< double >* jetsBtagHE_;
   std::vector< double >* jetsBtagHP_;
@@ -197,6 +198,11 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int isTriggerElectron_;
   int tightestAntiEWP_;
   int tightestAntiEMVAWP_;
+  int tightestAntiEMVA3WP_;
+  float AntiEMVA3raw_;
+  int AntiEMVA3category_;
+  int tightestAntiECutWP_;
+  int tightestAntiMuWP_;
   int tightestCiCWP_;
   int tightestHPSWP_;
   int tightestHPSDBWP_;

@@ -108,8 +108,9 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
-
-  doElecIsoMVA_      = iConfig.getParameter<bool>("doElecIsoMVA");
+  doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
+  
+  doElecIsoMVA_      = iConfig.getUntrackedParameter<bool>("doElecIsoMVA", false);
   if( doElecIsoMVA_ ){
 //     fElectronIsoMVA_ = new EGammaMvaEleEstimator();
 //     edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
@@ -422,6 +423,11 @@ void ElecTauStreamAnalyzer::beginJob(){
 
   tree_->Branch("tightestAntiEWP",&tightestAntiEWP_,"tightestAntiEWP/I");
   tree_->Branch("tightestAntiEMVAWP",&tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
+  tree_->Branch("tightestAntiEMVA3WP",&tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
+  tree_->Branch("AntiEMVA3category",&AntiEMVA3category_,"AntiEMVA3category/I");
+  tree_->Branch("AntiEMVA3raw",&AntiEMVA3raw_,"AntiEMVA3raw/F");
+  tree_->Branch("tightestAntiECutWP",&tightestAntiECutWP_,"tightestAntiECutWP/I");
+  tree_->Branch("tightestAntiMuWP",&tightestAntiMuWP_,"tightestAntiMuWP/I");
   tree_->Branch("tightestHPSDBWP",&tightestHPSDBWP_,"tightestHPSDBWP/I");
   tree_->Branch("tightestHPSMVAWP",&tightestHPSMVAWP_,"tightestHPSMVAWP/I");
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
@@ -1004,15 +1010,16 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
     float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVAraw");
+    float sortVariable = (doIsoMVAOrdering_) ? isoMVA : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
        tau_i->tauID("byLooseIsolationMVA")>0.5 )
-      sortedDiTausLooseIso.insert( make_pair( sumPt, i ) );
-    sortedDiTaus.insert( make_pair( sumPt, i ) );
+      sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
+    sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
-      sortedDiTausOS.insert( make_pair( sumPt, i ) );
+      sortedDiTausOS.insert( make_pair( sortVariable, i ) );
     else
-      sortedDiTausSS.insert( make_pair( sumPt, i ) );
+      sortedDiTausSS.insert( make_pair( sortVariable, i ) );
   }
   if( sortedDiTausOS.size()>0 ) 
     index = (sortedDiTausOS.begin())->second ;
@@ -1657,6 +1664,16 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGNonTrig")>0.985); 
     if(passesMVAPOGNonTrig) tightestMVAPOGNonTrigWP_ = 1;
     
+    tightestAntiMuWP_ = 0; 
+    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
+    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 
+    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3; 
+
+    tightestAntiECutWP_ = 0;
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;
+
     tightestAntiEWP_ = 0;
     if( leg2->tauID("againstElectronTight")>0.5 && leg2->tauID("againstElectronMVA")<0.5) tightestAntiEWP_ = 1;
     if( leg2->tauID("againstElectronTight")<0.5 && leg2->tauID("againstElectronMVA")>0.5) tightestAntiEWP_ = 2;
@@ -1693,6 +1710,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
         leg2->tauID("againstElectronMediumMVA2") >0.5 && 
         leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 7; 
+    
+    tightestAntiEMVA3WP_ = 0;
+    if( leg2->tauID("againstElectronLooseMVA3")>0.5)  tightestAntiEMVA3WP_  = 1;
+    if( leg2->tauID("againstElectronMediumMVA3")>0.5) tightestAntiEMVA3WP_  = 2;
+    if( leg2->tauID("againstElectronTightMVA3")>0.5)  tightestAntiEMVA3WP_  = 3;
+    if( leg2->tauID("againstElectronVTightMVA3")>0.5) tightestAntiEMVA3WP_  = 4;
+    AntiEMVA3raw_ = leg2->tauID("againstElectronMVA3raw");
+    AntiEMVA3category_ = leg2->tauID("againstElectronMVA3category");
     
     diTauVisP4_->push_back( theDiTau->p4Vis() );
     diTauCAP4_->push_back(  theDiTau->p4CollinearApprox() );
