@@ -35,7 +35,9 @@ UserIsolatedPatTau::UserIsolatedPatTau(const edm::ParameterSet & iConfig){
   isMC_ = iConfig.getParameter<bool>("isMC");
   verbose_ = iConfig.getUntrackedParameter<bool>("verbose",false);
   useIsoMVA_ = iConfig.getUntrackedParameter<bool>("useIsoMVA",true);
-  
+  minPt_ = iConfig.getParameter<double>("pt"); 
+  maxEta_ = iConfig.getParameter<double>("eta"); 
+
   produces<pat::TauCollection>("");
 }
 
@@ -81,6 +83,8 @@ void UserIsolatedPatTau::produce(edm::Event & iEvent, const edm::EventSetup & iS
 	patTau != patTaus->end(); ++patTau ) { 
     const pat::Tau* tau = &(*patTau);
 
+    if(tau->pt() < minPt_ || fabs(tau->eta()) > maxEta_)continue;
+    
     PatTauInfo tmpPatTauInfo;
     tmpPatTauInfo.tau_ = tau;
     if(useIsoMVA_){

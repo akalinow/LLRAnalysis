@@ -31,7 +31,9 @@ UserIsolatedPatMuon::UserIsolatedPatMuon(const edm::ParameterSet & iConfig){
   isMC_ = iConfig.getParameter<bool>("isMC");
   verbose_ = iConfig.getUntrackedParameter<bool>("verbose",false);
   userIso_ = iConfig.getUntrackedParameter<std::string>("userIso");
-  
+  minPt_ = iConfig.getParameter<double>("pt");  
+  maxEta_ = iConfig.getParameter<double>("eta"); 
+
   produces<pat::MuonCollection>("");
 }
 
@@ -72,6 +74,8 @@ void UserIsolatedPatMuon::produce(edm::Event & iEvent, const edm::EventSetup & i
   for ( pat::MuonCollection::const_iterator patMuon = patMuons->begin(); 
 	patMuon != patMuons->end(); ++patMuon ) { 
     const pat::Muon* muon = &(*patMuon);
+
+    if(muon->pt() < minPt_ || fabs(muon->eta()) > maxEta_)continue;
 
     PatMuonInfo tmpPatMuonInfo;
     tmpPatMuonInfo.mu_ = muon;
