@@ -37,7 +37,7 @@
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 #include "PhysicsTools/FWLite/interface/TFileService.h"
 #include "LLRAnalysis/Utilities/interface/BtagSF.hh"
-#include "/home/llr/cms/ndaci/SKWork/macro/skEfficiency/analyzers/COMMON/readJSONFile.cc"
+#include "LLRAnalysis/Utilities/interface/readJSONFile.h"
 
 #include "Math/Vector3D.h"
 #include "Math/Vector4D.h"

@@ -34,7 +34,7 @@
 #include "TauAnalysis/CandidateTools/interface/candidateAuxFunctions.h"
 #include "TauAnalysis/CandidateTools/interface/neuralMtautauAuxFunctions.h"
 #include "LLRAnalysis/Utilities/interface/BtagSF.hh"
-#include "LLRAnalysis/Utilities/bin/readJSONFile.h"
+#include "LLRAnalysis/Utilities/interface/readJSONFile.h"
 
 #include "Math/Vector3D.h"
 #include "Math/Vector4D.h"
