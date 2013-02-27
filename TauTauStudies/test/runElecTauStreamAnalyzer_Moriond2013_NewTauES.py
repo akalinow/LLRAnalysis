@@ -4,7 +4,6 @@ process = cms.Process("ELECTAUANA")
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.load("Configuration.StandardSequences.Geometry_cff")
 process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 
@@ -33,9 +32,9 @@ else:
 
 
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V10::All')
+    process.GlobalTag.globaltag = cms.string('START53_V18::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN1::All')
+    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN3::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -66,22 +65,21 @@ process.allEventsFilter = cms.EDFilter(
 
 ###################################################################################
 # produce MVA MET
+
 process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_cff")
 
 if runOnMC:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3")
 else:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
-    
-if runUserIsoTau:
-    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoElectrons'), cms.InputTag('UserIsoTaus') )
-else :
-    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoElectrons'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
-                
-#process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
-# use the following for the most isolated tau
-#process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('UserIsoTaus') )
 
+tausForPFMEtMVA = None
+if runUserIsoTau:
+    tausForPFMEtMVA = cms.InputTag('UserIsoTaus') 
+else :
+    tausForPFMEtMVA = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') 
+process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoElectrons'), tausForPFMEtMVA )
+                
 #process.pfMEtMVA.srcVertices = cms.InputTag("selectedPrimaryVertices")
 process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
 
@@ -100,8 +98,132 @@ process.patPFMetByMVA = process.patMETs.clone(
     genMETSource = cms.InputTag('genMetTrue'),
     addGenMET = cms.bool(False)
     )
+#----------------------------------------------------------------------------------
 
-#-----------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------
+# produce No-PU MET
+
+process.load("JetMETCorrections.METPUSubtraction.noPileUpPFMET_cff")
+
+doSmearJets = None
+if runOnMC:
+    doSmearJets = True
+else:
+    doSmearJets = False
+
+from PhysicsTools.PatUtils.tools.runNoPileUpMEtUncertainties import runNoPileUpMEtUncertainties
+runNoPileUpMEtUncertainties(
+    process,
+    electronCollection = cms.InputTag('UserIsoElectrons'),
+    photonCollection = '',
+    muonCollection = '',
+    tauCollection = tausForPFMEtMVA,
+    jetCollection = cms.InputTag('selectedPatJets'),     
+    doApplyChargedHadronSubtraction = False,
+    doSmearJets = doSmearJets,
+    jecUncertaintyTag = "SubTotalMC",
+    addToPatDefaultSequence = False
+)
+
+if runOnMC:
+    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3")
+else:
+    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
+
+process.producePFMEtNoPileUp = cms.Sequence(process.pfNoPileUpMEtUncertaintySequence)
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
+# produce Type-1 corrected PFMET
+
+process.load("PhysicsTools.PatUtils.patPFMETCorrections_cff")
+
+process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
+sysShiftCorrParameter = None
+if runOnMC:
+    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_mc
+else:
+    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_data
+
+from PhysicsTools.PatUtils.tools.runType1PFMEtUncertainties import runType1PFMEtUncertainties
+runType1PFMEtUncertainties(
+    process,
+    electronCollection = cms.InputTag('UserIsoElectrons'),
+    photonCollection = '',
+    muonCollection = '',
+    tauCollection = tausForPFMEtMVA,
+    jetCollection = cms.InputTag('selectedPatJets'),        
+    doSmearJets = doSmearJets,
+    jecUncertaintyTag = "SubTotalMC",
+    makeType1corrPFMEt = True,
+    makeType1p2corrPFMEt = False,
+    doApplyType0corr = True,
+    sysShiftCorrParameter = sysShiftCorrParameter,
+    doApplySysShiftCorr = True,
+    addToPatDefaultSequence = False
+)
+
+# CV: collections of MET and jets used as input for SysShiftMETcorrInputProducer
+#     are not fully consistent, but we anyway use parametrization of MET x/y shift as function of Nvtx
+process.pfMEtSysShiftCorr.srcMEt = cms.InputTag('patMETs')
+process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
+
+##from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
+##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
+##process.producePatPFMETCorrections.remove(process.patPFMet)
+
+if runOnMC:
+    process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
+else:
+    # CV: apply data/MC residual correction to "unclustered energy"
+    process.calibratedPFCandidates = cms.EDProducer("PFCandResidualCorrProducer",
+        src = cms.InputTag('particleFlow'),
+        residualCorrLabel = cms.string("ak5PFResidual"),
+        residualCorrEtaMax = cms.double(9.9),
+        extraCorrFactor = cms.double(1.05)
+    )                                                        
+    process.pfCandidateToVertexAssociation.PFCandidateCollection = cms.InputTag('calibratedPFCandidates')
+    process.patPFJetMETtype1p2Corr.type2ResidualCorrLabel = cms.string("ak5PFResidual")
+    process.patPFJetMETtype1p2Corr.type2ResidualCorrEtaMax = cms.double(9.9)
+    process.pfCandMETresidualCorr = process.pfCandMETcorr.clone(                
+        residualCorrLabel = cms.string("ak5PFResidual"),
+        residualCorrEtaMax = cms.double(9.9),
+        residualCorrOffset = cms.double(1.),
+        extraCorrFactor = cms.double(1.05)
+    )
+    process.producePatPFMETCorrections.replace(process.pfCandMETcorr, process.pfCandMETcorr + process.pfCandMETresidualCorr)
+    process.patType1CorrectedPFMet.srcType1Corrections.append(cms.InputTag('pfCandMETresidualCorr'))
+
+process.produceType1corrPFMEt = cms.Sequence(process.pfType1MEtUncertaintySequence)    
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
+# produce CaloMEtNoHF (MC corrected by data/MC difference in CaloMET response)
+
+process.produceCaloMEtNoHF = cms.Sequence()
+
+process.load("LLRAnalysis/TauTauStudies/sumCaloTowersInEtaSlices_cfi")
+if runOnMC:
+    process.metNoHFresidualCorrected.residualCorrLabel = cms.string("ak5CaloResidual")
+    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.05)
+    process.metNoHFresidualCorrected.isMC = cms.bool(True)
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
+    process.metNoHFresidualCorrectedUp = process.metNoHFresidualCorrected.clone(
+        extraGlobalSF = cms.double(1.10)
+    )
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedUp
+    process.metNoHFresidualCorrectedDown = process.metNoHFresidualCorrected.clone(
+        extraGlobalSF = cms.double(1.0)
+    )
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrectedDown
+else:
+    process.metNoHFresidualCorrected.residualCorrLabel = cms.string("")
+    process.metNoHFresidualCorrected.extraGlobalSF = cms.double(1.0)
+    process.metNoHFresidualCorrected.isMC = cms.bool(False)
+    process.produceCaloMEtNoHF += process.metNoHFresidualCorrected
+#----------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------
 # produce PU Jet Ids
 
 from RecoJets.JetProducers.PileupJetID_cfi import stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
@@ -123,6 +245,7 @@ process.puJetMva = cms.EDProducer('PileupJetIdProducer',
 process.puJetIdSequence = cms.Sequence(process.puJetMva)
 
 #----------------------------------------------------------------------------------
+
 process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSequence *
                                         (process.pfMEtMVAsequence*process.patPFMetByMVA))
 
@@ -349,7 +472,6 @@ process.selectedDiTauCounter = cms.EDFilter(
     minNumber = cms.uint32(1),
     maxNumber = cms.uint32(999),
     )
-
 
 process.diTauRaw = process.allElecTauPairs.clone()
 process.diTauRaw.srcLeg1  = cms.InputTag("elecPtEtaIDIso")
@@ -1267,6 +1389,5 @@ process.TFileService = cms.Service(
 
 process.outpath = cms.EndPath()
 
-#MB needed?
-#processDumpFile = open('runElecTauStreamAnalyzerFullAnalysis_Recoil.dump', 'w')
-#print >> processDumpFile, process.dumpPython()
+processDumpFile = open('runElecTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+print >> processDumpFile, process.dumpPython()

@@ -4,7 +4,6 @@ process = cms.Process("MUTAUANA")
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.load("Configuration.StandardSequences.Geometry_cff")
 process.load("Configuration.Geometry.GeometryIdeal_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 
@@ -28,7 +27,7 @@ else:
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V18::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN1::All')
+    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN3::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -73,14 +72,13 @@ if runOnMC:
 else:
     process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
 
-if runUserIsoTau :
-    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoMuons'), cms.InputTag('UserIsoTaus') )
+tausForPFMEtMVA = None
+if runUserIsoTau:
+    tausForPFMEtMVA = cms.InputTag('UserIsoTaus') 
 else :
-    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoMuons'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
-#process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
-# use the following for the most isolated tau
-#process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('UserIsoTaus') )
-
+    tausForPFMEtMVA = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso')
+process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoMuons'), tausForPFMEtMVA )
+    
 #process.pfMEtMVA.srcVertices = cms.InputTag("selectedPrimaryVertices")
 process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
 
@@ -115,10 +113,10 @@ else:
 from PhysicsTools.PatUtils.tools.runNoPileUpMEtUncertainties import runNoPileUpMEtUncertainties
 runNoPileUpMEtUncertainties(
     process,
-    electronCollection = cms.InputTag('elecPtEtaRelIDRelIso'),
+    electronCollection = '',
     photonCollection = '',
-    muonCollection = cms.InputTag('muPtEtaRelIDRelIso'),
-    tauCollection = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso'),
+    muonCollection = cms.InputTag('UserIsoMuons'),
+    tauCollection = tausForPFMEtMVA,
     jetCollection = cms.InputTag('selectedPatJets'),     
     doApplyChargedHadronSubtraction = False,
     doSmearJets = doSmearJets,
@@ -139,12 +137,6 @@ process.producePFMEtNoPileUp = cms.Sequence(process.pfNoPileUpMEtUncertaintySequ
 
 process.load("PhysicsTools.PatUtils.patPFMETCorrections_cff")
 
-doSmearJets = None
-if runOnMC:
-    doSmearJets = True
-else:
-    doSmearJets = False
-
 process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
 sysShiftCorrParameter = None
 if runOnMC:
@@ -155,10 +147,10 @@ else:
 from PhysicsTools.PatUtils.tools.runType1PFMEtUncertainties import runType1PFMEtUncertainties
 runType1PFMEtUncertainties(
     process,
-    electronCollection = cms.InputTag('elecPtEtaRelIDRelIso'),
+    electronCollection = '',
     photonCollection = '',
-    muonCollection = cms.InputTag('muPtEtaRelIDRelIso'),
-    tauCollection = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso'),
+    muonCollection = cms.InputTag('UserIsoMuons'),
+    tauCollection = tausForPFMEtMVA,
     jetCollection = cms.InputTag('selectedPatJets'),        
     doSmearJets = doSmearJets,
     jecUncertaintyTag = "SubTotalMC",
@@ -482,8 +474,6 @@ process.selectedDiTauCounter = cms.EDFilter(
     minNumber = cms.uint32(1),
     maxNumber = cms.uint32(999),
     )
-
-
 
 process.diTauRaw = process.allMuTauPairs.clone()
 process.diTauRaw.srcLeg1  = cms.InputTag("muPtEtaIDIso")
