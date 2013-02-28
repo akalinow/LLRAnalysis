@@ -147,6 +147,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float dxyE1_,dxyE2_;
   float dzE1_,dzE2_;
   float pfJetPt_;
+  float pfJetEtaMom2_; 
+  float pfJetPhiMom2_; 
   float MtLeg1_;
   float pZeta_;
   float pZetaVis_;
@@ -190,10 +192,18 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
 
   int tightestHPSWP_;
   int tightestHPSDBWP_;
+  int tightestHPSDB3HWP_;
   int tightestHPSMVAWP_;
+  int tightestHPSMVA2WP_;
   int tightestAntiECutWP_; 
+  int tightestAntiEMVA3WP_; 
+  float AntiEMVA3raw_; 
+  int AntiEMVA3category_; 
   int tightestAntiMuWP_; 
+  int tightestAntiMu2WP_;
   float hpsMVA_;
+  float hpsMVA2_;
+  float hpsDB3H_;
   int isTauLegMatched_;
   int isMuLegMatched_;
   int muFlag_;

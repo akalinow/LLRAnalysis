@@ -114,6 +114,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* diTauSVfitP4_; 
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* diTauLegsP4_; 
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* diTauLegsAltP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genDiTauLegsP4_; 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genTausP4_;
 
@@ -147,6 +148,8 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float dzE1_,dzE2_;
   float scEta1_;
   float pfJetPt_;
+  float pfJetEtaMom2_;
+  float pfJetPhiMom2_;
   float MtLeg1_;
   float pZeta_;
   float pZetaVis_;
@@ -203,11 +206,16 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int AntiEMVA3category_;
   int tightestAntiECutWP_;
   int tightestAntiMuWP_;
+  int tightestAntiMu2WP_;
   int tightestCiCWP_;
   int tightestHPSWP_;
   int tightestHPSDBWP_;
+  int tightestHPSDB3HWP_;
   int tightestHPSMVAWP_;
+  int tightestHPSMVA2WP_;
   float hpsMVA_;
+  float hpsMVA2_;
+  float hpsDB3H_;
   int isTauLegMatched_;
   int isElecLegMatched_;
   int elecFlag_;
