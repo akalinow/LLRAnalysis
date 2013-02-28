@@ -255,6 +255,7 @@ addSelectedPFlowParticle(process)
 
 from PhysicsTools.PatAlgos.tools.metTools import *
 addPfMET(process, postfix)
+'''
 ##MB standard corrections for PFMET
 ##MB FIXME: check with Christian
 ##MB FIXME: are the following corrections properly stacked??
@@ -282,7 +283,7 @@ process.pfType1CorrectedMet.srcType1Corrections.append(cms.InputTag('pfMEtSysShi
 process.producePFMETCorrections.replace(process.pfType1CorrectedMet,
                                         process.pfMEtSysShiftCorrSequence+process.pfType1CorrectedMet)
 ##
-
+'''
 from PhysicsTools.PatAlgos.tools.jetTools import *
 
 switchJetCollection(process,cms.InputTag('ak5PFJets'),
@@ -655,7 +656,7 @@ process.tausForVeto  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
-                     " && pt>20 && tauID('byLooseIsolationMVA')>0.5"),
+                     " && pt>20 && tauID('byLooseIsolationMVA2')>0.5"),
     filter = cms.bool(False)
     )
 
@@ -691,7 +692,7 @@ process.tauPtEtaIDAgMuAgElec  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaIDAgMu.cut.value()+
-                     " && tauID('againstElectronLoose')>0.5"),
+                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronLooseMVA3')>0.5 )"),
     filter = cms.bool(False)
     )
 
@@ -863,7 +864,7 @@ process.tauPtEtaIDAgMuL  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
-                     " && tauID('againstMuonLoose')>0.5"),
+                     " && ( tauID('againstMuonLoose')>0.5 || tauID('againstMuonLoose2')>0.5 )"),
     filter = cms.bool(False)
     )
 
