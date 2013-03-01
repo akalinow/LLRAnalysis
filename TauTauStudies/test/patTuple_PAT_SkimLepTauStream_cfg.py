@@ -25,7 +25,7 @@ runOnEmbed  = False
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V18::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN3::All')
+    process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
@@ -206,13 +206,13 @@ process.printTree1 = cms.EDAnalyzer(
 process.load('RecoJets.Configuration.RecoPFJets_cff')
 
 ################### New Type-1 MET ###################
-process.load("LLRAnalysis/TauTauStudies/sumCaloTowersInEtaSlices_cfi")
+process.load("LLRAnalysis.TauTauStudies.sumCaloTowersInEtaSlices_cfi")
 #Add process.sumCaloTowersInEtaSlicesNoHF to cms path
 ################### bTag ##############################
 
 if runOnEmbed:
-    process.load('RecoBTag/Configuration/RecoBTag_cff')
-    process.load('RecoJets/JetAssociationProducers/ak5JTA_cff')
+    process.load('RecoBTag.Configuration.RecoBTag_cff')
+    process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
     process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
     process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
 
@@ -1110,6 +1110,9 @@ if not runOnEmbed:
 if runOnMC and runOnEmbed:
     process.skimMuTau1.remove(process.HLTFilterMuTau)
     process.skimElecTau1.remove(process.HLTFilterEleTau)
+if runOnEmbed:
+    process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
+    process.commonOfflineSequence += process.makeTauMatchedCaloJets
         
 #process.p = cms.Path(process.printEventContent+process.skim)
 process.pMuTau1 = cms.Path(process.skimMuTau1)
@@ -1195,15 +1198,19 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_gsfElectrons_*_*',
     'keep *_allConversions_*_*',
     'keep *_genMetTrue_*_*',
+    'keep *_genTauMatchedCaloJet_*_*',
+    'keep *_genTauMatchedCaloJetElec_*_*',
+    'keep *_genTauMatchedCaloJetMu_*_*',    
     )
                                    )
 #MB
+'''
 if runOnEmbed:
     process.out.outputCommands.extend( cms.vstring(
         'keep *_towerMaker_*_*',
         )
-                                       )
-          
+                                   )
+'''          
 process.TFileService = cms.Service(
     "TFileService",
     fileName = cms.string("skimLepTauStream.root")
