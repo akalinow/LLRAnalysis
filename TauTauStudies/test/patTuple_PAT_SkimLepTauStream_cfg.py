@@ -16,8 +16,9 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
-runOnMC     = True
-runOnEmbed  = False
+runOnMC     = False
+runOnEmbed  = True
+isPfEmbed   = False 
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -40,6 +41,7 @@ process.source.fileNames = cms.untracked.vstring(
     #'root://node12.datagrid.cea.fr//dpm/datagrid.cea.fr/home/cms/trivcat/store/mc/Summer12_DR53X/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/AODSIM/PU_S10_START53_V7A-v1/0000/0088DD9F-B105-E211-BB06-001E67397D5A.root' #no access??
     #'file:/data_CMS/cms/mbluj/Production/test/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FED775BD-B8E1-E111-8ED5-003048C69036.root' #11k
     #'file:/data_CMS/cms/mbluj/Production/test/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FC3ED802-E606-E211-A0FD-0025B31E330A.root' #9k
+    #'file:/data_CMS/cms/mbluj/Production/HToTauTau/simDYmumu_embedded_mutau_2013Feb21_AOD.root'
     )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -214,7 +216,8 @@ if runOnEmbed:
     process.load('RecoBTag.Configuration.RecoBTag_cff')
     process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
     process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
-    process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
+    if isPfEmbed:
+        process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
 
 ## Plus, add this to your path:
 #process.ak5JetTracksAssociatorAtVertex*process.btagging
