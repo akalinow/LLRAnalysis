@@ -16,7 +16,7 @@ runOnMC     = True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-runUserIsoTau = False
+runUserIsoTau = True
 applyTauESCorr= True
 
 if runOnMC:
@@ -25,9 +25,9 @@ else:
     print "Running on Data"
         
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V18::All')
+    process.GlobalTag.globaltag = cms.string('START53_V15::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V41_AN3::All')
+    process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -278,11 +278,13 @@ process.UserIsoElectrons = cms.EDProducer( #Most isolated electron
     eta = cms.double(2.1)
     )
 
-process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( #Selection as like Phil's
+process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter( 
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
-                     " && tauID('byIsolationMVAraw')>0.7"),
+                     #" && tauID('byIsolationMVA2raw')>0.7", #Selection as like Phil's
+                     " && tauID('byLooseIsolationMVA2')>0.5"
+                     ),
     filter = cms.bool(False)
     )
 process.UserIsoTaus = cms.EDProducer( #Most isolated tau
@@ -296,7 +298,7 @@ process.UserIsoTaus = cms.EDProducer( #Most isolated tau
     )
 if applyTauESCorr:
     process.tauPtEtaIDAgMuAgElecRelIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
-    process.UserIsoTaus.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+    process.UserIsoTaus.patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
     
 #process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
 #                                        process.elecPtEtaRelIDRelIso*
@@ -690,6 +692,14 @@ if usePFMEtMVA:
     process.allDiTau.replace(process.diTauTauDown,process.pfMEtMVACovTauDown*process.diTauTauDown)
 
 #######################################################################
+process.tauPtEtaIDAgMuAgElec = cms.EDFilter( #apply AntiMuTight2
+    "PATTauSelector",
+    src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
+    cut = cms.string("tauID('againstMuonTight2')>0.5 "+
+                     " && tauID('againstElectronLoose')>0.5 "
+                     ),
+    filter = cms.bool(False)
+    )
 
 process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     "TauESCorrector",
@@ -701,7 +711,7 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>20 && abs(eta)<2.3"+
-                     " && tauID('byLooseIsolationMVA')>-0.5"
+                     " && tauID('byLooseIsolationMVA2')>-0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -709,7 +719,7 @@ process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
-                     " && tauID('byLooseIsolationMVA')>-0.5"
+                     " && tauID('byLooseIsolationMVA2')>-0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -963,7 +973,8 @@ process.analysis = cms.Sequence(
 process.tauPtEtaIDAgMuAgElecScaled
 process.seqNominal = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
@@ -979,7 +990,8 @@ process.seqNominal = cms.Sequence(
 
 process.seqJetUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
@@ -993,7 +1005,8 @@ process.seqJetUp = cms.Sequence(
 
 process.seqJetDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
@@ -1007,7 +1020,8 @@ process.seqJetDown = cms.Sequence(
 
 process.seqMEtResolutionUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1018,7 +1032,8 @@ process.seqMEtResolutionUp = cms.Sequence(
     )
 process.seqMEtResolutionDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1030,7 +1045,8 @@ process.seqMEtResolutionDown = cms.Sequence(
 
 process.seqMEtResponseUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1041,7 +1057,8 @@ process.seqMEtResponseUp = cms.Sequence(
     )
 process.seqMEtResponseDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1054,7 +1071,8 @@ process.seqMEtResponseDown = cms.Sequence(
 process.seqMuUp = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.metRecoilCorrector*
@@ -1068,7 +1086,8 @@ process.seqMuUp = cms.Sequence(
 process.seqMuDown = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.metRecoilCorrector*
@@ -1084,7 +1103,8 @@ process.seqMuDown = cms.Sequence(
 process.seqTauUp = cms.Sequence(
     process.allEventsFilter*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+    process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1098,7 +1118,8 @@ process.seqTauUp = cms.Sequence(
 process.seqTauDown = cms.Sequence(
     process.allEventsFilter*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+    process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -1127,7 +1148,8 @@ if not usePFMEtMVA:
 
 process.seqRawNominal = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1139,7 +1161,8 @@ process.seqRawNominal = cms.Sequence(
 
 process.seqRawJetUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1152,7 +1175,8 @@ process.seqRawJetUp = cms.Sequence(
 
 process.seqRawJetDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1165,7 +1189,8 @@ process.seqRawJetDown = cms.Sequence(
 
 process.seqRawMEtResolutionUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1177,7 +1202,8 @@ process.seqRawMEtResolutionUp = cms.Sequence(
 
 process.seqRawMEtResolutionDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1189,7 +1215,8 @@ process.seqRawMEtResolutionDown = cms.Sequence(
 
 process.seqRawMEtResponseUp = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1201,7 +1228,8 @@ process.seqRawMEtResponseUp = cms.Sequence(
 
 process.seqRawMEtResponseDown = cms.Sequence(
     process.allEventsFilter*
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
@@ -1214,7 +1242,8 @@ process.seqRawMEtResponseDown = cms.Sequence(
 process.seqRawMuUp = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
@@ -1228,7 +1257,8 @@ process.seqRawMuUp = cms.Sequence(
 process.seqRawMuDown = cms.Sequence(
     process.allEventsFilter*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     process.puJetIdSequence *
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
@@ -1242,7 +1272,7 @@ process.seqRawMuDown = cms.Sequence(
 process.seqRawTauUp = cms.Sequence(
     process.allEventsFilter*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.puJetIdSequence *
     process.metRecoilCorrector*
@@ -1256,7 +1286,7 @@ process.seqRawTauUp = cms.Sequence(
 process.seqRawTauDown = cms.Sequence(
     process.allEventsFilter*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.puJetIdSequence *
     process.metRecoilCorrector*
@@ -1355,7 +1385,7 @@ process.TFileService = cms.Service(
 #                             verbose=False)
 
 # before starting to process 1st event, print event content
-##process.printEventContent = cms.EDAnalyzer("EventContentAnalyzer")
+#process.printEventContent = cms.EDAnalyzer("EventContentAnalyzer")
 ##process.filterFirstEvent = cms.EDFilter("EventCountFilter",
 ##    numEvents = cms.int32(1)
 ##)

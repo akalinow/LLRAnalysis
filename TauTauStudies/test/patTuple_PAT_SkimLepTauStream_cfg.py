@@ -16,15 +16,15 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
-runOnMC     = False
-runOnEmbed  = True
+runOnMC     = True
+runOnEmbed  = False
 isPfEmbed   = False 
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
 
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V18::All')
+    process.GlobalTag.globaltag = cms.string('START53_V15::All')
 else:
     process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
 
@@ -1155,6 +1155,7 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_muPtEtaID_*_*',
     'keep *_muPtEtaRelID_*_*',
     'keep *_muons_*_*',
+    'keep *_globalMuons_*_*', #AN: needed for noPU MET
     'keep *_elecPtEtaID_*_*',
     'keep *_elecPtEtaRelID_*_*',
     'keep *_electronsForVeto_*_*',
@@ -1163,6 +1164,7 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_addPileupInfo_*_*',
     'keep *_generalTracks_*_*',
     'keep *_tmfTracks_*_*',
+    'keep *_generalTracksORG_*_*', #AN: needed for rechit Embed
     'keep *_electronGsfTracks_*_*',
     'keep recoTrackExtras_*_*_*',
     'keep recoGsfTrackExtras_*_*_*',
