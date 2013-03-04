@@ -31,6 +31,8 @@ UserIsolatedPatElectron::UserIsolatedPatElectron(const edm::ParameterSet & iConf
   isMC_ = iConfig.getParameter<bool>("isMC");
   verbose_ = iConfig.getUntrackedParameter<bool>("verbose",false);
   userIso_ = iConfig.getUntrackedParameter<std::string>("userIso");
+  minPt_ = iConfig.getParameter<double>("pt");  
+  maxEta_ = iConfig.getParameter<double>("eta"); 
   
   produces<pat::ElectronCollection>("");
 }
@@ -72,6 +74,8 @@ void UserIsolatedPatElectron::produce(edm::Event & iEvent, const edm::EventSetup
   for ( pat::ElectronCollection::const_iterator patElectron = patElectrons->begin(); 
 	patElectron != patElectrons->end(); ++patElectron ) { 
     const pat::Electron* electron = &(*patElectron);
+
+    if(electron->pt() < minPt_ || fabs(electron->eta()) > maxEta_)continue;
 
     PatElectronInfo tmpPatElectronInfo;
     tmpPatElectronInfo.ele_ = electron;

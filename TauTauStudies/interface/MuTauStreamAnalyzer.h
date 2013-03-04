@@ -12,7 +12,6 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-#include "Muon/MuonAnalysisTools/interface/MuonMVAEstimator.h"
 
 
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
@@ -80,8 +79,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
-  bool doMuIsoMVA_;
-  MuonMVAEstimator *fMuonIsoMVA_;
+  bool doIsoMVAOrdering_;
 
   std::vector< double >* jetsBtagHE_;
   std::vector< double >* jetsBtagHP_;
@@ -139,7 +137,6 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   int validityCA_,validityICA_;
   float x1CollApprox_,x2CollApprox_;
   float sumEt_;
-  float isoLeg1MVA_;
   float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_,elecIsoLeg1v1_,muIsoLeg1v1_;
   float chIsoPULeg1v1_,nhIsoPULeg1v1_,phIsoPULeg1v1_;
   float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_,elecIsoLeg1v2_,muIsoLeg1v2_;
@@ -150,6 +147,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float dxyE1_,dxyE2_;
   float dzE1_,dzE2_;
   float pfJetPt_;
+  float pfJetEtaMom2_; 
+  float pfJetPhiMom2_; 
   float MtLeg1_;
   float pZeta_;
   float pZetaVis_;
@@ -193,8 +192,18 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
 
   int tightestHPSWP_;
   int tightestHPSDBWP_;
+  int tightestHPSDB3HWP_;
   int tightestHPSMVAWP_;
+  int tightestHPSMVA2WP_;
+  int tightestAntiECutWP_; 
+  int tightestAntiEMVA3WP_; 
+  float AntiEMVA3raw_; 
+  int AntiEMVA3category_; 
+  int tightestAntiMuWP_; 
+  int tightestAntiMu2WP_;
   float hpsMVA_;
+  float hpsMVA2_;
+  float hpsDB3H_;
   int isTauLegMatched_;
   int isMuLegMatched_;
   int muFlag_;

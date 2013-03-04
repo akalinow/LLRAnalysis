@@ -25,6 +25,8 @@ class UserIsolatedPatTau : public edm::EDProducer{
   bool isMC_;
   bool verbose_;
   bool useIsoMVA_;
+  double minPt_;
+  double maxEta_;
 };
 
 

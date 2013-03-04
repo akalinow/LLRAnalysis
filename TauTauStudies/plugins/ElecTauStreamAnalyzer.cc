@@ -70,10 +70,12 @@
 /////// for jet-ID ///////////////////////////
 
 //#include "CMGTools/External/interface/PileupJetIdentifier.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+//#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 ///METCovMatrix/////
-#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+//#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+#include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 
 #include <vector>
 #include <utility>
@@ -106,8 +108,9 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
-
-  doElecIsoMVA_      = iConfig.getParameter<bool>("doElecIsoMVA");
+  doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
+  
+  doElecIsoMVA_      = iConfig.getUntrackedParameter<bool>("doElecIsoMVA", false);
   if( doElecIsoMVA_ ){
 //     fElectronIsoMVA_ = new EGammaMvaEleEstimator();
 //     edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
@@ -170,6 +173,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   diTauSVfitP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
   diTauLegsP4_    = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  diTauLegsAltP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genDiTauLegsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   METP4_          = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -317,6 +321,7 @@ void ElecTauStreamAnalyzer::beginJob(){
 
 
   tree_->Branch("diTauLegsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&diTauLegsP4_);
+  tree_->Branch("diTauLegsAltP4_","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&diTauLegsAltP4_);
   tree_->Branch("genDiTauLegsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genDiTauLegsP4_);
   tree_->Branch("genTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genTausP4_);
 
@@ -378,6 +383,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("dzE2",&dzE2_,"dzE2/F");
   tree_->Branch("scEta1",&scEta1_,"scEta1/F");
   tree_->Branch("pfJetPt",&pfJetPt_,"pfJetPt/F");
+  tree_->Branch("pfJetEtaMom2",&pfJetEtaMom2_,"pfJetEtaMom2/F");
+  tree_->Branch("pfJetPhiMom2",&pfJetPhiMom2_,"pfJetPhiMom2/F");
 
   // electron specific variables
   tree_->Branch("nBrehm",&nBrehm_,"nBrehm/F");
@@ -406,8 +413,6 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("decayMode",&decayMode_,"decayMode/I");
   tree_->Branch("genDecayMode",&genDecayMode_,"genDecayMode/I");
   tree_->Branch("genPolarization",&genPolarization_,"genPolarization/I");
-  tree_->Branch("tightestHPSWP",&tightestHPSWP_,"tightestHPSWP/I");
-  tree_->Branch("hpsMVA",&hpsMVA_,"hpsMVA/F");
   tree_->Branch("tightestCiCWP",&tightestCiCWP_,"tightestCiCWP/I");
   tree_->Branch("tightestCutBasedWP",&tightestCutBasedWP_,"tightestCutBasedWP/I");
   tree_->Branch("tightestMVAWP",&tightestMVAWP_,"tightestMVAWP/I");
@@ -420,8 +425,20 @@ void ElecTauStreamAnalyzer::beginJob(){
 
   tree_->Branch("tightestAntiEWP",&tightestAntiEWP_,"tightestAntiEWP/I");
   tree_->Branch("tightestAntiEMVAWP",&tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
+  tree_->Branch("tightestAntiEMVA3WP",&tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
+  tree_->Branch("AntiEMVA3category",&AntiEMVA3category_,"AntiEMVA3category/I");
+  tree_->Branch("AntiEMVA3raw",&AntiEMVA3raw_,"AntiEMVA3raw/F");
+  tree_->Branch("tightestAntiECutWP",&tightestAntiECutWP_,"tightestAntiECutWP/I");
+  tree_->Branch("tightestAntiMuWP",&tightestAntiMuWP_,"tightestAntiMuWP/I");
+  tree_->Branch("tightestAntiMu2WP",&tightestAntiMu2WP_,"tightestAntiMu2WP/I");
+  tree_->Branch("tightestHPSWP",&tightestHPSWP_,"tightestHPSWP/I");
   tree_->Branch("tightestHPSDBWP",&tightestHPSDBWP_,"tightestHPSDBWP/I");
+  tree_->Branch("tightestHPSDB3HWP",&tightestHPSDB3HWP_,"tightestHPSDB3HWP/I");
+  tree_->Branch("hpsDB3H",&hpsDB3H_,"hpsDB3H/F");
   tree_->Branch("tightestHPSMVAWP",&tightestHPSMVAWP_,"tightestHPSMVAWP/I");
+  tree_->Branch("hpsMVA",&hpsMVA_,"hpsMVA/F");
+  tree_->Branch("tightestHPSMVA2WP",&tightestHPSMVA2WP_,"tightestHPSMVA2WP/I"); 
+  tree_->Branch("hpsMVA2",&hpsMVA2_,"hpsMVA2/F");
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
   tree_->Branch("visibleGenTauMass",&visibleGenTauMass_,"visibleGenTauMass/F");
 
@@ -468,7 +485,7 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete METP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
   delete diTauSVfitP4_; delete genVP4_;
   delete diTauLegsP4_; delete jetsBtagHE_; delete jetsBtagHP_; delete jetsBtagCSV_;
-  delete bQuark_;
+  delete bQuark_; delete diTauLegsAltP4_;
   delete tauXTriggers_; delete triggerBits_; delete sigDCA_;
   delete genJetsIDP4_; delete genDiTauLegsP4_; delete genMETP4_;delete extraElectrons_; 
   delete vetoElectronsP4_; delete vetoTausP4_; delete vetoMuonsP4_; 
@@ -1002,15 +1019,16 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
     float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVAraw");
+    float sortVariable = (doIsoMVAOrdering_) ? isoMVA : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
        tau_i->tauID("byLooseIsolationMVA")>0.5 )
-      sortedDiTausLooseIso.insert( make_pair( sumPt, i ) );
-    sortedDiTaus.insert( make_pair( sumPt, i ) );
+      sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
+    sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
-      sortedDiTausOS.insert( make_pair( sumPt, i ) );
+      sortedDiTausOS.insert( make_pair( sortVariable, i ) );
     else
-      sortedDiTausSS.insert( make_pair( sumPt, i ) );
+      sortedDiTausSS.insert( make_pair( sortVariable, i ) );
   }
   if( sortedDiTausOS.size()>0 ) 
     index = (sortedDiTausOS.begin())->second ;
@@ -1049,6 +1067,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     diTauICAP4_->clear();
     diTauSVfitP4_->clear();
     diTauLegsP4_->clear();
+    diTauLegsAltP4_->clear();
     jetsChNfraction_->clear();
     jetsChEfraction_->clear();
     jetMoments_->clear();
@@ -1223,7 +1242,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     
     diTauLegsP4_->push_back(leg1->p4());
     diTauLegsP4_->push_back(leg2->p4());
-  
+    diTauLegsAltP4_->push_back(leg1->p4());
+    diTauLegsAltP4_->push_back(leg2->alternatLorentzVect());
+    
     genDecayMode_    = -99;
     genPolarization_ = -99;
     parton_          = -99;
@@ -1375,13 +1396,26 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
     if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_++;
     if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
+    tightestHPSDB3HWP_ = -1; 
+    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++; 
+    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5) tightestHPSDB3HWP_++; 
+    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++;
+    hpsDB3H_  = leg2->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+
     tightestHPSMVAWP_ = -1;
     if(leg2->tauID("byLooseIsolationMVA") >0.5) tightestHPSMVAWP_++;
     if(leg2->tauID("byMediumIsolationMVA")>0.5) tightestHPSMVAWP_++;
     if(leg2->tauID("byTightIsolationMVA") >0.5) tightestHPSMVAWP_++;
     hpsMVA_  = leg2->tauID("byIsolationMVAraw");
+    tightestHPSMVA2WP_ = -1; 
+    if(leg2->tauID("byLooseIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
+    if(leg2->tauID("byMediumIsolationMVA2")>0.5) tightestHPSMVA2WP_++; 
+    if(leg2->tauID("byTightIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
+    hpsMVA2_  = leg2->tauID("byIsolationMVA2raw"); 
 
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
+    pfJetEtaMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->etaetaMoment() : -99;
+    pfJetPhiMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->phiphiMoment() : -99;
 
     dxy1_  = vertexes->size()!=0 ? leg1->gsfTrack()->dxy( (*vertexes)[0].position() ) : -99;
     dz1_   = vertexes->size()!=0 ? leg1->gsfTrack()->dz( (*vertexes)[0].position() ) : -99;
@@ -1655,6 +1689,21 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGNonTrig")>0.985); 
     if(passesMVAPOGNonTrig) tightestMVAPOGNonTrigWP_ = 1;
     
+    tightestAntiMuWP_ = 0; 
+    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
+    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 
+    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3; 
+
+    tightestAntiMu2WP_ = 0;   
+    if( leg2->tauID("againstMuonLoose2")>0.5 )tightestAntiMu2WP_ = 1;   
+    if( leg2->tauID("againstMuonMedium2")>0.5 )tightestAntiMu2WP_ = 2;   
+    if( leg2->tauID("againstMuonTight2")>0.5 )tightestAntiMu2WP_ = 3;   
+
+    tightestAntiECutWP_ = 0;
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;
+
     tightestAntiEWP_ = 0;
     if( leg2->tauID("againstElectronTight")>0.5 && leg2->tauID("againstElectronMVA")<0.5) tightestAntiEWP_ = 1;
     if( leg2->tauID("againstElectronTight")<0.5 && leg2->tauID("againstElectronMVA")>0.5) tightestAntiEWP_ = 2;
@@ -1663,7 +1712,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 //     cout << leg2->tauID("againstElectronLooseMVA2") << endl;
 
     tightestAntiEMVAWP_ = 0;
-    //commented out for the time being to run over Ivo's patuple. 
     if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
         leg2->tauID("againstElectronMediumMVA2") <0.5 && 
         leg2->tauID("againstElectronTightMVA2")  <0.5) tightestAntiEMVAWP_ = 1; 
@@ -1691,6 +1739,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
         leg2->tauID("againstElectronMediumMVA2") >0.5 && 
         leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 7; 
+    
+    tightestAntiEMVA3WP_ = 0;
+    if( leg2->tauID("againstElectronLooseMVA3")>0.5)  tightestAntiEMVA3WP_  = 1;
+    if( leg2->tauID("againstElectronMediumMVA3")>0.5) tightestAntiEMVA3WP_  = 2;
+    if( leg2->tauID("againstElectronTightMVA3")>0.5)  tightestAntiEMVA3WP_  = 3;
+    if( leg2->tauID("againstElectronVTightMVA3")>0.5) tightestAntiEMVA3WP_  = 4;
+    AntiEMVA3raw_ = leg2->tauID("againstElectronMVA3raw");
+    AntiEMVA3category_ = leg2->tauID("againstElectronMVA3category");
     
     diTauVisP4_->push_back( theDiTau->p4Vis() );
     diTauCAP4_->push_back(  theDiTau->p4CollinearApprox() );

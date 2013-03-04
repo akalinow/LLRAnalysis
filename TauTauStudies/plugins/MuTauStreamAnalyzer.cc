@@ -64,10 +64,12 @@
 /////// for jet-ID ///////////////////////////
 
 //#include "CMGTools/External/interface/PileupJetIdentifier.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+//#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 ///METCovMatrix/////
-#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+//#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
+#include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 
 #include <vector>
 #include <utility>
@@ -99,30 +101,8 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
-  
+  doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
 
-  doMuIsoMVA_        = iConfig.getParameter<bool>("doMuIsoMVA");
-  if( doMuIsoMVA_ ){
-//     fMuonIsoMVA_ = new MuonMVAEstimator();
-//     edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
-//     edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
-//     edm::FileInPath inputFileName2 = iConfig.getParameter<edm::FileInPath>("inputFileName2");
-//     edm::FileInPath inputFileName3 = iConfig.getParameter<edm::FileInPath>("inputFileName3");
-//     edm::FileInPath inputFileName4 = iConfig.getParameter<edm::FileInPath>("inputFileName4");
-//     edm::FileInPath inputFileName5 = iConfig.getParameter<edm::FileInPath>("inputFileName5");   
-//     vector<string> muoniso_weightfiles;
-//     muoniso_weightfiles.push_back(inputFileName0.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName1.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName2.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName3.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName4.fullPath().data());
-//     muoniso_weightfiles.push_back(inputFileName5.fullPath().data());   
-//     fMuonIsoMVA_->initialize("MuonIso_BDTG_IsoRings",
-// 			     MuonMVAEstimator::kIsoRings,
-// 			     kTRUE,
-// 			     muoniso_weightfiles);
-  }
-  
 }
 
 void MuTauStreamAnalyzer::beginJob(){
@@ -355,7 +335,6 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("nhIsoPULeg1v2",&nhIsoPULeg1v2_,"nhIsoPULeg1v2/F");
   tree_->Branch("phIsoPULeg1v2",&phIsoPULeg1v2_,"phIsoPULeg1v2/F");
 
-  tree_->Branch("isoLeg1MVA",&isoLeg1MVA_,"isoLeg1MVA/F");
 
 
   tree_->Branch("chIsoLeg2",&chIsoLeg2_,"chIsoLeg2/F");
@@ -370,6 +349,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("dzE1",&dzE1_,"dzE1/F");
   tree_->Branch("dzE2",&dzE2_,"dzE2/F");
   tree_->Branch("pfJetPt",&pfJetPt_,"pfJetPt/F");
+  tree_->Branch("pfJetEtaMom2",&pfJetEtaMom2_,"pfJetEtaMom2/F");
+  tree_->Branch("pfJetPhiMom2",&pfJetPhiMom2_,"pfJetPhiMom2/F");
 
   tree_->Branch("run",&run_,"run/l");
   tree_->Branch("event",&event_,"event/l");
@@ -380,10 +361,20 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("decayMode",&decayMode_,"decayMode/I");
   tree_->Branch("genDecayMode",&genDecayMode_,"genDecayMode/I");
   tree_->Branch("genPolarization",&genPolarization_,"genPolarization/I");
+  tree_->Branch("tightestAntiECutWP",&tightestAntiECutWP_,"tightestAntiECutWP/I"); 
+  tree_->Branch("tightestAntiEMVA3WP",&tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I"); 
+  tree_->Branch("AntiEMVA3category",&AntiEMVA3category_,"AntiEMVA3category/I"); 
+  tree_->Branch("AntiEMVA3raw",&AntiEMVA3raw_,"AntiEMVA3raw/F"); 
+  tree_->Branch("tightestAntiMuWP",&tightestAntiMuWP_,"tightestAntiMuWP/I"); 
+  tree_->Branch("tightestAntiMu2WP",&tightestAntiMu2WP_,"tightestAntiMu2WP/I");
   tree_->Branch("tightestHPSWP",&tightestHPSWP_,"tightestHPSWP/I");
   tree_->Branch("tightestHPSDBWP",&tightestHPSDBWP_,"tightestHPSDBWP/I");
+  tree_->Branch("tightestHPSDB3HWP",&tightestHPSDB3HWP_,"tightestHPSDB3HWP/I");
+  tree_->Branch("hpsDB3H",&hpsDB3H_,"hpsDB3H/F");
   tree_->Branch("tightestHPSMVAWP",&tightestHPSMVAWP_,"tightestHPSMVAWP/I");
   tree_->Branch("hpsMVA",&hpsMVA_,"hpsMVA/F");
+  tree_->Branch("tightestHPSMVA2WP",&tightestHPSMVA2WP_,"tightestHPSMVA2WP/I"); 
+  tree_->Branch("hpsMVA2",&hpsMVA2_,"hpsMVA2/F");
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
   tree_->Branch("visibleGenTauMass",&visibleGenTauMass_,"visibleGenTauMass/F");
 
@@ -447,7 +438,6 @@ MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
   delete metSgnMatrix_;
-  if( doMuIsoMVA_ && fMuonIsoMVA_!=0) delete fMuonIsoMVA_;
 }
 
 void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup){
@@ -946,16 +936,17 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-
+    float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVAraw");
+    float sortVariable = (doIsoMVAOrdering_) ? isoMVA : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
-    if(tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 ||
+    if(/*tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 ||*/
        tau_i->tauID("byLooseIsolationMVA")>0.5)
-      sortedDiTausLooseIso.insert( make_pair( sumPt, i ) );
-    sortedDiTaus.insert( make_pair( sumPt, i ) );
+      sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
+    sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
-      sortedDiTausOS.insert( make_pair( sumPt, i ) );
+      sortedDiTausOS.insert( make_pair( sortVariable, i ) );
     else
-      sortedDiTausSS.insert( make_pair( sumPt, i ) );
+      sortedDiTausSS.insert( make_pair( sortVariable, i ) );
   }
   if( sortedDiTausOS.size()>0 ) 
     index = (sortedDiTausOS.begin())->second ;
@@ -1339,13 +1330,55 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
     if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_++;
     if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
+    tightestHPSDB3HWP_ = -1; 
+    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++; 
+    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5) tightestHPSDB3HWP_++; 
+    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++;
+    hpsDB3H_  = leg2->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+
     tightestHPSMVAWP_ = -1;
     if(leg2->tauID("byLooseIsolationMVA") >0.5) tightestHPSMVAWP_++;
     if(leg2->tauID("byMediumIsolationMVA")>0.5) tightestHPSMVAWP_++;
     if(leg2->tauID("byTightIsolationMVA") >0.5) tightestHPSMVAWP_++;
     hpsMVA_  = leg2->tauID("byIsolationMVAraw");
 
+    tightestHPSMVA2WP_ = -1; 
+    if(leg2->tauID("byLooseIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
+    if(leg2->tauID("byMediumIsolationMVA2")>0.5) tightestHPSMVA2WP_++; 
+    if(leg2->tauID("byTightIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
+    hpsMVA2_  = leg2->tauID("byIsolationMVA2raw"); 
+
+    tightestAntiMuWP_ = 0;  
+    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1;  
+    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2;  
+    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3;  
+ 
+    tightestAntiMu2WP_ = 0;   
+    if( leg2->tauID("againstMuonLoose2")>0.5 )tightestAntiMu2WP_ = 1;   
+    if( leg2->tauID("againstMuonMedium2")>0.5 )tightestAntiMu2WP_ = 2;   
+    if( leg2->tauID("againstMuonTight2")>0.5 )tightestAntiMu2WP_ = 3;   
+
+    tightestAntiECutWP_ = 0; 
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1; 
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2; 
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3; 
+
+    tightestAntiECutWP_ = 0;  
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;  
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;  
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;  
+
+    tightestAntiEMVA3WP_ = 0; 
+    if( leg2->tauID("againstElectronLooseMVA3")>0.5)  tightestAntiEMVA3WP_  = 1; 
+    if( leg2->tauID("againstElectronMediumMVA3")>0.5) tightestAntiEMVA3WP_  = 2; 
+    if( leg2->tauID("againstElectronTightMVA3")>0.5)  tightestAntiEMVA3WP_  = 3; 
+    if( leg2->tauID("againstElectronVTightMVA3")>0.5) tightestAntiEMVA3WP_  = 4; 
+    AntiEMVA3raw_ = leg2->tauID("againstElectronMVA3raw"); 
+    AntiEMVA3category_ = leg2->tauID("againstElectronMVA3category"); 
+
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
+    pfJetEtaMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->etaetaMoment() : -99;
+    pfJetPhiMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->phiphiMoment() : -99;
      
     dxy1_  = vertexes->size()!=0 && (leg1->innerTrack()).isNonnull() ? leg1->innerTrack()->dxy( (*vertexes)[0].position() ) : -99;
     dz1_   = vertexes->size()!=0 && (leg1->innerTrack()).isNonnull() ? leg1->innerTrack()->dz( (*vertexes)[0].position() ) : -99;
@@ -1383,25 +1416,6 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
        (leg1->track()->hitPattern()).trackerLayersWithMeasurement()>5) ? 1 : 0;
 
     isPFMuon_   = leg1->userInt("isPFMuon");
-    isoLeg1MVA_ = -99;
-    if(doMuIsoMVA_ && fMuonIsoMVA_!=0 && vertexes->size()){
-      
-      const reco::GsfElectronCollection dummyGsfColl;
-      const reco::MuonCollection dummyRecoMuon;
-      
-      const reco::Muon* aMuon = static_cast<const reco::Muon*>(leg1); 
-      // Mu-Iso MVA
-      isoLeg1MVA_ = isMC_ ?
-	fMuonIsoMVA_->mvaValue( *aMuon, (*vertexes)[0], 
-				*pfCandidates, rhoFastJet_, 
-				MuonEffectiveArea::kMuEAFall11MC, 
-				dummyGsfColl, dummyRecoMuon) :
-	fMuonIsoMVA_->mvaValue( *aMuon, (*vertexes)[0], 
-				*pfCandidates, rhoFastJet_, 
-				MuonEffectiveArea::kMuEAData2011, 
-				dummyGsfColl, dummyRecoMuon) ;
-      //cout << "Muon Iso MVA = " << isoLeg1MVA_ << endl;
-    }
     
     // isoDeposit definition: 2011
     isodeposit::AbsVetos vetos2011ChargedLeg1; 

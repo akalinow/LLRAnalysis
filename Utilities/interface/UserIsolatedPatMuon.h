@@ -23,6 +23,8 @@ class UserIsolatedPatMuon : public edm::EDProducer{
   bool isMC_;
   bool verbose_;
   std::string userIso_;
+  double minPt_; 
+  double maxEta_;
 };
 
 
