@@ -1,17 +1,17 @@
-#ifndef LLRAnalysis_Utilities_GetTauMatchedCaloJet_h
-#define LLRAnalysis_Utilities_GetTauMatchedCaloJet_h
+#ifndef LLRAnalysis_Utilities_GenTauMatchedCaloJet_h
+#define LLRAnalysis_Utilities_GenTauMatchedCaloJet_h
 
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-class GetTauMatchedCaloJet : public edm::EDProducer{
+class GenTauMatchedCaloJet : public edm::EDProducer{
 
  public: 
 
-  explicit GetTauMatchedCaloJet(const edm::ParameterSet&);
-  virtual ~GetTauMatchedCaloJet();
+  explicit GenTauMatchedCaloJet(const edm::ParameterSet&);
+  virtual ~GenTauMatchedCaloJet();
 
  private:
 

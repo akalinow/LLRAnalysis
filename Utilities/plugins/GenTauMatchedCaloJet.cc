@@ -1,4 +1,4 @@
-#include "LLRAnalysis/Utilities/interface/GetTauMatchedCaloJet.h"
+#include "LLRAnalysis/Utilities/interface/GenTauMatchedCaloJet.h"
 
 #include "DataFormats/JetReco/interface/CaloJet.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-GetTauMatchedCaloJet::GetTauMatchedCaloJet(const edm::ParameterSet & iConfig){
+GenTauMatchedCaloJet::GenTauMatchedCaloJet(const edm::ParameterSet & iConfig){
 
   jetTag_       = iConfig.getParameter<edm::InputTag>("jetTag"); 
   genTauJetTag_ = iConfig.getParameter<edm::InputTag>("genTauJetTag"); 
@@ -18,10 +18,10 @@ GetTauMatchedCaloJet::GetTauMatchedCaloJet(const edm::ParameterSet & iConfig){
   produces<reco::CaloJetCollection>("");
 }
 
-GetTauMatchedCaloJet::~GetTauMatchedCaloJet(){
+GenTauMatchedCaloJet::~GenTauMatchedCaloJet(){
 }
 
-void GetTauMatchedCaloJet::produce(edm::Event & iEvent, const edm::EventSetup & iSetup){
+void GenTauMatchedCaloJet::produce(edm::Event & iEvent, const edm::EventSetup & iSetup){
 
   edm::Handle<reco::CaloJetCollection> caloJetsHandle;
   iEvent.getByLabel(jetTag_, caloJetsHandle);
@@ -69,4 +69,4 @@ return;
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(GetTauMatchedCaloJet);
+DEFINE_FWK_MODULE(GenTauMatchedCaloJet);
