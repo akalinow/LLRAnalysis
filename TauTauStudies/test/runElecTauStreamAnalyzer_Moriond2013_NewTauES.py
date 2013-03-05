@@ -16,20 +16,25 @@ runOnMC     = True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-useLepTauPAT2012D = True
+useLepTauPAT = True
 runUserIsoTau = True
 applyTauESCorr= True
+useMarkov   = True
 
 if runOnMC:
     print "Running on MC"
 else:
     print "Running on Data"
 
-if useLepTauPAT2012D:
-    print "Running on common LepTau PAT-tuples (2012D)"
+if useLepTauPAT:
+    print "Running on common LepTau PAT-tuples"
 else:
-    print "Running on standard ElecTau PAT-tuples"
+    print "Running on old ElecTau PAT-tuples"
 
+if useMarkov:
+    print "Use SVFit with Markov chain integration"
+else:
+    print "Use SVFit with VEGAS integration"
 
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V15::All')
@@ -296,7 +301,7 @@ process.UserIsoTaus = cms.EDProducer( #Most isolated tau
     pt = cms.double(19),
     eta = cms.double(2.3)
     )
-if useLepTauPAT2012D:
+if useLepTauPAT:
     process.tauPtEtaIDAgMuAgElecRelIso.src = "tauPtEtaIDAgMuLAgElec"
     process.UserIsoTaus.patTauTag = "tauPtEtaIDAgMuLAgElec"
 if applyTauESCorr:
@@ -422,13 +427,48 @@ if usePFMEtMVA and useRecoil :
         
 ###################################################################################
 
-process.load("LLRAnalysis.Utilities.diTausReconstruction_cff")
+#process.load("LLRAnalysis.Utilities.diTausReconstruction_cff")
+process.load("TauAnalysis.CandidateTools.elecTauPairProduction_cff")
 process.diTau = process.allElecTauPairs.clone()
 process.diTau.srcLeg1  = cms.InputTag("elecPtEtaIDIso")
 process.diTau.srcLeg2  = cms.InputTag("tauPtEtaIDAgMuAgElecIso")
 process.diTau.srcMET   = cms.InputTag("metRecoilCorrector",  "N")
+process.diTau.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
 process.diTau.dRmin12  = cms.double(0.5)
 process.diTau.doSVreco = cms.bool(doSVFitReco)
+if useMarkov:
+    process.diTau.nSVfit.psKine_MEt_int.algorithm = cms.PSet( #Markov chain integration
+    pluginName = cms.string(
+        "nSVfitAlgorithmByIntegration2"
+    ),
+    pluginType = cms.string(
+        "NSVfitAlgorithmByIntegration2"
+    ),
+    markovChainOptions = cms.PSet(
+        mode = cms.string(
+            "Metropolis"
+        ),
+        initMode = cms.string(
+            "Gaus"
+        ),
+        numIterBurnin = cms.uint32(10000),
+        numIterSampling = cms.uint32(100000),
+        numIterSimAnnealingPhase1 = cms.uint32(2000),
+        numIterSimAnnealingPhase2 = cms.uint32(6000),
+        T0 = cms.double(15.),
+        alpha = cms.double(0.999),
+        numChains = cms.uint32(1),
+        numBatches = cms.uint32(1),
+        L = cms.uint32(1),
+        epsilon0 = cms.double(1.e-2),
+        nu = cms.double(0.71)
+    ),
+    max_or_median = cms.string(
+        "max"
+    ),
+    verbosity = cms.int32(0)
+)#end of Markov chain configuration
+    
 if usePFMEtMVA:
     if useRecoil :
         process.diTau.srcMET = cms.InputTag("metRecoilCorrector",  "N")
@@ -447,13 +487,13 @@ if usePFMEtMVA:
     if useRecoil :
         process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.srcMEt = cms.InputTag("metRecoilCorrector", "N")
         process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
-        process.diTau.nSVfit.psKine_MEt_logM_int.config.event.srcMEt = cms.InputTag("metRecoilCorrector", "N")
-        process.diTau.nSVfit.psKine_MEt_logM_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
+        process.diTau.nSVfit.psKine_MEt_int.config.event.srcMEt = cms.InputTag("metRecoilCorrector", "N")
+        process.diTau.nSVfit.psKine_MEt_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
     else :
         process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.srcMEt = cms.InputTag("patPFMetByMVA")
         process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
-        process.diTau.nSVfit.psKine_MEt_logM_int.config.event.srcMEt = cms.InputTag("patPFMetByMVA")
-        process.diTau.nSVfit.psKine_MEt_logM_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
+        process.diTau.nSVfit.psKine_MEt_int.config.event.srcMEt = cms.InputTag("patPFMetByMVA")
+        process.diTau.nSVfit.psKine_MEt_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
 
 process.selectedDiTau = cms.EDFilter(
     "ElecTauPairSelector",
@@ -471,14 +511,16 @@ process.diTauRaw = process.allElecTauPairs.clone()
 process.diTauRaw.srcLeg1  = cms.InputTag("elecPtEtaIDIso")
 process.diTauRaw.srcLeg2  = cms.InputTag("tauPtEtaIDAgMuAgElecIso")
 process.diTauRaw.srcMET   = cms.InputTag("metRecoilCorrector",  "N")
+process.diTauRaw.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
 process.diTauRaw.dRmin12  = cms.double(0.5)
 process.diTauRaw.doSVreco = cms.bool(doSVFitReco)
+process.diTauRaw.nSVfit.psKine_MEt_int.algorithm = process.diTau.nSVfit.psKine_MEt_int.algorithm
 
 if not runOnMC:
     process.diTauRaw.srcGenParticles = ""
         
 process.diTauRaw.nSVfit.psKine_MEt_logM_fit.config.event.srcMEt = cms.InputTag("metRecoilCorrector",  "N")
-process.diTauRaw.nSVfit.psKine_MEt_logM_int.config.event.srcMEt = cms.InputTag("metRecoilCorrector",  "N")
+process.diTauRaw.nSVfit.psKine_MEt_int.config.event.srcMEt = cms.InputTag("metRecoilCorrector",  "N")
 
 process.selectedDiTauRaw =  process.selectedDiTau.clone(   src = cms.InputTag("diTauRaw") )
 process.selectedDiTauRawCounter =  process.selectedDiTauCounter.clone(   src = cms.InputTag("selectedDiTauRaw") )
@@ -726,7 +768,7 @@ process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec")
     #verbose         = cms.bool(True)
     )
-if useLepTauPAT2012D:
+if useLepTauPAT:
     process.tauPtEtaIDAgMuAgElecScaled.tauTag = "tauPtEtaIDAgMuLAgElec"
     
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
@@ -751,7 +793,7 @@ process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
                      ),
     filter = cms.bool(False)
     )
-if useLepTauPAT2012D:
+if useLepTauPAT:
     process.tauPtEtaIDAgMuAgElecIso.src = "tauPtEtaIDAgMuLAgElec"
     process.tauPtEtaIDAgMuAgElecIsoPtRel.src = "tauPtEtaIDAgMuLAgElec"
 if applyTauESCorr:
@@ -1417,5 +1459,6 @@ process.TFileService = cms.Service(
 
 process.outpath = cms.EndPath()
 
-processDumpFile = open('runElecTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
-print >> processDumpFile, process.dumpPython()
+##
+#processDumpFile = open('runElecTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+#print >> processDumpFile, process.dumpPython()
