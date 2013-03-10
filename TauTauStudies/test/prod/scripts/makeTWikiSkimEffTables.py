@@ -69,7 +69,8 @@ def getEffFromTrigReport(selectionPath,skimType,fileList,opt):
     outputString+="<td>"+filters[0]+"</td> <td>"+str(NPassedPath[0])+"</td> <td>"+'%5.3f'%(eff)+"</td>"
     outputString += "</tr> "    
     for i in range(1,len(filters)):
-        if (float(NPassedPath[i-1]==0)):
+        #if (float(NPassedPath[i-1]==0)):
+        if (float(NBeforePath[i])==0):
             eff = -1.
         else:
             eff = float(NPassedPath[i])/float(NBeforePath[i])
@@ -131,10 +132,10 @@ def getReportForSample(path,skimType,crabDirPattern=""):
                     dbsInst = tmp1
             print "datasetpath: ",datasetpath," pset: ",pset," SE: ",storage_element
             print "publish_data_name: ",publish_data_name
-            dbsDatasetName="/"+datasetpath.split("/")[1]+"/akalinow-"+publish_data_name
+            dbsDatasetName="/"+datasetpath.split("/")[1]+"/mbluj-"+publish_data_name
             print "DBS Instance: ",dbsInst
             print "DBS Dataset name: ",dbsDatasetName
-            print "DBS Link: ","https://cmsweb.cern.ch/dbs_discovery/aSearch?caseSensitive=on&userMode=user&sortOrder=desc&sortName=&grid=1&method=dbsapi&dbsInst="+dbsInst+"&userInput=find+dataset+where+dataset+like+*"+dbsDatasetName+"*"+skimType+"*+and+dataset.status+like+VALID*"
+            print "DBS Link: ","https://cmsweb.cern.ch/dbs_discovery/aSearch?caseSensitive=on&userMode=user&sortOrder=desc&sortName=&grid=1&method=dbsapi&dbsInst="+dbsInst+"&userInput=find+dataset+where+dataset+like+*"+dbsDatasetName+"*/*"+skimType+"*+and+dataset.status+like+VALID*"
             print "DAS Link: ","https://cmsweb.cern.ch/das/request?view=list&limit=10&instance="+dbsInst+"&input=dataset%3D"+dbsDatasetName.replace("/","%2F")+"*"+skimType            
         ##############
             selectionPaths = ['']
@@ -177,7 +178,7 @@ def getReportForSample(path,skimType,crabDirPattern=""):
                 publishName = dbsDatasetName+" (Not published)"
             print "datasetpath: ",datasetpath," pset: ",pset," SE: ",storage_element
             print "publish_data_name: ",publish_data_name
-            dbsDatasetName="/"+datasetpath.split("/")[1]+"/akalinow-"+publish_data_name
+            dbsDatasetName="/"+datasetpath.split("/")[1]+"/mbluj-"+publish_data_name
             print "DBS Instance: ",dbsInst
             print "dbsDatasetName: ",dbsDatasetName
             print "publishName: ",publishName
@@ -185,7 +186,7 @@ def getReportForSample(path,skimType,crabDirPattern=""):
             fileName = "TWiki_"+skimType+".txt"
             f = open(fileName,"a")
             
-            f.write("<tr> <td>[[https://cmsweb.cern.ch/das/request?view=list&limit=10&instance="+dbsInst+"&input=dataset%3D"+dbsDatasetName.replace("/","%2F")+"*"+skimType+"]["+publishName+"]]"
+            f.write("<tr> <td>[[https://cmsweb.cern.ch/das/request?view=list&limit=10&instance="+dbsInst+"&input=dataset%3D"+dbsDatasetName.replace("/","%2F")+"*/*"+skimType+"]["+publishName+"]]"
                     + "</td> <td>" + "[["+dashboardLink+"][Link]]"
                     + "</td> <td>" + "[[https://cmsweb.cern.ch/filemover/]["+storage_element+"]]"
                     + "</td> <td>" + outputString
@@ -194,8 +195,8 @@ def getReportForSample(path,skimType,crabDirPattern=""):
 ##################
 ##################
 #rootPath = "/home/akalinow/scratch/CMS/test/"
-rootPath = "/home/llr/cms/mbluj/WorkDir/CMSSW/CMSSW_5_3_4_patch1/src/LLRAnalysis/TauTauStudies/test/skim/"
+rootPath = "/home/llr/cms/mbluj/WorkDir/CMSSW/CMSSW_5_3_4_patch2_pat_4March/src/LLRAnalysis/TauTauStudies/test/prod/"
 
-getReportForSample(rootPath,"","LepTauTrg-Skim_AOD")
+getReportForSample(rootPath,"","_06Mar2013_PAT_v1")
 
 
