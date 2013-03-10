@@ -12,7 +12,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = False
+runOnMC     = True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -94,7 +94,7 @@ process.patPFMetByMVA = process.patMETs.clone(
     metSource = cms.InputTag('pfMEtMVA'),
     addMuonCorrections = cms.bool(False),
     genMETSource = cms.InputTag('genMetTrue'),
-    addGenMET = cms.bool(False)
+    addGenMET = cms.bool(runOnMC)
 )
 #----------------------------------------------------------------------------------
 
@@ -168,6 +168,22 @@ process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
 
 ##from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
 ##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
+process.patPFMet.addGenMET = cms.bool(runOnMC)
+process.patPFMetJetEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetJetEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetMuonEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetMuonEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetTauEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetTauEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpJetEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpJetEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpMuonEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpMuonEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpTauEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpTauEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpUnclusteredEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpUnclusteredEnDown.addGenMET = cms.bool(runOnMC)
 ##process.producePatPFMETCorrections.remove(process.patPFMet)
 
 process.produceType1corrPFMEt = cms.Sequence()
@@ -1439,5 +1455,6 @@ process.TFileService = cms.Service(
 
 process.outpath = cms.EndPath()
 
-processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
-print >> processDumpFile, process.dumpPython()
+##
+#processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+#print >> processDumpFile, process.dumpPython()

@@ -96,7 +96,7 @@ process.patPFMetByMVA = process.patMETs.clone(
     metSource = cms.InputTag('pfMEtMVA'),
     addMuonCorrections = cms.bool(False),
     genMETSource = cms.InputTag('genMetTrue'),
-    addGenMET = cms.bool(False)
+    addGenMET = cms.bool(runOnMC)
     )
 #----------------------------------------------------------------------------------
 
@@ -170,6 +170,22 @@ process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
 
 ##from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
 ##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
+process.patPFMet.addGenMET = cms.bool(runOnMC)
+process.patPFMetJetEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetJetEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetElectronEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetElectronEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetTauEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetTauEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpJetEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpJetEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpElectronEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpElectronEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpTauEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpTauEnDown.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpUnclusteredEnUp.addGenMET = cms.bool(runOnMC)
+process.patPFMetNoPileUpUnclusteredEnDown.addGenMET = cms.bool(runOnMC)
 ##process.producePatPFMETCorrections.remove(process.patPFMet)
 
 process.produceType1corrPFMEt = cms.Sequence()
