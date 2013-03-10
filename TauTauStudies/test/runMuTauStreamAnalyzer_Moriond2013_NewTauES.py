@@ -12,7 +12,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = True
+runOnMC     = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -44,7 +44,8 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream.root'
+        ##'file:patTuples_LepTauStream.root'
+        'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
     )
 )
 
@@ -169,8 +170,10 @@ process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
 ##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
 ##process.producePatPFMETCorrections.remove(process.patPFMet)
 
+process.produceType1corrPFMEt = cms.Sequence()
 if runOnMC:
     process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
+    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
 else:
     # CV: apply data/MC residual correction to "unclustered energy"
     process.calibratedPFCandidates = cms.EDProducer("PFCandResidualCorrProducer",
@@ -178,7 +181,8 @@ else:
         residualCorrLabel = cms.string("ak5PFResidual"),
         residualCorrEtaMax = cms.double(9.9),
         extraCorrFactor = cms.double(1.05)
-    )                                                        
+    )
+    process.produceType1corrPFMEt += process.calibratedPFCandidates
     process.pfCandidateToVertexAssociation.PFCandidateCollection = cms.InputTag('calibratedPFCandidates')
     process.patPFJetMETtype1p2Corr.type2ResidualCorrLabel = cms.string("ak5PFResidual")
     process.patPFJetMETtype1p2Corr.type2ResidualCorrEtaMax = cms.double(9.9)
@@ -190,8 +194,7 @@ else:
     )
     process.producePatPFMETCorrections.replace(process.pfCandMETcorr, process.pfCandMETcorr + process.pfCandMETresidualCorr)
     process.patType1CorrectedPFMet.srcType1Corrections.append(cms.InputTag('pfCandMETresidualCorr'))
-
-process.produceType1corrPFMEt = cms.Sequence(process.pfType1MEtUncertaintySequence)    
+    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
 #----------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------
@@ -1436,6 +1439,5 @@ process.TFileService = cms.Service(
 
 process.outpath = cms.EndPath()
 
-##
-#processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
-#print >> processDumpFile, process.dumpPython()
+processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+print >> processDumpFile, process.dumpPython()

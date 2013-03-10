@@ -172,8 +172,10 @@ process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
 ##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
 ##process.producePatPFMETCorrections.remove(process.patPFMet)
 
+process.produceType1corrPFMEt = cms.Sequence()
 if runOnMC:
     process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
+    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
 else:
     # CV: apply data/MC residual correction to "unclustered energy"
     process.calibratedPFCandidates = cms.EDProducer("PFCandResidualCorrProducer",
@@ -181,7 +183,8 @@ else:
         residualCorrLabel = cms.string("ak5PFResidual"),
         residualCorrEtaMax = cms.double(9.9),
         extraCorrFactor = cms.double(1.05)
-    )                                                        
+    )
+    process.produceType1corrPFMEt += process.calibratedPFCandidates
     process.pfCandidateToVertexAssociation.PFCandidateCollection = cms.InputTag('calibratedPFCandidates')
     process.patPFJetMETtype1p2Corr.type2ResidualCorrLabel = cms.string("ak5PFResidual")
     process.patPFJetMETtype1p2Corr.type2ResidualCorrEtaMax = cms.double(9.9)
@@ -193,8 +196,7 @@ else:
     )
     process.producePatPFMETCorrections.replace(process.pfCandMETcorr, process.pfCandMETcorr + process.pfCandMETresidualCorr)
     process.patType1CorrectedPFMet.srcType1Corrections.append(cms.InputTag('pfCandMETresidualCorr'))
-
-process.produceType1corrPFMEt = cms.Sequence(process.pfType1MEtUncertaintySequence)    
+    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
 #----------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------
