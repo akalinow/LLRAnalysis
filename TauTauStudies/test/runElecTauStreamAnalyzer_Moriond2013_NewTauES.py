@@ -17,9 +17,10 @@ doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 useLepTauPAT = True
-runUserIsoTau = True
+runUserIsoTau = False
 applyTauESCorr= True
 useMarkov   = True
+runMoriond = True
 
 if runOnMC:
     print "Running on MC"
@@ -78,7 +79,10 @@ if runUserIsoTau:
     tausForPFMEtMVA = cms.InputTag('UserIsoTaus') 
 else :
     tausForPFMEtMVA = cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') 
-process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoElectrons'), tausForPFMEtMVA )
+if runMoriond:
+    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('muPtEtaRelIDRelIso'), cms.InputTag('elecPtEtaRelIDRelIso'), cms.InputTag('tauPtEtaIDAgMuAgElecRelIso') )
+else:
+    process.pfMEtMVA.srcLeptons = cms.VInputTag( cms.InputTag('UserIsoElectrons'), tausForPFMEtMVA )
                 
 #process.pfMEtMVA.srcVertices = cms.InputTag("selectedPrimaryVertices")
 process.pfMEtMVA.srcVertices = cms.InputTag("offlinePrimaryVertices")
@@ -305,8 +309,8 @@ process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
-                     #" && tauID('byIsolationMVA2raw')>0.7" #Selection as like Phil's
-                     " && tauID('byLooseIsolationMVA2')>0.5"
+                     " && tauID('byIsolationMVA2raw')>0.7" #Selection as like Phil's
+                     #" && tauID('byLooseIsolationMVA2')>0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -326,19 +330,20 @@ if applyTauESCorr:
     process.tauPtEtaIDAgMuAgElecRelIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
     process.UserIsoTaus.patTauTag = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
             
-#process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
-#                                        process.elecPtEtaRelIDRelIso*
-#                                        process.tauPtEtaIDAgMuAgElecRelIso
-#                                        #*process.UserIsoTaus # uncomment to use most isolated tau
-#                                        )
 if runUserIsoTau :
     process.TausForMVAMEt = cms.Sequence(process.UserIsoTaus)
 else :
     process.TausForMVAMEt = cms.Sequence(process.tauPtEtaIDAgMuAgElecRelIso)
-process.LeptonsForMVAMEt = cms.Sequence(#process.UserIsoMuons*
-                                        process.UserIsoElectrons*
-                                        process.TausForMVAMEt
-                                        )
+if runMoriond:
+    process.LeptonsForMVAMEt = cms.Sequence(process.muPtEtaRelIDRelIso*
+                                            process.elecPtEtaRelIDRelIso*
+                                            process.TausForMVAMEt
+                                            )
+else:
+    process.LeptonsForMVAMEt = cms.Sequence(#process.UserIsoMuons*
+                                            process.UserIsoElectrons*
+                                            process.TausForMVAMEt
+                                            )
 ###################################################################################
 process.rescaledMET = cms.EDProducer(
     "MEtRescalerProducer",
@@ -817,7 +822,17 @@ if useLepTauPAT:
 if applyTauESCorr:
     process.tauPtEtaIDAgMuAgElecIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
     process.tauPtEtaIDAgMuAgElecIsoPtRel.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
-            
+if runMoriond:
+    process.tauPtEtaIDAgMuLAgElec.cut = cms.string("tauID('againstMuonLoose2')>0.5 || tauID('againstMuonLoose')>0.5")
+    process.tauPtEtaIDAgMuAgElecIso.cut = cms.string("pt>20 && abs(eta)<2.3"+
+                                                     " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
+                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                    )
+    process.tauPtEtaIDAgMuAgElecIsoPtRel.cut = cms.string("pt>19 && abs(eta)<2.3"+
+                                                          " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
+                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                          )
+    
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
     "CandViewCountFilter",
     src = cms.InputTag("tauPtEtaIDAgMuAgElecIso"),
@@ -1420,7 +1435,10 @@ process.seqRawTauDown = cms.Sequence(
     process.diTauRawTauDown*process.selectedDiTauRawTauDown*process.selectedDiTauRawTauDownCounter*
     process.elecTauStreamAnalyzerRawTauDown
     )
-
+if runMoriond:
+    process.seqNominal.remove(process.produceType1corrPFMEt)
+    process.seqNominal.remove(process.producePFMEtNoPileUp)
+    
 #######################################################################
 
 if runOnMC:
