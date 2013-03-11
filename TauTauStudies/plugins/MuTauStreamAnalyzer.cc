@@ -71,6 +71,10 @@
 //#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
 #include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 
+#include "DataFormats/METReco/interface/CaloMET.h"
+#include "DataFormats/METReco/interface/CaloMETFwd.h"
+
+
 #include <vector>
 #include <utility>
 #include <map>
@@ -151,6 +155,7 @@ void MuTauStreamAnalyzer::beginJob(){
   genDiTauLegsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   METP4_          = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  caloMETNoHFP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genMETP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
@@ -160,6 +165,11 @@ void MuTauStreamAnalyzer::beginJob(){
   vetoMuonsP4_     = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   vetoElectronsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   vetoTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+
+  l1ETMP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  trgTaus_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  trgTauId_= new std::vector< int >();
+  l1Muons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
   // Summer12: truth (from twiki)
   std::vector< float > Summer12Lumi;
@@ -286,9 +296,13 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("x1CollApprox",&x1CollApprox_,"x1CollApprox/F");
   tree_->Branch("x2CollApprox",&x2CollApprox_,"x2CollApprox/F");
 
+  tree_->Branch("diTauNSVfitIsValid",    &diTauNSVfitIsValid_,"diTauNSVfitIsValid/I");
   tree_->Branch("diTauNSVfitMass",       &diTauNSVfitMass_,"diTauNSVfitMass/F");
   tree_->Branch("diTauNSVfitMassErrUp",  &diTauNSVfitMassErrUp_,"diTauNSVfitMassErrUp/F");
   tree_->Branch("diTauNSVfitMassErrDown",&diTauNSVfitMassErrDown_,"diTauNSVfitMassErrDown/F");
+  tree_->Branch("diTauNSVfitPt",         &diTauNSVfitPt_,"diTauNSVfitPt/F");
+  tree_->Branch("diTauNSVfitPtErrUp",    &diTauNSVfitPtErrUp_,"diTauNSVfitPtErrUp/F");
+  tree_->Branch("diTauNSVfitPtErrDown",  &diTauNSVfitPtErrDown_,"diTauNSVfitPtErrDown/F");
   tree_->Branch("diTauSVfitMassErrUp",   &diTauSVfitMassErrUp_,"diTauSVfitMassErrUp/F");
   tree_->Branch("diTauSVfitMassErrDown", &diTauSVfitMassErrDown_,"diTauSVfitMassErrDown/F");
 
@@ -298,6 +312,7 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("genTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genTausP4_);
 
   tree_->Branch("METP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&METP4_);
+  tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
   tree_->Branch("genMETP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genMETP4_);
   tree_->Branch("genVP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genVP4_);
   tree_->Branch("genDecay",&genDecay_,"genDecay/I");
@@ -314,7 +329,13 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("vetoElectronsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&vetoElectronsP4_);
   tree_->Branch("vetoTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&vetoTausP4_);
 
+  tree_->Branch("l1ETMP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1ETMP4_);
+  tree_->Branch("trgTaus","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&trgTaus_);
+  tree_->Branch("trgTauId","std::vector<int>",&trgTauId_);
+  tree_->Branch("l1Muons","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1Muons_);
+
   tree_->Branch("sumEt",&sumEt_,"sumEt/F");
+  tree_->Branch("caloNoHFsumEt",&caloNoHFsumEt_,"caloNoHFsumEt/F");
   tree_->Branch("mTauTauMin",&mTauTauMin_,"mTauTauMin/F");
   tree_->Branch("MtLeg1",&MtLeg1_,"MtLeg1/F");
   tree_->Branch("pZeta",&pZeta_,"pZeta/F");
@@ -403,10 +424,12 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("isTauLegMatched",&isTauLegMatched_,"isTauLegMatched/I");
   tree_->Branch("isMuLegMatched",&isMuLegMatched_,"isMuLegMatched/I");
   tree_->Branch("muFlag",&muFlag_,"muFlag/I");
+  tree_->Branch("muFlagSoft",&muFlagSoft_,"muFlagSoft/I");
   tree_->Branch("vetoEvent",&vetoEvent_,"vetoEvent/I");
   tree_->Branch("isPFMuon",&isPFMuon_,"isPFMuon/I");
   tree_->Branch("isTightMuon",&isTightMuon_,"isTightMuon/I");
   tree_->Branch("muVetoRelIso",&muVetoRelIso_,"muVetoRelIso/F");
+  tree_->Branch("muVetoRelIsoSoft",&muVetoRelIsoSoft_,"muVetoRelIsoSoft/F");
   tree_->Branch("hasKft",&hasKft_,"hasKft/I");
 
   tree_->Branch("diTauCharge",&diTauCharge_,"diTauCharge/F");
@@ -428,13 +451,14 @@ void MuTauStreamAnalyzer::beginJob(){
 
 MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete jetsP4_; delete jetsIDP4_; delete jetsIDUpP4_; delete jetsIDDownP4_; 
-  delete METP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
+  delete METP4_; delete caloMETNoHFP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
   delete diTauSVfitP4_; delete genVP4_;
   delete diTauLegsP4_; delete jetsBtagHE_; delete jetsBtagHP_; delete jetsBtagCSV_;
   delete bQuark_; delete diTauLegsAltP4_;
   delete tauXTriggers_; delete triggerBits_; delete sigDCA_;
   delete genJetsIDP4_; delete genDiTauLegsP4_; delete genMETP4_; delete extraMuons_; 
   delete vetoMuonsP4_; delete vetoElectronsP4_; delete vetoTausP4_;
+  delete l1ETMP4_; delete trgTaus_; delete trgTauId_; delete l1Muons_;
   delete pfMuons_; delete jetsIDL1OffsetP4_;
   delete leptonJets_;
   delete genTausP4_;
@@ -451,6 +475,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
   //METP4_->clear();
   genVP4_->clear();
+  caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
   pfMuons_->clear();
@@ -458,6 +483,11 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   vetoTausP4_->clear();
   vetoElectronsP4_->clear();
   vetoMuonsP4_->clear();
+  l1Muons_->clear();
+  l1ETMP4_->clear();
+  trgTaus_->clear();
+  trgTauId_->clear();
+
 
   edm::ESHandle<TransientTrackBuilder> builder;
   iSetup.get<TransientTrackRecord>().get("TransientTrackBuilder",builder);
@@ -725,12 +755,15 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     edm::LogError("DataNotAvailable")
       << "No muons label available \n";
   const pat::MuonCollection* muons = muonsHandle.product();
+  /* MB needed?
   if(muons->size()<1){
     cout << " No muons !!! " << endl;
     return;
   } else if(muons->size()>1 && verbose_){
     cout << "WARNING: "<< muons->size() << "  muons found in the event !!! We will select only one" << endl;
   }
+   */
+
   edm::Handle<pat::MuonCollection> muonsRelHandle;
   iEvent.getByLabel(muonsRelTag_, muonsRelHandle);
   if( !muonsRelHandle.isValid() )  
@@ -804,17 +837,73 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     }
   }
 
-  //////////////////////
-  // Quark/gluon id
+  /// l+tau+ETM analysis stuff
+  edm::Handle<l1extra::L1MuonParticleCollection> l1muonsHandle; ;
+  const l1extra::L1MuonParticleCollection* l1mus = 0;
+  edm::Handle<l1extra::L1EtMissParticleCollection> l1etmHandle;
+  const l1extra::L1EtMissParticleCollection* l1etm = 0;
+  edm::Handle<pat::TauCollection> trgTausHandle;
+  const pat::TauCollection* trgTaus = 0;
+  edm::Handle<reco::CaloMETCollection> caloMEtNoHFHandle;
+  const reco::CaloMETCollection* caloMEtNoHF = 0;
+
+  iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
+  if( !caloMEtNoHFHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No metNoHF collection available \n";
+  else{
+    caloMEtNoHF = caloMEtNoHFHandle.product();      
+    caloMETNoHFP4_->push_back( (*caloMEtNoHF)[0].p4() );
+    caloNoHFsumEt_ = (*caloMEtNoHF)[0].sumEt();
+  }
+  iEvent.getByLabel("l1extraParticles", l1muonsHandle);
+  if( !l1muonsHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No L1Muon collection available \n";
+  else{
+    l1mus = l1muonsHandle.product();
+    for(unsigned int i=0; i<l1mus->size(); ++i)
+      l1Muons_->push_back( (*l1mus)[i].p4() );
+  }
+  iEvent.getByLabel(edm::InputTag("l1extraParticles","MET"), l1etmHandle);
+  if( !l1etmHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No L1ETM collection available \n";
+  else{
+    l1etm = l1etmHandle.product();      
+    for(unsigned int i=0; i<l1etm->size(); ++i){
+      if( (*l1etm)[i].bx()==0){
+	l1ETMP4_->push_back( (*l1etm)[i].p4() );
+	break;
+      }
+    }
+  }
+  iEvent.getByLabel("selectedHltPatTaus", trgTausHandle);
+  if( !trgTausHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No trgTau collection available \n";
+  else{
+    trgTaus = trgTausHandle.product();
+    for(unsigned int i=0; i<trgTaus->size(); ++i){
+      trgTaus_->push_back( (*trgTaus)[i].p4() );
+      int id=0;
+      if( (*trgTaus)[i].tauID("decayModeFinding")>0.5){
+	id++;
+	if( (*trgTaus)[i].tauID("byIsolation")>0.5){
+	  id++;
+	}
+      }
+      trgTauId_->push_back(id);
+    }
+  }
+
+  /// Quark/gluon id stuff
   edm::Handle<edm::ValueMap<float> >  QGTagsHandleMLP;
   edm::Handle<edm::ValueMap<float> >  QGTagsHandleLikelihood;
   iEvent.getByLabel("QGTagger","qgMLP", QGTagsHandleMLP);
   iEvent.getByLabel("QGTagger","qgLikelihood", QGTagsHandleLikelihood);
-  //////////////////////
-
 
   /////////////////////////
-
 
   const PATMuTauPair *theDiTau = 0;
   if(diTaus->size()<1){
@@ -827,7 +916,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
   muFlag_       = 0;
   muVetoRelIso_ = 0.;
+  muFlagSoft_       = 0;
+  muVetoRelIsoSoft_ = 0.;
 
+  /* MB incorrect when muonsRel not really looser than diTau leg
   bool found = false;
   for(unsigned int i=0; i<muonsRel->size(); i++){
     for(unsigned int j=i+1; j<muonsRel->size(); j++){
@@ -854,7 +946,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       }
     }
   }
-  
+  */
 
   vector<string> triggerPaths;
   vector<string> XtriggerPaths;
@@ -864,56 +956,88 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   if(isMC_){
     
     // X-triggers 
-    XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");
+    XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");//0
+    XtriggerPaths.push_back("HLT_Mu8_v*");//1
+    XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//2
 
     // for Summer12-53X
     //HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v1
 
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");
-    
-    HLTfiltersMu.push_back("hltL1sMu14erORMu16er");
-    HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");
-    HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");//0
+    triggerPaths.push_back("HLT_Mu8_v16");//1
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//3
+
+    HLTfiltersMu.push_back("hltL1sMu14erORMu16er");//0
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//1
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//2
+    HLTfiltersMu.push_back("hltL3fL1sMu3L3Filtered8");//3
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//4
+    //L1mu//5
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//6
+    //trgTau//7
     
   }
   else{
     
-    XtriggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v*");
-    XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");
-    XtriggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v*");
-    XtriggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v*");
+    XtriggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v*");//0
+    XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");//1
+    XtriggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v*");//2
+    XtriggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v*");//3
+    XtriggerPaths.push_back("HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v*");//4
+    XtriggerPaths.push_back("HLT_Mu8_eta2p1_LooseIsoPFTau20_L1ETM26_v*");//5
+    XtriggerPaths.push_back("HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v*");//6
+    XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//7
 
-    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4");
-    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5");
-    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v6");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v3");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v4");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v5");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v6");
-    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v7");
-    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v4");
-    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v5");
-    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v6");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v2");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v3");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v4");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v5");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v6");
-    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v7");
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4");//0
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5");//1
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v6");//2
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");//3
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v3");//4
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v4");//5
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v5");//6
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v6");//7
+    triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v7");//8
+    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v4");//9
+    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v5");//10
+    triggerPaths.push_back("HLT_Mu18_eta2p1_LooseIsoPFTau20_v6");//11
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v2");//12
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v3");//13
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v4");//14
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v5");//15
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v6");//16
+    triggerPaths.push_back("HLT_Mu17_eta2p1_LooseIsoPFTau20_v7");//17
+    triggerPaths.push_back("HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1");//18
+    triggerPaths.push_back("HLT_Mu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1");//19
+    triggerPaths.push_back("HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v1");//20
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v3");//21
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v4");//22
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//23
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v6");//24
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v7");//25
 
-    HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");
-    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");
-    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");
-    HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
-    HLTfiltersMu.push_back("hltOverlapFilterMu18LooseIsoPFTau20");
-    HLTfiltersMu.push_back("hltOverlapFilterMu17LooseIsoPFTau20");
-
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
-    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");
-    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");
+    HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");//0
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");//1
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//2
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//3
+    HLTfiltersMu.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//4
+    HLTfiltersMu.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//5
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu7Eta2p1L1f0L2f7QL3f8QL3crIsoRhoFiltered0p15");//6
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//7
+    HLTfiltersMu.push_back("hltL3crIsoL1sSingleMu7Eta2p1L1f0L2f7QL3f8QL3crIsoRhoFiltered0p15");//8
+    HLTfiltersMu.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//9
+    HLTfiltersMu.push_back("hltL3fL1sMu7Eta2p1L1f0L2f7QL3Filtered8Q");//10
+    HLTfiltersMu.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//11
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10");//mu+ETM20 (v3-v4)//12
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//mu+ETM20 (v5-v7)//13
+    //L1mu//14 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//15
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//16
+    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//17
+    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//18
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//19
+    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//20
+    HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//21
+    //trgTau//22
 
   }
 
@@ -1077,8 +1201,34 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     const pat::Tau*  leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
 
     for(unsigned int i=0; i<muonsRel->size(); i++){
-      if( Geom::deltaR( (*muonsRel)[i].p4(),leg1->p4())>0.3) 
+      if( Geom::deltaR( (*muonsRel)[i].p4(),leg1->p4())>0.3) {
 	extraMuons_->push_back( (*muonsRel)[i].p4() );
+	//2nd electron veto
+	bool found=false, found2=false;
+	float vetoPtInclusive = 15.;
+	if(!found && (*muonsRel)[i].pt()>vetoPtInclusive && (*muonsRel)[i].userFloat("PFRelIsoDB04v2")<0.3){
+	  if( (*muonsRel)[i].charge()*leg1->charge()>0){
+	    muFlag_=2;
+	    muVetoRelIso_ = (*muonsRel)[i].userFloat("PFRelIsoDB04v2");
+	  }
+	  if( (*muonsRel)[i].charge()*leg1->charge()<0){
+	    muFlag_=1;
+	    muVetoRelIso_ = (*muonsRel)[i].userFloat("PFRelIsoDB04v2");
+	    found=true;
+	  }
+	}
+	if(!found2 && (*muonsRel)[i].userFloat("PFRelIsoDB04v2")<0.3){
+	  if( (*muonsRel)[i].charge()*leg1->charge()>0){
+	    muFlagSoft_=2;
+	    muVetoRelIsoSoft_ = (*muonsRel)[i].userFloat("PFRelIsoDB04v2");
+	  }
+	  if( (*muonsRel)[i].charge()*leg1->charge()<0){
+	    muFlagSoft_=1;
+	    muVetoRelIsoSoft_ = (*muonsRel)[i].userFloat("PFRelIsoDB04v2");
+	    found2=true;
+	  }
+	}
+      }
     }
     
 
@@ -1130,6 +1280,27 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	else cout << "!!! Muon is not trigger matched within dR=0.5 !!!" << endl;
       }
     }
+    if(l1mus){//check matching with l1mu Pt>7 |eta|<2.1
+      bool matched = false;
+      for(unsigned int i=0; i<l1mus->size(); ++i){
+	if( (*l1mus)[i].pt()<7 || fabs((*l1mus)[i].eta() )>2.1 ) continue;
+	if( Geom::deltaR( (*l1mus)[i].p4(), leg1->p4() )<0.5 ){
+	  matched = true;
+	  break;
+	}
+      }
+      if(matched) 
+	tauXTriggers_->push_back(1);
+      else 
+	tauXTriggers_->push_back(0);
+      if(verbose_){
+	if(matched) cout << "Muon matched within dR=0.5 with trigger L1Mu pt>7, |eta|<2.1" << endl;
+	else cout << "!!! Muon is not matched to L1Mu within dR=0.5 !!!" << endl;
+      }
+    }
+    else
+      tauXTriggers_->push_back(0);
+    //
     for(unsigned int i=0 ; i< HLTfiltersTau.size() ; i++){
       bool matched = false;
       for(pat::TriggerObjectStandAloneCollection::const_iterator it = triggerObjs->begin() ; it !=triggerObjs->end() ; it++){
@@ -1154,7 +1325,28 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	else cout << "!!! Tau is not trigger matched within dR=0.5 !!!" << endl;
       }
     }
-    
+    if(trgTaus){//check matching with HltTau@offline, Pt>20, LooseIso
+      bool matched = false;
+      for(unsigned int i=0; i<trgTaus->size(); ++i){
+	if( (*trgTaus)[i].pt()<20 ) continue;
+	if( (*trgTaus)[i].tauID("decayModeFinding")<0.5 || 
+	    (*trgTaus)[i].tauID("byIsolation")<0.5 ) continue;
+	if( Geom::deltaR( (*trgTaus)[i].p4(), leg2->p4() )<0.5 ){
+	  matched = true;
+	  break;
+	}
+      }
+      if(matched) 
+	tauXTriggers_->push_back(1);
+      else 
+	tauXTriggers_->push_back(0);
+      if(verbose_){
+	if(matched) cout << "Tau matched within dR=0.5 with HLTPFTau@offline pt>20" << endl;
+	else cout << "!!! Tau is not matched to HLTPFTau@offline pt>20 !!!" << endl;
+      }
+    }
+    else
+      tauXTriggers_->push_back(0);
 
     // triggers Mu
     if(verbose_){
@@ -1515,27 +1707,41 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	cout << "Watch out! ICA gave mass=0 and CA mass !=0 ..." << endl;
     }
     
-    math::XYZTLorentzVectorD nSVfitFitP4(0,0,0,(theDiTau->p4Vis()).M() );
-    if( theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->isValidSolution()*/ ){
-      if(verbose_) cout << "Visible mass ==> " << nSVfitFitP4.E() << endl;
-      nSVfitFitP4.SetPxPyPzE( 0,0,0, theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->mass() ) ;
-    if(verbose_) cout << "SVFit fit solution ==> " << nSVfitFitP4.E() << endl;
+    math::XYZTLorentzVectorD nSVfitIntP4(0,0,0,0 );
+    if( theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",0)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ){
+      if(verbose_) cout << "Visible mass ==> " << (theDiTau->p4Vis()).M() << endl;
+      math::PtEtaPhiMLorentzVectorD ptEtaPhiMTmpP4(theDiTau->nSVfitSolution("psKine_MEt_int",0)->pt(),
+						   theDiTau->nSVfitSolution("psKine_MEt_int",0)->eta(),
+						   theDiTau->nSVfitSolution("psKine_MEt_int",0)->phi(),
+						   theDiTau->nSVfitSolution("psKine_MEt_int",0)->mass() );
+      nSVfitIntP4.SetPxPyPzE(ptEtaPhiMTmpP4.Px(),
+			     ptEtaPhiMTmpP4.Py(),
+			     ptEtaPhiMTmpP4.Pz(),
+			     ptEtaPhiMTmpP4.E() );
+      if(verbose_) cout << "SVFit int solution ==> " << nSVfitIntP4.M() << endl;
     }
-    diTauSVfitP4_->push_back( nSVfitFitP4  );
-  
+    diTauSVfitP4_->push_back( nSVfitIntP4  );
+        
+
     int errFlag = 0;
     diTauSVfitMassErrUp_    = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) 
       ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrUp()   : -99; 
     diTauSVfitMassErrDown_  = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) 
       ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrDown() : -99; 
-    
+
+    diTauNSVfitIsValid_     = (int)(theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() );
     diTauNSVfitMass_        = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
       ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->mass()        : -99; 
     diTauNSVfitMassErrUp_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
       ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrUp()   : -99; 
     diTauNSVfitMassErrDown_ = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
       ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrDown() : -99; 
-    
+    diTauNSVfitPt_          = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->pt()          : -99;
+    diTauNSVfitPtErrUp_     = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrUp()     : -99;
+    diTauNSVfitPtErrDown_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrDown()   : -99;
     
 
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJets;
