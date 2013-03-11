@@ -90,6 +90,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< float >* jetMoments_;
   std::vector< float >* jetPUMVA_;
   std::vector< float >* jetPUWP_;
+  std::vector< float >* jetQuarkGluon_;   // Quark/gluon id
+  std::vector< float >* jetQuarkGluonGen_;   // Quark/gluon id
   std::vector< float >* metSgnMatrix_;
 
   std::vector< float >* gammadEta_;

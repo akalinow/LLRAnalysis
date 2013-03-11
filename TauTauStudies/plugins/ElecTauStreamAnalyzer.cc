@@ -149,6 +149,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   jetMoments_       = new std::vector< float >();
   jetPUMVA_         = new std::vector< float >();
   jetPUWP_          = new std::vector< float >();
+  jetQuarkGluon_    = new std::vector< float >();   // Quark/gluon id
+  jetQuarkGluonGen_ = new std::vector< float >();   // Quark/gluon id
 
   gammadR_       = new std::vector< float >();
   gammadEta_     = new std::vector< float >();
@@ -293,6 +295,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("jetMoments","std::vector<float> ",&jetMoments_);
   tree_->Branch("jetPUMVA","std::vector<float> ",&jetPUMVA_);
   tree_->Branch("jetPUWP","std::vector<float> ", &jetPUWP_);
+  tree_->Branch("jetQuarkGluon","std::vector<float> ", &jetQuarkGluon_);   // Quark/gluon id
+  tree_->Branch("jetQuarkGluonGen","std::vector<float> ", &jetQuarkGluonGen_);   // Quark/gluon id
 
   tree_->Branch("gammadR","std::vector<float> ",&gammadR_);
   tree_->Branch("gammadEta","std::vector<float> ",&gammadEta_);
@@ -498,6 +502,7 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   //delete antiE_;
   delete metSgnMatrix_;
   if( doElecIsoMVA_ && fElectronIsoMVA_!=0) delete fElectronIsoMVA_;
+  delete jetQuarkGluon_; delete jetQuarkGluonGen_;    // Quark/gluon id
   
 }
 
@@ -864,6 +869,16 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     }
   }
   buffer.clear();
+
+  //////////////////////
+  // Quark/gluon id
+  edm::Handle<edm::ValueMap<float> >  QGTagsHandleMLP;
+  edm::Handle<edm::ValueMap<float> >  QGTagsHandleLikelihood;
+  iEvent.getByLabel("QGTagger","qgMLP", QGTagsHandleMLP);
+  iEvent.getByLabel("QGTagger","qgLikelihood", QGTagsHandleLikelihood);
+  //////////////////////
+
+
   /////////////////////////
 
 
@@ -1073,6 +1088,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     jetMoments_->clear();
     jetPUMVA_->clear();
     jetPUWP_->clear();
+    jetQuarkGluon_->clear(); // Quark/gluon id
+    jetQuarkGluonGen_->clear(); // Quark/gluon id
     gammadR_->clear();
     gammadEta_->clear();
     gammadPhi_->clear();
@@ -1785,7 +1802,11 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     std::map<double, std::pair<float,float> ,  ElecTauStreamAnalyzer::more> jetPVassociation;
     std::map<double, std::pair<float,float> ,  ElecTauStreamAnalyzer::more> jetMoments;
     std::map<double, std::vector<float> ,      ElecTauStreamAnalyzer::more> jetPUID;
-    
+    //////////////////////
+    // Quark/gluon id
+    std::map<double, std::vector<float> ,      ElecTauStreamAnalyzer::more> quarkGluonID;
+    std::map<double, std::vector<float> ,      ElecTauStreamAnalyzer::more> quarkGluonIDGen;
+    //////////////////////        
     
     for(unsigned int it = 0; it < jets->size() ; it++){
 
@@ -1919,6 +1940,43 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	else sortedGenJetsID.insert( make_pair( newJet->p4().Pt() , math::XYZTLorentzVectorD(0,0,0,0) ) );
       }
 
+      //////////////////////
+      // Quark/gluon id
+      edm::RefToBase<reco::Jet> jetRef(edm::Ref<pat::JetCollection>(jetsHandle,it));    
+      float mlp(-1), likelihood(-1) ;
+      if (QGTagsHandleMLP.isValid()) mlp = (*QGTagsHandleMLP)[jetRef] ;
+      if (QGTagsHandleLikelihood.isValid()) likelihood = (*QGTagsHandleLikelihood)[jetRef] ;
+      if(verbose_) std::cout<<"==> pt ="<<jet->pt()<<" "<<newJet->p4().Pt()<<" mlp="<<mlp<<" likelihood="<<likelihood<<std::endl ;
+      vector<float> quarkGluonDiscriminator ;
+      quarkGluonDiscriminator.push_back(jet->pt()) ;
+      quarkGluonDiscriminator.push_back(mlp);
+      quarkGluonDiscriminator.push_back(likelihood);
+      quarkGluonID.insert(  make_pair( newJet->p4().Pt() ,  quarkGluonDiscriminator ) );
+
+      // generator part
+      vector<float> quarkGluonDiscriminatorGen ;
+      if(newJet->genJet()!=0){
+	quarkGluonDiscriminatorGen.push_back(newJet->partonFlavour());
+	quarkGluonDiscriminatorGen.push_back((newJet->genJet()->getGenConstituents()).size());
+	float leadGenPartPdg = (newJet->genJet()->getGenConstituents()).size()>0 ?
+	  ((newJet->genJet()->getGenConstituents())[0])->pdgId() : -99;
+	quarkGluonDiscriminatorGen.push_back(leadGenPartPdg) ;
+	float leadGenPartPt  = (newJet->genJet()->getGenConstituents()).size()>0 ?
+	  ((newJet->genJet()->getGenConstituents())[0])->pt() : -99;
+	quarkGluonDiscriminatorGen.push_back(leadGenPartPt) ;		
+	if(verbose_){
+	  cout << "parton flavor = " << newJet->partonFlavour() << endl;
+	  for(unsigned int l = 0; l < (newJet->genJet()->getGenConstituents()).size() ; l++){
+	    cout << "Hadron " << l 
+		 << " pdg " << ((newJet->genJet()->getGenConstituents())[l])->pdgId() << ", pt " << ((newJet->genJet()->getGenConstituents())[l])->pt()
+		 << endl;
+	  }
+	}
+      }
+      quarkGluonIDGen.insert(  make_pair( newJet->p4().Pt() ,  quarkGluonDiscriminatorGen ) );
+      //////////////////////  
+
+
       /////////////////////////////////////////////////////////////////////
       
       float mva   = (*puJetIdMVA)[jetsHandleForMVA->refAt(it)->originalObjectRef()];
@@ -1994,6 +2052,23 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       jetPUWP_->push_back(  (it->second)[2] );
       jetPUWP_->push_back(  (it->second)[3] );
     }
+
+    //////////////////////
+    // Quark/gluon id
+    for(std::map<double, std::vector<float> >::iterator it = quarkGluonID.begin(); it != quarkGluonID.end() ; it++){
+      jetQuarkGluon_->push_back( (it->second)[0] ); //pt
+      jetQuarkGluon_->push_back( (it->second)[1] ); //mlp
+      jetQuarkGluon_->push_back( (it->second)[2] ); //likelihood
+    }
+    for(std::map<double, std::vector<float> >::iterator it = quarkGluonIDGen.begin(); it != quarkGluonIDGen.end() ; it++){
+      if ( !(it->second).empty() ) {
+	jetQuarkGluonGen_->push_back( (it->second)[0] ); //flavor
+	jetQuarkGluonGen_->push_back( (it->second)[1] ); //nb of constituents
+	jetQuarkGluonGen_->push_back( (it->second)[2] ); //leadGenPartPdg
+	jetQuarkGluonGen_->push_back( (it->second)[3] ); //leadGenPartPt
+      }
+    }
+    //////////////////////
 
     tree_->Fill();
 

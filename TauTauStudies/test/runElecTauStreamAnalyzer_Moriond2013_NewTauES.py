@@ -51,7 +51,9 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream.root'     
+        'file:patTuples_LepTauStream.root'
+        #'file:VBFH125.root'
+        #'file:data2012D.root'    
         #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
         )
 )
@@ -63,6 +65,16 @@ process.source = cms.Source(
 process.allEventsFilter = cms.EDFilter(
     "AllEventsFilter"
     )
+
+#######################################################################
+#quark/gluon jets
+process.load('QuarkGluonTagger.EightTeV.QGTagger_RecoJets_cff')  
+process.QGTagger.srcJets = cms.InputTag("selectedPatJets")
+process.QGTagger.isPatJet = cms.untracked.bool(True) 
+#Switch for when PFJets with CHS are used (only supported for LD):
+#process.QGTagger.useCHS  = cms.untracked.bool(True) 
+#If an uncorrected jet source is used as input, you can correct the pt on the fly inside the QGTagger:
+#process.QGTagger.jec     = cms.untracked.string('ak5PFL1FastL2L3')
 
 ###################################################################################
 # produce MVA MET
@@ -1108,6 +1120,7 @@ process.seqNominal = cms.Sequence(
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTau*process.selectedDiTau*process.selectedDiTauCounter*
+    process.QuarkGluonTagger* #quark/gluon jets
     process.elecTauStreamAnalyzer
     )
 process.seqJetUp = cms.Sequence(
@@ -1241,6 +1254,7 @@ process.seqTauUp = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecIsoTauUp*process.tauPtEtaIDAgMuAgElecIsoTauUpCounter)*
     process.pfMEtMVACov*
     process.diTauTauUp*process.selectedDiTauTauUp*process.selectedDiTauTauUpCounter*
+    process.QuarkGluonTagger* #quark/gluon jets    
     process.elecTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -1256,6 +1270,7 @@ process.seqTauDown = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecIsoTauDown*process.tauPtEtaIDAgMuAgElecIsoTauDownCounter)*
     process.pfMEtMVACov*
     process.diTauTauDown*process.selectedDiTauTauDown*process.selectedDiTauTauDownCounter*
+    process.QuarkGluonTagger* #quark/gluon jets    
     process.elecTauStreamAnalyzerTauDown
     )
 
@@ -1439,6 +1454,7 @@ if runMoriond:
     process.seqNominal.remove(process.produceType1corrPFMEt)
     process.seqNominal.remove(process.producePFMEtNoPileUp)
     
+
 #######################################################################
 
 if runOnMC:
