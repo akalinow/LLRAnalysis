@@ -43,10 +43,7 @@
 <use   name="rootcore"/>
 <use   name="rootrflx"/>
 <use   name="LLRAnalysis/Utilities"/>
-<use   name="HiggsAnalysis/HiggsToWW2Leptons"/>
 <use   name="EGamma/EGammaAnalysisTools"/>
-<use   name="Muon/MuonAnalysisTools"/>
-<use   name="CMGTools/External"/>
 <library   name="LLRAnalysisTauTauStudiesPlugins" file="*.cc">
   <flags   EDM_PLUGIN="1"/>
 </library>
