@@ -755,14 +755,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     edm::LogError("DataNotAvailable")
       << "No muons label available \n";
   const pat::MuonCollection* muons = muonsHandle.product();
-  /* MB needed?
   if(muons->size()<1){
     cout << " No muons !!! " << endl;
     return;
   } else if(muons->size()>1 && verbose_){
     cout << "WARNING: "<< muons->size() << "  muons found in the event !!! We will select only one" << endl;
   }
-   */
 
   edm::Handle<pat::MuonCollection> muonsRelHandle;
   iEvent.getByLabel(muonsRelTag_, muonsRelHandle);
@@ -770,12 +768,14 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     edm::LogError("DataNotAvailable")
       << "No muonsRel label available \n";
   const pat::MuonCollection* muonsRel = muonsRelHandle.product();
+  /* MB needed?
   if(muonsRel->size()<1){
     cout << " No muonsRel !!! " << endl;
     return;
   } else if(muonsRel->size()>1 && verbose_){
     cout << "WARNING: "<< muonsRel->size() << "  muonsRel found in the event !!! We will select only one" << endl;
   }
+  */
   
 
   // Loose leptons for veto //
