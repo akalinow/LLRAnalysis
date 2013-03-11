@@ -121,6 +121,8 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genTausP4_;
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* METP4_;
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* caloMETNoHFP4_;
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1ETMP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genMETP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genVP4_;
   int genDecay_;
@@ -133,10 +135,14 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* vetoTausP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* pfElectrons_; 
 
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* trgTaus_;
+  std::vector<int>* trgTauId_;
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1IsoElectrons_;
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1NoIsoElectrons_;
   
   unsigned long run_,event_,lumi_;
   int index_;
-  float sumEt_;
+  float sumEt_, caloNoHFsumEt_;
   float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_,elecIsoLeg1v1_,muIsoLeg1v1_;
   float chIsoPULeg1v1_,nhIsoPULeg1v1_,phIsoPULeg1v1_;
   float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_;
@@ -168,11 +174,15 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int leadGenPartPdg_;
   float leadGenPartPt_;
 
+  int diTauNSVfitIsValid_; 
   float diTauNSVfitMass_;
   float diTauNSVfitMassErrUp_;
   float diTauNSVfitMassErrDown_;
   float diTauSVfitMassErrUp_;
   float diTauSVfitMassErrDown_;
+  float diTauNSVfitPt_;
+  float diTauNSVfitPtErrUp_;
+  float diTauNSVfitPtErrDown_;
   float visibleTauMass_;
   float visibleGenTauMass_;
 
@@ -220,9 +230,9 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float hpsDB3H_;
   int isTauLegMatched_;
   int isElecLegMatched_;
-  int elecFlag_;
+  int elecFlag_, elecFlagSoft_;
   int vetoEvent_;
-  float elecVetoRelIso_;
+  float elecVetoRelIso_, elecVetoRelIsoSoft_;
   int hasKft_;
 
   // ele specific variables
