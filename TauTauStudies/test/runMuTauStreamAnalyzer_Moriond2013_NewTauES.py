@@ -1088,6 +1088,7 @@ process.seqJetUp = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.rescaledMETjet *
     process.pfMEtMVACov*
@@ -1103,6 +1104,7 @@ process.seqJetDown = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.rescaledMETjet *
     process.pfMEtMVACov*
@@ -1117,6 +1119,7 @@ process.seqMEtResolutionUp = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTauMEtResolutionUp*process.selectedDiTauMEtResolutionUp*process.selectedDiTauMEtResolutionUpCounter*
@@ -1129,6 +1132,7 @@ process.seqMEtResolutionDown = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTauMEtResolutionDown*process.selectedDiTauMEtResolutionDown*process.selectedDiTauMEtResolutionDownCounter*
@@ -1142,6 +1146,7 @@ process.seqMEtResponseUp = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTauMEtResponseUp*process.selectedDiTauMEtResponseUp*process.selectedDiTauMEtResponseUpCounter*
@@ -1154,6 +1159,7 @@ process.seqMEtResponseDown = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.pfMEtMVACov*
     process.diTauMEtResponseDown*process.selectedDiTauMEtResponseDown*process.selectedDiTauMEtResponseDownCounter*
@@ -1167,6 +1173,7 @@ process.seqMuUp = cms.Sequence(
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuUp*process.muPtEtaIDIsoMuUpCounter) *
@@ -1182,6 +1189,7 @@ process.seqMuDown = cms.Sequence(
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuUp*process.muPtEtaIDIsoMuUpCounter) *
@@ -1200,6 +1208,7 @@ process.seqTauUp = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauUp*process.tauPtEtaIDAgMuAgElecIsoTauUpCounter)*
@@ -1216,6 +1225,7 @@ process.seqTauDown = cms.Sequence(
     process.muPtEtaRelID *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauDown*process.tauPtEtaIDAgMuAgElecIsoTauDownCounter)*
@@ -1247,6 +1257,7 @@ process.seqRawNominal = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRaw*process.selectedDiTauRaw*process.selectedDiTauRawCounter*
@@ -1260,6 +1271,7 @@ process.seqRawJetUp = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.rescaledMETRawjet *
     #process.pfMEtMVACov*
@@ -1274,6 +1286,7 @@ process.seqRawJetDown = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     process.rescaledMETRawjet *
     #process.pfMEtMVACov*
@@ -1288,6 +1301,7 @@ process.seqRawMEtResolutionUp = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResolutionUp*process.selectedDiTauRawMEtResolutionUp*process.selectedDiTauRawMEtResolutionUpCounter*
@@ -1301,6 +1315,7 @@ process.seqRawMEtResolutionDown = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResolutionDown*process.selectedDiTauRawMEtResolutionDown*process.selectedDiTauRawMEtResolutionDownCounter*
@@ -1314,6 +1329,7 @@ process.seqRawMEtResponseUp = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResponseUp*process.selectedDiTauRawMEtResponseUp*process.selectedDiTauRawMEtResponseUpCounter*
@@ -1327,6 +1343,7 @@ process.seqRawMEtResponseDown = cms.Sequence(
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     #process.pfMEtMVACov*
     process.diTauRawMEtResponseDown*process.selectedDiTauRawMEtResponseDown*process.selectedDiTauRawMEtResponseDownCounter*
@@ -1339,6 +1356,7 @@ process.seqRawMuUp = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuUp*process.muPtEtaIDIsoMuUpCounter) *
@@ -1354,6 +1372,7 @@ process.seqRawMuDown = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETRawmuon+process.rescaledMuons+process.rescaledMuonsRel)*
     (process.muPtEtaIDIsoMuDown*process.muPtEtaIDIsoMuDownCounter) *
@@ -1369,6 +1388,7 @@ process.seqRawTauUp = cms.Sequence(
     process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETRawtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauUp*process.tauPtEtaIDAgMuAgElecIsoTauUpCounter)*
@@ -1383,6 +1403,7 @@ process.seqRawTauDown = cms.Sequence(
     process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.puJetIdSequence *
+    process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
     (process.rescaledMETRawtau+process.rescaledTaus)*
     (process.tauPtEtaIDAgMuAgElecIsoTauDown*process.tauPtEtaIDAgMuAgElecIsoTauDownCounter)*

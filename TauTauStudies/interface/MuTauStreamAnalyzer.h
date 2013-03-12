@@ -144,7 +144,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   int index_;
   int validityCA_,validityICA_;
   float x1CollApprox_,x2CollApprox_;
-  float sumEt_, caloNoHFsumEt_;
+  float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_;
   float chIsoLeg1v1_,nhIsoLeg1v1_,phIsoLeg1v1_,elecIsoLeg1v1_,muIsoLeg1v1_;
   float chIsoPULeg1v1_,nhIsoPULeg1v1_,phIsoPULeg1v1_;
   float chIsoLeg1v2_,nhIsoLeg1v2_,phIsoLeg1v2_,elecIsoLeg1v2_,muIsoLeg1v2_;

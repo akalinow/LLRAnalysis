@@ -336,6 +336,7 @@ void MuTauStreamAnalyzer::beginJob(){
 
   tree_->Branch("sumEt",&sumEt_,"sumEt/F");
   tree_->Branch("caloNoHFsumEt",&caloNoHFsumEt_,"caloNoHFsumEt/F");
+  tree_->Branch("caloNoHFsumEtCorr",&caloNoHFsumEtCorr_,"caloNoHFsumEtCorr/F");
   tree_->Branch("mTauTauMin",&mTauTauMin_,"mTauTauMin/F");
   tree_->Branch("MtLeg1",&MtLeg1_,"MtLeg1/F");
   tree_->Branch("pZeta",&pZeta_,"pZeta/F");
@@ -846,6 +847,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   const pat::TauCollection* trgTaus = 0;
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFHandle;
   const reco::CaloMETCollection* caloMEtNoHF = 0;
+  edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrHandle;
+  const reco::CaloMETCollection* caloMEtNoHFCorr = 0;
 
   iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
   if( !caloMEtNoHFHandle.isValid() )  
@@ -855,6 +858,37 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     caloMEtNoHF = caloMEtNoHFHandle.product();      
     caloMETNoHFP4_->push_back( (*caloMEtNoHF)[0].p4() );
     caloNoHFsumEt_ = (*caloMEtNoHF)[0].sumEt();
+  }
+  iEvent.getByLabel("metNoHFresidualCorrected", caloMEtNoHFCorrHandle);
+  if( !caloMEtNoHFCorrHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No metNoHFresidualCorrected collection available \n";
+  else{
+    caloMEtNoHFCorr = caloMEtNoHFCorrHandle.product();      
+    caloMETNoHFP4_->push_back( (*caloMEtNoHFCorr)[0].p4() );
+    caloNoHFsumEtCorr_ = (*caloMEtNoHFCorr)[0].sumEt();
+  }
+  if(isMC_){
+    edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrUpHandle;
+    const reco::CaloMETCollection* caloMEtNoHFCorrUp = 0;
+    iEvent.getByLabel("metNoHFresidualCorrectedUp", caloMEtNoHFCorrUpHandle);
+    if( !caloMEtNoHFCorrUpHandle.isValid() )  
+      edm::LogError("DataNotAvailable")
+	<< "No metNoHFresidualCorrectedUp collection available \n";
+    else{
+      caloMEtNoHFCorrUp = caloMEtNoHFCorrUpHandle.product();      
+      caloMETNoHFP4_->push_back( (*caloMEtNoHFCorrUp)[0].p4() );
+    }
+    edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrDownHandle;
+    const reco::CaloMETCollection* caloMEtNoHFCorrDown = 0;
+    iEvent.getByLabel("metNoHFresidualCorrectedDown", caloMEtNoHFCorrDownHandle);
+    if( !caloMEtNoHFCorrDownHandle.isValid() )  
+      edm::LogError("DataNotAvailable")
+	<< "No metNoHFresidualCorrectedDown collection available \n";
+    else{
+      caloMEtNoHFCorrDown = caloMEtNoHFCorrDownHandle.product();      
+      caloMETNoHFP4_->push_back( (*caloMEtNoHFCorrDown)[0].p4() );
+    }
   }
   iEvent.getByLabel("l1extraParticles", l1muonsHandle);
   if( !l1muonsHandle.isValid() )  
