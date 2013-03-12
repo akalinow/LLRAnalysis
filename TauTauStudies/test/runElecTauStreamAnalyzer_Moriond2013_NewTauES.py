@@ -874,14 +874,16 @@ process.tauPtEtaIDAgMuAgElecIsoTauDownCounter = process.tauPtEtaIDAgMuAgElecIsoC
 process.elecPtEtaIDIso  = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("elecPtEtaID"),
-    cut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>24 && abs(eta)<2.1"+
+    #MBcut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>24 && abs(eta)<2.1"+
+    cut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>14 && abs(eta)<2.1"+
                      "&& userInt('antiConv')>0.5 && userInt('nHits')<1"),
     filter = cms.bool(False)
     )
 process.elecPtEtaIDIsoPtRel  = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("elecPtEtaID"),
-    cut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>23 && abs(eta)<2.1"+
+    #MBcut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>23 && abs(eta)<2.1"+
+    cut = cms.string("userFloat('PFRelIsoDB04v3')<0.5 && pt>13 && abs(eta)<2.1"+
                      "&& userInt('antiConv')>0.5 && userInt('nHits')<1"),
     filter = cms.bool(False)
     )
@@ -915,7 +917,8 @@ process.elecPtEtaIDIsoElecDownCounter = process.elecPtEtaIDIsoCounter.clone(
 process.elecPtEtaRelID = process.elecPtEtaIDIso.clone(
     #src = cms.InputTag("elecPtEtaRelIDInt"),
     src = cms.InputTag("elecPtEtaRelID"),
-    cut = cms.string("pt>15")
+    #MBcut = cms.string("pt>15")
+    cut = cms.string("pt>12")
     )
 process.elecPtEtaRelIDElecUp   = process.elecPtEtaRelID.clone(
     src = cms.InputTag("rescaledElectronsRel","U")
@@ -946,7 +949,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     rawMet             = cms.InputTag("patMETsPFlow"),
     mvaMet             = cms.InputTag("patPFMetByMVA"),
     metCov             = cms.InputTag("pfMEtMVACov"),
-    electrons          = cms.InputTag("elecPtEtaID"),
+    electrons          = cms.InputTag("elecPtEtaIDIso"),
     electronsRel       = cms.InputTag("elecPtEtaRelID"),
     vertices           = cms.InputTag("selectedPrimaryVertices"),
     triggerResults     = cms.InputTag("patTriggerEvent"),

@@ -838,13 +838,15 @@ process.tauPtEtaIDAgMuAgElecIsoTauDownCounter = process.tauPtEtaIDAgMuAgElecIsoC
 process.muPtEtaIDIso  = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("muPtEtaID"),
-    cut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>20 && abs(eta)<2.1"),
+    #MBcut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>20 && abs(eta)<2.1"),
+    cut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>9 && abs(eta)<2.1"),
     filter = cms.bool(False)
     )
 process.muPtEtaIDIsoPtRel  = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("muPtEtaID"),
-    cut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>19 && abs(eta)<2.1"),
+    #MBcut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>19 && abs(eta)<2.1"),
+    cut = cms.string("userFloat('PFRelIsoDB04v2')<0.50 && pt>8 && abs(eta)<2.1"),
     filter = cms.bool(False)
     )
 
@@ -868,7 +870,8 @@ process.muPtEtaIDIsoMuDownCounter = process.muPtEtaIDIsoCounter.clone(
     )
 process.muPtEtaRelID = process.muPtEtaIDIso.clone(
     src = cms.InputTag("muPtEtaRelID"),
-    cut = cms.string("pt>15")
+    #MBcut = cms.string("pt>15")
+    cut = cms.string("pt>7")
     )
 process.muPtEtaRelIDMuUp   = process.muPtEtaRelID.clone(
     src = cms.InputTag("rescaledMuonsRel","U")
