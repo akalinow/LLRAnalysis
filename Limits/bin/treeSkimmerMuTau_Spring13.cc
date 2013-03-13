@@ -1315,21 +1315,26 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
 
   RecoilCorrector* recoilCorr = 0;
 
-  if(sample_.find("WJets")!=string::npos){
-    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_wjets_njet.root");
-    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm42X_njet.root");
-    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm_njet.root");
-  }
-  else if(sample_.find("DYJets")!=string::npos){
-    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zjets_ltau_njet.root");
-    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm42X_njet.root");
-    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm_njet.root");
-  }
-  else if(sample_.find("H1")!=string::npos){
-    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_higgs_njet.root");
-    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm42X_njet.root");
-    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm_njet.root");
-  }
+
+  //if(sample_.find("WJets")!=string::npos){ 
+  if( sample_.find("WJets")!=string::npos || sample_.find("W1Jets")!=string::npos ||  
+      sample_.find("W2Jets")!=string::npos || sample_.find("W3Jets")!=string::npos ||  
+      sample_.find("W4Jets")!=string::npos  
+      ){ 
+    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_wjets53X_20pv_njet.root"); 
+    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root"); 
+    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root"); 
+  } 
+  else if(sample_.find("DYJets")!=string::npos){ 
+    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root"); 
+    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root");  
+    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root");  
+  } 
+  else if(sample_.find("HToTauTau")!=string::npos){ 
+    recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_higgs53X_20pv_njet.root"); 
+    recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root");   
+    recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root");   
+  } 
     
 
   TFile* HqT      = 0;
@@ -2303,10 +2308,13 @@ void doAllSamplesMu(string inputDir_ = "/data_CMS/cms/anayak/H2TauTauHCP/MuTauSt
   //samples.push_back("Run2011-MuTau-All_run");             crossSec.push_back( 0  );                          
   //samples.push_back("Run2011-MuTau-LooseIso-All_run");    crossSec.push_back( 0  );                          
   //samples.push_back("VBFH125-MuTau-8TeV-powheg-DR53X-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
+  //samples.push_back("DYJets-MuTau-50-madgraph-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
 
-  samples.push_back("DYJets-MuTau-50-madgraph-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
+  samples.push_back("VBFH125"); crossSec.push_back(1.578 * 0.0632 * 0.356445 * 0.607902); // xsec * BR * skim * pat
 
-  makeTrees_MuTau("",             samples[0], crossSec[0], inputDir_);
+  makeTrees_MuTau("",             samples[0], crossSec[0], 
+		  "/data_CMS/cms/htautau/PostMoriond/TREES/MuTau/HiggsSM/VBF125/", 
+		  "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/");
  
   return;
 
