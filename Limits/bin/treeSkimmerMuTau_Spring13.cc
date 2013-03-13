@@ -606,7 +606,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
-  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2, dxy1_, dz1_;
+  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_;
   float diTauCharge_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
@@ -772,6 +772,10 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   outTreePtOrd->Branch("phiL1",   &phiL1,"phiL1/F");
   outTreePtOrd->Branch("phiL2",   &phiL2,"phiL2/F");
   outTreePtOrd->Branch("dPhiL1L2",&dPhiL1L2,"dPhiL1L2/F");
+  outTreePtOrd->Branch("dPhiL1J1",&dPhiL1J1,"dPhiL1J1/F");
+  outTreePtOrd->Branch("dPhiL1J2",&dPhiL1J2,"dPhiL1J2/F");
+  outTreePtOrd->Branch("dPhiL2J1",&dPhiL2J1,"dPhiL2J1/F");
+  outTreePtOrd->Branch("dPhiL2J2",&dPhiL2J2,"dPhiL2J2/F");
 
   outTreePtOrd->Branch("dxy1",    &dxy1_,"dxy1/F");
   outTreePtOrd->Branch("dz1",     &dz1_,"dz1/F");
@@ -1494,6 +1498,13 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
       pt1_v2  = (*jets_v2)[lead].Pt();
       phi1_v2 = (*jets_v2)[lead].Phi();
       
+      dPhiL1J1 =  abs((*diTauLegsP4)[0].Phi()-phi1) > TMath::Pi() ? 
+	-abs( (*diTauLegsP4)[0].Phi()-phi1 ) + 2*TMath::Pi()  :
+	abs( (*diTauLegsP4)[0].Phi()-phi1 ) ;
+      dPhiL2J1 =  abs((*diTauLegsP4)[1].Phi()-phi1) > TMath::Pi() ? 
+	-abs( (*diTauLegsP4)[1].Phi()-phi1 ) + 2*TMath::Pi()  :
+	abs( (*diTauLegsP4)[1].Phi()-phi1 ) ;
+
       jetsBtagHE1 = (*jetsBtagHE)[lead];
       jetsBtagHP1 = (*jetsBtagHP)[lead];
       jetsBtagCSV1= (*jetsBtagCSV)[lead];
@@ -1514,6 +1525,13 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
 	eta2_v2 = (*jets_v2)[trail].Eta();
 	phi2_v2 = (*jets_v2)[trail].Phi();
 	
+	dPhiL1J2 =  abs((*diTauLegsP4)[0].Phi()-phi2) > TMath::Pi() ? 
+	  -abs( (*diTauLegsP4)[0].Phi()-phi2 ) + 2*TMath::Pi()  :
+	  abs( (*diTauLegsP4)[0].Phi()-phi2 ) ;
+	dPhiL2J2 =  abs((*diTauLegsP4)[1].Phi()-phi2) > TMath::Pi() ? 
+	  -abs( (*diTauLegsP4)[1].Phi()-phi2 ) + 2*TMath::Pi()  :
+	  abs( (*diTauLegsP4)[1].Phi()-phi2 ) ;
+
 	Deta = TMath::Abs(eta1-eta2);
 	Dphi = TMath::Abs((*jets)[lead].Phi()-(*jets)[trail].Phi()) > TMath::Pi() ? 
 	  -TMath::Abs( (*jets)[lead].Phi()-(*jets)[trail].Phi() ) + 2*TMath::Pi()  :
