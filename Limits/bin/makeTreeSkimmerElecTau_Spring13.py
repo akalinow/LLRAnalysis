@@ -7,7 +7,7 @@ import string
 import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/IvoTest/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/'
 
 options = {
     ###e+tau samples
