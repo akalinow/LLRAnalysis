@@ -456,7 +456,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLoc+'VBFH125-ElecTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF125/',
     'outputFileName' : OutDir+'nTupleVBFH125_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
