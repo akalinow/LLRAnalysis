@@ -582,7 +582,7 @@ process.fwliteOutput = cms.PSet(
     fileName = cms.string('$outputFileName')
 )
 
-process.treeSkimmerElecTau_HCP = cms.PSet(
+process.treeSkimmerElecTau = cms.PSet(
     sample = cms.string('$sample'),
     analysis = cms.string('$analysis'),
     xSection = cms.double($xSection),
