@@ -1406,8 +1406,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   
   MAPDITAU_run mapDiTau;
 
-//   for (int n = 0; n < nEntries ; n++) {
-  for (int n = 0; n < 10000 ; n++) {
+  for (int n = 0; n < nEntries ; n++) {
+//   for (int n = 0; n < 10000 ; n++) {
     
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
