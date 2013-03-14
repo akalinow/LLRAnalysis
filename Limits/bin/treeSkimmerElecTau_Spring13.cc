@@ -35,6 +35,8 @@
 //#include "PhysicsTools/Utilities/interface/LumiReweightingStandAlone.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+#include "TauAnalysis/CandidateTools/interface/candidateAuxFunctions.h"
+#include "TauAnalysis/CandidateTools/interface/neuralMtautauAuxFunctions.h"
 #include "PhysicsTools/FWLite/interface/TFileService.h"
 #include "LLRAnalysis/Utilities/interface/BtagSF.hh"
 #include "LLRAnalysis/Utilities/interface/readJSONFile.h"
@@ -1747,22 +1749,21 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     (*metsig)[1][1] = (*metSgnMatrix)[2]; 
 
     //add additional variables to test MVA Met (from Christian)
-    /*
     if( !isData && genVP4->size() > 0){
       int errorFlag = 0;
-      std::pair<double, double> uT = compMEtProjU((*genVP4)[0], recoilCorrecMET.Px() - (*genMETP4)[0].px(), recoilCorrecMET.py() - (*genMETP4)[0].py(), errorFlag);
+      std::pair<double, double> uT = compMEtProjU((*genVP4)[0], (*METP4)[1].Px() - (*genMETP4)[0].px(), (*METP4)[1].py() - (*genMETP4)[0].py(), errorFlag);
       if ( !errorFlag ) {
 	uParl = uT.first;
 	uPerp = uT.second;
       }
-      reco::Candidate::LorentzVector met_rotated = compP4inZetaFrame(recoilCorrecMET - (*genMETP4)[0], (*genVP4)[0].Phi());
+      reco::Candidate::LorentzVector met_rotated = compP4inZetaFrame((*METP4)[1] - (*genMETP4)[0], (*genVP4)[0].Phi());
       metParl = met_rotated.px();
       metPerp = met_rotated.py();
       TMatrixD metCov_rotated = compCovMatrixInZetaFrame(*metsig, (*genVP4)[0].Phi());
       metSigmaParl = TMath::Sqrt(TMath::Abs(metCov_rotated(0, 0)));
       metSigmaPerp = TMath::Sqrt(TMath::Abs(metCov_rotated(1, 1)));
     }
-    */
+
     //NSVfitStandalone::Vector measuredMET( (*METP4)[1].Px(), (*METP4)[1].Py(), 0);
     NSVfitStandalone::Vector measuredMET( recoilCorrecMET.Px(), recoilCorrecMET.Py(), 0);
 
