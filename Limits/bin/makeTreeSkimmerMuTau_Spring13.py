@@ -118,7 +118,7 @@ options = {
     },
     ##Embedded
     'Run2012A-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012A-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012A-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Embedded_MuTau.root',
     'sample'         : 'Run2012A-13Jul2012-Embedded',
     'xSection'       : 0,
@@ -126,7 +126,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012B-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012B-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-Embedded_MuTau.root',
     'sample'         : 'Run2012B-13Jul2012-Embedded',
     'xSection'       : 0,
@@ -134,7 +134,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012A-Recover06Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012A-MuTau-53X-recover_06Aug2012-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012A-MuTau-53X-recover_06Aug2012-Embedded-MuJet-iter6_run/',
     'outputFileName' : OutDir+'nTupleRun2012A-Recover06Aug2012-Embedded_MuTau.root',
     'sample'         : 'Run2012A-Recover06Aug2012-Embedded',
     'xSection'       : 0,
@@ -142,7 +142,7 @@ options = {
     'iJson'          : 1
     },
     'Run2012C-24Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012C-MuTau-53X-ReReco24Aug2012-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012C-MuTau-53X-ReReco24Aug2012-Embedded-MuJet-iter6_run/',
     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Embedded_MuTau.root',
     'sample'         : 'Run2012C-24Aug2012-Embedded',
     'xSection'       : 0,
@@ -150,7 +150,7 @@ options = {
     'iJson'          : 2
     },
     'Run2012C-PromptReco-v2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012C-MuTau-53X-PromptReco-v2-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012C-MuTau-53X-PromptReco-v2-Embedded-MuJet-iter6_run/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-Embedded_MuTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-Embedded',
     'xSection'       : 0,
@@ -158,7 +158,7 @@ options = {
     'iJson'          : 3
     },
     'Run2012D-PromptReco-v1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
     'xSection'       : 0,
@@ -166,7 +166,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
     'xSection'       : 0,
@@ -174,7 +174,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p2_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p2_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p2-Embedded',
     'xSection'       : 0,
@@ -182,7 +182,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p3_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p3_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p3-Embedded',
     'xSection'       : 0,
@@ -190,7 +190,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p4_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p4_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p4-Embedded',
     'xSection'       : 0,
@@ -198,7 +198,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p5_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p5_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p5-Embedded',
     'xSection'       : 0,
@@ -206,7 +206,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p6_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p6-Embedded',
     'xSection'       : 0,
@@ -214,7 +214,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p7_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p7_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p7-Embedded',
     'xSection'       : 0,
@@ -222,7 +222,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p8-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p8_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p8_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p8-Embedded',
     'xSection'       : 0,
@@ -230,7 +230,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p9-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedUpDown/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p9_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p9_run/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p9-Embedded',
     'xSection'       : 0,
@@ -239,7 +239,7 @@ options = {
     },
     ##Bkg MC
     'DYJets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/DYJets-MuTau-50-madgraph-PUS10-v2_run_LORENZO/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-MuTau-50-madgraph-PUS10-v2_run_LORENZO/',
     'outputFileName' : OutDir+'nTupleDYJets_MuTau.root',
     'sample'         : 'DYJets',
     'xSection'       : 3504,
@@ -247,7 +247,7 @@ options = {
     'iJson'          : -1
     } ,
     'DYJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/DYJets-MuTau-8TeV-50-madgraph-PUS7-Embedded_run_IVO/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-MuTau-8TeV-50-madgraph-PUS7-Embedded_run_IVO/',
     'outputFileName' : OutDir+'nTupleDYJets-Embedded_MuTau.root',
     'sample'         : 'DYJets-Embedded',
     'xSection'       : 3504,
@@ -255,7 +255,7 @@ options = {
     'iJson'          : -1
     } ,
     'T-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/T-tW-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleT-tW_MuTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
@@ -263,7 +263,7 @@ options = {
     'iJson'          : -1
     },
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/TTJets-MuTau-madgraph-PUS10-v2_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-MuTau-madgraph-PUS10-v2_run/',
     'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -271,7 +271,7 @@ options = {
     'iJson'          : -1
     },
     'Tbar-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/Tbar-tW-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleTbar-tW_MuTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
@@ -279,7 +279,7 @@ options = {
     'iJson'          : -1
     },
     'WJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/W1Jets-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWJets1Jets_MuTau.root',
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
@@ -287,7 +287,7 @@ options = {
     'iJson'          : -1
     },
     'WJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/W2Jets-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWJets2Jets_MuTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
@@ -295,7 +295,7 @@ options = {
     'iJson'          : -1
     },
     'WJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/W3Jets-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWJets3Jets_MuTau.root',
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
@@ -303,7 +303,7 @@ options = {
     'iJson'          : -1
     },
     'WJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/W4Jets-MuTau-madgraph-PUS10-v2_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-MuTau-madgraph-PUS10-v2_run/',
     'outputFileName' : OutDir+'nTupleWJets4Jets_MuTau.root',
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
@@ -311,7 +311,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p1' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/WJets-MuTau-madgraph-PUS10-p1_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p1_run/',
     'outputFileName' : OutDir+'nTupleWJets-p1_MuTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
@@ -319,7 +319,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p2' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/WJets-MuTau-madgraph-PUS10-p2_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p2_run/',
     'outputFileName' : OutDir+'nTupleWJets-p2_MuTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
@@ -327,7 +327,7 @@ options = {
     'iJson'          : -1
     },
     'WWJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/WWJetsTo2L2Nu-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WWJetsTo2L2Nu-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_MuTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
@@ -335,7 +335,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/WZJetsTo2L2Q-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo2L2Q-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_MuTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
@@ -343,7 +343,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo3LNu' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/WZJetsTo3LNu-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo3LNu-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_MuTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
@@ -351,7 +351,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/ZZJetsTo2L2Q-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Q-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_MuTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -359,7 +359,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo4L' : {
-    'inputFilePath'  : WorkdirLoc+'BkgMC/ZZJetsTo4L-MuTau-madgraph-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo4L-MuTau-madgraph-PUS10_run/',
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_MuTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
@@ -368,7 +368,7 @@ options = {
     },
     ##Higgs MC
     'GGFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH110-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH110-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH110_MuTau.root',
     'sample'         : 'GGFH110',
     'xSection'       : 25.04 ,
@@ -376,7 +376,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH115-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH115-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH115_MuTau.root',
     'sample'         : 'GGFH115',
     'xSection'       : 22.96 ,
@@ -384,7 +384,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH120-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH120-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH120_MuTau.root',
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
@@ -392,7 +392,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH125-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH125-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH125_MuTau.root',
     'sample'         : 'GGFH125',
     'xSection'       : 19.52,
@@ -400,7 +400,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH130-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH130-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH130_MuTau.root',
     'sample'         : 'GGFH130',
     'xSection'       : 18.07 ,
@@ -408,7 +408,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH135-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH135-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH135_MuTau.root',
     'sample'         : 'GGFH135',
     'xSection'       : 16.79,
@@ -416,7 +416,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH140-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH140-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH140_MuTau.root',
     'sample'         : 'GGFH140',
     'xSection'       : 15.63,
@@ -424,7 +424,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/GGFH145-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GGFH145-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleGGFH145_MuTau.root',
     'sample'         : 'GGFH145',
     'xSection'       : 14.59,
@@ -432,7 +432,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH110-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH110-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH110_MuTau.root',
     'sample'         : 'VBFH110',
     'xSection'       : 1.809,
@@ -440,7 +440,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH115-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH115-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH115_MuTau.root',
     'sample'         : 'VBFH115',
     'xSection'       : 1.729,
@@ -448,7 +448,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH120-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH120-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH120_MuTau.root',
     'sample'         : 'VBFH120',
     'xSection'       : 1.649,
@@ -464,7 +464,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH130-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH130-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH130_MuTau.root',
     'sample'         : 'VBFH130',
     'xSection'       : 1.511,
@@ -472,7 +472,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH135-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH135-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH135_MuTau.root',
     'sample'         : 'VBFH135',
     'xSection'       : 1.448,
@@ -480,7 +480,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH140-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH140-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH140_MuTau.root',
     'sample'         : 'VBFH140',
     'xSection'       : 1.389,
@@ -488,7 +488,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VBFH145-MuTau-powheg-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH145-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH145_MuTau.root',
     'sample'         : 'VBFH145',
     'xSection'       : 1.333,
@@ -496,7 +496,7 @@ options = {
     'iJson'          : -1
     },
     'VH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH110-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH110-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH110_MuTau.root',
     'sample'         : 'VH110',
     'xSection'       : (1.060+0.5869+0.1887) ,
@@ -504,7 +504,7 @@ options = {
     'iJson'          : -1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH115-MuTau-pythia-PUS10-v2_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH115-MuTau-pythia-PUS10-v2_run/',
     'outputFileName' : OutDir+'nTupleVH115_MuTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),
@@ -512,7 +512,7 @@ options = {
     'iJson'          : -1
     },
     'VH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH120-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH120-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH120_MuTau.root',
     'sample'         : 'VH120',
     'xSection'       : (0.7966+0.4483+0.1470),
@@ -520,7 +520,7 @@ options = {
     'iJson'          : -1
     },
     'VH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH125-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH125-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH125_MuTau.root',
     'sample'         : 'VH125',
     'xSection'       : (0.6966+0.3943+0.1302),
@@ -528,7 +528,7 @@ options = {
     'iJson'          : -1
     },
     'VH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH130-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH130-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH130_MuTau.root',
     'sample'         : 'VH130',
     'xSection'       : (0.6095+0.3473+0.1157),
@@ -536,7 +536,7 @@ options = {
     'iJson'          : -1
     },
     'VH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH135-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH135-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH135_MuTau.root',
     'sample'         : 'VH135',
     'xSection'       : (0.5351+0.3074+0.1031),
@@ -544,7 +544,7 @@ options = {
     'iJson'          : -1
     },
     'VH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH140-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH140-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH140_MuTau.root',
     'sample'         : 'VH140',
     'xSection'       : (0.4713+0.2728+0.09207),
@@ -552,7 +552,7 @@ options = {
     'iJson'          : -1
     },
     'VH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM_2/VH145-MuTau-pythia-PUS10_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VH145-MuTau-pythia-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVH145_MuTau.root',
     'sample'         : 'VH145',
     'xSection'       : (0.4164+0.2424+0.08246),
