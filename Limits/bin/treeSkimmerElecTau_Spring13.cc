@@ -965,6 +965,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("index", &index_, "index/I");
   outTreePtOrd->Branch("pairIndex", &pairIndex_, "pairIndex/I");
 
+  outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
+  outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
+  outTreePtOrd->Branch("metParl", &metParl, "metParl/F");
+  outTreePtOrd->Branch("metPerp", &metPerp, "metPerp/F");
+  outTreePtOrd->Branch("metSigmaParl", &metSigmaParl, "metSigmaParl/F");
+  outTreePtOrd->Branch("metSigmaPerp", &metSigmaPerp, "metSigmaPerp/F");
+
   int nEntries    = currentTree->GetEntries() ;
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
@@ -1450,6 +1457,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
     if(isDuplicated) continue;
     ///////////////////////
+
+    uParl=-999.; uPerp=-999.; metParl=-999.; metPerp=-999.; metSigmaParl=-999.; metSigmaPerp=-999.;
 
     // initialize variables filled only in the two jet case
     pt1=-99;pt2=-99;eta1=-99,eta2=-99;Deta=-99;Dphi=-99;Mjj=-99;phi1=-99;phi2=-99;
@@ -2281,7 +2290,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     }
     pairIndex_ = pairIndex;
 
-
     outTreePtOrd->Fill();
   }
   
@@ -2304,7 +2312,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 int main(int argc, const char* argv[])
 {
   
-  std::cout << "treeSkimmerElecTau_Moriond" << std::endl;
+  std::cout << "treeSkimmerElecTau_Spring13" << std::endl;
   gROOT->SetBatch(true);
   
   gSystem->Load("libFWCoreFWLite");
@@ -2324,7 +2332,7 @@ int main(int argc, const char* argv[])
 
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfgTreeSkimmerElecTauAnalyzer = cfg.getParameter<edm::ParameterSet>("treeSkimmerElecTau_HCP");
+  edm::ParameterSet cfgTreeSkimmerElecTauAnalyzer = cfg.getParameter<edm::ParameterSet>("treeSkimmerElecTau");
 
   std::string sample = cfgTreeSkimmerElecTauAnalyzer.getParameter<std::string>("sample");
   std::string analysis = cfgTreeSkimmerElecTauAnalyzer.getParameter<std::string>("analysis");
