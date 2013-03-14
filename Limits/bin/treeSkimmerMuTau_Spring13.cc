@@ -1,6 +1,7 @@
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 
 #include "TTree.h"
+#include "TChain.h"
 #include "TString.h"
 #include "TFile.h"
 #include "TMath.h"
@@ -25,6 +26,12 @@
 #include "TLorentzVector.h"
 #include "TRandom3.h"
 #include "TROOT.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "PhysicsTools/FWLite/interface/TFileService.h"
+#include "DataFormats/FWLite/interface/InputSource.h"
+#include "DataFormats/FWLite/interface/OutputFiles.h"
+#include "FWCore/PythonParameterSet/interface/MakeParameterSets.h"
+
 #include "LLRAnalysis/Utilities/interface/RecoilCorrector.hh"
 //#include "LLRAnalysis/Utilities/interface/Lumi3DReWeightingForLorenzo.h"
 //#include "PhysicsTools/Utilities/interface/LumiReweightingStandAlone.h"
@@ -75,9 +82,16 @@
 using namespace ROOT::Math;
 using namespace std;
 
+typedef map< float , int > MAPDITAU_etaL2;
+typedef map< float , MAPDITAU_etaL2 > MAPDITAU_etaL1;
+typedef map< float , MAPDITAU_etaL1 > MAPDITAU_ptL2;
+typedef map< float , MAPDITAU_ptL2 > MAPDITAU_ptL1;
+typedef map< int , MAPDITAU_ptL1 > MAPDITAU_event;
+typedef map< int , MAPDITAU_event > MAPDITAU_lumi;
+typedef map< int , MAPDITAU_lumi > MAPDITAU_run;
+
+typedef std::vector<std::string> vstring;
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LV;
-//edm::LumiReWeighting LumiWeights_("../../Utilities/data/pileUp/MC_Summer12_PU_S10-600bins.root","../../Utilities/data/pileUp/Data_Pileup_2012_HCP-600bins.root","pileup","pileup");
-//edm::LumiReWeighting LumiWeights_("/data_CMS/cms/htautau/SoftLeptonAnalysis/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/SoftLeptonAnalysis/tools/Data_Pileup_2012D_19-26OctPlus02-16Nov-600bins-mbiasXS69400.root","pileup","pileup"); //MB
 edm::LumiReWeighting LumiWeights_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_Moriond-600bins.root","pileup","pileup");
 edm::LumiReWeighting LumiWeightsHCP_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_HCP-600bins.root","pileup","pileup"); 
 edm::LumiReWeighting LumiWeightsD_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_DOnly-600bins.root","pileup","pileup"); 
@@ -395,12 +409,55 @@ int getJetIDMVALoose(double pt, double eta, double rawMVA)
   return passId;
 }
 
-void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0., string inputDir_ = "./", string dirOut_ = "./", int iJson_=-1, bool doLepVeto=true){
+bool checkEventIsDuplicated(MAPDITAU_run &mapDiTau, int run, int lumi, int event, float ptL1, float ptL2, float etaL1, float etaL2)
+{
+  
+  MAPDITAU_run::const_iterator iter_run = mapDiTau.find(run) ;
 
-  cout << "Now skimming analysis " << analysis_ << endl;
-  if(analysis_ == "nominal")
-    analysis_ = "";
+  if( iter_run != mapDiTau.end() ) {
+    MAPDITAU_lumi::const_iterator iter_lumi = iter_run->second.find(lumi) ;
+    
+    if( iter_lumi != iter_run->second.end() ) {
+      MAPDITAU_event::const_iterator iter_event = iter_lumi->second.find(event) ;
+      
+      if( iter_event != iter_lumi->second.end() ) {
+	MAPDITAU_ptL1::const_iterator iter_ptL1 = iter_event->second.find(ptL1) ;
+	
+	if( iter_ptL1 != iter_event->second.end() ) {
+	  MAPDITAU_ptL2::const_iterator iter_ptL2 = iter_ptL1->second.find(ptL2) ;
+	  
+	  if( iter_ptL2 != iter_ptL1->second.end() ) {
+	    MAPDITAU_etaL1::const_iterator iter_etaL1 = iter_ptL2->second.find(etaL1) ;
+	    
+	    if( iter_etaL1 != iter_ptL2->second.end() ) {
+	      MAPDITAU_etaL2::const_iterator iter_etaL2 = iter_etaL1->second.find(etaL2) ;
 
+	      if( iter_etaL2 != iter_etaL1->second.end() ) {
+		return true;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+
+  mapDiTau[run][lumi][event][ptL1][ptL2][etaL1][etaL2] = 1;
+
+  return false;
+}
+
+void fillTrees_MuTauStream(TChain* currentTree,
+			   TTree* outTreePtOrd,
+			   double nEventsRead =0.,
+			   string analysis_ = "", 
+			   string sample_ = "",
+			   float xsec_ = 0., 
+			   float skimEff_ = 0., 
+			   int iJson_=-1,
+			   bool doLepVeto=true
+			   )
+{
   TMVA::Tools::Instance();
 
   vector<int> mHMVAs;
@@ -554,24 +611,6 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   // normalization Lumi
   Float_t Lumi=1000;
 
-  string currentSample = sample_ ;
-  TString sample(currentSample.c_str());
-
-  string analysisFileName = analysis_;
-  if( !(analysis_.find("Up")!=string::npos || analysis_.find("Down")!=string::npos) &&  analysis_.find("Raw")==string::npos)
-    analysisFileName = "Nominal";
-  if( !(analysis_.find("Up")!=string::npos || analysis_.find("Down")!=string::npos) &&  analysis_.find("Raw")!=string::npos)
-    analysisFileName = "RawNominal";
-
-  TString outName = dirOut_+"/nTuple"+sample+"_MuTau_"+analysisFileName+".root";
-  cout << "Output file name called " << outName << endl;
-
-  //TFile *outFile = new TFile(outName,"UPDATE");
-  //TTree* outTreePtOrd     = new TTree(TString(("outTreePtOrd"+analysis_).c_str()),"tree jets pT-ord");
-
-  fwlite::TFileService fs = fwlite::TFileService(outName.Data());
-  TTree* outTreePtOrd = fs.make<TTree>(TString(("outTreePtOrd"+analysis_).c_str()),"tree jets pT-ord");
-
   //////////////////////////////////////////////////////////
 
   // kinematical variables of first 2 jets  
@@ -616,7 +655,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   float MEtCov00,MEtCov01,MEtCov10,MEtCov11;
   float combRelIsoLeg1,combRelIsoLeg1Beta,combRelIsoLeg1DBeta,combRelIsoLeg1DBetav2,combRelIsoLeg1Rho, combIsoLeg2;
   float rhoFastJet_;
-  float isoLeg1MVA_;
+//   float isoLeg1MVA_;
   int tightestHPSDBWP_, tightestHPSMVAWP_, decayMode_;
   float hpsMVA_;
   float pfJetPt_;
@@ -840,7 +879,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   outTreePtOrd->Branch("combRelIsoLeg1Rho",  &combRelIsoLeg1Rho,"combRelIsoLeg1Rho/F");
   outTreePtOrd->Branch("combRelIsoLeg1DBeta",&combRelIsoLeg1DBeta,"combRelIsoLeg1DBeta/F");
   outTreePtOrd->Branch("combRelIsoLeg1DBetav2",&combRelIsoLeg1DBetav2,"combRelIsoLeg1DBetav2/F");
-  outTreePtOrd->Branch("isoLeg1MVA",         &isoLeg1MVA_,"isoLeg1MVA/F");
+//   outTreePtOrd->Branch("isoLeg1MVA",         &isoLeg1MVA_,"isoLeg1MVA/F");
   outTreePtOrd->Branch("combIsoLeg2",        &combIsoLeg2,"combIsoLeg2/F");
   outTreePtOrd->Branch("rhoFastJet",         &rhoFastJet_,"rhoFastJet/F");
 
@@ -944,31 +983,11 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   outTreePtOrd->Branch("metSigmaParl", &metSigmaParl, "metSigmaParl/F");
   outTreePtOrd->Branch("metSigmaPerp", &metSigmaPerp, "metSigmaPerp/F");
 
-  //string currentInName = inputDir_+"/treeMuTauStream_"+sample_+".root" ;
-  string currentInName = inputDir_+"/treeMuTauStream_"+sample_+".root"; //MB
-
-  TString inName(currentInName.c_str());
-  TFile* file   = new TFile(inName,"READ");
-  if(file->IsZombie()){
-    cout << "No such file : " << inputDir_+"/treeMuTauETMStream_"+sample_+".root" << endl;
-    return;
-  }
-
-  string anlyzerName = analysis_;
-  if( analysis_.find("Jet")!=string::npos && analysis_.find("Raw")==string::npos)
-    anlyzerName = "";
-  if( analysis_.find("Jet")!=string::npos && analysis_.find("Raw")!=string::npos)
-    anlyzerName = "Raw";
-    
-
-  TString treeName(("muTauStreamAnalyzer"+anlyzerName+"/tree").c_str());
-
-  TTree* currentTree = (TTree*)file->Get(treeName);
   int nEntries    = currentTree->GetEntries() ;
-  int nEventsRead = ((TH1F*)file->Get("allEventsFilter/totalEvents"))->GetBinContent(1) ;
-  float crossSection = xsec_ ;
-  float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/crossSection )  : 1.0;
-
+  float crossSection = xsec_;
+  float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
+  
+  TString sample(sample_.c_str());
   cout << "Processing sample " << sample << endl;
   cout<< "nEventsRead = " << nEventsRead << endl;
   cout<< "nEntries    = " << nEntries << endl;
@@ -1020,7 +1039,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   currentTree->SetBranchStatus("chIsoPULeg1v2"         ,1);
   currentTree->SetBranchStatus("nhIsoPULeg1v2"         ,1);
   currentTree->SetBranchStatus("phIsoPULeg1v2"         ,1);
-  currentTree->SetBranchStatus("isoLeg1MVA"            ,1);
+//   currentTree->SetBranchStatus("isoLeg1MVA"            ,1);
 
   currentTree->SetBranchStatus("chIsoLeg2"             ,1);
   currentTree->SetBranchStatus("nhIsoLeg2"             ,0);
@@ -1241,7 +1260,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   float chIsoLeg1,nhIsoLeg1,phIsoLeg1; 
   float chIsoPULeg1,nhIsoPULeg1,phIsoPULeg1; 
   float allChIsoLeg1;
-  float isoLeg1MVA;
+//   float isoLeg1MVA;
   int parton, genPartMult, leadGenPartPdg, hepNUP; 
   float leadGenPartPt;
   ULong64_t event,run,lumi;
@@ -1256,7 +1275,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   currentTree->SetBranchAddress("nhIsoPULeg1v2",        &nhIsoPULeg1);
   currentTree->SetBranchAddress("phIsoPULeg1v2",        &phIsoPULeg1);
   currentTree->SetBranchAddress("elecIsoLeg1v2",        &allChIsoLeg1);
-  currentTree->SetBranchAddress("isoLeg1MVA",           &isoLeg1MVA);
+//   currentTree->SetBranchAddress("isoLeg1MVA",           &isoLeg1MVA);
   currentTree->SetBranchAddress("rhoFastJet",           &rhoFastJet);
 
   currentTree->SetBranchAddress("dxy1",                 &dxy1);
@@ -1377,28 +1396,21 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
   jsonFile[2] = dirJson+"/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt";      // PromptReco 
   jsonFile[3] = dirJson+"/Cert_190782-190949_8TeV_06Aug2012ReReco_Collisions12_JSON.txt";    // ReReco 06Aug
   jsonFile[4] = dirJson+"/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt";         // PromptReco updated
-
   map<int, vector<pair<int, int> > > jsonMap[nJson] ;  
   for(int iJ=0 ; iJ<nJson ; iJ++)
     jsonMap[iJ] = readJSONFile(jsonFile[iJ]);
   bool isGoodRun=false;
+  bool isDuplicated=false;
   bool isMatched=false;
   //////////////////////////
   
-  // define double event counting remover //
-  map < pair<int,int> , int > mapRunsEvts;
-  map < pair<int,int> , int >::iterator mapIter;
-  pair<int,int> runEvt;
+  MAPDITAU_run mapDiTau;
 
-  cout << "START LOOP OVER EVENTS" << endl;
-
-  for (int n = 0; n < nEntries ; n++) {
-  //for (int n = 0; n < 100 ; n++) {
+//   for (int n = 0; n < nEntries ; n++) {
+  for (int n = 0; n < 10000 ; n++) {
     
     currentTree->GetEntry(n);
-    if(n%5000==0) cout << n << endl;
-    //bool isData = sample.Contains("Run2012");
-    bool isData = sample.Contains("Run201");
+    if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
 
     // APPLY JSON SELECTION //
     isGoodRun=true;
@@ -1407,22 +1419,16 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
       isGoodRun = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[iJson_]);
 
     if(!isGoodRun) continue;
-    if(DEBUG) cout << "passed JSON i=" << iJson_ << endl;
-    /////////////////////////
 
-    // REMOVE DOUBLE COUNTING OF EVENTS IN DATA //
-//     if(isData || sample.Contains("Emb")) {
-//       runEvt = make_pair(run,event);
-//       mapIter = mapRunsEvts.find( runEvt );
-      
-//       if( mapIter==mapRunsEvts.end() )
-// 	mapRunsEvts[ runEvt ] = 1;
-      
-//       else {
-// 	mapRunsEvts[ runEvt ] += 1;
-// 	continue;
-//       }
-//     }
+    /////////////////////////    
+    ptL1     = (*diTauLegsP4)[0].Pt();
+    ptL2     = (*diTauLegsP4)[1].Pt();
+    etaL1    = (*diTauLegsP4)[0].Eta();
+    etaL2    = (*diTauLegsP4)[1].Eta();
+    //
+    isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
+    if(isDuplicated) continue;
+    ///////////////////////
 
     uParl=-999.; uPerp=-999.; metParl=-999.; metPerp=-999.; metSigmaParl=-999.; metSigmaPerp=-999.;
 
@@ -1459,6 +1465,8 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
     if(indexes.size()>0) lead  = indexes[0];  
     if(indexes.size()>1) trail = indexes[1];  
     if(indexes.size()>2) veto  = indexes[2];  
+
+    bool isData = sample.Contains("Run201");
 
     for(unsigned int v = 0 ; v < indexes.size() ; v++){
       if( (*jets)[indexes[v]].Pt() > 30 ) nJets30++;
@@ -1845,7 +1853,7 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
     combRelIsoLeg1Beta     = (chIsoLeg1+scaled_nhIsoLeg1+scaled_phIsoLeg1)/(*diTauLegsP4)[0].Pt();
     combRelIsoLeg1DBeta    = (chIsoLeg1    + std::max( nhIsoLeg1+phIsoLeg1-0.5*(nhIsoPULeg1),double(0.0)))/(*diTauLegsP4)[0].Pt();
     combRelIsoLeg1DBetav2  = (allChIsoLeg1 + std::max( nhIsoLeg1+phIsoLeg1-0.5*(nhIsoPULeg1),double(0.0)))/(*diTauLegsP4)[0].Pt();
-    isoLeg1MVA_            = isoLeg1MVA;
+//     isoLeg1MVA_            = isoLeg1MVA;
     float EffArea          = TMath::Pi()*0.4*0.4;
     combRelIsoLeg1Rho      = std::max(((chIsoLeg1+nhIsoLeg1+phIsoLeg1) - rhoNeutralFastJet*EffArea),float(0.0))/(*diTauLegsP4)[0].Pt();
     combIsoLeg2            =  ( chIsoLeg2 + std::max( phIsoLeg2 - rhoFastJet*TMath::Pi()*0.5*0.5, 0.0) ) ;    
@@ -2235,51 +2243,8 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
     }
     pairIndex_ = pairIndex;
     
-    
-    
     outTreePtOrd->Fill();
-
   }
-  file->Close();  
-
-  /////////////////////
-  // SPLIT DY Sample //
-  /////////////////////
-  cout << "DY Sample splitting" << endl;
-  TTree* backgroundDYTauTau, *backgroundDYMutoTau, *backgroundDYJtoTau;
-
-  TFile* outFile;
-
-  if(sample.Contains("DY")) {
-    backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
-    backgroundDYMutoTau = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) &&  leptFakeTau"); // g/Z -> mu+mu- mu->tau
-    backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
-
-    cout << "-- copy tree" << endl;
-
-    if(backgroundDYTauTau) {
-      outName = dirOut_+"/nTuple_DYJ_TauTau_MuTau_"+analysisFileName+".root" ;
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYTauTau->Write();
-      outFile->Close();
-    }
-
-    if(backgroundDYMutoTau) {
-      outName = dirOut_+"/nTuple_DYJ_MuToTau_MuTau_"+analysisFileName+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYMutoTau->Write();
-      outFile->Close();
-    }
-
-    if(backgroundDYJtoTau) {
-      outName = dirOut_+"/nTuple_DYJ_JetToTau_MuTau_"+analysisFileName+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYJtoTau->Write();
-      outFile->Close();
-    }
-  }
-
-  //return;
 
   delete jets; delete jets_v2; delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;
@@ -2296,89 +2261,210 @@ void makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0
 }
 
 
-void doAllSamplesMu(string inputDir_ = "/data_CMS/cms/anayak/H2TauTauHCP/MuTauStream/")
-{
+// void doAllSamplesMu(string inputDir_ = "/data_CMS/cms/anayak/H2TauTauHCP/MuTauStream/")
+// {
 
 
-  std::vector<std::string> samples;
-  std::vector<float> crossSec;
+//   std::vector<std::string> samples;
+//   std::vector<float> crossSec;
 
-  ////////////// samples & x-sections & skim1 & skim2 /////////////
+//   ////////////// samples & x-sections & skim1 & skim2 /////////////
   
+
   //samples.push_back("Run2011-MuTau-All_run");             crossSec.push_back( 0  );                          
   //samples.push_back("Run2011-MuTau-LooseIso-All_run");    crossSec.push_back( 0  );                          
   //samples.push_back("VBFH125-MuTau-8TeV-powheg-DR53X-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
   //samples.push_back("DYJets-MuTau-50-madgraph-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
 
-  samples.push_back("VBFH125"); crossSec.push_back(1.578 * 0.0632 * 0.356445 * 0.607902); // xsec * BR * skim * pat
-
-  makeTrees_MuTau("",             samples[0], crossSec[0], 
-		  "/data_CMS/cms/htautau/PostMoriond/TREES/MuTau/HiggsSM/VBF125/", 
-		  "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/");
+//   makeTrees_MuTau("",             samples[0], crossSec[0], 
+// 		  "/data_CMS/cms/htautau/PostMoriond/TREES/MuTau/HiggsSM/VBF125/", 
+// 		  "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/");
  
-  return;
+//   return;
 
-  for( unsigned int k = 0; k < samples.size(); k++) {
+//   for( unsigned int k = 0; k < samples.size(); k++) {
     
-    makeTrees_MuTau("",        samples[k], crossSec[k], inputDir_);
+//     makeTrees_MuTau("",        samples[k], crossSec[k], inputDir_);
 
-    if( samples[k].find("Run2012-MuTau-All")!=string::npos )
-      continue;
-    makeTrees_MuTau("TauUp",   samples[k], crossSec[k], inputDir_);
-    makeTrees_MuTau("TauDown", samples[k], crossSec[k], inputDir_);
-    if( samples[k].find("Embedded")!=string::npos)
-      continue;
-    makeTrees_MuTau("JetUp",   samples[k], crossSec[k], inputDir_);
-    makeTrees_MuTau("JetDown", samples[k], crossSec[k], inputDir_);
-  }
+//     if( samples[k].find("Run2012-MuTau-All")!=string::npos )
+//       continue;
+//     makeTrees_MuTau("TauUp",   samples[k], crossSec[k], inputDir_);
+//     makeTrees_MuTau("TauDown", samples[k], crossSec[k], inputDir_);
+//     if( samples[k].find("Embedded")!=string::npos)
+//       continue;
+//     makeTrees_MuTau("JetUp",   samples[k], crossSec[k], inputDir_);
+//     makeTrees_MuTau("JetDown", samples[k], crossSec[k], inputDir_);
+//   }
   
-  return;
+//   return;
 
-}
+// }
 
+
+// int main(int argc, const char* argv[])
+// {
+  
+//   std::cout << "doAllSamplesMu()" << std::endl;
+//   gROOT->SetBatch(true);
+ 
+//   gSystem->Load("libFWCoreFWLite");
+//   AutoLibraryLoader::enable();
+
+//   string inputDir = "./";
+//   string dirOut   = "./";
+
+//   if ( argc==1 ) {
+//     doAllSamplesMu(inputDir);
+//   }
+//   else if( argc==3 ) {
+    
+//     makeTrees_MuTau("",           argv[1], atof(argv[2]), inputDir, dirOut, -1);
+    
+//     if( string(argv[1]).find("Run2012-MuTau-All")!=string::npos )
+//       return 0;
+//     makeTrees_MuTau("TauUp",      argv[1], atof(argv[2]), inputDir, dirOut, -1);
+//     makeTrees_MuTau("TauDown",    argv[1], atof(argv[2]), inputDir, dirOut, -1);
+    
+//     if( string(argv[1]).find("Embedded")!=string::npos)
+//       return 0;
+//     makeTrees_MuTau("JetUp",      argv[1], atof(argv[2]), inputDir, dirOut, -1);
+//     makeTrees_MuTau("JetDown",    argv[1], atof(argv[2]), inputDir, dirOut, -1);
+//   }
+//   else if( argc==7 ){
+//     makeTrees_MuTau(argv[1], argv[2], atof(argv[3]), argv[4], argv[5], (int)atof(argv[6]));
+//   }
+//   else if( argc==8 ){
+//     makeTrees_MuTau(argv[1], argv[2], atof(argv[3]), argv[4], argv[5], (int)atof(argv[6]), (int)atof(argv[7]));
+//   }
+//   else {
+//     cout << "Wrong number of arguments. Specify either 0, 2, or 6 arguments" << endl;
+//     return 1;
+//   }
+
+//   cout << "finished running treeSkimmer" << endl;
+//   return 0;
+//   //makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0., string inputDir_ = "./", string dirOut_ = "./", int iJson_=-1, bool doLepVeto=false){
+
+// }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, const char* argv[])
 {
   
-  std::cout << "doAllSamplesMu()" << std::endl;
+  std::cout << "treeSkimmerMuTau_Spring13" << std::endl;
   gROOT->SetBatch(true);
- 
+  
   gSystem->Load("libFWCoreFWLite");
   AutoLibraryLoader::enable();
+  
 
-  string inputDir = "./";
-  string dirOut   = "./";
-
-  if ( argc==1 ) {
-    doAllSamplesMu(inputDir);
-  }
-  else if( argc==3 ) {
-    
-    makeTrees_MuTau("",           argv[1], atof(argv[2]), inputDir, dirOut, -1);
-    
-    if( string(argv[1]).find("Run2012-MuTau-All")!=string::npos )
-      return 0;
-    makeTrees_MuTau("TauUp",      argv[1], atof(argv[2]), inputDir, dirOut, -1);
-    makeTrees_MuTau("TauDown",    argv[1], atof(argv[2]), inputDir, dirOut, -1);
-    
-    if( string(argv[1]).find("Embedded")!=string::npos)
-      return 0;
-    makeTrees_MuTau("JetUp",      argv[1], atof(argv[2]), inputDir, dirOut, -1);
-    makeTrees_MuTau("JetDown",    argv[1], atof(argv[2]), inputDir, dirOut, -1);
-  }
-  else if( argc==7 ){
-    makeTrees_MuTau(argv[1], argv[2], atof(argv[3]), argv[4], argv[5], (int)atof(argv[6]));
-  }
-  else if( argc==8 ){
-    makeTrees_MuTau(argv[1], argv[2], atof(argv[3]), argv[4], argv[5], (int)atof(argv[6]), (int)atof(argv[7]));
-  }
-  else {
-    cout << "Wrong number of arguments. Specify either 0, 2, or 6 arguments" << endl;
-    return 1;
+//--- parse command-line arguments
+  if ( argc < 2 ) {
+    std::cout << "Usage: " << argv[0] << " [parameters.py]" << std::endl;
+    return 0;
   }
 
-  cout << "finished running treeSkimmer" << endl;
+//--- read python configuration parameters
+  if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") ) 
+    throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
+      << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
+
+  edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
+
+  edm::ParameterSet cfgTreeSkimmerMuTauAnalyzer = cfg.getParameter<edm::ParameterSet>("treeSkimmerMuTau");
+
+  std::string sample = cfgTreeSkimmerMuTauAnalyzer.getParameter<std::string>("sample");
+  std::string analysis = cfgTreeSkimmerMuTauAnalyzer.getParameter<std::string>("analysis");
+  double xSection = cfgTreeSkimmerMuTauAnalyzer.getParameter<double>("xSection");
+  double skimEff = cfgTreeSkimmerMuTauAnalyzer.getParameter<double>("skimEff");
+  int iJson = cfgTreeSkimmerMuTauAnalyzer.getParameter<int>("iJson");
+
+  fwlite::InputSource inputFiles(cfg); 
+  int maxEvents = inputFiles.maxEvents();
+
+  fwlite::OutputFiles outputFile(cfg);
+  fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
+
+  string analysisFileName = analysis;
+  if( !(analysis.find("Up")!=string::npos || analysis.find("Down")!=string::npos) &&  analysis.find("Raw")==string::npos)
+    analysisFileName = "Nominal";
+  if( !(analysis.find("Up")!=string::npos || analysis.find("Down")!=string::npos) &&  analysis.find("Raw")!=string::npos)
+    analysisFileName = "RawNominal";
+
+  cout << "Now skimming analysis " << analysis << endl;
+  if(analysis=="nominal") analysis="";
+
+  TTree* outTreePtOrd = fs.make<TTree>(TString(("outTreePtOrd"+analysis).c_str()),"tree jets pT-ord");
+
+  double nEventsRead = 0;
+  for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
+	inputFileName != inputFiles.files().end(); ++inputFileName ) {
+//--- open input file
+    TFile* inputFile = TFile::Open(inputFileName->data());
+    if ( !inputFile ) 
+      throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
+	<< "Failed to open inputFile = " << (*inputFileName) << " !!\n";
+
+    TString histoName("allEventsFilter/totalEvents");
+    TH1D* histo =(TH1D*)inputFile->Get(histoName);
+//     cout<<"histo "<<histo->GetEntries();
+    if(histo)nEventsRead += histo->GetBinContent(1) ;
+    else throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
+      << "Failed to read histogram "<<histoName<<" from inputFile = " << (*inputFileName) << " !!\n";
+//--- close input file
+    delete inputFile;
+  }
+  cout<< "nEventsRead " << nEventsRead << endl;
+
+  string anlyzerName = analysis;
+  if( analysis.find("Jet")!=string::npos && analysis.find("Raw")==string::npos)
+    anlyzerName = "";
+  if( analysis.find("Jet")!=string::npos && analysis.find("Raw")!=string::npos)
+    anlyzerName = "Raw";
+  TString treeName(("muTauStreamAnalyzer"+anlyzerName+"/tree").c_str());
+  TChain* currentTree = new TChain (treeName);
+  bool maxEvents_processed = false;
+  for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
+	inputFileName != inputFiles.files().end() && !maxEvents_processed; ++inputFileName ) {
+    currentTree->Add(inputFileName->data());
+  }
+  fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson);
+
+  TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
+  TTree* backgroundDYTauTau, *backgroundDYMutoTau, *backgroundDYJtoTau;
+  TString outName ="";
+  TFile *outFile;// = new TFile(outName,"UPDATE");
+
+  if(sample=="DYJets") {
+    backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
+    backgroundDYMutoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && leptFakeTau"); // g/Z -> mu+mu- mu->tau
+    backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
+
+    cout << "-- copy tree" << endl;
+    if(backgroundDYTauTau) { 
+      outName = dirOut_+"nTupleDYJ_TauTau_"+analysis+".root" ;
+      outFile = new TFile(outName,"RECREATE");
+      backgroundDYTauTau->Write();
+      outFile->Close();
+    }
+    
+    if(backgroundDYMutoTau) {
+      outName = dirOut_+"nTupleDYJ_MuToTau_"+analysis+".root";
+      outFile = new TFile(outName,"RECREATE");
+      backgroundDYMutoTau->Write();
+      outFile->Close();
+    }
+    
+    if(backgroundDYJtoTau) {
+      outName = dirOut_+"nTupleDYJ_JetToTau_"+analysis+".root";
+      outFile = new TFile(outName,"RECREATE");
+      backgroundDYJtoTau->Write();
+      outFile->Close();
+    }
+  }
+
   return 0;
-  //makeTrees_MuTau(string analysis_ = "", string sample_ = "", float xsec_ = 0., string inputDir_ = "./", string dirOut_ = "./", int iJson_=-1, bool doLepVeto=false){
-
 }
