@@ -625,7 +625,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     combRelIsoLeg1Rho, combIsoLeg2;
   float rhoFastJet_;
   float isoLeg1MVA_;
-  int tightestHPSDBWP_, tightestHPSMVAWP_, decayMode_;
+  int tightestHPSDBWP_, tightestHPSMVAWP_, tightestAntiMuWP_, tightestAntiMu2WP_,decayMode_;
   int tightestAntiEMVAWP_, tightestAntiECutWP_;
   float hpsMVA_;
   float pfJetPt_;
@@ -868,9 +868,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("dPhi",               &dPhi_,"dPhi/F");
   outTreePtOrd->Branch("HoE",                &HoE_,"HoE/F");
 
-
   outTreePtOrd->Branch("tightestHPSDBWP",    &tightestHPSDBWP_,"tightestHPSDBWP/I");
   outTreePtOrd->Branch("tightestHPSMVAWP",   &tightestHPSMVAWP_,"tightestHPSMVAWP/I");
+  outTreePtOrd->Branch("tightestAntiMuWP",   &tightestAntiMuWP_,"tightestAntiMuWP/I");//ND
+  outTreePtOrd->Branch("tightestAntiMu2WP",  &tightestAntiMu2WP_,"tightestAntiMu2WP/I");//ND
   outTreePtOrd->Branch("hpsMVA",             &hpsMVA_,   "hpsMVA/F");
   outTreePtOrd->Branch("decayMode",          &decayMode_,"decayMode/I");
 
@@ -1046,6 +1047,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("hpsMVA"                ,1);
   currentTree->SetBranchStatus("tightestAntiEWP"       ,1);
   currentTree->SetBranchStatus("tightestAntiEMVAWP"    ,1);
+  currentTree->SetBranchStatus("tightestAntiMuWP",      1);   // ND
+  currentTree->SetBranchStatus("tightestAntiMu2WP",     1);   // ND
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
   currentTree->SetBranchStatus("visibleGenTauMass"     ,0);
@@ -1274,6 +1277,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float leadGenPartPt;
   ULong64_t event,run,lumi;
   int index;
+  int tightestAntiMuWP, tightestAntiMu2WP; //ND
 
   currentTree->SetBranchAddress("chIsoLeg2",            &chIsoLeg2);
   currentTree->SetBranchAddress("phIsoLeg2",            &phIsoLeg2);
@@ -1302,6 +1306,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("mitMVA",               &mitMVA);
   currentTree->SetBranchAddress("tightestAntiEMVAWP",   &tightestAntiEMVAWP);
   currentTree->SetBranchAddress("tightestAntiEWP",      &tightestAntiECutWP);
+  currentTree->SetBranchAddress("tightestAntiMuWP",     &tightestAntiMuWP);    // ND
+  currentTree->SetBranchAddress("tightestAntiMu2WP",    &tightestAntiMu2WP);   // ND
 
   currentTree->SetBranchAddress("dxy1",                 &dxy1);
   currentTree->SetBranchAddress("dz1",                  &dz1);
@@ -1836,6 +1842,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     tightestAntiECutWP_ = tightestAntiECutWP;
     tightestAntiEMVAWP_ = tightestAntiEMVAWP;
+    tightestAntiMuWP_  = tightestAntiMuWP ;
+    tightestAntiMu2WP_ = tightestAntiMu2WP;
 
     sihih_ = sihih; 
     dEta_  = dEta; 
