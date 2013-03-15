@@ -656,7 +656,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float combRelIsoLeg1,combRelIsoLeg1Beta,combRelIsoLeg1DBeta,combRelIsoLeg1DBetav2,combRelIsoLeg1Rho, combIsoLeg2;
   float rhoFastJet_;
 //   float isoLeg1MVA_;
-  int tightestHPSDBWP_, tightestHPSMVAWP_, decayMode_;
+  int tightestHPSDBWP_, tightestHPSMVAWP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsMVA_;
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; //MB
@@ -885,6 +885,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   outTreePtOrd->Branch("tightestHPSDBWP",  &tightestHPSDBWP_,"tightestHPSDBWP/I");
   outTreePtOrd->Branch("tightestHPSMVAWP", &tightestHPSMVAWP_,"tightestHPSMVAWP/I");
+  outTreePtOrd->Branch("tightestAntiMuWP", &tightestAntiMuWP_,"tightestAntiMuWP/I"); //ND
+  outTreePtOrd->Branch("tightestAntiMu2WP",&tightestAntiMu2WP_,"tightestAntiMu2WP/I");//ND
   outTreePtOrd->Branch("hpsMVA",           &hpsMVA_,   "hpsMVA/F");
   outTreePtOrd->Branch("decayMode",        &decayMode_,"decayMode/I");
 
@@ -1053,6 +1055,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("tightestHPSWP"         ,0);
   currentTree->SetBranchStatus("tightestHPSDBWP"       ,1);
   currentTree->SetBranchStatus("tightestHPSMVAWP"      ,1);
+  currentTree->SetBranchStatus("tightestAntiMuWP",      1);   // ND
+  currentTree->SetBranchStatus("tightestAntiMu2WP",     1);   // ND
   currentTree->SetBranchStatus("hpsMVA"                ,1);
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
@@ -1265,6 +1269,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float leadGenPartPt;
   ULong64_t event,run,lumi;
   int index;
+  int tightestAntiMuWP, tightestAntiMu2WP; //ND
 
   currentTree->SetBranchAddress("chIsoLeg2",            &chIsoLeg2);
   currentTree->SetBranchAddress("phIsoLeg2",            &phIsoLeg2);
@@ -1283,10 +1288,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("dz1",                  &dz1);
 
   currentTree->SetBranchAddress("rhoNeutralFastJet",    &rhoNeutralFastJet);
-  currentTree->SetBranchAddress("tightestHPSDBWP",      &tightestHPSDBWP);
+  currentTree->SetBranchAddress("tightestHPSDBWP",      &tightestHPSDBWP); 
   currentTree->SetBranchAddress("tightestHPSMVAWP",     &tightestHPSMVAWP);
   currentTree->SetBranchAddress("hpsMVA",               &hpsMVA);
   currentTree->SetBranchAddress("diTauCharge",          &diTauCharge);
+
+  // old and new discriminators
+  currentTree->SetBranchAddress("tightestAntiMuWP",     &tightestAntiMuWP);    // ND
+  currentTree->SetBranchAddress("tightestAntiMu2WP",    &tightestAntiMu2WP);   // ND
 
   currentTree->SetBranchAddress("diTauNSVfitMass",       &diTauNSVfitMass);
   currentTree->SetBranchAddress("diTauNSVfitMassErrUp",  &diTauNSVfitMassErrUp);
@@ -1861,6 +1870,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     tightestHPSDBWP_  = tightestHPSDBWP;
     tightestHPSMVAWP_ = tightestHPSMVAWP;
+    
+    tightestAntiMuWP_  = tightestAntiMuWP ;
+    tightestAntiMu2WP_ = tightestAntiMu2WP;
+
     hpsMVA_           = hpsMVA;
 
     decayMode_       = decayMode;
