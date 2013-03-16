@@ -5,7 +5,7 @@ import sys, re, os
 ##############
 def getEffFromTrigReport(selectionPath,skimType,fileList,opt):   
     ### Init counters ###
-    filters = ["pElecTau1","pElecTau2","pMuTau1","pMuTau2"]
+    filters = ["pEleTau1","pEleTau2","pMuTau1","pMuTau2"]
     NBeforePath = [0] * len(filters)
     NPassedPath = [0] * len(filters)
     NEvents = 0
