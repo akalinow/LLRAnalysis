@@ -475,44 +475,35 @@ process.diTau.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
 process.diTau.dRmin12  = cms.double(0.5)
 process.diTau.doSVreco = cms.bool(doSVFitReco)
 if useMarkov:
-    process.diTau.nSVfit.psKine_MEt_int.algorithm = cms.PSet( #Markov chain integration
-    pluginName = cms.string(
-        "nSVfitAlgorithmByIntegration2"
-    ),
-    pluginType = cms.string(
-        "NSVfitAlgorithmByIntegration2"
-    ),
-    markovChainOptions = cms.PSet(
-        mode = cms.string(
-            "Metropolis"
+    process.diTau.nSVfit.psKine_MEt_int.algorithm = cms.PSet( 
+        pluginName = cms.string("nSVfitAlgorithmByIntegration2"),
+        pluginType = cms.string("NSVfitAlgorithmByIntegration2"),
+        markovChainOptions = cms.PSet(
+            mode = cms.string("Metropolis"),
+            initMode = cms.string("Gaus"),
+            numIterBurnin = cms.uint32(10000),
+            numIterSampling = cms.uint32(100000),
+            numIterSimAnnealingPhase1 = cms.uint32(2000),
+            numIterSimAnnealingPhase2 = cms.uint32(6000),
+            T0 = cms.double(15.),
+            alpha = cms.double(0.999),
+            numChains = cms.uint32(1),
+            numBatches = cms.uint32(1),
+            L = cms.uint32(1),
+            epsilon0 = cms.double(1.e-2),
+            nu = cms.double(0.71)
         ),
-        initMode = cms.string(
-            "Gaus"
-        ),
-        numIterBurnin = cms.uint32(10000),
-        numIterSampling = cms.uint32(100000),
-        numIterSimAnnealingPhase1 = cms.uint32(2000),
-        numIterSimAnnealingPhase2 = cms.uint32(6000),
-        T0 = cms.double(15.),
-        alpha = cms.double(0.999),
-        numChains = cms.uint32(1),
-        numBatches = cms.uint32(1),
-        L = cms.uint32(1),
-        epsilon0 = cms.double(1.e-2),
-        nu = cms.double(0.71)
-    ),
-    max_or_median = cms.string(
-        "max"
-    ),
-    verbosity = cms.int32(0)
-)#end of Markov chain configuration
-    
+        max_or_median = cms.string("max"),
+        verbosity = cms.int32(0)
+    )
+# CV: disable old fit mode
+delattr(process.diTau.nSVfit, "psKine_MEt_logM_fit")
+
 if usePFMEtMVA:
     if useRecoil :
         process.diTau.srcMET = cms.InputTag("metRecoilCorrector",  "N")
     else :
         process.diTau.srcMET = cms.InputTag("patPFMetByMVA")
-
 
 if not runOnMC:
     process.diTau.srcGenParticles = ""
@@ -524,13 +515,9 @@ process.pfMEtMVACov = cms.EDProducer(
 
 if usePFMEtMVA:
     if useRecoil :
-        process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.srcMEt = cms.InputTag("metRecoilCorrector", "N")
-        process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
         process.diTau.nSVfit.psKine_MEt_int.config.event.srcMEt = cms.InputTag("metRecoilCorrector", "N")
         process.diTau.nSVfit.psKine_MEt_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
     else :
-        process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.srcMEt = cms.InputTag("patPFMetByMVA")
-        process.diTau.nSVfit.psKine_MEt_logM_fit.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
         process.diTau.nSVfit.psKine_MEt_int.config.event.srcMEt = cms.InputTag("patPFMetByMVA")
         process.diTau.nSVfit.psKine_MEt_int.config.event.likelihoodFunctions[0].srcMEtCovMatrix = cms.InputTag("pfMEtMVACov")
 
