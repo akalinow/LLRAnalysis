@@ -1038,9 +1038,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  //   TString pathToFile = "/data_CMS/cms/htautau/HCP12/ntuples/ElecTau/";
-  //   TString pathToFile = "/data_CMS/cms/ivo/HTauTauAnalysis/Trees/ElecTauStream_HCP2012/ntuples/NewIter12Dec2012/";
-  TString pathToFile = "/data_CMS/cms/htautau/Moriond/ntuples/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/";
 
   // Open the files
   TFile *fData;
