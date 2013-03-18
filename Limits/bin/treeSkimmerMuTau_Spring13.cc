@@ -659,8 +659,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int tightestHPSDBWP_, tightestHPSMVAWP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsMVA_;
   float pfJetPt_;
-  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; //MB
-  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_; //MB
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
+  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_; // ND
 
   //tau related variables
   float HoP,EoP, emFraction_, leadPFChargedHadrMva_;
@@ -1089,8 +1089,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("pZetaVis"              ,0);
   currentTree->SetBranchStatus("pZetaSig"              ,1);
   currentTree->SetBranchStatus("metSgnMatrix"          ,1);
-  if(READSOFT) currentTree->SetBranchStatus("l1ETMP4"  ,1);//MB
-  if(READSOFT) currentTree->SetBranchStatus("caloMETP4",1);//MB
+  currentTree->SetBranchStatus("caloMETNoHFP4"         ,1);// ND
+  currentTree->SetBranchStatus("l1ETMP4"               ,1);// ND
+
 
   // generator-level boson
   currentTree->SetBranchStatus("genVP4"                ,1);
@@ -1189,10 +1190,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("METP4",           &METP4);
 
   std::vector< LV >* l1ETMP4        = new std::vector< LV >();//MB
-  if(READSOFT) currentTree->SetBranchAddress("l1ETMP4",         &l1ETMP4); //MB
+  currentTree->SetBranchAddress("l1ETMP4",         &l1ETMP4); //MB
 
-  std::vector< LV >* caloMETP4      = new std::vector< LV >();//MB
-  if(READSOFT) currentTree->SetBranchAddress("caloMETP4",       &caloMETP4); //MB
+  std::vector< LV >* caloMETNoHFP4      = new std::vector< LV >();//MB
+  currentTree->SetBranchAddress("caloMETNoHFP4",       &caloMETNoHFP4); //MB
 
   std::vector< LV >* genMETP4          = new std::vector< LV >();
   currentTree->SetBranchAddress("genMETP4",        &genMETP4);
@@ -1707,7 +1708,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
     double err1 = 0; double err2 = 0;
 
     if(genVP4->size() && recoilCorr!=0){
-      if(sample_.find("WJets")  !=string::npos)      
+      //if(sample_.find("WJets")  !=string::npos)      
+      if( sample_.find("WJets")!=string::npos || sample_.find("W1Jets")!=string::npos || 
+	  sample_.find("W2Jets")!=string::npos || sample_.find("W3Jets")!=string::npos || 
+	  sample_.find("W4Jets")!=string::npos 
+	  )  
 	recoilCorr->CorrectType2(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
 				 ((*diTauLegsP4)[0]).Pt(),((*diTauLegsP4)[0]).Phi(), u1, u2 , err1,err2, TMath::Min(nJets30,2) );
       else if(sample_.find("DYJets")!=string::npos || sample_.find("H1")!=string::npos)  
@@ -1772,11 +1777,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
       L1etm_     = -99;
       L1etmPhi_  = -99;
     }
-    if(caloMETP4->size()>0){
-      caloMEtType1_    = (*caloMETP4)[0].Et();
-      caloMEtType1Phi_ = (*caloMETP4)[0].Phi();
-      caloMEt_         = (*caloMETP4)[1].Et();
-      caloMEtPhi_      = (*caloMETP4)[1].Phi();
+    if(caloMETNoHFP4->size()>0){
+      caloMEtType1_    = (*caloMETNoHFP4)[0].Et();
+      caloMEtType1Phi_ = (*caloMETNoHFP4)[0].Phi();
+      caloMEt_         = (*caloMETNoHFP4)[1].Et();
+      caloMEtPhi_      = (*caloMETNoHFP4)[1].Phi();
     }
     else{
       caloMEtType1_=-99; caloMEtType1Phi_=-99;
@@ -1896,7 +1901,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // Reweight W+Jets
     weightHepNup=1;
-    //if( sample_.find("WJets")!=string::npos ) weightHepNup = reweightHEPNUP( hepNUP_ );
     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
