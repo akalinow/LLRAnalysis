@@ -630,7 +630,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float hpsMVA_;
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
-  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_; // ND
+  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_, caloMEtUp_, caloMEtUpPhi_, caloMEtDown_, caloMEtDownPhi_; // ND
+  float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
+
 
   //tau related variables
   float HoP,EoP, emFraction_, leadPFChargedHadrMva_;
@@ -854,6 +856,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("caloMEtPhi",      &caloMEtPhi_,      "caloMEtPhi/F");//ND
   outTreePtOrd->Branch("caloMEtType1",    &caloMEtType1_,    "caloMEtType1/F");//ND
   outTreePtOrd->Branch("caloMEtType1Phi", &caloMEtType1Phi_, "caloMEtType1Phi/F");//ND
+  outTreePtOrd->Branch("caloMEtUp",       &caloMEtUp_,       "caloMEtUp/F");// ND
+  outTreePtOrd->Branch("caloMEtUpPhi",    &caloMEtUpPhi_,    "caloMEtUpPhi/F");// ND
+  outTreePtOrd->Branch("caloMEtDown",     &caloMEtDown_,     "caloMEtDown/F");// ND
+  outTreePtOrd->Branch("caloMEtDownPhi",  &caloMEtDownPhi_,  "caloMEtDownPhi/F");// ND
+
+  outTreePtOrd->Branch("sumEt",             &sumEt_,             "sumEt/F");// ND
+  outTreePtOrd->Branch("caloNoHFsumEt",     &caloNoHFsumEt_,     "caloNoHFsumEt/F");// ND
+  outTreePtOrd->Branch("caloNoHFsumEtCorr", &caloNoHFsumEtCorr_, "caloNoHFsumEtCorr/F");// ND
 
   outTreePtOrd->Branch("combRelIsoLeg1",     &combRelIsoLeg1,"combRelIsoLeg1/F");
   outTreePtOrd->Branch("combRelIsoLeg1Beta", &combRelIsoLeg1Beta,"combRelIsoLeg1Beta/F");
@@ -1110,15 +1120,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // MET
   currentTree->SetBranchStatus("METP4"                 ,1);
   currentTree->SetBranchStatus("genMETP4"              ,1);
-  currentTree->SetBranchStatus("sumEt"                 ,0);
   currentTree->SetBranchStatus("mTauTauMin"            ,1);
   currentTree->SetBranchStatus("MtLeg1"                ,0);
   currentTree->SetBranchStatus("pZeta"                 ,0);
   currentTree->SetBranchStatus("pZetaVis"              ,0);
   currentTree->SetBranchStatus("pZetaSig"              ,0);
   currentTree->SetBranchStatus("metSgnMatrix"          ,1);
-  currentTree->SetBranchStatus("caloMETNoHFP4"         ,1);
+
+  // Extra variables for soft analysis
+  currentTree->SetBranchStatus("caloMETNoHFP4"         ,1);// ND
   currentTree->SetBranchStatus("l1ETMP4"               ,1);// ND
+  currentTree->SetBranchStatus("sumEt"                 ,1);// ND
+  currentTree->SetBranchStatus("caloNoHFsumEt"         ,1);// ND
+  currentTree->SetBranchStatus("caloNoHFsumEtCorr"     ,1);// ND
 
   // generator-level boson
   currentTree->SetBranchStatus("genVP4"                ,1);
@@ -1164,6 +1178,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
   currentTree->SetBranchStatus("triggerBits"           ,1);
+  currentTree->SetBranchStatus("trgTaus"               ,1);//MB
+  currentTree->SetBranchStatus("trgTauId"              ,1);//MB
 
   ////////////////////////////////////////////////////////////////////
 
@@ -1223,6 +1239,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("tauXTriggers",    &tauXTriggers);
   std::vector< int >* triggerBits   = new std::vector< int >();
   currentTree->SetBranchAddress("triggerBits",     &triggerBits);
+
+  std::vector< LV >* trgTaus        = new std::vector< LV >();//MB
+  currentTree->SetBranchAddress("trgTaus",         &trgTaus);//MB
+  std::vector< int >* trgTauId   = new std::vector< int >();//MB
+  currentTree->SetBranchAddress("trgTauId",        &trgTauId);//MB
 
   std::vector< double >* jetsBtagHE = new std::vector< double >();
   currentTree->SetBranchAddress("jetsBtagHE",      &jetsBtagHE);
@@ -1298,6 +1319,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   ULong64_t event,run,lumi;
   int index;
   int tightestAntiMuWP, tightestAntiMu2WP; //ND
+  float sumEt, caloNoHFsumEt, caloNoHFsumEtCorr; // ND
+
+  // additional variables for soft analysis ND
+  currentTree->SetBranchAddress("sumEt",            &sumEt);
+  currentTree->SetBranchAddress("caloNoHFsumEt",    &caloNoHFsumEt);
+  currentTree->SetBranchAddress("caloNoHFsumEtCorr",&caloNoHFsumEtCorr);
 
   currentTree->SetBranchAddress("chIsoLeg2",            &chIsoLeg2);
   currentTree->SetBranchAddress("phIsoLeg2",            &phIsoLeg2);
@@ -1499,6 +1526,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
     caloMEtType1_=-99; caloMEtType1Phi_=-99;//MB 
     caloMEt_=-99;      caloMEtPhi_=-99;//MB
+    caloMEtUp_=-99;      caloMEtUpPhi_=-99;// ND
+    caloMEtDown_=-99;      caloMEtDownPhi_=-99;// ND
+    sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     // define the relevant jet collection
     nJets20BTagged = 0; nJets20BTaggedBUp = 0; nJets20BTaggedBDown = 0; nJets20BTaggedLoose = 0;
@@ -1770,6 +1800,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     MEtMVA       = (*METP4)[1].Et();
     MEtMVAPhi    = (*METP4)[1].Phi();
 
+    sumEt_             = sumEt;
+    caloNoHFsumEt_     = caloNoHFsumEt;
+    caloNoHFsumEtCorr_ = caloNoHFsumEtCorr;
+
     if(l1ETMP4->size()>0){
       L1etm_     = (*l1ETMP4)[0].Et();//MB etMiss()
       L1etmPhi_  = (*l1ETMP4)[0].Phi();//MB
@@ -1784,10 +1818,21 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       caloMEtType1Phi_ = (*caloMETNoHFP4)[0].Phi();
       caloMEt_         = (*caloMETNoHFP4)[1].Et();
       caloMEtPhi_      = (*caloMETNoHFP4)[1].Phi();
+
+      if(!isData) {
+	caloMEtUp_      = (*caloMETNoHFP4)[0].Et();
+	caloMEtUpPhi_   = (*caloMETNoHFP4)[0].Phi();
+	caloMEtDown_    = (*caloMETNoHFP4)[0].Et();
+	caloMEtDownPhi_ = (*caloMETNoHFP4)[0].Phi();
+      }
+      else {
+	caloMEtUp_ = caloMEtUpPhi_ = caloMEtDown_ = caloMEtDownPhi_ = -99;
+      }
     }
     else{
       caloMEtType1_=-99; caloMEtType1Phi_=-99;
       caloMEt_=-99;      caloMEtPhi_=-99;
+      caloMEtUp_ = caloMEtUpPhi_ = caloMEtDown_ = caloMEtDownPhi_ = -99;
     }
 
     ////////////////////////////////////////////////
@@ -1981,29 +2026,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
       isMatched = false;
       for(int i=0 ; i<9 ; i++)
-	isMatched = isMatched || (*triggerBits)[i]; 
-      // HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4-6 
-      // HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2-7
-      
+	isMatched = isMatched || (*triggerBits)[i]; // HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4-6 , HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2-7
       HLTx = isMatched ? 1.0 : 0.0 ;
       
       isMatched = false;
       for(int i=9 ; i<18 ; i++)
-	isMatched = isMatched || (*triggerBits)[i]; 
-      // HLT_Ele20_CaloIdVT_TrkIdT_LooseIsoPFTau20_v4-6
-      // HLT_Ele22_eta2p1_WP90NoIso_LooseIsoPFTau20_v2-7
-      
+	isMatched = isMatched || (*triggerBits)[i]; // HLT_Ele20_CaloIdVT_TrkIdT_LooseIsoPFTau20_v4-6 , HLT_Ele22_eta2p1_WP90NoIso_LooseIsoPFTau20_v2-7
       HLTxQCD = isMatched ? 1.0 : 0.0 ;
       
-      isMatched = false;
+      HLTxSoft = float((*triggerBits)[18]);    // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v1
+      HLTxQCDSoft = float((*triggerBits)[19]); // HLT_Ele13_eta2p1_WP90NoIso_LooseIsoPFTau20_L1ETM36_v1
       
-      isMatched    = (*triggerBits)[18]; // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v1
-      HLTxSoft = isMatched ? 1.0 : 0.0 ;
-      
-      isMatched = (*triggerBits)[19]; // HLT_Ele13_eta2p1_WP90NoIso_LooseIsoPFTau20_L1ETM36_v1
-      HLTxQCDSoft = isMatched ? 1.0 : 0.0 ;
-      
-      // (*triggerBits)[19] => HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v1
+      // (*triggerBits)[20] => HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v1
+      // no path (ele+L1etm)
       
       isMatched = (((*tauXTriggers)[0] && (*tauXTriggers)[15])  || // hltOverlapFilterIsoEle20LooseIsoPFTau20 (Elec && Tau)
 		   ((*tauXTriggers)[1] && (*tauXTriggers)[16]));   // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (Elec && Tau)
@@ -2020,7 +2055,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       isMatched = (((*tauXTriggers)[9] && (*tauXTriggers)[20])); // hltOverlapFilterEle13WP90LooseIsoPFTau20 (Elec && Tau)
       //isMatched &= (L1etm_>26); // MB is this x-check needed?
       HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;
-      
+
       L1etmWeight_ = 1;    //no correction for data
       L1etmCorr_ = L1etm_; //no correction for data
 
