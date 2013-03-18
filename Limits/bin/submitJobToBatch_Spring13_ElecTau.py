@@ -56,63 +56,28 @@ def treeSkim( ana, sample, runInSeries=False):
 ###########################################
 ##Data
 ## treeSkim("nominal","Run2012A-13Jul2012-Data",False)
-## #treeSkim("nominal","Run2012B-13Jul2012-Data",False)
+## treeSkim("nominal","Run2012B-13Jul2012-p1-Data",False)
+## treeSkim("nominal","Run2012B-13Jul2012-p2-Data",False)
+## treeSkim("nominal","Run2012B-13Jul2012-p3-Data",False)
+## treeSkim("nominal","Run2012B-13Jul2012-p4-Data",False)
+## treeSkim("nominal","Run2012B-13Jul2012-p5-Data",False)
 ## treeSkim("nominal","Run2012C-24Aug2012-Data",False)
-## # treeSkim("nominal","Run2012C-PromptReco-v2-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Residual-Data",False)
-
-## ##Split
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h0",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h1",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h2",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h3",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h4",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h5",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h6",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h7",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h8",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h9",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h10",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h11",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h12",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h13",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h14",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h15",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h16",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h17",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h18",False)
-## treeSkim("nominal","Run2012B-13Jul2012-Data-h19",False)
-
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h0",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h1",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h2",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h3",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h4",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h5",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h6",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h7",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h8",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h9",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h10",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h11",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h12",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h13",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h14",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h15",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h16",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h17",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h18",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-Data-h19",False)
-
-treeSkim("nominal","Run2012D-PromptReco-v1-p1-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p2-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p3-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p4-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p5-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p6-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p7-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p8-Data",False)
-treeSkim("nominal","Run2012D-PromptReco-v1-p9-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p1-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p2-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p3-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p4-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p5-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p6-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p7-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p8-Data",False)
+## treeSkim("nominal","Run2012D-PromptReco-v1-p9-Data",False)
 
 ###Embedded samples
 anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
@@ -120,13 +85,21 @@ anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
 #anaEmb = ['TauUp','TauDown','ElecUp','ElecDown']
 
 samplesEmb = [
-##     'Run2012A-Recover06Aug2012-Embedded',
+##     'Run2012A-06Aug2012-Embedded',
 ##     'Run2012A-13Jul2012-Embedded',
-##     'Run2012B-13Jul2012-Embedded',
+##     'Run2012B-13Jul2012-p1-Embedded',
+##     'Run2012B-13Jul2012-p2-Embedded',
+##     'Run2012B-13Jul2012-p3-Embedded',
+##     'Run2012B-13Jul2012-p4-Embedded',
+##     'Run2012B-13Jul2012-p5-Embedded',
 ##     'Run2012C-24Aug2012-Embedded',
-##     'Run2012C-PromptReco-v2-Embedded',
-##     'Run2012D-PromptReco-v1-Embedded'
-    
+##     'Run2012C-PromptReco-v2-p1-Embedded',
+##     'Run2012C-PromptReco-v2-p2-Embedded',
+##     'Run2012C-PromptReco-v2-p3-Embedded',
+##     'Run2012C-PromptReco-v2-p4-Embedded',
+##     'Run2012C-PromptReco-v2-p5-Embedded',
+##     'Run2012C-PromptReco-v2-p6-Embedded',
+##     'Run2012C-PromptReco-v2-p7-Embedded',    
 ##     'Run2012D-PromptReco-v1-p1-Embedded',
 ##     'Run2012D-PromptReco-v1-p2-Embedded',
 ##     'Run2012D-PromptReco-v1-p3-Embedded',
