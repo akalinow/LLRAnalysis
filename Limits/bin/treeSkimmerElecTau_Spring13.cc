@@ -625,9 +625,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     combRelIsoLeg1Rho, combIsoLeg2;
   float rhoFastJet_;
   float isoLeg1MVA_;
-  int tightestHPSDBWP_, tightestHPSMVAWP_, tightestAntiMuWP_, tightestAntiMu2WP_,decayMode_;
-  int tightestAntiEMVAWP_, tightestAntiECutWP_;
-  float hpsMVA_;
+  int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_,decayMode_;//IN
+  int tightestAntiEMVAWP_, tightestAntiECutWP_,tightestAntiEMVA3WP_,AntiEMVA3category_;//IN
+  float hpsMVA_,hpsMVA2_,hpsDB3H_,AntiEMVA3raw_;//IN
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
   float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_, caloMEtUp_, caloMEtUpPhi_, caloMEtDown_, caloMEtDownPhi_; // ND
@@ -884,17 +884,25 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   outTreePtOrd->Branch("tightestAntiEMVAWP", &tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
   outTreePtOrd->Branch("tightestAntiECutWP", &tightestAntiECutWP_,"tightestAntiECutWP/I");
+  outTreePtOrd->Branch("tightestAntiEMVA3WP", &tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
+  outTreePtOrd->Branch("AntiEMVA3category", &AntiEMVA3category_,"AntiEMVA3category/I");
+  outTreePtOrd->Branch("AntiEMVA3raw", &AntiEMVA3raw_,"AntiEMVA3raw/F");
 
   outTreePtOrd->Branch("sihih",              &sihih_,"sihih/F");
   outTreePtOrd->Branch("dEta",               &dEta_,"dEta/F");
   outTreePtOrd->Branch("dPhi",               &dPhi_,"dPhi/F");
   outTreePtOrd->Branch("HoE",                &HoE_,"HoE/F");
 
+  outTreePtOrd->Branch("tightestHPSWP",      &tightestHPSWP_,"tightestHPSWP/I");//IN
   outTreePtOrd->Branch("tightestHPSDBWP",    &tightestHPSDBWP_,"tightestHPSDBWP/I");
+  outTreePtOrd->Branch("tightestHPSDB3HWP",  &tightestHPSDB3HWP_,"tightestHPSDB3HWP/I");//IN
   outTreePtOrd->Branch("tightestHPSMVAWP",   &tightestHPSMVAWP_,"tightestHPSMVAWP/I");
+  outTreePtOrd->Branch("tightestHPSMVA2WP",  &tightestHPSMVA2WP_,"tightestHPSMVA2WP/I");//IN
   outTreePtOrd->Branch("tightestAntiMuWP",   &tightestAntiMuWP_,"tightestAntiMuWP/I");//ND
   outTreePtOrd->Branch("tightestAntiMu2WP",  &tightestAntiMu2WP_,"tightestAntiMu2WP/I");//ND
-  outTreePtOrd->Branch("hpsMVA",             &hpsMVA_,   "hpsMVA/F");
+  outTreePtOrd->Branch("hpsDB3H",            &hpsDB3H_,   "hpsDB3H/F");//IN
+  outTreePtOrd->Branch("hpsMVA",             &hpsMVA_,    "hpsMVA/F");
+  outTreePtOrd->Branch("hpsMVA2",            &hpsMVA2_,   "hpsMVA2/F");//IN
   outTreePtOrd->Branch("decayMode",          &decayMode_,"decayMode/I");
 
   outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
@@ -1063,12 +1071,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("dz2"                   ,0);
   currentTree->SetBranchStatus("scEta1"                ,1);
   currentTree->SetBranchStatus("decayMode"             ,1);
-  currentTree->SetBranchStatus("tightestHPSWP"         ,0);
+  currentTree->SetBranchStatus("tightestHPSWP"         ,1);
   currentTree->SetBranchStatus("tightestHPSDBWP"       ,1);
+  currentTree->SetBranchStatus("tightestHPSDB3HWP"     ,1);
   currentTree->SetBranchStatus("tightestHPSMVAWP"      ,1);
+  currentTree->SetBranchStatus("tightestHPSMVA2WP"     ,1);
+  currentTree->SetBranchStatus("hpsDB3H"               ,1);
   currentTree->SetBranchStatus("hpsMVA"                ,1);
+  currentTree->SetBranchStatus("hpsMVA2"                ,1);
   currentTree->SetBranchStatus("tightestAntiEWP"       ,1);
   currentTree->SetBranchStatus("tightestAntiEMVAWP"    ,1);
+  currentTree->SetBranchStatus("tightestAntiEMVA3WP"   ,1);
+  currentTree->SetBranchStatus("AntiEMVA3category"     ,1);
+  currentTree->SetBranchStatus("AntiEMVA3raw"          ,1);
   currentTree->SetBranchStatus("tightestAntiMuWP",      1);   // ND
   currentTree->SetBranchStatus("tightestAntiMu2WP",     1);   // ND
 
@@ -1282,9 +1297,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,mTauTauMin;
   float diTauCharge;
-  int tightestHPSDBWP, tightestHPSMVAWP, decayMode;
-  int tightestAntiEMVAWP, tightestAntiECutWP;
-  float hpsMVA;
+  int tightestHPSDBWP,tightestHPSWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode;//IN
+  int tightestAntiEMVAWP, tightestAntiECutWP,tightestAntiEMVA3WP,AntiEMVA3category;//IN
+  float hpsDB3H,hpsMVA,hpsMVA2,AntiEMVA3raw;//IN
   int tightestCutBasedWP, tightestMVAWP;
   int tightestMVAPOGNonTrigWP;
   float mvaPOGTrig, mvaPOGNonTrig, mitMVA;
@@ -1339,9 +1354,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
  
   currentTree->SetBranchAddress("rhoFastJet",           &rhoFastJet);
   currentTree->SetBranchAddress("rhoNeutralFastJet",    &rhoNeutralFastJet);
+  currentTree->SetBranchAddress("tightestHPSWP",        &tightestHPSWP);
   currentTree->SetBranchAddress("tightestHPSDBWP",      &tightestHPSDBWP);
+  currentTree->SetBranchAddress("tightestHPSDB3HWP",    &tightestHPSDB3HWP);
   currentTree->SetBranchAddress("tightestHPSMVAWP",     &tightestHPSMVAWP);
+  currentTree->SetBranchAddress("tightestHPSMVA2WP",    &tightestHPSMVA2WP);
+  currentTree->SetBranchAddress("hpsDB3H",              &hpsDB3H);
   currentTree->SetBranchAddress("hpsMVA",               &hpsMVA);
+  currentTree->SetBranchAddress("hpsMVA2",               &hpsMVA2);
   currentTree->SetBranchAddress("diTauCharge",          &diTauCharge);
 
   currentTree->SetBranchAddress("tightestCutBasedWP",   &tightestCutBasedWP);
@@ -1353,6 +1373,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("mitMVA",               &mitMVA);
   currentTree->SetBranchAddress("tightestAntiEMVAWP",   &tightestAntiEMVAWP);
   currentTree->SetBranchAddress("tightestAntiEWP",      &tightestAntiECutWP);
+  currentTree->SetBranchAddress("tightestAntiEMVA3WP",  &tightestAntiEMVA3WP);
+  currentTree->SetBranchAddress("AntiEMVA3category",    &AntiEMVA3category);
+  currentTree->SetBranchAddress("AntiEMVA3raw",         &AntiEMVA3raw);
   currentTree->SetBranchAddress("tightestAntiMuWP",     &tightestAntiMuWP);    // ND
   currentTree->SetBranchAddress("tightestAntiMu2WP",    &tightestAntiMu2WP);   // ND
 
@@ -1927,6 +1950,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     tightestAntiECutWP_ = tightestAntiECutWP;
     tightestAntiEMVAWP_ = tightestAntiEMVAWP;
+    tightestAntiEMVA3WP_= tightestAntiEMVA3WP;
+    AntiEMVA3category_  = AntiEMVA3category;
+    AntiEMVA3raw_       = AntiEMVA3raw;
     tightestAntiMuWP_  = tightestAntiMuWP ;
     tightestAntiMu2WP_ = tightestAntiMu2WP;
 
@@ -1980,9 +2006,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     signalPFGammaCands_       = signalPFGammaCands; 
     signalPFChargedHadrCands_ = signalPFChargedHadrCands;
 
+    tightestHPSWP_      = tightestHPSWP;
     tightestHPSDBWP_    = tightestHPSDBWP;
+    tightestHPSDB3HWP_  = tightestHPSDB3HWP;
     tightestHPSMVAWP_   = tightestHPSMVAWP;
-    hpsMVA_           = hpsMVA;
+    tightestHPSMVA2WP_  = tightestHPSMVA2WP;
+    hpsDB3H_            = hpsDB3H;
+    hpsMVA_             = hpsMVA;
+    hpsMVA2_            = hpsMVA2;
     
     pfJetPt_            = pfJetPt;
 
