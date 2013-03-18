@@ -243,17 +243,65 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets_MuTau.root',
     'sample'         : 'DYJets',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1249322/24330458.,
+    'skimEff'        : 1.0 * 2431175./9669034,
     'iJson'          : -1
     } ,
-    'DYJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-MuTau-8TeV-50-madgraph-PUS7-Embedded_run_IVO/',
-    'outputFileName' : OutDir+'nTupleDYJets-Embedded_MuTau.root',
-    'sample'         : 'DYJets-Embedded',
-    'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1249322/24330458.,
+    'TTJets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-MuTau-madgraph-PUS10-v2_run/',
+    'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
+    'sample'         : 'TTJets',
+    'xSection'       : 225.5,
+    'skimEff'        : 1.0 * 2467119./3487856,
     'iJson'          : -1
-    } ,
+    },
+    'WJets-p1' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p1_run/',
+    'outputFileName' : OutDir+'nTupleWJets-p1_MuTau.root',
+    'sample'         : 'WJets-p1',
+    'xSection'       : 36257,
+    'skimEff'        : 1.0 * 440512./2000279,
+    'iJson'          : -1
+    },
+    'WJets-p2' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p2_run/',
+    'outputFileName' : OutDir+'nTupleWJets-p2_MuTau.root',
+    'sample'         : 'WJets-p2',
+    'xSection'       : 36257,
+    'skimEff'        : 1.0 * 1383633./6273656,
+    'iJson'          : -1
+    },
+    'WJets1Jets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-MuTau-madgraph-PUS10_run/',
+    'outputFileName' : OutDir+'nTupleWJets1Jets_MuTau.root',
+    'sample'         : 'WJets1Jets',
+    'xSection'       : 36257,
+    'skimEff'        :  1.0 * 1490832./23141598,
+    'iJson'          : -1
+    },
+    'WJets2Jets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-MuTau-madgraph-PUS10_run/',
+    'outputFileName' : OutDir+'nTupleWJets2Jets_MuTau.root',
+    'sample'         : 'WJets2Jets',
+    'xSection'       : 36257,
+    'skimEff'        : 1.0 * 1034822./34044921,
+    'iJson'          : -1
+    },
+    'WJets3Jets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-MuTau-madgraph-PUS10_run/',
+    'outputFileName' : OutDir+'nTupleWJets3Jets_MuTau.root',
+    'sample'         : 'WJets3Jets',
+    'xSection'       : 36257,
+    'skimEff'        :  1.0 * 3353306./15539503,
+    'iJson'          : -1
+    },
+    'WJets4Jets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-MuTau-madgraph-PUS10-v2_run/',
+    'outputFileName' : OutDir+'nTupleWJets4Jets_MuTau.root',
+    'sample'         : 'WJets4Jets',
+    'xSection'       : 36257,
+    'skimEff'        : 1.0 * 3993529./13382803,
+    'iJson'          : -1
+    },
     'T-tW' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleT-tW_MuTau.root',
@@ -262,68 +310,12 @@ options = {
     'skimEff'        : 1.0 * 0.081518021248,
     'iJson'          : -1
     },
-    'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-MuTau-madgraph-PUS10-v2_run/',
-    'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
-    'sample'         : 'TTJets',
-    'xSection'       : 225.5,
-    'skimEff'        : 1.0 * 510296./5423750.,
-    'iJson'          : -1
-    },
     'Tbar-tW' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleTbar-tW_MuTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
     'skimEff'        : 1.0 * 0.0822555699536,
-    'iJson'          : -1
-    },
-    'WJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-MuTau-madgraph-PUS10_run/',
-    'outputFileName' : OutDir+'nTupleWJets1Jets_MuTau.root',
-    'sample'         : 'WJets1Jets',
-    'xSection'       : 36257,
-    'skimEff'        :  1.0 * 344731./22491598,
-    'iJson'          : -1
-    },
-    'WJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-MuTau-madgraph-PUS10_run/',
-    'outputFileName' : OutDir+'nTupleWJets2Jets_MuTau.root',
-    'sample'         : 'WJets2Jets',
-    'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.00634753521127,
-    'iJson'          : -1
-    },
-    'WJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-MuTau-madgraph-PUS10_run/',
-    'outputFileName' : OutDir+'nTupleWJets3Jets_MuTau.root',
-    'sample'         : 'WJets3Jets',
-    'xSection'       : 36257,
-    'skimEff'        :  1.0 * 341616./6117001.,
-    'iJson'          : -1
-    },
-    'WJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-MuTau-madgraph-PUS10-v2_run/',
-    'outputFileName' : OutDir+'nTupleWJets4Jets_MuTau.root',
-    'sample'         : 'WJets4Jets',
-    'xSection'       : 36257,
-    'skimEff'        : 1.0 * 574303./7314266.,
-    'iJson'          : -1
-    },
-    'WJets-p1' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p1_run/',
-    'outputFileName' : OutDir+'nTupleWJets-p1_MuTau.root',
-    'sample'         : 'WJets-p1',
-    'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.00634753521127,
-    'iJson'          : -1
-    },
-    'WJets-p2' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-MuTau-madgraph-PUS10-p2_run/',
-    'outputFileName' : OutDir+'nTupleWJets-p2_MuTau.root',
-    'sample'         : 'WJets-p2',
-    'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.00636491514722,
     'iJson'          : -1
     },
     'WWJetsTo2L2Nu' : {
