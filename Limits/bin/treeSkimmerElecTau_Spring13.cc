@@ -629,6 +629,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int tightestAntiEMVAWP_, tightestAntiECutWP_;
   float hpsMVA_;
   float pfJetPt_;
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
+  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_; // ND
 
   //tau related variables
   float HoP,EoP, emFraction_, leadPFChargedHadrMva_;
@@ -842,6 +844,16 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("MEtCov01",    &MEtCov01,   "MEtCov01/F");
   outTreePtOrd->Branch("MEtCov10",    &MEtCov10,   "MEtCov10/F");
   outTreePtOrd->Branch("MEtCov11",    &MEtCov11,   "MEtCov11/F");
+
+  outTreePtOrd->Branch("L1etm",       &L1etm_,     "L1etm/F");//ND
+  outTreePtOrd->Branch("L1etmPhi",    &L1etmPhi_,  "L1etmPhi/F");//ND
+  outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_, "L1etmCorr/F");//ND
+  outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_,"L1etmWeight/F");//ND
+
+  outTreePtOrd->Branch("caloMEt",         &caloMEt_,         "caloMEt/F");//ND
+  outTreePtOrd->Branch("caloMEtPhi",      &caloMEtPhi_,      "caloMEtPhi/F");//ND
+  outTreePtOrd->Branch("caloMEtType1",    &caloMEtType1_,    "caloMEtType1/F");//ND
+  outTreePtOrd->Branch("caloMEtType1Phi", &caloMEtType1Phi_, "caloMEtType1Phi/F");//ND
 
   outTreePtOrd->Branch("combRelIsoLeg1",     &combRelIsoLeg1,"combRelIsoLeg1/F");
   outTreePtOrd->Branch("combRelIsoLeg1Beta", &combRelIsoLeg1Beta,"combRelIsoLeg1Beta/F");
@@ -1105,6 +1117,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("pZetaVis"              ,0);
   currentTree->SetBranchStatus("pZetaSig"              ,0);
   currentTree->SetBranchStatus("metSgnMatrix"          ,1);
+  currentTree->SetBranchStatus("caloMETNoHFP4"         ,1);
+  currentTree->SetBranchStatus("l1ETMP4"               ,1);// ND
 
   // generator-level boson
   currentTree->SetBranchStatus("genVP4"                ,1);
@@ -1195,6 +1209,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   std::vector< LV >* METP4          = new std::vector< LV >();
   currentTree->SetBranchAddress("METP4",           &METP4);
+
+  std::vector< LV >* l1ETMP4        = new std::vector< LV >();// ND
+  currentTree->SetBranchAddress("l1ETMP4",         &l1ETMP4); // ND
+
+  std::vector< LV >* caloMETNoHFP4  = new std::vector< LV >();
+  currentTree->SetBranchAddress("caloMETNoHFP4", &caloMETNoHFP4);
 
   std::vector< LV >* genMETP4       = new std::vector< LV >();
   currentTree->SetBranchAddress("genMETP4",        &genMETP4);
@@ -1369,11 +1389,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   
   RecoilCorrector* recoilCorr = 0;
 
-  //if(sample_.find("WJets")!=string::npos){ 
-  if( sample_.find("WJets")!=string::npos || sample_.find("W1Jets")!=string::npos ||  
-      sample_.find("W2Jets")!=string::npos || sample_.find("W3Jets")!=string::npos ||  
-      sample_.find("W4Jets")!=string::npos  
-      ){ 
+  if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
+      sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
+      sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+      ) { 
     recoilCorr = new RecoilCorrector("../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_wjets53X_20pv_njet.root"); 
     recoilCorr->addMCFile(           "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_zmm53X_2012_njet.root"); 
     recoilCorr->addDataFile(         "../../Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_datamm53X_2012_njet.root"); 
@@ -1477,6 +1496,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     jet1PUMVA = -99; jet2PUMVA=-99; jetVetoPUMVA=-99; 
     jet1PUWP = -99; jet2PUWP = -99; jetVetoPUWP = -99;
     MVAvbf = -99;
+    L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
+    caloMEtType1_=-99; caloMEtType1Phi_=-99;//MB 
+    caloMEt_=-99;      caloMEtPhi_=-99;//MB
 
     // define the relevant jet collection
     nJets20BTagged = 0; nJets20BTaggedBUp = 0; nJets20BTaggedBDown = 0; nJets20BTaggedLoose = 0;
@@ -1687,14 +1709,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
 
     if(genVP4->size() && recoilCorr!=0){
-      //if(sample_.find("WJets")  !=string::npos)      
-      if( sample_.find("WJets")!=string::npos || sample_.find("W1Jets")!=string::npos || 
-	  sample_.find("W2Jets")!=string::npos || sample_.find("W3Jets")!=string::npos || 
-	  sample_.find("W4Jets")!=string::npos 
-	  )  
+      if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
+	  sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
+	  sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+	  ) 
 	recoilCorr->CorrectType1(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
 				 ((*diTauLegsP4)[0]).Pt(),((*diTauLegsP4)[0]).Phi(), u1, u2 , err1,err2, TMath::Min(nJets30,2) );
-      //else if(sample_.find("DYJets")!=string::npos || sample_.find("H1")!=string::npos)  
       else if((sample_.find("DYJets")!=string::npos && abs(genDecay)==(23*15)) //only Z->tautau
 	      || (sample_.find("DYJets")!=string::npos && abs(genDecay)!=(23*15) && isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) //Zmm, m->tau
 	      || sample_.find("HToTauTau")!=string::npos)
@@ -1749,6 +1769,26 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     MEtCorrPhi   = recoilCorrecMET.Phi();
     MEtMVA       = (*METP4)[1].Et();
     MEtMVAPhi    = (*METP4)[1].Phi();
+
+    if(l1ETMP4->size()>0){
+      L1etm_     = (*l1ETMP4)[0].Et();//MB etMiss()
+      L1etmPhi_  = (*l1ETMP4)[0].Phi();//MB
+    }
+    else{
+      L1etm_     = -99;
+      L1etmPhi_  = -99;
+    }
+ 
+    if(caloMETNoHFP4->size()>0){
+      caloMEtType1_    = (*caloMETNoHFP4)[0].Et();
+      caloMEtType1Phi_ = (*caloMETNoHFP4)[0].Phi();
+      caloMEt_         = (*caloMETNoHFP4)[1].Et();
+      caloMEtPhi_      = (*caloMETNoHFP4)[1].Phi();
+    }
+    else{
+      caloMEtType1_=-99; caloMEtType1Phi_=-99;
+      caloMEt_=-99;      caloMEtPhi_=-99;
+    }
 
     ////////////////////////////////////////////////
     
@@ -1921,7 +1961,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     // Reweight W+Jets
     weightHepNup=1;
-    //if( sample_.find("WJets")!=string::npos ) weightHepNup = reweightHEPNUP( hepNUP_ );
     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
@@ -1982,6 +2021,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       //isMatched &= (L1etm_>26); // MB is this x-check needed?
       HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;
       
+      L1etmWeight_ = 1;    //no correction for data
+      L1etmCorr_ = L1etm_; //no correction for data
+
       SFTau         = 1.0;
       SFEtoTau      = 1.0;
       
@@ -2030,21 +2072,26 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTxQCDSoft = 1.0;
       HLTmatchQCDSoft = 1.0;
       
+      L1etmWeight_= 1;            
+
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
 	
 	HLTx  =  float((*triggerBits)[0]); // HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2
 	
 	HLTxSoft = float((*triggerBits)[1]); // HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v14
 	
-	isMatched = (*tauXTriggers)[1] && (*tauXTriggers)[3] ; // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (e && t)
+	isMatched = (*tauXTriggers)[1] && (*tauXTriggers)[4] ; // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (e && t)
 	HLTmatch = isMatched ? 1.0 : 0.0;
 	
+	L1etmCorr_  = L1etm_*0.8716;//difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
+
 	isMatched = (*tauXTriggers)[2] ; //&& (*tauXTriggers)[5] ; // hltEle8TightIdLooseIsoTrackIsoFilter (e && t)
 	//isMatched &= (L1etm_>26); // MB is this x-check needed?
 	HLTmatchSoft = isMatched ? 1.0 : 0.0;
 	
       }
       else {
+	L1etmCorr_ = L1etm_ ;
 	HLTx = HLTmatch = HLTxSoft = HLTmatchSoft = 1.0;
       }
       
