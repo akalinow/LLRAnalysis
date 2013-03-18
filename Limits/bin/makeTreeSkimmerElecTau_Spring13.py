@@ -241,44 +241,26 @@ options = {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p4-Embedded',
-=======
-    'Run2012B-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012B-ElecTau-53X-ReReco13Jul2012-v1-Embedded-EleJet-iter6_run/',
-    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-Embedded_ElecTau.root',
-    'sample'         : 'Run2012B-13Jul2012-Embedded',
->>>>>>> 1.1.2.5
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 0
     },
-<<<<<<< makeTreeSkimmerElecTau_Spring13.py
     'Run2012B-13Jul2012-p5-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p5-Embedded',
-=======
-    'Run2012A-Recover06Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012A-ElecTau-53X-recover_06Aug2012-Embedded-EleJet-iter6_run/',
-    'outputFileName' : OutDir+'nTupleRun2012A-Recover06Aug2012-Embedded_ElecTau.root',
-    'sample'         : 'Run2012A-Recover06Aug2012-Embedded',
->>>>>>> 1.1.2.5
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 0
     },
     'Run2012C-24Aug2012-Embedded' : {
-<<<<<<< makeTreeSkimmerElecTau_Spring13.py
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco24A_HTT_06Mar2013_Trees_EleTau_v1/',
-=======
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012C-ElecTau-53X-ReReco24Aug2012-Embedded-EleJet-iter6_run/',
->>>>>>> 1.1.2.5
     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-24Aug2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 2
     },
-<<<<<<< makeTreeSkimmerElecTau_Spring13.py
     'Run2012C-PromptReco-v2-p1-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Embedded_ElecTau.root',
