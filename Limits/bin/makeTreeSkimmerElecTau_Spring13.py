@@ -74,7 +74,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p1-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p2-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p2/',
@@ -82,7 +82,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p2-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p3-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p3/',
@@ -90,7 +90,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p3-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p4-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p4/',
@@ -98,7 +98,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p4-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p5-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p5/',
@@ -106,7 +106,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p5-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p6-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p6/',
@@ -114,7 +114,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p6-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p7-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p7/',
@@ -122,7 +122,7 @@ options = {
     'sample'         : 'Run2012C-PromptReco-v2-p7-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p1-Data' : {
     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p1/',
