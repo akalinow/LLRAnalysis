@@ -537,7 +537,7 @@ options = {
     },
     'VBFH125-NoRecoil' : {
     'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_MuTau_v1_up/',
-    'outputFileName' : OutDir+'nTupleVBFH125-NoRecoil_ElecTau.root',
+    'outputFileName' : OutDir+'nTupleVBFH125-NoRecoil_MuTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
     'skimEff'        : 6.32E-02 * 61421./978836.,
