@@ -150,7 +150,7 @@ double deltaR(LV v1, LV v2) {
 
 }
 
-float reweightHEPNUP(int hepNUP) {
+float reweightHEPNUPWJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   /* //old one
@@ -161,14 +161,32 @@ float reweightHEPNUP(int hepNUP) {
   else if(nJets>=4) return 0.038490064 ;
   else return 1 ;
   */
-  //New Weights specific to mu-tau from Christian 
-  if(nJets==0)      return 0.502269748 ;  
-  else if(nJets==1) return 0.183765696 ;  
-  else if(nJets==2) return 0.057359534 ;  
-  else if(nJets==3) return 0.038266418 ;  
-  else if(nJets>=4) return 0.019149548 ;  
-  else return 1 ;  
+//   //New Weights specific to mu-tau from Christian 
+//   if(nJets==0)      return 0.502269748 ;  
+//   else if(nJets==1) return 0.183765696 ;  
+//   else if(nJets==2) return 0.057359534 ;  
+//   else if(nJets==3) return 0.038266418 ;  
+//   else if(nJets>=4) return 0.019149548 ;  
+//   else return 1 ;  
 
+  if(nJets==0)      return 0.492871535 ;
+  else if(nJets==1) return 0.181745835 ;
+  else if(nJets==2) return 0.056192256 ;
+  else if(nJets==3) return 0.038029369 ;
+  else if(nJets>=4) return 0.018970657 ;
+  else return 1 ;
+}
+
+float reweightHEPNUPDYJets(int hepNUP) {
+
+  int nJets = hepNUP-5;
+  
+  if(nJets==0)      return 0.115028141 ;
+  else if(nJets==1) return 0.027710126 ;
+  else if(nJets==2) return 0.0098376 ;
+  else if(nJets==3) return 0.005509647 ;
+  else if(nJets>=4) return 0.004266394 ;
+  else return 1 ;
 }
 
 void createReWeighting3D(){
@@ -670,7 +688,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
 
   // event-related variables
-  float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight, weightHepNup, puWeightHCP, puWeightD;
+  float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
  
@@ -912,6 +930,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("puWeight2",          &puWeight2,"puWeight2/F");
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
@@ -1957,7 +1976,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
         ) 
-      weightHepNup = reweightHEPNUP( hepNUP_ );
+      weightHepNup = reweightHEPNUPWJets( hepNUP_ );
+
+    // Reweight DY+Jets
+    weightHepNupDY=1;
+    if( sample_.find("DYJets")!=string::npos  || 
+	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+        ) 
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP_ );
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
