@@ -722,7 +722,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // event id
   ULong64_t event_,run_,lumi_;
   int index_;
-  int pairIndex_;
+  int pairIndex_, pairIndexSoft_;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
   
@@ -1009,7 +1009,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("run",  &run_,  "run/l");
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
-  outTreePtOrd->Branch("pairIndex", &pairIndex_, "pairIndex/I");
+  outTreePtOrd->Branch("pairIndex",     &pairIndex_,     "pairIndex/I");
+  outTreePtOrd->Branch("pairIndexSoft", &pairIndexSoft_, "pairIndexSoft/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -1444,6 +1445,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   ULong64_t lastLumi  = 0;
 
   int counter         = 0;
+  int counterSoft     = 0;
 
   // define JSON selector //
   cout << "define JSON selection" << endl;
@@ -2345,22 +2347,31 @@ void fillTrees_MuTauStream(TChain* currentTree,
     index_           = index;
    
 
-    int pairIndex = -1;
-    bool passQualityCuts = (ptL1>20 && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    //bool passQualityCuts = (ptL1>10 && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchETM);//MB ptL1>20->10, HLTmatch->HLTmatchETM
+    int pairIndex = -1;     int pairIndexSoft = -1;
+    bool passQualityCuts     = (ptL1>20 && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsSoft = (ptL1>9  && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft);
 
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
 
       lastEvent = event;
       lastLumi  = lumi;
       lastRun   = run;
-      counter   = 0;
+      counter     = 0;
+      counterSoft = 0;
+
       if( passQualityCuts ){
 	pairIndex = counter;
 	counter++;
       }
       else
 	pairIndex = -1;
+
+      if( passQualityCutsSoft ){
+	pairIndexSoft = counterSoft;
+	counterSoft++;
+      }
+      else
+	pairIndexSoft = -1;
     }
     else{
       if( passQualityCuts ){
@@ -2369,8 +2380,17 @@ void fillTrees_MuTauStream(TChain* currentTree,
       }
       else
 	pairIndex = -1;
+
+      if( passQualityCutsSoft ){
+	pairIndexSoft = counterSoft;
+	counterSoft++;
+      }
+      else
+	pairIndexSoft = -1;
     }
-    pairIndex_ = pairIndex;
+
+    pairIndex_     = pairIndex;
+    pairIndexSoft_ = pairIndexSoft;
     
     outTreePtOrd->Fill();
   }

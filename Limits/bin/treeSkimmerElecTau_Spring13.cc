@@ -702,7 +702,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // event id
   ULong64_t event_,run_,lumi_;
   int index_;
-  int pairIndex_;
+  int pairIndex_, pairIndexSoft_;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
@@ -1014,6 +1014,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
   outTreePtOrd->Branch("pairIndex", &pairIndex_, "pairIndex/I");
+  outTreePtOrd->Branch("pairIndexSoft", &pairIndexSoft_, "pairIndexSoft/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -1508,7 +1509,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   ULong64_t lastLumi  = 0;
 
   int counter         = 0;
-  
+  int counterSoft     = 0;
+    
   // define JSON selector //
   int nJson=5;
   string jsonFile[nJson];
@@ -2432,8 +2434,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     index_           = index;
 
 
-    int pairIndex = -1;
+    int pairIndex = -1; int pairIndexSoft = -1;
     bool passQualityCuts = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 
+      && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
+
+    bool passQualityCutsSoft = tightestHPSMVAWP>=0 && ptL1>14 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 
       && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
 
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
@@ -2448,6 +2453,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
       else
 	pairIndex = -1;
+
+      if( passQualityCutsSoft ){
+	pairIndexSoft = counterSoft;
+	counterSoft++;
+      }
+      else
+	pairIndexSoft = -1;
     }
     else{
       if( passQualityCuts ){
@@ -2456,8 +2468,17 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
       else
 	pairIndex = -1;
+
+      if( passQualityCutsSoft ){
+	pairIndexSoft = counterSoft;
+	counterSoft++;
+      }
+      else
+	pairIndexSoft = -1;
     }
-    pairIndex_ = pairIndex;
+
+    pairIndex_     = pairIndex;
+    pairIndexSoft_ = pairIndexSoft;
 
     outTreePtOrd->Fill();
   }
