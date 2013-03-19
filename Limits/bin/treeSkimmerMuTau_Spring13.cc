@@ -2042,7 +2042,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
       // HLT Paths matching
 
-      HLTxMu8 = 1.0; // ND correct ? trigger not present in data !
+      HLTxMu8     = 1.0; // ND correct ? trigger not present in data !
+      HLTmatchMu8 = 1.0; // ND
 
       isMatched = false;
       for(int i=0 ; i<9 ; i++)
@@ -2082,7 +2083,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //isMatched &= (L1etm_>26); // MB is this x-check needed?
       HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;      
 
-      HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9]);    // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
+      HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9] && (*tauXTriggers)[20]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
       HLTmatchIsoMu15ETM20 = float( (*tauXTriggers)[12] || // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10
 				    (*tauXTriggers)[13] ); // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
 
@@ -2137,9 +2138,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       L1etmCorr_  = L1etm_*0.8716;//difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
       L1etmWeight_= 1;            
 
-      HLTxQCD     = 1.0;
-      HLTxSoft    = 1.0;
-      HLTxQCDSoft = 1.0;
+      HLTxQCD         = 1.0;
+      HLTxSoft        = 1.0;
+      HLTxQCDSoft     = 1.0;
+      HLTxIsoMu8Tau20 = 1.0;
 
       HLTmatchQCD         = 1.0;
       HLTmatchIsoMu8Tau20 = 1.0;
@@ -2148,31 +2150,33 @@ void fillTrees_MuTauStream(TChain* currentTree,
       
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
 	
-	HLTx    =  float((*triggerBits)[0]); // HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2
-	HLTxMu8 =  float((*triggerBits)[1]); // HLT_Mu8_v16 //MB
-
+	// HLT Paths matching
+	HLTx             = float((*triggerBits)[0]); // HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2
+	HLTxMu8          = float((*triggerBits)[1]); // HLT_Mu8_v16 //MB
 	HLTxIsoMu15ETM20 = float((*triggerBits)[2]); // HLT_IsoMu15_eta2p1_L1ETM20_v5
 
-	isMatched = (*tauXTriggers)[2] && (*tauXTriggers)[6] ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
-	HLTmatch = isMatched ? 1.0 : 0.0;	
-	
-	// emulate matching by matching to L1Mu7, HLT_Mu8 (w/o iso :(), offline tagTau and cut on L1etm  
+	// HLT filters matching
+	HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[6]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
+	HLTmatchIsoMu15ETM20 = float((*tauXTriggers)[4] && (L1etmCorr_>20));     // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
+	HLTmatchMu8          = float((*tauXTriggers)[3]); // hltL3fL1sMu3L3Filtered8
+
+	// emulate matching to SoftMu+L1ETM+Tau
 	isMatched = ( (*tauXTriggers)[3] &&  // HLT_Mu8 (hltL3fL1sMu3L3Filtered8)
 		      (*tauXTriggers)[5] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
 		      (*tauXTriggers)[7] );  // offline trgTau
 
-	float etmCut=20;
+	float etmCut=20; // sometimes L1Seed has actual cut at 20 GeV (even if path name is still L1ETM26)
 	if(gRandom->Uniform()>(1.0-4.806/7.274) ) // luminosity ratio : different cuts were applied in ABC and D
 	  etmCut=26;
 
-	HLTmatchSoft         = ( isMatched && L1etmCorr_>etmCut) ? 1.0 : 0.0;
-	HLTmatchQCDSoft      = HLTmatchSoft;
-	HLTmatchIsoMu15ETM20 = isMatched ? 1.0 : 0.0;
-	HLTmatchMu8          = float((*tauXTriggers)[3]);
+	HLTmatchIsoMu8Tau20 = float(isMatched);
+	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
+	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
+
       }
       else {
 	L1etmCorr_ = L1etm_ ;
-	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatch = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = 1.0;
+	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = 1.0;
       }
       
       // Weights for both MC and embedded
