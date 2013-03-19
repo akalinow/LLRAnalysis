@@ -535,6 +535,14 @@ options = {
     'skimEff'        : 6.32E-02 * 61421./978836.,
     'iJson'          : -1
     },
+    'VBFH125-NoRecoil' : {
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_MuTau_v1_up/',
+    'outputFileName' : OutDir+'nTupleVBFH125-NoRecoil_ElecTau.root',
+    'sample'         : 'VBFH125',
+    'xSection'       : 1.578,
+    'skimEff'        : 6.32E-02 * 61421./978836.,
+    'iJson'          : -1
+    },
     'VBFH130' : {
     'inputFilePath'  : WorkdirLoc+'HiggsSM/VBFH130-MuTau-powheg-PUS10_run/',
     'outputFileName' : OutDir+'nTupleVBFH130_MuTau.root',

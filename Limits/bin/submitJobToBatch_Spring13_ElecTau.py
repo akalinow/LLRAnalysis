@@ -61,14 +61,14 @@ def treeSkim( ana, sample, runInSeries=False):
 ## treeSkim("nominal","Run2012B-13Jul2012-p3-Data",False)
 ## treeSkim("nominal","Run2012B-13Jul2012-p4-Data",False)
 ## treeSkim("nominal","Run2012B-13Jul2012-p5-Data",False)
-treeSkim("nominal","Run2012C-24Aug2012-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
-treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
+## treeSkim("nominal","Run2012C-24Aug2012-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
+## treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p1-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p2-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p3-Data",False)
@@ -123,7 +123,7 @@ for iSEmb in range(0,len(samplesEmb)):
 anaMC = ['nominal']
 #anaMC = ['TauUp','TauDown','JetUp','JetDown']
 
-## for iAnMC in range(0,len(anaMC)):
+for iAnMC in range(0,len(anaMC)):
     ##BkgMC
 ##         treeSkim( anaMC[iAnMC] , "DYJets"        , False)
 ## ## ##         treeSkim( anaMC[iAnMC] , "DYJets-Embedded", False)
@@ -158,6 +158,7 @@ anaMC = ['nominal']
 ##         treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH125-NoRecoil"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH140"       , False)
