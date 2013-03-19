@@ -630,7 +630,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float hpsMVA_,hpsMVA2_,hpsDB3H_,AntiEMVA3raw_;//IN
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
-  float caloMEtType1_, caloMEtType1Phi_, caloMEt_, caloMEtPhi_, caloMEtUp_, caloMEtUpPhi_, caloMEtDown_, caloMEtDownPhi_; // ND
+  float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
 
 
@@ -852,14 +852,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_, "L1etmCorr/F");//ND
   outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_,"L1etmWeight/F");//ND
 
-  outTreePtOrd->Branch("caloMEt",         &caloMEt_,         "caloMEt/F");//ND
-  outTreePtOrd->Branch("caloMEtPhi",      &caloMEtPhi_,      "caloMEtPhi/F");//ND
-  outTreePtOrd->Branch("caloMEtType1",    &caloMEtType1_,    "caloMEtType1/F");//ND
-  outTreePtOrd->Branch("caloMEtType1Phi", &caloMEtType1Phi_, "caloMEtType1Phi/F");//ND
-  outTreePtOrd->Branch("caloMEtUp",       &caloMEtUp_,       "caloMEtUp/F");// ND
-  outTreePtOrd->Branch("caloMEtUpPhi",    &caloMEtUpPhi_,    "caloMEtUpPhi/F");// ND
-  outTreePtOrd->Branch("caloMEtDown",     &caloMEtDown_,     "caloMEtDown/F");// ND
-  outTreePtOrd->Branch("caloMEtDownPhi",  &caloMEtDownPhi_,  "caloMEtDownPhi/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHF",         &caloMEtNoHF_,         "caloMEtNoHF/F");//ND
+  outTreePtOrd->Branch("caloMEtNoHFPhi",      &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//ND
+  outTreePtOrd->Branch("caloMEtNoHFUncorr",    &caloMEtNoHFUncorr_,    "caloMEtNoHFUncorr/F");//ND
+  outTreePtOrd->Branch("caloMEtNoHFUncorrPhi", &caloMEtNoHFUncorrPhi_, "caloMEtNoHFUncorrPhi/F");//ND
+  outTreePtOrd->Branch("caloMEtNoHFUp",       &caloMEtNoHFUp_,       "caloMEtNoHFUp/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFUpPhi",    &caloMEtNoHFUpPhi_,    "caloMEtNoHFUpPhi/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFDown",     &caloMEtNoHFDown_,     "caloMEtNoHFDown/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFDownPhi",  &caloMEtNoHFDownPhi_,  "caloMEtNoHFDownPhi/F");// ND
 
   outTreePtOrd->Branch("sumEt",             &sumEt_,             "sumEt/F");// ND
   outTreePtOrd->Branch("caloNoHFsumEt",     &caloNoHFsumEt_,     "caloNoHFsumEt/F");// ND
@@ -1547,10 +1547,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     jet1PUWP = -99; jet2PUWP = -99; jetVetoPUWP = -99;
     MVAvbf = -99;
     L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
-    caloMEtType1_=-99; caloMEtType1Phi_=-99;//MB 
-    caloMEt_=-99;      caloMEtPhi_=-99;//MB
-    caloMEtUp_=-99;      caloMEtUpPhi_=-99;// ND
-    caloMEtDown_=-99;      caloMEtDownPhi_=-99;// ND
+    caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;//MB 
+    caloMEtNoHF_=-99;      caloMEtNoHFPhi_=-99;//MB
+    caloMEtNoHFUp_=-99;      caloMEtNoHFUpPhi_=-99;// ND
+    caloMEtNoHFDown_=-99;      caloMEtNoHFDownPhi_=-99;// ND
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     // define the relevant jet collection
@@ -1766,12 +1766,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	  sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
 	  ) 
-	recoilCorr->CorrectType1(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
+	recoilCorr->CorrectType2(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
 				 ((*diTauLegsP4)[0]).Pt(),((*diTauLegsP4)[0]).Phi(), u1, u2 , err1,err2, TMath::Min(nJets30,2) );
       else if((sample_.find("DYJets")!=string::npos && abs(genDecay)==(23*15)) //only Z->tautau
 	      || (sample_.find("DYJets")!=string::npos && abs(genDecay)!=(23*15) && isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) //Zmm, m->tau
 	      || sample_.find("HToTauTau")!=string::npos)
-	recoilCorr->CorrectType1(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
+	recoilCorr->CorrectType2(corrPt,corrPhi,(*genVP4)[0].Pt() ,(*genVP4)[0].Phi() , 
 				 ((*diTauLegsP4)[0]+(*diTauLegsP4)[1]).Pt(),((*diTauLegsP4)[0]+(*diTauLegsP4)[1]).Phi(), u1, u2, err1,err2, TMath::Min(nJets30,2)  );
     }
     corrMET_tmp.SetPtEtaPhiM(corrPt,0,corrPhi,0);
@@ -1837,25 +1837,25 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     }
  
     if(caloMETNoHFP4->size()>0){
-      caloMEtType1_    = (*caloMETNoHFP4)[0].Et();
-      caloMEtType1Phi_ = (*caloMETNoHFP4)[0].Phi();
-      caloMEt_         = (*caloMETNoHFP4)[1].Et();
-      caloMEtPhi_      = (*caloMETNoHFP4)[1].Phi();
+      caloMEtNoHFUncorr_    = (*caloMETNoHFP4)[0].Et();
+      caloMEtNoHFUncorrPhi_ = (*caloMETNoHFP4)[0].Phi();
+      caloMEtNoHF_         = (*caloMETNoHFP4)[1].Et();
+      caloMEtNoHFPhi_      = (*caloMETNoHFP4)[1].Phi();
 
       if(!isData) {
-	caloMEtUp_      = (*caloMETNoHFP4)[0].Et();
-	caloMEtUpPhi_   = (*caloMETNoHFP4)[0].Phi();
-	caloMEtDown_    = (*caloMETNoHFP4)[0].Et();
-	caloMEtDownPhi_ = (*caloMETNoHFP4)[0].Phi();
+	caloMEtNoHFUp_      = (*caloMETNoHFP4)[2].Et();
+	caloMEtNoHFUpPhi_   = (*caloMETNoHFP4)[2].Phi();
+	caloMEtNoHFDown_    = (*caloMETNoHFP4)[3].Et();
+	caloMEtNoHFDownPhi_ = (*caloMETNoHFP4)[3].Phi();
       }
       else {
-	caloMEtUp_ = caloMEtUpPhi_ = caloMEtDown_ = caloMEtDownPhi_ = -99;
+	caloMEtNoHFUp_ = caloMEtNoHFUpPhi_ = caloMEtNoHFDown_ = caloMEtNoHFDownPhi_ = -99;
       }
     }
     else{
-      caloMEtType1_=-99; caloMEtType1Phi_=-99;
-      caloMEt_=-99;      caloMEtPhi_=-99;
-      caloMEtUp_ = caloMEtUpPhi_ = caloMEtDown_ = caloMEtDownPhi_ = -99;
+      caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;
+      caloMEtNoHF_=-99;      caloMEtNoHFPhi_=-99;
+      caloMEtNoHFUp_ = caloMEtNoHFUpPhi_ = caloMEtNoHFDown_ = caloMEtNoHFDownPhi_ = -99;
     }
 
     ////////////////////////////////////////////////
@@ -2020,7 +2020,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     decayMode_          = decayMode;
     numPV_              = numPV;
     sampleWeight        = scaleFactor; 
-    if( sample_.find("WJets")!=string::npos ) sampleWeight        = 1;
+    if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight        = 1;
     puWeight            = isData ? 1.0 : pileupWeight(nPUVertices);
     puWeightHCP      = isData ? 1.0 : pileupWeightHCP( nPUVertices);   
     puWeightD        = isData ? 1.0 : pileupWeightD( nPUVertices);   
