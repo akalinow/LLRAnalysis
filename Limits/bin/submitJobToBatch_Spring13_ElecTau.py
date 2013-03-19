@@ -61,14 +61,14 @@ def treeSkim( ana, sample, runInSeries=False):
 ## treeSkim("nominal","Run2012B-13Jul2012-p3-Data",False)
 ## treeSkim("nominal","Run2012B-13Jul2012-p4-Data",False)
 ## treeSkim("nominal","Run2012B-13Jul2012-p5-Data",False)
-## treeSkim("nominal","Run2012C-24Aug2012-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
+treeSkim("nominal","Run2012C-24Aug2012-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
+treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p1-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p2-Data",False)
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p3-Data",False)
@@ -171,105 +171,3 @@ anaMC = ['nominal']
 ##         treeSkim( anaMC[iAnMC] , "VH140"         , False)
 ##         treeSkim( anaMC[iAnMC] , "VH145"         , False)
 
-
-#SUSY
-samplesSUSY = [
-##     'SUSYGGH80',
-##     'SUSYGGH90',
-##     'SUSYGGH100',
-##     'SUSYGGH110',
-##     'SUSYGGH120',
-##     'SUSYGGH130',
-##     'SUSYGGH140',
-##     'SUSYGGH160',
-##     'SUSYGGH180',
-##     'SUSYGGH200',
-##     'SUSYGGH250',
-##     'SUSYGGH300',
-##     'SUSYGGH350',
-##     'SUSYGGH400',
-##     'SUSYGGH450',
-##     'SUSYGGH500',
-##     'SUSYGGH600',
-##     'SUSYGGH700',
-##     'SUSYGGH800',
-##     'SUSYGGH900',
-##     'SUSYGGH1000',
-##     'SUSYBBH80',
-##     'SUSYBBH90',
-##     'SUSYBBH100',
-##     'SUSYBBH110',
-##     'SUSYBBH120',
-##     'SUSYBBH130',
-##     'SUSYBBH140',
-##     'SUSYBBH160',
-##     'SUSYBBH180',
-##     'SUSYBBH200',
-##     'SUSYBBH250',
-##     'SUSYBBH350',
-##     'SUSYBBH400',
-##     'SUSYBBH450',
-##     'SUSYBBH500',
-##     'SUSYBBH600',
-##     'SUSYBBH700',
-##     'SUSYBBH800',
-##     'SUSYBBH900',
-##     'SUSYBBH1000',
-    ]
-
-effSUSY = [
-    0.0120698167573,
-    0.0169360723747,
-    0.0220568034906,
-    0.0274764381995,
-    0.0330035378066,
-    0.038544344473,
-    0.0442641645327,
-    0.0547153893068,
-    0.0647823906939,
-    0.0735097960653,
-    0.0924692210735,
-    0.107448616314,
-    0.115083542001,
-    0.123453604107,
-    0.126559873529,
-    0.122935189184,
-    0.0684748591271,
-    0.0553935562806,
-    0.0442753918176,
-    0.0352997288678,
-    0.028819135186,
-    0.00880604119436,
-    0.0133063544344,
-    0.0186820735759,
-    0.0240026010404,
-    0.0292888590028,
-    0.0349787201702,
-    0.0407588566828,
-    0.0512933333333,
-    0.0603309609774,
-    0.069482133423,
-    0.087608783647,
-    0.114846276661,
-    0.124353410727,
-    0.13212778411,
-    0.138737329696,
-    0.147496551724,
-    0.153466538276,
-    0.157252520623, 
-    0.158490246352,
-    0.157811097154,
-    ]
-    
-
-for iSSUSY in range(0,len(samplesSUSY)):
-    for iAnMC in range(0,len(anaMC)):
-        
-        treeSkim( anaMC[iAnMC] , samplesSUSY[iSSUSY] , 1.0 * 1.0 * 1.0 *effSUSY[iSSUSY]  ,  False)
-
-
-
-
-#Embedded MC
-## for iAnMC in range(0,len(anaMC)):
-##     treeSkim(anaMC[iAnMC],'DYJets-Embedded', 3504 * 1.0 * 0.087645376959 , False) 
