@@ -197,7 +197,7 @@ options = {
     'iJson'          : 4
     },
     ##Embedded
-    'Run2012A-06Aug2012-Embedded' : {
+    'Run2012A-13Jul2012-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_ReReco13J_HTT_06Mar2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-13Jul2012-Embedded',
@@ -205,13 +205,13 @@ options = {
     'skimEff'        : 0,
     'iJson'          : 0
     },
-    'Run2012A-13Jul2012-Embedded' : {
+    'Run2012A-06Aug2012-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_Recov06Aug_HTT_06Mar2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-06Aug2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-06Aug2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 1
+    'iJson'          : 3
     },
     'Run2012B-13Jul2012-p1-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v1_p1/',

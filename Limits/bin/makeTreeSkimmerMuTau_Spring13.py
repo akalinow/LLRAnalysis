@@ -205,10 +205,10 @@ options = {
     'skimEff'        : 0,
     'iJson'          : 0
     },
-    'Run2012A-Recover06Aug2012-Embedded' : {
+    'Run2012A-06Aug2012-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012A_Recov06Aug_HTT_06Mar2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-Recover06Aug2012-Embedded_MuTau.root',
-    'sample'         : 'Run2012A-Recover06Aug2012-Embedded',
+    'sample'         : 'Run2012A-06Aug2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 1
