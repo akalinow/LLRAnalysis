@@ -13,6 +13,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = False
+runOnEmbed  = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -45,12 +46,14 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream.root'
-        #'file:VBFH125.root'
-        #'file:data2012D.root'        
-        #'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
+    #'file:patTuples_LepTauStream.root'
+    #'file:VBFH125.root'
+    #'file:data2012D.root'        
+    #'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'    
     )
-)
+    )
 
 #process.source.skipEvents = cms.untracked.uint32(90)
 
@@ -1407,16 +1410,17 @@ if runMoriond:
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
+    process.pTauUp              = cms.Path( process.seqTauUp)
+    process.pTauDown            = cms.Path( process.seqTauDown )
+    #process.pMuUp                  = cms.Path( process.seqMuUp)    NOT INTERESTING FOR ANALYSIS
+    #process.pMuDown                = cms.Path( process.seqMuDown)  NOT INTERESTING FOR ANALYSIS
+    ####
     #process.pJetUp                 = cms.Path( process.seqJetUp   )
     #process.pJetDown               = cms.Path( process.seqJetDown )
     #process.pMEtResolutionUp       = cms.Path( process.seqMEtResolutionUp )
     #process.pMEtResolutionDown     = cms.Path( process.seqMEtResolutionDown )
     #process.pMEtResponseUp         = cms.Path( process.seqMEtResponseUp)
     #process.pMEtResponseDown       = cms.Path( process.seqMEtResponseDown)
-    #process.pMuUp                  = cms.Path( process.seqMuUp)
-    #process.pMuDown                = cms.Path( process.seqMuDown)
-    process.pTauUp              = cms.Path( process.seqTauUp)
-    process.pTauDown            = cms.Path( process.seqTauDown )
     #process.pRawNominal         = cms.Path( process.seqRawNominal )
     #process.pRawJetUp              = cms.Path( process.seqRawJetUp   )
     #process.pRawJetDown            = cms.Path( process.seqRawJetDown )
@@ -1431,12 +1435,11 @@ if runOnMC:
 
 else:
     process.pNominal            = cms.Path( process.seqNominal )
-    #process.pTauUp              = cms.Path( process.seqTauUp)
-    #process.pTauDown            = cms.Path( process.seqTauDown )
-    #process.pRawNominal         = cms.Path( process.seqRawNominal )
-    #process.pRawTauUp           = cms.Path( process.seqRawTauUp )
-    #process.pRawTauDown         = cms.Path( process.seqRawTauDown )
-
+    if runOnEmbed:
+        process.pTauUp          = cms.Path( process.seqTauUp)
+        process.pTauDown        = cms.Path( process.seqTauDown )
+        #process.pMuUp                  = cms.Path( process.seqMuUp)    # NOT INTERESTING FOR ANALYSIS
+        #process.pMuDown                = cms.Path( process.seqMuDown)  # NOT INTERESTING FOR ANALYSIS
 
 #from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
 #massSearchReplaceAnyInputTag(process.pNominalRaw,

@@ -13,6 +13,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = True
+runOnEmbed  = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -51,12 +52,14 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream.root'
-        #'file:VBFH125.root'
-        #'file:data2012D.root'    
-        #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
-        )
-)
+    #'file:patTuples_LepTauStream.root'
+    #'file:VBFH125.root'
+    #'file:data2012D.root'    
+    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
+    )
+    )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
 #    '1:470223'
@@ -1471,16 +1474,17 @@ if runMoriond:
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
+    process.pTauUp              = cms.Path( process.seqTauUp)
+    process.pTauDown            = cms.Path( process.seqTauDown )
+    #process.pElecUp                  = cms.Path( process.seqElecUp)    # TO BE STUDIED LATER
+    #process.pElecDown                = cms.Path( process.seqElecDown)  # TO BE STUDIED LATER
+    ####
     #process.pJetUp                 = cms.Path( process.seqJetUp   )
     #process.pJetDown               = cms.Path( process.seqJetDown )
     #process.pMEtResolutionUp       = cms.Path( process.seqMEtResolutionUp )
     #process.pMEtResolutionDown     = cms.Path( process.seqMEtResolutionDown )
     #process.pMEtResponseUp         = cms.Path( process.seqMEtResponseUp)
     #process.pMEtResponseDown       = cms.Path( process.seqMEtResponseDown)
-    #process.pElecUp                  = cms.Path( process.seqElecUp)
-    #process.pElecDown                = cms.Path( process.seqElecDown)
-    process.pTauUp              = cms.Path( process.seqTauUp)
-    process.pTauDown            = cms.Path( process.seqTauDown )
     #process.pRawNominal         = cms.Path( process.seqRawNominal )
     #process.pRawJetUp              = cms.Path( process.seqRawJetUp   )
     #process.pRawJetDown            = cms.Path( process.seqRawJetDown )
@@ -1495,11 +1499,11 @@ if runOnMC:
 
 else:
     process.pNominal            = cms.Path( process.seqNominal )
-    #process.pTauUp              = cms.Path( process.seqTauUp)
-    #process.pTauDown            = cms.Path( process.seqTauDown )
-    #process.pRawNominal         = cms.Path( process.seqRawNominal )
-    #process.pRawTauUp           = cms.Path( process.seqRawTauUp )
-    #process.pRawTauDown         = cms.Path( process.seqRawTauDown )
+    if runOnEmbed:
+        process.pTauUp          = cms.Path( process.seqTauUp)
+        process.pTauDown        = cms.Path( process.seqTauDown )
+        process.pElecUp         = cms.Path( process.seqElecUp)
+        process.pElecDown       = cms.Path( process.seqElecDown)
 
 #######################################################################
 

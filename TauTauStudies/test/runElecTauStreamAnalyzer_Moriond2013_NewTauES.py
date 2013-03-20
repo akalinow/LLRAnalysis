@@ -1476,8 +1476,8 @@ if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
     process.pTauUp              = cms.Path( process.seqTauUp)
     process.pTauDown            = cms.Path( process.seqTauDown )
-    #process.pElecUp                  = cms.Path( process.seqElecUp)    TO BE STUDIED LATER
-    #process.pElecDown                = cms.Path( process.seqElecDown)  TO BE STUDIED LATER
+    #process.pElecUp                  = cms.Path( process.seqElecUp)    # TO BE STUDIED LATER
+    #process.pElecDown                = cms.Path( process.seqElecDown)  # TO BE STUDIED LATER
     ####
     #process.pJetUp                 = cms.Path( process.seqJetUp   )
     #process.pJetDown               = cms.Path( process.seqJetDown )
