@@ -198,55 +198,127 @@ options = {
     },
     ##Embedded
     'Run2012A-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012A-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012A_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Embedded_MuTau.root',
     'sample'         : 'Run2012A-13Jul2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 0
     },
-    'Run2012B-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012B-MuTau-53X-ReReco13Jul2012-v1-Embedded-MuJet-iter6_run/',
-    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-Embedded_MuTau.root',
-    'sample'         : 'Run2012B-13Jul2012-Embedded',
-    'xSection'       : 0,
-    'skimEff'        : 0,
-    'iJson'          : 0
-    },
     'Run2012A-Recover06Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012A-MuTau-53X-recover_06Aug2012-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012A_Recov06Aug_HTT_06Mar2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-Recover06Aug2012-Embedded_MuTau.root',
     'sample'         : 'Run2012A-Recover06Aug2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 1
     },
+    'Run2012B-13Jul2012-p1-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1_p1/',
+    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p1-Embedded_MuTau.root',
+    'sample'         : 'Run2012B-13Jul2012-p1-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 0
+    },
+    'Run2012B-13Jul2012-p2-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1_p2/',
+    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p2-Embedded_MuTau.root',
+    'sample'         : 'Run2012B-13Jul2012-p2-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 0
+    },
+    'Run2012B-13Jul2012-p3-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1_p3/',
+    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p3-Embedded_MuTau.root',
+    'sample'         : 'Run2012B-13Jul2012-p3-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 0
+    },
+    'Run2012B-13Jul2012-p4-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1_p4/',
+    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Embedded_MuTau.root',
+    'sample'         : 'Run2012B-13Jul2012-p4-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 0
+    },
+    'Run2012B-13Jul2012-p5-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v1_p5/',
+    'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Embedded_MuTau.root',
+    'sample'         : 'Run2012B-13Jul2012-p5-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 0
+    },
     'Run2012C-24Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012C-MuTau-53X-ReReco24Aug2012-Embedded-MuJet-iter6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_ReReco24A_HTT_06Mar2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Embedded_MuTau.root',
     'sample'         : 'Run2012C-24Aug2012-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 2
     },
-    'Run2012C-PromptReco-v2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012C-MuTau-53X-PromptReco-v2-Embedded-MuJet-iter6_run/',
-    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-Embedded_MuTau.root',
-    'sample'         : 'Run2012C-PromptReco-v2-Embedded',
+    'Run2012C-PromptReco-v2-p1-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p1/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p1-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 3
+    'iJson'          : 4
     },
-    'Run2012D-PromptReco-v1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
-    'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-Embedded_MuTau.root',
-    'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
+    'Run2012C-PromptReco-v2-p2-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p2/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p2-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p2-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 4
+    },
+    'Run2012C-PromptReco-v2-p3-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p3/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p3-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p3-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 4
+    },
+    'Run2012C-PromptReco-v2-p4-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p4/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p4-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p4-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 4
+    },
+    'Run2012C-PromptReco-v2-p5-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p5/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p5-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p5-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 4
+    },
+    'Run2012C-PromptReco-v2-p6-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p6/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p6-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p6-Embedded',
+    'xSection'       : 0,
+    'skimEff'        : 0,
+    'iJson'          : 4
+    },
+    'Run2012C-PromptReco-v2-p7-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v1_p7/',
+    'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p7-Embedded_MuTau.root',
+    'sample'         : 'Run2012C-PromptReco-v2-p7-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p1_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
     'xSection'       : 0,
@@ -254,7 +326,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p2_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p2-Embedded',
     'xSection'       : 0,
@@ -262,7 +334,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p3_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p3-Embedded',
     'xSection'       : 0,
@@ -270,7 +342,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p4_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p4-Embedded',
     'xSection'       : 0,
@@ -278,7 +350,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p5_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p5-Embedded',
     'xSection'       : 0,
@@ -286,7 +358,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p6_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p6-Embedded',
     'xSection'       : 0,
@@ -294,7 +366,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p7_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p7-Embedded',
     'xSection'       : 0,
@@ -302,7 +374,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p8-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p8_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p8-Embedded',
     'xSection'       : 0,
@@ -310,7 +382,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p9-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Run2012D-Embed-MuTau-PromptReco-v1_07Dec_p9_run/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v1_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Embedded_MuTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p9-Embedded',
     'xSection'       : 0,
