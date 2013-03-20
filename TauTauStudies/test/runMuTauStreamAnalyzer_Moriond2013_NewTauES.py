@@ -13,6 +13,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = True
+runOnEmbed  = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -1431,8 +1432,9 @@ if runOnMC:
 
 else:
     process.pNominal            = cms.Path( process.seqNominal )
-    #process.pTauUp              = cms.Path( process.seqTauUp)
-    #process.pTauDown            = cms.Path( process.seqTauDown )
+    if runOnEmbed:
+        process.pTauUp              = cms.Path( process.seqTauUp)
+        process.pTauDown            = cms.Path( process.seqTauDown )
     #process.pRawNominal         = cms.Path( process.seqRawNominal )
     #process.pRawTauUp           = cms.Path( process.seqRawTauUp )
     #process.pRawTauDown         = cms.Path( process.seqRawTauDown )
