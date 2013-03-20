@@ -99,6 +99,12 @@ edm::LumiReWeighting LumiWeightsD_("/data_CMS/cms/htautau/Moriond/tools/MC_Summe
 enum BVariation{kNo = 0, kDown = 1, kUp = 2};
 BtagSF* btsf = new BtagSF(12345);
 
+float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca") {
+
+  return L1etm*0.8716; //difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
+
+}
+
 float* computeZeta(LV leg1, LV leg2, LV MEt){
 
   float* result = new float[2];
@@ -2151,7 +2157,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     else { // MC or embedded
       if(DEBUG) cout << "-- MC or embedded" << endl;
 
-      L1etmCorr_  = L1etm_*0.8716;//difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
+      // float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca")
+      L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Nadir");
       L1etmWeight_= 1;            
 
       HLTxQCD         = 1.0;
