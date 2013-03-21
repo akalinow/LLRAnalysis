@@ -13,9 +13,9 @@ sys.path.append('./')
 def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY,RUN):
     
     release="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/"
-    stream = "ElecTau"
+    stream = "MuTau"
 
-    nameJob = 'job_m'+str(mH)+'_'+category+'_'+analysis+'_'+variable+'_'+outputDir
+    nameJob = 'job_m'+str(mH)+'_'+category+'_'+analysis+'_'+variable+'_'+outputDir+'_'+stream
     fileJob = 'batch/analyze/'+nameJob+'.sh'
     fileLog = 'results/'+outputDir+'/log/'+nameJob+'.txt'
     ##
