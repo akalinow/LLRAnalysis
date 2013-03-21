@@ -39,7 +39,7 @@
 
 #define USESSBKG         false
 #define scaleByBinWidth  false
-#define DOSPLIT          false
+#define DOSPLIT          true
 #define studyQCDshape    false
 #define useZDataMC       false
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -785,7 +785,7 @@ void plotMuTau( Int_t mH_           = 120,
 
   //string postfix_ = "Raw";
   string postfix_ = "";
-  ofstream out(Form(location+"/histograms/%s/yieldsMuTau_mH%d_%s_%s.txt",
+  ofstream out(Form(location+"/%s/yields/yieldsMuTau_mH%d_%s_%s.txt",
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
@@ -1010,34 +1010,37 @@ void plotMuTau( Int_t mH_           = 120,
   TString pathToFileWJ = "/data_CMS/cms/anayak/H2TauTauHCP/Moriond/MuTauStream/NtuplesMoriondNewRecoilV2/WJetNewSF/";
 
   // Open the files
-  TFile *fData            = new TFile(pathToFileData+"/nTuple_Data_2012ABCD_MuTau.root", "READ");
-  //TFile *fData            = new TFile(pathToFile+"/nTuple_Data_2012ABC_MuTau.root", "READ");
-  TFile *fDataEmbedded    = new TFile(pathToFileNewtauES+"/nTuple_Embedded_2012ABCD_MuTau.root", "READ");
+//   TFile *fData            = new TFile(pathToFileData+"/nTuple_Data_2012ABCD_MuTau.root", "READ");
+  TFile *fData            = new TFile(pathToFile+"/nTuple_Data_Run2012ABCD_MuTau.root", "READ");
+//   TFile *fDataEmbedded    = new TFile(pathToFileNewtauES+"/nTuple_Embedded_2012ABCD_MuTau.root", "READ");
   //TFile *fDataEmbedded    = new TFile(pathToFileData+"/nTuple_Embedded_2012ABCD_MuTau.root", "READ");
-  //TFile *fDataEmbedded    = new TFile(pathToFile+"/nTuple_Embedded_2012ABC_MuTau.root", "READ");
-  //TFile *fBackgroundDY    = new TFile(pathToFile+"/nTupleDYJets-MuTau-50-madgraph-PUS10_run_Open_MuTauStream.root","READ");
-  TFile *fBackgroundDY    = new TFile(pathToFileNewtauESBugFix+"/nTupleDYJets-MuTau-50-madgraph-PUS10_run_Open_MuTauStream.root","READ");
+  TFile *fDataEmbedded    = new TFile(pathToFile+"/nTuple_Embedded_Run2012ABCD_MuTau.root", "READ");
+  TFile *fBackgroundDY    = new TFile(pathToFile+"/nTuple_DYJets_MuTau.root","READ");
+//   TFile *fBackgroundDY    = new TFile(pathToFileNewtauESBugFix+"/nTupleDYJets-MuTau-50-madgraph-PUS10_run_Open_MuTauStream.root","READ");
   //TFile *fBackgroundWJets = new TFile(pathToFileWJ+"/nTupleWJets-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
-  TFile *fBackgroundWJets = new TFile(pathToFileWJ+"/nTupleWJetsAllBins-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
+//   TFile *fBackgroundWJets = new TFile(pathToFileWJ+"/nTupleWJetsAllBins-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
+  TFile *fBackgroundWJets = new TFile(pathToFile+"/nTuple_WJetsAllBins_MuTau.root","READ");
   //TFile *fBackgroundW3Jets= new TFile(pathToFileWJ+"/nTupleW3Jets-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
-  TFile *fBackgroundW3Jets= new TFile(pathToFileWJ+"/nTupleWJetsAllBins-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ"); 
-  TFile *fBackgroundTTbar = new TFile(pathToFile+"/nTupleTTJets-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
-  TFile *fBackgroundOthers= new TFile(pathToFile+"/nTupleOthers-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ");
+//   TFile *fBackgroundW3Jets= new TFile(pathToFileWJ+"/nTupleWJetsAllBins-MuTau-madgraph-PUS10_run_Open_MuTauStream.root","READ"); 
+  TFile *fBackgroundW3Jets= new TFile(pathToFile+"/nTuple_WJetsAllBins_MuTau.root","READ"); 
+  TFile *fBackgroundTTbar = new TFile(pathToFile+"/nTuple_TTJets_MuTau.root","READ");
+  TFile *fBackgroundOthers= new TFile(pathToFile+"/nTuple_Others_MuTau.root","READ");
   
   vector<int> hMasses;
   hMasses.push_back(110);hMasses.push_back(115);hMasses.push_back(120);hMasses.push_back(125);
   hMasses.push_back(130);hMasses.push_back(135);hMasses.push_back(140);hMasses.push_back(145);
 
   const int nProd=3;
-  const int nMasses=11;
-  TString nameProd[nProd]={"GluGluToHToTauTau","VBF_HToTauTau","WH_ZH_TTH_HToTauTau"};
-  TString nameMasses[nMasses]={"110","115","120","125","130","135","140","145","150","155","160"};
+  const int nMasses=8;
+  TString nameProd[nProd]={"GGFH","VBFH","VH"};
+  TString nameMasses[nMasses]={"110","115","120","125","130","135","140","145"};
 
   TFile *fSignal[nProd][nMasses];
 
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
-      fSignal[iP][iM] = new TFile(pathToFileNewtauES+"/nTuple"+nameProd[iP]+"_M-"+nameMasses[iM]+"_Open_MuTauStream.root","READ");
+//       fSignal[iP][iM] = new TFile(pathToFileNewtauES+"/nTuple"+nameProd[iP]+"_M-"+nameMasses[iM]+"_Open_MuTauStream.root","READ");
+      fSignal[iP][iM] = new TFile(pathToFile+"/nTuple_"+nameProd[iP]+nameMasses[iM]+"_MuTau.root","READ");
        
   std::map<string,TFile*> mapSUSYfiles;
   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
@@ -1420,7 +1423,7 @@ void plotMuTau( Int_t mH_           = 120,
   tMap["SS"]           = data;
 
   string shortProd[nProd]={"ggH","qqH","VH"};
-  string sMasses[nMasses] = {"110","115","120","125","130","135","140","145","150","155","160"};
+  string sMasses[nMasses] = {"110","115","120","125","130","135","140","145"};
 
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
@@ -2163,6 +2166,55 @@ void plotMuTau( Int_t mH_           = 120,
 
   hParameters->GetXaxis()->LabelsOption("v");
 
+//YIELDS
+
+  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
+    out<<"Yields for VBF :"<<endl;
+    out<<"VBF data : hData -> "<<hData->Integral()<<endl;
+    out<<"VBF Ztt : hDataEmb -> "<<hDataEmb->Integral()<<endl;
+    out<<"VBF QCD : hDataAntiIsoLooseTauIsoQCD -> "<<hDataAntiIsoLooseTauIsoQCD->Integral()<<endl;
+    out<<"VBF W : hW3JetsMediumTauIsoRelVBF -> "<<hW3JetsMediumTauIsoRelVBF->Integral()<<endl;
+    out<<"VBF Zee j->t : hZmj -> "<<hZmj->Integral()<<endl;
+    out<<"VBF Zee e->t : hZmm -> "<<hZmm->Integral()<<endl;
+    out<<"VBF TTb : hTTb -> "<<hTTb->Integral()<<endl;
+    out<<"VBF VV : hVV -> "<<hVV->Integral()<<endl;
+  }
+  else if(selection_.find("boost")!=string::npos){
+    out<<"Yields for boost :"<<endl;
+    out<<"boost data : hData -> "<<hData->Integral()<<endl;
+    out<<"boost Ztt : hDataEmb -> "<<hDataEmb->Integral()<<endl;
+    out<<"boost high QCD : hDataAntiIsoLooseTauIsoQCD -> "<<hDataAntiIsoLooseTauIsoQCD->Integral()<<endl;
+    out<<"boost low QCD : hQCD -> "<<hQCD->Integral()<<endl;
+    out<<"boost W : hW -> "<<hW->Integral()<<endl;
+    out<<"boost Zee j->t : hZmj -> "<<hZmj->Integral()<<endl;
+    out<<"boost Zee e->t : hZmm -> "<<hZmm->Integral()<<endl;
+    out<<"boost TTb : hTTb -> "<<hTTb->Integral()<<endl;
+    out<<"boost VV : hVV -> "<<hVV->Integral()<<endl;
+  }
+  else if(selection_.find("bTag")!=string::npos){
+    out<<"Yields for bTag :"<<endl;
+    out<<"bTag data : hData -> "<<hData->Integral()<<endl;
+    out<<"bTag Ztt : hDataEmb -> "<<hDataEmb->Integral()<<endl;
+    out<<"bTag high QCD : hDataAntiIsoLooseTauIso -> "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
+    out<<"bTag W : hW -> "<<hW->Integral()<<endl;
+    out<<"bTag Zee j->t : hZmj -> "<<hZmj->Integral()<<endl;
+    out<<"bTag Zee e->t : hZmm -> "<<hZmm->Integral()<<endl;
+    out<<"bTag TTb : hTTb -> "<<hTTb->Integral()<<endl;
+    out<<"bTag VV : hVV -> "<<hVV->Integral()<<endl;
+  }
+  else{
+    out<<"Yields for "<<selection_<<" : "<<endl;
+    out<<selection_<<" data : hData -> "<<hData->Integral()<<endl;
+    out<<selection_<<" Ztt : hDataEmb -> "<<hDataEmb->Integral()<<endl;
+    out<<selection_<<" high QCD : hQCD -> "<<hQCD->Integral()<<endl;
+    out<<selection_<<" W : hW -> "<<hW->Integral()<<endl;
+    out<<selection_<<" Zee j->t : hZmj -> "<<hZmj->Integral()<<endl;
+    out<<selection_<<" Zee e->t : hZmm -> "<<hZmm->Integral()<<endl;
+    out<<selection_<<" TTb : hTTb -> "<<hTTb->Integral()<<endl;
+    out<<selection_<<" VV : hVV -> "<<hVV->Integral()<<endl;
+  }
+  out.close();
+
   if(scaleByBinWidth && variable_.Contains("diTauNSVfitMass")){ 
     hData->Scale(1.0, "width");
     hTTb->Scale(1.0, "width");
@@ -2312,11 +2364,11 @@ void plotMuTau( Int_t mH_           = 120,
   
   //return;
 
-  c1->SaveAs(Form(location+"/plots/%s/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
-  c1->SaveAs(Form(location+"/plots/%s/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+  c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+  c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
 
   // templates for fitting
-  TFile* fout = new TFile(Form(location+"/histograms/%s/muTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()),"RECREATE");
+  TFile* fout = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()),"RECREATE");
   fout->cd();
 
   hSiml->Write();
@@ -2555,40 +2607,76 @@ int main(int argc, const char* argv[])
 
   int mH, nBins, logy; 
   float magnify, hltEff, xMin, xMax, maxY;
-  string category, analysis, variable, xtitle, unity, outputDir;
-
-  //cout << argc << " arguments" << endl < endl;
+  string category, analysis, variable, xtitle, unity, outputDir, RUN;
 
   if(argc==1) plotMuTauAll();
-  //else if(argc>14) { 
-  else {
-    mH=(int)atof(argv[1]); category=argv[2]; variable=argv[3]; 
+  else if(argc>7) { 
 
-    int i=4;
-    while(string(argv[i])!="XX") {
-      xtitle += string(argv[i]);
-      xtitle += " "; 
-      i++ ;
-    }
-    i++ ;
-    unity=argv[i]; 
+    mH=(int)atof(argv[1]); category=argv[2]; variable=argv[3]; xtitle=argv[4]; unity=argv[5]; 
 
-    nBins=(int)atof(argv[i+1]); xMin=atof(argv[i+2]); xMax=atof(argv[i+3]); 
+    nBins=(int)atof(argv[6]); xMin=atof(argv[7]); xMax=atof(argv[8]); 
 
-    magnify=atof(argv[i+4]); hltEff=atof(argv[i+5]); logy=(int)atof(argv[i+6]); maxY=atof(argv[i+7]) ;
+    magnify=atof(argv[9]); hltEff=atof(argv[10]); logy=(int)atof(argv[11]); maxY=atof(argv[12]) ;
 
-    outputDir=argv[i+8]; analysis = argc>i+9 ? argv[i+9] : ""; 
-    
-    cout << endl
-	 << "plotMuTau(" << mH << ",1," << category << "," << analysis << "," << variable << "," << xtitle << "," 
-	 << unity << "," << outputDir << "," << nBins << "," << xMin << "," << xMax << "," << magnify << "," 
-	 << hltEff << "," << logy << "," << maxY << ")" << endl << endl;
+    outputDir=argv[13]; RUN = argv[14] ;
 
-    plotMuTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY);
+    analysis = argc>15 ? argv[15] : ""; 
 
+    cout << endl << "ANALYZING DATA FROM RUN : " << RUN << endl << endl;
+
+    plotMuTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN);
   }
-  //else { cout << "Please put at least 14 arguments" << endl; return 1;}
+  else { cout << "Please put at least 15 arguments" << endl; return 1;}
 
   cout << "DONE" << endl;
   return 0;
 }
+
+// int main(int argc, const char* argv[])
+// {
+
+//   std::cout << "plotMuTau()" << std::endl;
+//   gROOT->SetBatch(true);
+
+//   gSystem->Load("libFWCoreFWLite");
+//   AutoLibraryLoader::enable();
+
+//   int mH, nBins, logy; 
+//   float magnify, hltEff, xMin, xMax, maxY;
+//   string category, analysis, variable, xtitle, unity, outputDir;
+
+//   //cout << argc << " arguments" << endl < endl;
+
+//   if(argc==1) plotMuTauAll();
+//   //else if(argc>14) { 
+//   else {
+//     mH=(int)atof(argv[1]); category=argv[2]; variable=argv[3]; 
+
+//     int i=4;
+//     while(string(argv[i])!="XX") {
+//       xtitle += string(argv[i]);
+//       xtitle += " "; 
+//       i++ ;
+//     }
+//     i++ ;
+//     unity=argv[i]; 
+
+//     nBins=(int)atof(argv[i+1]); xMin=atof(argv[i+2]); xMax=atof(argv[i+3]); 
+
+//     magnify=atof(argv[i+4]); hltEff=atof(argv[i+5]); logy=(int)atof(argv[i+6]); maxY=atof(argv[i+7]) ;
+
+//     outputDir=argv[i+8]; analysis = argc>i+9 ? argv[i+9] : ""; 
+    
+//     cout << endl
+// 	 << "plotMuTau(" << mH << ",1," << category << "," << analysis << "," << variable << "," << xtitle << "," 
+// 	 << unity << "," << outputDir << "," << nBins << "," << xMin << "," << xMax << "," << magnify << "," 
+// 	 << hltEff << "," << logy << "," << maxY << ")" << endl << endl;
+
+//     plotMuTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY);
+
+//   }
+//   //else { cout << "Please put at least 14 arguments" << endl; return 1;}
+
+//   cout << "DONE" << endl;
+//   return 0;
+// }

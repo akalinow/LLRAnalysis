@@ -80,8 +80,8 @@ def treeSkim( ana, sample, runInSeries=False):
 ## treeSkim("nominal","Run2012D-PromptReco-v1-p9-Data",False)
 
 ###Embedded samples
-anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
-#anaEmb = ['nominal']
+#anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
+anaEmb = ['nominal']
 #anaEmb = ['TauUp','TauDown','ElecUp','ElecDown']
 
 samplesEmb = [
@@ -119,56 +119,52 @@ for iSEmb in range(0,len(samplesEmb)):
 
 
 ##MC
-#anaMC = ['nominal','TauUp','TauDown','JetUp','JetDown']
-anaMC = ['nominal']
+anaMC = ['nominal','TauUp','TauDown','JetUp','JetDown']
+#anaMC = ['nominal']
 #anaMC = ['TauUp','TauDown','JetUp','JetDown']
 
 for iAnMC in range(0,len(anaMC)):
     ##BkgMC
-##         treeSkim( anaMC[iAnMC] , "DYJets"        , False)
-## ## ##         treeSkim( anaMC[iAnMC] , "DYJets-Embedded", False)
-## ## ##         treeSkim( anaMC[iAnMC] , "DYJ_TauTau"    , False)
-## ## ##         treeSkim( anaMC[iAnMC] , "DYJ_EToTau"    , False)
-## ## ##         treeSkim( anaMC[iAnMC] , "DYJ_JetToTau"  , False)
-##         treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
-##         treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
+        treeSkim( anaMC[iAnMC] , "DYJets"        , False)
+        #treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
+        #treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
 ##         treeSkim( anaMC[iAnMC] , "WJets3Jets"    , False)
 ##         treeSkim( anaMC[iAnMC] , "WJets4Jets"    , False)
-##         treeSkim( anaMC[iAnMC] , "WJets-p1"      , False)
-##         treeSkim( anaMC[iAnMC] , "WJets-p2"      , False)
+        #treeSkim( anaMC[iAnMC] , "WJets-p1"      , False)
+        #treeSkim( anaMC[iAnMC] , "WJets-p2"      , False)
 ##         treeSkim( anaMC[iAnMC] , "TTJets"        , False)
-##         treeSkim( anaMC[iAnMC] , "T-tW"          , False)
-##         treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
-##         treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
+        treeSkim( anaMC[iAnMC] , "T-tW"          , False)
+        #treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
+        #treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
 ##         treeSkim( anaMC[iAnMC] , "WZJetsTo2L2Q"  , False)
-##         treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
+        #treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
 ##         treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"  , False)
-##         treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
+        #treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
 
-## ##     ##HiggsMC
-##         treeSkim( anaMC[iAnMC] , "GGFH110"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH115"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH120"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH125"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH130"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH135"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH140"       , False)
-##         treeSkim( anaMC[iAnMC] , "GGFH145"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH110"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
+##     ##HiggsMC
+        treeSkim( anaMC[iAnMC] , "GGFH110"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH115"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH120"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH125"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH130"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH135"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH140"       , False)
+        treeSkim( anaMC[iAnMC] , "GGFH145"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH110"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
 ##         treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
-        treeSkim( anaMC[iAnMC] , "VBFH125-NoRecoil"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH140"       , False)
-##         treeSkim( anaMC[iAnMC] , "VBFH145"       , False)
-##         treeSkim( anaMC[iAnMC] , "VH110"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH115"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH120"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH125"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH130"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH135"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH140"         , False)
-##         treeSkim( anaMC[iAnMC] , "VH145"         , False)
+##         treeSkim( anaMC[iAnMC] , "VBFH125-NoRecoil"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH140"       , False)
+        treeSkim( anaMC[iAnMC] , "VBFH145"       , False)
+        treeSkim( anaMC[iAnMC] , "VH110"         , False)
+        treeSkim( anaMC[iAnMC] , "VH115"         , False)
+        treeSkim( anaMC[iAnMC] , "VH120"         , False)
+        treeSkim( anaMC[iAnMC] , "VH125"         , False)
+        treeSkim( anaMC[iAnMC] , "VH130"         , False)
+        treeSkim( anaMC[iAnMC] , "VH135"         , False)
+        treeSkim( anaMC[iAnMC] , "VH140"         , False)
+        treeSkim( anaMC[iAnMC] , "VH145"         , False)
 
