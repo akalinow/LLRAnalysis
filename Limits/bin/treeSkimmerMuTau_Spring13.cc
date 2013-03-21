@@ -693,6 +693,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
+  float visGenTauMass, genTauPt, genTauEta, genVMass;
+  int genDecayMode_;
 
   // event-related variables
   float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD;
@@ -860,6 +862,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("phiMom2",                 &phiMom2,"phiMom2/F");
   outTreePtOrd->Branch("gammaFrac",               &gammaFrac,"gammaFrac/F");
 
+  outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
+  outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
+  outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
+  outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
+  
   outTreePtOrd->Branch("pfJetPt",                 &pfJetPt_,"pfJetPt/F");
   outTreePtOrd->Branch("fakeRateRun2011",         &fakeRateRun2011,"fakeRateRun2011/F");
   outTreePtOrd->Branch("fakeRateWMC",             &fakeRateWMC,"fakeRateWMC/F");
@@ -1111,7 +1119,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("hpsMVA2"               ,1);//IN
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
-  currentTree->SetBranchStatus("visibleGenTauMass"     ,0);
+  currentTree->SetBranchStatus("visibleGenTauMass"     ,1);
+  currentTree->SetBranchStatus("genDecayMode"          ,1);
   currentTree->SetBranchStatus("isTauLegMatched"       ,1);
   currentTree->SetBranchStatus("isMuLegMatched"        ,0);
   currentTree->SetBranchStatus("hasKft"                ,0);
@@ -1300,7 +1309,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
   float diTauCharge;
-  int tightestHPSWP,tightestHPSDBWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode;
+  int tightestHPSWP,tightestHPSDBWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;
   float hpsDB3H,hpsMVA,hpsMVA2;
   float numPV;
   int numOfLooseIsoDiTaus;
@@ -1313,7 +1322,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int isTauLegMatched,muFlag,isPFMuon,isTightMuon,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1, nPUVerticesP1;
   float rhoFastJet,rhoNeutralFastJet;
-  float visibleTauMass;
+  float visibleTauMass, visibleGenTauMass;
   float dxy1, dxy2, dz1;
   float pZetaSig;
   float chIsoLeg2, phIsoLeg2;
@@ -1385,6 +1394,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("nPUVerticesM1",        &nPUVerticesM1);
   currentTree->SetBranchAddress("genDecay",             &genDecay);
   currentTree->SetBranchAddress("decayMode",            &decayMode);
+  currentTree->SetBranchAddress("genDecayMode",         &genDecayMode);
   currentTree->SetBranchAddress("numOfLooseIsoDiTaus",  &numOfLooseIsoDiTaus);
   currentTree->SetBranchAddress("muFlag",               &muFlag);
   currentTree->SetBranchAddress("isPFMuon",             &isPFMuon);
@@ -1392,6 +1402,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("vetoEvent",            &vetoEvent);
   currentTree->SetBranchAddress("isTauLegMatched",      &isTauLegMatched);
   currentTree->SetBranchAddress("visibleTauMass",       &visibleTauMass);
+  currentTree->SetBranchAddress("visibleGenTauMass",    &visibleGenTauMass);
   currentTree->SetBranchAddress("leadPFChargedHadrP",   &leadPFChargedHadrCandP);
   currentTree->SetBranchAddress("leadPFChargedHadrMva" ,&leadPFChargedHadrMva);
   currentTree->SetBranchAddress("emFraction"           ,&emFraction);
@@ -1772,6 +1783,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
+    
+    //genTau Info
+    genTauPt   = (*genDiTauLegsP4)[1].Pt();
+    genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    visGenTauMass = visibleGenTauMass;
+    genDecayMode_ = genDecayMode;
+    genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
     
     ////////////////////////////////////////////////////////////////////
     if(DEBUG) cout << "Look at MET correct" << endl;
