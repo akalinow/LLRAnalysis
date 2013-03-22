@@ -1097,7 +1097,6 @@ process.selectedPatElectronsUserEmbedded.vertexTag = "selectedPrimaryVertices"
 process.selectedPatTausUserEmbedded.vertexTag = "selectedPrimaryVertices"
 
 ##Arun:  change vertex for the PFLow isolation?
-pfParticleSelectionSequence
 massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              "offlinePrimaryVertices",
                              "selectedPrimaryVertices",
