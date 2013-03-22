@@ -13,7 +13,8 @@ sys.path.append('./')
 def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY,RUN):
     
     release="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/"
-    stream = "MuTau"
+    #stream = "MuTau"
+    stream = "ElecTau"
 
     nameJob = 'job_m'+str(mH)+'_'+category+'_'+analysis+'_'+variable+'_'+outputDir+'_'+stream
     fileJob = 'batch/analyze/'+nameJob+'.sh'
@@ -38,6 +39,7 @@ def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax
 
 outputDir = 'Spring13'
 outputDirABCD = 'ABCD'
+#outputDirABCD = 'MVA2Iso_MuTau'
 outputDirD = 'D'
 
 
@@ -158,33 +160,83 @@ analyze(125,"vbf"      ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABC
 ## analyze(125,"vbf"      ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABC,-1,0,100,5.0,1.0,0,1.2,"ABC");
 
 ##Control
-## analyze(125,"inclusive",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow" ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow" ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf"      ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"decayMode",     "'#tau_{h} decay mode'","units"   ,outputDirABCD,3,0,3, 5.0,1.0,0,1.4,"ABCD");
+analyze(125,"inclusive"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDirABCD,40,0,2,5.0,1.0,0,1.2,"ABCD");  
+analyze(125,"inclusive"      ,""   ,"MEtMVA","'MET'","GeV"                             ,outputDirABCD,20,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"MEt","'Uncorr MET'","GeV"                         ,outputDirABCD,20,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDirABCD,32,-3.2,3.2,5.0,1.0,0,1.5,"ABCD");
+analyze(125,"inclusiveNoMt"  ,""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDirABCD,40,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDirABCD,-1,0,200,5.0,1.0,0,1.2,"ABCD"); 
+analyze(125,"inclusive"      ,""   ,"diTauNSVfitMass" ,"'SVfit mass'","GeV"            ,outputDirABCD,60,0,360,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
+analyze(125,"inclusive"      ,""   ,"diTauNSVfitMass" ,"'SVfit mass'","GeV"            ,outputDirABCD,35,0,350,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"etaL1","'e #eta'","units"                         ,outputDirABCD,36,-2.4, 2.4,5.0,1.0,0,2.,"ABCD");
+analyze(125,"inclusive"      ,""   ,"ptL1","'e p_{T}'","GeV"                           ,outputDirABCD,30,0, 120,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDirABCD,30,0, 120,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"etaL2","'#tau #eta'","units"                      ,outputDirABCD,36,-2.4, 2.4,5.0,1.0,0,2.,"ABCD");
+analyze(125,"inclusive"      ,""   ,"numPV","'reconstructed vertexes'","units"         ,outputDirABCD,30,0,30,5.0,1.0,0,1.5,"ABCD");
+analyze(125,"inclusive"      ,""   ,"nJets30","'jet multiplicity'","units"             ,outputDirABCD,10,0,10,5.0,1.0,1,10,"ABCD");
+analyze(125,"inclusive"      ,""   ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDirABCD,10,0,10,5.0,1.0,1,10,"ABCD");
+analyze(125,"inclusive"      ,""   ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDirABCD,27,20,300,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"eta1","'Leading jet #eta'","units"                ,outputDirABCD,25,-4.5, 4.5,5.0,1.0,0,2.,"ABCD");
+analyze(125,"inclusive"      ,""   ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDirABCD,27,20,300,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"inclusive"      ,""   ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDirABCD,25,-4.5, 4.5,5.0,1.0,0,2.,"ABCD");
 
-## analyze(125,"inclusive",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow" ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow" ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf"      ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDirABCD,10,0,100,5.0,1.0,0,   1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"MEtMVA","'MET'","GeV"                              ,outputDirABCD,10,0,100,5.0,1.0,0,   1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"MEtMVAPhi","'MET #phi'","units"                    ,outputDirABCD,20,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
+analyze(125,"novbfLowNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"             ,outputDirABCD,16,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"diTauVisMass","'Visible mass'","GeV"               ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD");  
+analyze(125,"novbfLow",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"              ,outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"etaL1","'e #eta'","units"                       ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+analyze(125,"novbfLow",""   ,"ptL1","'e p_{T}'","GeV"                         ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDirABCD,10,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
 
-## analyze(125,"inclusive",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"novbfLow" ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"novbfHigh",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"boostLow" ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"boostHigh",""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"vbf"      ,""      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
+analyze(125,"novbfHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"MEtMVA","'MET'","GeV"                             ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDirABCD,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
+analyze(125,"novbfHighNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"            ,outputDirABCD,16,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"diTauVisMass","'visible mass'","GeV"              ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
+analyze(125,"novbfHigh",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"etaL1","'e #eta'","units"                      ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+analyze(125,"novbfHigh",""   ,"ptL1","'e p_{T}'","GeV"                        ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"novbfHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
 
-## analyze(125,"inclusive",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"novbfLow" ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"novbfHigh",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"boostLow" ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"boostHigh",""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
-## analyze(125,"vbf"      ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirD,-1,0,100,5.0,1.0,0,1.2,"D");
+analyze(125,"boostLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"boostLow",""   ,"MEtMVA","'MET'","GeV"                              ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"boostLow",""   ,"MEtMVAPhi","'MET #phi'","units"                    ,outputDirABCD,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
+analyze(125,"boostLowNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"             ,outputDirABCD,16,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostLow",""   ,"diTauVisMass","'Visible mass'","GeV"               ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD");  
+analyze(125,"boostLow",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"              ,outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostLow",""   ,"etaL1","'e #eta'","units"                       ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+analyze(125,"boostLow",""   ,"ptL1","'e p_{T}'","GeV"                         ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+
+analyze(125,"boostHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"MEtMVA","'MET'","GeV"                             ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDirABCD,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
+analyze(125,"boostHighNoMt",""   ,"MtLeg1MVA","M_{T}(e#nu)'","GeV"            ,outputDirABCD,16,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
+analyze(125,"boostHigh",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"etaL1","'e #eta'","units"                      ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+analyze(125,"boostHigh",""   ,"ptL1","'e p_{T}'","GeV"                        ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"boostHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+
+analyze(125,"vbf",""   ,"MEt","'Uncorr MET'","GeV"                                   ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"vbf",""   ,"MEtMVA","'MET'","GeV"                                   ,outputDirABCD,10,0,100,5.0,1.0,0, 1.2,"ABCD");
+analyze(125,"vbf",""   ,"MEtMVAPhi","'MET #phi'","units"                         ,outputDirABCD,16,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
+analyze(125,"vbfNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDirABCD,16,0,160,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"vbf",""   ,"diTauVisMass","'Visible mass'","GeV"                    ,outputDirABCD,30,0,300,5.0,1.0,0,1.2,"ABCD");  
+analyze(125,"vbf",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"                   ,outputDirABCD,-1,0,100,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"vbf",""   ,"etaL1","'e #eta'","units"                            ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0, 2.,"ABCD");
+analyze(125,"vbf",""   ,"ptL1","'e p_{T}'","GeV"                              ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"vbf",""   ,"ptL2","'#tau p_{T}'","GeV"                              ,outputDirABCD,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
+analyze(125,"vbf",""   ,"etaL2","'#tau #eta'","units"                            ,outputDirABCD,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
+
 
 
 ###D datacards
@@ -261,85 +313,9 @@ analyze(125,"vbf"      ,""      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDirABC
 ## analyze(125,"boostHigh",""   ,"diTauVisMass","'Visible mass'","GeV"               ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
 ## analyze(125,"vbf",""         ,"diTauVisMass","'Visible mass'","GeV"               ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD");  
 
-## analyze(125,"inclusive"      ,""   ,"decayMode",     "'#tau_{h} decay mode'","units"   ,outputDir,3,0,3, 5.0,1.0,0,1.4,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,40,0,2,5.0,1.0,0,1.2,"ABCD");  
-## analyze(125,"inclusive"      ,""   ,"MEtMVA","'MET'","GeV"                             ,outputDir,20,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"MEt","'Uncorr MET'","GeV"                         ,outputDir,20,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDir,32,-3.2,3.2,5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"inclusiveNoMt"  ,""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDir,-1,0,200,5.0,1.0,0,1.2,"ABCD"); 
-## analyze(125,"inclusive"      ,""   ,"diTauNSVfitMass" ,"'SVfit mass'","GeV"            ,outputDir,60,0,360,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
-## analyze(125,"inclusive"      ,""   ,"diTauNSVfitMass" ,"'SVfit mass'","GeV"            ,outputDir,35,0,350,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"etaL1","'e #eta'","units"                         ,outputDir,36,-2.4, 2.4,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,30,0, 120,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,30,0, 120,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,36,-2.4, 2.4,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0,30,5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"nJets30","'jet multiplicity'","units"             ,outputDir,10,0,10,5.0,1.0,1,10,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,10,0,10,5.0,1.0,1,10,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,27,20,300,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"eta1","'Leading jet #eta'","units"                ,outputDir,25,-4.5, 4.5,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,27,20,300,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"inclusive"      ,""   ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,25,-4.5, 4.5,5.0,1.0,0,2.,"ABCD");
 
 ## ## analyze(125,"bTag",""        ,"ptB1", "'leading b-tagged jet p_{T}'","GeV"       ,outputDir,50,30, 330,5.0,1.0,1,100,"ABCD");
 ## ## analyze(125,"bTag",""        ,"etaB1","'leading b-tagged jet #eta'","units"      ,outputDir,21,-5, 5,5.0,1.0,0,2.,"ABCD");
-
-## analyze(125,"novbfLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0,   1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"MEtMVA","'MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0,   1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"MEtMVAPhi","'MET #phi'","units"                    ,outputDir,20,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"novbfLowNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"             ,outputDir,16,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"diTauVisMass","'Visible mass'","GeV"               ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD");  
-## analyze(125,"novbfLow",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"              ,outputDir,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"etaL1","'e #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"novbfLow",""   ,"ptL1","'e p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,10,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-
-## analyze(125,"novbfHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"MEtMVA","'MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDir,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"novbfHighNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"            ,outputDir,16,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"diTauVisMass","'visible mass'","GeV"              ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
-## analyze(125,"novbfHigh",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"etaL1","'e #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"novbfHigh",""   ,"ptL1","'e p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"novbfHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-
-## analyze(125,"boostLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"MEtMVA","'MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"MEtMVAPhi","'MET #phi'","units"                    ,outputDir,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"boostLowNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"             ,outputDir,16,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"diTauVisMass","'Visible mass'","GeV"               ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD");  
-## analyze(125,"boostLow",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"              ,outputDir,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"etaL1","'e #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"boostLow",""   ,"ptL1","'e p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-
-## analyze(125,"boostHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"MEtMVA","'MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"MEtMVAPhi","'MET #phi'","units"                   ,outputDir,10,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"boostHighNoMt",""   ,"MtLeg1MVA","M_{T}(e#nu)'","GeV"            ,outputDir,16,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"diTauVisMass","'Visible mass'","GeV"              ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD"); 
-## analyze(125,"boostHigh",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"etaL1","'e #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-## analyze(125,"boostHigh",""   ,"ptL1","'e p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"boostHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
-
-## analyze(125,"vbf",""   ,"MEt","'Uncorr MET'","GeV"                                   ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"vbf",""   ,"MEtMVA","'MET'","GeV"                                   ,outputDir,10,0,100,5.0,1.0,0, 1.2,"ABCD");
-## analyze(125,"vbf",""   ,"MEtMVAPhi","'MET #phi'","units"                         ,outputDir,16,-3.2,3.2,   5.0,1.0,0,1.5,"ABCD");
-## analyze(125,"vbfNoMt",""   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,16,0,160,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf",""   ,"diTauVisMass","'Visible mass'","GeV"                    ,outputDir,30,0,300,5.0,1.0,0,1.2,"ABCD");  
-## analyze(125,"vbf",""   ,"diTauNSVfitMass","'SVfit mass'","GeV"                   ,outputDir,-1,0,100,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf",""   ,"etaL1","'e #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0, 2.,"ABCD");
-## analyze(125,"vbf",""   ,"ptL1","'e p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf",""   ,"ptL2","'#tau p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,"ABCD");
-## analyze(125,"vbf",""   ,"etaL2","'#tau #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,"ABCD");
 
 ###QCDShape uncertainty
 ## analyze(125,"inclusiveQCDEn"      ,""   ,"diTauNSVfitMass" ,"'SVfit mass'","GeV"            ,outputDir,36,0,360,5.0,1.0,0,1.2,"ABC","ABCD");

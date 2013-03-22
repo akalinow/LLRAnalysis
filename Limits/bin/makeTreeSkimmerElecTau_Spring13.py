@@ -697,7 +697,7 @@ options = {
     },
     'VBFH125' : {
     'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF125/',
-    'outputFileName' : OutDir+'nTupleVBF_HToTauTau_M-125_ElecTau.root',
+    'outputFileName' : OutDir+'nTupleVBFH125_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
     'skimEff'        : 6.32E-02 * 0.356445 * 0.607902,
@@ -808,7 +808,7 @@ options = {
     'iJson'          : -1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115-ElecTau-pythia-PUS10-v2_run/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH115_ElecTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),

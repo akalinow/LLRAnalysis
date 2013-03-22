@@ -39,7 +39,7 @@
 
 #define USESSBKG         false
 #define scaleByBinWidth  false
-#define DOSPLIT          true
+#define DOSPLIT          false
 #define studyQCDshape    false
 #define useZDataMC       false
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1167,8 +1167,10 @@ void plotMuTau( Int_t mH_           = 120,
     tpt = tpt&&TCut("ptL2<40");
   */
   ////// TAU ISO //////
-  TCut tiso("tightestHPSMVAWP>=0"); 
-  TCut ltiso("tightestHPSMVAWP>-99");
+//   TCut tiso("tightestHPSMVAWP>=0"); 
+  TCut tiso("tightestHPSMVA2WP>=0"); 
+//   TCut ltiso("tightestHPSMVAWP>-99");
+  TCut ltiso("tightestHPSMVA2WP>-99");
   TCut mtiso("hpsMVA>0.7");
 
   ////// MU ISO ///////

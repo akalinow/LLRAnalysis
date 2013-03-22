@@ -1114,9 +1114,9 @@ void plotElecTau( Int_t mH_           = 120,
   else {
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     
-    fBackgroundDYTauTau    = new TFile(pathToFile+"/SplitDY/nTuple_DYJ_TauTau_ElecTau.root"  ,"READ");
-    fBackgroundDYElecToTau = new TFile(pathToFile+"/SplitDY/nTuple_DYJ_EToTau_ElecTau.root"  ,"READ");
-    fBackgroundDYJetToTau  = new TFile(pathToFile+"/SplitDY/nTuple_DYJ_JetToTau_ElecTau.root","READ");
+    fBackgroundDYTauTau    = new TFile(pathToFile+"/nTuple_DYJ_TauTau_ElecTau.root"  ,"READ");
+    fBackgroundDYElecToTau = new TFile(pathToFile+"/nTuple_DYJ_EToTau_ElecTau.root"  ,"READ");
+    fBackgroundDYJetToTau  = new TFile(pathToFile+"/nTuple_DYJ_JetToTau_ElecTau.root","READ");
     
     backgroundDYTauTau    = fBackgroundDYTauTau    ? (TTree*)(fBackgroundDYTauTau    -> Get(tree)) : 0;
     backgroundDYElectoTau = fBackgroundDYElecToTau ? (TTree*)(fBackgroundDYElecToTau -> Get(tree)) : 0;
@@ -1192,7 +1192,7 @@ void plotElecTau( Int_t mH_           = 120,
 
   //TCut apZ2(Form("((%s)>%f && (%s)<120)",antiWcut.c_str(),antiWsdb,antiWcut.c_str()));
   TCut apZ2(Form("((%s)>60 && (%s)<120)",antiWcut.c_str(),antiWcut.c_str()));
-  TCut hltevent("vetoEvent==0 && pairIndex<1 && HLTx==1 && ( run>=163269 || run==1)");
+  TCut hltevent("pairIndexMoriond<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");
   //TCut hltmatch("(HLTmatch==1 || run>=203773)");
   TCut hltmatch("HLTmatch==1");
   //TCut hltmatch("");
