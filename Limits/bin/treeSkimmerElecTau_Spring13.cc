@@ -665,6 +665,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
+  float visGenTauMass, genTauPt, genTauEta, genVMass;
+  int genDecayMode_;
   float leadPFChHadTrackPt_, leadPFChHadTrackEta_,leadPFChHadPt_, leadPFChHadEta_;
   float leadPFCandPt_, leadPFCandEta_;
 
@@ -835,6 +837,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("etaMom2",                 &etaMom2,"etaMom2/F");
   outTreePtOrd->Branch("phiMom2",                 &phiMom2,"phiMom2/F");
   outTreePtOrd->Branch("gammaFrac",               &gammaFrac,"gammaFrac/F");
+
+  outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
+  outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
+  outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
+  outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
 
   outTreePtOrd->Branch("leadPFChHadTrackPt",      &leadPFChHadTrackPt_,"leadPFChHadPt/F");
   outTreePtOrd->Branch("leadPFChHadTrackEta",     &leadPFChHadTrackEta_,"leadPFChHadEta/F");
@@ -1128,7 +1136,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("tightestAntiMu2WP",     1);   // ND
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
-  currentTree->SetBranchStatus("visibleGenTauMass"     ,0);
+  currentTree->SetBranchStatus("visibleGenTauMass"     ,1);
+  currentTree->SetBranchStatus("genDecayMode"          ,1);
   currentTree->SetBranchStatus("isTauLegMatched"       ,1);
   currentTree->SetBranchStatus("isElecLegMatched"      ,1);
   currentTree->SetBranchStatus("hasKft"                ,0);
@@ -1338,7 +1347,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
   float diTauCharge;
-  int tightestHPSDBWP,tightestHPSWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode;//IN
+  int tightestHPSDBWP,tightestHPSWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;//IN
   int tightestAntiEMVAWP, tightestAntiECutWP,tightestAntiEMVA3WP,AntiEMVA3category;//IN
   float hpsDB3H,hpsMVA,hpsMVA2,AntiEMVA3raw;//IN
   int tightestCutBasedWP, tightestMVAWP;
@@ -1362,7 +1371,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float emFraction, hasGsf, leadPFChargedHadrHcalEnergy, leadPFChargedHadrEcalEnergy;
   int signalPFChargedHadrCands, signalPFGammaCands;
   float rhoFastJet,rhoNeutralFastJet;
-  float visibleTauMass;
+  float visibleTauMass, visibleGenTauMass;
   float dxy1, dxy2, dz1, scEta1;
   float pZetaSig;
   float chIsoLeg2, phIsoLeg2;
@@ -1453,12 +1462,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("nPUVerticesM1",        &nPUVerticesM1);
   currentTree->SetBranchAddress("genDecay",             &genDecay);
   currentTree->SetBranchAddress("decayMode",            &decayMode);
+  currentTree->SetBranchAddress("genDecayMode",         &genDecayMode);
   currentTree->SetBranchAddress("numOfLooseIsoDiTaus",  &numOfLooseIsoDiTaus);
   currentTree->SetBranchAddress("elecFlag",             &elecFlag);
   currentTree->SetBranchAddress("isTauLegMatched",      &isTauLegMatched);
   currentTree->SetBranchAddress("isElecLegMatched",     &isElecLegMatched);
   currentTree->SetBranchAddress("vetoEvent",            &vetoEvent);
   currentTree->SetBranchAddress("visibleTauMass",       &visibleTauMass);
+  currentTree->SetBranchAddress("visibleGenTauMass",    &visibleGenTauMass);
   currentTree->SetBranchAddress("leadPFChargedHadrTrackPt",  &leadPFChargedHadrCandTrackPt);
   currentTree->SetBranchAddress("leadPFChargedHadrTrackP",   &leadPFChargedHadrCandTrackP);
   currentTree->SetBranchAddress("leadPFChargedHadrPt",  &leadPFChargedHadrCandPt);
@@ -1806,6 +1817,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
       
+    //genTau Info
+    genTauPt   = (*genDiTauLegsP4)[1].Pt();
+    genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    visGenTauMass = visibleGenTauMass;
+    genDecayMode_ = genDecayMode;
+    genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
+    
     ////////////////////////////////////////////////////////////////////
 
     TLorentzVector corrMET_tmp;
