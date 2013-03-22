@@ -1173,7 +1173,25 @@ void plotElecTau( Int_t mH_           = 120,
     tpt = tpt&&TCut("TMath::Abs(etaL2)>1.5");
 
  ////// TAU ISO //////
-  TCut tiso("tightestHPSMVAWP>=0 && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); 
+  TCut tisoMoriond("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //Moriond
+  TCut tisoAntiETightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>2"); //AntiETightMVA3
+  TCut tisoAntiEVTightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>3"); //AntiEVTightMVA3
+  TCut tisoHPSMVA2("tightestHPSMVA2WP>=0 && tightestAntiMuWP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //HPSMVA2
+  TCut tisoAntiMu2("tightestHPSMVA2WP>=0 && tightestAntiMu2WP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //AntiMu22
+  TCut tisoSpring13("tightestHPSMVA2WP>=0 && tightestAntiMu2WP>0  && tightestAntiEMVA3WP>3"); //Spring13
+  TCut tiso("");
+  if(selection_.find("Moriond")!=string::npos)
+    tiso = tisoMoriond;
+  if(selection_.find("AntiETightMVA3")!=string::npos)
+    tiso = tisoAntiETightMVA3;
+  if(selection_.find("AntiEVTightMVA3")!=string::npos)
+    tiso = tisoAntiEVTightMVA3;
+  if(selection_.find("HPSMVA2")!=string::npos)
+    tiso = tisoHPSMVA2;
+  if(selection_.find("AntiMu2")!=string::npos)
+    tiso = tisoAntiMu2;
+  if(selection_.find("Spring13")!=string::npos)
+    tiso = tisoSpring13;
   TCut ltiso("tightestHPSMVAWP>-99 && tightestAntiECutWP<1 ");
   TCut mtiso("hpsMVA>0.7");
 
@@ -1192,7 +1210,26 @@ void plotElecTau( Int_t mH_           = 120,
 
   //TCut apZ2(Form("((%s)>%f && (%s)<120)",antiWcut.c_str(),antiWsdb,antiWcut.c_str()));
   TCut apZ2(Form("((%s)>60 && (%s)<120)",antiWcut.c_str(),antiWcut.c_str()));
-  TCut hltevent("pairIndexMoriond<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");
+  TCut hlteventMoriond("pairIndexMoriond<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//Moriond
+  TCut hlteventAntiETightMVA3("pairIndexAntiETightMVA3<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//AntiETightMVA3
+  TCut hlteventAntiEVTightMVA3("pairIndexAntiEVTightMVA3<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//AntiEVTightMVA3
+  TCut hlteventHPSMVA2("pairIndexHPSMVA2<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//HPSMVA2
+  TCut hlteventAntiMu2("pairIndexAntiMu2<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//AntiMu2
+  TCut hlteventSpring13("pairIndexSpring13<1 && vetoEvent==0 &&  HLTx==1 && ( run>=163269 || run==1)");//Spring13
+  TCut hltevent("");
+  if(selection_.find("Moriond")!=string::npos)
+    hltevent = hlteventMoriond;
+  if(selection_.find("AntiETightMVA3")!=string::npos)
+    hltevent = hlteventAntiETightMVA3;
+  if(selection_.find("AntiEVTightMVA3")!=string::npos)
+    hltevent = hlteventAntiEVTightMVA3;
+  if(selection_.find("HPSMVA2")!=string::npos)
+    hltevent = hlteventHPSMVA2;
+  if(selection_.find("AntiMu2")!=string::npos)
+    hltevent = hlteventAntiMu2;
+  if(selection_.find("Spring13")!=string::npos)
+    hltevent = hlteventSpring13;
+
   //TCut hltmatch("(HLTmatch==1 || run>=203773)");
   TCut hltmatch("HLTmatch==1");
   //TCut hltmatch("");
