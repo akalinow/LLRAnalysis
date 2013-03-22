@@ -100,10 +100,19 @@ edm::LumiReWeighting LumiWeightsD_("/data_CMS/cms/htautau/Moriond/tools/MC_Summe
 enum BVariation{kNo = 0, kDown = 1, kUp = 2};
 BtagSF* btsf = new BtagSF(12345);
 
-float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca") {
+float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca1") {
 
-  return L1etm*0.8716; //difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
+  //difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
+  if(method=="Michal") 
+    return L1etm*0.8716; 
 
+  // include caloMEtNoHF corrections and parametrized dependance on caloMEtNoHF (fit to the ratio of the l1etm*corr1 mean values in data/MC)
+  else if(method=="Luca1") 
+    return L1etm*(caloMEtNoHFcorr/caloMEtNoHF)*(0.01134*TMath::Sqrt(caloMEtNoHF)+0.9422) ;
+
+  // soon : gaussian smearing to be introduced
+
+  else return L1etm;
 }
 
 float* computeZeta(LV leg1, LV leg2, LV MEt){
@@ -2222,7 +2231,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     else { // MC or embedded
 
       // float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca")
-      L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Nadir");
+      L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Luca1");
       L1etmWeight_= 1;            
 
       HLTxQCD     = 1.0;
