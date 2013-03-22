@@ -731,7 +731,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // event id
   ULong64_t event_,run_,lumi_;
   int index_;
-  int pairIndex_, pairIndexSoft_;
+  int pairIndexMoriond_,pairIndexHPSMVA2_,pairIndexAntiMu2_,pairIndexSpring13_, pairIndexSoft_;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
   
@@ -1027,7 +1027,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("run",  &run_,  "run/l");
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
-  outTreePtOrd->Branch("pairIndex",     &pairIndex_,     "pairIndex/I");
+  outTreePtOrd->Branch("pairIndexMoriond", &pairIndexMoriond_, "pairIndexMoriond/I");
+  outTreePtOrd->Branch("pairIndexHPSMVA2", &pairIndexHPSMVA2_, "pairIndexHPSMVA2/I");
+  outTreePtOrd->Branch("pairIndexAntiMu2", &pairIndexAntiMu2_, "pairIndexAntiMu2/I");
+  outTreePtOrd->Branch("pairIndexSpring13", &pairIndexSpring13_, "pairIndexSpring13/I");
   outTreePtOrd->Branch("pairIndexSoft", &pairIndexSoft_, "pairIndexSoft/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
@@ -1472,7 +1475,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   ULong64_t lastRun   = 0;
   ULong64_t lastLumi  = 0;
 
-  int counter         = 0;
+  int counterMoriond  = 0;
+  int counterHPSMVA2  = 0;
+  int counterAntiMu2  = 0;
+  int counterSpring13  = 0;
   int counterSoft     = 0;
 
   // define JSON selector //
@@ -2385,40 +2391,92 @@ void fillTrees_MuTauStream(TChain* currentTree,
     lumi_            = lumi;
     index_           = index;
    
+    int pairIndexMoriond = -1; 
+    int pairIndexSoft = -1;
+    int pairIndexHPSMVA2 = -1;
+    int pairIndexAntiMu2 = -1; 
+    int pairIndexSpring13 = -1;  
 
-    int pairIndex = -1;     int pairIndexSoft = -1;
-    bool passQualityCuts     = (ptL1>20 && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    bool passQualityCutsSoft = (ptL1>9  && ptL2>20 && tightestHPSMVAWP_>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft);
+    bool passQualityCutsMoriond = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsHPSMVA2 = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsAntiMu2 = (ptL1>20 && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsSpring13 = (ptL1>20 && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsSoft = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft);
 
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
 
       lastEvent = event;
       lastLumi  = lumi;
       lastRun   = run;
-      counter     = 0;
-      counterSoft = 0;
+      counterMoriond   = 0;
+      counterHPSMVA2   = 0;
+      counterAntiMu2   = 0;
+      counterSpring13   = 0;
 
-      if( passQualityCuts ){
-	pairIndex = counter;
-	counter++;
+      if( passQualityCutsMoriond ){
+	pairIndexMoriond = counterMoriond;
+	counterMoriond++;
       }
       else
-	pairIndex = -1;
+	pairIndexMoriond = -1;
 
+      if( passQualityCutsHPSMVA2 ){
+	pairIndexHPSMVA2 = counterHPSMVA2;
+	counterHPSMVA2++;
+      }
+      else
+	pairIndexHPSMVA2 = -1;
+
+      if( passQualityCutsAntiMu2 ){
+	pairIndexAntiMu2 = counterAntiMu2;
+	counterAntiMu2++;
+      }
+      else
+	pairIndexAntiMu2 = -1;
+
+      if( passQualityCutsSpring13 ){
+	pairIndexSpring13 = counterSpring13;
+	counterSpring13++;
+      }
+      else
+	pairIndexSpring13 = -1;
+      
       if( passQualityCutsSoft ){
 	pairIndexSoft = counterSoft;
 	counterSoft++;
       }
       else
 	pairIndexSoft = -1;
+      
     }
     else{
-      if( passQualityCuts ){
-	pairIndex = counter;
-	counter++;
+      if( passQualityCutsMoriond ){
+	pairIndexMoriond = counterMoriond;
+	counterMoriond++;
       }
       else
-	pairIndex = -1;
+	pairIndexMoriond = -1;
+
+      if( passQualityCutsHPSMVA2 ){
+	pairIndexHPSMVA2 = counterHPSMVA2;
+	counterHPSMVA2++;
+      }
+      else
+	pairIndexHPSMVA2 = -1;
+
+      if( passQualityCutsAntiMu2 ){
+	pairIndexAntiMu2 = counterAntiMu2;
+	counterAntiMu2++;
+      }
+      else
+	pairIndexAntiMu2 = -1;
+
+      if( passQualityCutsSpring13 ){
+	pairIndexSpring13 = counterSpring13;
+	counterSpring13++;
+      }
+      else
+	pairIndexSpring13 = -1;
 
       if( passQualityCutsSoft ){
 	pairIndexSoft = counterSoft;
@@ -2428,9 +2486,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	pairIndexSoft = -1;
     }
 
-    pairIndex_     = pairIndex;
+    pairIndexMoriond_     = pairIndexMoriond;
     pairIndexSoft_ = pairIndexSoft;
-    
+    pairIndexHPSMVA2_ = pairIndexHPSMVA2;
+    pairIndexAntiMu2_ = pairIndexAntiMu2;
+    pairIndexSpring13_ = pairIndexSpring13;
+
     outTreePtOrd->Fill();
   }
 
