@@ -1093,8 +1093,9 @@ void plotElecTau( Int_t mH_           = 120,
   TFile *fBackgroundOthers= new TFile(pathToFile+"/nTuple_Others_ElecTau.root","READ");
 
   vector<int> hMasses;
-  hMasses.push_back(110);hMasses.push_back(115);hMasses.push_back(120);hMasses.push_back(125);
-  hMasses.push_back(130);hMasses.push_back(135);hMasses.push_back(140);hMasses.push_back(145);
+  hMasses.push_back(90);hMasses.push_back(95);hMasses.push_back(100);hMasses.push_back(105);hMasses.push_back(110);
+  hMasses.push_back(115);hMasses.push_back(120);hMasses.push_back(125);hMasses.push_back(130);hMasses.push_back(135);
+  hMasses.push_back(140);hMasses.push_back(145);hMasses.push_back(150);hMasses.push_back(155); hMasses.push_back(160);
 
   const int nProd=3;
   const int nMasses=15;
