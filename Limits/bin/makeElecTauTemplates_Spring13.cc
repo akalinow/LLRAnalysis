@@ -24,6 +24,10 @@ using namespace std;
 float higgsXsection(int mH = 125, string process = "ggH"){
   float xsection = 1.0;
   if(process.find("ggH")!=string::npos){
+    if(mH == 90) xsection = 36.80                   * 8.33E-02;
+    if(mH == 95) xsection = 33.19                   * 8.32E-02;
+    if(mH == 100) xsection = 30.12                   * 8.28E-02;
+    if(mH == 105) xsection = 27.39                   * 8.17E-02;
     if(mH == 110) xsection = 25.04                   * 7.95E-02;
     if(mH == 115) xsection = 22.96                   * 7.58E-02;
     if(mH == 120) xsection = 21.13                   * 7.04E-02;
@@ -32,8 +36,15 @@ float higgsXsection(int mH = 125, string process = "ggH"){
     if(mH == 135) xsection = 16.79                   * 4.49E-02;
     if(mH == 140) xsection = 15.63                   * 3.52E-02;
     if(mH == 145) xsection = 14.59                   * 2.61E-02;
+    if(mH == 150) xsection = 13.65                   * 1.79E-02;
+    if(mH == 155) xsection = 12.79                   * 1.05E-02;
+    if(mH == 160) xsection = 11.95                   * 3.96E-03;
   }
   if(process.find("qqH")!=string::npos){
+    if(mH == 90) xsection = 2.191                   * 8.33E-02;
+    if(mH == 95) xsection = 2.084                   * 8.32E-02;
+    if(mH == 100) xsection = 1.988                   * 8.28E-02;
+    if(mH == 105) xsection = 1.897                   * 8.17E-02;
     if(mH == 110) xsection = 1.809                   * 7.95E-02;
     if(mH == 115) xsection = 1.729                   * 7.58E-02;
     if(mH == 120) xsection = 1.649                   * 7.04E-02;
@@ -42,8 +53,15 @@ float higgsXsection(int mH = 125, string process = "ggH"){
     if(mH == 135) xsection = 1.448                   * 4.49E-02;
     if(mH == 140) xsection = 1.389                   * 3.52E-02;
     if(mH == 145) xsection = 1.333                   * 2.61E-02;
+    if(mH == 150) xsection = 1.280                   * 1.79E-02;
+    if(mH == 155) xsection = 1.231                   * 1.05E-02;
+    if(mH == 160) xsection = 1.185                   * 3.96E-03;
   }
   if(process.find("VH")!=string::npos){
+    if(mH == 90) xsection = (1.972 + 1.057 + 0.3233)   * 8.33E-02;
+    if(mH == 95) xsection = (1.676 + 0.9060 + 0.2812)   * 8.32E-02;
+    if(mH == 100) xsection = (1.432 + 0.7807 + 0.2454)   * 8.28E-02;
+    if(mH == 105) xsection = (1.229 + 0.6750 + 0.2149)   * 8.17E-02;
     if(mH == 110) xsection = (1.060+0.5869+0.1887)   * 7.95E-02;
     if(mH == 115) xsection = (0.9165+0.5117+0.1663)  * 7.58E-02;
     if(mH == 120) xsection = (0.7966+0.4483+0.1470)  * 7.04E-02;
@@ -52,6 +70,9 @@ float higgsXsection(int mH = 125, string process = "ggH"){
     if(mH == 135) xsection = (0.5351+0.3074+0.1031)  * 4.49E-02;
     if(mH == 140) xsection = (0.4713+0.2728+0.09207) * 3.52E-02;
     if(mH == 145) xsection = (0.4164+0.2424+0.08246) * 2.61E-02;
+    if(mH == 150) xsection = (0.3681 + 0.2159 + 0.07403) * 1.79E-02;
+    if(mH == 155) xsection = (0.3252 + 0.1923 + 0.06664) * 1.05E-02;
+    if(mH == 160) xsection = (0.2817 + 0.1687 + 0.06013) * 3.96E-03;
   }
   return xsection;
 }
