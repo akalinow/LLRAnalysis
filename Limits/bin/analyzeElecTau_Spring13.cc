@@ -836,7 +836,21 @@ void plotElecTau( Int_t mH_           = 120,
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
-  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
+  string selectionBins;
+  if(selection_.find("inclusive")!=string::npos)
+    selectionBins="inclusive";
+  if(selection_.find("boostLow")!=string::npos)
+    selectionBins="boostLow";
+  if(selection_.find("boostHigh")!=string::npos)
+    selectionBins="boostHigh";
+  if(selection_.find("novbfLow")!=string::npos)
+    selectionBins="novbfLow";
+  if(selection_.find("novbfHigh")!=string::npos)
+    selectionBins="novbfHigh";
+  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos )
+    selectionBins="vbf";
+
+  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selectionBins, variable_);
   cout<<"Bins : "<<endl;
   for(int i=0 ; i<bins.GetSize() ; i++)cout<<"bin "<<i<<"   "<<bins[i]<<endl;
   
@@ -971,6 +985,10 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hW3JetsMediumTauIsoRelVBFMinusSS  = new TH1F( "hW3JetsMediumTauIsoRelVBFMinusSS" ,  "W+3jets (medium tau-iso)-SS"  , nBins , bins.GetArray());
   TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
+  TH1F* hggH90     = new TH1F( "hggH90"    ,"ggH90"                , nBins , bins.GetArray()); hggH90->SetLineWidth(2);
+  TH1F* hggH95     = new TH1F( "hggH95"    ,"ggH95"                , nBins , bins.GetArray()); hggH95->SetLineWidth(2);
+  TH1F* hggH100    = new TH1F( "hggH100"   ,"ggH100"               , nBins , bins.GetArray()); hggH100->SetLineWidth(2);
+  TH1F* hggH105    = new TH1F( "hggH105"   ,"ggH105"               , nBins , bins.GetArray()); hggH105->SetLineWidth(2);
   TH1F* hggH110    = new TH1F( "hggH110"   ,"ggH110"               , nBins , bins.GetArray()); hggH110->SetLineWidth(2);
   TH1F* hggH115    = new TH1F( "hggH115"   ,"ggH115"               , nBins , bins.GetArray()); hggH115->SetLineWidth(2);
   TH1F* hggH120    = new TH1F( "hggH120"   ,"ggH120"               , nBins , bins.GetArray()); hggH120->SetLineWidth(2);
@@ -979,6 +997,13 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hggH135    = new TH1F( "hggH135"   ,"ggH135"               , nBins , bins.GetArray()); hggH135->SetLineWidth(2);
   TH1F* hggH140    = new TH1F( "hggH140"   ,"ggH140"               , nBins , bins.GetArray()); hggH140->SetLineWidth(2);
   TH1F* hggH145    = new TH1F( "hggH145"   ,"ggH145"               , nBins , bins.GetArray()); hggH145->SetLineWidth(2);
+  TH1F* hggH150    = new TH1F( "hggH150"   ,"ggH150"               , nBins , bins.GetArray()); hggH150->SetLineWidth(2);
+  TH1F* hggH155    = new TH1F( "hggH155"   ,"ggH155"               , nBins , bins.GetArray()); hggH155->SetLineWidth(2);
+  TH1F* hggH160    = new TH1F( "hggH160"   ,"ggH160"               , nBins , bins.GetArray()); hggH160->SetLineWidth(2);
+  TH1F* hqqH90     = new TH1F( "hqqH90"    ,"qqH90"                , nBins , bins.GetArray()); hqqH90->SetLineWidth(2);
+  TH1F* hqqH95     = new TH1F( "hqqH95"    ,"qqH95"                , nBins , bins.GetArray()); hqqH95->SetLineWidth(2);
+  TH1F* hqqH100    = new TH1F( "hqqH100"   ,"qqH100"               , nBins , bins.GetArray()); hqqH100->SetLineWidth(2);
+  TH1F* hqqH105    = new TH1F( "hqqH105"   ,"qqH105"               , nBins , bins.GetArray()); hqqH105->SetLineWidth(2);
   TH1F* hqqH110    = new TH1F( "hqqH110"   ,"qqH110"               , nBins , bins.GetArray()); hqqH110->SetLineWidth(2);
   TH1F* hqqH115    = new TH1F( "hqqH115"   ,"qqH115"               , nBins , bins.GetArray()); hqqH115->SetLineWidth(2);
   TH1F* hqqH120    = new TH1F( "hqqH120"   ,"qqH120"               , nBins , bins.GetArray()); hqqH120->SetLineWidth(2);
@@ -987,6 +1012,13 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hqqH135    = new TH1F( "hqqH135"   ,"qqH135"               , nBins , bins.GetArray()); hqqH135->SetLineWidth(2); 
   TH1F* hqqH140    = new TH1F( "hqqH140"   ,"qqH140"               , nBins , bins.GetArray()); hqqH140->SetLineWidth(2);
   TH1F* hqqH145    = new TH1F( "hqqH145"   ,"qqH145"               , nBins , bins.GetArray()); hqqH145->SetLineWidth(2);
+  TH1F* hqqH150    = new TH1F( "hqqH150"   ,"qqH150"               , nBins , bins.GetArray()); hqqH150->SetLineWidth(2);
+  TH1F* hqqH155    = new TH1F( "hqqH155"   ,"qqH155"               , nBins , bins.GetArray()); hqqH155->SetLineWidth(2);
+  TH1F* hqqH160    = new TH1F( "hqqH160"   ,"qqH160"               , nBins , bins.GetArray()); hqqH160->SetLineWidth(2);
+  TH1F* hVH90      = new TH1F( "hVH90"    ,"VH90"                  , nBins , bins.GetArray()); hVH90->SetLineWidth(2);
+  TH1F* hVH95      = new TH1F( "hVH95"    ,"VH95"                  , nBins , bins.GetArray()); hVH95->SetLineWidth(2);
+  TH1F* hVH100     = new TH1F( "hVH100"   ,"VH100"                 , nBins , bins.GetArray()); hVH100->SetLineWidth(2);
+  TH1F* hVH105     = new TH1F( "hVH105"   ,"VH105"                 , nBins , bins.GetArray()); hVH105->SetLineWidth(2);
   TH1F* hVH110     = new TH1F( "hVH110"   ,"VH110"                 , nBins , bins.GetArray()); hVH110->SetLineWidth(2);
   TH1F* hVH115     = new TH1F( "hVH115"   ,"VH115"                 , nBins , bins.GetArray()); hVH115->SetLineWidth(2);
   TH1F* hVH120     = new TH1F( "hVH120"   ,"VH120"                 , nBins , bins.GetArray()); hVH120->SetLineWidth(2);
@@ -995,6 +1027,9 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hVH135     = new TH1F( "hVH135"   ,"VH135"                 , nBins , bins.GetArray()); hVH135->SetLineWidth(2);
   TH1F* hVH140     = new TH1F( "hVH140"   ,"VH140"                 , nBins , bins.GetArray()); hVH140->SetLineWidth(2);
   TH1F* hVH145     = new TH1F( "hVH145"   ,"VH145"                 , nBins , bins.GetArray()); hVH145->SetLineWidth(2);
+  TH1F* hVH150     = new TH1F( "hVH150"   ,"VH150"                 , nBins , bins.GetArray()); hVH150->SetLineWidth(2);
+  TH1F* hVH155     = new TH1F( "hVH155"   ,"VH155"                 , nBins , bins.GetArray()); hVH155->SetLineWidth(2);
+  TH1F* hVH160     = new TH1F( "hVH160"   ,"VH160"                 , nBins , bins.GetArray()); hVH160->SetLineWidth(2);
 
   vector<string> SUSYhistos;
   //SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
@@ -1062,9 +1097,9 @@ void plotElecTau( Int_t mH_           = 120,
   hMasses.push_back(130);hMasses.push_back(135);hMasses.push_back(140);hMasses.push_back(145);
 
   const int nProd=3;
-  const int nMasses=8;
+  const int nMasses=15;
   TString nameProd[nProd]={"GGFH","VBFH","VH"};
-  TString nameMasses[nMasses]={"110","115","120","125","130","135","140","145"};
+  TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
 
   TFile *fSignal[nProd][nMasses];
 
@@ -2001,6 +2036,18 @@ void plotElecTau( Int_t mH_           = 120,
 	    hSgn3->Scale(magnifySgn_);
 	    hSgn->Add(hSgn3,1.0);
 	  }
+	  if((it->first).find(string(Form("ggH%d",90)))!=string::npos){
+	    hggH90->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",95)))!=string::npos){
+	    hggH95->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",100)))!=string::npos){
+	    hggH100->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",105)))!=string::npos){
+	    hggH105->Add(h1,1.0);
+	  }
 	  if((it->first).find(string(Form("ggH%d",110)))!=string::npos){
 	    hggH110->Add(h1,1.0);
 	  }
@@ -2024,6 +2071,27 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  if((it->first).find(string(Form("ggH%d",145)))!=string::npos){
 	    hggH145->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",150)))!=string::npos){
+	    hggH150->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",155)))!=string::npos){
+	    hggH155->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("ggH%d",160)))!=string::npos){
+	    hggH160->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",90)))!=string::npos){
+	    hqqH90->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",95)))!=string::npos){
+	    hqqH95->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",100)))!=string::npos){
+	    hqqH100->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",105)))!=string::npos){
+	    hqqH105->Add(h1,1.0);
 	  }
 	  if((it->first).find(string(Form("qqH%d",110)))!=string::npos){
 	    hqqH110->Add(h1,1.0);
@@ -2049,6 +2117,27 @@ void plotElecTau( Int_t mH_           = 120,
 	  if((it->first).find(string(Form("qqH%d",145)))!=string::npos){
 	    hqqH145->Add(h1,1.0);
 	  }
+	  if((it->first).find(string(Form("qqH%d",150)))!=string::npos){
+	    hqqH150->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",155)))!=string::npos){
+	    hqqH155->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("qqH%d",160)))!=string::npos){
+	    hqqH160->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",90)))!=string::npos){
+	    hVH90->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",95)))!=string::npos){
+	    hVH95->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",100)))!=string::npos){
+	    hVH100->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",105)))!=string::npos){
+	    hVH105->Add(h1,1.0);
+	  }
 	  if((it->first).find(string(Form("VH%d",110)))!=string::npos){
 	    hVH110->Add(h1,1.0);
 	  }
@@ -2072,6 +2161,15 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  if((it->first).find(string(Form("VH%d",145)))!=string::npos){
 	    hVH145->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",150)))!=string::npos){
+	    hVH150->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",155)))!=string::npos){
+	    hVH155->Add(h1,1.0);
+	  }
+	  if((it->first).find(string(Form("VH%d",160)))!=string::npos){
+	    hVH160->Add(h1,1.0);
 	  }
 
 	  if((it->first).find("SUSY")!=string::npos){
@@ -2420,12 +2518,12 @@ void plotElecTau( Int_t mH_           = 120,
   hDataAntiIsoLooseTauIsoQCD->Write();
   hData->Write();
   hParameters->Write();
-  hggH110->Write(); hggH115->Write(); hggH120->Write(); hggH125->Write();  
-  hggH130->Write(); hggH135->Write(); hggH140->Write(); hggH145->Write(); 
-  hqqH110->Write(); hqqH115->Write(); hqqH120->Write(); hqqH125->Write();  
-  hqqH130->Write(); hqqH135->Write(); hqqH140->Write(); hqqH145->Write();  
-  hVH110->Write();  hVH115->Write();  hVH120->Write();  hVH125->Write();  
-  hVH130->Write();  hVH135->Write();  hVH140->Write();  hVH145->Write(); 
+  hggH90->Write(); hggH95->Write() ; hggH100->Write(); hggH105->Write(); hggH110->Write(); hggH115->Write(); hggH120->Write(); hggH125->Write();  
+  hggH130->Write(); hggH135->Write(); hggH140->Write(); hggH145->Write(); hggH150->Write(); hggH155->Write();hggH160->Write(); 
+  hqqH90->Write(); hqqH95->Write() ; hqqH100->Write(); hqqH105->Write(); hqqH110->Write(); hqqH115->Write(); hqqH120->Write(); hqqH125->Write();  
+  hqqH130->Write(); hqqH135->Write(); hqqH140->Write(); hqqH145->Write(); hqqH150->Write(); hqqH155->Write();hqqH160->Write(); 
+  hVH90->Write(); hVH95->Write() ; hVH100->Write(); hVH105->Write(); hVH110->Write();  hVH115->Write();  hVH120->Write();  hVH125->Write();  
+  hVH130->Write();  hVH135->Write();  hVH140->Write();  hVH145->Write(); hVH150->Write(); hVH155->Write();hVH160->Write();
   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
     ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
   }
@@ -2440,9 +2538,9 @@ void plotElecTau( Int_t mH_           = 120,
   delete hVV; delete hSgn; delete hSgn1; delete hSgn2; delete hSgn3; delete hData; delete hParameters;
   delete hW3JetsLooseTauIso; delete hW3JetsMediumTauIso; delete hW3JetsMediumTauIsoRelVBF; delete hW3JetsMediumTauIsoRelVBFMinusSS; 
   delete hDataAntiIsoLooseTauIso; delete hDataAntiIsoLooseTauIsoQCD;
-  delete hggH110; delete hggH115 ; delete hggH120; delete hggH125; delete hggH130; delete hggH135; delete hggH140; delete hggH145;
-  delete hqqH110; delete hqqH115 ; delete hqqH120; delete hqqH125; delete hqqH130; delete hqqH135; delete hqqH140; delete hqqH145;
-  delete hVH110;  delete hVH115 ;  delete hVH120;  delete hVH125;  delete hVH130;  delete hVH135;  delete hVH140;  delete hVH145;
+  delete hggH90; delete hggH95 ; delete hggH100; delete hggH105 ; delete hggH110; delete hggH115 ; delete hggH120; delete hggH125; delete hggH130; delete hggH135; delete hggH140; delete hggH145; delete hggH150; delete hggH155; delete hggH160; 
+  delete hqqH90; delete hqqH95 ; delete hqqH100; delete hqqH105 ; delete hqqH110; delete hqqH115 ; delete hqqH120; delete hqqH125; delete hqqH130; delete hqqH135; delete hqqH140; delete hqqH145; delete hqqH150; delete hqqH155; delete hqqH160; 
+  delete hVH90; delete hVH95 ; delete hVH100; delete hVH105 ; delete hVH110;  delete hVH115 ;  delete hVH120;  delete hVH125;  delete hVH130;  delete hVH135;  delete hVH140;  delete hVH145; delete hVH150; delete hVH155; delete hVH160; 
   for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
   delete aStack;  delete hEWK; delete hSiml; delete hDataEmb;  delete hRatio; delete line;
   delete fout;
@@ -2483,6 +2581,9 @@ void plotElecTauAll( Int_t useEmbedded = 1, TString outputDir = ""){
   //variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
   
+  mH.push_back(90);
+  mH.push_back(95);
+  mH.push_back(100);
   mH.push_back(105);
   mH.push_back(110);
   mH.push_back(115);
@@ -2492,6 +2593,8 @@ void plotElecTauAll( Int_t useEmbedded = 1, TString outputDir = ""){
   mH.push_back(135);
   mH.push_back(140);
   mH.push_back(145);
+  mH.push_back(150);
+  mH.push_back(155);
   mH.push_back(160);
   
 //   plotElecTau(125,1,"inclusive",""   ,"decayMode",     "#tau_{h} decay mode","units"   ,outputDir,3,0,3, 5.0,1.0,0,1.4);

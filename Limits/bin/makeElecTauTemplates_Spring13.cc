@@ -1419,7 +1419,7 @@ void produce(
 
 
 
-void produceAll(  TString outputDir = "ABCD" ){
+void produceAll(  TString outputDir = "AntiEVTight" ){
 
   vector<string> variables;
   vector<int> mH;
@@ -1427,6 +1427,11 @@ void produceAll(  TString outputDir = "ABCD" ){
   //variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
 
+  mH.push_back(90);
+  mH.push_back(95);
+  mH.push_back(100);
+  mH.push_back(105);
+  mH.push_back(110);
   mH.push_back(110);
   mH.push_back(115);
   mH.push_back(120);
@@ -1435,6 +1440,9 @@ void produceAll(  TString outputDir = "ABCD" ){
   mH.push_back(135);
   mH.push_back(140);
   mH.push_back(145);
+  mH.push_back(150);
+  mH.push_back(155);
+  mH.push_back(160);
 
   //mH.push_back(90);
   //mH.push_back(100);
@@ -1454,41 +1462,78 @@ void produceAll(  TString outputDir = "ABCD" ){
   for(unsigned int i = 0 ; i < variables.size(); i++){
     for(unsigned j = 0; j < mH.size(); j++){
 //       if(!DO2DFIT){
-       produce(mH[j],variables[i], ""        , "inclusiveMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "inclusiveMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "inclusiveMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "inclusiveMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "inclusiveMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "inclusiveMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "inclusiveMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "inclusiveMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "inclusiveMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "inclusiveMoriond", outputDir);
 
-       produce(mH[j],variables[i], ""        , "novbfLowMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "novbfLowMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "novbfLowMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "novbfLowMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "novbfLowMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "novbfLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "novbfLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "novbfLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "novbfLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "novbfLowMoriond", outputDir);
 
-       produce(mH[j],variables[i], ""        , "novbfHighMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "novbfHighMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "novbfHighMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "novbfHighMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "novbfHighMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "novbfHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "novbfHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "novbfHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "novbfHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "novbfHighMoriond", outputDir);
 
-       produce(mH[j],variables[i], ""        , "boostLowMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "boostLowMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "boostLowMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "boostLowMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "boostLowMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "boostLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "boostLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "boostLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "boostLowMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "boostLowMoriond", outputDir);
  
-       produce(mH[j],variables[i], ""        , "boostHighMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "boostHighMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "boostHighMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "boostHighMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "boostHighMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "boostHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "boostHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "boostHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "boostHighMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "boostHighMoriond", outputDir);
 
-       produce(mH[j],variables[i], ""        , "vbfMoriond", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "vbfMoriond", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "vbfMoriond", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "vbfMoriond", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "vbfMoriond", outputDir);
+//        produce(mH[j],variables[i], ""        , "vbfMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauUp"   , "vbfMoriond", outputDir);
+//        produce(mH[j],variables[i], "TauDown" , "vbfMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetUp"   , "vbfMoriond", outputDir);
+//        produce(mH[j],variables[i], "JetDown" , "vbfMoriond", outputDir);
+
+       produce(mH[j],variables[i], ""        , "inclusiveAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "inclusiveAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "inclusiveAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "inclusiveAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "inclusiveAntiEVTightMVA3", outputDir);
+
+       produce(mH[j],variables[i], ""        , "novbfLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "novbfLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "novbfLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "novbfLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "novbfLowAntiEVTightMVA3", outputDir);
+
+       produce(mH[j],variables[i], ""        , "novbfHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "novbfHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "novbfHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "novbfHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "novbfHighAntiEVTightMVA3", outputDir);
+
+       produce(mH[j],variables[i], ""        , "boostLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "boostLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "boostLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "boostLowAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "boostLowAntiEVTightMVA3", outputDir);
+ 
+       produce(mH[j],variables[i], ""        , "boostHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "boostHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "boostHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "boostHighAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "boostHighAntiEVTightMVA3", outputDir);
+
+       produce(mH[j],variables[i], ""        , "vbfAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauUp"   , "vbfAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "TauDown" , "vbfAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetUp"   , "vbfAntiEVTightMVA3", outputDir);
+       produce(mH[j],variables[i], "JetDown" , "vbfAntiEVTightMVA3", outputDir);
+
 //       }//!DO2DFIT
 //       else{
 //        produce2DFit(mH[j],variables[i], ""        , "inclusiveMoriond", outputDir);
