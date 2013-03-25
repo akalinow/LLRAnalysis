@@ -1800,8 +1800,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
     diTauCharge_    = diTauCharge;
     
     //genTau Info
-    genTauPt   = (*genDiTauLegsP4)[1].Pt();
-    genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    if(genDiTauLegsP4->size()>1) {
+      genTauPt   = (*genDiTauLegsP4)[1].Pt();
+      genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    }
+    else genTauPt = genTauEta = -99;
+
     visGenTauMass = visibleGenTauMass;
     genDecayMode_ = genDecayMode;
     genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
@@ -2406,11 +2410,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
     int pairIndexAntiMu2 = -1; 
     int pairIndexSpring13 = -1;  
 
-    bool passQualityCutsMoriond = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    bool passQualityCutsHPSMVA2 = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    bool passQualityCutsAntiMu2 = (ptL1>20 && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsMoriond  = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsHPSMVA2  = (ptL1>20 && ptL2>20 && tightestAntiMuWP>2  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    bool passQualityCutsAntiMu2  = (ptL1>20 && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
     bool passQualityCutsSpring13 = (ptL1>20 && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    bool passQualityCutsSoft = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2 && tightestHPSMVAWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft);
+    bool passQualityCutsSoft     = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft);
 
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
 

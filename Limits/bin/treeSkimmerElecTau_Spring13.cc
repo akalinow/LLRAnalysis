@@ -1826,7 +1826,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauCharge_    = diTauCharge;
       
     // genTau Info
-    if(genDiTauLegsP4->size()>0) {
+    if(genDiTauLegsP4->size()>1) {
       genTauPt   = (*genDiTauLegsP4)[1].Pt();
       genTauEta  = (*genDiTauLegsP4)[1].Eta();
     }
