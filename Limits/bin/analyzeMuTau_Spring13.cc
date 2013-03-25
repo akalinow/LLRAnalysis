@@ -44,6 +44,21 @@
 #define studyQCDshape    false
 #define useZDataMC       false
 ///////////////////////////////////////////////////////////////////////////////////////////////
+TH1F* blindHistogram(TH1F* h, float xmin, float xmax, TString name) {
+
+  TH1F* hOut = (TH1F*)h->Clone(name);
+  int nBins  = hOut->GetNbinsX();
+  float x    = 0;
+
+  for(int i=1; i<nBins+1 ; i++) {
+    x = hOut->GetBinCenter(i);
+    if( x>xmin && x<xmax ) hOut->SetBinContent(i,-10);
+  }
+
+  return hOut;
+
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 
@@ -2308,6 +2323,72 @@ void plotMuTau( Int_t mH_           = 120,
 
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+
+  TH1F *hDataBlind, *hRatioBlind;
+
+  // Plot blinded histogram
+  if(variable_.Contains("Mass")) {
+
+    hDataBlind  = blindHistogram(hData,  100, 160, "hDataBlind");
+    hRatioBlind = blindHistogram(hRatio, 100, 160, "hRatioBlind");
+
+    c1 = new TCanvas("c2","",5,30,650,600);
+    c1->SetGrid(0,0);
+    c1->SetFillStyle(4000);
+    c1->SetFillColor(10);
+    c1->SetTicky();
+    c1->SetObjectStat(0);
+    c1->SetLogy(logy_);
+
+    pad1 = new TPad("pad2_1DEta","",0.05,0.22,0.96,0.97);
+    pad2 = new TPad("pad2_2DEta","",0.05,0.02,0.96,0.20);
+    
+    pad1->SetFillColor(0);
+    pad2->SetFillColor(0);
+    pad1->Draw();
+    pad2->Draw();
+    
+    pad1->cd();
+    pad1->SetLogy(logy_);
+    gStyle->SetOptStat(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetCanvasBorderMode(0);
+    gStyle->SetCanvasColor(0);
+    gStyle->SetPadBorderMode(0);
+    gStyle->SetPadColor(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetTitleBorderSize(0);
+    gStyle->SetTitleH(0.07);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleStyle(0);
+    gStyle->SetTitleOffset(1.3,"y");
+
+    hDataBlind->Draw("P");
+    aStack->Draw("HISTSAME");
+    hDataBlind->Draw("PSAME");
+    if(logy_) hSgn->Draw("HISTSAME");
+    leg->Draw();
+
+    pad2->cd();
+    gStyle->SetOptStat(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetCanvasBorderMode(0);
+    gStyle->SetCanvasColor(0);
+    gStyle->SetPadBorderMode(0);
+    gStyle->SetPadColor(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetTitleBorderSize(0);
+    gStyle->SetTitleH(0.07);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleStyle(0);
+    gStyle->SetTitleOffset(1.3,"y");
+
+    hRatioBlind->Draw("P");  
+
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+
+  }
 
   // templates for fitting
   TFile* fout = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()),"RECREATE");
