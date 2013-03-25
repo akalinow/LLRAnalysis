@@ -1534,7 +1534,7 @@ void plotElecTau( Int_t mH_           = 120,
   tMap["SS"]           = data;
 
   string shortProd[nProd]={"ggH","qqH","VH"};
-  string sMasses[nMasses] = {"110","115","120","125","130","135","140","145"};
+  string sMasses[nMasses] = {"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
 
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
