@@ -69,7 +69,7 @@
 #define USEFAKERATE false
 #define DOSVFITSTANDALONE false
 #define DOVBFMVA true
-#define DEBUG false
+#define DEBUG true
 
 // Weights of differents periods
 #define wA  0.04185 //0.067   L=810.99
@@ -1100,7 +1100,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // taus
   currentTree->SetBranchStatus("diTauLegsP4"           ,1);
-  currentTree->SetBranchStatus("genDiTauLegsP4"        ,1);
+  currentTree->SetBranchStatus("genDiTauLegsP4"        ,1); // ND
   currentTree->SetBranchStatus("genTausP4"             ,1);
   //currentTree->SetBranchStatus("chIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("nhIsoLeg1v1"           ,0);
@@ -1145,8 +1145,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("tightestAntiMu2WP",     1);   // ND
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
-  currentTree->SetBranchStatus("visibleGenTauMass"     ,1);
-  currentTree->SetBranchStatus("genDecayMode"          ,1);
+  currentTree->SetBranchStatus("visibleGenTauMass"     ,1); //ND
+  currentTree->SetBranchStatus("genDecayMode"          ,1); //ND
   currentTree->SetBranchStatus("isTauLegMatched"       ,1);
   currentTree->SetBranchStatus("isElecLegMatched"      ,1);
   currentTree->SetBranchStatus("hasKft"                ,0);
@@ -1291,7 +1291,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   std::vector< LV >*  genTausP4= new std::vector< LV >();
   currentTree->SetBranchAddress("genTausP4",    &genTausP4);
-
 
   std::vector< LV >* genVP4         = new std::vector< LV >();
   currentTree->SetBranchAddress("genVP4",          &genVP4);
@@ -1471,14 +1470,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("nPUVerticesM1",        &nPUVerticesM1);
   currentTree->SetBranchAddress("genDecay",             &genDecay);
   currentTree->SetBranchAddress("decayMode",            &decayMode);
-  currentTree->SetBranchAddress("genDecayMode",         &genDecayMode);
+  currentTree->SetBranchAddress("genDecayMode",         &genDecayMode); //ND
   currentTree->SetBranchAddress("numOfLooseIsoDiTaus",  &numOfLooseIsoDiTaus);
   currentTree->SetBranchAddress("elecFlag",             &elecFlag);
   currentTree->SetBranchAddress("isTauLegMatched",      &isTauLegMatched);
   currentTree->SetBranchAddress("isElecLegMatched",     &isElecLegMatched);
   currentTree->SetBranchAddress("vetoEvent",            &vetoEvent);
   currentTree->SetBranchAddress("visibleTauMass",       &visibleTauMass);
-  currentTree->SetBranchAddress("visibleGenTauMass",    &visibleGenTauMass);
+  currentTree->SetBranchAddress("visibleGenTauMass",    &visibleGenTauMass);//ND
   currentTree->SetBranchAddress("leadPFChargedHadrTrackPt",  &leadPFChargedHadrCandTrackPt);
   currentTree->SetBranchAddress("leadPFChargedHadrTrackP",   &leadPFChargedHadrCandTrackP);
   currentTree->SetBranchAddress("leadPFChargedHadrPt",  &leadPFChargedHadrCandPt);
@@ -1826,9 +1825,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
       
-    //genTau Info
-    genTauPt   = (*genDiTauLegsP4)[1].Pt();
-    genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    // genTau Info
+    if(genDiTauLegsP4->size()>0) {
+      genTauPt   = (*genDiTauLegsP4)[1].Pt();
+      genTauEta  = (*genDiTauLegsP4)[1].Eta();
+    }
+    else genTauPt = genTauEta = -99;
+
     visGenTauMass = visibleGenTauMass;
     genDecayMode_ = genDecayMode;
     genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
@@ -2501,26 +2504,25 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     int pairIndexHPSMVA2 = -1;
     int pairIndexAntiMu2 = -1; 
     int pairIndexSpring13 = -1;   
+
     bool passQualityCutsMoriond = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMuWP>0  &&(tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
     
     bool passQualityCutsAntiETightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 2 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
   
-  bool passQualityCutsAntiEVTightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
-    && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 3  && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479));
-
-bool passQualityCutsHPSMVA2 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
-    && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
-
-bool passQualityCutsAntiMu2 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
-    && tightestAntiMu2WP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
-
-bool passQualityCutsSpring13 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
-
-bool passQualityCutsSoft = tightestHPSMVAWP>=0 && ptL1>14 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft 
-&& tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 
-      && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
-
+    bool passQualityCutsAntiEVTightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
+      && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 3  && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479));
+    
+    bool passQualityCutsHPSMVA2 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
+      && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+    
+    bool passQualityCutsAntiMu2 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
+      && tightestAntiMu2WP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+    
+    bool passQualityCutsSpring13 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+    
+    bool passQualityCutsSoft = tightestHPSMVA2WP>=0 && ptL1>14 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+    
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
 
       lastEvent = event;
