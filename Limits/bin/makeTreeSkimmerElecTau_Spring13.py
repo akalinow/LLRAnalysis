@@ -459,7 +459,7 @@ options = {
     'outputFileName' : OutDir+'nTupleT-tW_ElecTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
-    'skimEff'        : 1.0 * 0.437682 * 0.081518021248,
+    'skimEff'        : 0.437682 * 0.669368,
     'iJson'          : -1
     },
     'Tbar-tW' : {
@@ -467,7 +467,7 @@ options = {
     'outputFileName' : OutDir+'nTupleTbar-tW_ElecTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
-    'skimEff'        : 1.0 * 0.437851 * 0.0822555699536,
+    'skimEff'        : 0.437851 * 0.668091,
     'iJson'          : -1
     },
     'WWJetsTo2L2Nu' : {
@@ -475,7 +475,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
-    'skimEff'        : 1.0 * 0.535505 * 102870./1263235,
+    'skimEff'        : 0.535690 * 0.410962,
     'iJson'          : -1
     },
     'WZJetsTo2L2Q' : {
@@ -483,7 +483,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
-    'skimEff'        : 1.0 * 0.471732 * 0.127811802097,
+    'skimEff'        : 0.471732 * 0.658115,
     'iJson'          : -1
     },
     'WZJetsTo3LNu' : {
@@ -491,7 +491,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_ElecTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
-    'skimEff'        : 1.0 * 0.618552 * 0.14055,
+    'skimEff'        : 0.618550 * 0.458578,
     'iJson'          : -1
     },
     'ZZJetsTo2L2Nu' : {
@@ -499,7 +499,7 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
-    'skimEff'        : 1.0 * 0.478421 * 0.322154,
+    'skimEff'        : 0.468227 * 0.322101,
     'iJson'          : -1
     },
     'ZZJetsTo2L2Q' : {
@@ -507,7 +507,7 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
-    'skimEff'        : 1.0 * 0.533349 * 0.145166994064,
+    'skimEff'        : 0.533349 * 0.648352,
     'iJson'          : -1
     },
     'ZZJetsTo4L' : {
@@ -515,7 +515,7 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_ElecTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
-    'skimEff'        : 1.0 * 0.578143 * 0.145166994064,
+    'skimEff'        : 0.577947 *  0.457893,
     'iJson'          : -1
     },
     ##Higgs MC
