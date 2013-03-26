@@ -69,7 +69,7 @@
 #define USEFAKERATE false
 #define DOSVFITSTANDALONE false
 #define DOVBFMVA true
-#define DEBUG true
+#define DEBUG false
 
 // Weights of differents periods
 #define wA  0.04185 //0.067   L=810.99
