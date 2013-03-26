@@ -836,8 +836,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  Float_t maxY_       = 1.2,
 		  TString RUN         = "ABCD",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1229,7 +1229,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut tisoAntiETightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>2"); //AntiETightMVA3
   TCut tisoAntiEVTightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>3"); //AntiEVTightMVA3
   TCut tisoHPSMVA2("tightestHPSMVA2WP>=0 && tightestAntiMuWP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //HPSMVA2
-  TCut tisoAntiMu2("tightestHPSMVA2WP>=0 && tightestAntiMu2WP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //AntiMu22
+  TCut tisoAntiMu2("tightestHPSMVAWP>=0 && tightestAntiMu2WP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //AntiMu2
   TCut tisoSpring13("tightestHPSMVA2WP>=0 && tightestAntiMu2WP>0  && tightestAntiEMVA3WP>3"); //Spring13
   TCut tiso("");
   if(selection_.find("Moriond")!=string::npos)
@@ -1604,9 +1604,10 @@ void plotElecTau( Int_t mH_           = 120,
       TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
       float dummyfloat = 0.;      
 
-      TCut sbinPZetaRelForWextrapolation = sbinPZetaRel;
+//       TCut sbinPZetaRelForWextrapolation = sbinPZetaRel;
+      TCut sbinPZetaRelSSForWextrapolation = sbinPZetaRelSS;
       if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
-	sbinPZetaRelForWextrapolation = (sbinPZetaRelInclusive&&vbfLoose);     
+	sbinPZetaRelSSForWextrapolation = (sbinPZetaRelSSInclusive&&vbfLoose);     
       
 
       evaluateQCD(RUN, h1, hCleaner, true, "SS", false, removeMtCut, selection_, 
@@ -1624,8 +1625,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  antiWsdb, antiWsgn, useMt,
 		  scaleFactElec,
 		  sbinSS,
-		  sbinPZetaRelForWextrapolation,
-// 		  sbinPZetaRelSSForWextrapolation,
+// 		  sbinPZetaRelForWextrapolation,
+		  sbinPZetaRelSSForWextrapolation,
 		  sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
 		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
 		  vbfLoose, oneJet, zeroJet,
@@ -1883,7 +1884,8 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else if(selection_.find("novbfLow")!=string::npos) {
 	    TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
-	    TCut sbinPZetaRelForWextrapolation = sbinPZetaRel;
+// 	    TCut sbinPZetaRelForWextrapolation = sbinPZetaRel;
+	    TCut sbinPZetaRelSSForWextrapolation = sbinPZetaRelSS;
 	    float dummy1 = 0.;      
 	    evaluateQCD(RUN, hDataAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
 			SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
@@ -1900,8 +1902,8 @@ void plotElecTau( Int_t mH_           = 120,
 			antiWsdb, antiWsgn, useMt,
 			scaleFactElec,
 			sbinSS,
-			sbinPZetaRelForWextrapolation,
-// 			sbinPZetaRelSSForWextrapolation,
+// 			sbinPZetaRelForWextrapolation,
+			sbinPZetaRelSSForWextrapolation,
 			sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
 			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
 			vbfLoose, oneJet, zeroJet, 
