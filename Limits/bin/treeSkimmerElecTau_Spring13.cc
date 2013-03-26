@@ -721,7 +721,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // event id
   ULong64_t event_,run_,lumi_;
   int index_;
-  int pairIndexMoriond_,pairIndexAntiETightMVA3_,pairIndexAntiEVTightMVA3_,pairIndexHPSMVA2_,pairIndexAntiMu2_,pairIndexSpring13_,  pairIndexSoft_;
+  int pairIndexMoriond_,pairIndexAntiETightMVA3_,pairIndexAntiEVTightMVA3_,pairIndexHPSMVA2_,pairIndexAntiMu2_,pairIndexSpring13Tight_,pairIndexSpring13VTight_,  pairIndexSoft_;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
@@ -1047,7 +1047,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("pairIndexAntiEVTightMVA3", &pairIndexAntiEVTightMVA3_, "pairIndexAntiEVTightMVA3/I");
   outTreePtOrd->Branch("pairIndexHPSMVA2", &pairIndexHPSMVA2_, "pairIndexHPSMVA2/I");
   outTreePtOrd->Branch("pairIndexAntiMu2", &pairIndexAntiMu2_, "pairIndexAntiMu2/I");
-  outTreePtOrd->Branch("pairIndexSpring13", &pairIndexSpring13_, "pairIndexSpring13/I");
+  outTreePtOrd->Branch("pairIndexSpring13Tight", &pairIndexSpring13Tight_, "pairIndexSpring13Tight/I");
+  outTreePtOrd->Branch("pairIndexSpring13VTight", &pairIndexSpring13VTight_, "pairIndexSpring13VTight/I");
   outTreePtOrd->Branch("pairIndexSoft", &pairIndexSoft_, "pairIndexSoft/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
@@ -1556,7 +1557,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int counterAntiEVTightMVA3  = 0;
   int counterHPSMVA2  = 0;
   int counterAntiMu2  = 0;
-  int counterSpring13  = 0;
+  int counterSpring13Tight  = 0;
+  int counterSpring13VTight  = 0;
   int counterSoft     = 0;
     
   // define JSON selector //
@@ -2503,25 +2505,29 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     int pairIndexAntiEVTightMVA3 = -1;
     int pairIndexHPSMVA2 = -1;
     int pairIndexAntiMu2 = -1; 
-    int pairIndexSpring13 = -1;   
+    int pairIndexSpring13Tight = -1;   
+    int pairIndexSpring13VTight = -1;   
 
     bool passQualityCutsMoriond = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMuWP>0  &&(tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
     
-    bool passQualityCutsAntiETightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
-      && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 2 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
+    bool passQualityCutsAntiETightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 2 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
   
     bool passQualityCutsAntiEVTightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 3  && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479));
-    
+
     bool passQualityCutsHPSMVA2 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
-    
+
     bool passQualityCutsAntiMu2 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMu2WP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
     
-    bool passQualityCutsSpring13 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
-    
-    bool passQualityCutsSoft = tightestHPSMVA2WP>=0 && ptL1>14 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+    bool passQualityCutsSpring13Tight = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >2 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+
+    bool passQualityCutsSpring13VTight = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch && tightestAntiMu2WP>0 && tightestAntiEMVA3WP >3 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
+
+    bool passQualityCutsSoft = tightestHPSMVAWP>=0 && ptL1>14 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft 
+      && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 
+      && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) ); 
     
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
 
@@ -2533,7 +2539,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       counterAntiEVTightMVA3   = 0;
       counterHPSMVA2   = 0;
       counterAntiMu2   = 0;
-      counterSpring13   = 0;
+      counterSpring13Tight   = 0;
+      counterSpring13VTight   = 0;
 
       if( passQualityCutsMoriond ){
 	pairIndexMoriond = counterMoriond;
@@ -2570,12 +2577,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       else
 	pairIndexAntiMu2 = -1;
 
-      if( passQualityCutsSpring13 ){
-	pairIndexSpring13 = counterSpring13;
-	counterSpring13++;
+      if( passQualityCutsSpring13Tight ){
+	pairIndexSpring13Tight = counterSpring13Tight;
+	counterSpring13Tight++;
       }
       else
-	pairIndexSpring13 = -1;
+	pairIndexSpring13Tight = -1;
+
+      if( passQualityCutsSpring13VTight ){
+	pairIndexSpring13VTight = counterSpring13VTight;
+	counterSpring13VTight++;
+      }
+      else
+	pairIndexSpring13VTight = -1;
 
       if( passQualityCutsSoft ){
 	pairIndexSoft = counterSoft;
@@ -2592,7 +2606,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       else
 	pairIndexMoriond = -1;
 
-
       if( passQualityCutsAntiETightMVA3 ){
 	pairIndexAntiETightMVA3 = counterAntiETightMVA3;
 	counterAntiETightMVA3++;
@@ -2621,12 +2634,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       else
 	pairIndexAntiMu2 = -1;
 
-      if( passQualityCutsSpring13 ){
-	pairIndexSpring13 = counterSpring13;
-	counterSpring13++;
+      if( passQualityCutsSpring13Tight ){
+	pairIndexSpring13Tight = counterSpring13Tight;
+	counterSpring13Tight++;
       }
       else
-	pairIndexSpring13 = -1;
+	pairIndexSpring13Tight = -1;
+
+      if( passQualityCutsSpring13VTight ){
+	pairIndexSpring13VTight = counterSpring13VTight;
+	counterSpring13VTight++;
+      }
+      else
+	pairIndexSpring13VTight = -1;
 
       if( passQualityCutsSoft ){
 	pairIndexSoft = counterSoft;
@@ -2642,7 +2662,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     pairIndexAntiEVTightMVA3_ = pairIndexAntiEVTightMVA3;
     pairIndexHPSMVA2_ = pairIndexHPSMVA2;
     pairIndexAntiMu2_ = pairIndexAntiMu2;
-    pairIndexSpring13_ = pairIndexSpring13;
+    pairIndexSpring13Tight_ = pairIndexSpring13Tight;
+    pairIndexSpring13VTight_ = pairIndexSpring13VTight;
 
     outTreePtOrd->Fill();
   }
