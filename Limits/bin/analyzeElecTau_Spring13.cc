@@ -1090,6 +1090,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/";
+  TString Tanalysis_(analysis_);
 
   // Open the files
   TFile *fData;
@@ -1103,10 +1104,24 @@ void plotElecTau( Int_t mH_           = 120,
   else             fDataEmbedded = new TFile(pathToFile+"/nTuple_Run2012ABCD_Embedded_ElecTau.root", "READ");
 
   TFile *fBackgroundDY    = new TFile(pathToFile+"/nTuple_DYJets_ElecTau.root","READ");
-  TFile *fBackgroundWJets = new TFile(pathToFile+"/nTuple_WJetsAllBins_ElecTau.root","READ"); // AllBins
+  //TFile *fBackgroundWJets = new TFile(pathToFile+"/nTuple_WJetsAllBins_ElecTau.root","READ"); // AllBins
   TFile *fBackgroundW3Jets= new TFile(pathToFile+"/nTuple_WJets3Jets_ElecTau.root","READ"); // W3J
   TFile *fBackgroundTTbar = new TFile(pathToFile+"/nTuple_TTJets_ElecTau.root","READ");
   TFile *fBackgroundOthers= new TFile(pathToFile+"/nTuple_Others_ElecTau.root","READ");
+
+  TString treeMC;
+  if(Tanalysis_.Contains("TauUp") || Tanalysis_.Contains("TauDown") || Tanalysis_.Contains("JetUp") || Tanalysis_.Contains("JetDown") )
+    treeMC = "outTreePtOrd"+Tanalysis_;
+  else treeMC = "outTreePtOrd";
+  //
+  TChain *backgroundWJets      = new TChain(treeMC);
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets-p1_ElecTau.root");
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets-p2_ElecTau.root");
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets1Jets_ElecTau.root");
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets2Jets_ElecTau.root");
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets3Jets_ElecTau.root");
+  backgroundWJets      ->Add(pathToFile+"/nTuple_WJets4Jets_ElecTau.root");
+
 
   vector<int> hMasses;
   hMasses.push_back(90);hMasses.push_back(95);hMasses.push_back(100);hMasses.push_back(105);hMasses.push_back(110);
@@ -1180,7 +1195,7 @@ void plotElecTau( Int_t mH_           = 120,
   cout << backgroundDYJtoTau->GetEntries()    << " come from DY->ee, jet->tau" << endl;
 
   TTree *backgroundTTbar     = (TTree*)fBackgroundTTbar->Get(tree);
-  TTree *backgroundWJets     = (TTree*)fBackgroundWJets->Get(tree);
+//   TTree *backgroundWJets     = (TTree*)fBackgroundWJets->Get(tree);
   TTree *backgroundW3Jets    = W3JETS ? (TTree*)fBackgroundW3Jets->Get(tree) : 0;
   TTree *backgroundOthers    = (TTree*)fBackgroundOthers->Get(tree);
  
@@ -2643,7 +2658,7 @@ void plotElecTau( Int_t mH_           = 120,
 
   fBackgroundOthers->Close();delete fBackgroundOthers;
   fBackgroundTTbar->Close(); delete fBackgroundTTbar;
-  fBackgroundWJets->Close(); delete fBackgroundWJets;
+//   fBackgroundWJets->Close(); delete fBackgroundWJets;
   fData->Close();            delete fData; 
   dummy1->Close();           delete dummy1;
   fBackgroundDY->Close();    delete fBackgroundDY;
