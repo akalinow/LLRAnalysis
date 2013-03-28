@@ -855,9 +855,9 @@ void plotElecTau( Int_t mH_           = 120,
   string selectionBins;
   if(selection_.find("inclusive")!=string::npos)
     selectionBins="inclusive";
-  if(selection_.find("boostLow")!=string::npos)
+  if(selection_.find("boost")!=string::npos && selection_.find("Low")!=string::npos)
     selectionBins="boostLow";
-  if(selection_.find("boostHigh")!=string::npos)
+  if(selection_.find("boost")!=string::npos && selection_.find("High")!=string::npos)
     selectionBins="boostHigh";
   if(selection_.find("novbfLow")!=string::npos)
     selectionBins="novbfLow";
