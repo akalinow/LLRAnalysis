@@ -2399,8 +2399,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	nVetoLepton++;
     }
     for(size_t imu = 0; imu < vetoElectronsP4->size(); imu++){ 
-      if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 && (*vetoElectronsP4)[imu].Pt()>10) //&&  
-	//deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 ) 
+      if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 &&  
+	 //deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 && 
+	 (*vetoElectronsP4)[imu].Pt()>10) 
         nVetoLepton++; 
     }    
     if(DEBUG) cout << "End 3rd lepton veto" << endl;
