@@ -1244,6 +1244,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut tisoAntiETightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>2"); //AntiETightMVA3
   TCut tisoAntiEVTightMVA3("tightestHPSMVAWP>=0 && tightestAntiMuWP>0  && tightestAntiEMVA3WP>3"); //AntiEVTightMVA3
   TCut tisoHPSMVA2("tightestHPSMVA2WP>=0 && tightestAntiMuWP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //HPSMVA2
+  TCut tisoHPSDB3H("tightestHPSDB3HWP>=0 && tightestAntiMuWP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //HPSMVA2
   TCut tisoAntiMu2("tightestHPSMVAWP>=0 && tightestAntiMu2WP>0  && tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)"); //AntiMu2
   TCut tisoSpring13("tightestHPSMVA2WP>=0 && tightestAntiMu2WP>0  && tightestAntiEMVA3WP>3"); //Spring13
   TCut tiso("");
@@ -1255,12 +1256,20 @@ void plotElecTau( Int_t mH_           = 120,
     tiso = tisoAntiEVTightMVA3;
   if(selection_.find("HPSMVA2")!=string::npos)
     tiso = tisoHPSMVA2;
+  if(selection_.find("HPSDB3H")!=string::npos)
+    tiso = tisoHPSDB3H;
   if(selection_.find("AntiMu2")!=string::npos)
     tiso = tisoAntiMu2;
   if(selection_.find("Spring13")!=string::npos)
     tiso = tisoSpring13;
   TCut ltiso("tightestHPSMVAWP>-99 && tightestAntiECutWP<1 ");
-  TCut mtiso("hpsMVA>0.7");
+  TCut mtiso("");
+  if(selection_.find("HPSMVA2")!=string::npos)
+    mtiso="hpsMVA2>0.7";
+  else if(selection_.find("HPSDB3H")!=string::npos)
+    mtiso="hpsDB3H>0.7";
+  else
+    mtiso="hpsMVA>0.7";
 
   ////// E ISO ///////
   TCut liso("combRelIsoLeg1DBetav2<0.10");
@@ -1313,6 +1322,12 @@ void plotElecTau( Int_t mH_           = 120,
   TCut vh("pt1>30 && pt2>30 && Mjj>70 && Mjj<120 && diJetPt>150 && MVAvbf<0.80 && nJets20BTagged<1");
   TCut boost("nJets30>0 && pt1>30 && nJets20BTagged<1 && MEtMVA>30");
   boost = boost && !vbf /*&& !vh*/;
+  TCut boostMet0("nJets30>0 && pt1>30 && nJets20BTagged<1 && MEtMVA>0");
+  boostMet0 = boostMet0 && !vbf /*&& !vh*/;
+  TCut boostMet10("nJets30>0 && pt1>30 && nJets20BTagged<1 && MEtMVA>10");
+  boostMet10 = boostMet10 && !vbf /*&& !vh*/;
+  TCut boostMet20("nJets30>0 && pt1>30 && nJets20BTagged<1 && MEtMVA>20");
+  boostMet20 = boostMet20 && !vbf /*&& !vh*/;
   TCut bTag("nJets30<2 && nJets20BTagged>0");
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
   TCut nobTag("nJets30<2 && nJets20BTagged==0");
@@ -1384,6 +1399,12 @@ void plotElecTau( Int_t mH_           = 120,
     sbinTmp = novbf;
   else if(selection_.find("boost")!=string::npos)
     sbinTmp = boost;
+  else if(selection_.find("boostMet0")!=string::npos)
+    sbinTmp = boostMet0;
+  else if(selection_.find("boostMet10")!=string::npos)
+    sbinTmp = boostMet10;
+  else if(selection_.find("boostMet20")!=string::npos)
+    sbinTmp = boostMet20;
   else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos)
     sbinTmp = bTag;
   else if(selection_.find("nobTag")!=string::npos)
