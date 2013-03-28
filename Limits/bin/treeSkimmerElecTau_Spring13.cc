@@ -721,7 +721,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // event id
   ULong64_t event_,run_,lumi_;
   int index_;
-  int pairIndexMoriond_,pairIndexAntiETightMVA3_,pairIndexAntiEVTightMVA3_,pairIndexHPSMVA2_,pairIndexAntiMu2_,pairIndexSpring13Tight_,pairIndexSpring13VTight_,  pairIndexSoft_;
+  int pairIndexMoriond_,pairIndexAntiETightMVA3_,pairIndexAntiEVTightMVA3_,pairIndexHPSDB3H_,pairIndexHPSMVA2_,pairIndexAntiMu2_,pairIndexSpring13Tight_,pairIndexSpring13VTight_,  pairIndexSoft_;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
@@ -1045,6 +1045,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("pairIndexMoriond", &pairIndexMoriond_, "pairIndexMoriond/I");
   outTreePtOrd->Branch("pairIndexAntiETightMVA3", &pairIndexAntiETightMVA3_, "pairIndexAntiETightMVA3/I");
   outTreePtOrd->Branch("pairIndexAntiEVTightMVA3", &pairIndexAntiEVTightMVA3_, "pairIndexAntiEVTightMVA3/I");
+  outTreePtOrd->Branch("pairIndexHPSDB3H", &pairIndexHPSDB3H_, "pairIndexHPSDB3H/I");
   outTreePtOrd->Branch("pairIndexHPSMVA2", &pairIndexHPSMVA2_, "pairIndexHPSMVA2/I");
   outTreePtOrd->Branch("pairIndexAntiMu2", &pairIndexAntiMu2_, "pairIndexAntiMu2/I");
   outTreePtOrd->Branch("pairIndexSpring13Tight", &pairIndexSpring13Tight_, "pairIndexSpring13Tight/I");
@@ -1555,6 +1556,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int counterMoriond  = 0;
   int counterAntiETightMVA3  = 0;
   int counterAntiEVTightMVA3  = 0;
+  int counterHPSDB3H  = 0;
   int counterHPSMVA2  = 0;
   int counterAntiMu2  = 0;
   int counterSpring13Tight  = 0;
@@ -2505,6 +2507,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     int pairIndexSoft = -1;
     int pairIndexAntiETightMVA3 = -1;
     int pairIndexAntiEVTightMVA3 = -1;
+    int pairIndexHPSDB3H = -1;
     int pairIndexHPSMVA2 = -1;
     int pairIndexAntiMu2 = -1; 
     int pairIndexSpring13Tight = -1;   
@@ -2516,6 +2519,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   
     bool passQualityCutsAntiEVTightMVA3 = tightestHPSMVAWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMuWP>0 && tightestAntiEMVA3WP > 3  && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479));
+
+    bool passQualityCutsHPSDB3H = tightestHPSDB3HWP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
+      && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
 
     bool passQualityCutsHPSMVA2 = tightestHPSMVA2WP>=0 && ptL1>24 && ptL2>20 && TMath::Abs(scEtaL1)<2.1 && combRelIsoLeg1DBetav2<0.1 && HLTmatch 
       && tightestAntiMuWP>0 && (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && tightestAntiECutWP > 1 && ((mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479) );
@@ -2539,6 +2545,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       counterMoriond   = 0;
       counterAntiETightMVA3   = 0;
       counterAntiEVTightMVA3   = 0;
+      counterHPSDB3H   = 0;
       counterHPSMVA2   = 0;
       counterAntiMu2   = 0;
       counterSpring13Tight   = 0;
@@ -2564,6 +2571,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
       else
 	pairIndexAntiEVTightMVA3 = -1;
+
+      if( passQualityCutsHPSDB3H ){
+	pairIndexHPSDB3H = counterHPSDB3H;
+	counterHPSDB3H++;
+      }
+      else
+	pairIndexHPSDB3H = -1;
 
       if( passQualityCutsHPSMVA2 ){
 	pairIndexHPSMVA2 = counterHPSMVA2;
@@ -2622,6 +2636,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       else
 	pairIndexAntiEVTightMVA3 = -1;
 
+      if( passQualityCutsHPSDB3H ){
+	pairIndexHPSDB3H = counterHPSDB3H;
+	counterHPSDB3H++;
+      }
+      else
+	pairIndexHPSDB3H = -1;
+
       if( passQualityCutsHPSMVA2 ){
 	pairIndexHPSMVA2 = counterHPSMVA2;
 	counterHPSMVA2++;
@@ -2662,6 +2683,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     pairIndexSoft_ = pairIndexSoft;
     pairIndexAntiETightMVA3_ = pairIndexAntiETightMVA3;
     pairIndexAntiEVTightMVA3_ = pairIndexAntiEVTightMVA3;
+    pairIndexHPSDB3H_ = pairIndexHPSDB3H;
     pairIndexHPSMVA2_ = pairIndexHPSMVA2;
     pairIndexAntiMu2_ = pairIndexAntiMu2;
     pairIndexSpring13Tight_ = pairIndexSpring13Tight;
