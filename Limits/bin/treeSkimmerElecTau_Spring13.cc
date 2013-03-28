@@ -2395,10 +2395,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     for(size_t imu = 0; imu < vetoMuonsP4->size(); imu++){
       //if(deltaR((*diTauLegsP4)[0], (*vetoMuonsP4)[imu]) > 0.3 && 
       // deltaR((*diTauLegsP4)[1], (*vetoMuonsP4)[imu]) > 0.3 )
-      nVetoLepton++;
+      if((*vetoMuonsP4)[imu].Pt()>10)
+	nVetoLepton++;
     }
     for(size_t imu = 0; imu < vetoElectronsP4->size(); imu++){ 
-      if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 ) //&&  
+      if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 && (*vetoElectronsP4)[imu].Pt()>10) //&&  
 	//deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 ) 
         nVetoLepton++; 
     }    
