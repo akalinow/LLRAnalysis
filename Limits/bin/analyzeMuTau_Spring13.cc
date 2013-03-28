@@ -823,8 +823,10 @@ void plotMuTau( Int_t mH_           = 120,
 		Int_t logy_         = 0,
 		Float_t maxY_       = 1.2,
 		TString RUN         = "ABCD",
+		TString version_    = "Moriond",
 		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_p2_topup/src/Bianchi/Limits/bin/results/"
-		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+		//TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
 
@@ -1057,12 +1059,13 @@ void plotMuTau( Int_t mH_           = 120,
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
   if(RUN.Contains("ABC")) {
-    data->Add(pathToFile+"/nTupleRun2012A-13Jul2012-Data_MuTau.root");
-    data->Add(pathToFile+"/nTuple_Run2012B_Data_MuTau.root");
-    data->Add(pathToFile+"/nTuple_Run2012C_Data_MuTau.root");
-    if(RUN=="ABCD") data->Add(pathToFile+"/nTuple_Run2012D_Data_MuTau.root");
+    data->Add(pathToFile+"/nTupleRun2012A*Data_MuTau.root");
+    data->Add(pathToFile+"/nTupleRun2012B*Data_MuTau.root");
+    data->Add(pathToFile+"/nTupleRun2012C*Data_MuTau.root");
   }
-  else if(RUN=="D") data->Add(pathToFile+"/nTuple_Run2012D_Data_MuTau.root");
+  if(RUN.Contains("D")) {
+    data->Add(pathToFile+"/nTupleRun2012D*Data_MuTau.root");
+  }
 
   // EMBEDDED //
   TString treeEmbedded;
@@ -1072,12 +1075,11 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *dataEmbedded = new TChain(treeEmbedded);
   //
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012A_Embedded_MuTau.root");
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012B_Embedded_MuTau.root");
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012C_Embedded_MuTau.root");
-    if(RUN=="ABCD") dataEmbedded->Add(pathToFile+"/nTuple_Run2012D_Embedded_MuTau.root");
+    dataEmbedded->Add(pathToFile+"/nTuple_Run2012A*Embedded_MuTau_*.root");
+    dataEmbedded->Add(pathToFile+"/nTuple_Run2012B*Embedded_MuTau_*.root");
+    dataEmbedded->Add(pathToFile+"/nTuple_Run2012C*Embedded_MuTau_*.root");
   }
-  else if(RUN=="D") dataEmbedded->Add(pathToFile+"/nTuple_Run2012D_Embedded_MuTau.root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTuple_Run2012D*Embedded_MuTau_*.root");
 
   // BACKGROUNDS //
   TString treeMC;
@@ -1094,25 +1096,25 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
 
-  backgroundDY         ->Add(pathToFile+"nTuple_DYJets_MuTau.root");
-  backgroundTTbar      ->Add(pathToFile+"nTuple_TTJets_MuTau.root");
+  backgroundDY         ->Add(pathToFile+"nTuple_DYJets_MuTau_*.root");
+  backgroundTTbar      ->Add(pathToFile+"nTuple_TTJets_MuTau_*.root");
 
-  backgroundOthers     ->Add(pathToFile+"nTuple_T-tW_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_Tbar-tW_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WWJetsTo2L2Nu_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo2L2Q_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo3LNu_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Nu_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Q_MuTau.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo4L_MuTau.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_T-tW_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_Tbar-tW_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_WWJetsTo2L2Nu_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo2L2Q_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo3LNu_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Nu_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Q_MuTau_*.root");
+  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo4L_MuTau_*.root");
 
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p1_MuTau.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p2_MuTau.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets1Jets_MuTau.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets2Jets_MuTau.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets3Jets_MuTau.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets4Jets_MuTau.root");
-  backgroundW3Jets     ->Add(pathToFile+"nTuple_WJets3Jets_MuTau.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p1_MuTau_*.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p2_MuTau_*.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets1Jets_MuTau_*.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets2Jets_MuTau_*.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets3Jets_MuTau_*.root");
+  backgroundWJets      ->Add(pathToFile+"nTuple_WJets4Jets_MuTau_*.root");
+  backgroundW3Jets     ->Add(pathToFile+"nTuple_WJets3Jets_MuTau_*.root");
 
 
   TChain *signal[nProd][nMasses];
@@ -1120,7 +1122,7 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
-      signal[iP][iM]->Add(pathToFile+"/nTuple_"+nameProd[iP]+nameMasses[iM]+"_MuTau.root");
+      signal[iP][iM]->Add(pathToFile+"/nTuple_"+nameProd[iP]+nameMasses[iM]+"_MuTau_*.root");
     }
   }
 
@@ -1129,7 +1131,7 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdS ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signalSusy[iP][iM] = new TChain(treeMC);
-      signalSusy[iP][iM]->Add(pathToFile+"/nTuple_SUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau.root");
+      signalSusy[iP][iM]->Add(pathToFile+"/nTuple_SUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_*.root");
     }
   }
 
@@ -1167,24 +1169,46 @@ void plotMuTau( Int_t mH_           = 120,
   ///// LEPT PT ///////
   TCut lpt("ptL1>20 && isPFMuon && isTightMuon");
   TCut tpt("ptL2>20");
-  /*
-  if(selection_.find("High")!=string::npos)
-    tpt = tpt&&TCut("ptL2>40");
-  else if(selection_.find("Low")!=string::npos)
-    tpt = tpt&&TCut("ptL2<40");
-  */
+
   ////// TAU ISO //////
-//   TCut tiso("tightestHPSMVAWP>=0"); 
-  TCut tiso("tightestHPSMVA2WP>=0"); 
-//   TCut ltiso("tightestHPSMVAWP>-99");
-  TCut ltiso("tightestHPSMVA2WP>-99");
+  TCut tiso("tightestHPSMVAWP>=0  && tightestAntiMuWP>2");
+  TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
+  TCut pairIndex("pairIndexMoriond<1");
+
+  if(version_.Contains("Moriond")) {
+    tiso  = "tightestHPSMVAWP>=0  && tightestAntiMuWP>2" ;
+    ltiso = "tightestHPSMVAWP>-99";
+    mtiso = "hpsMVA>0.7";
+    pairIndex = "pairIndexMoriond<1";
+  }
+  else if(version_.Contains("TauIso2")) {
+    tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMuWP>2" ;
+    ltiso = "tightestHPSMVA2WP>-99";
+    mtiso = "hpsMVA2>0.7";
+    pairIndex = "pairIndexHPSMVA2<1";
+  }
+  else if(version_.Contains("AntiMu2")) {
+    tiso  = "tightestHPSMVAWP>=0 && tightestAntiMu2WP>2" ;
+    ltiso = "tightestHPSMVAWP>-99";
+    mtiso = "hpsMVA>0.7";
+    pairIndex = "pairIndexAntiMu2<1";
+  }
+  else if(version_.Contains("PostMoriond")) {
+    tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMu2WP>2" ;
+    ltiso = "tightestHPSMVA2WP>-99";
+    mtiso = "hpsMVA2>0.7";
+    pairIndex = "pairIndexSpring13<1";
+  }
+
+  if(version_.Contains("Soft")) {
+    pairIndex = "pairIndexSoft<1";
+  }
 
   ////// MU ISO ///////
   TCut liso("combRelIsoLeg1DBetav2<0.10");
   TCut laiso("combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50");
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
-
  
   ////// EVENT WISE //////
   TCut lveto("muFlag!=1 && vetoEvent==0"); //muFlag==0
@@ -1194,9 +1218,8 @@ void plotMuTau( Int_t mH_           = 120,
   TCut apZ(Form("((%s)>%f)",antiWcut.c_str(),antiWsdb));
   //TCut apZ2(Form("((%s)>%f && (%s)<120)",antiWcut.c_str(),antiWsdb,antiWcut.c_str()));
   TCut apZ2(Form("((%s)>60 && (%s)<120)",antiWcut.c_str(),antiWcut.c_str()));
-  TCut hltevent("pairIndex<1 && HLTx==1 && ( run>=163269 || run==1)");
+  TCut hltevent("HLTx==1 && ( run>=163269 || run==1)");
   TCut hltmatch("HLTmatch==1");
-
 
   ////// CATEGORIES ///
   TCut zeroJet("nJets30<1");
@@ -1237,41 +1260,41 @@ void plotMuTau( Int_t mH_           = 120,
   TCut sbinSSltiso; TCut sbinSSmtiso; TCut sbinLtiso; TCut sbinMtiso; TCut sbinPZetaRelMtiso;
 
   TCut sbinInclusive;
-  sbinInclusive                     = lpt && tpt && tiso && liso && lveto && diTauCharge && MtCut  && hltevent && hltmatch;
+  sbinInclusive                     = lpt && tpt && tiso && liso && lveto && diTauCharge && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinEmbeddingInclusive;
-  sbinEmbeddingInclusive            = lpt && tpt && tiso && liso && lveto && diTauCharge && MtCut                         ;
+  sbinEmbeddingInclusive            = lpt && tpt && tiso && liso && lveto && diTauCharge && MtCut  && pairIndex                        ;
   TCut sbinPZetaRelEmbeddingInclusive;
-  sbinPZetaRelEmbeddingInclusive    = lpt && tpt && tiso && liso && lveto && diTauCharge                                  ;
+  sbinPZetaRelEmbeddingInclusive    = lpt && tpt && tiso && liso && lveto && diTauCharge           && pairIndex                        ;
   TCut sbinPZetaRelSSInclusive;
-  sbinPZetaRelSSInclusive           = lpt && tpt && tiso && liso && lveto && SS                    && hltevent && hltmatch;
+  sbinPZetaRelSSInclusive           = lpt && tpt && tiso && liso && lveto && SS                    && hltevent && pairIndex && hltmatch;
   TCut sbinPZetaRelInclusive;
-  sbinPZetaRelInclusive             = lpt && tpt && tiso && liso && lveto && diTauCharge           && hltevent && hltmatch;
+  sbinPZetaRelInclusive             = lpt && tpt && tiso && liso && lveto && diTauCharge           && hltevent && pairIndex && hltmatch;
   TCut sbinSSInclusive;
-  sbinSSInclusive                   = lpt && tpt && tiso && liso && lveto && SS          && MtCut  && hltevent && hltmatch;
+  sbinSSInclusive                   = lpt && tpt && tiso && liso && lveto && SS          && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinSSaIsoInclusive;
-  sbinSSaIsoInclusive               = lpt && tpt && tiso && laiso&& lveto && SS          && MtCut  && hltevent && hltmatch;
+  sbinSSaIsoInclusive               = lpt && tpt && tiso && laiso&& lveto && SS          && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinAisoInclusive;
-  sbinAisoInclusive                 = lpt && tpt && tiso && laiso&& lveto && diTauCharge && MtCut  && hltevent && hltmatch;
+  sbinAisoInclusive                 = lpt && tpt && tiso && laiso&& lveto && diTauCharge && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinPZetaRelSSaIsoInclusive;
-  sbinPZetaRelSSaIsoInclusive       = lpt && tpt && tiso && laiso&& lveto && SS                    && hltevent && hltmatch;
+  sbinPZetaRelSSaIsoInclusive       = lpt && tpt && tiso && laiso&& lveto && SS                    && hltevent && pairIndex && hltmatch;
   TCut sbinPZetaRelSSaIsoMtisoInclusive;
-  sbinPZetaRelSSaIsoMtisoInclusive  = lpt && tpt && mtiso&& laiso&& lveto && SS                    && hltevent && hltmatch;
+  sbinPZetaRelSSaIsoMtisoInclusive  = lpt && tpt && mtiso&& laiso&& lveto && SS                    && hltevent && pairIndex && hltmatch;
 
   TCut sbinSSaIsoLtisoInclusive;
-  sbinSSaIsoLtisoInclusive          = lpt && tpt && mtiso&& laiso&& lveto && SS && MtCut           && hltevent && hltmatch;
+  sbinSSaIsoLtisoInclusive          = lpt && tpt && mtiso&& laiso&& lveto && SS && MtCut           && hltevent && pairIndex && hltmatch;
   TCut sbinSSaIsoMtisoInclusive;
-  sbinSSaIsoMtisoInclusive          = lpt && tpt && mtiso&& laiso&& lveto && SS && MtCut           && hltevent && hltmatch;
+  sbinSSaIsoMtisoInclusive          = lpt && tpt && mtiso&& laiso&& lveto && SS && MtCut           && hltevent && pairIndex && hltmatch;
   TCut sbinPZetaRelaIsoInclusive;
-  sbinPZetaRelaIsoInclusive         = lpt && tpt && tiso && laiso&& lveto && diTauCharge           && hltevent && hltmatch;
+  sbinPZetaRelaIsoInclusive         = lpt && tpt && tiso && laiso&& lveto && diTauCharge           && hltevent && pairIndex && hltmatch;
 
   TCut sbinSSltisoInclusive;
-  sbinSSltisoInclusive              = lpt && tpt && ltiso&& liso && lveto && SS && MtCut           && hltevent && hltmatch;
+  sbinSSltisoInclusive              = lpt && tpt && ltiso&& liso && lveto && SS && MtCut           && hltevent && pairIndex && hltmatch;
   TCut sbinLtisoInclusive;
-  sbinLtisoInclusive                = lpt && tpt && ltiso&& liso && lveto && diTauCharge && MtCut  && hltevent && hltmatch;
+  sbinLtisoInclusive                = lpt && tpt && ltiso&& liso && lveto && diTauCharge && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinMtisoInclusive;
-  sbinMtisoInclusive                = lpt && tpt && mtiso&& liso && lveto && diTauCharge && MtCut  && hltevent && hltmatch;
+  sbinMtisoInclusive                = lpt && tpt && mtiso&& liso && lveto && diTauCharge && MtCut  && hltevent && pairIndex && hltmatch;
   TCut sbinPZetaRelLtisoInclusive;
-  sbinPZetaRelLtisoInclusive        = lpt && tpt && ltiso&& liso && lveto && diTauCharge           && hltevent && hltmatch;
+  sbinPZetaRelLtisoInclusive        = lpt && tpt && ltiso&& liso && lveto && diTauCharge           && hltevent && pairIndex && hltmatch;
 
 
   TCut sbinTmp("");
@@ -1295,27 +1318,27 @@ void plotMuTau( Int_t mH_           = 120,
     sbinTmp = nobTag;
 
 
-  sbin                   =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge  && MtCut  && hltevent && hltmatch ;
-  sbinEmbedding          =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge  && MtCut                          ;
-  sbinEmbeddingPZetaRel  =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge                                    ;
-  sbinPZetaRel           =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge            && hltevent && hltmatch ;
-  sbinPZetaRelaIso       =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && diTauCharge            && hltevent && hltmatch ;
-  sbinPZetaRelSSaIso     =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && SS                     && hltevent && hltmatch ;
-  sbinSS                 =  sbinTmp && lpt && tpt && tiso && liso && lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinPZetaRelSS         =  sbinTmp && lpt && tpt && tiso && liso && lveto && SS                     && hltevent && hltmatch ;
-  sbinAiso               =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && diTauCharge  && MtCut  && hltevent && hltmatch ;
-  sbinSSaIso             =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSlIso1            =  sbinTmp && lpt && tpt && tiso && lliso&& lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSlIso2            =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSlIso3            =  sbinTmp && lpt && tpt && mtiso&& lliso&& lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSaIsoLtiso        =  sbinTmp && lpt && tpt && ltiso&& laiso&& lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSaIsoMtiso        =  sbinTmp && lpt && tpt && mtiso&& laiso&& lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSltiso            =  sbinTmp && lpt && tpt && ltiso&& liso && lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinSSmtiso            =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && SS           && MtCut  && hltevent && hltmatch ;
-  sbinLtiso              =  sbinTmp && lpt && tpt && ltiso&& liso && lveto && diTauCharge  && MtCut  && hltevent && hltmatch ;
-  sbinMtiso              =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && diTauCharge  && MtCut  && hltevent && hltmatch ;
-  sbinPZetaRelMtiso      =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && diTauCharge            && hltevent && hltmatch ;
-  sbinPZetaRelSSaIsoMtiso=  sbinTmp && lpt && tpt && mtiso&& laiso&& lveto && SS                     && hltevent && hltmatch ;
+  sbin                   =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge  && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinEmbedding          =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge  && MtCut              && pairIndex             ;
+  sbinEmbeddingPZetaRel  =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge                        && pairIndex             ;
+  sbinPZetaRel           =  sbinTmp && lpt && tpt && tiso && liso && lveto && diTauCharge            && hltevent && pairIndex && hltmatch ;
+  sbinPZetaRelaIso       =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && diTauCharge            && hltevent && pairIndex && hltmatch ;
+  sbinPZetaRelSSaIso     =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && SS                     && hltevent && pairIndex && hltmatch ;
+  sbinSS                 =  sbinTmp && lpt && tpt && tiso && liso && lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinPZetaRelSS         =  sbinTmp && lpt && tpt && tiso && liso && lveto && SS                     && hltevent && pairIndex && hltmatch ;
+  sbinAiso               =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && diTauCharge  && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSaIso             =  sbinTmp && lpt && tpt && tiso && laiso&& lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSlIso1            =  sbinTmp && lpt && tpt && tiso && lliso&& lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSlIso2            =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSlIso3            =  sbinTmp && lpt && tpt && mtiso&& lliso&& lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSaIsoLtiso        =  sbinTmp && lpt && tpt && ltiso&& laiso&& lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSaIsoMtiso        =  sbinTmp && lpt && tpt && mtiso&& laiso&& lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSltiso            =  sbinTmp && lpt && tpt && ltiso&& liso && lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinSSmtiso            =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && SS           && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinLtiso              =  sbinTmp && lpt && tpt && ltiso&& liso && lveto && diTauCharge  && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinMtiso              =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && diTauCharge  && MtCut  && hltevent && pairIndex && hltmatch ;
+  sbinPZetaRelMtiso      =  sbinTmp && lpt && tpt && mtiso&& liso && lveto && diTauCharge            && hltevent && pairIndex && hltmatch ;
+  sbinPZetaRelSSaIsoMtiso=  sbinTmp && lpt && tpt && mtiso&& laiso&& lveto && SS                     && hltevent && pairIndex && hltmatch ;
 
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
@@ -2634,7 +2657,7 @@ int main(int argc, const char* argv[])
 
   int mH, nBins, logy; 
   float magnify, hltEff, xMin, xMax, maxY;
-  string category, analysis, variable, xtitle, unity, outputDir, RUN;
+  string category, analysis, variable, xtitle, unity, outputDir, RUN, version;
 
   if(argc==1) plotMuTauAll();
   else if(argc>7) { 
@@ -2647,13 +2670,15 @@ int main(int argc, const char* argv[])
 
     outputDir=argv[13]; RUN = argv[14] ;
 
-    analysis = argc>15 ? argv[15] : ""; 
+    version=argv[15];
+
+    analysis = argc>16 ? argv[16] : ""; 
 
     cout << endl << "ANALYZING DATA FROM RUN : " << RUN << endl << endl;
 
-    plotMuTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN);
+    plotMuTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY,RUN,version);
   }
-  else { cout << "Please put at least 15 arguments" << endl; return 1;}
+  else { cout << "Please put 16 arguments" << endl; return 1;}
 
   cout << "DONE" << endl;
   return 0;
