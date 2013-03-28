@@ -1397,7 +1397,7 @@ void plotElecTau( Int_t mH_           = 120,
     sbinTmp = vh;
   else if(selection_.find("novbf")!=string::npos)
     sbinTmp = novbf;
-  else if(selection_.find("boost")!=string::npos)
+  else if(selection_.find("boost")!=string::npos && selection_.find("boostMet")==string::npos)
     sbinTmp = boost;
   else if(selection_.find("boostMet0")!=string::npos)
     sbinTmp = boostMet0;
