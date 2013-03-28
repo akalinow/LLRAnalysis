@@ -843,14 +843,7 @@ void plotMuTau( Int_t mH_           = 120,
   const int nMasses=15;
 
   TString nameProd[nProd]={"GGFH","VBFH","VH"};
-  vector<TString> nameMasses;
-  ostringstream ossi;
-
-  for(int i=90 ; i<=160 ; i+=5) { 
-    ossi.str("");
-    ossi << i ;
-    nameMasses.push_back(ossi.str());
-  }
+  TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
 
   const int nProdS=2;
   const int nMassesS=21;
@@ -966,7 +959,9 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hSgn1     = new TH1F( "hSgn1"   ,"vbf"               , nBins , bins.GetArray());         hSgn1->SetLineWidth(2);
   TH1F* hSgn2     = new TH1F( "hSgn2"   ,"ggf"               , nBins , bins.GetArray());         hSgn2->SetLineWidth(2);
   TH1F* hSgn3     = new TH1F( "hSgn3"   ,"vh"                , nBins , bins.GetArray());         hSgn3->SetLineWidth(2);
-  TH1F* hData     = new TH1F( "hData"   ,"        "          , nBins , bins.GetArray());         hData->SetMarkerStyle(20);hData->SetMarkerSize(1.2);hData->SetMarkerColor(kBlack);hData->SetLineColor(kBlack);hData->SetXTitle(XTitle_+" ("+Unities_+")");hData->SetYTitle(Form(" Events/(%.1f %s)", hData->GetBinWidth(1), Unities_.Data() ) );hData->SetTitleSize(0.04,"X");hData->SetTitleSize(0.05,"Y");hData->SetTitleOffset(0.95,"Y");
+  TH1F* hData     = new TH1F( "hData"   ,"        "          , nBins , bins.GetArray());         
+  hData->SetMarkerStyle(20);hData->SetMarkerSize(1.2);hData->SetMarkerColor(kBlack);hData->SetLineColor(kBlack);hData->SetXTitle(XTitle_+" ("+Unities_+")");hData->SetYTitle(Form(" Events/(%.1f %s)", hData->GetBinWidth(1), Unities_.Data() ) );hData->SetTitleSize(0.04,"X");hData->SetTitleSize(0.05,"Y");hData->SetTitleOffset(0.95,"Y");
+
   TH1F* hDataEmb  = new TH1F( "hDataEmb","Embedded"          , nBins , bins.GetArray());         hDataEmb->SetFillColor(kOrange-4);
   TH1F* hW        = new TH1F( "hW"      ,"W+jets"            , nBins , bins.GetArray());         hW->SetFillColor(kRed+2);
   TH1F* hWSS      = new TH1F( "hWSS"    ,"W+jets SS"         , nBins , bins.GetArray());
@@ -997,6 +992,7 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
   
+  if(VERBOSE) cout << "Define Signal histograms" << endl;
   TH1F* hSignal[nProd][nMasses];
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
@@ -1004,7 +1000,7 @@ void plotMuTau( Int_t mH_           = 120,
       hSignal[iP][iM]->SetLineWidth(2);
     }
   }
-
+  if(VERBOSE) cout << "Define SUSY histograms" << endl;
   TH1F* hSusy[nProdS][nMassesS];
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
@@ -1014,6 +1010,7 @@ void plotMuTau( Int_t mH_           = 120,
   }
 
   // QCD shapes //
+  if(VERBOSE) cout << "Define QCD shapes histograms" << endl;
   const int nSign=2;
   const int nSamples=8;
   TH1F* h_QCDshape[nSamples][nSign];
@@ -1030,6 +1027,7 @@ void plotMuTau( Int_t mH_           = 120,
     }
   }
   
+  if(VERBOSE) cout << "Define hParameters" << endl;
   TH1F* hParameters   = new TH1F( "hParameters", "" ,30, 0, 30);
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1055,6 +1053,8 @@ void plotMuTau( Int_t mH_           = 120,
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/";
   TString Tanalysis_(analysis_);
+  TString fileAnalysis = Tanalysis_;
+  if(Tanalysis_=="") fileAnalysis = "nominal";
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -1069,17 +1069,17 @@ void plotMuTau( Int_t mH_           = 120,
 
   // EMBEDDED //
   TString treeEmbedded;
-  if(Tanalysis_.Contains("TauUp") || Tanalysis_.Contains("TauDown") || Tanalysis_.Contains("MuUp") || Tanalysis_.Contains("MuDown") )
+  if(Tanalysis_.Contains("TauUp") || Tanalysis_.Contains("TauDown") ) //|| Tanalysis_.Contains("MuUp") || Tanalysis_.Contains("MuDown") )
     treeEmbedded = "outTreePtOrd"+Tanalysis_;
   else treeEmbedded = "outTreePtOrd";
   TChain *dataEmbedded = new TChain(treeEmbedded);
   //
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012A*Embedded_MuTau_*.root");
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012B*Embedded_MuTau_*.root");
-    dataEmbedded->Add(pathToFile+"/nTuple_Run2012C*Embedded_MuTau_*.root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysis+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysis+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysis+".root");
   }
-  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTuple_Run2012D*Embedded_MuTau_*.root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysis+".root");
 
   // BACKGROUNDS //
   TString treeMC;
@@ -1090,39 +1090,38 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundDY         = new TChain(treeMC);
   TChain *backgroundDYTauTau   = new TChain(treeMC);
   TChain *backgroundDYMuToTau  = new TChain(treeMC);
-  TChain *backgroundDYJToTau = new TChain(treeMC);
+  TChain *backgroundDYJToTau   = new TChain(treeMC);
   TChain *backgroundTTbar      = new TChain(treeMC);
   TChain *backgroundOthers     = new TChain(treeMC);
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
-
-  backgroundDY         ->Add(pathToFile+"nTuple_DYJets_MuTau_*.root");
-  backgroundTTbar      ->Add(pathToFile+"nTuple_TTJets_MuTau_*.root");
-
-  backgroundOthers     ->Add(pathToFile+"nTuple_T-tW_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_Tbar-tW_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WWJetsTo2L2Nu_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo2L2Q_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_WZJetsTo3LNu_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Nu_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo2L2Q_MuTau_*.root");
-  backgroundOthers     ->Add(pathToFile+"nTuple_ZZJetsTo4L_MuTau_*.root");
-
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p1_MuTau_*.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets-p2_MuTau_*.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets1Jets_MuTau_*.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets2Jets_MuTau_*.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets3Jets_MuTau_*.root");
-  backgroundWJets      ->Add(pathToFile+"nTuple_WJets4Jets_MuTau_*.root");
-  backgroundW3Jets     ->Add(pathToFile+"nTuple_WJets3Jets_MuTau_*.root");
-
+  //
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
+  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_MuTau_"+fileAnalysis+".root");
+  //
+  backgroundOthers  ->Add(pathToFile+"nTupleT-tW_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleTbar-tW_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWWJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo3LNu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
+  //
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
+  backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
 
   TChain *signal[nProd][nMasses];
 
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
-      signal[iP][iM]->Add(pathToFile+"/nTuple_"+nameProd[iP]+nameMasses[iM]+"_MuTau_*.root");
+      signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+fileAnalysis+".root");
     }
   }
 
@@ -1131,7 +1130,7 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdS ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signalSusy[iP][iM] = new TChain(treeMC);
-      signalSusy[iP][iM]->Add(pathToFile+"/nTuple_SUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_*.root");
+      signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_"+fileAnalysis+".root");
     }
   }
 
@@ -1154,9 +1153,9 @@ void plotMuTau( Int_t mH_           = 120,
   else {
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     //
-    backgroundDYTauTau   ->Add(pathToFile+"nTuple_DYJ_TauTau_Open_MuTauStream.root");
-    backgroundDYMuToTau  ->Add(pathToFile+"nTuple_DYJ_MuToTau_Open_MuTauStream.root");
-    backgroundDYJToTau ->Add(pathToFile+"nTuple_DYJ_JetToTau_Open_MuTauStream.root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
+    backgroundDYMuToTau ->Add(pathToFile+"/nTupleDYJetsMuToTau_MuTau_"+fileAnalysis+".root");
+    backgroundDYJToTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
