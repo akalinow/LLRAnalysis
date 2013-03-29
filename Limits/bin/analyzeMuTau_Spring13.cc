@@ -1424,7 +1424,6 @@ void plotMuTau( Int_t mH_           = 120,
   float SSWinSidebandRegionMCIncl = 0.;      
   if(invertDiTauSign) OStoSSRatioQCD = 1.0;
 
-  /* // TO UNCOMMENT 
   evaluateQCD(RUN, 0, 0, true, "SS", false, removeMtCut, "inclusive", 
 	      SSQCDinSignalRegionDATAIncl , SSIsoToSSAIsoRatioQCD, scaleFactorTTSSIncl,
 	      extrapFactorWSSIncl, 
@@ -1444,7 +1443,6 @@ void plotMuTau( Int_t mH_           = 120,
  	      sbinPZetaRelSSInclusive, pZ, apZ, sbinPZetaRelSSInclusive, 
  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
 	      vbf, oneJet, zeroJet);
-  */
 
   delete hExtrap;
 
@@ -1520,8 +1518,8 @@ void plotMuTau( Int_t mH_           = 120,
     TChain* currentTree = 0;
 
     // TESTS => TO COMMENT !
-    if(samples[iter]=="Data" || samples[iter]=="SS" || samples[iter]=="WJets") continue;
-    cout << "start processing " << endl;
+    //if(samples[iter]=="Data" || samples[iter]=="SS" || samples[iter]=="WJets") continue;
+    //cout << "start processing " << endl;
     
     if((it->first).find("SS")!=string::npos){
       
