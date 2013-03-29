@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream> 
 #include <fstream>
+#include <sstream>
 #include <map>
 #include <string>
 
@@ -42,6 +43,21 @@
 #define DOSPLIT          false
 #define studyQCDshape    false
 #define useZDataMC       false
+///////////////////////////////////////////////////////////////////////////////////////////////
+TH1F* blindHistogram(TH1F* h, float xmin, float xmax, TString name) {
+
+  TH1F* hOut = (TH1F*)h->Clone(name);
+  int nBins  = hOut->GetNbinsX();
+  float x    = 0;
+
+  for(int i=1; i<nBins+1 ; i++) {
+    x = hOut->GetBinCenter(i);
+    if( x>xmin && x<xmax ) hOut->SetBinContent(i,-10);
+  }
+
+  return hOut;
+
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
@@ -818,8 +834,16 @@ void plotMuTau( Int_t mH_           = 120,
   cout << "@@@@@@@@@@@@@@@@@@ Variable  = " << string(variable_.Data()) <<  endl;
   cout << endl;
 
-  //string postfix_ = "Raw";
-  string postfix_ = "";
+  ostringstream ossiTmH("");
+  ossiTmH << mH_ ;
+  TString TmH_ = ossiTmH.str();
+
+  const int nProd=3;
+  const int nMasses=15;
+  TString nameProd[nProd]={"GGFH","VBFH","VH"};
+  TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
+  int hMasses[nMasses]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
+
   ofstream out(Form(location+"/%s/yields/yieldsMuTau_mH%d_%s_%s.txt",
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
   out.precision(5);
@@ -958,30 +982,14 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hWLooseBTag                       = new TH1F( "hWLooseBTag" ,  "W+jets (Loose b-Tag)", nBins , bins.GetArray());
   TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
-  TH1F* hggH110    = new TH1F( "hggH110"   ,"ggH110"               , nBins , bins.GetArray()); hggH110->SetLineWidth(2);
-  TH1F* hggH115    = new TH1F( "hggH115"   ,"ggH115"               , nBins , bins.GetArray()); hggH115->SetLineWidth(2);
-  TH1F* hggH120    = new TH1F( "hggH120"   ,"ggH120"               , nBins , bins.GetArray()); hggH120->SetLineWidth(2);
-  TH1F* hggH125    = new TH1F( "hggH125"   ,"ggH125"               , nBins , bins.GetArray()); hggH125->SetLineWidth(2);
-  TH1F* hggH130    = new TH1F( "hggH130"   ,"ggH130"               , nBins , bins.GetArray()); hggH130->SetLineWidth(2);
-  TH1F* hggH135    = new TH1F( "hggH135"   ,"ggH135"               , nBins , bins.GetArray()); hggH135->SetLineWidth(2);
-  TH1F* hggH140    = new TH1F( "hggH140"   ,"ggH140"               , nBins , bins.GetArray()); hggH140->SetLineWidth(2);
-  TH1F* hggH145    = new TH1F( "hggH145"   ,"ggH145"               , nBins , bins.GetArray()); hggH145->SetLineWidth(2);
-  TH1F* hqqH110    = new TH1F( "hqqH110"   ,"qqH110"               , nBins , bins.GetArray()); hqqH110->SetLineWidth(2);
-  TH1F* hqqH115    = new TH1F( "hqqH115"   ,"qqH115"               , nBins , bins.GetArray()); hqqH115->SetLineWidth(2);
-  TH1F* hqqH120    = new TH1F( "hqqH120"   ,"qqH120"               , nBins , bins.GetArray()); hqqH120->SetLineWidth(2);
-  TH1F* hqqH125    = new TH1F( "hqqH125"   ,"qqH125"               , nBins , bins.GetArray()); hqqH125->SetLineWidth(2);
-  TH1F* hqqH130    = new TH1F( "hqqH130"   ,"qqH130"               , nBins , bins.GetArray()); hqqH130->SetLineWidth(2);
-  TH1F* hqqH135    = new TH1F( "hqqH135"   ,"qqH135"               , nBins , bins.GetArray()); hqqH135->SetLineWidth(2); 
-  TH1F* hqqH140    = new TH1F( "hqqH140"   ,"qqH140"               , nBins , bins.GetArray()); hqqH140->SetLineWidth(2);
-  TH1F* hqqH145    = new TH1F( "hqqH145"   ,"qqH145"               , nBins , bins.GetArray()); hqqH145->SetLineWidth(2);
-  TH1F* hVH110     = new TH1F( "hVH110"   ,"VH110"                 , nBins , bins.GetArray()); hVH110->SetLineWidth(2);
-  TH1F* hVH115     = new TH1F( "hVH115"   ,"VH115"                 , nBins , bins.GetArray()); hVH115->SetLineWidth(2);
-  TH1F* hVH120     = new TH1F( "hVH120"   ,"VH120"                 , nBins , bins.GetArray()); hVH120->SetLineWidth(2);
-  TH1F* hVH125     = new TH1F( "hVH125"   ,"VH125"                 , nBins , bins.GetArray()); hVH125->SetLineWidth(2);
-  TH1F* hVH130     = new TH1F( "hVH130"   ,"VH130"                 , nBins , bins.GetArray()); hVH130->SetLineWidth(2);
-  TH1F* hVH135     = new TH1F( "hVH135"   ,"VH135"                 , nBins , bins.GetArray()); hVH135->SetLineWidth(2);
-  TH1F* hVH140     = new TH1F( "hVH140"   ,"VH140"                 , nBins , bins.GetArray()); hVH140->SetLineWidth(2);
-  TH1F* hVH145     = new TH1F( "hVH145"   ,"VH145"                 , nBins , bins.GetArray()); hVH145->SetLineWidth(2);
+
+  TH1F* hSignal[nProd][nMasses];
+  for(int iP=0 ; iP<nProd ; iP++) {
+    for(int iM=0 ; iM<nMasses ; iM++) {
+      hSignal[iP][iM] = new TH1F("h"+nameProd[iP]+nameMasses[iM], nameProd[iP]+nameMasses[iM], nBins , bins.GetArray());
+      hSignal[iP][iM]->SetLineWidth(2);
+    }
+  }
 
   // QCD shapes //
   const int nSign=2;
@@ -1106,16 +1114,6 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
   backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
-
-
-  vector<int> hMasses;
-  hMasses.push_back(110);hMasses.push_back(115);hMasses.push_back(120);hMasses.push_back(125);
-  hMasses.push_back(130);hMasses.push_back(135);hMasses.push_back(140);hMasses.push_back(145);
-
-  const int nProd=3;
-  const int nMasses=8;
-  TString nameProd[nProd]={"GGFH","VBFH","VH"};
-  TString nameMasses[nMasses]={"110","115","120","125","130","135","140","145"};
 
   TChain *signal[nProd][nMasses];
   for(int iP=0 ; iP<nProd ; iP++) {
@@ -1402,6 +1400,7 @@ void plotMuTau( Int_t mH_           = 120,
   float SSWinSidebandRegionMCIncl = 0.;      
   if(invertDiTauSign) OStoSSRatioQCD = 1.0;
 
+  /* // TO UNCOMMENT 
   evaluateQCD(RUN, 0, 0, true, "SS", false, removeMtCut, "inclusive", 
 	      SSQCDinSignalRegionDATAIncl , SSIsoToSSAIsoRatioQCD, scaleFactorTTSSIncl,
 	      extrapFactorWSSIncl, 
@@ -1421,6 +1420,7 @@ void plotMuTau( Int_t mH_           = 120,
  	      sbinPZetaRelSSInclusive, pZ, apZ, sbinPZetaRelSSInclusive, 
  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
 	      vbf, oneJet, zeroJet);
+  */
 
   delete hExtrap;
 
@@ -1434,45 +1434,36 @@ void plotMuTau( Int_t mH_           = 120,
   /////////////////////////////////////////////////////////////////////////////////////
  
   std::vector<string> samples;
+  std::map<std::string,TChain*> tMap;
+
   samples.push_back("SS");
   samples.push_back("WJets");
   samples.push_back("Data");
-  if(backgroundW3Jets)
-    samples.push_back("W3Jets");
+  if(backgroundW3Jets) samples.push_back("W3Jets");
   samples.push_back("TTbar");
   samples.push_back("Others");
   samples.push_back("DYMutoTau");
   samples.push_back("DYJtoTau");
   samples.push_back("DYToTauTau");
-  if(dataEmbedded)
-    samples.push_back("Embedded");
-  for(unsigned int i = 0 ; i < hMasses.size() ; i++) {
-    samples.push_back(string(Form("ggH%d",hMasses[i])));
-    samples.push_back(string(Form("qqH%d",hMasses[i])));
-    samples.push_back(string(Form("VH%d",hMasses[i])));
+  if(dataEmbedded) samples.push_back("Embedded");
+
+  tMap["Data"]       = data;
+  tMap["Embedded"]   = dataEmbedded;
+  tMap["DYToTauTau"] = backgroundDYTauTau;
+  tMap["DYMutoTau"]  = backgroundDYMutoTau;
+  tMap["DYJtoTau"]   = backgroundDYJtoTau;
+  tMap["WJets"]      = backgroundWJets;
+  tMap["W3Jets"]     = backgroundW3Jets;
+  tMap["Others"]     = backgroundOthers;
+  tMap["TTbar"]      = backgroundTTbar;
+  tMap["SS"]         = data;
+
+  for(int iP=0 ; iP<nProd ; iP++) {
+    for(int iM=0 ; iM<nMasses ; iM++) {
+      samples.push_back((nameProd[iP]+nameMasses[iM]).Data());
+      tMap[ (nameProd[iP]+nameMasses[iM]).Data() ] = signal[iP][iM];
+    }
   }
-
-  std::map<std::string,TChain*> tMap;
-  tMap["Data"]         = data;
-  tMap["Embedded"]     = dataEmbedded;
-  tMap["DYToTauTau"]   = backgroundDYTauTau;
-  tMap["DYMutoTau"]    = backgroundDYMutoTau;
-  tMap["DYJtoTau"]     = backgroundDYJtoTau;
-  tMap["WJets"]        = backgroundWJets;
-  tMap["W3Jets"]       = backgroundW3Jets;
-  tMap["Others"]       = backgroundOthers;
-  tMap["TTbar"]        = backgroundTTbar;
-  tMap["SS"]           = data;
-
-  string shortProd[nProd]={"ggH","qqH","VH"};
-  string sMasses[nMasses] = {"110","115","120","125","130","135","140","145"};
-
-  for(int iP=0 ; iP<nProd ; iP++)
-    for(int iM=0 ; iM<nMasses ; iM++)
-      tMap[ shortProd[iP] + sMasses[iM] ] = signal[iP][iM] ;
-
-
-
 
   std::map<TString,Float_t> vMap;
 
@@ -1503,6 +1494,10 @@ void plotMuTau( Int_t mH_           = 120,
     TH1F* hCleaner = new TH1F("hCleaner","",nBins , bins.GetArray());
     if ( !h1->GetSumw2N() )h1->Sumw2(); if ( !hCleaner->GetSumw2N() )hCleaner->Sumw2();
     TChain* currentTree = 0;
+
+    // TESTS => TO COMMENT !
+    if(samples[iter]=="Data" || samples[iter]=="SS" || samples[iter]=="WJets") continue;
+    cout << "start processing " << endl;
     
     if((it->first).find("SS")!=string::npos){
       
@@ -1518,7 +1513,6 @@ void plotMuTau( Int_t mH_           = 120,
       if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
 	sbinPZetaRelSSForWextrapolation = (sbinPZetaRelSSInclusive&&vbfLoose);     
       
-
       evaluateQCD(RUN, h1, hCleaner, true, "SS", false, removeMtCut, selection_, 
 		  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
 		  extrapFactorWSS, 
@@ -2011,101 +2005,34 @@ void plotMuTau( Int_t mH_           = 120,
 
 
 
-	else if((it->first).find("qqH") !=string::npos || 
-		(it->first).find("ggH") !=string::npos ||
+	else if((it->first).find("VBFH") !=string::npos || 
+		(it->first).find("GGFH") !=string::npos ||
 		(it->first).find("VH")  !=string::npos ){
 		//(it->first).find("SUSY")!=string::npos){
 
 	  float NormSign = 0.;
 	  drawHistogramMC(RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, sbin, 1);
-	   
-	  if((it->first).find(string(Form("qqH%d",mH_)))!=string::npos){
+
+	  if((it->first).find("VBFH"+TmH_)!=string::npos){
 	    hSgn1->Add(h1,1.0);
 	    hSgn1->Scale(magnifySgn_);
 	    hSgn->Add(hSgn1,1.0);
 	  }
-	  else if((it->first).find(string(Form("ggH%d",mH_)))!=string::npos){
+	  else if((it->first).find("GGFH"+TmH_)!=string::npos){
 	    hSgn2->Add(h1,1.0);
 	    hSgn2->Scale(magnifySgn_);
 	    hSgn->Add(hSgn2,1.0);
 	  }
-	  else  if((it->first).find(string(Form("VH%d",mH_)))!=string::npos){
+	  else  if((it->first).find("VH"+TmH_)!=string::npos){
 	    hSgn3->Add(h1,1.0);
 	    hSgn3->Scale(magnifySgn_);
 	    hSgn->Add(hSgn3,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",110)))!=string::npos){
-	    hggH110->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",115)))!=string::npos){
-	    hggH115->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",120)))!=string::npos){
-	    hggH120->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",125)))!=string::npos){
-	    hggH125->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",130)))!=string::npos){
-	    hggH130->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",135)))!=string::npos){
-	    hggH135->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",140)))!=string::npos){
-	    hggH140->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("ggH%d",145)))!=string::npos){
-	    hggH145->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",110)))!=string::npos){
-	    hqqH110->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",115)))!=string::npos){
-	    hqqH115->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",120)))!=string::npos){
-	    hqqH120->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",125)))!=string::npos){
-	    hqqH125->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",130)))!=string::npos){
-	    hqqH130->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",135)))!=string::npos){
-	    hqqH135->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",140)))!=string::npos){
-	    hqqH140->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("qqH%d",145)))!=string::npos){
-	    hqqH145->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",110)))!=string::npos){
-	    hVH110->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",115)))!=string::npos){
-	    hVH115->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",120)))!=string::npos){
-	    hVH120->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",125)))!=string::npos){
-	    hVH125->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",130)))!=string::npos){
-	    hVH130->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",135)))!=string::npos){
-	    hVH135->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",140)))!=string::npos){
-	    hVH140->Add(h1,1.0);
-	  }
-	  if((it->first).find(string(Form("VH%d",145)))!=string::npos){
-	    hVH145->Add(h1,1.0);
-	  }
+	  }	   
+
+	  for(int iP=0 ; iP<nProd ; iP++)
+	    for(int iM=0 ; iM<nMasses ; iM++)
+	      if((it->first).find(nameProd[iP]+nameMasses[iM])!=string::npos)
+		hSignal[iP][iM]->Add(h1,1.0);
 
 // 	  if((it->first).find("SUSY")!=string::npos){
 // 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
@@ -2405,6 +2332,72 @@ void plotMuTau( Int_t mH_           = 120,
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
 
+  TH1F *hDataBlind, *hRatioBlind;
+
+  // Plot blinded histogram
+  if(variable_.Contains("Mass")) {
+
+    hDataBlind  = blindHistogram(hData,  100, 160, "hDataBlind");
+    hRatioBlind = blindHistogram(hRatio, 100, 160, "hRatioBlind");
+
+    c1 = new TCanvas("c2","",5,30,650,600);
+    c1->SetGrid(0,0);
+    c1->SetFillStyle(4000);
+    c1->SetFillColor(10);
+    c1->SetTicky();
+    c1->SetObjectStat(0);
+    c1->SetLogy(logy_);
+
+    pad1 = new TPad("pad2_1DEta","",0.05,0.22,0.96,0.97);
+    pad2 = new TPad("pad2_2DEta","",0.05,0.02,0.96,0.20);
+    
+    pad1->SetFillColor(0);
+    pad2->SetFillColor(0);
+    pad1->Draw();
+    pad2->Draw();
+    
+    pad1->cd();
+    pad1->SetLogy(logy_);
+    gStyle->SetOptStat(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetCanvasBorderMode(0);
+    gStyle->SetCanvasColor(0);
+    gStyle->SetPadBorderMode(0);
+    gStyle->SetPadColor(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetTitleBorderSize(0);
+    gStyle->SetTitleH(0.07);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleStyle(0);
+    gStyle->SetTitleOffset(1.3,"y");
+
+    hDataBlind->Draw("P");
+    aStack->Draw("HISTSAME");
+    hDataBlind->Draw("PSAME");
+    if(logy_) hSgn->Draw("HISTSAME");
+    leg->Draw();
+
+    pad2->cd();
+    gStyle->SetOptStat(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetCanvasBorderMode(0);
+    gStyle->SetCanvasColor(0);
+    gStyle->SetPadBorderMode(0);
+    gStyle->SetPadColor(0);
+    gStyle->SetTitleFillColor(0);
+    gStyle->SetTitleBorderSize(0);
+    gStyle->SetTitleH(0.07);
+    gStyle->SetTitleFontSize(0.1);
+    gStyle->SetTitleStyle(0);
+    gStyle->SetTitleOffset(1.3,"y");
+
+    hRatioBlind->Draw("P");  
+
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+
+  }
+
   // templates for fitting
   TFile* fout = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()),"RECREATE");
   fout->cd();
@@ -2444,12 +2437,11 @@ void plotMuTau( Int_t mH_           = 120,
   hDataAntiIsoLooseTauIsoQCD->Write();
   hData->Write();
   hParameters->Write();
-  hggH110->Write(); hggH115->Write(); hggH120->Write(); hggH125->Write();  
-  hggH130->Write(); hggH135->Write(); hggH140->Write(); hggH145->Write(); 
-  hqqH110->Write(); hqqH115->Write(); hqqH120->Write(); hqqH125->Write();  
-  hqqH130->Write(); hqqH135->Write(); hqqH140->Write(); hqqH145->Write();  
-  hVH110->Write();  hVH115->Write();  hVH120->Write();  hVH125->Write();  
-  hVH130->Write();  hVH135->Write();  hVH140->Write();  hVH145->Write(); 
+
+  for(int iP=0 ; iP<nProd ; iP++)
+    for(int iM=0 ; iM<nMasses ; iM++)
+      if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
+
 //   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
 //     ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
 //   }
@@ -2467,9 +2459,11 @@ void plotMuTau( Int_t mH_           = 120,
   delete hVV; delete hSgn; delete hSgn1; delete hSgn2; delete hSgn3; delete hData; delete hParameters;
   delete hW3JetsLooseTauIso; delete hW3JetsMediumTauIso; delete hW3JetsMediumTauIsoRelVBF; delete hW3JetsMediumTauIsoRelVBFMinusSS; delete hWLooseBTag;
   delete hDataAntiIsoLooseTauIso; delete hDataAntiIsoLooseTauIsoQCD;
-  delete hggH110; delete hggH115 ; delete hggH120; delete hggH125; delete hggH130; delete hggH135; delete hggH140; delete hggH145;
-  delete hqqH110; delete hqqH115 ; delete hqqH120; delete hqqH125; delete hqqH130; delete hqqH135; delete hqqH140; delete hqqH145;
-  delete hVH110;  delete hVH115 ;  delete hVH120;  delete hVH125;  delete hVH130;  delete hVH135;  delete hVH140;  delete hVH145;
+
+  for(int iP=0 ; iP<nProd ; iP++)
+    for(int iM=0 ; iM<nMasses ; iM++)
+      if(hSignal[iP][iM]) delete hSignal[iP][iM];
+
 //   for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
 
   for(int iS=0 ; iS<nSign ; iS++)
