@@ -17,6 +17,7 @@ echo "generate and launch jobs to compute the limits"
 submit.py --asymptotic $2/bin-by-bin/$1/* --llr --jobdir $2
 cd $2/bin-by-bin-$1/
 ./bin-by-bin-$1_submit.sh
+cd ../..
 
 echo "prepare the limits comparison"
 cp -r $2/bin-by-bin/$1/ $2/bin-by-bin/$1_$3
