@@ -20,7 +20,7 @@ cd LIMITS_$2/bin-by-bin-$1/
 cd ../..
 
 echo "Plot the limits."
-echo "cp -r LIMITS_"$2"/bin-by-bin/"$1"/ LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; plot --asymptotic HiggsAnalysis/HiggsToTauTau/python/layouts/limit-sm.py LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; mkdir LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results ; mv "$1"_"$3"_limit.* LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results" > plot_$3.sh
-chmod u+x plot_$3.sh
-echo "Wait for your T3 jobs to be finished, then launch plot_"$3".sh to plot the limits."
+echo "cp -r LIMITS_"$2"/bin-by-bin/"$1"/ LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; plot --asymptotic HiggsAnalysis/HiggsToTauTau/python/layouts/limit-sm.py LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; mkdir LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results ; mv "$1"_"$3"_limit.* LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results" > plot_$1_$3.sh
+chmod u+x plot_$1_$3.sh
+echo "Wait for your T3 jobs to be finished, then launch plot_"$1"_"$3".sh to plot the limits."
 
