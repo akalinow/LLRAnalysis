@@ -13,17 +13,14 @@ python HiggsAnalysis/HiggsToTauTau/scripts/doSM.py -a bin-by-bin -c $1 -p 8TeV -
 echo "Compute the pulls"
 for((i=90;i<=160;i+=5)) do limit.py --stable --max-likelihood LIMITS_$2/bin-by-bin/$1/$i ; done 
 
-echo "generate and launch jobs to compute the limits"
+echo "Generate and launch jobs to compute the limits"
 submit.py --asymptotic LIMITS_$2/bin-by-bin/$1/* --llr --jobdir LIMITS_$2
 cd LIMITS_$2/bin-by-bin-$1/
 ./bin-by-bin-$1_submit.sh
 cd ../..
 
-echo "prepare the limits comparison"
-cp -r LIMITS_$2/bin-by-bin/$1/ LIMITS_$2/bin-by-bin/$1_$3
-
-echo "plot the limits"
-plot --asymptotic HiggsAnalysis/HiggsToTauTau/python/layouts/limit-sm.py LIMITS_$2/bin-by-bin/$1_$3
-mkdir LIMITS_$2/bin-by-bin/$1_$3/results
-mv $1_$3_limit.* LIMITS_$2/bin-by-bin/$1_$3/results
+echo "Plot the limits."
+echo "cp -r LIMITS_"$2"/bin-by-bin/"$1"/ LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; plot --asymptotic HiggsAnalysis/HiggsToTauTau/python/layouts/limit-sm.py LIMITS_"$2"/bin-by-bin/"$1"_"$3" ; mkdir LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results ; mv "$1"_"$3"_limit.* LIMITS_"$2"/bin-by-bin/"$1"_"$3"/results" > plot_$3.sh
+chmod u+x plot_$3.sh
+echo "Wait for your T3 jobs to be finished, then launch plot_"$3".sh to plot the limits."
 
