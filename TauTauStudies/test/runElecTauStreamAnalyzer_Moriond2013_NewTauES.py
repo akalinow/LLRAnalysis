@@ -909,7 +909,7 @@ process.elecPtEtaRelID = process.elecPtEtaIDIso.clone(
     #src = cms.InputTag("elecPtEtaRelIDInt"),
     src = cms.InputTag("elecPtEtaRelID"),
     #MBcut = cms.string("pt>15")
-    cut = cms.string("pt>12")
+    cut = cms.string("pt>12 && abs(userFloat('dxyWrtPV'))<0.045")
     )
 process.elecPtEtaRelIDElecUp   = process.elecPtEtaRelID.clone(
     src = cms.InputTag("rescaledElectronsRel","U")
@@ -917,6 +917,14 @@ process.elecPtEtaRelIDElecUp   = process.elecPtEtaRelID.clone(
 process.elecPtEtaRelIDElecDown = process.elecPtEtaRelID.clone(
     src = cms.InputTag("rescaledElectronsRel","D")
     )
+##Update 3rdLepVeto cuts##
+process.electronsForVeto = cms.EDFilter(
+    "PATElectronSelector",
+    src = cms.InputTag("electronsForVeto"),
+    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"),
+    filter = cms.bool(False)
+    )
+#########
 
 process.filterSequence = cms.Sequence(
     (process.tauPtEtaIDAgMuAgElecIso       * process.tauPtEtaIDAgMuAgElecIsoCounter) +
@@ -1106,6 +1114,7 @@ process.seqNominal = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceType1corrPFMEt*
@@ -1124,6 +1133,7 @@ process.seqJetUp = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
@@ -1140,6 +1150,7 @@ process.seqJetDown = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
@@ -1157,6 +1168,7 @@ process.seqMEtResolutionUp = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
@@ -1171,6 +1183,7 @@ process.seqMEtResolutionDown = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
@@ -1186,6 +1199,7 @@ process.seqMEtResponseUp = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
@@ -1200,6 +1214,7 @@ process.seqMEtResponseDown = cms.Sequence(
     #process.elecPtEtaID*
     (process.elecPtEtaIDIso *process.elecPtEtaIDIsoCounter) *
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
     process.metRecoilCorrector*
@@ -1221,6 +1236,7 @@ process.seqElecUp = cms.Sequence(
     (process.rescaledMETelectron+process.rescaledElectrons+process.rescaledElectronsRel)*
     (process.elecPtEtaIDIsoElecUp*process.elecPtEtaIDIsoElecUpCounter) *
     process.elecPtEtaRelIDElecUp *
+    process.electronsForVeto *
     process.pfMEtMVACov*
     process.diTauElecUp*process.selectedDiTauElecUp*process.selectedDiTauElecUpCounter*
     process.elecTauStreamAnalyzerElecUp
@@ -1238,6 +1254,7 @@ process.seqElecDown = cms.Sequence(
     (process.rescaledMETelectron+process.rescaledElectrons+process.rescaledElectronsRel)*
     (process.elecPtEtaIDIsoElecDown*process.elecPtEtaIDIsoElecDownCounter) *
     process.elecPtEtaRelIDElecDown *
+    process.electronsForVeto *
     process.pfMEtMVACov*
     process.diTauElecDown*process.selectedDiTauElecDown*process.selectedDiTauElecDownCounter*
     process.elecTauStreamAnalyzerElecDown
@@ -1249,6 +1266,7 @@ process.seqTauUp = cms.Sequence(
     (process.elecPtEtaIDIso*process.elecPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
@@ -1266,6 +1284,7 @@ process.seqTauDown = cms.Sequence(
     (process.elecPtEtaIDIso*process.elecPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.elecPtEtaRelID *
+    process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     (process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.produceCaloMEtNoHF*
