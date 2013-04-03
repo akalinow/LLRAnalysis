@@ -34,7 +34,7 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/"\n')
+        f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/"\n')
         f.write('')
         f.write('cd $WORKINGDIR\n')
         f.write('export SCRAM_ARCH=slc5_amd64_gcc462\n')
@@ -76,9 +76,9 @@ treeSkim("nominal","Run2012D-PromptReco-v1-p8-Data",False)
 treeSkim("nominal","Run2012D-PromptReco-v1-p9-Data",False)
 
 ###Embedded samples
-#anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
-anaEmb = ['nominal']
-#anaEmb = ['TauUp','TauDown','ElecUp','ElecDown']
+#anaEmb = ['nominal']
+anaEmb = ['nominal', 'TauUp','TauDown']
+#anaEmb = ['nominal','TauUp','TauDown','MuUp','MuDown']
 
 samplesEmb = [
     'Run2012A-06Aug2012-Embedded',
