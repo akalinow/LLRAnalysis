@@ -1068,18 +1068,23 @@ void plotMuTau( Int_t mH_           = 120,
   }
 
   // EMBEDDED //
-  TString treeEmbedded;
-  if(Tanalysis_.Contains("TauUp") || Tanalysis_.Contains("TauDown") ) //|| Tanalysis_.Contains("MuUp") || Tanalysis_.Contains("MuDown") )
+  TString treeEmbedded,fileAnalysisEmbedded;
+  if(Tanalysis_.Contains("TauUp") || Tanalysis_.Contains("TauDown") ) { //|| Tanalysis_.Contains("MuUp") || Tanalysis_.Contains("MuDown") )
     treeEmbedded = "outTreePtOrd"+Tanalysis_;
-  else treeEmbedded = "outTreePtOrd";
+    fileAnalysisEmbedded = fileAnalysis ;
+  }
+  else {
+    treeEmbedded = "outTreePtOrd";
+    fileAnalysisEmbedded = "nominal";
+  }
   TChain *dataEmbedded = new TChain(treeEmbedded);
   //
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysis+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysis+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysis+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
   }
-  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysis+".root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
 
   // BACKGROUNDS //
   TString treeMC;
@@ -1169,32 +1174,32 @@ void plotMuTau( Int_t mH_           = 120,
 
   ////// TAU ISO //////
   TCut tiso("tightestHPSMVAWP>=0  && tightestAntiMuWP>2");
-  TCut ltiso("tightestHPSMVAWP>-99");
-  TCut mtiso("hpsMVA>0.7");
+  TCut ltiso("tightestHPSMVAWP>-99 && tightestAntiMuWP>2");
+  TCut mtiso("hpsMVA>0.7 && tightestAntiMuWP>2");
   TCut pairIndex("pairIndexMoriond<1");
 
   if(version_.Contains("Moriond")) {
     tiso  = "tightestHPSMVAWP>=0  && tightestAntiMuWP>2" ;
-    ltiso = "tightestHPSMVAWP>-99";
-    mtiso = "hpsMVA>0.7";
+    ltiso = "tightestHPSMVAWP>-99 && tightestAntiMuWP>2";
+    mtiso = "hpsMVA>0.7 && tightestAntiMuWP>2";
     pairIndex = "pairIndexMoriond<1";
   }
   else if(version_.Contains("TauIso2")) {
     tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMuWP>2" ;
-    ltiso = "tightestHPSMVA2WP>-99";
-    mtiso = "hpsMVA2>0.7";
+    ltiso = "tightestHPSMVA2WP>-99 && tightestAntiMuWP>2";
+    mtiso = "hpsMVA2>0.7 && tightestAntiMuWP>2";
     pairIndex = "pairIndexHPSMVA2<1";
   }
   else if(version_.Contains("AntiMu2")) {
     tiso  = "tightestHPSMVAWP>=0 && tightestAntiMu2WP>2" ;
-    ltiso = "tightestHPSMVAWP>-99";
-    mtiso = "hpsMVA>0.7";
+    ltiso = "tightestHPSMVAWP>-99 && tightestAntiMu2WP>2";
+    mtiso = "hpsMVA>0.7 && tightestAntiMu2WP>2";
     pairIndex = "pairIndexAntiMu2<1";
   }
   else if(version_.Contains("PostMoriond")) {
     tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMu2WP>2" ;
-    ltiso = "tightestHPSMVA2WP>-99";
-    mtiso = "hpsMVA2>0.7";
+    ltiso = "tightestHPSMVA2WP>-99 && tightestAntiMu2WP>2";
+    mtiso = "hpsMVA2>0.7 && tightestAntiMu2WP>2";
     pairIndex = "pairIndexSpring13<1";
   }
 
