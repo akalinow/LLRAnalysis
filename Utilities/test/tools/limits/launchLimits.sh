@@ -7,11 +7,12 @@ chan=$1
 dir=$2
 tag=$3
 
-echo "Install directories + add bin-by-bin uncertainties"
+#echo "Install directories + add bin-by-bin uncertainties"
 python HiggsAnalysis/HiggsToTauTau/scripts/doSM.py -a bin-by-bin -c $1 -p 8TeV --update-all --inputs-$1=$2 --label $2 90-160:5 
 
-echo "Compute the pulls"
-for((i=90;i<=160;i+=5)) do limit.py --stable --max-likelihood LIMITS_$2/bin-by-bin/$1/$i ; done 
+#echo "Compute the pulls"
+#for((i=90;i<=160;i+=5)) do limit.py --stable --max-likelihood LIMITS_$2/bin-by-bin/$1/$i ; done 
+limit.py --stable --max-likelihood LIMITS_$2/bin-by-bin/$1/125
 
 echo "Generate and launch jobs to compute the limits"
 submit.py --asymptotic LIMITS_$2/bin-by-bin/$1/* --llr --jobdir LIMITS_$2
