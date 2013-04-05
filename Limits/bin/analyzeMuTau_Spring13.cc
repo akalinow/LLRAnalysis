@@ -1050,7 +1050,7 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1066,6 +1066,8 @@ void plotMuTau( Int_t mH_           = 120,
   if(RUN.Contains("D")) {
     data->Add(pathToFile+"/nTupleRun2012D*Data_MuTau.root");
   }
+
+  if(!data) cout << "### DATA NTUPLE NOT FOUND ###" << endl;
 
   // EMBEDDED //
   TString treeEmbedded,fileAnalysisEmbedded;
@@ -1085,6 +1087,8 @@ void plotMuTau( Int_t mH_           = 120,
     dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
   }
   if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+
+  if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
 
   // BACKGROUNDS //
   TString treeMC;
@@ -1121,11 +1125,18 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
   backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
 
+  if(!backgroundDY)    cout << "###  NTUPLE DY NOT FOUND ###" << endl;  
+  if(!backgroundTTbar) cout << "###  NTUPLE TT NOT FOUND ###" << endl;  
+  if(!backgroundOthers)cout << "###  NTUPLE VVt NOT FOUND ###" << endl;  
+  if(!backgroundWJets) cout << "###  NTUPLE W NOT FOUND ###" << endl;  
+  if(!backgroundW3Jets)cout << "###  NTUPLE W3 NOT FOUND ###" << endl;  
+
   TChain *signal[nProd][nMasses];
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
       signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+fileAnalysis+".root");
+      if(!signal[iP][iM])cout << "###  NTUPLE Signal " << nameProd[iP]+nameMasses[iM] << " NOT FOUND ###" << endl;  
     }
   }
   
@@ -1178,34 +1189,52 @@ void plotMuTau( Int_t mH_           = 120,
   TCut mtiso("hpsMVA>0.7 && tightestAntiMuWP>2");
   TCut pairIndex("pairIndexMoriond<1");
 
-  if(version_.Contains("Moriond")) {
+  if(version_=="Moriond") {
     tiso  = "tightestHPSMVAWP>=0  && tightestAntiMuWP>2" ;
     ltiso = "tightestHPSMVAWP>-99 && tightestAntiMuWP>2";
     mtiso = "hpsMVA>0.7 && tightestAntiMuWP>2";
     pairIndex = "pairIndexMoriond<1";
   }
-  else if(version_.Contains("TauIso2")) {
+  else if(version_=="MoriondHPSDB3H") {
+    tiso  = "tightestHPSDB3HWP>=0  && tightestAntiMuWP>2" ;
+    ltiso = "tightestHPSDB3HWP>-99 && tightestAntiMuWP>2";
+    mtiso = "hpsDB3H>0.7 && tightestAntiMuWP>2";
+    pairIndex = "pairIndexHPSDB3H<1"; 
+    //pairIndex = "pairIndexMoriond<1"; // old ntuples --> to be changed with next iteration
+  }
+  else if(version_=="TauIso2") {
     tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMuWP>2" ;
     ltiso = "tightestHPSMVA2WP>-99 && tightestAntiMuWP>2";
     mtiso = "hpsMVA2>0.7 && tightestAntiMuWP>2";
     pairIndex = "pairIndexHPSMVA2<1";
   }
-  else if(version_.Contains("AntiMu2")) {
+  else if(version_=="AntiMu2") {
     tiso  = "tightestHPSMVAWP>=0 && tightestAntiMu2WP>2" ;
     ltiso = "tightestHPSMVAWP>-99 && tightestAntiMu2WP>2";
     mtiso = "hpsMVA>0.7 && tightestAntiMu2WP>2";
     pairIndex = "pairIndexAntiMu2<1";
   }
-  else if(version_.Contains("PostMoriond")) {
+  else if(version_=="AntiMu2TauIso2") {
     tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMu2WP>2" ;
     ltiso = "tightestHPSMVA2WP>-99 && tightestAntiMu2WP>2";
     mtiso = "hpsMVA2>0.7 && tightestAntiMu2WP>2";
-    pairIndex = "pairIndexSpring13<1";
+    pairIndex = "pairIndexAntiMu2HPSMVA2<1";
+    //pairIndex = "pairIndexSpring13<1"; // old ntuples --> to be changed with next iteration
   }
-
-  if(version_.Contains("Soft")) {
+  else if(version_=="AntiMu2HPSDB3H") {
+    tiso  = "tightestHPSDB3HWP>=0 && tightestAntiMu2WP>2" ;
+    ltiso = "tightestHPSDB3HWP>-99 && tightestAntiMu2WP>2";
+    mtiso = "hpsDB3H>0.7 && tightestAntiMu2WP>2";
+    pairIndex = "pairIndexAntiMu2HPSDB3H<1";
+    //pairIndex = "pairIndexSpring13<1"; // old ntuples --> to be changed with next iteration
+  }
+  else if(version_=="AntiMu2TauIso2Soft") {
+    tiso  = "tightestHPSMVA2WP>=0 && tightestAntiMu2WP>2" ;
+    ltiso = "tightestHPSMVA2WP>-99 && tightestAntiMu2WP>2";
+    mtiso = "hpsMVA2>0.7 && tightestAntiMu2WP>2";
     pairIndex = "pairIndexSoft<1";
   }
+  if(VERBOSE) cout << "USING PAIR INDEX : " << pairIndex << endl;
 
   ////// MU ISO ///////
   TCut liso("combRelIsoLeg1DBetav2<0.10");
