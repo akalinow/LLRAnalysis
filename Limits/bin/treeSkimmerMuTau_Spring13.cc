@@ -687,7 +687,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsDB3H_,hpsMVA_,hpsMVA2_;//IN
   float pfJetPt_;
-  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_; // ND
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_, passL1etmCutABC_; // ND
   float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
 
@@ -909,6 +909,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_, "L1etmCorr/F");//MB
   outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_,"L1etmWeight/F");//MB
   outTreePtOrd->Branch("passL1etmCut",&passL1etmCut_,"passL1etmCut/F");//ND
+  outTreePtOrd->Branch("passL1etmCutABC",&passL1etmCutABC_,"passL1etmCutABC/F");//ND
 
   outTreePtOrd->Branch("caloMEtNoHF",         &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFPhi",      &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
@@ -2262,6 +2263,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
 	passL1etmCut_       = float(L1etmCorr_>etmCut);
+	passL1etmCutABC_    = float(L1etmCorr_>20);
 
       }
       else {
