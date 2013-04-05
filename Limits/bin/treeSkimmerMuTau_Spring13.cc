@@ -67,7 +67,6 @@
 #define USEFAKERATE false
 #define DOSVFITSTANDALONE false
 #define DOVBFMVA true
-#define READSOFT false
 #define DEBUG false
 
 // Weights of differents periods
@@ -95,6 +94,8 @@ typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LV;
 edm::LumiReWeighting LumiWeights_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_Moriond-600bins.root","pileup","pileup");
 edm::LumiReWeighting LumiWeightsHCP_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_HCP-600bins.root","pileup","pileup"); 
 edm::LumiReWeighting LumiWeightsD_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_DOnly-600bins.root","pileup","pileup"); 
+edm::LumiReWeighting LumiWeightsDHigh_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012D_high-600bins-mbiasXS69400.root","pileup","pileup"); 
+edm::LumiReWeighting LumiWeightsDLow_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root","/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012D_low-600bins-mbiasXS69400.root","pileup","pileup"); 
 
 enum BVariation{kNo = 0, kDown = 1, kUp = 2};
 BtagSF* btsf = new BtagSF(12345);
@@ -292,31 +293,13 @@ void createReWeighting3D(){
 
 }
 
-float pileupWeight( float intimepileup_ ){
+float pileupWeight( float intimepileup , TString period=""){
 
-  float intimepileup = intimepileup_; //>59 ? 59 : intimepileup_;
-
-  //return LumiWeights_.ITweight(intimepileup);
-  return LumiWeights_.weight(intimepileup);
-  
-}
-
-float pileupWeightHCP( float intimepileup_ ){
-
-  float intimepileup = intimepileup_; //>59 ? 59 : intimepileup_;
-
-  //return LumiWeights_.ITweight(intimepileup);
-  return LumiWeightsHCP_.weight(intimepileup);
-  
-}
-
-float pileupWeightD( float intimepileup_ ){
-
-  float intimepileup = intimepileup_; //>59 ? 59 : intimepileup_;
-
-  //return LumiWeights_.ITweight(intimepileup);
-  return LumiWeightsD_.weight(intimepileup);
-  
+  if(     period=="HCP")   return LumiWeightsHCP_.weight(intimepileup);
+  else if(period=="D")     return LumiWeightsD_.weight(intimepileup);
+  else if(period=="DHigh") return LumiWeightsDHigh_.weight(intimepileup);
+  else if(period=="DLow")  return LumiWeightsDLow_.weight(intimepileup);
+  else                     return LumiWeights_.weight(intimepileup);
 }
 
 float pileupWeight2( int intimepileup_ ){
@@ -551,13 +534,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Moriond.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/Moriond/tools/llrCorrections_Moriond_v2.root");
+  cout << "Using corrections from llrCorrections_Spring13.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Spring13.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
-  const int nRunMuT=7; // A, B, C, D, MC-old, ABCD, MC-new
-  TString nom_run_mu[nRunMuT]={"A","B","C","D","MCold","ABCD","MCnew"};
+  const int nRunMuT=9; // A, B, C, D, MC-old, ABCD, MC-new, SoftMuD, SoftMuMC
+  TString nom_run_mu[nRunMuT]={"A","B","C","D","MCold","ABCD","MCnew","SoftD","SoftMC"};
   TString nom_eta_mu[nEtaMuT]={"0","1","2","3","4","5"};
   TF1 *turnOnMu[nEtaMuT][nRunMuT];
 
@@ -704,7 +687,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsDB3H_,hpsMVA_,hpsMVA2_;//IN
   float pfJetPt_;
-  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_; // ND
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_; // ND
   float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
 
@@ -717,7 +700,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD;
+  float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
  
@@ -726,8 +709,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoMu8Tau20, HLTmatchIsoMu15ETM20, HLTmatchMu8;
 
   // Muon weights
-  float HLTMu, HLTMuA, HLTMuB, HLTMuC, HLTMuD, HLTMuABC, HLTMuABCD, HLTMuMCold, HLTMuMCnew, HLTMuSoft, HLTMuSoftMC;
-  float HLTweightMu, HLTweightMuA, HLTweightMuB, HLTweightMuC, HLTweightMuD, HLTweightMuABC, HLTweightMuABCD, HLTweightMuSoft;
+  float HLTMu, HLTMuA, HLTMuB, HLTMuC, HLTMuD, HLTMuABC, HLTMuABCD, HLTMuMCold, HLTMuMCnew, HLTMuSoft, HLTMuSoftMC, HLTMuShift, HLTMuShiftMC, HLTMuABCShift, HLTMuShiftMCold;
+  float HLTweightMu, HLTweightMuA, HLTweightMuB, HLTweightMuC, HLTweightMuD, HLTweightMuABC, HLTweightMuABCD, HLTweightMuSoft, HLTweightMuShift, HLTweightMuABCShift;
   float SFMuID, SFMuID_ABC, SFMuID_D, SFMuID_ABCD;
   float SFMuIso, SFMuIso_ABC, SFMuIso_D, SFMuIso_ABCD;
   float SFMu, SFMu_ABC, SFMu_D, SFMu_ABCD;
@@ -925,6 +908,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("L1etmPhi",    &L1etmPhi_,  "L1etmPhi/F");//MB
   outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_, "L1etmCorr/F");//MB
   outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_,"L1etmWeight/F");//MB
+  outTreePtOrd->Branch("passL1etmCut",&passL1etmCut_,"passL1etmCut/F");//ND
 
   outTreePtOrd->Branch("caloMEtNoHF",         &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFPhi",      &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
@@ -960,12 +944,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("hpsMVA2",          &hpsMVA2_,   "hpsMVA2/F");
   outTreePtOrd->Branch("decayMode",        &decayMode_,"decayMode/I");
 
-  outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
-  outTreePtOrd->Branch("sampleWeight",       &sampleWeight,"sampleWeight/F"); 
-  outTreePtOrd->Branch("puWeight",           &puWeight,"puWeight/F");
-  outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,"puWeightHCP/F");
-  outTreePtOrd->Branch("puWeightD",          &puWeightD,"puWeightD/F");
-  outTreePtOrd->Branch("puWeight2",          &puWeight2,"puWeight2/F");
+  outTreePtOrd->Branch("numPV",              &numPV_,       "numPV/F");
+  outTreePtOrd->Branch("sampleWeight",       &sampleWeight, "sampleWeight/F"); 
+  outTreePtOrd->Branch("puWeight",           &puWeight,     "puWeight/F");
+  outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,  "puWeightHCP/F");
+  outTreePtOrd->Branch("puWeightD",          &puWeightD,    "puWeightD/F");
+  outTreePtOrd->Branch("puWeightDLow",       &puWeightDLow, "puWeightDLow/F");
+  outTreePtOrd->Branch("puWeightDHigh",      &puWeightDHigh,"puWeightDHigh/F");
+  outTreePtOrd->Branch("puWeight2",          &puWeight2,    "puWeight2/F");
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
@@ -992,6 +978,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HLTweightMuABC", &HLTweightMuABC,"HLTweightMuABC/F");
   outTreePtOrd->Branch("HLTweightMuABCD", &HLTweightMuABCD,"HLTweightMuABCD/F");
   outTreePtOrd->Branch("HLTweightMuSoft",&HLTweightMuSoft,"HLTweightMuSoft/F"); //MB
+  outTreePtOrd->Branch("HLTweightMuShift",&HLTweightMuShift,"HLTweightMuShift/F"); //MB
+  outTreePtOrd->Branch("HLTweightMuABCShift",&HLTweightMuABCShift,"HLTweightMuABCShift/F"); //MB
   //
   outTreePtOrd->Branch("HLTMu",  &HLTMu,"HLTMu/F");
   outTreePtOrd->Branch("HLTMuA", &HLTMuA,"HLTMuA/F");
@@ -1001,6 +989,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HLTMuABC", &HLTMuABC,"HLTMuABC/F");
   outTreePtOrd->Branch("HLTMuABCD", &HLTMuABCD,"HLTMuABCD/F");
   outTreePtOrd->Branch("HLTMuSoft",&HLTMuSoft,"HLTMuSoft/F"); //MB
+  outTreePtOrd->Branch("HLTMuSoftMC",&HLTMuSoftMC,"HLTMuSoftMC/F"); //MB
+  outTreePtOrd->Branch("HLTMuShift",&HLTMuShift,"HLTMuShift/F"); //MB
+  outTreePtOrd->Branch("HLTMuShiftMC",&HLTMuShiftMC,"HLTMuShiftMC/F"); //MB
+  outTreePtOrd->Branch("HLTMuABCShift",&HLTMuABCShift,"HLTMuABCShift/F"); //MB
+  outTreePtOrd->Branch("HLTMuShiftMCold",&HLTMuShiftMCold,"HLTMuShiftMCold/F"); //MB
   //
   outTreePtOrd->Branch("SFMu",         &SFMu,     "SFMu/F");
   outTreePtOrd->Branch("SFMu_ABC",     &SFMu_ABC, "SFMu_ABC/F");
@@ -1521,6 +1514,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   bool isGoodRun=false;
   bool isDuplicated=false;
   bool isMatched=false;
+  float etmCut=20;
   //////////////////////////
   
   MAPDITAU_run mapDiTau;
@@ -2029,12 +2023,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     decayMode_       = decayMode;
     numPV_           = numPV;
     sampleWeight     = scaleFactor; 
-    //puWeight         = (std::string(sample.Data())).find("Run2012")!=string::npos ? 1.0 : mcPUweight ;
-    puWeight         = isData ? 1.0 : pileupWeight( nPUVertices);   
-    puWeightHCP      = isData ? 1.0 : pileupWeightHCP( nPUVertices);   
-    puWeightD        = isData ? 1.0 : pileupWeightD( nPUVertices);   
-    puWeight2        = isData ? 1.0 : pileupWeight2(int(nPUVertices));   
-    //puWeight         = (std::string(sample.Data())).find("Run2012")!=string::npos ? 1.0 : Lumi3DReWeighting->weight3D(nPUVerticesM1, nPUVertices, nPUVerticesP1) ;
+
     nPUVertices_     = nPUVertices;
     embeddingWeight_ = embeddingWeight;
 
@@ -2114,6 +2103,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       L1etmWeight_ = 1;    //no correction for data
       L1etmCorr_ = L1etm_; //no correction for data
 
+      puWeight         = 1.0;
+      puWeightHCP      = 1.0;
+      puWeightD        = 1.0;
+      puWeightDLow     = 1.0;
+      puWeightDHigh    = 1.0;
+      puWeight2        = 1.0;
+
       // HLT Paths matching
 
       HLTxMu8     = 1.0; // ND correct ? trigger not present in data !
@@ -2181,6 +2177,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTMuMCnew = 1.0;
       HLTMuSoft   = 1.0;
       HLTMuSoftMC = 1.0;
+      HLTMuShift   = 1.0;
+      HLTMuShiftMC = 1.0;
+      HLTMuABCShift   = 1.0;
+      HLTMuShiftMCold = 1.0;
       HLTMuABC       = 1.0;
       HLTweightMuA    = 1.0;
       HLTweightMuB    = 1.0;
@@ -2189,6 +2189,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightMuABC  = 1.0;
       HLTweightMuABCD = 1.0;
       HLTweightMuSoft = 1.0;
+      HLTweightMuShift = 1.0;
+      HLTweightMuABCShift = 1.0;
       HLTMu = 1.0;
       HLTweightMu = 1.0;
       SFMuID_ABCD  = 1.0;
@@ -2209,8 +2211,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     else { // MC or embedded
       if(DEBUG) cout << "-- MC or embedded" << endl;
 
-      // float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca")
-      L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Luca2_Magn");
       L1etmWeight_= 1;            
 
       HLTxQCD         = 1.0;
@@ -2225,6 +2225,24 @@ void fillTrees_MuTauStream(TChain* currentTree,
       
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
 	
+	// L1 ETM
+	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Luca2_Xproj");
+	if(gRandom->Uniform()>(1.0-4.806/7.274) ) etmCut=26;
+	else                                      etmCut=20;
+
+	// Pile-Up
+	puWeight2        = pileupWeight2(int(nPUVertices));  
+	puWeight         = pileupWeight(nPUVertices, "");
+	puWeightHCP      = pileupWeight(nPUVertices, "HCP");   
+	puWeightD        = pileupWeight(nPUVertices, "D" );
+	if(etmCut==20) {
+	  puWeightDLow  = pileupWeight(nPUVertices, "DLow" );
+	  puWeightDHigh = 1.0;
+	} else {
+	  puWeightDLow  = 1.0;
+	  puWeightDHigh = pileupWeight(nPUVertices, "DHigh" );
+	}
+
 	// HLT Paths matching
 	HLTx             = float((*triggerBits)[0]); // HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2
 	HLTxMu8          = float((*triggerBits)[1]); // HLT_Mu8_v16 //MB
@@ -2240,13 +2258,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
 		      (*tauXTriggers)[5] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
 		      (*tauXTriggers)[7] );  // offline trgTau
 
-	float etmCut=20; // sometimes L1Seed has actual cut at 20 GeV (even if path name is still L1ETM26)
-	if(gRandom->Uniform()>(1.0-4.806/7.274) ) // luminosity ratio : different cuts were applied in ABC and D
-	  etmCut=26;
-
 	HLTmatchIsoMu8Tau20 = float(isMatched);
 	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
+	passL1etmCut_       = float(L1etmCorr_>etmCut);
 
       }
       else {
@@ -2287,18 +2302,29 @@ void fillTrees_MuTauStream(TChain* currentTree,
       else                  iEta = 5;
       //
       // compute efficiency
-      HLTMuA     = turnOnMu[iEta][0]->Eval(ptL1);
-      HLTMuB     = turnOnMu[iEta][1]->Eval(ptL1);
-      HLTMuC     = turnOnMu[iEta][2]->Eval(ptL1);
+
+      // ABC with pT shift to evaluate ABC IsoMu15 efficiency
+      HLTMuA        = turnOnMu[iEta][0]->Eval(ptL1+17-15);
+      HLTMuB        = turnOnMu[iEta][1]->Eval(ptL1+17-15);
+      HLTMuC        = turnOnMu[iEta][2]->Eval(ptL1+17-15);
+      HLTMuABCShift = (HLTMuA*wA + HLTMuB*wB + HLTMuC*wC)/(wA+wB+wC) ;
+      // Retrieve normal ABC
+      HLTMuA   = turnOnMu[iEta][0]->Eval(ptL1);
+      HLTMuB   = turnOnMu[iEta][1]->Eval(ptL1);
+      HLTMuC   = turnOnMu[iEta][2]->Eval(ptL1);
+      HLTMuABC = (HLTMuA*wA + HLTMuB*wB + HLTMuC*wC)/(wA+wB+wC) ;
+      // D and ABCD(Moriond)
       HLTMuD     = turnOnMu[iEta][3]->Eval(ptL1);
-      HLTMuMCold = turnOnMu[iEta][4]->Eval(ptL1);
       HLTMuABCD  = turnOnMu[iEta][5]->Eval(ptL1);
-      HLTMuMCnew = turnOnMu[iEta][6]->Eval(ptL1);
-
-      HLTMuSoft   = turnOnMu[iEta][3]->Eval(ptL1+17.-8.);
-      HLTMuSoftMC = turnOnMu[iEta][6]->Eval(ptL1+17.-8.);
-
-      HLTMuABC       = (HLTMuA*wA + HLTMuB*wB + HLTMuC*wC)/(wA+wB+wC) ;
+      // MC : HCP and Moriond
+      HLTMuMCold      = turnOnMu[iEta][4]->Eval(ptL1); // for normal ABC
+      HLTMuMCnew      = turnOnMu[iEta][6]->Eval(ptL1); // for ABCD and D
+      HLTMuShiftMCold = turnOnMu[iEta][6]->Eval(ptL1+17.-15.); // for soft ABC
+      // Soft leptons : IsoMu8(soft) and runD/newMC with shift
+      HLTMuSoft    = turnOnMu[iEta][7]->Eval(ptL1);
+      HLTMuSoftMC  = turnOnMu[iEta][8]->Eval(ptL1);
+      HLTMuShift   = turnOnMu[iEta][3]->Eval(ptL1+17.-8.);
+      HLTMuShiftMC = turnOnMu[iEta][6]->Eval(ptL1+17.-8.);
 
       // Compute weight D/MC
       HLTweightMuA    = HLTMuMCold!=0 ?  HLTMuA / HLTMuMCold : 0;
@@ -2308,6 +2334,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightMuABC  = HLTMuMCold!=0 ?  HLTMuABC / HLTMuMCold : 0;
       HLTweightMuABCD = HLTMuMCnew!=0 ?  HLTMuABCD / HLTMuMCnew : 0;
       HLTweightMuSoft = HLTMuSoftMC!=0 ? HLTMuSoft / HLTMuSoftMC : 0;
+      HLTweightMuShift= HLTMuShiftMC!=0? HLTMuShift / HLTMuShiftMC : 0;
+      HLTweightMuABCShift= HLTMuShiftMCold!=0? HLTMuABCShift / HLTMuShiftMCold : 0;
 
       HLTMu = HLTMuABCD; 
       HLTweightMu = HLTweightMuABCD;
