@@ -63,7 +63,7 @@ void UserIsolatedPatMuon::produce(edm::Event & iEvent, const edm::EventSetup & i
   else {
     HLTfiltersMuon.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");
     HLTfiltersMuon.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
-    HLTfiltersMuon.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");
+    //HLTfiltersMuon.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20"); //not in MC, so don't match in data as well 
   }
   //select the most isolated tau
   
