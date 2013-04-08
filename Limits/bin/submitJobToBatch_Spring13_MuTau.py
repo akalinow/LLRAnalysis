@@ -28,7 +28,11 @@ def treeSkim( ana, sample, runInSeries=False):
 
     else:
         print "Creating the shell file for the batch..."
-        nameJob = 'job_'+sample+'_'+ana+'_'+stream
+        #nameJob = 'job_'+sample+'_'+ana+'_'+stream
+        if 'Data' in sample:
+            nameJob = 'job_'+sample+'_'+stream
+        else:
+            nameJob = 'job_'+sample+'_'+stream+'_'+ana
         fileJob = 'batch/'+nameJob+'.sh'
         fileLog = 'batch/log/'+nameJob+'.txt'
         ##
