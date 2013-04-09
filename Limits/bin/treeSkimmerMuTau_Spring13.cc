@@ -1048,7 +1048,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
 
-  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[nPidx]/I");
+  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[26]/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -2457,7 +2457,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     lumi_            = lumi;
     index_           = index;
    
-    // pairIndex : Moriond, HPSMVA2, HPSDB3H, AntiMu2, AntiMu2HPSMVA2, AntiMu2HPSDB3H, SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_, 
+    // pairIndex : Moriond, HPSMVA2, HPSDB3H, AntiMu2, AntiMu2HPSMVA2, AntiMu2HPSDB3H, 
 
     for(int i=0 ; i<nPidx ; i++) { pairIndex[i]=-1; passQualityCuts[i]=false;}
 
@@ -2471,31 +2471,31 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // SoftD analysis
     //// HLT matching
-    passQualityCuts[6]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
-    passQualityCuts[7]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
+    passQualityCuts[6]  = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu1HPSMVA2_SoftD_HLTmatch
+    passQualityCuts[7]  = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu1HPSDB3H_SoftD_HLTmatch
     passQualityCuts[8]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
     passQualityCuts[9]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
     //// L1ETM cut
-    passQualityCuts[10]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[11]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
+    passQualityCuts[10]  = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu1HPSMVA2_SoftD_L1ETMcut
+    passQualityCuts[11]  = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu1HPSDB3H_SoftD_L1ETMcut
     passQualityCuts[12]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
     passQualityCuts[13]  = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
 
     // SoftABC analysis
     //// HLT matching
-    passQualityCuts[14] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftABC_HLTmatch
-    passQualityCuts[15] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftABC_HLTmatch
+    passQualityCuts[14] = (ptL1>15 && ptL2>20 && tightestAntiMuWP>2   && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu1HPSMVA2_SoftABC_HLTmatch
+    passQualityCuts[15] = (ptL1>15 && ptL2>20 && tightestAntiMuWP>2   && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu1HPSDB3H_SoftABC_HLTmatch
     passQualityCuts[16] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftABC_HLTmatch
     passQualityCuts[17] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftABC_HLTmatch
     //// L1ETM cut
-    passQualityCuts[18] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu2HPSMVA2_SoftABC_L1ETMcut
-    passQualityCuts[19] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu2HPSDB3H_SoftABC_L1ETMcut
+    passQualityCuts[18] = (ptL1>15 && ptL2>20 && tightestAntiMuWP>2   && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu1HPSMVA2_SoftABC_L1ETMcut
+    passQualityCuts[19] = (ptL1>15 && ptL2>20 && tightestAntiMuWP>2   && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu1HPSDB3H_SoftABC_L1ETMcut
     passQualityCuts[20] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu2HPSMVA2_SoftABC_L1ETMcut
     passQualityCuts[21] = (ptL1>15 && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCutABC_); // AntiMu2HPSDB3H_SoftABC_L1ETMcut
 
     // Soft + tau (w/o L1ETM cut)
-    passQualityCuts[22] = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[23] = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu2HPSDB3H_Soft_Tau
+    passQualityCuts[22] = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu1HPSMVA2_Soft_Tau
+    passQualityCuts[23] = (ptL1>9  && ptL2>20 && tightestAntiMuWP>2   && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu1HPSDB3H_Soft_Tau
     passQualityCuts[24] = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu2HPSMVA2_Soft_Tau
     passQualityCuts[25] = (ptL1>9  && ptL2>20 && tightestAntiMu2WP>2  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoMu8Tau20); // AntiMu2HPSDB3H_Soft_Tau
 
