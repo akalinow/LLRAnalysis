@@ -324,7 +324,7 @@ process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string("pt>19 && abs(eta)<2.3"+
-                     " && tauID('byIsolationMVA2raw')>0.7" #Selection as like Phil's
+                     " && tauID('byIsolationMVA2raw')>0.8" #Selection as like Phil's
                      #" && tauID('byLooseIsolationMVA2')>0.5"
                      ),
     filter = cms.bool(False)
