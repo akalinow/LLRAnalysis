@@ -573,7 +573,7 @@ process.muPtEtaRelID = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("selectedPatMuonsUserEmbedded"),
     cut = cms.string("pt>7 && abs(eta)<2.4 && isGlobalMuon && isPFMuon && isTrackerMuon"+
-                     "&& abs(userFloat('dzWrtPV'))<0.2 && abs(userFloat('dxyWrtPV'))<0.045"
+                     "&& abs(userFloat('dzWrtPV'))<0.2"
                      ),
     filter = cms.bool(False)
     )
@@ -816,8 +816,8 @@ process.elecPtEtaRelID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("selectedPatElectronsUserEmbeddedIso"),
     cut = cms.string("pt>12 && abs(eta)<2.5 &&"+
-                     "abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+
-                     #"abs(userFloat('dzWrtPV'))<0.2 &&"+
+                     #"abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+
+                     "abs(userFloat('dzWrtPV'))<0.2 &&"+
                      simpleCutsVeto
                      ),
     filter = cms.bool(False)
@@ -839,7 +839,6 @@ process.electronsForVeto = cms.EDFilter(
                      " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 && "+
                      #" && ( ( pt > 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.905) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.955) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.975) )) || (pt < 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.925) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.915) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.965) )))"+
                      MVALoose +
-                     " && userFloat('nHits')==0 && userInt('antiConv')>0.5"+
                      " && userFloat('PFRelIsoDB04v3')<0.30"),
     filter = cms.bool(False)
     )
@@ -1098,6 +1097,7 @@ process.selectedPatElectronsUserEmbedded.vertexTag = "selectedPrimaryVertices"
 process.selectedPatTausUserEmbedded.vertexTag = "selectedPrimaryVertices"
 
 ##Arun:  change vertex for the PFLow isolation?
+pfParticleSelectionSequence
 massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              "offlinePrimaryVertices",
                              "selectedPrimaryVertices",
