@@ -2272,9 +2272,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	passL1etmCutABC_    = float(L1etmCorr_>20);
 
       }
-      else {
-	L1etmCorr_ = L1etm_ ;
+      else { // embedded
 	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = 1.0;
+	L1etmCorr_ = L1etm_ ;
+	if(isPeriodLow)       etmCut=20;
+	else if(isPeriodHigh) etmCut=26;
+	else etmCut=20;
+	passL1etmCut_ = float(L1etm_>etmCut);
+	passL1etmCutABC_ = L1etm_>20;
       }
       
       // Weights for both MC and embedded

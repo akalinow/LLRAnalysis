@@ -2309,9 +2309,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	HLTmatchQCDSoft       = float(isMatched && L1etmCorr_>etmCut);
 	passL1etmCut_         = float(L1etmCorr_>etmCut);
       }
-      else {
-	L1etmCorr_ = L1etm_ ;
+      else { // embedded
 	HLTx = HLTxEle8 = HLTmatch = HLTmatchEle8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoEle13Tau20 = 1.0;
+	L1etmCorr_ = L1etm_ ;
+	if(isPeriodLow)       etmCut=30;
+	else if(isPeriodHigh) etmCut=36;
+	else etmCut=30;
+	passL1etmCut_ = float(L1etm_>etmCut);	
       }
       
       // Weights for both MC and embedded
