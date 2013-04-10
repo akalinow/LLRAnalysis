@@ -55,8 +55,9 @@ void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Even
   int idxDiTau = 0;
   for ( typename std::vector<inputEntryType>::const_iterator input = inputs_.begin();
 	input != inputs_.end(); ++input ) {
-    edm::Handle<CompositePtrCandidateCollection> inputDiTaus;
+    edm::Handle<CompositePtrCandidateCollection> inputDiTaus;    
     evt.getByLabel(input->srcDiTau_, inputDiTaus);
+    if ( !inputDiTaus.isValid() ) continue;
     
     edm::Handle<pat::METCollection> inputMETs;
     evt.getByLabel(input->srcMET_, inputMETs);
