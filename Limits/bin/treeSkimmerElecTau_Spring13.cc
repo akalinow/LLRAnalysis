@@ -643,7 +643,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // taus/MET related variables
   float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1;
-  float diTauCharge_,
+  float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
     pZeta_,pZetaCorr_,pZetaMVA_,
@@ -867,6 +867,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   
  
   outTreePtOrd->Branch("diTauCharge", &diTauCharge_,"diTauCharge/F");
+  outTreePtOrd->Branch("chargeL1", &chargeL1_,"chargeL1/F");
   outTreePtOrd->Branch("MtLeg1",      &MtLeg1_,"MtLeg1/F");
   outTreePtOrd->Branch("MtLeg1Corr",  &MtLeg1Corr_,"MtLeg1Corr/F");
   outTreePtOrd->Branch("MtLeg1MVA",   &MtLeg1MVA_,"MtLeg1MVA/F");
@@ -1100,6 +1101,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("diTauNSVfitPtErrDown",1);
   currentTree->SetBranchStatus("mTauTauMin"            ,1);
   currentTree->SetBranchStatus("diTauCharge"           ,1);
+  currentTree->SetBranchStatus("chargeL1"           ,1);
 
   // taus
   currentTree->SetBranchStatus("diTauLegsP4"           ,1);
@@ -1357,7 +1359,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
-  float diTauCharge;
+  float diTauCharge, chargeL1;
   int tightestHPSDBWP,tightestHPSWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;//IN
   int tightestAntiEMVAWP, tightestAntiECutWP,tightestAntiEMVA3WP,AntiEMVA3category;//IN
   float hpsDB3H,hpsMVA,hpsMVA2,AntiEMVA3raw;//IN
@@ -1424,6 +1426,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("hpsMVA",               &hpsMVA);
   currentTree->SetBranchAddress("hpsMVA2",               &hpsMVA2);
   currentTree->SetBranchAddress("diTauCharge",          &diTauCharge);
+  currentTree->SetBranchAddress("chargeL1",             &chargeL1);
 
   currentTree->SetBranchAddress("tightestCutBasedWP",   &tightestCutBasedWP);
   currentTree->SetBranchAddress("tightestMVAWP",        &tightestMVAWP);
@@ -1836,6 +1839,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
+    chargeL1_       = chargeL1;
       
     // genTau Info
     if(genDiTauLegsP4->size()>1) {

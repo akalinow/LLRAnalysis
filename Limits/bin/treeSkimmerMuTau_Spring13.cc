@@ -674,7 +674,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // taus/MET related variables
   float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_;
-  float diTauCharge_,
+  float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
     pZeta_,pZetaCorr_,pZetaMVA_,
@@ -883,6 +883,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("CDFWeight",               &CDFWeight,"CDFWeight/F");
   
   outTreePtOrd->Branch("diTauCharge", &diTauCharge_,"diTauCharge/F");
+  outTreePtOrd->Branch("chargeL1", &chargeL1_,"chargeL1/F");
   outTreePtOrd->Branch("MtLeg1",      &MtLeg1_,"MtLeg1/F");
   outTreePtOrd->Branch("MtLeg1Corr",  &MtLeg1Corr_,"MtLeg1Corr/F");
   outTreePtOrd->Branch("MtLeg1MVA",   &MtLeg1MVA_,"MtLeg1MVA/F");
@@ -1092,11 +1093,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("diTauNSVfitMass"       ,1);
   currentTree->SetBranchStatus("diTauNSVfitMassErrUp"  ,1);
   currentTree->SetBranchStatus("diTauNSVfitMassErrDown",1);
-  currentTree->SetBranchStatus("diTauNSVfitPt"       ,1);
-  currentTree->SetBranchStatus("diTauNSVfitPtErrUp"  ,1);
-  currentTree->SetBranchStatus("diTauNSVfitPtErrDown",1);
+  currentTree->SetBranchStatus("diTauNSVfitPt"         ,1);
+  currentTree->SetBranchStatus("diTauNSVfitPtErrUp"    ,1);
+  currentTree->SetBranchStatus("diTauNSVfitPtErrDown"  ,1);
   currentTree->SetBranchStatus("mTauTauMin"            ,1);
   currentTree->SetBranchStatus("diTauCharge"           ,1);
+  currentTree->SetBranchStatus("chargeL1"              ,1);
 
   // taus
   currentTree->SetBranchStatus("diTauLegsP4"           ,1);
@@ -1328,7 +1330,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
-  float diTauCharge;
+  float diTauCharge, chargeL1;
   int tightestHPSWP,tightestHPSDBWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;
   float hpsDB3H,hpsMVA,hpsMVA2;
   float numPV;
@@ -1388,6 +1390,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("hpsMVA",               &hpsMVA);
   currentTree->SetBranchAddress("hpsMVA2",              &hpsMVA2);
   currentTree->SetBranchAddress("diTauCharge",          &diTauCharge);
+  currentTree->SetBranchAddress("chargeL1",          &chargeL1);
 
   // old and new discriminators
   currentTree->SetBranchAddress("tightestAntiMuWP",     &tightestAntiMuWP);    // ND
@@ -1807,6 +1810,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
+    chargeL1_       = chargeL1;
     
     //genTau Info
     if(genDiTauLegsP4->size()>1) {
