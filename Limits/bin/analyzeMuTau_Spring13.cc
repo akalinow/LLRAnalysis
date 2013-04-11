@@ -1294,12 +1294,15 @@ void plotMuTau( Int_t mH_           = 120,
 
   ///// MU PT+ID+ISO ///////
   TCut lpt("ptL1>20");
+  TCut lptMax("ptL1>-999");
   TCut lID("isPFMuon && isTightMuon");
 
-  if(     version_.Contains("SoftABC"))  lpt = "ptL1>16 && ptL1<=20" ;
-  else if(version_.Contains("SoftD"))    lpt = "ptL1>9 && ptL1<=20" ;
-  else if(version_.Contains("SoftLTau")) lpt = "ptL1>9 && ptL1<=20" ;
-  else if(!version_.Contains("Soft"))    lpt = "ptL1>20" ;
+  if(     version_.Contains("SoftABC"))  {lpt="ptL1>16"; lptMax="ptL1<=20";}
+  else if(version_.Contains("SoftD"))    {lpt="ptL1>9";  lptMax="ptL1<=20";}
+  else if(version_.Contains("SoftLTau")) {lpt="ptL1>9";  lptMax="ptL1<=20";}
+  else if(!version_.Contains("Soft"))    {lpt="ptL1>20"; lptMax="ptL1>-999";}
+  if(     version_.Contains("NoMaxPt"))  {lptMax="ptL1>-999";}
+  lpt = lpt && lptMax ;
 
   TCut liso("combRelIsoLeg1DBetav2<0.10");
   TCut laiso("combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50");
