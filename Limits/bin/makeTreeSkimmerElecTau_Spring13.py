@@ -7,13 +7,14 @@ import string
 import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/SoftAnalysis/iter2/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/SoftAnalysis/iter2/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/'
 
 options = {
     ###e+tau samples
     ##DATA
     'Run2012A-13Jul2012-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012A_ReReco13J_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012A_ReReco13J_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Data_ElecTau.root',
     'sample'         : 'Run2012A-13Jul2012-Data',
     'xSection'       : 0,
@@ -21,7 +22,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p1-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_PAT_v1_p1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v2_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p1-Data_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p1-Data',
     'xSection'       : 0,
@@ -29,7 +30,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p2-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_PAT_v1_p2/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v2_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p2-Data_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p2-Data',
     'xSection'       : 0,
@@ -37,7 +38,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p3-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_PAT_v1_p3/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v2_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p3-Data_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p3-Data',
     'xSection'       : 0,
@@ -45,7 +46,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p4-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_PAT_v1_p4/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v2_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Data_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p4-Data',
     'xSection'       : 0,
@@ -53,7 +54,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p5-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_PAT_v1_p5/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v2_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Data_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p5-Data',
     'xSection'       : 0,
@@ -61,7 +62,7 @@ options = {
     'iJson'          : 0
     },   
     'Run2012C-24Aug2012-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_ReReco24A_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_ReReco24A_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Data_ElecTau.root',
     'sample'         : 'Run2012C-24Aug2012-Data',
     'xSection'       : 0,
@@ -69,7 +70,7 @@ options = {
     'iJson'          : 2
     },
     'Run2012C-PromptReco-v2-p1-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p1-Data',
     'xSection'       : 0,
@@ -77,7 +78,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p2-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p2/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p2-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p2-Data',
     'xSection'       : 0,
@@ -85,7 +86,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p3-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p3/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p3-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p3-Data',
     'xSection'       : 0,
@@ -93,7 +94,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p4-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p4/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p4-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p4-Data',
     'xSection'       : 0,
@@ -101,7 +102,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p5-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p5/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p5-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p5-Data',
     'xSection'       : 0,
@@ -109,7 +110,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p6-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p6/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p6-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p6-Data',
     'xSection'       : 0,
@@ -117,7 +118,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p7-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v1_p7/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v2_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p7-Data_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p7-Data',
     'xSection'       : 0,
@@ -125,7 +126,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p1-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p1-Data',
     'xSection'       : 0,
@@ -133,7 +134,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p2-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p2/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p2-Data',
     'xSection'       : 0,
@@ -141,7 +142,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p3-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p3/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p3-Data',
     'xSection'       : 0,
@@ -149,7 +150,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p4-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p4/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p4-Data',
     'xSection'       : 0,
@@ -157,7 +158,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p5-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p5/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p5-Data',
     'xSection'       : 0,
@@ -165,7 +166,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p6-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p6/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p6-Data',
     'xSection'       : 0,
@@ -173,7 +174,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p7-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p7/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p7-Data',
     'xSection'       : 0,
@@ -181,7 +182,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p8-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p8/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p8-Data',
     'xSection'       : 0,
@@ -189,7 +190,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p9-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v1_p9/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v2_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Data_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p9-Data',
     'xSection'       : 0,
@@ -198,7 +199,7 @@ options = {
     },
     ##Embedded
     'Run2012A-13Jul2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_ReReco13J_HTT_06Mar2013_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4/',
     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-13Jul2012-Embedded',
     'xSection'       : 0,
@@ -206,7 +207,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012A-06Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_Recov06Aug_HTT_06Mar2013_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_Recov06Aug_HTT_06Mar2013_Trees_EleTau_v4/',
     'outputFileName' : OutDir+'nTupleRun2012A-06Aug2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-06Aug2012-Embedded',
     'xSection'       : 0,
@@ -214,7 +215,7 @@ options = {
     'iJson'          : 3
     },
     'Run2012B-13Jul2012-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v3_p1/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p1-Embedded',
     'xSection'       : 0,
@@ -222,7 +223,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v3_p2/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p2-Embedded',
     'xSection'       : 0,
@@ -230,7 +231,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v3_p3/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p3-Embedded',
     'xSection'       : 0,
@@ -238,7 +239,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v3_p4/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p4-Embedded',
     'xSection'       : 0,
@@ -246,7 +247,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012B-13Jul2012-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v3_p5/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco13J_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-13Jul2012-p5-Embedded',
     'xSection'       : 0,
@@ -254,7 +255,7 @@ options = {
     'iJson'          : 0
     },
     'Run2012C-24Aug2012-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco24A_HTT_06Mar2013_Trees_EleTau_v3/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco24A_HTT_06Mar2013_Trees_EleTau_v4/',
     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-24Aug2012-Embedded',
     'xSection'       : 0,
@@ -262,7 +263,7 @@ options = {
     'iJson'          : 2
     },
     'Run2012C-PromptReco-v2-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p1/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p1-Embedded',
     'xSection'       : 0,
@@ -270,7 +271,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p2/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p2-Embedded',
     'xSection'       : 0,
@@ -278,7 +279,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p3/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p3-Embedded',
     'xSection'       : 0,
@@ -286,7 +287,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p4/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p4-Embedded',
     'xSection'       : 0,
@@ -294,7 +295,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p5/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p5-Embedded',
     'xSection'       : 0,
@@ -302,7 +303,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p6/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p6-Embedded',
     'xSection'       : 0,
@@ -310,7 +311,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012C-PromptReco-v2-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v3_p7/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_PRV2_HTT_06Mar2013_Trees_EleTau_v4_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-PromptReco-v2-p7-Embedded',
     'xSection'       : 0,
@@ -318,7 +319,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p1/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
     'xSection'       : 0,
@@ -326,7 +327,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p2/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p2-Embedded',
     'xSection'       : 0,
@@ -334,7 +335,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p3/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p3-Embedded',
     'xSection'       : 0,
@@ -342,7 +343,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p4/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p4-Embedded',
     'xSection'       : 0,
@@ -350,7 +351,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p5/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p5-Embedded',
     'xSection'       : 0,
@@ -358,7 +359,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p6/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p6-Embedded',
     'xSection'       : 0,
@@ -366,7 +367,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p7/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p7-Embedded',
     'xSection'       : 0,
@@ -374,7 +375,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p8-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p8/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p8-Embedded',
     'xSection'       : 0,
@@ -382,7 +383,7 @@ options = {
     'iJson'          : 4
     },
     'Run2012D-PromptReco-v1-p9-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v3_p9/',
+    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_PRV1_HTT_06Mar2013_Trees_EleTau_v4_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-PromptReco-v1-p9-Embedded',
     'xSection'       : 0,
@@ -391,7 +392,7 @@ options = {
     },
     ##Bkg MC
     'DYJets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleDYJets_ElecTau.root',
     'sample'         : 'DYJets',
     'xSection'       : 3504,
@@ -399,7 +400,7 @@ options = {
     'iJson'          : -1
     } ,
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_ElecTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -407,7 +408,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p1' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets-p1_ElecTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
@@ -415,7 +416,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p2' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets-p2_ElecTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
@@ -423,7 +424,7 @@ options = {
     'iJson'          : -1
     },
     'WJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets1Jets_ElecTau.root',
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
@@ -431,7 +432,7 @@ options = {
     'iJson'          : -1
     },
     'WJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets2Jets_ElecTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
@@ -439,7 +440,7 @@ options = {
     'iJson'          : -1
     },
     'WJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets3Jets_ElecTau.root',
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
@@ -447,7 +448,7 @@ options = {
     'iJson'          : -1
     },
     'WJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWJets4Jets_ElecTau.root',
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
@@ -455,7 +456,7 @@ options = {
     'iJson'          : -1
     },
     'T-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-powheg-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-powheg-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleT-tW_ElecTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
@@ -463,7 +464,7 @@ options = {
     'iJson'          : -1
     },
     'Tbar-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTbar-tW_ElecTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
@@ -471,7 +472,7 @@ options = {
     'iJson'          : -1
     },
     'WWJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
@@ -479,7 +480,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
@@ -487,7 +488,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo3LNu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_ElecTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
@@ -495,7 +496,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -503,7 +504,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -511,7 +512,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo4L' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_ElecTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
@@ -520,7 +521,7 @@ options = {
     },
     ##Higgs MC
     'GGFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH90_ElecTau.root',
     'sample'         : 'GGFH90',
     'xSection'       : 36.80 ,
@@ -528,7 +529,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH95_ElecTau.root',
     'sample'         : 'GGFH95',
     'xSection'       : 33.19 ,
@@ -536,7 +537,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH100_ElecTau.root',
     'sample'         : 'GGFH100',
     'xSection'       : 30.12 ,
@@ -544,7 +545,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH105_ElecTau.root',
     'sample'         : 'GGFH105',
     'xSection'       : 27.39 ,
@@ -552,7 +553,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH110_ElecTau.root',
     'sample'         : 'GGFH110',
     'xSection'       : 25.04 ,
@@ -560,7 +561,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH115_ElecTau.root',
     'sample'         : 'GGFH115',
     'xSection'       : 22.96 ,
@@ -568,7 +569,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH120_ElecTau.root',
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
@@ -576,7 +577,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH125_ElecTau.root',
     'sample'         : 'GGFH125',
     'xSection'       : 19.52,
@@ -584,7 +585,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH130_ElecTau.root',
     'sample'         : 'GGFH130',
     'xSection'       : 18.07 ,
@@ -592,7 +593,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH135_ElecTau.root',
     'sample'         : 'GGFH135',
     'xSection'       : 16.79,
@@ -600,7 +601,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH140_ElecTau.root',
     'sample'         : 'GGFH140',
     'xSection'       : 15.63,
@@ -608,7 +609,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH145_ElecTau.root',
     'sample'         : 'GGFH145',
     'xSection'       : 14.59,
@@ -616,7 +617,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH150_ElecTau.root',
     'sample'         : 'GGFH150',
     'xSection'       : 13.65,
@@ -624,7 +625,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH155_ElecTau.root',
     'sample'         : 'GGFH155',
     'xSection'       : 12.79,
@@ -632,7 +633,7 @@ options = {
     'iJson'          : -1
     },
     'GGFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH160_ElecTau.root',
     'sample'         : 'GGFH160',
     'xSection'       : 11.95,
@@ -640,7 +641,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH90_ElecTau.root',
     'sample'         : 'VBFH90',
     'xSection'       : 2.191 ,
@@ -648,7 +649,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH95_ElecTau.root',
     'sample'         : 'VBFH95',
     'xSection'       : 2.084 ,
@@ -656,7 +657,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH100_ElecTau.root',
     'sample'         : 'VBFH100',
     'xSection'       : 1.988,
@@ -664,7 +665,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH105_ElecTau.root',
     'sample'         : 'VBFH105',
     'xSection'       : 1.897,
@@ -672,7 +673,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH110_ElecTau.root',
     'sample'         : 'VBFH110',
     'xSection'       : 1.809,
@@ -680,7 +681,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH115_ElecTau.root',
     'sample'         : 'VBFH115',
     'xSection'       : 1.729,
@@ -688,7 +689,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH120_ElecTau.root',
     'sample'         : 'VBFH120',
     'xSection'       : 1.649,
@@ -704,7 +705,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH125-NoRecoil' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1_up/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v2_up/',
     'outputFileName' : OutDir+'nTupleVBFH125-NoRecoil_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -712,7 +713,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH130_ElecTau.root',
     'sample'         : 'VBFH130',
     'xSection'       : 1.511,
@@ -720,7 +721,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH135_ElecTau.root',
     'sample'         : 'VBFH135',
     'xSection'       : 1.448,
@@ -728,7 +729,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH140_ElecTau.root',
     'sample'         : 'VBFH140',
     'xSection'       : 1.389,
@@ -736,7 +737,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH145_ElecTau.root',
     'sample'         : 'VBFH145',
     'xSection'       : 1.333,
@@ -744,7 +745,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH150_ElecTau.root',
     'sample'         : 'VBFH150',
     'xSection'       : 1.280 ,
@@ -752,7 +753,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH155_ElecTau.root',
     'sample'         : 'VBFH155',
     'xSection'       : 1.231 ,
@@ -760,7 +761,7 @@ options = {
     'iJson'          : -1
     },
     'VBFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH160_ElecTau.root',
     'sample'         : 'VBFH160',
     'xSection'       : 1.185 ,
@@ -768,7 +769,7 @@ options = {
     'iJson'          : -1
     },
     'VH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH90_ElecTau.root',
     'sample'         : 'VH90',
     'xSection'       : (1.972 + 1.057 + 0.3233) ,
@@ -776,7 +777,7 @@ options = {
     'iJson'          : -1
     },
     'VH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH95_ElecTau.root',
     'sample'         : 'VH95',
     'xSection'       : (1.676 + 0.9060 + 0.2812) ,
@@ -784,7 +785,7 @@ options = {
     'iJson'          : -1
     },
     'VH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH100_ElecTau.root',
     'sample'         : 'VH100',
     'xSection'       : (1.432 + 0.7807 + 0.2454) ,
@@ -792,7 +793,7 @@ options = {
     'iJson'          : -1
     },
     'VH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH105_ElecTau.root',
     'sample'         : 'VH105',
     'xSection'       : (1.229 + 0.6750 + 0.2149) ,
@@ -800,7 +801,7 @@ options = {
     'iJson'          : -1
     },
     'VH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH110_ElecTau.root',
     'sample'         : 'VH110',
     'xSection'       : (1.060+0.5869+0.1887) ,
@@ -808,7 +809,7 @@ options = {
     'iJson'          : -1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH115_ElecTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),
@@ -816,7 +817,7 @@ options = {
     'iJson'          : -1
     },
     'VH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH120_ElecTau.root',
     'sample'         : 'VH120',
     'xSection'       : (0.7966+0.4483+0.1470),
@@ -824,7 +825,7 @@ options = {
     'iJson'          : -1
     },
     'VH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH125_ElecTau.root',
     'sample'         : 'VH125',
     'xSection'       : (0.6966+0.3943+0.1302),
@@ -832,7 +833,7 @@ options = {
     'iJson'          : -1
     },
     'VH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH130_ElecTau.root',
     'sample'         : 'VH130',
     'xSection'       : (0.6095+0.3473+0.1157),
@@ -840,7 +841,7 @@ options = {
     'iJson'          : -1
     },
     'VH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH135_ElecTau.root',
     'sample'         : 'VH135',
     'xSection'       : (0.5351+0.3074+0.1031),
@@ -848,7 +849,7 @@ options = {
     'iJson'          : -1
     },
     'VH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH140_ElecTau.root',
     'sample'         : 'VH140',
     'xSection'       : (0.4713+0.2728+0.09207),
@@ -856,7 +857,7 @@ options = {
     'iJson'          : -1
     },
     'VH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH145_ElecTau.root',
     'sample'         : 'VH145',
     'xSection'       : (0.4164+0.2424+0.08246),
@@ -864,7 +865,7 @@ options = {
     'iJson'          : -1
     },
     'VH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH150_ElecTau.root',
     'sample'         : 'VH150',
     'xSection'       : (0.3681 + 0.2159 + 0.07403),
@@ -872,7 +873,7 @@ options = {
     'iJson'          : -1
     },
     'VH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH155_ElecTau.root',
     'sample'         : 'VH155',
     'xSection'       : (0.3252 + 0.1923 + 0.06664),
@@ -880,7 +881,7 @@ options = {
     'iJson'          : -1
     },
     'VH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVH160_ElecTau.root',
     'sample'         : 'VH160',
     'xSection'       : (0.2817 + 0.1687 + 0.06013),
