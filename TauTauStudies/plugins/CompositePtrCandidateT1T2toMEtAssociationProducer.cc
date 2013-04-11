@@ -80,7 +80,7 @@ void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Even
       pat::METRef outputMEtRef(outputMEtRefProd, idxDiTau);
       //std::cout << "pat::METRef = " << outputMEtRef.id() << ":" << outputMEtRef.key() << std::endl;
       int idxMET = outputMEtRef.index();
-      outputMEtAssociations->setValue(idxDiTau, idxMET);
+      //outputMEtAssociations->setValue(idxDiTau, idxMET);
       ++idxDiTau;
     }
   }
