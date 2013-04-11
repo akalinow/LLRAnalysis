@@ -12,6 +12,10 @@
   <use   name="FWCore/FWLite"/>
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
+<bin   file="analyzeMuTau_Spring13_MODIFIED.cc"  name="analyzeMuTau_Spring13_M">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
 
 <bin   file="analyzeElecTau_Spring13.cc"  name="analyzeElecTau_Spring13">
   <use   name="FWCore/FWLite"/>

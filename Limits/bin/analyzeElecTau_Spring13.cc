@@ -1298,11 +1298,14 @@ void plotElecTau( Int_t mH_           = 120,
 
   ///// ELE PT+ID+ISO ///////
   TCut lpt("ptL1>24");
+  TCut lptMax("ptL1>-999");
   TCut lID("((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1");
 
-  if(version_.Contains("SoftD"))         lpt = "ptL1>14 && ptL1<=24" ;
-  else if(version_.Contains("SoftLTau")) lpt = "ptL1>14 && ptL1<=24" ;
-  else if(!version_.Contains("Soft"))    lpt = "ptL1>24" ;
+  if(     version_.Contains("SoftD"))    {lpt="ptL1>14"; lptMax="ptL1<=24"; }
+  else if(version_.Contains("SoftLTau")) {lpt="ptL1>14"; lptMax="ptL1<=24"; }
+  else if(!version_.Contains("Soft"))    {lpt="ptL1>24"; lptMax="ptL1>-999";}
+  if(     version_.Contains("NoMaxPt"))  {lptMax="ptL1>-999";}
+  lpt = lpt && lptMax ;
 
   TCut liso("combRelIsoLeg1DBetav2<0.10");
   TCut laiso("combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50");
