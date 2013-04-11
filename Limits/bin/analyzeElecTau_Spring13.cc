@@ -1164,7 +1164,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/SoftAnalysis/iter2/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_highqtmet/EleTau/temp/SoftAnalysis/iter2/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
