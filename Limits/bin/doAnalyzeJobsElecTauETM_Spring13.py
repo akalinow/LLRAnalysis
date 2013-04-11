@@ -46,7 +46,7 @@ versionList=['SoftD_HLTmatch_AntiMu2_AntiEle2Tight_TauIso2', 'SoftD_HLTmatch_Ant
              'SoftLTau_HLTmatch_AntiMu2_AntiEle2Tight_TauIso2', 'SoftLTau_HLTmatch_AntiMu2_AntiEle2Tight_HPSDB3H', 'SoftLTau_HLTmatch_AntiMu2_AntiEle2VeryTight_TauIso2', 'SoftLTau_HLTmatch_AntiMu2_AntiEle2VeryTight_HPSDB3H']
                
 #data = 'ABCD'
-iteration = 'v5'
+iteration = 'v3'
 useEmb=0
 
 for version in versionList:
@@ -132,12 +132,12 @@ for version in versionList:
     analyze(125,"vbf"      ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
     ##  Control
-    analyze(125,"inclusive"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"inclusive"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"inclusive"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"inclusive"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"inclusive"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"inclusive"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"inclusive"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"inclusive"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"inclusive"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"inclusive"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"inclusive"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"inclusive"      ,""   ,"MEt","'Uncorr MET'","GeV"                         ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
@@ -160,12 +160,12 @@ for version in versionList:
     analyze(125,"inclusive"      ,""   ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,10,0,10,5.0,1.0,1,10,data, stream, version, useEmb);
 
     ## novbfLow
-    analyze(125,"novbfLow"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfLow"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfLow"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfLow"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfLow"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfLow"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfLow"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfLow"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfLow"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfLow"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfLow"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"novbfLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0,   1.2,data, stream, version, useEmb);
@@ -178,12 +178,12 @@ for version in versionList:
     analyze(125,"novbfLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,10,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version, useEmb);
 
     ## novbfHigh
-    analyze(125,"novbfHigh"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfHigh"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfHigh"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfHigh"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfHigh"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfHigh"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfHigh"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"novbfHigh"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfHigh"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"novbfHigh"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"novbfHigh"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"novbfHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,data, stream, version, useEmb);
@@ -196,12 +196,12 @@ for version in versionList:
     analyze(125,"novbfHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version, useEmb);
 
     ## boostLow
-    analyze(125,"boostLow"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostLow"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostLow"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostLow"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostLow"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostLow"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostLow"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostLow"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostLow"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostLow"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostLow"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"boostLow",""   ,"MEt","'Uncorr MET'","GeV"                              ,outputDir,10,0,100,5.0,1.0,0, 1.2,data, stream, version, useEmb);
@@ -214,12 +214,12 @@ for version in versionList:
     analyze(125,"boostLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version, useEmb);
 
     ## boostHigh
-    analyze(125,"boostHigh"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostHigh"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostHigh"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostHigh"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostHigh"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostHigh"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostHigh"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"boostHigh"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostHigh"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"boostHigh"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"boostHigh"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"boostHigh",""   ,"MEt","'Uncorr MET'","GeV"                             ,outputDir,10,0,100,5.0,1.0,0, 1.2,data, stream, version, useEmb);
@@ -232,12 +232,12 @@ for version in versionList:
     analyze(125,"boostHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version, useEmb);
 
     ## vbf
-    analyze(125,"vbf"      ,""   ,"CaloMEtNoHFUncorr","'Uncorr CaloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"vbf"      ,""   ,"CaloMEtNoHF","'Corr CaloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"vbf"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"vbf"      ,""   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"vbf"      ,""   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"vbf"      ,""   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"vbf"      ,""   ,"CaloMEtNoHFUncorrPhi","'Uncorr CaloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"vbf"      ,""   ,"CaloMEtNoHFPhi","'Corr CaloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"vbf"      ,""   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
+    analyze(125,"vbf"      ,""   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     analyze(125,"vbf"      ,""   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"vbf",""   ,"MEt","'Uncorr MET'","GeV"                                   ,outputDir,10,0,100,5.0,1.0,0, 1.2,data, stream, version, useEmb);
