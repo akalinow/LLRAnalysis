@@ -939,8 +939,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString RUN         = "ABCD",
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1502,6 +1502,9 @@ void plotElecTau( Int_t mH_           = 120,
   float sidebandRatioMadgraph = ExtrapDYNuminSidebandRegion/ExtrapDYNumPZetaRel;
   float sidebandRatioEmbedded = ExtrapEmbedNuminSidebandRegion/ExtrapEmbedNumPZetaRel;
   ExtrapolationFactorSidebandZDataMC = (sidebandRatioMadgraph > 0) ? sidebandRatioEmbedded/sidebandRatioMadgraph : 1.0;
+  if(!useEmbedding_) {
+    ExtrapolationFactorZ = ExtrapolationFactorZDataMC = ExtrapolationFactorZFromSideband = sidebandRatioEmbedded = ExtrapolationFactorSidebandZDataMC = 1;
+  }
 
   cout << "Extrap. factor using embedded sample     = " << ExtrapolationFactorZ << " +/- " << ErrorExtrapolationFactorZ << endl;
   cout << " ==> data/MC (signal region)             = " << ExtrapolationFactorZDataMC << " +/- " 
@@ -2694,28 +2697,34 @@ int main(int argc, const char* argv[])
   gSystem->Load("libFWCoreFWLite");
   AutoLibraryLoader::enable();
 
-  int mH, nBins, logy; 
+  int mH, nBins, logy, useEmb; 
   float magnify, hltEff, xMin, xMax, maxY;
   string category, analysis, variable, xtitle, unity, outputDir, RUN, version;
 
   if(argc==1) plotElecTauAll();
-  else if(argc>15) { 
+  else if(argc>16) { 
 
-    mH=(int)atof(argv[1]); category=argv[2]; variable=argv[3]; xtitle=argv[4]; unity=argv[5]; 
+    mH         =  (int)atof(argv[1]); 
+    category   =  argv[2]; 
+    variable   =  argv[3]; 
+    xtitle     =  argv[4]; 
+    unity      =  argv[5]; 
+    nBins      =  (int)atof(argv[6]); 
+    xMin       =  atof(argv[7]); 
+    xMax       =  atof(argv[8]); 
+    magnify    =  atof(argv[9]); 
+    hltEff     =  atof(argv[10]); 
+    logy       =  (int)atof(argv[11]); 
+    maxY       =  atof(argv[12]) ;
+    outputDir  =  argv[13]; 
+    RUN        =  argv[14] ;
+    version    =  argv[15];
+    useEmb     =  (int)atof(argv[16]);
+    analysis   =  argc>17 ? argv[17] : ""; 
 
-    nBins=(int)atof(argv[6]); xMin=atof(argv[7]); xMax=atof(argv[8]); 
+    cout << endl << "RUN : " << RUN << " | VERSION : " << version << " | ANALYSIS : " << analysis << endl << endl;
 
-    magnify=atof(argv[9]); hltEff=atof(argv[10]); logy=(int)atof(argv[11]); maxY=atof(argv[12]) ;
-
-    outputDir=argv[13]; RUN = argv[14] ;
-
-    version=argv[15];
-
-    analysis = argc>16 ? argv[16] : ""; 
-
-    cout << endl << "ANALYZING DATA FROM RUN : " << RUN << endl << endl;
-
-    plotElecTau(mH,1,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN, version);
+    plotElecTau(mH,useEmb,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN, version);
   }
   else { cout << "Please put at least 16 arguments" << endl; return 1;}
 
