@@ -32,7 +32,7 @@ CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::CompositePtrCandidateT
 
   produces<CompositePtrCandidateCollection>(instNameDiTaus);
   produces<pat::METCollection>(instNameMEtObjects);
-  produces<diTauToMEtAssociation>(instNameDiTauToMEtAssociations);
+  //produces<diTauToMEtAssociation>(instNameDiTauToMEtAssociations);
 }
 
 template <typename T1, typename T2>
@@ -44,30 +44,30 @@ CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::~CompositePtrCandidate
 template <typename T1, typename T2>
 void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Event& evt, const edm::EventSetup& es)
 {
-  std::cout << "<CompositePtrCandidateT1T2toMEtAssociationProducer::produce>:" << std::endl;
-  std::cout << " moduleLabel = " << moduleLabel_ << std::endl;
+  //std::cout << "<CompositePtrCandidateT1T2toMEtAssociationProducer::produce>:" << std::endl;
+  //std::cout << " moduleLabel = " << moduleLabel_ << std::endl;
 
   std::auto_ptr<CompositePtrCandidateCollection> outputDiTaus(new CompositePtrCandidateCollection());
   edm::RefProd<CompositePtrCandidateCollection> outputDiTauRefProd = evt.getRefBeforePut<CompositePtrCandidateCollection>(instNameDiTaus);
-  std::cout << " outputDiTauRefProd = " << outputDiTauRefProd.id() << std::endl;
+  //std::cout << " outputDiTauRefProd = " << outputDiTauRefProd.id() << std::endl;
 
   std::auto_ptr<pat::METCollection> outputMETs(new pat::METCollection());
   edm::RefProd<pat::METCollection> outputMEtRefProd = evt.getRefBeforePut<pat::METCollection>(instNameMEtObjects);
-  std::cout << " outputMEtRefProd = " << outputMEtRefProd.id() << std::endl;
+  //std::cout << " outputMEtRefProd = " << outputMEtRefProd.id() << std::endl;
 
-  std::auto_ptr<diTauToMEtAssociation> outputMEtAssociations(new diTauToMEtAssociation(outputDiTauRefProd));
+  //std::auto_ptr<diTauToMEtAssociation> outputMEtAssociations(new diTauToMEtAssociation(outputDiTauRefProd));
 
   int idxDiTau = 0;
   for ( typename std::vector<inputEntryType>::const_iterator input = inputs_.begin();
 	input != inputs_.end(); ++input ) {
     edm::Handle<CompositePtrCandidateCollection> inputDiTaus;    
     evt.getByLabel(input->srcDiTau_, inputDiTaus);
-    std::cout << "inputDiTaus(" << input->srcDiTau_.label() << ") = " << inputDiTaus.id() << std::endl;
+    //std::cout << "inputDiTaus(" << input->srcDiTau_.label() << ") = " << inputDiTaus.id() << std::endl;
     if ( !inputDiTaus.isValid() ) continue;
     
     edm::Handle<pat::METCollection> inputMETs;
     evt.getByLabel(input->srcMET_, inputMETs);
-    std::cout << "inputMETs(" << input->srcMET_.label() << ") = " << inputMETs.id() << std::endl;
+    //std::cout << "inputMETs(" << input->srcMET_.label() << ") = " << inputMETs.id() << std::endl;
     if ( inputMETs->size() != 1 ) 
       throw cms::Exception("CompositePtrCandidateT1T2toMEtAssociationProducer")
 	<< "Failed to find unique MET object for input collection = " << input->srcMET_.label() << " !!\n";
@@ -78,20 +78,20 @@ void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Even
       outputDiTaus->push_back(*inputDiTau);
       outputMETs->push_back(inputMET);
       pat::METRef outputMEtRef(outputMEtRefProd, idxDiTau);
-      std::cout << "pat::METRef = " << outputMEtRef.id() << ":" << outputMEtRef.key() << std::endl;
+      //std::cout << "pat::METRef = " << outputMEtRef.id() << ":" << outputMEtRef.key() << std::endl;
       int idxMET = outputMEtRef.index();
       outputMEtAssociations->setValue(idxDiTau, idxMET);
       ++idxDiTau;
     }
   }
 
-  std::cout << "adding outputDiTaus..." << std::endl;
+  //std::cout << "adding outputDiTaus..." << std::endl;
   evt.put(outputDiTaus, instNameDiTaus);
-  std::cout << "adding outputMETs..." << std::endl;
+  //std::cout << "adding outputMETs..." << std::endl;
   evt.put(outputMETs, instNameMEtObjects);
-  std::cout << "adding outputMEtAssociations..." << std::endl;
-  evt.put(outputMEtAssociations, instNameDiTauToMEtAssociations);  
-  std::cout << "done." << std::endl;
+  //std::cout << "adding outputMEtAssociations..." << std::endl;
+  //evt.put(outputMEtAssociations, instNameDiTauToMEtAssociations);  
+  //std::cout << "done." << std::endl;
 }
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
