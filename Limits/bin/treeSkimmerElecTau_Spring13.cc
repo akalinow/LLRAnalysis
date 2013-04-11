@@ -717,7 +717,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   ULong64_t event_,run_,lumi_;
   int index_;
 
-  const int nPidx=20;
+  const int nPidx=32;
   int  pairIndex[nPidx];
   bool passQualityCuts[nPidx];
   int  counter[nPidx];
@@ -1052,7 +1052,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
 
-  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[20]/I");
+  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[32]/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -2558,6 +2558,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     bool mvaPOG_e      = (mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479);
     bool anti_e_old    = (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1);
+    bool anti_e_new_L  = tightestAntiEMVA3WP > 0 ;
+    bool anti_e_new_M  = tightestAntiEMVA3WP > 1 ;
     bool anti_e_new_T  = tightestAntiEMVA3WP > 2 ;
     bool anti_e_new_VT = tightestAntiEMVA3WP > 3 ;
     
@@ -2577,17 +2579,29 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     passQualityCuts[9] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
     passQualityCuts[10] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
     passQualityCuts[11] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
+    passQualityCuts[12] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
+    passQualityCuts[13] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
+    passQualityCuts[14] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
+    passQualityCuts[15] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
     //// L1ETM cut
-    passQualityCuts[12] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[13] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
-    passQualityCuts[14] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[15] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
+    passQualityCuts[16] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
+    passQualityCuts[17] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
+    passQualityCuts[18] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
+    passQualityCuts[19] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
+    passQualityCuts[20] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
+    passQualityCuts[21] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
+    passQualityCuts[22] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
+    passQualityCuts[23] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
 
     // Soft + tau (w/o L1ETM cut)
-    passQualityCuts[16] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[17] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
-    passQualityCuts[18] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[19] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
+    passQualityCuts[24] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
+    passQualityCuts[25] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
+    passQualityCuts[26] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
+    passQualityCuts[27] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
+    passQualityCuts[28] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
+    passQualityCuts[29] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
+    passQualityCuts[30] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
+    passQualityCuts[31] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
 
     // Arrived in a new event
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
