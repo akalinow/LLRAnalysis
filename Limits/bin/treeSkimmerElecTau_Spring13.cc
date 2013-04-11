@@ -113,16 +113,16 @@ float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TS
   // Christian residual
   else if(method.Contains("Luca2")) {
     //
-    float L1etmcorr = L1etm*(caloMEtNoHFcorr/caloMEtNoHF)*(0.01134*TMath::Sqrt(caloMEtNoHF)+0.9422);
+    float L1etmcorr = L1etm*(caloMEtNoHFcorr/caloMEtNoHF)*(0.009868*TMath::Sqrt(caloMEtNoHF)+0.9514);
     //
     float kMagn  = 0.8716 - 0.002187*caloMEtNoHF ;
-    float kXproj = 0.6665 + 0.0006096*caloMEtNoHF;
+    float kXproj = 0.6687 + 0.0005584*caloMEtNoHF;
     float k=1;
     //
     if(     method=="Luca2_Magn" ) k = kMagn;
     else if(method=="Luca2_Xproj") k = kXproj;
     //
-    return L1etmcorr + 0.017*(L1etmcorr-k*caloMEtNoHF);
+    return L1etmcorr + 0.031*(L1etmcorr-k*caloMEtNoHF);
   }
 
   else return L1etm;
