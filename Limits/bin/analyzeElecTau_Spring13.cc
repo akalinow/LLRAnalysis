@@ -341,9 +341,14 @@ void drawHistogramData(TTree* tree = 0,
 		       TH1F* h = 0, 
 		       TCut cut = TCut(""),
 		       int verbose = 0 ){
+
+  TString localVar=variable;
+  if(variable=="caloMEtNoHF")    localVar="caloMEtNoHFUncorr";
+  if(variable=="caloMEtNoHFPhi") localVar="caloMEtNoHFUncorrPhi";
+
   if(tree!=0 && h!=0){
     h->Reset();
-    tree->Draw(variable+">>"+TString(h->GetName()),cut);
+    tree->Draw(localVar+">>"+TString(h->GetName()),cut);
     h->Scale(scaleFactor);
     normalization      = h->Integral();
     normalizationError = TMath::Sqrt(h->GetEntries())*(normalization/h->GetEntries());
@@ -369,9 +374,13 @@ void drawHistogramDataFakeRate(TTree* tree = 0,
 			       TCut cut = TCut(""),
 			       string scaleFact = "",
 			       int verbose = 0 ){
+  TString localVar=variable;
+  if(variable=="caloMEtNoHF")    localVar="caloMEtNoHFUncorr";
+  if(variable=="caloMEtNoHFPhi") localVar="caloMEtNoHFUncorrPhi";
+
   if(tree!=0 && h!=0){
     h->Reset();
-    tree->Draw(variable+">>"+TString(h->GetName()),TCut(scaleFact.c_str())*cut);
+    tree->Draw(localVar+">>"+TString(h->GetName()),TCut(scaleFact.c_str())*cut);
     normalization      = h->Integral()*scaleFactor;
     normalizationError = TMath::Sqrt(h->GetEntries())*(normalization/h->GetEntries());
      if(verbose==0) h->Reset();
