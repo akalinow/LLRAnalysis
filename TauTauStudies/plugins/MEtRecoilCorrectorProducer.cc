@@ -769,23 +769,25 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
   pat::MET scaledMETN( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxN, scaledMETPyN, 0, sqrt(scaledMETPxN*scaledMETPxN+scaledMETPyN*scaledMETPyN)), 
 				 reco::MET::Point(0,0,0)) );
+  scaledMETN.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
 
   pat::MET scaledMETUm( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxUm, scaledMETPyUm, 0, sqrt(scaledMETPxUm*scaledMETPxUm+scaledMETPyUm*scaledMETPyUm)), 
 				 reco::MET::Point(0,0,0)) );
+  scaledMETUm.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
   pat::MET scaledMETUs( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxUs, scaledMETPyUs, 0, sqrt(scaledMETPxUs*scaledMETPxUs+scaledMETPyUs*scaledMETPyUs)), 
 				 reco::MET::Point(0,0,0)) );
+  scaledMETUs.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
   pat::MET scaledMETDm( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxDm, scaledMETPyDm, 0, sqrt(scaledMETPxDm*scaledMETPxDm+scaledMETPyDm*scaledMETPyDm)), 
 				 reco::MET::Point(0,0,0)) );
+  scaledMETDm.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
   pat::MET scaledMETDs( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxDs, scaledMETPyDs, 0, sqrt(scaledMETPxDs*scaledMETPxDs+scaledMETPyDs*scaledMETPyDs)), 
 				 reco::MET::Point(0,0,0)) );
-
+  scaledMETDs.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
   
-  
-
 
   MEtRescaledCollN->push_back(scaledMETN);  
 
