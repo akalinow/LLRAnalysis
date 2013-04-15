@@ -948,8 +948,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString RUN         = "ABCD",
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1173,7 +1173,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_highqtmet/EleTau/temp/SoftAnalysis/iter2/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1261,6 +1261,9 @@ void plotElecTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
       signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_ElecTau_"+fileAnalysis+".root");
+//       cout<<"Signal entries :"<<signal[iP][iM]->GetEntries()<<endl;
+//       cout<<"Signal iP :"<<iP<<endl;
+//       cout<<"Signal iM :"<<iM<<endl;
       if(!signal[iP][iM])cout << "###  NTUPLE Signal " << nameProd[iP]+nameMasses[iM] << " NOT FOUND ###" << endl;  
     }
   }
@@ -2076,8 +2079,8 @@ void plotElecTau( Int_t mH_           = 120,
 
 
 
-	else if((it->first).find("qqH") !=string::npos || 
-		(it->first).find("ggH") !=string::npos ||
+	else if((it->first).find("VBFH") !=string::npos || 
+		(it->first).find("GGFH") !=string::npos ||
 		(it->first).find("VH")  !=string::npos ){
 		//(it->first).find("SUSY")!=string::npos){
 
