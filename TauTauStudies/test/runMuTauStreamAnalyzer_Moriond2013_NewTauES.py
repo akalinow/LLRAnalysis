@@ -261,7 +261,8 @@ else:
 #----------------------------------------------------------------------------------
 # produce PU Jet Ids
 
-from RecoJets.JetProducers.PileupJetID_cfi import stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
+from RecoJets.JetProducers.PileupJetID_cfi import *
+stdalgos = cms.VPSet(full_53x,cutbased,PhilV1)
 process.puJetMva = cms.EDProducer('PileupJetIdProducer',
                                   produceJetIds = cms.bool(True),
                                   jetids = cms.InputTag(""),
@@ -1521,5 +1522,5 @@ process.TFileService = cms.Service(
 process.outpath = cms.EndPath()
 
 ##
-#processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
-#print >> processDumpFile, process.dumpPython()
+processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+print >> processDumpFile, process.dumpPython()
