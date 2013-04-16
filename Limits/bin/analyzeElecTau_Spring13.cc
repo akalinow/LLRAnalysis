@@ -1388,13 +1388,19 @@ void plotElecTau( Int_t mH_           = 120,
   TCut vbfLooseQCD("nJets20>=2 && isVetoInJets!=1 && Mjj>200 && Deta>2");
   TCut vh("pt1>30 && pt2>30 && Mjj>70 && Mjj<120 && diJetPt>150 && MVAvbf<0.80 && nJets20BTagged<1");
 
-  TCut boostNoMet("nJets30>0 && pt1>30 && nJets20BTagged<1 && MEtMVA>30");
+  TCut boostNoMet("nJets30>0 && pt1>30 && nJets20BTagged<1");
   boostNoMet = boostNoMet && !vbf /*&& !vh*/;
 
   TCut boost      = boostNoMet && TCut("MEtMVA>30");
   TCut boostMet0  = boostNoMet && TCut("MEtMVA>0");
+  TCut boostMet5  = boostNoMet && TCut("MEtMVA>5");
   TCut boostMet10 = boostNoMet && TCut("MEtMVA>10");
+  TCut boostMet15  = boostNoMet && TCut("MEtMVA>15");
   TCut boostMet20 = boostNoMet && TCut("MEtMVA>20");
+  TCut boostMet25  = boostNoMet && TCut("MEtMVA>25");
+  TCut boostMet35  = boostNoMet && TCut("MEtMVA>35");
+  TCut boostMet40  = boostNoMet && TCut("MEtMVA>40");
+  TCut boostMet45  = boostNoMet && TCut("MEtMVA>45");
 
   TCut bTag("nJets30<2 && nJets20BTagged>0");
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
@@ -1408,8 +1414,14 @@ void plotElecTau( Int_t mH_           = 120,
   else if(selection_.find("vh")!=string::npos)         sbinCat = vh;
   else if(selection_.find("novbf")!=string::npos)      sbinCat = novbf;
   else if(selection_.find("boostMet0")!=string::npos)  sbinCat = boostMet0;
+  else if(selection_.find("boostMet5")!=string::npos)  sbinCat = boostMet5;
   else if(selection_.find("boostMet10")!=string::npos) sbinCat = boostMet10;
+  else if(selection_.find("boostMet10")!=string::npos) sbinCat = boostMet15;
   else if(selection_.find("boostMet20")!=string::npos) sbinCat = boostMet20;
+  else if(selection_.find("boostMet25")!=string::npos) sbinCat = boostMet25;
+  else if(selection_.find("boostMet35")!=string::npos) sbinCat = boostMet35;
+  else if(selection_.find("boostMet40")!=string::npos) sbinCat = boostMet40;
+  else if(selection_.find("boostMet45")!=string::npos) sbinCat = boostMet45;
   else if(selection_.find("nobTag")!=string::npos)     sbinCat = nobTag;
   else if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)      sbinCat = vbf;
   else if(selection_.find("boost")!=string::npos && selection_.find("boostMet")==string::npos) sbinCat = boost;
