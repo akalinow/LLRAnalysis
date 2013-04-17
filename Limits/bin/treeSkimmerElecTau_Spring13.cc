@@ -669,7 +669,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
-  float visGenTauMass, genTauPt, genTauEta, genVMass;
+  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt;
   float genElecPt, genElecEta;
   int genDecayMode_;
   float leadPFChHadTrackPt_, leadPFChHadTrackEta_,leadPFChHadPt_, leadPFChHadEta_;
@@ -854,6 +854,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("genElecEta",               &genElecEta, "genElecEta/F");
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
+  outTreePtOrd->Branch("genVPt",                &genVPt,     "genVPt/F");
 
   outTreePtOrd->Branch("leadPFChHadTrackPt",      &leadPFChHadTrackPt_,"leadPFChHadPt/F");
   outTreePtOrd->Branch("leadPFChHadTrackEta",     &leadPFChHadTrackEta_,"leadPFChHadEta/F");
@@ -1861,7 +1862,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     visGenTauMass = visibleGenTauMass;
     genDecayMode_ = genDecayMode;
     genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
-    
+    genVPt       = (genVP4->size() > 0) ? (*genVP4)[0].Pt() : 0;
     ////////////////////////////////////////////////////////////////////
 
     TLorentzVector corrMET_tmp;
