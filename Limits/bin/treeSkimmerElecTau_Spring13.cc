@@ -670,6 +670,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
   float visGenTauMass, genTauPt, genTauEta, genVMass;
+  float genElecPt, genElecEta;
   int genDecayMode_;
   float leadPFChHadTrackPt_, leadPFChHadTrackEta_,leadPFChHadPt_, leadPFChHadEta_;
   float leadPFCandPt_, leadPFCandEta_;
@@ -849,6 +850,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
   outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
   outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genElecPt",                &genElecPt, "genElecPt/F");
+  outTreePtOrd->Branch("genElecEta",               &genElecEta, "genElecEta/F");
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
 
@@ -1841,6 +1844,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauCharge_    = diTauCharge;
     chargeL1_       = chargeL1;
       
+    // genElec Info
+    if(genDiTauLegsP4->size()>0) {
+      genElecPt   = (*genDiTauLegsP4)[0].Pt();
+      genElecEta  = (*genDiTauLegsP4)[0].Eta();
+    }
+    else genElecPt = genElecEta = -99;
+
     // genTau Info
     if(genDiTauLegsP4->size()>1) {
       genTauPt   = (*genDiTauLegsP4)[1].Pt();

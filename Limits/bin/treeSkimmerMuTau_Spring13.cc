@@ -698,6 +698,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
   float visGenTauMass, genTauPt, genTauEta, genVMass;
+  float genMuPt, genMuEta;
   int genDecayMode_;
 
   // event-related variables
@@ -873,6 +874,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
   outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
   outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genMuPt",                &genMuPt, "genMuPt/F");
+  outTreePtOrd->Branch("genMuEta",               &genMuEta, "genMuEta/F");
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
   
@@ -1811,6 +1814,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
     chargeL1_       = chargeL1;
+
+    // genMu info
+    if(genDiTauLegsP4->size()>0) {
+      genMuPt   = (*genDiTauLegsP4)[0].Pt();
+      genMuEta  = (*genDiTauLegsP4)[0].Eta();
+    }
+    else genMuPt = genMuEta = -99;
     
     //genTau Info
     if(genDiTauLegsP4->size()>1) {
