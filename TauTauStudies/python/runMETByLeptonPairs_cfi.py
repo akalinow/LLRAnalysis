@@ -3,6 +3,13 @@ from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
 
 def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=True, useMarkov=True, useRecoil=True, doSVFitReco=True, postfix="") :
 
+    isMuTau = False
+    isElecTau = False
+    if muonColl != "":
+        isMuTau = True
+    elif electronColl != "":
+        isElecTau = True
+        
     process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_cff")
     process.pfMEtMVA.minNumLeptons = cms.int32(2)
     if runOnMC:
@@ -58,11 +65,11 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         src = cms.InputTag("patPFMetByMVA")
     )
 
-    if muonColl != "":
+    if isMuTau:
         process.load("TauAnalysis.CandidateTools.muTauPairProduction_cff")
         process.diTau = process.allMuTauPairs.clone()
         process.diTau.srcLeg1  = cms.InputTag(muonColl)
-    elif electronColl != "":    
+    elif isElecTau:    
         process.load("TauAnalysis.CandidateTools.elecTauPairProduction_cff")
         process.diTau = process.allElecTauPairs.clone()
         process.diTau.srcLeg1  = cms.InputTag(electronColl)
@@ -93,7 +100,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
             max_or_median = cms.string("max"),
             verbosity = cms.int32(0)
             )
-                
+        process.diTau.nSVfit.psKine_MEt_int.config.event.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
     delattr(process.diTau.nSVfit, "psKine_MEt_logM_fit")
     if not runOnMC:
         process.diTau.srcGenParticles = ""
@@ -104,7 +111,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
     for idxLep in range(10):
         for idxTau in range(10):
 
-            if muonColl != "":
+            if isMuTau:
                 moduleNameMu = "muPtEtaIDIso%i%i%s" % (idxLep, idxTau, postfix)
                 moduleMu = cms.EDProducer("SinglePatMuonPicker",
                                           src = cms.InputTag(muonColl),
@@ -113,11 +120,11 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                                           )
                 setattr(process, moduleNameMu, moduleMu)
                 runMETByPairsSequence += moduleMu
-            elif electronColl != "":   
+            elif isElecTau:   
                  moduleNameEle = "elePtEtaIDIso%i%i%s" % (idxLep, idxTau, postfix)
                  moduleEle = cms.EDProducer("SinglePatElectronPicker",
                                             src = cms.InputTag(electronColl),
-                                            itemNumber = cms.uint32(idxEle),
+                                            itemNumber = cms.uint32(idxLep),
                                             verbose = cms.untracked.bool(False)
                                            )
                  setattr(process, moduleNameEle, moduleEle)
@@ -133,9 +140,9 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
             runMETByPairsSequence += moduleTau
             moduleNameMVAMET = "pfMEtMVA%i%i%s" % (idxLep, idxTau ,postfix)
             moduleMVAMET = process.pfMEtMVA.clone()
-            if muonColl != "":
+            if isMuTau:
                 moduleMVAMET.srcLeptons = cms.VInputTag( cms.InputTag(moduleNameMu),  cms.InputTag(moduleNameTau))
-            elif electronColl != "":
+            elif isElecTau:
                 moduleMVAMET.srcLeptons = cms.VInputTag( cms.InputTag(moduleNameEle),  cms.InputTag(moduleNameTau))
             setattr(process, moduleNameMVAMET, moduleMVAMET)
             runMETByPairsSequence += moduleMVAMET
@@ -152,9 +159,9 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 srcLeg2  = cms.InputTag(moduleNameTau),
                 srcMET   = cms.InputTag(moduleNamePatMetMVA)
                 )
-            if muonColl != "":
+            if isMuTau:
                 moduleDiTau.srcLeg1 = cms.InputTag(moduleNameMu)
-            elif electronColl != "":
+            elif isElecTau:
                 moduleDiTau.srcLeg1 = cms.InputTag(moduleNameEle)
             #setattr(process, moduleNameDiTau, moduleDiTau)
             metCollection = cms.InputTag(moduleNamePatMetMVA)
@@ -162,10 +169,10 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 moduleNameRecoilMET = "metRecoilCorrector%i%i%s" % (idxLep, idxTau, postfix)
                 moduleRecoilMET = process.metRecoilCorrector.clone()
                 moduleRecoilMET.metTag = cms.InputTag(moduleNamePatMetMVA)
-                if muonColl != "":
+                if isMuTau:
                     moduleRecoilMET.electronTag  = cms.InputTag("")
                     moduleRecoilMET.muonTag = cms.InputTag(muonColl)
-                elif electronColl != "":
+                elif isElecTau:
                     moduleRecoilMET.electronTag  = cms.InputTag(electronColl)
                     moduleRecoilMET.muonTag = cms.InputTag("")
                 moduleRecoilMET.tauTag  = cms.InputTag(tauColl)
@@ -196,16 +203,18 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
     #setattr(process, moduleEvtContentName, moduleEventContent)
     #runMETByPairsSequence += moduleEventContent
     MergedDiTausName  = "MergedDiTaus%s" % postfix        
-    MergedDiTaus = cms.EDProducer("PATMuTauPairToMEtAssociationProducer",
-                                          inputs = cms.VPSet(diTauInputList)
-                                          )
+    if isMuTau:
+        MergedDiTaus = cms.EDProducer("PATMuTauPairToMEtAssociationProducer",
+                                      inputs = cms.VPSet(diTauInputList)
+                                      )
+    elif isElecTau:
+        MergedDiTaus = cms.EDProducer("PATElecTauPairToMEtAssociationProducer",
+                                      inputs = cms.VPSet(diTauInputList)
+                                      )
     setattr(process, MergedDiTausName, MergedDiTaus) 
     runMETByPairsSequence += MergedDiTaus
 
     runMETByPairsSequenceName = "runMETByPairsSequence%s" % postfix
     setattr(process, runMETByPairsSequenceName, runMETByPairsSequence)
-    print runMETByPairsSequence
+    #print runMETByPairsSequence
     return runMETByPairsSequence
-
-    #process.runDiTauByPairsSequence = cloneProcessingSnippet(process, process.runMETByPairsSequence, postfix) 
-
