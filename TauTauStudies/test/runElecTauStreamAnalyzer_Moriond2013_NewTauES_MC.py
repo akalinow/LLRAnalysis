@@ -263,7 +263,8 @@ else:
 #----------------------------------------------------------------------------------
 # produce PU Jet Ids
 
-from RecoJets.JetProducers.PileupJetID_cfi import stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
+from RecoJets.JetProducers.PileupJetID_cfi import *
+stdalgos = cms.VPSet(full_53x,cutbased,PhilV1)
 process.puJetMva = cms.EDProducer('PileupJetIdProducer',
                                   produceJetIds = cms.bool(True),
                                   jetids = cms.InputTag(""),
@@ -496,6 +497,7 @@ if useMarkov:
         max_or_median = cms.string("max"),
         verbosity = cms.int32(0)
     )
+    process.diTau.nSVfit.psKine_MEt_int.config.event.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
 # CV: disable old fit mode
 delattr(process.diTau.nSVfit, "psKine_MEt_logM_fit")
     

@@ -1523,5 +1523,5 @@ process.TFileService = cms.Service(
 process.outpath = cms.EndPath()
 
 ##
-processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
-print >> processDumpFile, process.dumpPython()
+#processDumpFile = open('runMuTauStreamAnalyzer_Moriond2013_NewTauES.dump', 'w')
+#print >> processDumpFile, process.dumpPython()
