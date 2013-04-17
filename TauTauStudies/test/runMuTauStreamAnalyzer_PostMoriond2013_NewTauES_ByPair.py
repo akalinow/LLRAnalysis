@@ -255,7 +255,7 @@ process.rescaledTaus = cms.EDProducer(
 
 #######################################################################
 from LLRAnalysis.TauTauStudies.runMETByLeptonPairs_cfi import *
-getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIso", runOnMC, useMarkov, useRecoil)
+getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIso", runOnMC, useMarkov, useRecoil, doSVFitReco)
 
 process.selectedDiTau = cms.EDFilter(
     "MuTauPairSelector",
@@ -270,13 +270,13 @@ process.selectedDiTauCounter = cms.EDFilter(
 )
 
 #######################################################################
-getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, "TauUp")
+getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauUp")
 
 process.selectedDiTauTauUp = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausTauUp:diTaus") )
 process.selectedDiTauTauUpCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauUp"))
 
 #######################################################################
-getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, "TauDown")
+getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauDown")
 
 process.selectedDiTauTauDown = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausTauDown:diTaus") )
 process.selectedDiTauTauDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauDown"))

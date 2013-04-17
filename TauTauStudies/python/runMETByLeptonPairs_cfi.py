@@ -1,9 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
 
-def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=True, useMarkov=True, useRecoil=True, postfix="") :
+def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=True, useMarkov=True, useRecoil=True, doSVFitReco=True, postfix="") :
 
     process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_cff")
+    process.pfMEtMVA.minNumLeptons = cms.int32(2)
     if runOnMC:
         process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3")
     else:
@@ -69,7 +70,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
     process.diTau.srcMET   = cms.InputTag("metRecoilCorrector",  "N")
     process.diTau.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
     process.diTau.dRmin12  = cms.double(0.5)
-    process.diTau.doSVreco = cms.bool(False)
+    process.diTau.doSVreco = cms.bool(doSVFitReco)
     if useMarkov:
         process.diTau.nSVfit.psKine_MEt_int.algorithm = cms.PSet(
             pluginName = cms.string("nSVfitAlgorithmByIntegration2"),
@@ -144,6 +145,8 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
             runMETByPairsSequence += modulePatMetMVA
             moduleNameMetCov = "pfMEtMVACov%i%i%s" % (idxLep, idxTau, postfix)
             moduleMetCov = process.pfMEtMVACov.clone(src = cms.InputTag(moduleNamePatMetMVA))
+            setattr(process, moduleNameMetCov, moduleMetCov)
+            runMETByPairsSequence += moduleMetCov
             moduleNameDiTau = "diTau%i%i%s" % (idxLep, idxTau, postfix)
             moduleDiTau = process.diTau.clone(
                 srcLeg2  = cms.InputTag(moduleNameTau),
