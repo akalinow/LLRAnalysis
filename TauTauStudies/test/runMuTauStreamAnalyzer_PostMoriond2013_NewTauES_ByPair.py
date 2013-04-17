@@ -16,7 +16,7 @@ runOnMC     = True
 runOnEmbed  = False
 doSVFitReco = True
 usePFMEtMVA = True
-useRecoil   = False
+useRecoil   = True
 runUserIsoTau = False
 applyTauESCorr= True
 useMarkov   = True
@@ -222,7 +222,8 @@ else:
 #----------------------------------------------------------------------------------
 # produce PU Jet Ids
 
-from RecoJets.JetProducers.PileupJetID_cfi import stdalgos_5x, stdalgos_4x, stdalgos, cutbased, chsalgos_5x, chsalgos_4x, chsalgos
+from RecoJets.JetProducers.PileupJetID_cfi import *
+stdalgos = cms.VPSet(full_53x,cutbased,PhilV1)
 process.puJetMva = cms.EDProducer('PileupJetIdProducer',
                                   produceJetIds = cms.bool(True),
                                   jetids = cms.InputTag(""),
@@ -249,6 +250,20 @@ process.rescaledTaus = cms.EDProducer(
     "TauRescalerProducer",
     inputCollection = cms.InputTag("tauPtEtaIDAgMuAgElecIsoPtRel"),
     shift           = cms.vdouble(0.03,0.03),
+    numOfSigmas     = cms.double(1.0),
+    #verbose         = cms.bool(True)
+    )
+process.rescaledMuons = cms.EDProducer(
+    "MuonRescalerProducer",
+    inputCollection = cms.InputTag("muPtEtaIDIsoPtRel"),
+    shift           = cms.vdouble(0.01,0.01),
+    numOfSigmas     = cms.double(1.0),
+    #verbose         = cms.bool(True)
+    )
+process.rescaledMuonsRel = cms.EDProducer(
+    "MuonRescalerProducer",
+    inputCollection = cms.InputTag("muPtEtaRelID"),
+    shift           = cms.vdouble(0.01,0.01),
     numOfSigmas     = cms.double(1.0),
     #verbose         = cms.bool(True)
     )
@@ -281,6 +296,17 @@ getDiTauMassByLeptonPair(process, "muPtEtaIDIso", "", "tauPtEtaIDAgMuAgElecIsoTa
 process.selectedDiTauTauDown = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausTauDown:diTaus") )
 process.selectedDiTauTauDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauDown"))
 #######################################################################
+getDiTauMassByLeptonPair(process, "muPtEtaIDIsoMuUp", "", "tauPtEtaIDAgMuAgElecIso", runOnMC, useMarkov, useRecoil, doSVFitReco, "MuUp")
+
+process.selectedDiTauMuUp = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausMuUp:diTaus") )
+process.selectedDiTauMuUpCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauMuUp"))
+
+#######################################################################
+getDiTauMassByLeptonPair(process, "muPtEtaIDIsoMuDown", "", "tauPtEtaIDAgMuAgElecIso", runOnMC, useMarkov, useRecoil, doSVFitReco, "MuDown")
+
+process.selectedDiTauMuDown = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausMuDown:diTaus") )
+process.selectedDiTauMuDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauMuDown"))
+########################################################################
 
 process.tauPtEtaIDAgMuAgElec = cms.EDFilter( #apply AntiMuTight2
     "PATTauSelector",
@@ -436,9 +462,13 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     doMuIsoMVA     = cms.untracked.bool( True ),
     )
 
-process.muTauStreamAnalyzer.met = cms.InputTag("")
+if usePFMEtMVA:
+    if useRecoil :
+        process.muTauStreamAnalyzer.met = cms.InputTag("metRecoilCorrector00",  "N")
+    else :
+        process.muTauStreamAnalyzer.met = cms.InputTag("patPFMetByMVA00")
 
-'''
+
 process.muTauStreamAnalyzerMuUp    = process.muTauStreamAnalyzer.clone(
     diTaus   =  cms.InputTag("selectedDiTauMuUp"),
     met      =  cms.InputTag("rescaledMETmuon","NNUNN"),
@@ -451,7 +481,6 @@ process.muTauStreamAnalyzerMuDown  = process.muTauStreamAnalyzer.clone(
     muons    =  cms.InputTag("muPtEtaIDIsoMuDown"),
     muonsRel =  cms.InputTag("muPtEtaRelIDMuDown"),
     )
-'''
 
 process.muTauStreamAnalyzerTauUp   = process.muTauStreamAnalyzer.clone(
     diTaus =  cms.InputTag("selectedDiTauTauUp"),
@@ -485,6 +514,53 @@ process.seqNominal = cms.Sequence(
     process.selectedDiTau*process.selectedDiTauCounter*
     process.QuarkGluonTagger* #quark/gluon jets    
     process.muTauStreamAnalyzer
+    )
+
+process.seqMuUp = cms.Sequence(
+    process.allEventsFilter*
+    process.muPtEtaIDIsoPtRel *
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
+    #(process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.puJetIdSequence *
+    #process.produceCaloMEtNoHF*
+    #process.metRecoilCorrector*
+    #(process.rescaledMETmuon+process.rescaledMuons+process.rescaledMuonsRel)*
+    (process.rescaledMuons+process.rescaledMuonsRel)*
+    (process.muPtEtaIDIsoMuUp*process.muPtEtaIDIsoMuUpCounter) *
+    process.muPtEtaRelIDMuUp *
+    process.electronsForVeto *
+    #process.pfMEtMVACov*
+    #process.diTauMuUp*process.selectedDiTauMuUp*process.selectedDiTauMuUpCounter*
+    process.calibratedAK5PFJetsForPFMEtMVA*
+    process.runMETByPairsSequenceMuUp*
+    process.selectedDiTauMuUp*process.selectedDiTauMuUpCounter*
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.muTauStreamAnalyzerMuUp
+    )
+process.seqMuDown = cms.Sequence(
+    process.allEventsFilter*
+    process.muPtEtaIDIsoPtRel *
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
+    #(process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.puJetIdSequence *
+    #process.produceCaloMEtNoHF*
+    #process.metRecoilCorrector*
+    #(process.rescaledMETmuon+process.rescaledMuons+process.rescaledMuonsRel)*
+    (process.rescaledMuons+process.rescaledMuonsRel)* 
+    (process.muPtEtaIDIsoMuDown*process.muPtEtaIDIsoMuDownCounter) *
+    process.muPtEtaRelIDMuDown *
+    process.electronsForVeto *
+    #process.pfMEtMVACov*
+    #process.diTauMuDown*process.selectedDiTauMuDown*process.selectedDiTauMuDownCounter*
+    process.calibratedAK5PFJetsForPFMEtMVA*
+    process.runMETByPairsSequenceMuDown*
+    process.selectedDiTauMuDown*process.selectedDiTauMuDownCounter*
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.muTauStreamAnalyzerMuDown
     )
 
 process.seqTauUp = cms.Sequence(
@@ -543,8 +619,8 @@ if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
     process.pTauUp              = cms.Path( process.seqTauUp)
     process.pTauDown            = cms.Path( process.seqTauDown )
-    #process.pMuUp                  = cms.Path( process.seqMuUp)    NOT INTERESTING FOR ANALYSIS
-    #process.pMuDown                = cms.Path( process.seqMuDown)  NOT INTERESTING FOR ANALYSIS
+    #process.pMuUp                  = cms.Path( process.seqMuUp)    #NOT INTERESTING FOR ANALYSIS
+    #process.pMuDown                = cms.Path( process.seqMuDown)  #NOT INTERESTING FOR ANALYSIS
     ####
 
 else:
