@@ -1182,9 +1182,9 @@ process.out.outputCommands.extend( cms.vstring(
     'drop *_selectedPatMuons_*_*',
     'drop *_selectedPatTaus_*_*',
     #MB'drop *_patMETs_*_*',
-    'drop *_selectedPatMuonsUserEmbedded_*_*',
+    'keep *_selectedPatMuonsUserEmbedded_*_*', #AN+
     'drop *_selectedPatElectronsUserEmbedded_*_*',
-    'drop *_selectedPatElectronsUserEmbeddedIso_*_*',
+    'keep *_selectedPatElectronsUserEmbeddedIso_*_*', #AN+
     'drop *_selectedPatTausUserEmbedded_*_*',
     'keep *_puJetId_*_*',
     'keep *_puJetMva_*_*',
