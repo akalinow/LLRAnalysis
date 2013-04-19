@@ -17,6 +17,7 @@
 #include "TROOT.h"
 #include "TPluginManager.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TH1.h"
 #include "TFile.h"
 #include "TCanvas.h"
@@ -1089,7 +1090,6 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hZmjLoose = new TH1F( "hZmjLoose","Z+jets, jet->tau" , nBins , bins.GetArray());         hZmjLoose->SetFillColor(kBlue-2);
   TH1F* hZfakes   = new TH1F( "hZfakes" ,"Z+jets, jet to tau", nBins , bins.GetArray());         hZfakes->SetFillColor(kBlue-2);
   TH1F* hTTb      = new TH1F( "hTTb"    ,"ttbar"             , nBins , bins.GetArray());         hTTb->SetFillColor(kBlue-8); 
-  TH1F* hQCD      = new TH1F( "hQCD"    ,"QCD"               , nBins , bins.GetArray());         hQCD->SetFillColor(kMagenta-10);
   TH1F* hSS       = new TH1F( "hSS"     ,"same-sign"         , nBins , bins.GetArray());         hSS->SetFillColor(kMagenta-10);
   TH1F* hSSLooseVBF= new TH1F("hSSLooseVBF" ,"same-sign"     , nBins , bins.GetArray());         hSSLooseVBF->SetFillColor(kMagenta-10);
   TH1F* hLooseIso1= new TH1F( "hLooseIso1","Loose Iso"       , nBins , bins.GetArray());
@@ -1103,8 +1103,16 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hW3JetsMediumTauIsoRelVBF         = new TH1F( "hW3JetsMediumTauIsoRelVBF" ,  "W+3jets (medium tau-iso)"            , nBins , bins.GetArray());
   TH1F* hW3JetsMediumTauIsoRelVBFMinusSS  = new TH1F( "hW3JetsMediumTauIsoRelVBFMinusSS" ,  "W+3jets (medium tau-iso)-SS"  , nBins , bins.GetArray());
   TH1F* hWLooseBTag                       = new TH1F( "hWLooseBTag" ,  "W+jets (Loose b-Tag)", nBins , bins.GetArray());
-  TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
-  TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
+
+  // QCD estimations
+  TH1F* hQCD                           = new TH1F( "hQCD"         ,"QCD full vbf"      , nBins , bins.GetArray());                                    hQCD        ->SetFillColor(kMagenta-10);
+  TH1F* hQCDrelaxVBF                   = new TH1F( "hQCDRelaxVBF" ,"QCD relax vbf"     , nBins , bins.GetArray());                                    hQCDrelaxVBF->SetFillColor(kMagenta-10); //ND
+  //
+  TH1F* hDataAntiIsoLooseTauIsoFullVBF = new TH1F( "hDataAntiIsoLooseTauIsoFullVBF","data anti-iso,loose tau-iso,full vbf",  nBins, bins.GetArray()); hDataAntiIsoLooseTauIsoFullVBF ->SetFillColor(kMagenta-10);//ND
+  TH1F* hDataAntiIsoLooseTauIsoRelaxVBF= new TH1F( "hDataAntiIsoLooseTauIsoRelaxVBF","data anti-iso,loose tau-iso,relax vbf",nBins, bins.GetArray()); hDataAntiIsoLooseTauIsoRelaxVBF->SetFillColor(kMagenta-10);//ND
+  //
+  TH1F* hDataAntiIsoLooseTauIso        = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray()); hDataAntiIsoLooseTauIso   ->SetFillColor(kMagenta-10);
+  TH1F* hDataAntiIsoLooseTauIsoQCD     = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins, bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
 
   TH1F* hSignal[nProd][nMasses];
   for(int iP=0 ; iP<nProd ; iP++) {
@@ -1172,7 +1180,8 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_highqtmet/MuTau/temp/SoftAnalysis/iter2/";
+  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_highqtmet/MuTau/temp/SoftAnalysis/iter2/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1629,11 +1638,37 @@ void plotMuTau( Int_t mH_           = 120,
       TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
       float dummy1 = 0.;      
 
-
       TCut sbinPZetaRelSSForWextrapolation = sbinPZetaRelSS;
       if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
 	sbinPZetaRelSSForWextrapolation = (sbinPZetaRelSSInclusive&&vbfLoose);     
       
+      // hQCD for relaxed vbf selection
+      if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) {
+
+	evaluateQCD(version_, RUN, hQCDrelaxVBF, hCleaner, true, "SS", false, removeMtCut, selection_, 
+		    SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+		    extrapFactorWSS, 
+		    SSWinSignalRegionDATA, SSWinSignalRegionMC,
+		    SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+		    hExtrapSS, variable,
+		    treeForWestimation, backgroundTTbar, backgroundOthers, 
+		    backgroundDYTauTau, backgroundDYJtoTau, backgroundDYMutoTau, data,
+		    Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+		    ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+		    MutoTauCorrectionFactor, JtoTauCorrectionFactor, 
+		    OStoSSRatioQCD,
+		    antiWsdb, antiWsgn, useMt,
+		    scaleFactMu,
+		    sbinSSInclusive && vbfLooseQCD,
+		    sbinPZetaRelSSForWextrapolation,
+		    sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
+		    sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
+		    vbfLoose, oneJet, zeroJet);
+
+	hCleaner->Reset();
+      }
+
+      // Normal hQCD
       evaluateQCD(version_, RUN, h1, hCleaner, true, "SS", false, removeMtCut, selection_, 
 		  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
 		  extrapFactorWSS, 
@@ -1911,9 +1946,14 @@ void plotMuTau( Int_t mH_           = 120,
 	  if ( !hData->GetSumw2N() )hData->Sumw2();
 	  
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
+
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
 	    float tmpNorm = hCleaner->Integral();
+	    hDataAntiIsoLooseTauIsoFullVBF->Add(hCleaner); //ND
+
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive&&vbfLooseQCD ,1);
+	    hDataAntiIsoLooseTauIsoRelaxVBF->Add(hCleaner); //ND
+
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
 
 	    //get efficiency of events passing QCD selection to pass the category selection 
@@ -2525,6 +2565,7 @@ void plotMuTau( Int_t mH_           = 120,
 
   hSiml->Write();
   hQCD->Write();
+  hQCDrelaxVBF->Write();
   hSS->Write();
   hSSLooseVBF->Write();
   hZmm->Write();
@@ -2555,6 +2596,8 @@ void plotMuTau( Int_t mH_           = 120,
   hW3JetsMediumTauIsoRelVBFMinusSS->Write();
   hWLooseBTag->Write();
   hDataAntiIsoLooseTauIso->Write();
+  hDataAntiIsoLooseTauIsoFullVBF->Write();
+  hDataAntiIsoLooseTauIsoRelaxVBF->Write();
   hDataAntiIsoLooseTauIsoQCD->Write();
   hData->Write();
   hParameters->Write();
@@ -2579,7 +2622,7 @@ void plotMuTau( Int_t mH_           = 120,
   delete hZmmLoose; delete hZmjLoose; delete hLooseIso1; delete hLooseIso2; delete hLooseIso3;
   delete hVV; delete hSgn; delete hSgn1; delete hSgn2; delete hSgn3; delete hData; delete hParameters;
   delete hW3JetsLooseTauIso; delete hW3JetsMediumTauIso; delete hW3JetsMediumTauIsoRelVBF; delete hW3JetsMediumTauIsoRelVBFMinusSS; delete hWLooseBTag;
-  delete hDataAntiIsoLooseTauIso; delete hDataAntiIsoLooseTauIsoQCD;
+  delete hDataAntiIsoLooseTauIso; delete hDataAntiIsoLooseTauIsoQCD; delete hDataAntiIsoLooseTauIsoFullVBF;
 
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
