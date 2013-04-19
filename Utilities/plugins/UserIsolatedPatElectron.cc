@@ -63,7 +63,7 @@ void UserIsolatedPatElectron::produce(edm::Event & iEvent, const edm::EventSetup
   else { 
     HLTfiltersElectron.push_back("hltOverlapFilterIsoEle20LooseIsoPFTau20"); 
     HLTfiltersElectron.push_back("hltOverlapFilterIsoEle20WP90LooseIsoPFTau20"); 
-    //HLTfiltersElectron.push_back("hltOverlapFilterIsoEle13WP90LooseIsoPFTau20"); //not in MC, so don't match indata as well 
+    HLTfiltersElectron.push_back("hltOverlapFilterIsoEle13WP90LooseIsoPFTau20"); 
   } 
   //select the most isolated tau
   

@@ -68,10 +68,10 @@ void UserIsolatedPatTau::produce(edm::Event & iEvent, const edm::EventSetup & iS
   else {
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");
-    //HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20"); //not in MC, so don't match indata as well
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");
     HLTfiltersTau.push_back("hltOverlapFilterIsoEle20LooseIsoPFTau20");
     HLTfiltersTau.push_back("hltOverlapFilterIsoEle20WP90LooseIsoPFTau20");
-    //HLTfiltersTau.push_back("hltOverlapFilterIsoEle13WP90LooseIsoPFTau20"); //not in MC, so don't match indata as well
+    HLTfiltersTau.push_back("hltOverlapFilterIsoEle13WP90LooseIsoPFTau20");
   }
   //select the most isolated tau
   
