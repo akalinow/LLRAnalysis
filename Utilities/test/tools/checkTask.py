@@ -100,7 +100,10 @@ for line in ifile:
 
 # PRINT INSTRUCTION #
 
-instruction="crab -c "+task+" "
+if 'NoISB' in force :
+	instruction="crab -GRID.additional_jdl_parameters='AllowZippedISB = false' -c "+task+" "
+else:
+	instruction="crab -c "+task+" "
 
 # Submit
 joblineC=""
