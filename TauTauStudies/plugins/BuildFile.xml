@@ -11,6 +11,7 @@
 <use   name="DataFormats/TauReco"/>
 <use   name="DataFormats/HepMCCandidate"/>
 <use   name="DataFormats/GsfTrackReco"/>
+<use   name="DataFormats/L1Trigger"/>
 <use   name="DataFormats/Math"/>
 <use   name="DataFormats/VertexReco"/>
 <use   name="DataFormats/Common"/>
