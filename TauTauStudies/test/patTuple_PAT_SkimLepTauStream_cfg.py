@@ -1206,6 +1206,10 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_genTauMatchedCaloJet_*_*',
     'keep *_genTauMatchedCaloJetElec_*_*',
     'keep *_genTauMatchedCaloJetMu_*_*',    
+    #To re-make patJets
+    'keep *_jetTracksAssociatorAtVertex_*_*',
+    'keep *_ak5GenJets_*_*',
+    'keep *_*JetTagsAOD_*_*',
     )
                                    )
 #MB
