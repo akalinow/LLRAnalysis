@@ -26,7 +26,7 @@ isPfEmbed   = False
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V15::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
