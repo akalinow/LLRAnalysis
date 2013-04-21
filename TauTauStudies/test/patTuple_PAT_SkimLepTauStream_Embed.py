@@ -18,7 +18,7 @@ process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 postfix     = "PFlow"
 runOnMC     = False
 runOnEmbed  = True
-isPfEmbed   = True 
+isPfEmbed   = False 
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -26,7 +26,7 @@ isPfEmbed   = True
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V15::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
@@ -573,7 +573,7 @@ process.muPtEtaRelID = cms.EDFilter(
     "PATMuonSelector",
     src = cms.InputTag("selectedPatMuonsUserEmbedded"),
     cut = cms.string("pt>7 && abs(eta)<2.4 && isGlobalMuon && isPFMuon && isTrackerMuon"+
-                     "&& abs(userFloat('dzWrtPV'))<0.2"
+                     "&& abs(userFloat('dzWrtPV'))<0.2 && abs(userFloat('dxyWrtPV'))<0.045"
                      ),
     filter = cms.bool(False)
     )
@@ -816,8 +816,8 @@ process.elecPtEtaRelID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("selectedPatElectronsUserEmbeddedIso"),
     cut = cms.string("pt>12 && abs(eta)<2.5 &&"+
-                     #"abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+
-                     "abs(userFloat('dzWrtPV'))<0.2 &&"+
+                     "abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 &&"+
+                     #"abs(userFloat('dzWrtPV'))<0.2 &&"+
                      simpleCutsVeto
                      ),
     filter = cms.bool(False)
@@ -839,6 +839,7 @@ process.electronsForVeto = cms.EDFilter(
                      " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 && "+
                      #" && ( ( pt > 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.905) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.955) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.975) )) || (pt < 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.925) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.915) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.965) )))"+
                      MVALoose +
+                     " && userFloat('nHits')==0 && userInt('antiConv')>0.5"+
                      " && userFloat('PFRelIsoDB04v3')<0.30"),
     filter = cms.bool(False)
     )
@@ -1097,7 +1098,6 @@ process.selectedPatElectronsUserEmbedded.vertexTag = "selectedPrimaryVertices"
 process.selectedPatTausUserEmbedded.vertexTag = "selectedPrimaryVertices"
 
 ##Arun:  change vertex for the PFLow isolation?
-pfParticleSelectionSequence
 massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              "offlinePrimaryVertices",
                              "selectedPrimaryVertices",
@@ -1182,9 +1182,9 @@ process.out.outputCommands.extend( cms.vstring(
     'drop *_selectedPatMuons_*_*',
     'drop *_selectedPatTaus_*_*',
     #MB'drop *_patMETs_*_*',
-    'drop *_selectedPatMuonsUserEmbedded_*_*',
+    'keep *_selectedPatMuonsUserEmbedded_*_*', #AN+
     'drop *_selectedPatElectronsUserEmbedded_*_*',
-    'drop *_selectedPatElectronsUserEmbeddedIso_*_*',
+    'keep *_selectedPatElectronsUserEmbeddedIso_*_*', #AN+
     'drop *_selectedPatTausUserEmbedded_*_*',
     'keep *_puJetId_*_*',
     'keep *_puJetMva_*_*',
@@ -1206,6 +1206,10 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_genTauMatchedCaloJet_*_*',
     'keep *_genTauMatchedCaloJetElec_*_*',
     'keep *_genTauMatchedCaloJetMu_*_*',    
+    #To re-make patJets
+    'keep *_jetTracksAssociatorAtVertex_*_*',
+    'keep *_ak5GenJets_*_*',
+    'keep *_*JetTagsAOD_*_*',
     )
                                    )
 #MB
