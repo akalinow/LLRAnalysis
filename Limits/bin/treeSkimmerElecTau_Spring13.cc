@@ -638,6 +638,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float diTauVisMassCorr;
   float diTauRecoPt,diTauRecoPhi;
   float diTauMinMass;
+  float diTauVisPtOverPtSum;
 
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
@@ -819,6 +820,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("diTauVisEta", &diTauVisEta,"diTauVisEta/F");
   outTreePtOrd->Branch("diTauVisPhi", &diTauVisPhi,"diTauVisPhi/F");
   outTreePtOrd->Branch("diTauVisMassCorr",&diTauVisMassCorr,"diTauVisMassCorr/F");
+  outTreePtOrd->Branch("diTauVisPtOverPtSum",&diTauVisPtOverPtSum,"diTauVisPtOverPtSum/F");//IN
 
   outTreePtOrd->Branch("diTauMinMass",&diTauMinMass,"diTauMisMass/F");
 
@@ -1821,6 +1823,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauVisEta   = (*diTauVisP4)[0].Eta();
     diTauVisPhi   = (*diTauVisP4)[0].Phi();
     diTauVisMassCorr  = (*diTauVisP4)[0].M();
+    diTauVisPtOverPtSum = diTauVisPt/(ptL1+ptL2);
 
     diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[0]).Pt();
     diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[0]).Phi();
