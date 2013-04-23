@@ -81,8 +81,8 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 {
 
   // Anti-Mu discriminator //
-  if(version_.Contains("AntiMu1"))      antimu = "tightestAntiMuWP>2";
-  else if(version_.Contains("AntiMu2")) antimu = "tightestAntiMu2WP>2";
+  if(version_.Contains("AntiMu1"))      antimu = "tightestAntiMuWP>0";
+  else if(version_.Contains("AntiMu2")) antimu = "tightestAntiMu2WP>0";
 
   // Anti-Ele discriminator //
   if(version_.Contains("AntiEle1"))               antiele = "tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1";
@@ -101,11 +101,14 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
       if(version_.Contains("AntiMu2")) pairIndex = "pairIndex[5]<1"; // standard
     }
     //
-    else if(version_.Contains("AntiEle2Tight")) { // anti-mu 2
-      pairIndex = "pairIndex[1]<1"; // standard
-    }
-    else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
+    else if(version_.Contains("AntiEle2Medium")) { // anti-e medium antimu2 hpsdb3h
       pairIndex = "pairIndex[2]<1"; // standard
+    }
+    else if(version_.Contains("AntiEle2Tight")) { // anti-e tight
+      pairIndex = "pairIndex[3]<1"; // standard
+    }
+    else if(version_.Contains("AntiEle2VeryTight")) { // anti-e vtight 
+      pairIndex = "pairIndex[4]<1"; // standard
     }
   }
   
@@ -117,13 +120,13 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 
     // pairIndex
     if(version_.Contains("AntiEle1")) { // anti-mu 1
-      pairIndex = "pairIndex[3]<1";  // standard
+      pairIndex = "pairIndex[5]<1";  // standard
     }
     //
     else if(version_.Contains("AntiEle2Tight")) { // anti-mu 2
       if(version_.Contains("SoftD")) {       // soft D
-	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[8]<1"; // with HLTmatch
-	else                              pairIndex = "pairIndex[12]<1"; // with L1ETM cut
+	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[10]<1"; // with HLTmatch
+	else                              pairIndex = "pairIndex[18]<1"; // with L1ETM cut
       }
       else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[16]<1"; // soft lepton + tau (w/o l1etm)
       else                                   pairIndex = "pairIndex[6]<1"; // standard
@@ -146,7 +149,7 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 
     // pairIndex
     if(version_.Contains("AntiEle1")) { // anti-mu 1
-      pairIndex = "pairIndex[4]<1"; // standard
+      pairIndex = "pairIndex[6]<1"; // standard
     }
     //
     else if(version_.Contains("AntiEle2Tight")) { // anti-mu 2
@@ -1173,7 +1176,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_MetFix/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
