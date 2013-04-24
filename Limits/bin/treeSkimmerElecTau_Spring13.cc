@@ -436,6 +436,17 @@ bool checkEventIsDuplicated(MAPDITAU_run &mapDiTau, int run, int lumi, int event
   return false;
 }
 
+struct antiElecMVAcutType
+{
+  antiElecMVAcutType(const edm::ParameterSet& cfg)
+    : SoverB_(cfg.getParameter<int>("SoverB")),
+      cuts_(cfg.getParameter<std::vector<double> >("cuts"))
+  {}
+  int SoverB_;
+  std::vector<double> cuts_;
+};
+
+
 void fillTrees_ElecTauStream( TChain* currentTree,
 			      TTree* outTreePtOrd,
 			      double nEventsRead =0.,
@@ -444,6 +455,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 			      float xsec_ = 0., 
 			      float skimEff_ = 0., 
 			      int iJson_=-1,
+			      std::vector< antiElecMVAcutType > antiElecMVAcuts= 0.,
 			      bool doLepVeto=true
 			      )
 {
@@ -657,13 +669,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float isoLeg1MVA_;
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_,decayMode_;//IN
   int tightestAntiEMVAWP_, tightestAntiECutWP_,tightestAntiEMVA3WP_,AntiEMVA3category_;//IN
-  float hpsMVA_,hpsMVA2_,hpsDB3H_,AntiEMVA3raw_;//IN
+  float hpsMVA_,hpsMVA2_,hpsDB3H_,AntiEMVA3raw_,AntiEMVA3var_;//IN
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_; // ND
   float etmCut=30;
   float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
-
 
   //tau related variables
   float HoP,EoP, emFraction_, leadPFChargedHadrMva_;
@@ -942,6 +953,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("tightestAntiEMVA3WP", &tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
   outTreePtOrd->Branch("AntiEMVA3category", &AntiEMVA3category_,"AntiEMVA3category/I");
   outTreePtOrd->Branch("AntiEMVA3raw", &AntiEMVA3raw_,"AntiEMVA3raw/F");
+  outTreePtOrd->Branch("AntiEMVA3var", &AntiEMVA3var_,"AntiEMVA3var/F");
 
   outTreePtOrd->Branch("sihih",              &sihih_,"sihih/F");
   outTreePtOrd->Branch("dEta",               &dEta_,"dEta/F");
@@ -1598,6 +1610,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   MAPDITAU_run mapDiTau;
 
   for (int n = 0; n <nEntries  ; n++) {
+//   for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
@@ -2069,6 +2082,32 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     AntiEMVA3raw_       = AntiEMVA3raw;
     tightestAntiMuWP_  = tightestAntiMuWP ;
     tightestAntiMu2WP_ = tightestAntiMu2WP;
+
+    int SoverB = 0;
+    int SoverBMedium = 12.;
+    float K = 0.1*SoverBMedium;
+    float Eps = 0.01*SoverBMedium;
+    if(AntiEMVA3category>15) AntiEMVA3var_ = 1.0;
+    else{
+      for ( std::vector< antiElecMVAcutType >::const_iterator antiElecMVAcut = antiElecMVAcuts.begin();
+	    antiElecMVAcut != antiElecMVAcuts.end(); ++ antiElecMVAcut ) {
+	if ( AntiEMVA3raw > antiElecMVAcut-> cuts_[AntiEMVA3category] && antiElecMVAcut->SoverB_ > SoverB ){
+	  SoverB = antiElecMVAcut->SoverB_;
+	}
+      } 
+      AntiEMVA3var_ = 1/(1+(K/(SoverB-SoverBMedium+Eps)));
+    }
+
+    if(DEBUG){
+    cout<<"antiElecMVA3category : "<<AntiEMVA3category<<endl;
+    cout<<"antiElecMVA3raw : "<<AntiEMVA3raw<<endl;
+    cout<<"K : "<<K<<endl;
+    cout<<"Eps : "<<Eps<<endl;
+    cout<<"SoverB : "<<SoverB<<endl;
+    cout<<"SoverBMedium : "<<SoverBMedium<<endl;
+    cout<<"AntiEMVA3var_ : "<<AntiEMVA3var_<<endl;
+    cout<<endl;
+    }
 
     sihih_ = sihih; 
     dEta_  = dEta; 
@@ -2688,6 +2727,22 @@ int main(int argc, const char* argv[])
   }
 
 //--- read python configuration parameters
+  if ( !edm::readPSetsFrom("antiElecMVAcuts.py")->existsAs<edm::ParameterSet>("process") ) 
+    throw cms::Exception("antiElecMVAcuts") 
+      << "No ParameterSet 'process' found in configuration file = antiElecMVAcuts.py" << " !!\n";
+
+  edm::ParameterSet cfgAntiEMVAprocess = edm::readPSetsFrom("antiElecMVAcuts.py")->getParameter<edm::ParameterSet>("process");
+
+  std::vector< antiElecMVAcutType > antiElecMVAcuts;
+
+  std::vector<edm::ParameterSet> cfgAntiElecMVAcuts = cfgAntiEMVAprocess.getParameter<std::vector<edm::ParameterSet> >("antiElecMVAcuts");
+  for ( std::vector<edm::ParameterSet>::const_iterator cfgAntiElecMVAcut = cfgAntiElecMVAcuts.begin();
+	cfgAntiElecMVAcut != cfgAntiElecMVAcuts.end(); ++ cfgAntiElecMVAcut ) {
+    antiElecMVAcuts.push_back(antiElecMVAcutType(* cfgAntiElecMVAcut));
+  }
+
+
+//--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") ) 
     throw cms::Exception("TreeSkimmerElecTauAnalyzer") 
       << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
@@ -2751,7 +2806,7 @@ int main(int argc, const char* argv[])
 	inputFileName != inputFiles.files().end() && !maxEvents_processed; ++inputFileName ) {
     currentTree->Add(inputFileName->data());
   }
-  fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson);
+  fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts);
 
   TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
   TTree* backgroundDYTauTau, *backgroundDYEtoTau, *backgroundDYJtoTau;
