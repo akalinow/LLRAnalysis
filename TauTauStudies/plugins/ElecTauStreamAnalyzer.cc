@@ -103,6 +103,7 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   metCovTag_         = iConfig.getParameter<edm::InputTag>("metCov");
   electronsTag_      = iConfig.getParameter<edm::InputTag>("electrons");
   electronsRelTag_   = iConfig.getParameter<edm::InputTag>("electronsRel");
+  electronsAntiZeeTag_  = iConfig.getParameter<edm::InputTag>("electronsAntiZee");
   verticesTag_       = iConfig.getParameter<edm::InputTag>("vertices");
   triggerResultsTag_ = iConfig.getParameter<edm::InputTag>("triggerResults"); 
   isMC_              = iConfig.getParameter<bool>("isMC");
@@ -433,6 +434,14 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("elecVetoRelIso",&elecVetoRelIso_,"elecVetoRelIso/F");
   tree_->Branch("elecVetoRelIsoSoft",&elecVetoRelIsoSoft_,"elecVetoRelIsoSoft/F");
   tree_->Branch("hasKft",&hasKft_,"hasKft/I");
+
+  //Electrons for antiZee
+  tree_->Branch("elecAntiZeePt",&elecAntiZeePt_,"elecAntiZeePt[4]/F");
+  tree_->Branch("elecAntiZeeEta",&elecAntiZeeEta_,"elecAntiZeeEta[4]/F");
+  tree_->Branch("elecAntiZeeSCEta",&elecAntiZeeSCEta_,"elecAntiZeeSCEta[4]/F");
+  tree_->Branch("elecAntiZeePhi",&elecAntiZeePhi_,"elecAntiZeePhi[4]/F");
+  tree_->Branch("elecAntiZeeRelIso",&elecAntiZeeRelIso_,"elecAntiZeeRelIso[4]/F");
+  tree_->Branch("elecAntiZeeId",&elecAntiZeeId_,"elecAntiZeeId[4]/F");
 
 
   tree_->Branch("run",&run_,"run/l");
@@ -835,6 +844,12 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     edm::LogError("DataNotAvailable")
       << "No electronsRel label available \n";
   const pat::ElectronCollection* electronsRel = electronsRelHandle.product();
+  edm::Handle<pat::ElectronCollection> electronsAntiZeeHandle;
+  iEvent.getByLabel(electronsAntiZeeTag_,electronsAntiZeeHandle);
+  if( !electronsAntiZeeHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No electronsAntiZee label available \n";
+  const pat::ElectronCollection* electronsAntiZee = electronsAntiZeeHandle.product();
   /* MB needed?
   if(electronsRel->size()<1){
     cout << " No electronsRel !!! " << endl;
@@ -1336,7 +1351,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	}
       }
     }
-
 
     double iDCA3D,iDCA3DE,iDCA2D,iDCA2DE,
       iDCARPhi3D,iDCARPhi3DE,iDCARPhi2D,iDCARPhi2DE;
@@ -2311,6 +2325,96 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       }
     }
     //////////////////////
+
+
+    //////////////////////IN
+    // Electron related variables for AntiZeeMVA seeded by ElectronsForVeto collection
+    float ptMax0,ptMax1,ptMax2,ptMax3;
+    float etaMax0,etaMax1,etaMax2,etaMax3;
+    float scEtaMax0,scEtaMax1,scEtaMax2,scEtaMax3;
+    float phiMax0,phiMax1,phiMax2,phiMax3;
+    float idMax0,idMax1,idMax2,idMax3;
+    float isoMax0,isoMax1,isoMax2,isoMax3;
+    int kMax0,kMax1,kMax2,kMax3;
+    ptMax0= ptMax1= ptMax2= ptMax3=-999;
+    etaMax0= etaMax1= etaMax2= etaMax3=-999;
+    scEtaMax0= scEtaMax1= scEtaMax2= scEtaMax3=-999;
+    phiMax0= phiMax1= phiMax2= phiMax3=-999;
+    idMax0= idMax1= idMax2= idMax3=-999;
+    isoMax0= isoMax1= isoMax2= isoMax3=-999;
+    kMax0=kMax1=kMax2=kMax3=-999;
+
+    for(unsigned int k=0; k<electronsAntiZee->size(); k++){
+      if((*electronsAntiZee)[k].pt()>ptMax0){
+	kMax0=k;
+	ptMax0=(*electronsAntiZee)[k].pt();
+	etaMax0=(*electronsAntiZee)[k].eta();
+	scEtaMax0=(*electronsAntiZee)[k].superClusterPosition().Eta();
+	phiMax0=(*electronsAntiZee)[k].phi();
+	idMax0=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	isoMax0=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
+      }
+      else if((*electronsAntiZee)[k].pt()>ptMax1){
+	kMax1=k;
+	ptMax1=(*electronsAntiZee)[k].pt();
+	etaMax1=(*electronsAntiZee)[k].eta();
+	scEtaMax1=(*electronsAntiZee)[k].superClusterPosition().Eta();
+	phiMax1=(*electronsAntiZee)[k].phi();
+	idMax1=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	isoMax1=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
+      }
+      else if((*electronsAntiZee)[k].pt()>ptMax2){
+	kMax2=k;
+	ptMax2=(*electronsAntiZee)[k].pt();
+	etaMax2=(*electronsAntiZee)[k].eta();
+	scEtaMax2=(*electronsAntiZee)[k].superClusterPosition().Eta();
+	phiMax2=(*electronsAntiZee)[k].phi();
+	idMax2=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	isoMax2=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
+      }
+      else if((*electronsAntiZee)[k].pt()>ptMax3){
+	kMax3=k;
+	ptMax3=(*electronsAntiZee)[k].pt();
+	etaMax3=(*electronsAntiZee)[k].eta();
+	scEtaMax3=(*electronsAntiZee)[k].superClusterPosition().Eta();
+	phiMax3=(*electronsAntiZee)[k].phi();
+	idMax3=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	isoMax3=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
+      }
+    }
+    elecAntiZeePt_[0]=ptMax0;
+    elecAntiZeePt_[1]=ptMax1;
+    elecAntiZeePt_[2]=ptMax2;
+    elecAntiZeePt_[3]=ptMax3;
+
+    elecAntiZeeEta_[0]=etaMax0;
+    elecAntiZeeEta_[1]=etaMax1;
+    elecAntiZeeEta_[2]=etaMax2;
+    elecAntiZeeEta_[3]=etaMax3;
+
+    elecAntiZeeSCEta_[0]=scEtaMax0;
+    elecAntiZeeSCEta_[1]=scEtaMax1;
+    elecAntiZeeSCEta_[2]=scEtaMax2;
+    elecAntiZeeSCEta_[3]=scEtaMax3;
+
+    elecAntiZeePhi_[0]=phiMax0;
+    elecAntiZeePhi_[1]=phiMax1;
+    elecAntiZeePhi_[2]=phiMax2;
+    elecAntiZeePhi_[3]=phiMax3;
+
+    elecAntiZeeId_[0]=idMax0;
+    elecAntiZeeId_[1]=idMax1;
+    elecAntiZeeId_[2]=idMax2;
+    elecAntiZeeId_[3]=idMax3;
+
+    elecAntiZeeRelIso_[0]=isoMax0;
+    elecAntiZeeRelIso_[1]=isoMax1;
+    elecAntiZeeRelIso_[2]=isoMax2;
+    elecAntiZeeRelIso_[3]=isoMax3;
+
+    // Electron related variables for AntiZeeMVA seeded by ElectronsForVeto collection
+    //////////////////////
+
 
     tree_->Fill();
 

@@ -67,6 +67,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   edm::InputTag metCovTag_;
   edm::InputTag electronsTag_;
   edm::InputTag electronsRelTag_;
+  edm::InputTag electronsAntiZeeTag_;
   edm::InputTag verticesTag_;
   edm::InputTag triggerResultsTag_;
   edm::InputTag genParticlesTag_;
@@ -234,6 +235,14 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int vetoEvent_;
   float elecVetoRelIso_, elecVetoRelIsoSoft_;
   int hasKft_;
+
+  //Electrons for antiZee
+  float elecAntiZeePt_[4];
+  float elecAntiZeeEta_[4];
+  float elecAntiZeeSCEta_[4];
+  float elecAntiZeePhi_[4];
+  float elecAntiZeeRelIso_[4];
+  float elecAntiZeeId_[4];
 
   // ele specific variables
   float nBrehm_;
