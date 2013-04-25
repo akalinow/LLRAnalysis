@@ -183,9 +183,11 @@ instruction1=''
 instruction2=''
 #print nSuccess
 #print nTotal
-if nSuccess==nTotal and pub=="pub":
-	instruction="crab -c "+task+" -publish > "+task+"/log/publish.txt"
-	instruction += " ; crab -c "+task+" -report > "+task+"/log/report.txt"
+
+if pub=="pub" :	
+	if (nSuccess==nTotal and !isServer) or (isServer and nGetS==0 and nC==0 and nF==0 and n==0) :
+		instruction="crab -c "+task+" -publish > "+task+"/log/publish.txt"
+		instruction += " ; crab -c "+task+" -report > "+task+"/log/report.txt"
 
 #if nTotal!=0:
 if nSuccess==nTotal and pub=="pub":
