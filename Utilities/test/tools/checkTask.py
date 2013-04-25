@@ -126,7 +126,7 @@ for line in ifile:
 if "NoISB" in force:
 	instruction="crab -GRID.additional_jdl_parameters='AllowZippedISB = false' -c "+task+" "
 else:
-instruction="crab -c "+task+" "
+	instruction="crab -c "+task+" "
 
 # Submit
 joblineC=""
@@ -185,7 +185,7 @@ instruction2=''
 #print nTotal
 
 if pub=="pub" :	
-	if (nSuccess==nTotal and !isServer) or (isServer and nGetS==0 and nC==0 and nF==0 and n==0) :
+	if (nSuccess==nTotal and isServer==0) or (isServer==1 and nGetS==0 and nC==0 and nF==0 and n==0) :
 		instruction="crab -c "+task+" -publish > "+task+"/log/publish.txt"
 		instruction += " ; crab -c "+task+" -report > "+task+"/log/report.txt"
 
