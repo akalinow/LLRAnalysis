@@ -264,8 +264,8 @@ void drawHistogramMC(TString version_ = "",
   if(tree!=0 && h!=0){
     h->Reset();
 
-    if(version_.Contains("SoftD"))         tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*HqTWeight*weightHepNup*ZeeWeight*passL1etmCut)"*cut);
-    else if(version_.Contains("SoftLTau")) tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFMu_D*HqTWeight*weightHepNup*ZeeWeight)"*cut);
+    if(version_.Contains("SoftD"))         tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNup*ZeeWeight*passL1etmCut)"*cut);
+    else if(version_.Contains("SoftLTau")) tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFMu_D*weightHepNup*ZeeWeight)"*cut);
     else if(!version_.Contains("Soft")) {
       if(     RUN=="ABC")                  tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNup*ZeeWeightHCP)"*cut);
       else if(RUN=="D")                    tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNup*ZeeWeight)"*cut);
@@ -417,8 +417,8 @@ void drawHistogramMCFakeRate(TString version_ = "",
   if(tree!=0 && h!=0){
     h->Reset();
 
-    if(version_.Contains("SoftD"))         cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*HqTWeight*weightHepNup*ZeeWeight*passL1etmCut)";
-    else if(version_.Contains("SoftLTau")) cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFMu_D*HqTWeight*weightHepNup*ZeeWeight)";
+    if(version_.Contains("SoftD"))         cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNup*ZeeWeight*passL1etmCut)";
+    else if(version_.Contains("SoftLTau")) cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFMu_D*weightHepNup*ZeeWeight)";
     else if(!version_.Contains("Soft")) {
       if(     RUN=="ABC")                  cutWeight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNup*ZeeWeightHCP)";
       else if(RUN=="D")                    cutWeight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNup*ZeeWeight)";
