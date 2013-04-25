@@ -17,6 +17,7 @@ runOnEmbed  = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
+useAntiZee   = True
 useLepTauPAT = True
 runUserIsoTau = False
 applyTauESCorr= True
@@ -45,7 +46,7 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+process.MessageLogger.cerr.FwkReport.reportEvery = 10
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
@@ -965,6 +966,9 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     verbose            = cms.untracked.bool( False ),
     doElecIsoMVA       = cms.untracked.bool( False ),
     )
+
+if not useAntiZee:
+    process.elecTauStreamAnalyzer.electronsAntiZee = cms.InputTag("elecPtEtaRelID")
 
 if usePFMEtMVA:
     if useRecoil :
