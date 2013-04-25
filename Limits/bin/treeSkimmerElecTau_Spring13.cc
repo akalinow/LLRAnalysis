@@ -655,7 +655,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
-  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1;
+  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1,VisMassL1J1,VisMassL1J2;
   float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
@@ -700,6 +700,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
+  float AntiZeeMVAraw_;
 
   // object-related weights and triggers
   float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8;
@@ -847,6 +848,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("dPhiL2J1",&dPhiL2J1,"dPhiL2J1/F");
   outTreePtOrd->Branch("dPhiL2J2",&dPhiL2J2,"dPhiL2J2/F");
   outTreePtOrd->Branch("scEtaL1",   &scEtaL1,"scEtaL1/F");
+  outTreePtOrd->Branch("VisMassL1J1",&VisMassL1J1,"VisMassL1J1/F");
+  outTreePtOrd->Branch("VisMassL1J2",&VisMassL1J2,"VisMassL1J2/F");
 
   outTreePtOrd->Branch("visibleTauMass",          &visibleTauMass_,"visibleTauMass/F");
   outTreePtOrd->Branch("HoP",                     &HoP,"HoP/F");
@@ -947,6 +950,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("mvaPOGNonTrig",      &mvaPOGNonTrig_,"mvaPOGNonTrig/F");
   outTreePtOrd->Branch("mitMVA",             &mitMVA_,"mitMVA/F");
   outTreePtOrd->Branch("isTriggerElectron",  &isTriggerElectron_,"isTriggerElectron/I");
+  outTreePtOrd->Branch("AntiZeeMVAraw",      &AntiZeeMVAraw_,"AntiZeeMVAraw/F");
 
   outTreePtOrd->Branch("tightestAntiEMVAWP", &tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
   outTreePtOrd->Branch("tightestAntiECutWP", &tightestAntiECutWP_,"tightestAntiECutWP/I");
@@ -1609,6 +1613,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   MAPDITAU_run mapDiTau;
 
+  //////////////////////////////////////////////////////////
+  //AntiZeeMVA
+  string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v1_BDTG.weights.xml";
+
+  TMVA::Reader *readerAntiZee = new TMVA::Reader( "!Color:!Silent:Error" );  
+  readerAntiZee->AddVariable("ptL1",&ptL1);
+  readerAntiZee->AddVariable("scEtaL1",&scEtaL1);
+  readerAntiZee->AddVariable("ptL2",&ptL2);
+  readerAntiZee->AddVariable("etaL2",&etaL2);
+  readerAntiZee->AddVariable("MEtMVA",&MEtMVA);
+  readerAntiZee->AddVariable("diTauVisMass",&diTauVisMass);
+
+
   for (int n = 0; n <nEntries  ; n++) {
 //   for (int n = 0; n <80000  ; n++) {
 
@@ -1723,6 +1740,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	-abs( (*diTauLegsP4)[1].Phi()-phi1 ) + 2*TMath::Pi()  :
 	abs( (*diTauLegsP4)[1].Phi()-phi1 ) ;
 
+      VisMassL1J1 = ((*diTauLegsP4)[0] + (*jets)[lead]).M();
+
       jetsBtagHE1 = (*jetsBtagHE)[lead];
       jetsBtagHP1 = (*jetsBtagHP)[lead];
       jetsBtagCSV1= (*jetsBtagCSV)[lead];
@@ -1748,6 +1767,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	dPhiL2J2 =  abs((*diTauLegsP4)[1].Phi()-phi2) > TMath::Pi() ? 
 	  -abs( (*diTauLegsP4)[1].Phi()-phi2 ) + 2*TMath::Pi()  :
 	  abs( (*diTauLegsP4)[1].Phi()-phi2 ) ;
+
+	VisMassL1J2 = ((*diTauLegsP4)[0] + (*jets)[trail]).M();
 
 	Deta = abs(eta1-eta2);
 	Dphi = abs((*jets)[lead].Phi()-(*jets)[trail].Phi()) > TMath::Pi() ? 
@@ -2591,6 +2612,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
     }
 
+    AntiZeeMVAraw_ = readerAntiZee->EvaluateMVA("BDT");
 
     elecFlag_        = elecFlag;
     genDecay_        = genDecay ;
@@ -2605,6 +2627,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     run_             = run;
     lumi_            = lumi;
     index_           = index;
+
 
     // pairIndex : Moriond, HPSMVA2, HPSDB3H, AntiMu2, AntiMu2HPSMVA2, AntiMu2HPSDB3H, SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_, 
     for(int i=0 ; i<nPidx ; i++) { pairIndex[i]=-1; passQualityCuts[i]=false;}
