@@ -1,5 +1,5 @@
-#ifndef LLRAnalysis_TauTauStudies_CaloMEtFromEtaSliceSumsProducer_h
-#define LLRAnalysis_TauTauStudies_CaloMEtFromEtaSliceSumsProducer_h
+#ifndef LLRAnalysis_Utilities_CaloMEtFromEtaSliceSumsProducer_h
+#define LLRAnalysis_Utilities_CaloMEtFromEtaSliceSumsProducer_h
 
 /** \class CaloMEtFromEtaSliceSumsProducer
  *
@@ -10,9 +10,9 @@
  *
  * \authors Christian Veelken, LLR
  *
- * \version $Revision: 1.1.2.2 $
+ * \version $Revision: 1.1.2.1 $
  *
- * $Id: CaloMEtFromEtaSliceSumsProducer.h,v 1.1.2.2 2013/02/27 14:06:15 veelken Exp $
+ * $Id: CaloMEtFromEtaSliceSumsProducer.h,v 1.1.2.1 2013/02/21 18:07:47 paganini Exp $
  *
  */
 
@@ -22,7 +22,9 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 
-#include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
+#include "DataFormats/METReco/interface/CorrMETData.h"
+
+#include "DataFormats/Candidate/interface/Candidate.h"
 
 #include <string>
 #include <vector>
@@ -62,7 +64,7 @@ class CaloMEtFromEtaSliceSumsProducer : public edm::EDProducer
   std::string residualCorrLabel_;
   double residualCorrEtaMax_;
   double extraCorrFactor_;
-  FactorizedJetCorrector* residualCorrectorFromFile_;
+
   bool isMC_;
 
   int verbosity_;

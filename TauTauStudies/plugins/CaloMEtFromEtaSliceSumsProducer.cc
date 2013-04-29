@@ -3,14 +3,12 @@
 #include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
 
-#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
 
 #include <TMath.h>
 
 CaloMEtFromEtaSliceSumsProducer::CaloMEtFromEtaSliceSumsProducer(const edm::ParameterSet& cfg)
-  : moduleLabel_(cfg.getParameter<std::string>("@module_label")),
-    residualCorrectorFromFile_(0)
+  : moduleLabel_(cfg.getParameter<std::string>("@module_label"))
 {
   srcMEt_ = cfg.getParameter<edm::InputTag>("srcMEt");
   srcCaloTowerEtaSliceSums_ = cfg.getParameter<edm::InputTag>("srcCaloTowerEtaSliceSums");
@@ -24,19 +22,9 @@ CaloMEtFromEtaSliceSumsProducer::CaloMEtFromEtaSliceSumsProducer(const edm::Para
   
   residualCorrLabel_ = cfg.getParameter<std::string>("residualCorrLabel");
   residualCorrEtaMax_ = cfg.getParameter<double>("residualCorrEtaMax");
-  extraCorrFactor_ = cfg.exists("extraCorrFactor") ? 
-    cfg.getParameter<double>("extraCorrFactor") : 1.;
-  if ( cfg.exists("residualCorrFileName") ) {
-    edm::FileInPath residualCorrFileName = cfg.getParameter<edm::FileInPath>("residualCorrFileName");
-    if ( !residualCorrFileName.isLocal()) 
-      throw cms::Exception("CaloMEtFromEtaSliceSumsProducer") 
-	<< " Failed to find File = " << residualCorrFileName << " !!\n";
-    JetCorrectorParameters residualCorr(residualCorrFileName.fullPath().data());
-    std::vector<JetCorrectorParameters> jetCorrections;
-    jetCorrections.push_back(residualCorr);
-    residualCorrectorFromFile_ = new FactorizedJetCorrector(jetCorrections);
-  }  
-  isMC_ = cfg.getParameter<bool>("isMC");
+  extraCorrFactor_ = cfg.getParameter<double>("extraCorrFactor");
+  
+  isMC_  = cfg.getParameter<bool>("isMC");
 
   verbosity_ = ( cfg.exists("verbosity") ) ?
     cfg.getParameter<int>("verbosity") : 0;
@@ -46,7 +34,6 @@ CaloMEtFromEtaSliceSumsProducer::CaloMEtFromEtaSliceSumsProducer(const edm::Para
 
 CaloMEtFromEtaSliceSumsProducer::~CaloMEtFromEtaSliceSumsProducer()
 {
-  delete residualCorrectorFromFile_;
   for ( std::vector<binningEntryType*>::const_iterator it = binning_.begin();
 	it != binning_.end(); ++it ) {
     delete (*it);
@@ -64,10 +51,10 @@ void CaloMEtFromEtaSliceSumsProducer::produce(edm::Event& evt, const edm::EventS
   edm::Handle<reco::CaloMETCollection> uncorrectedMEtCollection;
   evt.getByLabel(srcMEt_, uncorrectedMEtCollection);
 
-  const JetCorrector* residualCorrectorFromDB = 0;
-  if ( !residualCorrectorFromFile_ && residualCorrLabel_ != "" ) {
-    residualCorrectorFromDB = JetCorrector::getJetCorrector(residualCorrLabel_, es);
-    if ( !residualCorrectorFromDB )  
+  const JetCorrector* residualCorrector = 0;
+  if ( residualCorrLabel_ != "" ) {
+    residualCorrector = JetCorrector::getJetCorrector(residualCorrLabel_, es);
+    if ( !residualCorrector )  
       throw cms::Exception("CaloMEtFromEtaSliceSumsProducer")
 	<< "Failed to access Residual corrections = " << residualCorrLabel_ << " !!\n";
   }
@@ -92,18 +79,9 @@ void CaloMEtFromEtaSliceSumsProducer::produce(edm::Event& evt, const edm::EventS
 	std::cout << "eta = " << (*binningEntry)->binCenter_ << ": sumPx = " << binEnergySum->mex << ", sumPy = " << binEnergySum->mey << ", sumEt = " << binEnergySum->sumet << std::endl;
       }
       double residualCorrFactor = 1.;
-      if ( fabs((*binningEntry)->binCenter_) < residualCorrEtaMax_ ) {
+      if ( residualCorrector && fabs((*binningEntry)->binCenter_) < residualCorrEtaMax_ ) {
 	reco::Candidate::PolarLorentzVector binCenterP4(15., (*binningEntry)->binCenter_, 0., 0.);
-	if ( residualCorrectorFromFile_ ) {
-	  residualCorrectorFromFile_->setJetEta((*binningEntry)->binCenter_);
-	  residualCorrectorFromFile_->setJetPt(10.);
-	  residualCorrectorFromFile_->setJetA(0.25);
-	  residualCorrectorFromFile_->setRho(10.); 
-	  residualCorrFactor = residualCorrectorFromFile_->getCorrection();
-	} else if ( residualCorrectorFromDB ) {	
-	  reco::Candidate::PolarLorentzVector binCenterP4(15., (*binningEntry)->binCenter_, 0., 0.);
-	  residualCorrFactor = residualCorrectorFromDB->correction(reco::Candidate::LorentzVector(binCenterP4.px(), binCenterP4.py(), binCenterP4.pz(), binCenterP4.E()));
-	}
+	residualCorrFactor = residualCorrector->correction(reco::Candidate::LorentzVector(binCenterP4.px(), binCenterP4.py(), binCenterP4.pz(), binCenterP4.E()));
       }
       residualCorrFactor *= extraCorrFactor_;
       if ( isMC_ && residualCorrFactor != 0. ) residualCorrFactor = 1./residualCorrFactor;

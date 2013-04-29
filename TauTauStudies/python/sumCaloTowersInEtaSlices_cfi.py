@@ -2,9 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 etaBinsForResidualCorr = [
     # NOTE: binning needs to match exactly the binning used for data/MC residual CaloJet energy corrections
-    #      (this binning is taken from GR_P_V42_AN3)
-    ##-5.191, -3.489, -3.139, -2.964, -2.853, -2.5, -2.411, -2.322, -1.93, -1.479, -1.305, -1.131, -0.957, -0.783, -0.522, -0.261, 0.,
-    ##0.261, 0.522, 0.783, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 3.139, 3.489, 5.191
     -5.191, -2.964, -2.853, -2.5, -2.411, -2.322, -1.93, -1.479, -1.305, -1.131, -0.957, -0.783, -0.522, -0.261, 0.,
     0.261, 0.522, 0.783, 0.957, 1.131, 1.305, 1.479, 1.93, 2.322, 2.411, 2.5, 2.853, 2.964, 5.191
 ]
@@ -22,7 +19,6 @@ sumCaloTowersInEtaSlicesNoHF = cms.EDProducer("CaloTowerMETcorrInputProducer",
     residualCorrLabel = cms.string(""),
     residualCorrEtaMax = cms.double(9.9),
     residualCorrOffset = cms.double(0.),
-    isMC = cms.bool(False), # CV: only used to decide whether to apply "unclustered energy" calibration to MC or Data                                               
     globalThreshold = cms.double(0.3), # NOTE: this value need to match met.globalThreshold, defined in RecoMET/METProducers/python/CaloMET_cfi.py
     noHF = cms.bool(True)
 )
@@ -54,7 +50,7 @@ metNoHFresidualCorrected = cms.EDProducer("CaloMEtFromEtaSliceSumsProducer",
     residualCorrLabel = cms.string("ak5CaloResidual"), # apply data/MC residual correction
     ##residualCorrLabel = cms.string(""), # do not apply data/MC residual correction                                    
     residualCorrEtaMax = cms.double(9.9),
-    extraCorrFactor = cms.double(1.05),                                       
+    extraCorrFactor = cms.double(1.0),                                       
     isMC = cms.bool(True),
     verbosity = cms.int32(0)                                          
 )                                          
