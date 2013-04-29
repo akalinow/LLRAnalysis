@@ -15,6 +15,7 @@
 <use   name="DataFormats/Math"/>
 <use   name="DataFormats/VertexReco"/>
 <use   name="DataFormats/Common"/>
+<use   name="CondFormats/JetMETObjects"/>
 <use   name="DataFormats/GeometryVector"/>
 <use   name="CommonTools/UtilAlgos"/>
 <use   name="CommonTools/Utils"/>
