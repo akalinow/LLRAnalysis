@@ -2558,7 +2558,7 @@ unsigned int  ElecTauStreamAnalyzer::jetID( const pat::Jet* jet, const reco::Ver
       break;
     case reco::PFCandidate::h_HF: // fill neutral
       nNeutral++;
-      energyNeutral += cand.energy();
+      //energyNeutral += cand.energy();
       break;
     case reco::PFCandidate::egamma_HF: // fill e/gamma
       nPhotons++;
