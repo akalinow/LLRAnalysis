@@ -59,7 +59,7 @@
 #define MINPt2 20.0
 //#define PtVETO 20.0
 #define PtVETO 30.0
-#define MAXEta  5.0 
+#define MAXEta  4.7 
 #define MINJetID 0.5
 #define ETOTAUEB 0.85
 #define ETOTAUEE 0.65
@@ -1613,9 +1613,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   MAPDITAU_run mapDiTau;
 
+
   //////////////////////////////////////////////////////////
   //AntiZeeMVA
-  string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v1_BDTG.weights.xml";
+//   string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v1_BDTG.weights.xml";
+  string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v3_BDTG.weights.xml";
 
   TMVA::Reader *readerAntiZee = new TMVA::Reader( "!Color:!Silent:Error" );  
   readerAntiZee->AddVariable("ptL1",&ptL1);
@@ -1624,7 +1626,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   readerAntiZee->AddVariable("etaL2",&etaL2);
   readerAntiZee->AddVariable("MEtMVA",&MEtMVA);
   readerAntiZee->AddVariable("diTauVisMass",&diTauVisMass);
-
+  readerAntiZee->AddVariable("VisMassL1J1",&VisMassL1J1);
+  readerAntiZee->AddVariable("VisMassL1J2",&VisMassL1J2);
+  readerAntiZee->AddVariable("AntiEMVA3var",&AntiEMVA3var_);//for v3
+  readerAntiZee->AddVariable("diTauVisPtOverPtSum",&diTauVisPtOverPtSum);//for v3
+  readerAntiZee->SetVerbose(kTRUE);
+  readerAntiZee->BookMVA("BDTG",WeightAntiZee  );
 
   for (int n = 0; n <nEntries  ; n++) {
 //   for (int n = 0; n <80000  ; n++) {
@@ -2612,7 +2619,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
     }
 
-    AntiZeeMVAraw_ = readerAntiZee->EvaluateMVA("BDT");
+    AntiZeeMVAraw_ = readerAntiZee->EvaluateMVA("BDTG");
 
     elecFlag_        = elecFlag;
     genDecay_        = genDecay ;

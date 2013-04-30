@@ -34,7 +34,7 @@
 #define SAVE             true
 #define addVH            true
 #define EMBEDDEDSAMPLES  true
-#define W3JETS           true
+#define W3JETS           false
 #define LOOSEISO         true
 #define kFactorSM         1.0
 //#define DOHCP            true
@@ -86,6 +86,7 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 
   // Anti-Ele discriminator //
   if(version_.Contains("AntiEle1"))               antiele = "tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1";
+  else if(version_.Contains("AntiEle2Medium"))     antiele = "tightestAntiEMVA3WP>1";
   else if(version_.Contains("AntiEle2Tight"))     antiele = "tightestAntiEMVA3WP>2";
   else if(version_.Contains("AntiEle2VeryTight")) antiele = "tightestAntiEMVA3WP>3";
   
@@ -101,7 +102,7 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
       if(version_.Contains("AntiMu2")) pairIndex = "pairIndex[5]<1"; // standard
     }
     //
-    else if(version_.Contains("AntiEle2Medium")) { // anti-e medium antimu2 hpsdb3h
+    else if(version_.Contains("AntiEle2Medium")) { // anti-e medium 
       pairIndex = "pairIndex[2]<1"; // standard
     }
     else if(version_.Contains("AntiEle2Tight")) { // anti-e tight
@@ -1176,7 +1177,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_MetFix/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_JetIdFix/EleTau/temp/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1401,9 +1402,32 @@ void plotElecTau( Int_t mH_           = 120,
   TCut boostMet15  = boostNoMet && TCut("MEtMVA>15");
   TCut boostMet20 = boostNoMet && TCut("MEtMVA>20");
   TCut boostMet25  = boostNoMet && TCut("MEtMVA>25");
+  TCut boostMet30  = boostNoMet && TCut("MEtMVA>30");
   TCut boostMet35  = boostNoMet && TCut("MEtMVA>35");
   TCut boostMet40  = boostNoMet && TCut("MEtMVA>40");
   TCut boostMet45  = boostNoMet && TCut("MEtMVA>45");
+
+  TCut boostAntiZee02  = boostNoMet && TCut("AntiZeeMVAraw>0.2");
+  TCut boostAntiZee04  = boostNoMet && TCut("AntiZeeMVAraw>0.4");
+  TCut boostAntiZee06  = boostNoMet && TCut("AntiZeeMVAraw>0.6");
+  TCut boostAntiZee08  = boostNoMet && TCut("AntiZeeMVAraw>0.8");
+  TCut boostAntiZee09  = boostNoMet && TCut("AntiZeeMVAraw>0.9");
+  TCut boostAntiZee099  = boostNoMet && TCut("AntiZeeMVAraw>0.99");
+  TCut boostAntiZee0995  = boostNoMet && TCut("AntiZeeMVAraw>0.995");
+  TCut boostAntiZee0996  = boostNoMet && TCut("AntiZeeMVAraw>0.996");
+  TCut boostAntiZee0997  = boostNoMet && TCut("AntiZeeMVAraw>0.997");
+  TCut boostAntiZee0999  = boostNoMet && TCut("AntiZeeMVAraw>0.999");
+  TCut boostAntiZee09995  = boostNoMet && TCut("AntiZeeMVAraw>0.9995");
+
+  TCut boostAntiZee09Met10  = boostNoMet && TCut("AntiZeeMVAraw>0.9 && MEtMVA>10");
+  TCut boostAntiZee09Met20  = boostNoMet && TCut("AntiZeeMVAraw>0.9 && MEtMVA>20");
+  TCut boostAntiZee09Met30  = boostNoMet && TCut("AntiZeeMVAraw>0.9 && MEtMVA>30");
+  TCut boostAntiZee09Met40  = boostNoMet && TCut("AntiZeeMVAraw>0.9 && MEtMVA>40");
+
+  TCut boostAntiZee099Met10  = boostNoMet && TCut("AntiZeeMVAraw>0.99 && MEtMVA>10");
+  TCut boostAntiZee099Met20  = boostNoMet && TCut("AntiZeeMVAraw>0.99 && MEtMVA>20");
+  TCut boostAntiZee099Met30  = boostNoMet && TCut("AntiZeeMVAraw>0.99 && MEtMVA>30");
+  TCut boostAntiZee099Met40  = boostNoMet && TCut("AntiZeeMVAraw>0.99 && MEtMVA>40");
 
   TCut bTag("nJets30<2 && nJets20BTagged>0");
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
@@ -1419,12 +1443,56 @@ void plotElecTau( Int_t mH_           = 120,
   else if(selection_.find("boostMet0")!=string::npos)  sbinCat = boostMet0;
   else if(selection_.find("boostMet5")!=string::npos)  sbinCat = boostMet5;
   else if(selection_.find("boostMet10")!=string::npos) sbinCat = boostMet10;
-  else if(selection_.find("boostMet10")!=string::npos) sbinCat = boostMet15;
+  else if(selection_.find("boostMet15")!=string::npos) sbinCat = boostMet15;
   else if(selection_.find("boostMet20")!=string::npos) sbinCat = boostMet20;
   else if(selection_.find("boostMet25")!=string::npos) sbinCat = boostMet25;
+  else if(selection_.find("boostMet30")!=string::npos) sbinCat = boostMet30;
   else if(selection_.find("boostMet35")!=string::npos) sbinCat = boostMet35;
   else if(selection_.find("boostMet40")!=string::npos) sbinCat = boostMet40;
   else if(selection_.find("boostMet45")!=string::npos) sbinCat = boostMet45;
+
+  else if(selection_.find("boostAntiZee02")!=string::npos)  sbinCat = boostAntiZee02;
+  else if(selection_.find("boostAntiZee04")!=string::npos)  sbinCat = boostAntiZee04;
+  else if(selection_.find("boostAntiZee06")!=string::npos)  sbinCat = boostAntiZee06;
+  else if(selection_.find("boostAntiZee08")!=string::npos)  sbinCat = boostAntiZee08;
+  else if(selection_.find("boostAntiZee09")!=string::npos 
+	  && selection_.find("boostAntiZee099")==string::npos
+	  && selection_.find("boostAntiZee0995")==string::npos
+	  && selection_.find("boostAntiZee0996")==string::npos
+	  && selection_.find("boostAntiZee0997")==string::npos
+	  && selection_.find("boostAntiZee0999")==string::npos
+	  && selection_.find("boostAntiZee09995")==string::npos
+	  && selection_.find("boostAntiZee09Met10")==string::npos
+	  && selection_.find("boostAntiZee09Met20")==string::npos
+	  && selection_.find("boostAntiZee09Met30")==string::npos
+	  && selection_.find("boostAntiZee09Met40")==string::npos
+	  )  sbinCat = boostAntiZee09;
+  else if(selection_.find("boostAntiZee099")!=string::npos
+	  && selection_.find("boostAntiZee0995")==string::npos
+	  && selection_.find("boostAntiZee0996")==string::npos
+	  && selection_.find("boostAntiZee0997")==string::npos
+	  && selection_.find("boostAntiZee0999")==string::npos
+	  && selection_.find("boostAntiZee099Met10")==string::npos
+	  && selection_.find("boostAntiZee099Met20")==string::npos
+	  && selection_.find("boostAntiZee099Met30")==string::npos
+	  && selection_.find("boostAntiZee099Met40")==string::npos
+	  && selection_.find("boostAntiZee09995")==string::npos)  sbinCat = boostAntiZee099;
+  else if(selection_.find("boostAntiZee0995")!=string::npos)  sbinCat = boostAntiZee0995;
+  else if(selection_.find("boostAntiZee0996")!=string::npos)  sbinCat = boostAntiZee0996;
+  else if(selection_.find("boostAntiZee0997")!=string::npos)  sbinCat = boostAntiZee0997;
+  else if(selection_.find("boostAntiZee0999")!=string::npos
+	  && selection_.find("boostAntiZee09995")==string::npos)  sbinCat = boostAntiZee0999;
+  else if(selection_.find("boostAntiZee09995")!=string::npos)  sbinCat = boostAntiZee09995;
+
+  else if(selection_.find("boostAntiZee09Met10")!=string::npos)  sbinCat = boostAntiZee09Met10;
+  else if(selection_.find("boostAntiZee09Met20")!=string::npos)  sbinCat = boostAntiZee09Met20;
+  else if(selection_.find("boostAntiZee09Met30")!=string::npos)  sbinCat = boostAntiZee09Met30;
+  else if(selection_.find("boostAntiZee09Met40")!=string::npos)  sbinCat = boostAntiZee09Met40;
+  else if(selection_.find("boostAntiZee099Met10")!=string::npos)  sbinCat = boostAntiZee099Met10;
+  else if(selection_.find("boostAntiZee099Met20")!=string::npos)  sbinCat = boostAntiZee099Met20;
+  else if(selection_.find("boostAntiZee099Met30")!=string::npos)  sbinCat = boostAntiZee099Met30;
+  else if(selection_.find("boostAntiZee099Met40")!=string::npos)  sbinCat = boostAntiZee099Met40;
+
   else if(selection_.find("nobTag")!=string::npos)     sbinCat = nobTag;
   else if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)      sbinCat = vbf;
   else if(selection_.find("boost")!=string::npos && selection_.find("boostMet")==string::npos) sbinCat = boost;
@@ -1613,7 +1681,7 @@ void plotElecTau( Int_t mH_           = 120,
   tMap["DYElectoTau"]  = backgroundDYElectoTau;
   tMap["DYJtoTau"]     = backgroundDYJtoTau;
   tMap["WJets"]        = backgroundWJets;
-  tMap["W3Jets"]       = backgroundW3Jets;
+  tMap["W3Jets"]       = backgroundWJets;
   tMap["Others"]       = backgroundOthers;
   tMap["TTbar"]        = backgroundTTbar;
   tMap["SS"]           = data;
