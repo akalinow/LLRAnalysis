@@ -92,6 +92,25 @@ using namespace reco;
 
 typedef std::map<double, math::XYZTLorentzVectorD ,ElecTauStreamAnalyzer::more>::iterator CImap;
 
+struct DiTauInfo 
+{ 
+  DiTauInfo(){}; 
+  int diTauCharge_; 
+  double sumPt_; 
+  int index_; 
+}; 
+struct SortDiTauPairs 
+{ 
+  bool operator() (const DiTauInfo t1, const DiTauInfo t2) 
+  { 
+    // 1st criterion: OS 
+    if ( t1.diTauCharge_ < t2.diTauCharge_ ) return true; 
+    if ( t1.diTauCharge_ > t2.diTauCharge_ ) return false; 
+    // 2nd criterion: sumPt of diTau pair 
+    return (t1.sumPt_ > t2.sumPt_);  
+  } 
+}; 
+
 ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
 
   diTauTag_          = iConfig.getParameter<edm::InputTag>("diTaus");
@@ -1043,13 +1062,13 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     cout << "WARNING: "<< diTaus->size() << "  diTaus found in the event !!! We will select only one" << endl;
   }
   numOfDiTaus_ = diTaus->size();
-
+  /*
   elecFlag_       = 0;
   elecVetoRelIso_ = 0;
   elecFlagSoft_       = 0;
   elecVetoRelIsoSoft_ = 0;
 
-  /* MB incorrect when electronsRel not really looser than diTau leg  
+  //MB incorrect when electronsRel not really looser than diTau leg  
   bool found = false;
   for(unsigned int i=0; i<electronsRel->size(); i++){
     for(unsigned int j=i+1; j<electronsRel->size(); j++){ 
@@ -1207,11 +1226,13 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   std::map<double, unsigned int , ElecTauStreamAnalyzer::more> sortedDiTausOS;
   std::map<double, unsigned int , ElecTauStreamAnalyzer::more> sortedDiTausSS;
   std::map<double, unsigned int , ElecTauStreamAnalyzer::more> sortedDiTausLooseIso;
+  std::vector<DiTauInfo>sortDiTauInfos; sortDiTauInfos.clear();
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-    float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVAraw");
-    float sortVariable = (doIsoMVAOrdering_) ? isoMVA : sumPt;
+    float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVA2raw");
+    float isoEle = ((*diTaus)[i].leg1())->userFloat("PFRelIsoDB04v3");
+    float sortVariable = (doIsoMVAOrdering_) ? (isoMVA-isoEle) : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
        tau_i->tauID("byLooseIsolationMVA")>0.5 )
@@ -1221,6 +1242,12 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       sortedDiTausOS.insert( make_pair( sortVariable, i ) );
     else
       sortedDiTausSS.insert( make_pair( sortVariable, i ) );
+    //Fill all without ordering 
+    DiTauInfo sortDiTauInfo; 
+    sortDiTauInfo.index_ = i; 
+    sortDiTauInfo.sumPt_ = sortVariable; //sumPt; 
+    sortDiTauInfo.diTauCharge_ = pairCharge; 
+    sortDiTauInfos.push_back(sortDiTauInfo); 
   }
   if( sortedDiTausOS.size()>0 ) 
     index = (sortedDiTausOS.begin())->second ;
@@ -1228,6 +1255,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     index = (sortedDiTausSS.begin())->second ;
     
   numOfLooseIsoDiTaus_ = sortedDiTausLooseIso.size();
+  
+  //sort diTaus, first OS and then according to sumPt  
+  std::sort(sortDiTauInfos.begin(), sortDiTauInfos.end(), SortDiTauPairs()); 
 
   ////////////////////////////////////////////////////////
 
@@ -1242,12 +1272,15 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   //theDiTau = &(*diTaus)[index];
 
   int diTauCounter = -1;
-  for(std::map<double, unsigned int , ElecTauStreamAnalyzer::more>::iterator iter = sortedDiTaus.begin(); 
-      iter != sortedDiTaus.end() ; iter++){
+  //for(std::map<double, unsigned int , ElecTauStreamAnalyzer::more>::iterator iter = sortedDiTaus.begin(); 
+  //iter != sortedDiTaus.end() ; iter++){
+  for(std::vector<DiTauInfo>::iterator iter = sortDiTauInfos.begin();  iter != sortDiTauInfos.end() ; iter++){
+    
     diTauCounter++;
     
     index_   = diTauCounter;
-    theDiTau = &(*diTaus)[ iter->second ];
+    //theDiTau = &(*diTaus)[ iter->second ];
+    theDiTau = &(*diTaus)[iter->index_];
     
     jetsP4_->clear();
     jetsIDP4_->clear();
@@ -1321,6 +1354,11 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     const pat::Electron* leg1 = dynamic_cast<const pat::Electron*>( (theDiTau->leg1()).get() );
     const pat::Tau*      leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
 
+    elecFlag_       = 0;  
+    elecVetoRelIso_ = 0;  
+    elecFlagSoft_       = 0;  
+    elecVetoRelIsoSoft_ = 0;
+    
     for(unsigned int i=0; i<electronsRel->size(); i++){
       if( Geom::deltaR( (*electronsRel)[i].p4(),leg1->p4())>0.3) {
 	extraElectrons_->push_back( (*electronsRel)[i].p4() );
@@ -2520,7 +2558,7 @@ unsigned int  ElecTauStreamAnalyzer::jetID( const pat::Jet* jet, const reco::Ver
       break;
     case reco::PFCandidate::h_HF: // fill neutral
       nNeutral++;
-      //energyNeutral += cand.energy();
+      energyNeutral += cand.energy();
       break;
     case reco::PFCandidate::egamma_HF: // fill e/gamma
       nPhotons++;
