@@ -22,10 +22,18 @@ applyTauESCorr= True
 useMarkov   = True
 runMoriond = True
 
+if runOnEmbed and runOnMC:
+    print "Running on Embedded, runOnMC should be switched off"
+    runOnMC=False    
+
 if runOnMC:
     print "Running on MC"
 else:
     print "Running on Data"
+
+if (not runOnMC) and (not runOnEmbed) and applyTauESCorr:
+    print "Running on Data, Tau ESCorr should be switched off"
+    applyTauESCorr=False 
 
 if useMarkov:
     print "Use SVFit with Markov chain integration"
@@ -234,10 +242,12 @@ else:
 
 #----------------------------------------------------------------------------------
 # produce CaloMEtNoHF (MC corrected by data/MC difference in CaloMET response)
+process.load("LLRAnalysis.TauTauStudies.calibrateCaloMETandL1ETMforEmbedded_cff")
+process.load("LLRAnalysis.TauTauStudies.sumCaloTowersInEtaSlices_cfi")
 
-process.produceCaloMEtNoHF = cms.Sequence()
-
-process.load("LLRAnalysis/TauTauStudies/sumCaloTowersInEtaSlices_cfi")
+process.produceCaloMEtNoHF = cms.Sequence(process.uncorrectedL1ETM)
+if runOnEmbed:
+    process.produceCaloMEtNoHF += process.calibrateCaloMETandL1ETMforEmbedded
 if runOnMC:
     process.metNoHFresidualCorrected.residualCorrLabel = cms.string("ak5CaloResidual")
     process.metNoHFresidualCorrected.extraCorrFactor = cms.double(1.05)
@@ -908,6 +918,7 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     genParticles   = cms.InputTag("genParticles"),
     genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
+    isRhEmb        = cms.untracked.bool(runOnEmbed),
     deltaRLegJet   = cms.untracked.double(0.5),
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
