@@ -74,7 +74,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   edm::InputTag genTausTag_;
   const  TransientTrackBuilder *transientTrackBuilder_;
 
-  bool isMC_;
+  bool isMC_, isRhEmb_;
   bool verbose_;
   float minCorrPt_;
   float minJetID_;

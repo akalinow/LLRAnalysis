@@ -20,7 +20,7 @@ correctedL1ETM = cms.EDProducer("CorrectedCaloMETforEmbeddedProducer",
     residualCorrLabel = cms.string("ak5CaloResidual"), # apply data/MC residual correction
     ##residualCorrLabel = cms.string(""), # do not apply data/MC residual correction                                    
     residualCorrEtaMax = cms.double(3.0),
-    extraCorrFactor = cms.double(1.05),
+    extraCorrFactor = cms.double(1.125),
     isMC = cms.bool(True), # CV: use 'MC' setting to calibrate simulated tau decay products in Embedded samples
 )
 

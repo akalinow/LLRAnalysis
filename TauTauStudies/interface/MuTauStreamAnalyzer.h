@@ -74,7 +74,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   const  TransientTrackBuilder *transientTrackBuilder_;
 
 
-  bool isMC_;
+  bool isMC_, isRhEmb_;
   bool verbose_;
   float minCorrPt_;
   float minJetID_;

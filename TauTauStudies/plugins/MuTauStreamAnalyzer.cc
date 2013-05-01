@@ -118,6 +118,7 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   verticesTag_       = iConfig.getParameter<edm::InputTag>("vertices");
   triggerResultsTag_ = iConfig.getParameter<edm::InputTag>("triggerResults"); 
   isMC_              = iConfig.getParameter<bool>("isMC");
+  isRhEmb_           = iConfig.getUntrackedParameter<bool>("isRhEmb",false);
   genParticlesTag_   = iConfig.getParameter<edm::InputTag>("genParticles"); 
   genTausTag_        = iConfig.getParameter<edm::InputTag>("genTaus"); 
   deltaRLegJet_      = iConfig.getUntrackedParameter<double>("deltaRLegJet",0.3);
@@ -862,6 +863,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   const l1extra::L1MuonParticleCollection* l1mus = 0;
   edm::Handle<l1extra::L1EtMissParticleCollection> l1etmHandle;
   const l1extra::L1EtMissParticleCollection* l1etm = 0;
+  edm::Handle<reco::CaloMETCollection> caloL1etmHandle;
+  const reco::CaloMETCollection* caloL1etm = 0;
   edm::Handle<pat::TauCollection> trgTausHandle;
   const pat::TauCollection* trgTaus = 0;
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFHandle;
@@ -869,7 +872,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrHandle;
   const reco::CaloMETCollection* caloMEtNoHFCorr = 0;
 
-  iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
+  if(!isRhEmb_)
+    iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
+  else
+    iEvent.getByLabel("correctedCaloMEtNoHF", caloMEtNoHFHandle);
   if( !caloMEtNoHFHandle.isValid() )  
     edm::LogError("DataNotAvailable")
       << "No metNoHF collection available \n";
@@ -917,6 +923,17 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     l1mus = l1muonsHandle.product();
     for(unsigned int i=0; i<l1mus->size(); ++i)
       l1Muons_->push_back( (*l1mus)[i].p4() );
+  }
+  if(!isRhEmb_)
+    iEvent.getByLabel("uncorrectedL1ETM", caloL1etmHandle);
+  else
+    iEvent.getByLabel("correctedL1ETM", caloL1etmHandle);
+  if( !caloL1etmHandle.isValid() )  
+    edm::LogError("DataNotAvailable")
+      << "No uncorrectedL1ETM collection available \n";
+  else{
+    caloL1etm = caloL1etmHandle.product();      
+    l1ETMP4_->push_back( (*caloL1etm)[0].p4() );
   }
   iEvent.getByLabel(edm::InputTag("l1extraParticles","MET"), l1etmHandle);
   if( !l1etmHandle.isValid() )  
