@@ -14,11 +14,11 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = True
 runOnEmbed  = False
+applyTauESCorr= True 
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 runUserIsoTau = False
-applyTauESCorr= True
 useMarkov   = True
 runMoriond = True
 

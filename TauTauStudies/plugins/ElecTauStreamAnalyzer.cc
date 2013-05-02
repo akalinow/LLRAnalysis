@@ -648,26 +648,29 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   
   numPV_ = vertexes->size();
 
+  const pat::METCollection* met = 0;
   edm::Handle<pat::METCollection> metHandle;
   iEvent.getByLabel( metTag_ ,metHandle);
   if( !metHandle.isValid() )  
     edm::LogError("DataNotAvailable")
       << "No MET label available \n";
-  const pat::METCollection* met = metHandle.product();
+  if(metHandle.isValid() )met = metHandle.product();
 
+  const pat::METCollection* rawMet = 0;
   edm::Handle<pat::METCollection> rawMetHandle;
   iEvent.getByLabel( rawMetTag_, rawMetHandle);
   if( !rawMetHandle.isValid() )  
     edm::LogError("DataNotAvailable")
       << "No raw MET label available \n";
-  const pat::METCollection* rawMet = rawMetHandle.product();
+  if(rawMetHandle.isValid() )rawMet = rawMetHandle.product();
 
+  const pat::METCollection* mvaMet = 0;
   edm::Handle<pat::METCollection> mvaMetHandle;
   iEvent.getByLabel( mvaMetTag_, mvaMetHandle);
   if( !mvaMetHandle.isValid() )  
     edm::LogError("DataNotAvailable")
       << "No mva MET label available \n";
-  const pat::METCollection* mvaMet = mvaMetHandle.product();
+  if(mvaMetHandle.isValid() )mvaMet = mvaMetHandle.product();
 
   edm::Handle<PFMEtSignCovMatrix>metCovHandle;
   iEvent.getByLabel( metCovTag_, metCovHandle);
@@ -1280,7 +1283,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
   if(isMC_) 
     genMETP4_->push_back( (*rawMet)[0].genMET()->p4() );
-  sumEt_  = (*met)[0].sumEt();
+  //sumEt_  = (*met)[0].sumEt(); //get it from diTau pair
   run_   = iEvent.run();
   event_ = (iEvent.eventAuxiliary()).event();
   lumi_  = iEvent.luminosityBlock();
@@ -1350,6 +1353,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       metSgnMatrix_->push_back( elements[3] );    
     }
     */
+    /*
     if(metCovHandle.isValid()){
       const TMatrixD cov = (*metCovHandle);
       const double* elements;
@@ -1358,12 +1362,21 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       metSgnMatrix_->push_back( elements[1] ); //sigma_Ephi
       metSgnMatrix_->push_back( elements[3] ); //sigma_phi
     }
-
+    */
+    //Use Cov of the MET from diTau  
+    const TMatrixD cov = theDiTau->met()->getSignificanceMatrix();  
+    const double* elements;  
+    elements = cov.GetMatrixArray();  
+    //cout<<" met cov modified "<<elements[0]<<endl;  
+    metSgnMatrix_->push_back( elements[0] ); //sigma_E  
+    metSgnMatrix_->push_back( elements[1] ); //sigma_Ephi  
+    metSgnMatrix_->push_back( elements[3] ); //sigma_phi  
+    
     METP4_->push_back((*rawMet)[0].p4()); 
-    METP4_->push_back((*met)[0].p4());
     METP4_->push_back(theDiTau->met()->p4());
-    METP4_->push_back((*mvaMet)[0].p4()); 
-
+    if(met)METP4_->push_back((*met)[0].p4());
+    if(mvaMet)METP4_->push_back((*mvaMet)[0].p4()); 
+    sumEt_  = theDiTau->met()->sumEt();
 
     isElecLegMatched_  = 0;
     isTauLegMatched_   = 0;

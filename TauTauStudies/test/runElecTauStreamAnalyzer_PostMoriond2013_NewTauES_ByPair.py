@@ -14,12 +14,13 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = True
 runOnEmbed  = False
+applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
+useAntiZee   = True
 useLepTauPAT = True
 runUserIsoTau = False
-applyTauESCorr= True
 useMarkov   = True
 runMoriond = True
 
@@ -64,7 +65,8 @@ process.source = cms.Source(
     #'file:VBFH125.root'
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'    
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
     )
     )
@@ -521,9 +523,10 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     met                = cms.InputTag("metRecoilCorrector00",  "N"),
     rawMet             = cms.InputTag("patMETsPFlow"),
     mvaMet             = cms.InputTag("patPFMetByMVA00"),
-    metCov             = cms.InputTag("pfMEtMVACov"),
+    metCov             = cms.InputTag("pfMEtMVACov00"),
     electrons          = cms.InputTag("elecPtEtaIDIso"),
     electronsRel       = cms.InputTag("elecPtEtaRelID"),
+    electronsAntiZee   = cms.InputTag("selectedPatElectronsUserEmbeddedIso"),
     vertices           = cms.InputTag("selectedPrimaryVertices"),
     triggerResults     = cms.InputTag("patTriggerEvent"),
     genParticles       = cms.InputTag("genParticles"),
@@ -537,6 +540,9 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     doElecIsoMVA       = cms.untracked.bool( False ),
     )
 
+if not useAntiZee:
+    process.elecTauStreamAnalyzer.electronsAntiZee = cms.InputTag("elecPtEtaRelID")
+    
 if usePFMEtMVA:
     if useRecoil :
         process.elecTauStreamAnalyzer.met = cms.InputTag("metRecoilCorrector00",  "N")
