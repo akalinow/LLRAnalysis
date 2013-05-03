@@ -18,9 +18,8 @@ applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-useAntiZee   = True
+useAntiZee   = False
 useLepTauPAT = True
-runUserIsoTau = False
 useMarkov   = True
 runMoriond = True
 
@@ -538,6 +537,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose            = cms.untracked.bool( False ),
     doElecIsoMVA       = cms.untracked.bool( False ),
+    doIsoMVAOrdering = cms.untracked.bool(False)
     )
 
 if not useAntiZee:

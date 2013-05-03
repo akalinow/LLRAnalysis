@@ -18,7 +18,6 @@ applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-runUserIsoTau = False
 useMarkov   = True
 runMoriond = True
 
@@ -469,8 +468,8 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
-    doIsoMVAOrdering = cms.untracked.bool(runUserIsoTau),
-    doMuIsoMVA     = cms.untracked.bool( True ),
+    doIsoMVAOrdering = cms.untracked.bool(False),
+    doMuIsoMVA     = cms.untracked.bool( False ),
     )
 
 if usePFMEtMVA:
