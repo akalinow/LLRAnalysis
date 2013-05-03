@@ -32,12 +32,14 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define VERBOSE          true
-#define W3JETS           true
+#define W3JETS           false
 #define USESSBKG         false
 #define scaleByBinWidth  false
 #define DOSPLIT          false
 #define studyQCDshape    false
 #define useZDataMC       false
+#define scaleSoftD       true
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 TH1F* blindHistogram(TH1F* h, float xmin, float xmax, TString name) {
 
@@ -132,7 +134,8 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   else if(version_.Contains("HPSDB3H")) {
     tiso   = "tightestHPSDB3HWP>=0" ;
     ltiso  = "tightestHPSDB3HWP>-99" ;
-    mtiso  = "hpsDB3H>0.7" ;
+    //mtiso  = "hpsDB3H>0.7" ;
+    mtiso  = "hpsDB3H<3" ;
 
     // pairIndex
     if(version_.Contains("AntiMu1")) { // anti-mu 1
@@ -256,13 +259,13 @@ void drawHistogramMC(TString version_ = "",
   if(tree!=0 && h!=0){
     h->Reset();
 
-    if(     version_.Contains("SoftABC"))  tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*HqTWeight*weightHepNup*passL1etmCutABC)"*cut);
-    else if(version_.Contains("SoftD"))    tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*HqTWeight*weightHepNup*passL1etmCut)"*cut);
-    else if(version_.Contains("SoftLTau")) tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*HqTWeight*weightHepNup)"*cut);
+    if(     version_.Contains("SoftABC"))  tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightHepNup*passL1etmCutABC)"*cut);
+    else if(version_.Contains("SoftD"))    tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup*passL1etmCut)"*cut);
+    else if(version_.Contains("SoftLTau")) tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup)"*cut);
     else if(!version_.Contains("Soft")) {
-      if(     RUN=="ABC")                  tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*HqTWeight*weightHepNup)"*cut);
-      else if(RUN=="D")                    tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*HqTWeight*weightHepNup)"*cut);
-      else                                 tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*HqTWeight*weightHepNup)"*cut);
+      if(     RUN=="ABC")                  tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightHepNup)"*cut);
+      else if(RUN=="D")                    tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightHepNup)"*cut);
+      else                                 tree->Draw(variable+">>"+TString(h->GetName()),"(sampleWeight*puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightHepNup)"*cut);
     }
     else {
 	cout << "ERROR : Soft analyses need RUN set to ABC or D, nothing else is allowed." << endl;
@@ -408,13 +411,13 @@ void drawHistogramMCFakeRate(TString version_ = "",
     TString tscaleFact(scaleFact);
     TString cutWeight;
 
-    if(     version_.Contains("SoftABC"))  cutWeight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*HqTWeight*weightHepNup*passL1etmCutABC)";
-    else if(version_.Contains("SoftD"))    cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*HqTWeight*weightHepNup*passL1etmCut)";
-    else if(version_.Contains("SoftLTau")) cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*HqTWeight*weightHepNup)";
+    if(     version_.Contains("SoftABC"))  cutWeight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightHepNup*passL1etmCutABC)";
+    else if(version_.Contains("SoftD"))    cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup*passL1etmCut)";
+    else if(version_.Contains("SoftLTau")) cutWeight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup)";
     else if(!version_.Contains("Soft")) {
-      if(     RUN=="ABC")                  cutWeight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*HqTWeight*weightHepNup)";
-      else if(RUN=="D")                    cutWeight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*HqTWeight*weightHepNup)";
-      else                                 cutWeight = "(sampleWeight*puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*HqTWeight*weightHepNup)";
+      if(     RUN=="ABC")                  cutWeight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightHepNup)";
+      else if(RUN=="D")                    cutWeight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightHepNup)";
+      else                                 cutWeight = "(sampleWeight*puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightHepNup)";
     }
     else {
 	cout << "ERROR : Soft analyses need RUN set to ABC or D, nothing else is allowed." << endl;
@@ -972,13 +975,18 @@ void plotMuTau( Int_t mH_           = 120,
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
 
   // LUMINOSITY //
-  float Lumi = 0.; 
+  float Lumi, LumiABC, LumiD, LumiSoftABC;
+  LumiABC     = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ; // 2012ABC 
+  LumiSoftABC = LumiABC;                                      // needs modification ?
+  LumiD   = 7274;                                             // 2012D 
 
-  if(RUN=="ABC")    Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;       // 2012ABC 
-  else if(RUN=="D") Lumi = 7274;                                               // 2012D 
-  else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
+  if(RUN=="ABC")    Lumi = LumiABC;
+  else if(RUN=="D") Lumi = LumiD;
+  else              Lumi = LumiABC + LumiD;
 
-  if(version_.Contains("SoftABC")) Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;
+  if(version_.Contains("SoftABC"))             Lumi = LumiSoftABC;
+  if(version_.Contains("SoftD") && scaleSoftD) Lumi = LumiABC + LumiD;
+  int nScaleSoftD = TMath::Nint( (LumiABC+LumiD)/LumiD );
 
   /////////////////
 
@@ -1180,8 +1188,7 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_highqtmet/MuTau/temp/SoftAnalysis/iter2/";
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/MuTau/temp/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_JetIdFix/MuTau/temp/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1254,7 +1261,8 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
-  backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
+  //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
+  backgroundW3Jets = backgroundWJets;
 
   if(!backgroundDY)    cout << "###  NTUPLE DY NOT FOUND ###" << endl;  
   if(!backgroundTTbar) cout << "###  NTUPLE TT NOT FOUND ###" << endl;  
@@ -1371,6 +1379,12 @@ void plotMuTau( Int_t mH_           = 120,
   TCut vbf("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1");
   TCut vbfLoose("nJets30>=2 && pt1>30 && pt2>30 && isVetoInJets!=1 && Mjj>200 && Deta>2");
   TCut vbfLooseQCD("nJets20>=2 && isVetoInJets!=1 && Mjj>200 && Deta>2");
+  //TCut vbfLoose("nJets30>=2 && pt1>30 && pt2>30 && isVetoInJets!=1 && Mjj>500 && Deta>2");
+  //TCut vbfLooseQCD("nJets20>=2 && isVetoInJets!=1 && Mjj>500 && Deta>2");
+
+  vbfLooseQCD = vbf;
+  vbfLoose = vbf;
+
   TCut vh("pt1>30 && pt2>30 && Mjj>70 && Mjj<120 && diJetPt>150 && MVAvbf<0.80 && nJets20BTagged<1");
   TCut boost("nJets30>0 && pt1>30 && nJets20BTagged<1");
   boost = boost && !vbf /*&& !vh*/;
@@ -1625,10 +1639,6 @@ void plotMuTau( Int_t mH_           = 120,
     if ( !h1->GetSumw2N() )h1->Sumw2(); if ( !hCleaner->GetSumw2N() )hCleaner->Sumw2();
     TChain* currentTree = 0;
 
-    // TESTS => TO COMMENT !
-    //if(samples[iter]=="Data" || samples[iter]=="SS" || samples[iter]=="WJets") continue;
-    //cout << "start processing " << endl;
-    
     if((it->first).find("SS")!=string::npos){
       
       currentTree = (it->second);
@@ -1719,7 +1729,7 @@ void plotMuTau( Int_t mH_           = 120,
 	    hTTb->Add(hCleaner, 1.0);
 	    NormTTjets = 0.;
 	    drawHistogramMC(version_, RUN,currentTree, variable, NormTTjets,     Error,   Lumi*TTxsectionRatio*scaleFactorTTOSWJets*hltEff_/1000., h1, sbin, 1);
-	    hTTb->Scale(h1->Integral()/hTTb->Integral()); 
+	    hTTb->Scale( hTTb->Integral()!=0 ? h1->Integral()/hTTb->Integral() : 1.0 ); 
 	  } 
 	  else{
 	    float NormTTjets = 0.;
@@ -1761,7 +1771,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  float NormW3Jets = 0.;
 	  drawHistogramMC(version_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
 	  if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAW3Jets/OSWinSidebandRegionMCW3Jets);
-	  else h1->Scale(OSWinSignalRegionDATAW3Jets/h1->Integral());
+	  else h1->Scale( h1->Integral()!=0 ? OSWinSignalRegionDATAW3Jets/h1->Integral() : 1.0 );
 	  hW3Jets->Add(h1, 1.0);
 
 	  drawHistogramMC(version_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinMtiso, 1);
@@ -1817,13 +1827,13 @@ void plotMuTau( Int_t mH_           = 120,
 	  float NormSSWJets = 0.;
 	  drawHistogramMC(version_, RUN,currentTree, variable, NormSSWJets, Error,   Lumi*hltEff_/1000., h1, sbinSS, 1);
 	  if(removeMtCut) h1->Scale(SSWinSidebandRegionDATA/SSWinSidebandRegionMC);
-	  else h1->Scale(SSWinSignalRegionDATA/h1->Integral());
+	  else h1->Scale( h1->Integral()!=0 ? SSWinSignalRegionDATA/h1->Integral() : 1.0 );
 	  hWSS->Add(h1, 1.0);
 
 	  float NormWJets = 0.;
 	  drawHistogramMC(version_, RUN,currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
 	  if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);
-	  else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
+	  else h1->Scale( h1->Integral()!=0 ? OSWinSignalRegionDATAWJets/h1->Integral() : 1.0 );
 	  hW->Add(h1, 1.0); //hW->Sumw2();
 	  
 	  hWMinusSS->Add(h1, (1-OStoSSRatioQCD*SSWinSidebandRegionDATA/OSWinSidebandRegionDATAWJets));
@@ -1853,10 +1863,12 @@ void plotMuTau( Int_t mH_           = 120,
 	    hCleaner->Reset();
 	    float NormDYMutoTauEmbd = 0.;
 	    drawHistogramEmbed(version_, RUN,dataEmbedded, variable, NormDYMutoTauEmbd,  Error, 1.0 , hCleaner,  sbin  ,1);
-            h1->Scale(NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose);
-	    hZmm->Add(h1, 1.0); //hZmm->Sumw2(); 
-	    hZfakes->Add(h1,1.0); //hZfakes->Sumw2();
-	    hEWK->Add(h1,1.0); 
+            h1->Scale( NormDYMutoTauEmbdLoose!=0 ? NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose : 1.0 );
+	    if(h1) {
+	      hZmm->Add(h1, 1.0); //hZmm->Sumw2(); 
+	      hZfakes->Add(h1,1.0); //hZfakes->Sumw2();
+	      hEWK->Add(h1,1.0); 
+	    }
           }  
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	    float NormDYMutoTau = 0.; 
@@ -1893,10 +1905,12 @@ void plotMuTau( Int_t mH_           = 120,
 	      drawHistogramMC(version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
 	    else
 	      drawHistogramMC(version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
-	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
-	    hZmj->Add(hCleaner, 1.0); //hZmj->Sumw2();
-	    hZfakes->Add(hCleaner,1.0); //hZfakes->Sumw2();
-	    hEWK->Add(hCleaner,1.0); 
+	    hCleaner->Scale( hCleaner->Integral()!=0 ? h1->Integral()/hCleaner->Integral() : 1.0 );
+	    if(hCleaner) {
+	      hZmj->Add(hCleaner, 1.0); //hZmj->Sumw2();
+	      hZfakes->Add(hCleaner,1.0); //hZfakes->Sumw2();
+	      hEWK->Add(hCleaner,1.0); 
+	    }
 	  }
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	    float NormDYJtoTau = 0.;  
@@ -1927,9 +1941,11 @@ void plotMuTau( Int_t mH_           = 120,
 	    drawHistogramMC(version_, RUN,currentTree, variable, NormOthers, Error,     Lumi*hltEff_/1000., hCleaner, sbinVBFLoose, 1);
 	    NormOthers = 0.; 
             drawHistogramMC(version_, RUN,currentTree, variable, NormOthers , Error,     Lumi*hltEff_/1000., h1, sbin, 1);
-            hCleaner->Scale(h1->Integral()/hCleaner->Integral()); 
-            hVV->Add(hCleaner, 1.0);  
-            hEWK->Add(hCleaner,1.0);  
+            hCleaner->Scale( hCleaner->Integral()!=0 ? h1->Integral()/hCleaner->Integral() : 1.0 ); 
+	    if(hCleaner) {
+	      hVV->Add(hCleaner, 1.0);  
+	      hEWK->Add(hCleaner,1.0);  
+	    }
           } 
 	  else{
 	    float NormOthers = 0.;
@@ -2353,6 +2369,9 @@ void plotMuTau( Int_t mH_           = 120,
     hEWK->Scale(1.0, "width");
     hSgn->Scale(1.0, "width");
   }
+
+  // RESCALE FOR TESTING PURPOSES
+  if(version_.Contains("SoftD") && scaleSoftD) hData->Scale(nScaleSoftD);
 
   hSiml->Add(hTTb,1.0);
   if(useEmbedding_)
