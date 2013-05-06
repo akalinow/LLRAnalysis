@@ -18,7 +18,7 @@ process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 postfix     = "PFlow"
 runOnMC     = True
 runOnEmbed  = False
-isPfEmbed   = False 
+embedType   = "PfEmbed" #"RhEmbedMuTau" or "RhEmbedElTau" 
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -216,7 +216,7 @@ if runOnEmbed:
     process.load('RecoBTag.Configuration.RecoBTag_cff')
     process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
     process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
-    if isPfEmbed:
+    if "PfEmbed" in embedType:
         process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
 
 ## Plus, add this to your path:
@@ -1029,7 +1029,7 @@ process.skimMuTau1 = cms.Sequence(
     process.muLegSequence*
     process.tauLegForMuTauSequence
     ##+process.jetCleaningSequence
-    +process.printTree1
+    ##+process.printTree1
     )
 
 process.skimMuTau2 = cms.Sequence(
@@ -1104,7 +1104,7 @@ massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              verbose=False)
 
 if not runOnMC:
-    process.skimMuTau1.remove(process.printTree1)
+    ##process.skimMuTau1.remove(process.printTree1)
     process.skimMuTau1.remove(process.HLTFilterMuTau)
     process.skimElecTau1.remove(process.HLTFilterEleTau)
 if not runOnEmbed:
@@ -1116,6 +1116,13 @@ if runOnMC and runOnEmbed:
 if runOnEmbed:
     process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
     process.commonOfflineSequence += process.makeTauMatchedCaloJets
+    if "RhEmbed" in embedType:
+        process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
+        process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
+        if "MuTau" in embedType:
+            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+        else:
+            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
         
 #process.p = cms.Path(process.printEventContent+process.skim)
 process.pMuTau1 = cms.Path(process.skimMuTau1)
@@ -1210,6 +1217,15 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_jetTracksAssociatorAtVertex_*_*',
     'keep *_ak5GenJets_*_*',
     'keep *_*JetTagsAOD_*_*',
+    'keep *_TauSpinnerReco_TauSpinnerWT_*',
+    'keep *_ZmumuEvtSelEffCorrWeightProducer_weight_*',
+    'keep *_muonRadiationCorrWeightProducer_weight_*',
+    'keep *_muonRadiationCorrWeightProducer_weightUp_*',
+    'keep *_muonRadiationCorrWeightProducer_weightDown_*',
+    'keep *_embeddingKineReweightRECembedding_genTau2PtVsGenTau1Pt_*',
+    'keep *_embeddingKineReweightRECembedding_genTau2EtaVsGenTau1Eta_*',
+    'keep *_embeddingKineReweightRECembedding_genDiTauMassVsGenDiTauPt_*',
+    'keep *_generator_minVisPtFilter_*',
     )
                                    )
 #MB
