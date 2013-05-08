@@ -426,10 +426,25 @@ process.muPtEtaRelIDMuDown = process.muPtEtaRelID.clone(
     src = cms.InputTag("rescaledMuonsRel","D")
     )
 ##Update 3rdLepVeto cuts##
+##Loose MVA ID used for e-mu and 3d lepton veto selection
+MVALoose = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGNonTrig')>0.925) ||" + \
+           "(pt<=20 && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGNonTrig')>0.915) ||" + \
+           "(pt<=20 && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGNonTrig')>0.965) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGNonTrig')>0.905) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGNonTrig')>0.955) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGNonTrig')>0.975))"
+##Loose MVA ID: new e-Id, same FR as old one
+MVALooseNew = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>-0.5375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>-0.375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>-0.025) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>0.325) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>0.775) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>0.775))"
 process.electronsForVeto = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("electronsForVeto"),
-    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"),
+    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"
+                     +" && "+MVALoose),#use MVAloose for back compability, can be changed in future
     filter = cms.bool(False)
     )
 #########

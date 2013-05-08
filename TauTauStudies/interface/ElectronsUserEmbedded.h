@@ -16,8 +16,8 @@
 #include "DataFormats/RecoCandidate/interface/IsoDeposit.h"
 #include "DataFormats/PatCandidates/interface/Isolation.h"
 
-#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
-
+//#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
 
 
 class ElectronsUserEmbedded : public edm::EDProducer{
@@ -39,6 +39,7 @@ class ElectronsUserEmbedded : public edm::EDProducer{
   bool doMVA_;
   EGammaMvaEleEstimator* myMVATrig_;
   EGammaMvaEleEstimator* myMVANonTrig_;
+  EGammaMvaEleEstimator* myMVATrigNoIP_;
 
 
 };

@@ -45,7 +45,7 @@
 <use   name="rootcore"/>
 <use   name="rootrflx"/>
 <use   name="LLRAnalysis/Utilities"/>
-<use   name="EGamma/EGammaAnalysisTools"/>
+<use   name="EgammaAnalysis/ElectronTools"/>
 <library   name="LLRAnalysisTauTauStudiesPlugins" file="*.cc">
   <flags   EDM_PLUGIN="1"/>
 </library>
