@@ -21,9 +21,9 @@
 
 using namespace std;
 
-float higgsXsection(int mH = 125, string process = "ggH"){
+float higgsXsection(int mH = 125, string process = "GGFH"){
   float xsection = 1.0;
-  if(process.find("ggH")!=string::npos){
+  if(process.find("GGFH")!=string::npos){
     if(mH == 90) xsection = 36.80                   * 8.33E-02;
     if(mH == 95) xsection = 33.19                   * 8.32E-02;
     if(mH == 100) xsection = 30.12                   * 8.28E-02;
@@ -40,7 +40,7 @@ float higgsXsection(int mH = 125, string process = "ggH"){
     if(mH == 155) xsection = 12.79                   * 1.05E-02;
     if(mH == 160) xsection = 11.95                   * 3.96E-03;
   }
-  if(process.find("qqH")!=string::npos){
+  if(process.find("VBFH")!=string::npos){
     if(mH == 90) xsection = 2.191                   * 8.33E-02;
     if(mH == 95) xsection = 2.084                   * 8.32E-02;
     if(mH == 100) xsection = 1.988                   * 8.28E-02;
@@ -83,7 +83,7 @@ void produce(
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "ABC",
-	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
 	     )
 {
@@ -102,8 +102,8 @@ void produce(
   TFile* fin_nominal = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s__%s.root",        outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   ///////////////////////////////////////////////
 
-  float rescaleggH = RESCALETO1PB ? higgsXsection(mH_,"ggH") : 1.0;
-  float rescaleqqH = RESCALETO1PB ? higgsXsection(mH_,"qqH") : 1.0;
+  float rescaleGGFH = RESCALETO1PB ? higgsXsection(mH_,"GGFH") : 1.0;
+  float rescaleVBFH = RESCALETO1PB ? higgsXsection(mH_,"VBFH") : 1.0;
   float rescaleVH  = RESCALETO1PB ? higgsXsection(mH_,"VH")  : 1.0;
 
   string binNameSpace = "";
@@ -122,10 +122,10 @@ void produce(
   else if(bin_.find("boost")!=string::npos) 
     binNameSpace =  "SM1";
 
-  if(bin_.find("boostLow")!=string::npos) 
+  if(bin_.find("boost")!=string::npos && bin_.find("Low")!=string::npos) 
     binNameSpace =  "boost_low";
 
-  if(bin_.find("boostHigh")!=string::npos) 
+  if(bin_.find("boost")!=string::npos && bin_.find("High")!=string::npos) 
     binNameSpace =  "boost_high";
 
   else if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos) 
@@ -166,13 +166,13 @@ void produce(
     hData->Write("data_obs");
 
     if(!DOSUSY){
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hggH%d",mH_));
-      hSgn2->Scale(1./rescaleggH);
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",mH_));
+      hSgn2->Scale(1./rescaleGGFH);
       hSgn2->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn2->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hqqH%d",mH_));
-      hSgn1->Scale(1./rescaleqqH);
+      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",mH_));
+      hSgn1->Scale(1./rescaleVBFH);
       hSgn1->SetName(Form("qqH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("qqH%d%s"   ,mH_,suffix.c_str()));
 
@@ -353,15 +353,15 @@ void produce(
     fTemplOut->cd( dirName.Data() );
     
     if(!DOSUSY){
-      if(dir->FindObjectAny(Form("qqH%d%s"         ,mH_,suffix.c_str()))==0 ){
-	TH1F* hSgn2 = (TH1F*)fin->Get(Form("hqqH%d",mH_));
-	hSgn2->Scale(1./rescaleqqH);
+      if(dir->FindObjectAny(Form("VBFH%d%s"         ,mH_,suffix.c_str()))==0 ){
+	TH1F* hSgn2 = (TH1F*)fin->Get(Form("hVBFH%d",mH_));
+	hSgn2->Scale(1./rescaleVBFH);
 	hSgn2->SetName(Form("qqH%d%s" ,mH_,suffix.c_str()));
 	hSgn2->Write(Form("qqH%d%s" ,mH_  ,suffix.c_str()));
       }
-      if(dir->FindObjectAny(Form("ggH%d%s"         , mH_,suffix.c_str()))==0 ){
-	TH1F* hSgn1 = (TH1F*)fin->Get(Form("hggH%d",mH_));
-	hSgn1->Scale(1./rescaleggH);
+      if(dir->FindObjectAny(Form("GGFH%d%s"         , mH_,suffix.c_str()))==0 ){
+	TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGFH%d",mH_));
+	hSgn1->Scale(1./rescaleGGFH);
 	hSgn1->SetName(Form("ggH%d%s" , mH_,suffix.c_str())); 
 	hSgn1->Write(Form("ggH%d%s" , mH_  ,suffix.c_str()));
       }
@@ -370,7 +370,7 @@ void produce(
 	hSgn3->Scale(1./rescaleVH);
 	hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
 	if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
-	  TH1F* hSgn2 = (TH1F*)fin->Get(Form("hqqH%d",mH_));
+	  TH1F* hSgn2 = (TH1F*)fin->Get(Form("hVBFH%d",mH_));
 	  float VHyield = hSgn3->Integral();
 	  hSgn3->Reset();
 	  hSgn3->Add(hSgn2,1.0);
@@ -382,10 +382,10 @@ void produce(
       }
     }
     else{//SUSY
-      if(dir->FindObjectAny(Form("qqH%d%s"         ,mH_,suffix.c_str()))==0 ){
+      if(dir->FindObjectAny(Form("VBFH%d%s"         ,mH_,suffix.c_str()))==0 ){
         TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
-	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-        hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
+	hSgn1->SetName(Form("GGFH%d%s" ,mH_,suffix.c_str()));
+        hSgn1->Write(Form("GGFH%d%s" ,mH_,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
         TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
@@ -670,7 +670,7 @@ void produce(
 	    line.replace( line.find("XXX") , 3 , string("eTauMSSM")  );
 	  out << line << endl;
 	}
-	else if(line.find("process")!=string::npos && line.find("ggH")!=string::npos){
+	else if(line.find("process")!=string::npos && line.find("GGFH")!=string::npos){
 
 	  if(!DOSUSY){
 	    if(!RESCALETO1PB){
@@ -709,11 +709,11 @@ void produce(
 	  /////////////////////////////////////////////
 	  /////////////////////////////////////////////
 	  
-	  TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hggH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
-	  //hSgn2->Scale(1./rescaleggH);
+	  TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hGGFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
+	  //hSgn2->Scale(1./rescaleGGFH);
 	  
-	  TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hqqH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
-	  //hSgn1->Scale(1./rescaleqqH);
+	  TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hVBFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
+	  //hSgn1->Scale(1./rescaleVBFH);
 	  
 	  TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
 	  //hSgn3->Scale(1./rescaleVH);
@@ -759,37 +759,37 @@ void produce(
 	  if(!DOSUSY){
 
 	    //////////////////////////////// FIX HERE!!!
-	    VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hqqH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hqqH%d",mH_)))->Integral())),
-				TMath::Abs((((TH1F*)fin_jDown->Get(Form("hqqH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hqqH%d",mH_)))->Integral()))
+	    VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hVBFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVBFH%d",mH_)))->Integral())),
+				TMath::Abs((((TH1F*)fin_jDown->Get(Form("hVBFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVBFH%d",mH_)))->Integral()))
 				);
-	    if( ((TH1F*)fin->Get(Form("hqqH%d",mH_)))->Integral()>0 ){
-	      VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hqqH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hqqH%d",mH_)))->Integral());
-	      VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hqqH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hqqH%d",mH_)))->Integral());
+	    if( ((TH1F*)fin->Get(Form("hVBFH%d",mH_)))->Integral()>0 ){
+	      VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hVBFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVBFH%d",mH_)))->Integral());
+	      VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hVBFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVBFH%d",mH_)))->Integral());
 	    }
 	    else{
 	      VBFrelUp   = 1.1; // conservative
 	      VBFrelDown = 1.1; // conservative
 	    }
 	    
-	    VBFrel     *= 1./rescaleqqH;
-	    VBFrelUp   *= 1./rescaleqqH;
-	    VBFrelDown *= 1./rescaleqqH;
+	    VBFrel     *= 1./rescaleVBFH;
+	    VBFrelUp   *= 1./rescaleVBFH;
+	    VBFrelDown *= 1./rescaleVBFH;
 
-	    SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hggH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hggH%d",mH_)))->Integral())),
-				TMath::Abs((((TH1F*)fin_jDown->Get(Form("hggH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hggH%d",mH_)))->Integral()))
+	    SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hGGFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGGFH%d",mH_)))->Integral())),
+				TMath::Abs((((TH1F*)fin_jDown->Get(Form("hGGFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGGFH%d",mH_)))->Integral()))
 				);
-	    if( ((TH1F*)fin->Get(Form("hggH%d",mH_)))->Integral()>0 ){
-	      SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hggH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hggH%d",mH_)))->Integral());
-	      SMrelDown = (((TH1F*)fin_jDown->Get(Form("hggH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hggH%d",mH_)))->Integral());
+	    if( ((TH1F*)fin->Get(Form("hGGFH%d",mH_)))->Integral()>0 ){
+	      SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hGGFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGGFH%d",mH_)))->Integral());
+	      SMrelDown = (((TH1F*)fin_jDown->Get(Form("hGGFH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGGFH%d",mH_)))->Integral());
 	    }
 	    else{
 	      SMrelUp   = 1.1; // conservative
 	      SMrelDown = 1.1; // conservative
 	    }
 
-	    SMrel     *= 1./rescaleggH;
-	    SMrelUp   *= 1./rescaleggH;
-	    SMrelDown *= 1./rescaleggH;
+	    SMrel     *= 1./rescaleGGFH;
+	    SMrelUp   *= 1./rescaleGGFH;
+	    SMrelDown *= 1./rescaleGGFH;
 
 	    VHrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hVH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVH%d",mH_)))->Integral())),
 				TMath::Abs((((TH1F*)fin_jDown->Get(Form("hVH%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hVH%d",mH_)))->Integral()))
@@ -929,8 +929,8 @@ void produce(
 
 //   fin = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_%s_%s.root", outputDir.Data(), mH_, bin_.c_str() , analysisFile.c_str(), variable_.c_str()), "READ");
 
-//   float rescaleggH = RESCALETO1PB ? higgsXsection(mH_,"ggH") : 1.0;
-//   float rescaleqqH = RESCALETO1PB ? higgsXsection(mH_,"qqH") : 1.0;
+//   float rescaleGGFH = RESCALETO1PB ? higgsXsection(mH_,"GGFH") : 1.0;
+//   float rescaleVBFH = RESCALETO1PB ? higgsXsection(mH_,"VBFH") : 1.0;
 //   float rescaleVH  = RESCALETO1PB ? higgsXsection(mH_,"VH")  : 1.0;
 
 //   string binNameSpace = "";
@@ -984,8 +984,8 @@ void produce(
 //   cout << "For Signal "<< endl;
 //   TH2F *hSgn ;
 //   if(!DOSUSY){
-//     TH2F* hSgn12D     =  (TH2F*)fin->Get(Form("hggH%d2D",mH_));
-//     TH2F* hSgn22D     =  (TH2F*)fin->Get(Form("hqqH%d2D",mH_));
+//     TH2F* hSgn12D     =  (TH2F*)fin->Get(Form("hGGFH%d2D",mH_));
+//     TH2F* hSgn22D     =  (TH2F*)fin->Get(Form("hVBFH%d2D",mH_));
 //     TH2F* hSgn32D     =  (TH2F*)fin->Get(Form("hVH%d2D",mH_));
 //     hSgn = (TH2F*)hSgn12D->Clone("hSgn");
 //     hSgn->Add(hSgn22D);
@@ -1044,15 +1044,15 @@ void produce(
 //     hData->Write("data_obs");
 
 //     if(!DOSUSY){
-//       TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hggH%d2D",mH_)));
-//       hSgn2->Scale(1./rescaleggH);
-//       hSgn2->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-//       hSgn2->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
+//       TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hGGFH%d2D",mH_)));
+//       hSgn2->Scale(1./rescaleGGFH);
+//       hSgn2->SetName(Form("GGFH%d%s" ,mH_,suffix.c_str()));
+//       hSgn2->Write(Form("GGFH%d%s"   ,mH_,suffix.c_str()));
 
-//       TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hqqH%d2D",mH_)));
-//       hSgn1->Scale(1./rescaleqqH);
-//       hSgn1->SetName(Form("qqH%d%s" ,mH_,suffix.c_str()));
-//       hSgn1->Write(Form("qqH%d%s"   ,mH_,suffix.c_str()));
+//       TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hVBFH%d2D",mH_)));
+//       hSgn1->Scale(1./rescaleVBFH);
+//       hSgn1->SetName(Form("VBFH%d%s" ,mH_,suffix.c_str()));
+//       hSgn1->Write(Form("VBFH%d%s"   ,mH_,suffix.c_str()));
 
 //       TH1* hSgn3 = th2Rebinner((TH2F*)fin->Get(Form("hVH%d2D",mH_)));
 //       hSgn3->Scale(1./rescaleVH);
@@ -1070,8 +1070,8 @@ void produce(
 //     }
 //     else{//SUSY
 //       TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hSUSYGG%d2D",mH_)));
-//       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-//       hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
+//       hSgn1->SetName(Form("GGFH%d%s" ,mH_,suffix.c_str()));
+//       hSgn1->Write(Form("GGFH%d%s"   ,mH_,suffix.c_str()));
 
 //       TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hSUSYBB%d2D",mH_)));
 //       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
@@ -1209,24 +1209,24 @@ void produce(
 //     fTemplOut->cd( dirName.Data() );
     
 //     if(!DOSUSY){
-//       if(dir->FindObjectAny(Form("qqH%d%s"         ,mH_,suffix.c_str()))==0 ){
-// 	TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hqqH%d2D",mH_)));
-// 	hSgn2->Scale(1./rescaleqqH);
-// 	hSgn2->SetName(Form("qqH%d%s" ,mH_,suffix.c_str()));
-// 	hSgn2->Write(Form("qqH%d%s" ,mH_  ,suffix.c_str()));
+//       if(dir->FindObjectAny(Form("VBFH%d%s"         ,mH_,suffix.c_str()))==0 ){
+// 	TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hVBFH%d2D",mH_)));
+// 	hSgn2->Scale(1./rescaleVBFH);
+// 	hSgn2->SetName(Form("VBFH%d%s" ,mH_,suffix.c_str()));
+// 	hSgn2->Write(Form("VBFH%d%s" ,mH_  ,suffix.c_str()));
 //       }
-//       if(dir->FindObjectAny(Form("ggH%d%s"         , mH_,suffix.c_str()))==0 ){
-// 	TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hggH%d2D",mH_)));
-// 	hSgn1->Scale(1./rescaleggH);
-// 	hSgn1->SetName(Form("ggH%d%s" , mH_,suffix.c_str())); 
-// 	hSgn1->Write(Form("ggH%d%s" , mH_  ,suffix.c_str()));
+//       if(dir->FindObjectAny(Form("GGFH%d%s"         , mH_,suffix.c_str()))==0 ){
+// 	TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hGGFH%d2D",mH_)));
+// 	hSgn1->Scale(1./rescaleGGFH);
+// 	hSgn1->SetName(Form("GGFH%d%s" , mH_,suffix.c_str())); 
+// 	hSgn1->Write(Form("GGFH%d%s" , mH_  ,suffix.c_str()));
 //       }
 //       if(dir->FindObjectAny(Form("VH%d%s"          , mH_,suffix.c_str()))==0 ){
 // 	TH1* hSgn3 = th2Rebinner((TH2F*)fin->Get(Form("hVH%d2D",mH_)));
 // 	hSgn3->Scale(1./rescaleVH);
 // 	hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
 // 	if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
-// 	  TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hqqH%d2D",mH_)));
+// 	  TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hVBFH%d2D",mH_)));
 // 	  float VHyield = hSgn3->Integral();
 // 	  hSgn3->Reset();
 // 	  hSgn3->Add(hSgn2,1.0);
@@ -1238,10 +1238,10 @@ void produce(
 //       }
 //     }
 //     else{//SUSY
-//       if(dir->FindObjectAny(Form("qqH%d%s"         ,mH_,suffix.c_str()))==0 ){
+//       if(dir->FindObjectAny(Form("VBFH%d%s"         ,mH_,suffix.c_str()))==0 ){
 //         TH1* hSgn1 = th2Rebinner((TH2F*)fin->Get(Form("hSUSYGG%d2D",mH_)));
-// 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-//         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
+// 	hSgn1->SetName(Form("GGFH%d%s" ,mH_,suffix.c_str()));
+//         hSgn1->Write(Form("GGFH%d%s" ,mH_,suffix.c_str()));
 //       }
 //       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
 //         TH1* hSgn2 = th2Rebinner((TH2F*)fin->Get(Form("hSUSYBB%d2D",mH_)));
@@ -1440,10 +1440,17 @@ void produce(
 
 
 
-void produceAll(  TString outputDir = "AntiEVTight" ){
+// void produceAll(  TString outputDir = "MoriondMet0" ){
+// void produceAll(  TString outputDir = "Spring13" ){
+// void produceAll(  TString outputDir = "HPSMVA2" ){
+// void produceAll(  TString outputDir = "AntiETightMVA3" ){
+// void produceAll(  TString outputDir = "AntiEVTightMVA3" ){
+// void produceAll(  TString outputDir = "AntiMu2" ){
+void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Datacards",TString boostLabel = "" ){
 
   vector<string> variables;
   vector<int> mH;
+  vector<std::string> analysis;
 
   //variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
@@ -1465,95 +1472,179 @@ void produceAll(  TString outputDir = "AntiEVTight" ){
   mH.push_back(155);
   mH.push_back(160);
 
-  //mH.push_back(90);
-  //mH.push_back(100);
-  //mH.push_back(120);
-  //mH.push_back(130);
-  //mH.push_back(140);
-  //mH.push_back(160);
-  //mH.push_back(180);
-  //mH.push_back(200);
-  //mH.push_back(250);
-  //mH.push_back(300);
-  //mH.push_back(350);
-  //mH.push_back(400);
-  //mH.push_back(450);
-
-
   for(unsigned int i = 0 ; i < variables.size(); i++){
     for(unsigned j = 0; j < mH.size(); j++){
 //       if(!DO2DFIT){
-//        produce(mH[j],variables[i], ""        , "inclusiveMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "inclusiveMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "inclusiveMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "inclusiveMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "inclusiveMoriond", outputDir);
+	produce(mH[j],variables[i], ""        , "inclusive", outputDir);
+	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
+	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
+	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir);
+	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir);
 
-//        produce(mH[j],variables[i], ""        , "novbfLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "novbfLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "novbfLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "novbfLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "novbfLowMoriond", outputDir);
+	produce(mH[j],variables[i], ""        , "novbfLow", outputDir);
+	produce(mH[j],variables[i], "TauUp"   , "novbfLow", outputDir);
+	produce(mH[j],variables[i], "TauDown" , "novbfLow", outputDir);
+	produce(mH[j],variables[i], "JetUp"   , "novbfLow", outputDir);
+	produce(mH[j],variables[i], "JetDown" , "novbfLow", outputDir);
 
-//        produce(mH[j],variables[i], ""        , "novbfHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "novbfHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "novbfHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "novbfHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "novbfHighMoriond", outputDir);
+	produce(mH[j],variables[i], ""        , "novbfHigh", outputDir);
+	produce(mH[j],variables[i], "TauUp"   , "novbfHigh", outputDir);
+	produce(mH[j],variables[i], "TauDown" , "novbfHigh", outputDir);
+	produce(mH[j],variables[i], "JetUp"   , "novbfHigh", outputDir);
+	produce(mH[j],variables[i], "JetDown" , "novbfHigh", outputDir);
 
-//        produce(mH[j],variables[i], ""        , "boostLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "boostLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "boostLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "boostLowMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "boostLowMoriond", outputDir);
+	produce(mH[j],variables[i], ""        , Form("boost%sLow",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "TauUp"   , Form("boost%sLow",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "TauDown" , Form("boost%sLow",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "JetUp"   , Form("boost%sLow",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "JetDown" , Form("boost%sLow",boostLabel.Data()), outputDir);
  
-//        produce(mH[j],variables[i], ""        , "boostHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "boostHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "boostHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "boostHighMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "boostHighMoriond", outputDir);
+	produce(mH[j],variables[i], ""        , Form("boost%sHigh",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "TauUp"   , Form("boost%sHigh",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "TauDown" , Form("boost%sHigh",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "JetUp"   , Form("boost%sHigh",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "JetDown" , Form("boost%sHigh",boostLabel.Data()), outputDir);
 
-//        produce(mH[j],variables[i], ""        , "vbfMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauUp"   , "vbfMoriond", outputDir);
-//        produce(mH[j],variables[i], "TauDown" , "vbfMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetUp"   , "vbfMoriond", outputDir);
-//        produce(mH[j],variables[i], "JetDown" , "vbfMoriond", outputDir);
-
-       produce(mH[j],variables[i], ""        , "inclusiveAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "inclusiveAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "inclusiveAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "inclusiveAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "inclusiveAntiEVTightMVA3", outputDir);
-
-       produce(mH[j],variables[i], ""        , "novbfLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "novbfLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "novbfLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "novbfLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "novbfLowAntiEVTightMVA3", outputDir);
-
-       produce(mH[j],variables[i], ""        , "novbfHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "novbfHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "novbfHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "novbfHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "novbfHighAntiEVTightMVA3", outputDir);
-
-       produce(mH[j],variables[i], ""        , "boostLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "boostLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "boostLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "boostLowAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "boostLowAntiEVTightMVA3", outputDir);
+// 	produce(mH[j],variables[i], ""        , "boostAntiZee099Met40Low", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostAntiZee099Met40Low", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostAntiZee099Met40Low", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostAntiZee099Met40Low", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostAntiZee099Met40Low", outputDir);
  
-       produce(mH[j],variables[i], ""        , "boostHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "boostHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "boostHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "boostHighAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "boostHighAntiEVTightMVA3", outputDir);
+// 	produce(mH[j],variables[i], ""        , "boostAntiZee099Met40High", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostAntiZee099Met40High", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostAntiZee099Met40High", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostAntiZee099Met40High", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostAntiZee099Met40High", outputDir);
 
-       produce(mH[j],variables[i], ""        , "vbfAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauUp"   , "vbfAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "TauDown" , "vbfAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetUp"   , "vbfAntiEVTightMVA3", outputDir);
-       produce(mH[j],variables[i], "JetDown" , "vbfAntiEVTightMVA3", outputDir);
+// 	produce(mH[j],variables[i], ""        , "boostMet45Low", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet45Low", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet45Low", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet45Low", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet45Low", outputDir);
+ 
+// 	produce(mH[j],variables[i], ""        , "boostMet45High", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet45High", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet45High", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet45High", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet45High", outputDir);
+
+	produce(mH[j],variables[i], ""        , "vbf", outputDir);
+	produce(mH[j],variables[i], "TauUp"   , "vbf", outputDir);
+	produce(mH[j],variables[i], "TauDown" , "vbf", outputDir);
+	produce(mH[j],variables[i], "JetUp"   , "vbf", outputDir);
+	produce(mH[j],variables[i], "JetDown" , "vbf", outputDir);
+     
+// 	outputDir = analysis[k]+"Met0";
+// 	produce(mH[j],variables[i], ""        , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfLow", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfHigh", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "boostMet0Low", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet0Low", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet0Low", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet0Low", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet0Low", outputDir);
+ 
+// 	produce(mH[j],variables[i], ""        , "boostMet0High", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet0High", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet0High", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet0High", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet0High", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "vbf", outputDir);
+
+// 	outputDir = analysis[k]+"Met10";
+// 	produce(mH[j],variables[i], ""        , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfLow", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfHigh", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "boostMet10Low", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet10Low", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet10Low", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet10Low", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet10Low", outputDir);
+ 
+// 	produce(mH[j],variables[i], ""        , "boostMet10High", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet10High", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet10High", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet10High", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet10High", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "vbf", outputDir);
+
+// 	outputDir = analysis[k]+"Met20";
+// 	produce(mH[j],variables[i], ""        , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfLow", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfLow", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "novbfHigh", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "novbfHigh", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "boostMet20Low", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet20Low", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet20Low", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet20Low", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet20Low", outputDir);
+ 
+// 	produce(mH[j],variables[i], ""        , "boostMet20High", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "boostMet20High", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "boostMet20High", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "boostMet20High", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "boostMet20High", outputDir);
+
+// 	produce(mH[j],variables[i], ""        , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "TauDown" , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetUp"   , "vbf", outputDir);
+// 	produce(mH[j],variables[i], "JetDown" , "vbf", outputDir);
 
 //       }//!DO2DFIT
 //       else{
@@ -1600,6 +1691,75 @@ void produceAll(  TString outputDir = "AntiEVTight" ){
 
 
 
+void produceAll(){
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Datacards");
+//////produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso2_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_HPSDB3H_Datacards");
+////produceOne("Results_ABCD_AntiMu2_AntiEle1_TauIso1_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met0");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met0");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met0");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met5");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met5");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met5");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met10");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met10");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met10");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met15");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met15");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met15");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met20");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met20");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met20");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met25");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met25");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met25");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met35");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met35");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met35");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met40");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met40");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met40");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Met45");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met45");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met45");
+
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met0","Met0");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met5","Met5");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met10","Met10");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met15","Met15");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met20","Met20");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met25","Met25");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met35","Met35");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met40","Met40");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met45","Met45");
+  
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09","AntiZee09");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099","AntiZee099");
+  // produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0995","AntiZee0995");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0996","AntiZee0996");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0997","AntiZee0997");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0999","AntiZee0999");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09995","AntiZee09995");
+
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee09","AntiZee09");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee099","AntiZee099");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee0999","AntiZee0999");
+// produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee09995","AntiZee09995");
+
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met10","AntiZee09Met10");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met20","AntiZee09Met20");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met30","AntiZee09Met30");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met40","AntiZee09Met40");
+  
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met10","AntiZee099Met10");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met20","AntiZee099Met20");
+  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met30","AntiZee099Met30");
+  //   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met40","AntiZee099Met40");
+}
+
 
 int main(int argc, const char* argv[])
 {
@@ -1610,6 +1770,6 @@ int main(int argc, const char* argv[])
   AutoLibraryLoader::enable();
 
   if(argc==1)      produceAll();
-  else if(argc==2) produceAll(argv[1]);
+  else if(argc==2) produceOne(argv[1]);
   else return -1;
 }
