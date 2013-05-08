@@ -48,6 +48,13 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
   edm::FileInPath inputFileName4v3 = iConfig.getParameter<edm::FileInPath>("inputFileName4v3");
   edm::FileInPath inputFileName5v3 = iConfig.getParameter<edm::FileInPath>("inputFileName5v3");
 
+  edm::FileInPath inputFileName0v4 = iConfig.getParameter<edm::FileInPath>("inputFileName0v4");
+  edm::FileInPath inputFileName1v4 = iConfig.getParameter<edm::FileInPath>("inputFileName1v4");
+  edm::FileInPath inputFileName2v4 = iConfig.getParameter<edm::FileInPath>("inputFileName2v4");
+  edm::FileInPath inputFileName3v4 = iConfig.getParameter<edm::FileInPath>("inputFileName3v4");
+  edm::FileInPath inputFileName4v4 = iConfig.getParameter<edm::FileInPath>("inputFileName4v4");
+  edm::FileInPath inputFileName5v4 = iConfig.getParameter<edm::FileInPath>("inputFileName5v4");
+
   if(doMVA_){
 
     Bool_t manualCat = true;
@@ -80,10 +87,22 @@ ElectronsUserEmbedded::ElectronsUserEmbedded(const edm::ParameterSet & iConfig){
 			      manualCat,
 			      myManualCatWeigthsNonTrig); 
     
+
+    std::vector<string> myManualCatWeigthsTrigNoIP;
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName0v4.fullPath().data());
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName1v4.fullPath().data());
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName2v4.fullPath().data());
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName3v4.fullPath().data());
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName4v4.fullPath().data());
+    myManualCatWeigthsTrigNoIP.push_back(inputFileName5v4.fullPath().data());
+    
+    myMVATrigNoIP_ = new EGammaMvaEleEstimator();
+    myMVATrigNoIP_->initialize("BDT",
+			       EGammaMvaEleEstimator::kTrigNoIP,
+			       manualCat,
+			       myManualCatWeigthsTrigNoIP); 
+  
   }
-
-
-
  
   produces<pat::ElectronCollection>("");
 
@@ -93,6 +112,7 @@ ElectronsUserEmbedded::~ElectronsUserEmbedded(){
   if(doMVA_){
     delete myMVATrig_;
     delete myMVANonTrig_;
+    delete myMVATrigNoIP_;
   }
   
 }
@@ -230,6 +250,7 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     float mva  = -99;    
     float mva2 = -99; 
     float mva3 = -99; 
+    float mva4 = -99; 
     int mvaPreselection = passconversionveto && nHits<=0 && dxyWrtPV<0.045 && dzWrtPV<0.2 &&
       ((aElectron.isEB() && sihih < 0.01 
 	&& fabs(dEta) < 0.007
@@ -251,9 +272,14 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
 
     if(doMVA_){
       //MBmva2 = myMVATrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
-      //MBmva3 = myMVANonTrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
       mva2 = myMVATrig_->mvaValue( *aGsf , (*vertexes)[0], *transientTrackBuilder, lazyTools, false);
+      //MBmva3 = myMVANonTrig_->mvaValue( *aGsf , (*stdVertexes)[0], *transientTrackBuilder, lazyTools, false);
       mva3 = myMVANonTrig_->mvaValue( *aGsf , (*vertexes)[0], *transientTrackBuilder, lazyTools, false);
+      edm::Handle<double> rhoHandle;
+      iEvent.getByLabel(edm::InputTag("kt6PFJets", "rho"),rhoHandle);
+      double myRho = *rhoHandle;
+      //mva4 = myMVATrigNoIP_->mvaValue( *aGsf , (*stdVertexes)[0], myRho,/* *transientTrackBuilder,*/ lazyTools, false);
+      mva4 = myMVATrigNoIP_->mvaValue( *aGsf , (*vertexes)[0], myRho,/* *transientTrackBuilder,*/ lazyTools, false);
       //cout << mva2 << endl; 
     }
 
@@ -264,6 +290,7 @@ void ElectronsUserEmbedded::produce(edm::Event & iEvent, const edm::EventSetup &
     aElectron.addUserInt("isTriggerElectron",myTrigPresel);
     aElectron.addUserFloat("mvaPOGTrig"   ,mva2);
     aElectron.addUserFloat("mvaPOGNonTrig",mva3);
+    aElectron.addUserFloat("mvaPOGTrigNoIP",mva4);
 
     /* //Arun : These isolations are not needed at all
     // iso deposits   

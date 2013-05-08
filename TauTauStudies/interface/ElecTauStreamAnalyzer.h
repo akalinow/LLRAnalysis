@@ -16,7 +16,8 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 
-#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+//#include "EGamma/EGammaAnalysisTools/interface/EGammaMvaEleEstimator.h"
+#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h"
 
 #include "TFile.h"
 #include "TTree.h"

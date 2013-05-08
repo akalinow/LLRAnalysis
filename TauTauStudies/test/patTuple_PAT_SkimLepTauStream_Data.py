@@ -18,7 +18,7 @@ process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 postfix     = "PFlow"
 runOnMC     = False
 runOnEmbed  = False
-isPfEmbed   = False 
+embedType   = "RhEmbedMuTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -216,7 +216,7 @@ if runOnEmbed:
     process.load('RecoBTag.Configuration.RecoBTag_cff')
     process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
     process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
-    if isPfEmbed:
+    if "PfEmbed" in embedType:
         process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
 
 ## Plus, add this to your path:
@@ -523,7 +523,13 @@ process.selectedPatElectronsUserEmbedded = cms.EDProducer( #MIT MVA Ids to be re
     inputFileName2v3 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_NonTrigV0_Cat3.weights.xml'),
     inputFileName3v3 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_NonTrigV0_Cat4.weights.xml'),
     inputFileName4v3 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_NonTrigV0_Cat5.weights.xml'),
-    inputFileName5v3 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_NonTrigV0_Cat6.weights.xml')
+    inputFileName5v3 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_NonTrigV0_Cat6.weights.xml'),
+    inputFileName0v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat1.weights.xml'),
+    inputFileName1v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat2.weights.xml'),
+    inputFileName2v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat3.weights.xml'),
+    inputFileName3v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat4.weights.xml'),
+    inputFileName4v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat5.weights.xml'),
+    inputFileName5v4 = cms.FileInPath('LLRAnalysis/Utilities/data/mvaEleId/Electrons_BDTG_TrigNoIPV0_2012_Cat6.weights.xml'),
     )
 
 process.selectedPatElectronsUserEmbeddedIso = cms.EDProducer(
@@ -761,6 +767,13 @@ MVALoose = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 
            "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGNonTrig')>0.905) ||" + \
            "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGNonTrig')>0.955) ||" + \
            "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGNonTrig')>0.975))"
+##Loose MVA ID: new e-Id, same FR as old one
+MVALooseNew = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>-0.5375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>-0.375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>-0.025) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>0.325) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>0.775) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>0.775))"
 
 process.atLeastOneElecTau = cms.EDProducer(
     "CandViewShallowCloneCombiner",
@@ -798,7 +811,7 @@ process.elecPtEtaID = cms.EDFilter(
     cut = cms.string(process.elecPtEta.cut.value()+
                      " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2"+
                      " && userFloat('nHits')==0 && userInt('antiConv')>0.5 &&"+ 
-                     MVALoose
+                     "("+MVALoose+"||"+MVALooseNew+")"
                      ),
     filter = cms.bool(False)
     )
@@ -838,7 +851,7 @@ process.electronsForVeto = cms.EDFilter(
     cut = cms.string("pt>10 && abs(eta)<2.5" +
                      " && abs(userFloat('dxyWrtPV'))<0.045 && abs(userFloat('dzWrtPV'))<0.2 && "+
                      #" && ( ( pt > 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.905) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.955) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.975) )) || (pt < 20 && ( (abs(superCluster.eta)<0.80 && userFloat('mvaPOGNonTrig')>0.925) || (abs(superCluster.eta)<1.479 && abs(superCluster.eta)>0.80 && userFloat('mvaPOGNonTrig')>0.915) || (abs(superCluster.eta)>1.479 && userFloat('mvaPOGNonTrig')>0.965) )))"+
-                     MVALoose +
+                     "("+MVALoose+"||"+MVALooseNew+")"
                      " && userFloat('nHits')==0 && userInt('antiConv')>0.5"+
                      " && userFloat('PFRelIsoDB04v3')<0.30"),
     filter = cms.bool(False)
@@ -1029,7 +1042,7 @@ process.skimMuTau1 = cms.Sequence(
     process.muLegSequence*
     process.tauLegForMuTauSequence
     ##+process.jetCleaningSequence
-    +process.printTree1
+    ##+process.printTree1
     )
 
 process.skimMuTau2 = cms.Sequence(
@@ -1104,7 +1117,7 @@ massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              verbose=False)
 
 if not runOnMC:
-    process.skimMuTau1.remove(process.printTree1)
+    ##process.skimMuTau1.remove(process.printTree1)
     process.skimMuTau1.remove(process.HLTFilterMuTau)
     process.skimElecTau1.remove(process.HLTFilterEleTau)
 if not runOnEmbed:
@@ -1116,7 +1129,14 @@ if runOnMC and runOnEmbed:
 if runOnEmbed:
     process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
     process.commonOfflineSequence += process.makeTauMatchedCaloJets
-        
+    if "RhEmbed" in embedType:
+        process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
+        process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
+        if "MuTau" in embedType:
+            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+        else:
+            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+
 #process.p = cms.Path(process.printEventContent+process.skim)
 process.pMuTau1 = cms.Path(process.skimMuTau1)
 process.pElecTau1 = cms.Path(process.skimElecTau1)
@@ -1210,8 +1230,17 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_jetTracksAssociatorAtVertex_*_*',
     'keep *_ak5GenJets_*_*',
     'keep *_*JetTagsAOD_*_*',
+    'keep *_TauSpinnerReco_TauSpinnerWT_*',
+    'keep *_ZmumuEvtSelEffCorrWeightProducer_weight_*',
+    'keep *_muonRadiationCorrWeightProducer_weight_*',
+    'keep *_muonRadiationCorrWeightProducer_weightUp_*',
+    'keep *_muonRadiationCorrWeightProducer_weightDown_*',
+    'keep *_embeddingKineReweightRECembedding_genTau2PtVsGenTau1Pt_*',
+    'keep *_embeddingKineReweightRECembedding_genTau2EtaVsGenTau1Eta_*',
+    'keep *_embeddingKineReweightRECembedding_genDiTauMassVsGenDiTauPt_*',
+    'keep *_generator_minVisPtFilter_*',
     )
-                                   )
+)
 #MB
 '''
 if runOnEmbed:

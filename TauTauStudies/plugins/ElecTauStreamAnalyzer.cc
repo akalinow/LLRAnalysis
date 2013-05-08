@@ -136,7 +136,7 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
   
   doElecIsoMVA_      = iConfig.getUntrackedParameter<bool>("doElecIsoMVA", false);
-  if( doElecIsoMVA_ ){
+//  if( doElecIsoMVA_ ){
 //     fElectronIsoMVA_ = new EGammaMvaEleEstimator();
 //     edm::FileInPath inputFileName0 = iConfig.getParameter<edm::FileInPath>("inputFileName0");
 //     edm::FileInPath inputFileName1 = iConfig.getParameter<edm::FileInPath>("inputFileName1");
@@ -152,7 +152,7 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
 // 				 kTRUE,
 // 				 eleiso_weightfiles);
     //fElectronIsoMVA_->SetPrintMVADebug(kTRUE);
-  }
+//  }
   
 
 }
@@ -1774,7 +1774,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     
     isoLeg1MVA_ = -99;
     // Elec-Iso MVA
-    if(doElecIsoMVA_ && fElectronIsoMVA_!=0 && vertexes->size()){
+    //if(doElecIsoMVA_ && fElectronIsoMVA_!=0 && vertexes->size()){
 
       //cout << "Doing MVA " << endl;
       //EcalClusterLazyTools lazyTools(iEvent,iSetup,
@@ -1782,21 +1782,21 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       //			     edm::InputTag("reducedEcalRecHitsEE"));  
       //cout << "Ecal " << endl;
 
-      const reco::GsfElectronCollection dummyGsfColl;
-      const reco::MuonCollection dummyRecoMuon;
+      //const reco::GsfElectronCollection dummyGsfColl;
+      //const reco::MuonCollection dummyRecoMuon;
       
-      const reco::GsfElectron* aElectron = static_cast<const reco::GsfElectron*>(leg1); 
-      isoLeg1MVA_ = isMC_ ?
-	fElectronIsoMVA_->mvaValue( *aElectron, (*vertexes)[0], 
-				    *pfCandidates, rhoFastJet_, 
-				    ElectronEffectiveArea::kEleEAFall11MC, 
-				    dummyGsfColl, dummyRecoMuon) :
-	fElectronIsoMVA_->mvaValue( *aElectron, (*vertexes)[0],
-				    *pfCandidates, rhoFastJet_, 
-				    ElectronEffectiveArea::kEleEAData2011, 
-				    dummyGsfColl, dummyRecoMuon) ;
-      if ( verbose_ )cout << "Electron Iso MVA = " << isoLeg1MVA_ << endl;
-    }
+      //const reco::GsfElectron* aElectron = static_cast<const reco::GsfElectron*>(leg1); 
+      //isoLeg1MVA_ = isMC_ ?
+      //	fElectronIsoMVA_->mvaValue( *aElectron, (*vertexes)[0], 
+      //				    *pfCandidates, rhoFastJet_, 
+      //				    ElectronEffectiveArea::kEleEAFall11MC, 
+      //				    dummyGsfColl, dummyRecoMuon) :
+      //	fElectronIsoMVA_->mvaValue( *aElectron, (*vertexes)[0],
+      //				    *pfCandidates, rhoFastJet_, 
+      //				    ElectronEffectiveArea::kEleEAData2011, 
+      //				    dummyGsfColl, dummyRecoMuon) ;
+      //      if ( verbose_ )cout << "Electron Iso MVA = " << isoLeg1MVA_ << endl;
+      //}
     
 
     isodeposit::AbsVetos vetos2011AllChargedLeg1;
