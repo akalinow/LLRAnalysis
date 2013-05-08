@@ -1646,7 +1646,8 @@ void plotElecTau( Int_t mH_           = 120,
 	      sbinSSInclusive,
 	      sbinPZetaRelSSInclusive,
  	      sbinPZetaRelSSInclusive, pZ, apZ, sbinPZetaRelSSInclusive, 
- 	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
+//  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
+ 	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, 
 	      vbf, oneJet, zeroJet,
 	      true,true,true);
 
@@ -1758,7 +1759,8 @@ void plotElecTau( Int_t mH_           = 120,
 // 		  sbinPZetaRelForWextrapolation,
 		  sbinPZetaRelSSForWextrapolation,
 		  sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
-		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
+// 		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
+		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, 
 		  vbfLoose, oneJet, zeroJet,
 		  true,true,true);
 
@@ -1837,7 +1839,8 @@ void plotElecTau( Int_t mH_           = 120,
 	  else h1->Scale(OSWinSignalRegionDATAW3Jets/h1->Integral());
 	  hW3Jets->Add(h1, 1.0);
 
-	  drawHistogramMC(version_, RUN, currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinMtiso, 1);
+// 	  drawHistogramMC(version_, RUN, currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinMtiso, 1);
+	  drawHistogramMC(version_, RUN, currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbin, 1);
 	  hW3JetsMediumTauIso->Add(hCleaner, hW3Jets->Integral()/hCleaner->Integral());
 
 	  drawHistogramMC(version_, RUN, currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtiso, 1);
@@ -1982,9 +1985,11 @@ void plotElecTau( Int_t mH_           = 120,
 	  if ( !hData->GetSumw2N() ) hData->Sumw2();
 	  
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
-	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
+// 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
+	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    float tmpNorm = hCleaner->Integral();
-	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive&&vbfLooseQCD ,1);
+// 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive&&vbfLooseQCD ,1);
+	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive&&vbfLooseQCD ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
 
 	    //get efficiency of events passing QCD selection to pass the category selection 
@@ -2035,7 +2040,8 @@ void plotElecTau( Int_t mH_           = 120,
 // 			sbinPZetaRelForWextrapolation,
 			sbinPZetaRelSSForWextrapolation,
 			sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
-			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
+// 			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
+			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, 
 			vbfLoose, oneJet, zeroJet, 
 			true, true, true);
 	    
@@ -2070,7 +2076,8 @@ void plotElecTau( Int_t mH_           = 120,
 	    }
 	  }
 	  else{
-	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
+// 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
+	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
