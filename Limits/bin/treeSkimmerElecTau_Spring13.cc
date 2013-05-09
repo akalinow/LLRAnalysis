@@ -68,7 +68,7 @@
 #define USERECOILALGO true
 #define USEFAKERATE false
 #define DOSVFITSTANDALONE false
-#define DOVBFMVA true
+#define DOVBFMVA false
 #define DEBUG false
 
 // Weights of differents periods
@@ -461,38 +461,38 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 {
   TMVA::Tools::Instance();
   
-  vector<int> mHMVAs;
-  mHMVAs.push_back(120);
+//   vector<int> mHMVAs;
+//   mHMVAs.push_back(120);
   
-  vector<string> bkgMVAs;
-  bkgMVAs.push_back("VBF");
+//   vector<string> bkgMVAs;
+//   bkgMVAs.push_back("VBF");
   
   
-  std::map< string , TMVA::Reader*> readers;
-  Float_t MJJ, DETA,DPHI,DITAUPT,DIJETPT,DPHIHJ,C1,C2;
+//   std::map< string , TMVA::Reader*> readers;
+//   Float_t MJJ, DETA,DPHI,DITAUPT,DIJETPT,DPHIHJ,C1,C2;
   
-  for(unsigned int k = 0 ; k < mHMVAs.size(); k++){
-    for(unsigned int j = 0 ; j < bkgMVAs.size(); j++){
+//   for(unsigned int k = 0 ; k < mHMVAs.size(); k++){
+//     for(unsigned int j = 0 ; j < bkgMVAs.size(); j++){
       
-      TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
+//       TMVA::Reader *reader = new TMVA::Reader( "!Color:!Silent" );
       
-      if(DOVBFMVA && bkgMVAs[j].find("VBF")!=string::npos){
-	reader->AddVariable("mjj", &MJJ);
-	reader->AddVariable("dEta", &DETA);
-	//reader->AddVariable("dPhi", &DPHI);
-	//reader->AddVariable("ditau_pt", &DITAUPT);
-	//reader->AddVariable("dijet_pt", &DIJETPT);
-	//reader->AddVariable("dPhi_hj", &DPHIHJ);
-	reader->AddVariable("C1", &C1);
-	reader->AddVariable("C2", &C2);
-	//reader->BookMVA("BDTG", "../../../UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml");
-	reader->BookMVA("BDTG", "../../../UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG_HCP_52X.weights.xml");
-	//reader->BookMVA("BDTG", "../VBFMVA/MuTau/VBFMVA_BDTG_HCP_52X.weights.xml");
-	readers.insert(  make_pair(Form("%d%s",mHMVAs[k],bkgMVAs[j].c_str()), reader));
-      }
+//       if(DOVBFMVA && bkgMVAs[j].find("VBF")!=string::npos){
+// 	reader->AddVariable("mjj", &MJJ);
+// 	reader->AddVariable("dEta", &DETA);
+// 	//reader->AddVariable("dPhi", &DPHI);
+// 	//reader->AddVariable("ditau_pt", &DITAUPT);
+// 	//reader->AddVariable("dijet_pt", &DIJETPT);
+// 	//reader->AddVariable("dPhi_hj", &DPHIHJ);
+// 	reader->AddVariable("C1", &C1);
+// 	reader->AddVariable("C2", &C2);
+// 	//reader->BookMVA("BDTG", "../../../UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml");
+// 	reader->BookMVA("BDTG", "../../../UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG_HCP_52X.weights.xml");
+// 	//reader->BookMVA("BDTG", "../VBFMVA/MuTau/VBFMVA_BDTG_HCP_52X.weights.xml");
+// 	readers.insert(  make_pair(Form("%d%s",mHMVAs[k],bkgMVAs[j].c_str()), reader));
+//       }
      
-    }
-  }
+//     }
+//   }
 
   //////////////////////////////////////////////////////////
   //edm::Lumi3DReWeightingForLorenzo* Lumi3DReWeighting = 
@@ -624,7 +624,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
-  float MVAvbf;
+//   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
   int nJets30, nJets20;
@@ -775,7 +775,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("dz1",   &dz1_  , "dz1/F");
   
 
-  outTreePtOrd->Branch("MVAvbf",        &MVAvbf,         "MVAvbf/F");
+//   outTreePtOrd->Branch("MVAvbf",        &MVAvbf,         "MVAvbf/F");
   outTreePtOrd->Branch("jet1PUMVA",     &jet1PUMVA,      "jet1PUMVA/F");
   outTreePtOrd->Branch("jet2PUMVA",     &jet2PUMVA,      "jet2PUMVA/F");
   outTreePtOrd->Branch("jetVetoPUMVA",  &jetVetoPUMVA,   "jetVetoPUMVA/F");
@@ -1694,7 +1694,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     jetsBtagCSV1 = -99; jetsBtagCSV2 = -99; 
     jet1PUMVA = -99; jet2PUMVA=-99; jetVetoPUMVA=-99; 
     jet1PUWP = -99; jet2PUWP = -99; jetVetoPUWP = -99;
-    MVAvbf = -99;
+//     MVAvbf = -99;
     L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
     caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;//MB 
     caloMEtNoHF_=-99;      caloMEtNoHFPhi_=-99;//MB
@@ -1832,17 +1832,17 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	c1 = TMath::Min(TMath::Abs( (*diTauVisP4)[0].Eta() - eta1), TMath::Abs((*diTauVisP4)[0].Eta() - eta2));
 	c2 = (*diTauVisP4)[0].Pt() ;
 	
-	//MVA vbf
-	MJJ     = Mjj; 
-	DETA    = Deta;
-	//DPHI    = Dphi;
-	//DITAUPT = ((*diTauVisP4)[0]+(*METP4)[1]).Pt();
-	//DIJETPT = diJetPt;
-	//DPHIHJ  = dPhiHjet;
-	C1      = c1 ;
-	C2      = c2 ;
+// 	//MVA vbf
+// 	MJJ     = Mjj; 
+// 	DETA    = Deta;
+// 	//DPHI    = Dphi;
+// 	//DITAUPT = ((*diTauVisP4)[0]+(*METP4)[1]).Pt();
+// 	//DIJETPT = diJetPt;
+// 	//DPHIHJ  = dPhiHjet;
+// 	C1      = c1 ;
+// 	C2      = c2 ;
 	
-	MVAvbf    = readers["120VBF"]!=0 ? readers["120VBF"]->EvaluateMVA( "BDTG" ) : -99;
+// 	MVAvbf    = readers["120VBF"]!=0 ? readers["120VBF"]->EvaluateMVA( "BDTG" ) : -99;
     	
       }
 
@@ -2754,8 +2754,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   delete jetPUMVA; delete jetPUWP;
   delete ran;
   
-  for(std::map<string , TMVA::Reader*>::iterator read = readers.begin() ; read!=readers.end(); read++)
-    delete (*read).second;
+//   for(std::map<string , TMVA::Reader*>::iterator read = readers.begin() ; read!=readers.end(); read++)
+//     delete (*read).second;
   
   return;
 }
