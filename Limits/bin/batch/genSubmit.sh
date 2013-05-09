@@ -1,0 +1,1 @@
+ls job*.sh | awk '{print "/opt/exp_soft/cms/t3/t3submit -V "$1}' > submitAll.sh ; chmod u+x submitAll.sh
