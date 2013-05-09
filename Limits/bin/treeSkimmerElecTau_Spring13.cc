@@ -701,6 +701,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
   float AntiZeeMVAraw_;
+  float AntiZeeMVAv4raw_;
 
   // object-related weights and triggers
   float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8;
@@ -951,6 +952,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("mitMVA",             &mitMVA_,"mitMVA/F");
   outTreePtOrd->Branch("isTriggerElectron",  &isTriggerElectron_,"isTriggerElectron/I");
   outTreePtOrd->Branch("AntiZeeMVAraw",      &AntiZeeMVAraw_,"AntiZeeMVAraw/F");
+  outTreePtOrd->Branch("AntiZeeMVAv4raw",      &AntiZeeMVAv4raw_,"AntiZeeMVAv4raw/F");
 
   outTreePtOrd->Branch("tightestAntiEMVAWP", &tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
   outTreePtOrd->Branch("tightestAntiECutWP", &tightestAntiECutWP_,"tightestAntiECutWP/I");
@@ -1618,6 +1620,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   //AntiZeeMVA
 //   string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v1_BDTG.weights.xml";
   string WeightAntiZee = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v3_BDTG.weights.xml";
+  string WeightAntiZeev4 = "/home/llr/cms/ivo/AntiZeeMVA/CMSSW_5_3_4_p2_Training/src/IvoNaranjo/ElectronsStudies/test/Macros/tmva/weights/TMVAClassification_AntiZee_v4_BDTG.weights.xml";
 
   TMVA::Reader *readerAntiZee = new TMVA::Reader( "!Color:!Silent:Error" );  
   readerAntiZee->AddVariable("ptL1",&ptL1);
@@ -1632,6 +1635,25 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   readerAntiZee->AddVariable("diTauVisPtOverPtSum",&diTauVisPtOverPtSum);//for v3
   readerAntiZee->SetVerbose(kTRUE);
   readerAntiZee->BookMVA("BDTG",WeightAntiZee  );
+
+
+  TMVA::Reader *readerAntiZeev4 = new TMVA::Reader( "!Color:!Silent:Error" );  
+  readerAntiZeev4->AddVariable("ptL1",&ptL1);
+  readerAntiZeev4->AddVariable("scEtaL1",&scEtaL1);
+  readerAntiZeev4->AddVariable("ptL2",&ptL2);
+  readerAntiZeev4->AddVariable("etaL2",&etaL2);
+  readerAntiZeev4->AddVariable("dPhiL1L2",&dPhiL1L2);
+  readerAntiZeev4->AddVariable("MEtMVA",&MEtMVA);
+  readerAntiZeev4->AddVariable("diTauVisMass",&diTauVisMass);
+  readerAntiZeev4->AddVariable("VisMassL1J1",&VisMassL1J1);
+  readerAntiZeev4->AddVariable("pt1",&pt1);
+  readerAntiZeev4->AddVariable("dPhiL1J1",&dPhiL1J1);
+  readerAntiZeev4->AddVariable("dPhiL1J2",&dPhiL1J2);
+  readerAntiZeev4->AddVariable("AntiEMVA3var",&AntiEMVA3var_);
+  readerAntiZeev4->AddVariable("diTauVisPtOverPtSum",&diTauVisPtOverPtSum);
+  readerAntiZeev4->SetVerbose(kTRUE);
+  readerAntiZeev4->BookMVA("BDTG",WeightAntiZeev4  );
+
 
   for (int n = 0; n <nEntries  ; n++) {
 //   for (int n = 0; n <80000  ; n++) {
@@ -2620,6 +2642,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     }
 
     AntiZeeMVAraw_ = readerAntiZee->EvaluateMVA("BDTG");
+    AntiZeeMVAv4raw_ = readerAntiZeev4->EvaluateMVA("BDTG");
 
     elecFlag_        = elecFlag;
     genDecay_        = genDecay ;
