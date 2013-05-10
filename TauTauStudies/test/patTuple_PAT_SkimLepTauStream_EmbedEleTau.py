@@ -17,8 +17,8 @@ process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
 runOnMC     = False
-runOnEmbed  = False
-embedType   = "RhEmbedMuTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
+runOnEmbed  = True
+embedType   = "RhEmbedElTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )

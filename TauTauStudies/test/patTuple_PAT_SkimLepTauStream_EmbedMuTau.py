@@ -17,7 +17,7 @@ process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
 runOnMC     = False
-runOnEmbed  = False
+runOnEmbed  = True
 embedType   = "RhEmbedMuTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
