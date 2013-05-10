@@ -1131,11 +1131,16 @@ if runOnEmbed:
     process.commonOfflineSequence += process.makeTauMatchedCaloJets
     if "RhEmbed" in embedType:
         process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
-        process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
+        if not runOnMC:
+            process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
+        else:
+            process.commonOfflineSequence += process.embeddingKineReweightSequenceGENembedding
         if "MuTau" in embedType:
             process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+            process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
         else:
             process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+            process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
 
 #process.p = cms.Path(process.printEventContent+process.skim)
 process.pMuTau1 = cms.Path(process.skimMuTau1)
@@ -1194,8 +1199,8 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_source_*_*',
     'keep *_l1extraParticles_*_*',#MB+
     'keep *_selectedHltPatTaus_*_*',#MB+
-    #MB'keep *_reducedEcalRecHitsEB_*_*',
-    #MB'keep *_reducedEcalRecHitsEE_*_*',
+    'keep *_reducedEcalRecHitsEB_*_*',
+    'keep *_reducedEcalRecHitsEE_*_*',
     'drop *_TriggerResults_*_HLT',
     'drop *_TriggerResults_*_RECO',
     'drop *_selectedPatElectrons_*_*',
@@ -1238,6 +1243,9 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_embeddingKineReweightRECembedding_genTau2PtVsGenTau1Pt_*',
     'keep *_embeddingKineReweightRECembedding_genTau2EtaVsGenTau1Eta_*',
     'keep *_embeddingKineReweightRECembedding_genDiTauMassVsGenDiTauPt_*',
+    'keep *_embeddingKineReweightGENembedding_genTau2PtVsGenTau1Pt_*',
+    'keep *_embeddingKineReweightGENembedding_genTau2EtaVsGenTau1Eta_*',
+    'keep *_embeddingKineReweightGENembedding_genDiTauMassVsGenDiTauPt_*',
     'keep *_generator_minVisPtFilter_*',
     )
 )
