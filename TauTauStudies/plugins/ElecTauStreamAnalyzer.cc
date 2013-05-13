@@ -215,6 +215,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   vetoElectronsP4_    = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   vetoTausP4_    = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   pfElectrons_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  vetoElectronsID_    = new std::vector< int >();
 
   trgTaus_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   trgTauId_= new std::vector< int >();
@@ -383,6 +384,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("vetoMuonsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&vetoMuonsP4_);
   tree_->Branch("vetoTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&vetoTausP4_);
   tree_->Branch("vetoElectronsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&vetoElectronsP4_);
+  tree_->Branch("vetoElectronsID","std::vector< int >",&vetoElectronsID_);
 
   tree_->Branch("l1ETMP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1ETMP4_);
   tree_->Branch("trgTaus","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&trgTaus_);
@@ -482,6 +484,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("mvaPOGNonTrig", &mvaPOGNonTrig_, "mvaPOGNonTrig/F");
   tree_->Branch("mitMVA", &mitMVA_, "mitMVA/F");
   tree_->Branch("tightestMVAPOGNonTrigWP",&tightestMVAPOGNonTrigWP_,"tightestMVAPOGNonTrigWP/I");
+  tree_->Branch("tightestMVAPOGTrigNoIPWP",&tightestMVAPOGTrigNoIPWP_,"tightestMVAPOGTrigNoIPWP/I");
   tree_->Branch("antiConv",&antiConv_,"antiConv/I");
   tree_->Branch("isTriggerElectron",&isTriggerElectron_,"isTriggerElectron/I");
 
@@ -551,6 +554,7 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete tauXTriggers_; delete triggerBits_; delete sigDCA_;
   delete genJetsIDP4_; delete genDiTauLegsP4_; delete genMETP4_;delete extraElectrons_; 
   delete vetoElectronsP4_; delete vetoTausP4_; delete vetoMuonsP4_; 
+  delete vetoElectronsID_;
   delete l1ETMP4_; delete trgTaus_; delete trgTauId_; delete l1IsoElectrons_; delete l1NoIsoElectrons_;
   delete pfElectrons_;
   delete genTausP4_;
@@ -576,6 +580,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   vetoMuonsP4_->clear();
   vetoTausP4_->clear();
   vetoElectronsP4_->clear();
+  vetoElectronsID_->clear();
   l1IsoElectrons_->clear();
   l1NoIsoElectrons_->clear();
   l1ETMP4_->clear();
@@ -896,6 +901,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   iEvent.getByLabel( "tausForVeto" ,      tausForVetoHandle);
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > > buffer;
+  std::vector< int> bufferID;
 
   bool alreadyThere = false;
 
@@ -916,10 +922,34 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       if(!alreadyThere){
         //cout << "new electron eta " <<  (*electronsForVeto)[l].eta() << endl;
         buffer.push_back((*electronsForVeto)[l].p4());
+
+	int passID =-1;
+	bool passesMVAPOGNonTrigLoose =   
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.0 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<0.8 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.925) ||  
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.8 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<1.479 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.915) ||  
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=1.479 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.965) || 
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.0 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<0.8 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.905) ||  
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.8 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<1.479 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.955) ||  
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=1.479 && (*electronsForVeto)[l].userFloat("mvaPOGNonTrig")>0.975); 
+	
+	//Loose MVA ID: new e-Id, same FR as old one
+	bool passesMVAPOGTrigNoIPLoose =   
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.0 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<0.8 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>-0.5375) ||  
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.8 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<1.479 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>-0.375) ||  
+	  ((*electronsForVeto)[l].pt()<=20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=1.479 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>-0.025) ||
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.0 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<0.8 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>0.325) ||  
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=0.8 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())<1.479 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>0.775) ||  
+	  ((*electronsForVeto)[l].pt()>20 && fabs((*electronsForVeto)[l].superClusterPosition().Eta())>=1.479 && (*electronsForVeto)[l].userFloat("mvaPOGTrigNoIP")>0.775); 
+	
+	if(passesMVAPOGNonTrigLoose && !passesMVAPOGTrigNoIPLoose)  passID= 0;
+	if(!passesMVAPOGNonTrigLoose && passesMVAPOGTrigNoIPLoose)  passID= 1;
+	if(passesMVAPOGNonTrigLoose && passesMVAPOGTrigNoIPLoose)   passID= 2;	
+        bufferID.push_back(passID);
       }
     }
     for(unsigned int m = 0; m < buffer.size() ; m++){ 
       vetoElectronsP4_->push_back( buffer[m] );
+      vetoElectronsID_->push_back( bufferID[m] );
     }
   }
   buffer.clear();
@@ -2019,7 +2049,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=0.8 && fabs(leg1->superClusterPosition().Eta())<1.479 && leg1->userFloat("mvaPOGNonTrig")>0.975) ||  
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGNonTrig")>0.985); 
     if(passesMVAPOGNonTrig) tightestMVAPOGNonTrigWP_ = 1;
-    
+ 
+    tightestMVAPOGTrigNoIPWP_ = -1; 
+    bool passesMVAPOGTrigNoIP =   
+      (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=0.0 && fabs(leg1->superClusterPosition().Eta())<0.8 && leg1->userFloat("mvaPOGTrigNoIP")>0.55) ||  
+      (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=0.8 && fabs(leg1->superClusterPosition().Eta())<1.479 && leg1->userFloat("mvaPOGTrigNoIP")>0.9) ||  
+      (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGTrigNoIP")>0.925); 
+    if(passesMVAPOGTrigNoIP) tightestMVAPOGTrigNoIPWP_ = 1;
+
     tightestAntiMuWP_ = 0; 
     if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
     if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 

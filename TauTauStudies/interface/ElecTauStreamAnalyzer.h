@@ -136,6 +136,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* vetoMuonsP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* vetoTausP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* pfElectrons_; 
+  std::vector<int>* vetoElectronsID_;
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* trgTaus_;
   std::vector<int>* trgTauId_;
@@ -211,6 +212,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float mvaPOGTrigNoIP_;
   float mvaPOGNonTrig_;
   int tightestMVAPOGNonTrigWP_;
+  int tightestMVAPOGTrigNoIPWP_;
   float mitMVA_;
   int antiConv_;
   int isTriggerElectron_;
