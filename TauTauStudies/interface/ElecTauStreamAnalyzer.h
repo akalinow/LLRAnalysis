@@ -244,7 +244,8 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float elecAntiZeeSCEta_[4];
   float elecAntiZeePhi_[4];
   float elecAntiZeeRelIso_[4];
-  float elecAntiZeeId_[4];
+  float elecAntiZeeIdNonTrig_[4];
+  float elecAntiZeeIdTrigNoIP_[4];
 
   // ele specific variables
   float nBrehm_;
