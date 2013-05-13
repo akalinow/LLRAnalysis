@@ -461,7 +461,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("elecAntiZeeSCEta",&elecAntiZeeSCEta_,"elecAntiZeeSCEta[4]/F");
   tree_->Branch("elecAntiZeePhi",&elecAntiZeePhi_,"elecAntiZeePhi[4]/F");
   tree_->Branch("elecAntiZeeRelIso",&elecAntiZeeRelIso_,"elecAntiZeeRelIso[4]/F");
-  tree_->Branch("elecAntiZeeId",&elecAntiZeeId_,"elecAntiZeeId[4]/F");
+  tree_->Branch("elecAntiZeeIdNonTrig",&elecAntiZeeIdNonTrig_,"elecAntiZeeIdNonTrig[4]/F");
+  tree_->Branch("elecAntiZeeIdTrigNoIP",&elecAntiZeeIdTrigNoIP_,"elecAntiZeeIdTrigNoIP[4]/F");
 
 
   tree_->Branch("run",&run_,"run/l");
@@ -2404,6 +2405,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     float scEtaMax0,scEtaMax1,scEtaMax2,scEtaMax3;
     float phiMax0,phiMax1,phiMax2,phiMax3;
     float idMax0,idMax1,idMax2,idMax3;
+    float idNewMax0,idNewMax1,idNewMax2,idNewMax3;
     float isoMax0,isoMax1,isoMax2,isoMax3;
     int kMax0,kMax1,kMax2,kMax3;
     ptMax0= ptMax1= ptMax2= ptMax3=-999;
@@ -2411,6 +2413,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     scEtaMax0= scEtaMax1= scEtaMax2= scEtaMax3=-999;
     phiMax0= phiMax1= phiMax2= phiMax3=-999;
     idMax0= idMax1= idMax2= idMax3=-999;
+    idNewMax0= idNewMax1= idNewMax2= idNewMax3=-999;
     isoMax0= isoMax1= isoMax2= isoMax3=-999;
     kMax0=kMax1=kMax2=kMax3=-999;
 
@@ -2422,6 +2425,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	scEtaMax0=(*electronsAntiZee)[k].superClusterPosition().Eta();
 	phiMax0=(*electronsAntiZee)[k].phi();
 	idMax0=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	idNewMax0=(*electronsAntiZee)[k].userFloat("mvaPOGTrigNoIP");
 	isoMax0=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax1){
@@ -2431,6 +2435,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	scEtaMax1=(*electronsAntiZee)[k].superClusterPosition().Eta();
 	phiMax1=(*electronsAntiZee)[k].phi();
 	idMax1=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	idNewMax1=(*electronsAntiZee)[k].userFloat("mvaPOGTrigNoIP");
 	isoMax1=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax2){
@@ -2440,6 +2445,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	scEtaMax2=(*electronsAntiZee)[k].superClusterPosition().Eta();
 	phiMax2=(*electronsAntiZee)[k].phi();
 	idMax2=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	idNewMax2=(*electronsAntiZee)[k].userFloat("mvaPOGTrigNoIP");
 	isoMax2=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax3){
@@ -2449,6 +2455,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	scEtaMax3=(*electronsAntiZee)[k].superClusterPosition().Eta();
 	phiMax3=(*electronsAntiZee)[k].phi();
 	idMax3=(*electronsAntiZee)[k].userFloat("mvaPOGNonTrig");
+	idNewMax3=(*electronsAntiZee)[k].userFloat("mvaPOGTrigNoIP");
 	isoMax3=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
     }
@@ -2472,10 +2479,15 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     elecAntiZeePhi_[2]=phiMax2;
     elecAntiZeePhi_[3]=phiMax3;
 
-    elecAntiZeeId_[0]=idMax0;
-    elecAntiZeeId_[1]=idMax1;
-    elecAntiZeeId_[2]=idMax2;
-    elecAntiZeeId_[3]=idMax3;
+    elecAntiZeeIdNonTrig_[0]=idMax0;
+    elecAntiZeeIdNonTrig_[1]=idMax1;
+    elecAntiZeeIdNonTrig_[2]=idMax2;
+    elecAntiZeeIdNonTrig_[3]=idMax3;
+
+    elecAntiZeeIdTrigNoIP_[0]=idNewMax0;
+    elecAntiZeeIdTrigNoIP_[1]=idNewMax1;
+    elecAntiZeeIdTrigNoIP_[2]=idNewMax2;
+    elecAntiZeeIdTrigNoIP_[3]=idNewMax3;
 
     elecAntiZeeRelIso_[0]=isoMax0;
     elecAntiZeeRelIso_[1]=isoMax1;
