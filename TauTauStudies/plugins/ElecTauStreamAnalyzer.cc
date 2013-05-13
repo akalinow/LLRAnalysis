@@ -477,6 +477,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("tightestCutBasedWP",&tightestCutBasedWP_,"tightestCutBasedWP/I");
   tree_->Branch("tightestMVAWP",&tightestMVAWP_,"tightestMVAWP/I");
   tree_->Branch("mvaPOGTrig",    &mvaPOGTrig_,    "mvaPOGTrig/F");
+  tree_->Branch("mvaPOGTrigNoIP",    &mvaPOGTrigNoIP_,    "mvaPOGTrigNoIP/F");
   tree_->Branch("mvaPOGNonTrig", &mvaPOGNonTrig_, "mvaPOGNonTrig/F");
   tree_->Branch("mitMVA", &mitMVA_, "mitMVA/F");
   tree_->Branch("tightestMVAPOGNonTrigWP",&tightestMVAPOGNonTrigWP_,"tightestMVAPOGNonTrigWP/I");
@@ -2005,6 +2006,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     //if( (int(leg1->electronID("eidCiCHZZHyperTight1"))&1)==1  ) tightestCiCWP_++;
     
     mvaPOGTrig_         = leg1->userFloat("mvaPOGTrig");
+    mvaPOGTrigNoIP_     = leg1->userFloat("mvaPOGTrigNoIP");
     mvaPOGNonTrig_      = leg1->userFloat("mvaPOGNonTrig");
     isTriggerElectron_  = leg1->userInt("isTriggerElectron");
     mitMVA_             = leg1->userFloat("mva");

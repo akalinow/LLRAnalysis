@@ -208,6 +208,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int tightestCutBasedWP_;
   int tightestMVAWP_;
   float mvaPOGTrig_;
+  float mvaPOGTrigNoIP_;
   float mvaPOGNonTrig_;
   int tightestMVAPOGNonTrigWP_;
   float mitMVA_;
