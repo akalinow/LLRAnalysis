@@ -1709,7 +1709,10 @@ void plotMuTau( Int_t mH_           = 120,
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	    float NormDYJtoTau = 0.;  
             TCut sbinbTagLoose = sbinInclusive && oneJet;    
-            drawHistogramMC(currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinbTagLoose, 1); 
+	    if(useZDataMC)
+	      drawHistogramMC(currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinbTagLoose, 1); 
+	    else
+	      drawHistogramMC(currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinbTagLoose, 1);
             NormDYJtoTau = 0.;  
             drawHistogramMC(currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZ*hltEff_/1000., h1, sbinInclusive, 1);  
             hCleaner->Scale(h1->Integral()/hCleaner->Integral()); 
@@ -2066,6 +2069,18 @@ void plotMuTau( Int_t mH_           = 120,
 	  }
 
 	  if((it->first).find("SUSY")!=string::npos){
+	    //select events within 30% of Higgs mass
+	    TString sampleName = samples[iter];
+	    if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", "");
+	    else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", "");
+	    float mA = atof(sampleName.Data());
+	    //cout<<" SUSY mass "<<samples[iter]<<" "<<mA<<endl; 
+	    TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
+	    //cout<<" width cut "<<HWidth<<endl; 
+
+	    float NormSign = 0.; 
+	    drawHistogramMC(currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+
 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
 	    histoSusy->Add(h1,1.0);
 	    histoSusy->SetLineWidth(2);
