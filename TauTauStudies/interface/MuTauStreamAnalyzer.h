@@ -229,6 +229,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float diTauCharge_;
   float chargeL1_;
   float rhoFastJet_;
+  float rho_;
+  float rhoiso_;
   float rhoNeutralFastJet_;
   float embeddingWeight_;
   float nPUVertices_;
@@ -237,6 +239,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float nPUtruth_;
 
   float mcPUweight_;
+
+  std::map<std::string,float> calcLikelihoodVariables(const pat::Jet *jet, edm::Handle<reco::VertexCollection> vC, std::string type);
 
 };
 

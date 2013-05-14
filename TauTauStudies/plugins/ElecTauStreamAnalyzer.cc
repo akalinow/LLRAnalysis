@@ -902,9 +902,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > > buffer;
   std::vector< int> bufferID;
-
   bool alreadyThere = false;
-
   if( muonsForVetoHandle.isValid() ) {
     const pat::MuonCollection* muonsForVeto         = muonsForVetoHandle.product();
     for(unsigned int l = 0; l < muonsForVeto->size() ; l++){
@@ -2315,6 +2313,38 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       quarkGluonDiscriminator.push_back(jet->pt()) ;
       quarkGluonDiscriminator.push_back(mlp);
       quarkGluonDiscriminator.push_back(likelihood);
+
+      ////// Compute input variables of likelihood
+      edm::Handle<double> rhoHandle;
+      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rho"), rhoHandle);
+      rho_ = rhoHandle.isValid() ? (*rhoHandle) : -99;
+
+      edm::Handle<double> rhoisoHandle;
+      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rhoiso"), rhoisoHandle);
+      rhoiso_ = rhoisoHandle.isValid() ? (*rhoisoHandle) : -99;
+
+      edm::Handle<reco::VertexCollection> vC_likelihood;
+      iEvent.getByLabel("offlinePrimaryVertices", vC_likelihood);
+      
+      map<string,float> likelihoodvariables;
+      if(newJet->isPFJet()){
+	likelihoodvariables=calcLikelihoodVariables(&*newJet, vC_likelihood, "Likelihood");
+	likelihoodvariables["pt"]=newJet->pt();
+	likelihoodvariables["rho"]=rho_;
+	likelihoodvariables["rhoiso"]=rhoiso_;
+      }
+      quarkGluonDiscriminator.push_back(likelihoodvariables["pt"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["eta"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["rho"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["rhoiso"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["ptD"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["axis1"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["axis2"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["mult"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["nChg_QC"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["nChg_ptCut"]);
+      quarkGluonDiscriminator.push_back(likelihoodvariables["nNeutral_ptCut"]);
+
       quarkGluonID.insert(  make_pair( newJet->p4().Pt() ,  quarkGluonDiscriminator ) );
 
       // generator part
@@ -2420,10 +2450,12 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     //////////////////////
     // Quark/gluon id
     for(std::map<double, std::vector<float> >::iterator it = quarkGluonID.begin(); it != quarkGluonID.end() ; it++){
-      jetQuarkGluon_->push_back( (it->second)[0] ); //pt
-      jetQuarkGluon_->push_back( (it->second)[1] ); //mlp
-      jetQuarkGluon_->push_back( (it->second)[2] ); //likelihood
+      for(unsigned int j=0; j!=(it->second).size(); j++)
+	jetQuarkGluon_->push_back( (it->second)[j] );
+      // 0=pt , 1=mlp , 2=likelihood
+      //likelihood variables 3=pt , 4=eta , 5=rho , 6=rhoiso , 7=ptd , 8=axis1 , 9=axis2 , 10=mult , 11=nChg_QC , 12=nChg_ptCut , 13=nNeutral_ptCut
     }
+
     for(std::map<double, std::vector<float> >::iterator it = quarkGluonIDGen.begin(); it != quarkGluonIDGen.end() ; it++){
       if ( !(it->second).empty() ) {
 	jetQuarkGluonGen_->push_back( (it->second)[0] ); //flavor
@@ -2886,6 +2918,98 @@ void ElecTauStreamAnalyzer::computeDCASig(double &iDCA3D    ,double &iDCA3DE    
  
 }
 
+map<string,float> ElecTauStreamAnalyzer::calcLikelihoodVariables(const pat::Jet *jet, edm::Handle<reco::VertexCollection> vC, string type){
+ 
+  static map<string,float> variables;
+  variables["eta"] = jet->eta();
+  Bool_t useQC = true;
+  if(fabs(jet->eta()) > 2.5 && type == "MLP") useQC = false;		//In MLP: no QC in forward region
+
+  reco::VertexCollection::const_iterator vtxLead = vC->begin();
+
+  Float_t sum_weight = 0., sum_deta = 0., sum_dphi = 0., sum_deta2 = 0., sum_dphi2 = 0., sum_detadphi = 0., sum_pt = 0.;
+  Int_t nChg_QC = 0, nChg_ptCut = 0, nNeutral_ptCut = 0;
+
+  //Loop over the jet constituents
+  std::vector<reco::PFCandidatePtr> constituents = jet->getPFConstituents();
+  for(unsigned i = 0; i < constituents.size(); ++i){
+    reco::PFCandidatePtr part = jet->getPFConstituent(i);      
+    if(!part.isNonnull()) continue;
+
+    reco::TrackRef itrk = part->trackRef();;
+
+    bool trkForAxis = false;
+    if(itrk.isNonnull()){						//Track exists --> charged particle
+      if(part->pt() > 1.0) nChg_ptCut++;
+
+      //Search for closest vertex to track
+      reco::VertexCollection::const_iterator vtxClose = vC->begin();
+      for(reco::VertexCollection::const_iterator vtx = vC->begin(); vtx != vC->end(); ++vtx){
+        if(fabs(itrk->dz(vtx->position())) < fabs(itrk->dz(vtxClose->position()))) vtxClose = vtx;
+      }
+
+      if(vtxClose == vtxLead){
+        Float_t dz = itrk->dz(vtxClose->position());
+        Float_t dz_sigma = sqrt(pow(itrk->dzError(),2) + pow(vtxClose->zError(),2));
+	      
+        if(itrk->quality(reco::TrackBase::qualityByName("highPurity")) && fabs(dz/dz_sigma) < 5.){
+          trkForAxis = true;
+          Float_t d0 = itrk->dxy(vtxClose->position());
+          Float_t d0_sigma = sqrt(pow(itrk->d0Error(),2) + pow(vtxClose->xError(),2) + pow(vtxClose->yError(),2));
+          if(fabs(d0/d0_sigma) < 5.) nChg_QC++;
+        }
+      }
+    } else {								//No track --> neutral particle
+      if(part->pt() > 1.0) nNeutral_ptCut++;
+      trkForAxis = true;
+    }
+	  
+    Float_t deta = part->eta() - jet->eta();
+    Float_t dphi = 2*atan(tan(((part->phi()-jet->phi()))/2));           
+    Float_t partPt = part->pt(); 
+    Float_t weight = partPt*partPt;
+
+    if(!useQC || trkForAxis){					//If quality cuts, only use when trkForAxis
+      sum_weight += weight;
+      sum_pt += partPt;
+      sum_deta += deta*weight;                  
+      sum_dphi += dphi*weight;                                                                                             
+      sum_deta2 += deta*deta*weight;                    
+      sum_detadphi += deta*dphi*weight;                               
+      sum_dphi2 += dphi*dphi*weight;
+    }	
+  }
+
+  //Calculate axis and ptD
+  Float_t a = 0., b = 0., c = 0.;
+  Float_t ave_deta = 0., ave_dphi = 0., ave_deta2 = 0., ave_dphi2 = 0.;
+  if(sum_weight > 0){
+    variables["ptD"] = sqrt(sum_weight)/sum_pt;
+    ave_deta = sum_deta/sum_weight;
+    ave_dphi = sum_dphi/sum_weight;
+    ave_deta2 = sum_deta2/sum_weight;
+    ave_dphi2 = sum_dphi2/sum_weight;
+    a = ave_deta2 - ave_deta*ave_deta;                          
+    b = ave_dphi2 - ave_dphi*ave_dphi;                          
+    c = -(sum_detadphi/sum_weight - ave_deta*ave_dphi);                
+  } else variables["ptD"] = 0;
+  Float_t delta = sqrt(fabs((a-b)*(a-b)+4*c*c));
+  if(a+b+delta > 0) variables["axis1"] = sqrt(0.5*(a+b+delta));
+  else variables["axis1"] = 0.;
+  if(a+b-delta > 0) variables["axis2"] = sqrt(0.5*(a+b-delta));
+  else variables["axis2"] = 0.;
+
+  if(type == "MLP" && useQC) variables["mult"] = nChg_QC;
+  else if(type == "MLP") variables["mult"] = (nChg_ptCut + nNeutral_ptCut);
+  else variables["mult"] = (nChg_QC + nNeutral_ptCut);
+
+  variables["nChg_QC"]=nChg_QC;
+  variables["nChg_ptCut"]=nChg_ptCut;
+  variables["nNeutral_ptCut"]=nNeutral_ptCut;
+
+  return variables;
+
+}
 
 
 void ElecTauStreamAnalyzer::endJob(){}
