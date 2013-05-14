@@ -12,8 +12,8 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = True
-runOnEmbed  = False
+runOnMC     = False
+runOnEmbed  = True
 applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
@@ -53,7 +53,7 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
@@ -65,7 +65,8 @@ process.source = cms.Source(
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'    
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
     )
     )
@@ -453,7 +454,8 @@ MVALooseNew = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0
 process.elecPtEtaID = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("elecPtEtaID"),
-    cut = cms.string(MVALoose),#for back compatibility
+    cut = cms.string(''),
+    ##cut = cms.string(MVALoose),#for back compatibility
     filter = cms.bool(False)
     )
 process.elecPtEtaIDIso  = cms.EDFilter(
@@ -515,8 +517,8 @@ process.elecPtEtaRelIDElecDown = process.elecPtEtaRelID.clone(
 process.electronsForVeto = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("electronsForVeto"),
-    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"
-                     +" && "+MVALoose),#for back compatibility
+    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"),
+                     ## +" && "+MVALoose),#for back compatibility
     filter = cms.bool(False)
     )
 #########
