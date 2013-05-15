@@ -14,16 +14,17 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = True
 runOnEmbed  = False
-applyTauESCorr= False 
+embedType   = "RhEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
+applyTauESCorr= True 
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 useMarkov   = True
 runMoriond = True
 
-if runOnEmbed and runOnMC:
-    print "Running on Embedded, runOnMC should be switched off"
-    runOnMC=False
+#if runOnEmbed and runOnMC:
+#    print "Running on Embedded, runOnMC should be switched off"
+#    runOnMC=False
 
 if runOnMC:
     print "Running on MC"
@@ -53,12 +54,13 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream.root'
+        #'file:patTuples_LepTauStream.root'
         #'file:VBFH125.root'
         #'file:data2012D.root'        
         #'file:/afs/cern.ch/work/a/anayak/public/HTauTau/Spring2013/patTuples_LepTauStream.root'
         #'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
         #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'    
+        'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
         )
     )
 
@@ -426,10 +428,25 @@ process.muPtEtaRelIDMuDown = process.muPtEtaRelID.clone(
     src = cms.InputTag("rescaledMuonsRel","D")
     )
 ##Update 3rdLepVeto cuts##
+##Loose MVA ID used for e-mu and 3d lepton veto selection
+MVALoose = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGNonTrig')>0.925) ||" + \
+           "(pt<=20 && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGNonTrig')>0.915) ||" + \
+           "(pt<=20 && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGNonTrig')>0.965) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGNonTrig')>0.905) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGNonTrig')>0.955) ||" + \
+           "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGNonTrig')>0.975))"
+##Loose MVA ID: new e-Id, same FR as old one
+MVALooseNew = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>-0.5375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>-0.375) ||" + \
+              "(pt<=20 && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>-0.025) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0.8 && userFloat('mvaPOGTrigNoIP')>0.325) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=0.8 && abs(superCluster.eta)<1.479 && userFloat('mvaPOGTrigNoIP')>0.775) ||" + \
+              "(pt>20  && abs(superCluster.eta)>=1.479 && abs(superCluster.eta)<2.5 && userFloat('mvaPOGTrigNoIP')>0.775))"
 process.electronsForVeto = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("electronsForVeto"),
-    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"),
+    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"
+                     +" && "+MVALoose),#use MVAloose for back compability, can be changed in future
     filter = cms.bool(False)
     )
 #########
@@ -500,7 +517,37 @@ process.muTauStreamAnalyzerTauDown = process.muTauStreamAnalyzer.clone(
     diTaus =  cms.InputTag("selectedDiTauTauDown"),
     #met    =  cms.InputTag("rescaledMETtau","NNNDN")
     )
-
+#######################################################################
+# weights for embedding
+process.kineWeightsForEmbed = cms.Sequence()
+if runOnEmbed:
+    if "RhEmbed" in embedType:
+        process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
+        if not runOnMC:
+            process.kineWeightsForEmbed += process.embeddingKineReweightSequenceRECembedding
+        else:
+            process.kineWeightsForEmbed += process.embeddingKineReweightSequenceGENembedding
+        if "MuTau" in embedType:
+            if "LowPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
+            else if "HighPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_muPtGt16tauPtGt18_recEmbedded.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_muPtGt16tauPtGt18_recEmbedded.root")
+           else if "FullRange" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
+        else if "EleTau" in embedType:
+            if "LowPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
+            else if "HighPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_ePtGt20tauPtGt18_recEmbedded.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_ePtGt20tauPtGt18_genEmbedded.root")
+            else if "FullRange" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
+                
 #######################################################################
 
 process.seqNominal = cms.Sequence(
@@ -522,7 +569,8 @@ process.seqNominal = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequence*
     process.selectedDiTau*process.selectedDiTauCounter*
-    process.QuarkGluonTagger* #quark/gluon jets    
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.muTauStreamAnalyzer
     )
 
@@ -547,6 +595,7 @@ process.seqMuUp = cms.Sequence(
     process.runMETByPairsSequenceMuUp*
     process.selectedDiTauMuUp*process.selectedDiTauMuUpCounter*
     process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.muTauStreamAnalyzerMuUp
     )
 process.seqMuDown = cms.Sequence(
@@ -570,6 +619,7 @@ process.seqMuDown = cms.Sequence(
     process.runMETByPairsSequenceMuDown*
     process.selectedDiTauMuDown*process.selectedDiTauMuDownCounter*
     process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.muTauStreamAnalyzerMuDown
     )
 
@@ -594,7 +644,8 @@ process.seqTauUp = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauUp*
     process.selectedDiTauTauUp*process.selectedDiTauTauUpCounter*
-    process.QuarkGluonTagger* #quark/gluon jets    
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.muTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -618,7 +669,8 @@ process.seqTauDown = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauDown*
     process.selectedDiTauTauDown*process.selectedDiTauTauDownCounter*
-    process.QuarkGluonTagger* #quark/gluon jets    
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.muTauStreamAnalyzerTauDown
     )
 
