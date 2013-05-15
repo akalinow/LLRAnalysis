@@ -222,6 +222,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   l1IsoElectrons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   l1NoIsoElectrons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
+  embeddingWeights_ = new std::vector< double >();
 
   //antiE_  = new AntiElectronIDMVA();
   //antiE_->Initialize("BDT",
@@ -533,7 +534,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("rhoFastJet",&rhoFastJet_,"rhoFastJet/F");
   tree_->Branch("rhoNeutralFastJet",&rhoNeutralFastJet_,"rhoNeutralFastJet/F");
   tree_->Branch("mcPUweight",&mcPUweight_,"mcPUweight/F");
-  tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");
+  tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");//FilterEfficiency()
+  tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
   tree_->Branch("nPUVertices",&nPUVertices_,"nPUVertices/F");
   tree_->Branch("nPUVerticesM1",&nPUVerticesM1_,"nPUVerticesM1/F");
   tree_->Branch("nPUVerticesP1",&nPUVerticesP1_,"nPUVerticesP1/F");
@@ -562,6 +564,7 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
   delete leptonJets_;
+  delete embeddingWeights_;
   //delete antiE_;
   delete metSgnMatrix_;
   if( doElecIsoMVA_ && fElectronIsoMVA_!=0) delete fElectronIsoMVA_;
@@ -1366,6 +1369,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     tauXTriggers_->clear();
     extraElectrons_->clear();
     METP4_->clear();
+    embeddingWeights_->clear();
 
     diTauCharge_ =  theDiTau->charge();
     chargeL1_    =  theDiTau->leg1()->charge();
@@ -2566,6 +2570,78 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     // Electron related variables for AntiZeeMVA seeded by ElectronsForVeto collection
     //////////////////////
 
+
+    //////////////////////
+    // Embedding weights
+
+    edm::Handle<double> TauSpinnerHandle;
+    double TauSpinnerWeight = 1.0;
+
+    edm::Handle<double> ZmumuEffHandle;
+    double ZmumuEffWeight = 1.0;
+
+    edm::Handle<double> diTauMassVSdiTauPtHandle;
+    double diTauMassVSdiTauPtWeight = 1.0;
+
+    edm::Handle<double> tau2EtaVStau1EtaHandle;
+    double tau2EtaVStau1EtaWeight = 1.0;
+
+    edm::Handle<double> tau2PtVStau1PtHandle;
+    double tau2PtVStau1PtWeight = 1.0;
+
+    edm::Handle<double> muonRadiationHandle;
+    double muonRadiationWeight = 1.0;
+
+    edm::Handle<double> muonRadiationDownHandle;
+    double muonRadiationDownWeight = 1.0;
+
+    edm::Handle<double> muonRadiationUpHandle;
+    double muonRadiationUpWeight = 1.0;
+
+    if (isRhEmb_){
+      iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
+      iEvent.getByLabel(edm::InputTag("ZmumuEvtSelEffCorrWeightProducer","weight"), ZmumuEffHandle);
+      if(isMC_){
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), diTauMassVSdiTauPtHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), tau2EtaVStau1EtaHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), tau2PtVStau1PtHandle);
+      }
+      else{
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), diTauMassVSdiTauPtHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), tau2EtaVStau1EtaHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), tau2PtVStau1PtHandle);
+      }
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weight"), muonRadiationHandle);
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weightDown"), muonRadiationDownHandle);
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weightUp"), muonRadiationUpHandle);
+
+      TauSpinnerWeight = TauSpinnerHandle.isValid() ? (*TauSpinnerHandle) : 1.0;
+      ZmumuEffWeight   = ZmumuEffHandle.isValid() ? (*ZmumuEffHandle) : 1.0;
+      diTauMassVSdiTauPtWeight = diTauMassVSdiTauPtHandle.isValid() ? (*diTauMassVSdiTauPtHandle) : 1.0;
+      tau2EtaVStau1EtaWeight = tau2EtaVStau1EtaHandle.isValid() ? (*tau2EtaVStau1EtaHandle) : 1.0;
+      tau2PtVStau1PtWeight = tau2PtVStau1PtHandle.isValid() ? (*tau2PtVStau1PtHandle) : 1.0;
+      muonRadiationWeight = muonRadiationHandle.isValid() ? (*muonRadiationHandle) : 1.0;
+      muonRadiationDownWeight = muonRadiationDownHandle.isValid() ? (*muonRadiationDownHandle) : 1.0;
+      muonRadiationUpWeight = muonRadiationUpHandle.isValid() ? (*muonRadiationUpHandle) : 1.0;
+    }
+    if(verbose_){
+      cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
+      cout<<"ZmumuEff weight: "<<ZmumuEffWeight<<endl;
+      cout<<"diTauMassVSdiTauPt weight: "<<diTauMassVSdiTauPtWeight<<endl;
+      cout<<"tau2EtaVStau1Eta weight: "<<tau2EtaVStau1EtaWeight<<endl;
+      cout<<"tau2PtVStau1Pt weight: "<<tau2PtVStau1PtWeight<<endl;
+      cout<<"muonRadiation weight: "<<muonRadiationWeight<<endl;
+      cout<<"muonRadiationDown weight: "<<muonRadiationDownWeight<<endl;
+      cout<<"muonRadiationUp weight: "<<muonRadiationUpWeight<<endl;
+    }
+    embeddingWeights_->push_back(TauSpinnerWeight);
+    embeddingWeights_->push_back(ZmumuEffWeight);
+    embeddingWeights_->push_back(diTauMassVSdiTauPtWeight);
+    embeddingWeights_->push_back(tau2EtaVStau1EtaWeight);
+    embeddingWeights_->push_back(tau2PtVStau1PtWeight);
+    embeddingWeights_->push_back(muonRadiationWeight);
+    embeddingWeights_->push_back(muonRadiationDownWeight);
+    embeddingWeights_->push_back(muonRadiationUpWeight);
 
     tree_->Fill();
 

@@ -192,6 +192,8 @@ void MuTauStreamAnalyzer::beginJob(){
   trgTauId_= new std::vector< int >();
   l1Muons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
+  embeddingWeights_ = new std::vector< double >();
+
   // Summer12: truth (from twiki)
   std::vector< float > Summer12Lumi;
   Double_t Summer12Lumi_f[60] = {
@@ -464,7 +466,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("nPUVerticesM1",&nPUVerticesM1_,"nPUVerticesM1/F");
   tree_->Branch("nPUVerticesP1",&nPUVerticesP1_,"nPUVerticesP1/F");
 
-  tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");
+  tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");//FilterEfficiency()
+  tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
   tree_->Branch("nPUtruth",  &nPUtruth_,  "nPUtruth/F");
 
   tree_->Branch("index",&index_,"index/I");
@@ -490,6 +493,7 @@ MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
   delete metSgnMatrix_;
+  delete embeddingWeights_;
   delete jetQuarkGluon_; delete jetQuarkGluonGen_;    // Quark/gluon id
 
 }
@@ -1273,7 +1277,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     extraMuons_->clear();
     leptonJets_->clear();
     METP4_->clear();
-    
+    embeddingWeights_->clear();
+
     diTauCharge_ =  theDiTau->charge();
     chargeL1_    =  theDiTau->leg1()->charge();
     MtLeg1_      =  theDiTau->mt1MET();
@@ -2185,6 +2190,79 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     }
     //////////////////////
     
+
+    //////////////////////
+    // Embedding weights
+
+    edm::Handle<double> TauSpinnerHandle;
+    double TauSpinnerWeight = 1.0;
+
+    edm::Handle<double> ZmumuEffHandle;
+    double ZmumuEffWeight = 1.0;
+
+    edm::Handle<double> diTauMassVSdiTauPtHandle;
+    double diTauMassVSdiTauPtWeight = 1.0;
+
+    edm::Handle<double> tau2EtaVStau1EtaHandle;
+    double tau2EtaVStau1EtaWeight = 1.0;
+
+    edm::Handle<double> tau2PtVStau1PtHandle;
+    double tau2PtVStau1PtWeight = 1.0;
+
+    edm::Handle<double> muonRadiationHandle;
+    double muonRadiationWeight = 1.0;
+
+    edm::Handle<double> muonRadiationDownHandle;
+    double muonRadiationDownWeight = 1.0;
+
+    edm::Handle<double> muonRadiationUpHandle;
+    double muonRadiationUpWeight = 1.0;
+
+    if (isRhEmb_){
+      iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
+      iEvent.getByLabel(edm::InputTag("ZmumuEvtSelEffCorrWeightProducer","weight"), ZmumuEffHandle);
+      if(isMC_){
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), diTauMassVSdiTauPtHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), tau2EtaVStau1EtaHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightGENembedding","genDiTauMassVsGenDiTauPt"), tau2PtVStau1PtHandle);
+      }
+      else{
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), diTauMassVSdiTauPtHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), tau2EtaVStau1EtaHandle);
+	iEvent.getByLabel(edm::InputTag("embeddingKineReweightRECembedding","genDiTauMassVsGenDiTauPt"), tau2PtVStau1PtHandle);
+      }
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weight"), muonRadiationHandle);
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weightDown"), muonRadiationDownHandle);
+      iEvent.getByLabel(edm::InputTag("muonRadiationCorrWeightProducer","weightUp"), muonRadiationUpHandle);
+
+      TauSpinnerWeight = TauSpinnerHandle.isValid() ? (*TauSpinnerHandle) : 1.0;
+      ZmumuEffWeight   = ZmumuEffHandle.isValid() ? (*ZmumuEffHandle) : 1.0;
+      diTauMassVSdiTauPtWeight = diTauMassVSdiTauPtHandle.isValid() ? (*diTauMassVSdiTauPtHandle) : 1.0;
+      tau2EtaVStau1EtaWeight = tau2EtaVStau1EtaHandle.isValid() ? (*tau2EtaVStau1EtaHandle) : 1.0;
+      tau2PtVStau1PtWeight = tau2PtVStau1PtHandle.isValid() ? (*tau2PtVStau1PtHandle) : 1.0;
+      muonRadiationWeight = muonRadiationHandle.isValid() ? (*muonRadiationHandle) : 1.0;
+      muonRadiationDownWeight = muonRadiationDownHandle.isValid() ? (*muonRadiationDownHandle) : 1.0;
+      muonRadiationUpWeight = muonRadiationUpHandle.isValid() ? (*muonRadiationUpHandle) : 1.0;
+    }
+    if(verbose_){
+      cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
+      cout<<"ZmumuEff weight: "<<ZmumuEffWeight<<endl;
+      cout<<"diTauMassVSdiTauPt weight: "<<diTauMassVSdiTauPtWeight<<endl;
+      cout<<"tau2EtaVStau1Eta weight: "<<tau2EtaVStau1EtaWeight<<endl;
+      cout<<"tau2PtVStau1Pt weight: "<<tau2PtVStau1PtWeight<<endl;
+      cout<<"muonRadiation weight: "<<muonRadiationWeight<<endl;
+      cout<<"muonRadiationDown weight: "<<muonRadiationDownWeight<<endl;
+      cout<<"muonRadiationUp weight: "<<muonRadiationUpWeight<<endl;
+    }
+    embeddingWeights_->push_back(TauSpinnerWeight);
+    embeddingWeights_->push_back(ZmumuEffWeight);
+    embeddingWeights_->push_back(diTauMassVSdiTauPtWeight);
+    embeddingWeights_->push_back(tau2EtaVStau1EtaWeight);
+    embeddingWeights_->push_back(tau2PtVStau1PtWeight);
+    embeddingWeights_->push_back(muonRadiationWeight);
+    embeddingWeights_->push_back(muonRadiationDownWeight);
+    embeddingWeights_->push_back(muonRadiationUpWeight);
+
     tree_->Fill();
     
   }

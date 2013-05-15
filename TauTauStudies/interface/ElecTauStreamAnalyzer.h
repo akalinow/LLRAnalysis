@@ -270,6 +270,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float rhoiso_;
   float rhoNeutralFastJet_;
   float embeddingWeight_;
+  std::vector< double >* embeddingWeights_;
   float nPUVertices_;
   float nPUaverage_;
   float nPUVerticesM1_;
