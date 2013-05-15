@@ -12,8 +12,9 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = False
-runOnEmbed  = True
+runOnMC     = True
+runOnEmbed  = False
+embedType   = "RhEmbedEleTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
@@ -23,9 +24,9 @@ useLepTauPAT = True
 useMarkov   = True
 runMoriond = True
 
-if runOnEmbed and runOnMC:
-    print "Running on Embedded, runOnMC should be switched off"
-    runOnMC=False
+#if runOnEmbed and runOnMC:
+#    print "Running on Embedded, runOnMC should be switched off"
+#    runOnMC=False
 
 if runOnMC:
     print "Running on MC"
@@ -53,7 +54,7 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+process.MessageLogger.cerr.FwkReport.reportEvery = 10
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
@@ -66,7 +67,9 @@ process.source = cms.Source(
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
     )
     )
@@ -592,7 +595,37 @@ process.elecTauStreamAnalyzerTauDown   = process.elecTauStreamAnalyzer.clone(
     #met    =  cms.InputTag("rescaledMETtau","NNNDN")
     )
 #######################################################################
+# weights for embedding
+process.kineWeightsForEmbed = cms.Sequence()
+if runOnEmbed:
+    if "RhEmbed" in embedType:
+        process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
+        if not runOnMC:
+            process.kineWeightsForEmbed += process.embeddingKineReweightSequenceRECembedding
+        else:
+            process.kineWeightsForEmbed += process.embeddingKineReweightSequenceGENembedding
+        if "MuTau" in embedType:
+            if "LowPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
+            if "HighPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_muPtGt16tauPtGt18_recEmbedded.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_muPtGt16tauPtGt18_recEmbedded.root")
+            if "FullRange" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
+        if "EleTau" in embedType:
+            if "LowPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
+            if "HighPt" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_ePtGt20tauPtGt18_recEmbedded.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_ePtGt20tauPtGt18_genEmbedded.root")
+            if "FullRange" in embedType:
+                process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+                process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
 
+#######################################################################
 process.seqNominal = cms.Sequence(
     process.allEventsFilter*
     (process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*
@@ -614,6 +647,7 @@ process.seqNominal = cms.Sequence(
     process.runMETByPairsSequence*
     process.selectedDiTau*process.selectedDiTauCounter*
     process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.elecTauStreamAnalyzer
     )
 process.seqElecUp = cms.Sequence(
@@ -638,6 +672,7 @@ process.seqElecUp = cms.Sequence(
     process.runMETByPairsSequenceElecUp*
     process.selectedDiTauElecUp*process.selectedDiTauElecUpCounter*
     process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.elecTauStreamAnalyzerElecUp
     )
 process.seqElecDown = cms.Sequence(
@@ -662,6 +697,7 @@ process.seqElecDown = cms.Sequence(
     process.runMETByPairsSequenceElecDown*
     process.selectedDiTauElecDown*process.selectedDiTauElecDownCounter*
     process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.elecTauStreamAnalyzerElecDown
     )
 
@@ -686,7 +722,8 @@ process.seqTauUp = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauUp*
     process.selectedDiTauTauUp*process.selectedDiTauTauUpCounter*
-    process.QuarkGluonTagger* #quark/gluon jets    
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.elecTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -710,7 +747,8 @@ process.seqTauDown = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauDown*
     process.selectedDiTauTauDown*process.selectedDiTauTauDownCounter*
-    process.QuarkGluonTagger* #quark/gluon jets    
+    process.QuarkGluonTagger* #quark/gluon jets
+    process.kineWeightsForEmbed*#IN
     process.elecTauStreamAnalyzerTauDown
     )
 
@@ -721,8 +759,8 @@ if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
     process.pTauUp              = cms.Path( process.seqTauUp)
     process.pTauDown            = cms.Path( process.seqTauDown )
-    process.pElecUp                  = cms.Path( process.seqElecUp)    # TO BE STUDIED LATER
-    process.pElecDown                = cms.Path( process.seqElecDown)  # TO BE STUDIED LATER
+    #process.pElecUp                  = cms.Path( process.seqElecUp)    # TO BE STUDIED LATER
+    #process.pElecDown                = cms.Path( process.seqElecDown)  # TO BE STUDIED LATER
 
 else:
     process.pNominal            = cms.Path( process.seqNominal )
