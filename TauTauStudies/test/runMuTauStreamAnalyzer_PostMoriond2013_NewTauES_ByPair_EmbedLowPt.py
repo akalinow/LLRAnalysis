@@ -12,9 +12,9 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = True
-runOnEmbed  = False
-embedType   = "RhEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
+runOnMC     = False
+runOnEmbed  = True
+embedType   = "RhEmbedEleTauLowPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 applyTauESCorr= True 
 doSVFitReco = True
 usePFMEtMVA = True
