@@ -233,6 +233,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float rhoiso_;
   float rhoNeutralFastJet_;
   float embeddingWeight_;
+  std::vector< double >* embeddingWeights_;
   float nPUVertices_;
   float nPUVerticesM1_;
   float nPUVerticesP1_;
