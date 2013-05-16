@@ -102,30 +102,14 @@ edm::LumiReWeighting LumiWeightsDLow_("/data_CMS/cms/htautau/Moriond/tools/MC_Su
 enum BVariation{kNo = 0, kDown = 1, kUp = 2};
 BtagSF* btsf = new BtagSF(12345);
 
-float correctL1etm(float L1etm, float caloMEtNoHF=0, float caloMEtNoHFcorr=0, TString method="Luca2_Magn") {
+float correctL1etm(float L1etm, float caloMEtNoHFUncorr=0, float caloMEtNoHF=0) {
 
-  //difference of 'energy scale' found by fittig landau convoluted with gaus (MPV_data/MPV_mc=1.59390e+01/1.82863e+01)
-  if(method=="Michal")     return L1etm*0.8716; 
+  if(caloMEtNoHFUncorr==0) return L1etm;
 
-  // include caloMEtNoHF corrections and parametrized dependance on caloMEtNoHF (fit to the ratio of the l1etm*corr1 mean values in data/MC)
-  else if(method=="Luca1") return L1etm*(caloMEtNoHFcorr/caloMEtNoHF)*(0.01134*TMath::Sqrt(caloMEtNoHF)+0.9422) ;
-
-  // Christian residual
-  else if(method.Contains("Luca2")) {
-    //
-    float L1etmcorr = L1etm*(caloMEtNoHFcorr/caloMEtNoHF)*(0.009868*TMath::Sqrt(caloMEtNoHF)+0.9514);
-    //
-    float kMagn  = 0.8716 - 0.002187*caloMEtNoHF ;
-    float kXproj = 0.6687 + 0.0005584*caloMEtNoHF;
-    float k=1;
-    //
-    if(     method=="Luca2_Magn" ) k = kMagn;
-    else if(method=="Luca2_Xproj") k = kXproj;
-    //
-    return L1etmcorr + 0.031*(L1etmcorr-k*caloMEtNoHF);
-  }
-
-  else return L1etm;
+  float R = 0.9322;     // VALORE OTTENUTO CON FIT CONSTANTE USANDO 10 BIN
+  float K = 0.6693;
+  float H = (0.8828 - 1.0) + (0.0499*TMath::Log(caloMEtNoHFUncorr));
+  return (L1etm*(caloMEtNoHF/caloMEtNoHFUncorr)*R) + H*(L1etm*(caloMEtNoHF/caloMEtNoHFUncorr)*R - K*caloMEtNoHFUncorr);  
 }
 
 float* computeZeta(LV leg1, LV leg2, LV MEt){
@@ -732,11 +716,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   ULong64_t event_,run_,lumi_;
   int index_;
 
-  const int nPidx=34;
-  int  pairIndex[nPidx];
-  bool passQualityCuts[nPidx];
-  int  counter[nPidx];
-
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
   outTreePtOrd->Branch("pt1",  &pt1,"pt1/F");
@@ -1006,6 +985,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("HLTxQCDSoft",  &HLTxQCDSoft,"HLTxQCDSoft/F"); // ND
   outTreePtOrd->Branch("HLTmatchQCDSoft",&HLTmatchQCDSoft,"HLTmatchQCDSoft/F");// ND
 
+  outTreePtOrd->Branch("HLTxIsoEle13Tau20",&HLTxIsoEle13Tau20,"HLTxIsoEle13Tau20/F");// ND
+  outTreePtOrd->Branch("HLTmatchIsoEle13Tau20",&HLTmatchIsoEle13Tau20,"HLTmatchIsoEle13Tau20/F");// ND
+
   // Electron
   outTreePtOrd->Branch("HLTweightElec", &HLTweightElec,"HLTweightElec/F");
   outTreePtOrd->Branch("HLTweightEleA", &HLTweightEleA,"HLTweightEleA/F");
@@ -1075,8 +1057,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("run",  &run_,  "run/l");
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
-
-  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[34]/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -1576,21 +1556,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     }
   }
 
-  // protection against multiple pairs per event
-  ULong64_t lastEvent = 0;
-  ULong64_t lastRun   = 0;
-  ULong64_t lastLumi  = 0;
-
-  int counterMoriond  = 0;
-  int counterAntiETightMVA3  = 0;
-  int counterAntiEVTightMVA3  = 0;
-  int counterHPSDB3H  = 0;
-  int counterHPSMVA2  = 0;
-  int counterAntiMu2  = 0;
-  int counterSpring13Tight  = 0;
-  int counterSpring13VTight  = 0;
-  int counterSoft     = 0;
-    
   // define JSON selector //
   int nJson=7;
   string jsonFile[nJson];
@@ -2375,10 +2340,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTmatchIsoEle13Tau20 = 1.0;
       
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
-	
 
 	// L1 ETM
-	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_, "Luca2_Xproj");
+	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
 	if(gRandom->Uniform()>(1.0-4.806/7.274) ) etmCut=36;
 	else etmCut=30;
 
@@ -2657,92 +2621,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     run_             = run;
     lumi_            = lumi;
     index_           = index;
-
-
-    // pairIndex : Moriond, HPSMVA2, HPSDB3H, AntiMu2, AntiMu2HPSMVA2, AntiMu2HPSDB3H, SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_, 
-    for(int i=0 ; i<nPidx ; i++) { pairIndex[i]=-1; passQualityCuts[i]=false;}
-
-    bool mvaPOG_e      = (mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479);
-    bool anti_e_old    = (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1);
-    bool anti_e_new_L  = tightestAntiEMVA3WP > 0 ;
-    bool anti_e_new_M  = tightestAntiEMVA3WP > 1 ;
-    bool anti_e_new_T  = tightestAntiEMVA3WP > 2 ;
-    bool anti_e_new_VT = tightestAntiEMVA3WP > 3 ;
-    
-    // ABCD analysis
-    passQualityCuts[0] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond
-    passQualityCuts[1] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3
-    passQualityCuts[2] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3AntiMu2HPSDB3H
-    passQualityCuts[3] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3
-    passQualityCuts[4] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3
-    passQualityCuts[5] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2
-    passQualityCuts[6] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSDB3HWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSDB3H
-    passQualityCuts[7] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiMu2
-    passQualityCuts[8] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13Tight
-    passQualityCuts[9] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13VTight
-
-    // SoftD analysis
-    //// HLT matching
-    passQualityCuts[10] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
-    passQualityCuts[11] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
-    passQualityCuts[12] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
-    passQualityCuts[13] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
-    passQualityCuts[14] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
-    passQualityCuts[15] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
-    passQualityCuts[16] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch
-    passQualityCuts[17] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch
-    //// L1ETM cut
-    passQualityCuts[18] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[19] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
-    passQualityCuts[20] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[21] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
-    passQualityCuts[22] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[23] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
-    passQualityCuts[24] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut
-    passQualityCuts[25] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut
-
-    // Soft + tau (w/o L1ETM cut)
-    passQualityCuts[26] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[27] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
-    passQualityCuts[28] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[29] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
-    passQualityCuts[30] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[31] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
-    passQualityCuts[32] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau
-    passQualityCuts[33] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau
-
-    // Arrived in a new event
-    if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
-      
-      // change reference
-      lastEvent = event;
-      lastLumi  = lumi;
-      lastRun   = run;
-
-      // set back counters to 0
-      for(int i=0 ; i<nPidx ; i++) counter[i]=0;
-
-      for(int i=0 ; i<nPidx ; i++) {
-	if( passQualityCuts[i] ){
-	  pairIndex[i] = counter[i];
-	  counter[i]++;
-	}
-	else pairIndex[i] = -1;
-      }
-    }
-    // This entry is in the same event
-    else{
-      for(int i=0 ; i<nPidx ; i++) {
-	
-	if( passQualityCuts[i] ){
-	  pairIndex[i] = counter[i];
-	  counter[i]++;
-	}
-	else
-	  pairIndex[i] = -1;
-      }
-    }
-    
 
     outTreePtOrd->Fill();
   }
