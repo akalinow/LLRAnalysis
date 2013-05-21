@@ -674,7 +674,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // electron related variables
   int tightestCutBasedWP_, tightestMVAWP_;
   int tightestMVAPOGNonTrigWP_;
-  float mvaPOGTrig_, mvaPOGNonTrig_, mitMVA_;
+  int tightestMVAPOGTrigNoIPWP_;//IN
+  float mvaPOGTrig_, mvaPOGNonTrig_,mvaPOGTrigNoIP_, mitMVA_;
   int isTriggerElectron_;
 
   float sihih_, dEta_, dPhi_, HoE_;
@@ -926,8 +927,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("tightestCutBasedWP", &tightestCutBasedWP_,"tightestCutBasedWP/I");
   outTreePtOrd->Branch("tightestMVAWP",      &tightestMVAWP_,"tightestMVAWP/I");
   outTreePtOrd->Branch("tightestMVAPOGNonTrigWP", &tightestMVAPOGNonTrigWP_,"tightestMVAPOGNonTrigWP/I");
+  outTreePtOrd->Branch("tightestMVAPOGTrigNoIPWP", &tightestMVAPOGTrigNoIPWP_,"tightestMVAPOGTrigNoIPWP/I");//IN
   outTreePtOrd->Branch("mvaPOGTrig",         &mvaPOGTrig_,   "mvaPOGTrig/F");
   outTreePtOrd->Branch("mvaPOGNonTrig",      &mvaPOGNonTrig_,"mvaPOGNonTrig/F");
+  outTreePtOrd->Branch("mvaPOGTrigNoIP",     &mvaPOGTrigNoIP_,"mvaPOGTrigNoIP/F");//IN
   outTreePtOrd->Branch("mitMVA",             &mitMVA_,"mitMVA/F");
   outTreePtOrd->Branch("isTriggerElectron",  &isTriggerElectron_,"isTriggerElectron/I");
   outTreePtOrd->Branch("AntiZeeMVAraw",      &AntiZeeMVAraw_,"AntiZeeMVAraw/F");
@@ -1193,8 +1196,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("tightestCiCWP"         ,0);
   currentTree->SetBranchStatus("tightestMVAWP"         ,1);
   currentTree->SetBranchStatus("tightestMVAPOGNonTrigWP", 1);
+  currentTree->SetBranchStatus("tightestMVAPOGTrigNoIPWP", 1);//IN
   currentTree->SetBranchStatus("mvaPOGTrig"            ,1);
   currentTree->SetBranchStatus("mvaPOGNonTrig"         ,1);
+  currentTree->SetBranchStatus("mvaPOGTrigNoIP"        ,1);//IN
   currentTree->SetBranchStatus("mitMVA"                ,1);
   currentTree->SetBranchStatus("antiConv"              ,0);
   currentTree->SetBranchStatus("isTriggerElectron"     ,1);
@@ -1369,7 +1374,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float hpsDB3H,hpsMVA,hpsMVA2,AntiEMVA3raw;//IN
   int tightestCutBasedWP, tightestMVAWP;
   int tightestMVAPOGNonTrigWP;
-  float mvaPOGTrig, mvaPOGNonTrig, mitMVA;
+  int tightestMVAPOGTrigNoIPWP;//IN
+  float mvaPOGTrig, mvaPOGNonTrig,mvaPOGTrigNoIP, mitMVA;
   int isTriggerElectron;
   float sihih, dEta, dPhi, HoE;
   float numPV;
@@ -1435,8 +1441,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("tightestCutBasedWP",   &tightestCutBasedWP);
   currentTree->SetBranchAddress("tightestMVAWP",        &tightestMVAWP);
   currentTree->SetBranchAddress("tightestMVAPOGNonTrigWP", &tightestMVAPOGNonTrigWP);
+  currentTree->SetBranchAddress("tightestMVAPOGTrigNoIPWP", &tightestMVAPOGTrigNoIPWP);//IN
   currentTree->SetBranchAddress("mvaPOGTrig",           &mvaPOGTrig);
   currentTree->SetBranchAddress("mvaPOGNonTrig",        &mvaPOGNonTrig);
+  currentTree->SetBranchAddress("mvaPOGTrigNoIP",       &mvaPOGTrigNoIP);//IN
   currentTree->SetBranchAddress("isTriggerElectron",    &isTriggerElectron);
   currentTree->SetBranchAddress("mitMVA",               &mitMVA);
   currentTree->SetBranchAddress("tightestAntiEMVAWP",   &tightestAntiEMVAWP);
@@ -1510,6 +1518,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("hepNUP",               &hepNUP);
   currentTree->SetBranchAddress("leadGenPartPt",        &leadGenPartPt);
   
+
   RecoilCorrector* recoilCorr = 0;
 
   if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
@@ -1557,7 +1566,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   }
 
   // define JSON selector //
-  int nJson=7;
+  int nJson=8;
   string jsonFile[nJson];
 
   string dirJson = "/data_CMS/cms/htautau/JSON/";
@@ -1568,6 +1577,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   jsonFile[4] = dirJson+"/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt";         // PromptReco updated
   jsonFile[5] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_lowETM.txt";  // RunD period Low
   jsonFile[6] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_highETM.txt"; // RunD period High
+  jsonFile[7] = dirJson+"/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"; // ReReco 22Jan2013
   map<int, vector<pair<int, int> > > jsonMap[nJson] ;  
   for(int iJ=0 ; iJ<nJson ; iJ++)
     jsonMap[iJ] = readJSONFile(jsonFile[iJ]);
@@ -1618,6 +1628,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   readerAntiZeev4->AddVariable("diTauVisPtOverPtSum",&diTauVisPtOverPtSum);
   readerAntiZeev4->SetVerbose(kTRUE);
   readerAntiZeev4->BookMVA("BDTG",WeightAntiZeev4  );
+
 
 
   for (int n = 0; n <nEntries  ; n++) {
@@ -2085,8 +2096,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     tightestCutBasedWP_ = tightestCutBasedWP;
     tightestMVAWP_      = tightestMVAWP;
     tightestMVAPOGNonTrigWP_ = tightestMVAPOGNonTrigWP;
+    tightestMVAPOGTrigNoIPWP_ = tightestMVAPOGTrigNoIPWP;
     mvaPOGTrig_         = mvaPOGTrig;
     mvaPOGNonTrig_      = mvaPOGNonTrig;
+    mvaPOGTrigNoIP_     = mvaPOGTrigNoIP;
     mitMVA_             = mitMVA;
     isTriggerElectron_  = isTriggerElectron;
 
