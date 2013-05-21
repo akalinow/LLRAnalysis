@@ -163,6 +163,14 @@ double deltaR(LV v1, LV v2) {
 
 }
 
+// double DeltaR(float eta1,float eta2,float phi1,float phi2) {
+
+//   double deta = eta1 - eta2;
+//   double dphi = phi1 - phi2;
+//   return TMath::Sqrt( TMath::Power(deta,2) + TMath::Power(dphi,2) );
+
+// }
+
 
 float reweightHEPNUPWJets(int hepNUP) {
 
@@ -356,10 +364,15 @@ float pileupWeight2( int intimepileup_ ){
 int getJetIDMVALoose(double pt, double eta, double rawMVA)
 {
   float eta_bin[] = {0,2.5,2.75,3.0,5.0};
-  float Pt010_Loose[]    = {-0.95,-0.97,-0.97,-0.97};
-  float Pt1020_Loose[]   = {-0.95,-0.97,-0.97,-0.97};
-  float Pt2030_Loose[]   = {-0.80,-0.85,-0.84,-0.85};
-  float Pt3050_Loose[]   = {-0.80,-0.74,-0.68,-0.77};
+//   float Pt010_Loose[]    = {-0.95,-0.97,-0.97,-0.97};
+//   float Pt1020_Loose[]   = {-0.95,-0.97,-0.97,-0.97};
+//   float Pt2030_Loose[]   = {-0.80,-0.85,-0.84,-0.85};
+//   float Pt3050_Loose[]   = {-0.80,-0.74,-0.68,-0.77};
+//New WP
+  float Pt010_Loose[]    = {-0.95,-0.96,-0.94,-0.95};
+  float Pt1020_Loose[]   = {-0.95,-0.96,-0.94,-0.95};
+  float Pt2030_Loose[]   = {-0.63,-0.60,-0.55,-0.45};
+  float Pt3050_Loose[]   = {-0.63,-0.60,-0.55,-0.45};
 
   int passId = 0;
   for(int i = 0; i < 4; i++){
@@ -721,6 +734,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
+  //iso and id of electron matching leading jet for antiZeeMVA
+  float elecLeadJetRelIso_,elecLeadJetIdNonTrig_,elecLeadJetIdTrigNoIP_;//IN
+
   outTreePtOrd->Branch("pt1",  &pt1,"pt1/F");
   outTreePtOrd->Branch("pt2",  &pt2,"pt2/F");
   outTreePtOrd->Branch("eta1", &eta1,"eta1/F");
@@ -1080,6 +1096,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("metSigmaParl", &metSigmaParl, "metSigmaParl/F");
   outTreePtOrd->Branch("metSigmaPerp", &metSigmaPerp, "metSigmaPerp/F");
 
+  //Electrons for AntiZee
+  outTreePtOrd->Branch("elecLeadJetRelIso", &elecLeadJetRelIso_, "elecLeadJetRelIso/F");//IN
+  outTreePtOrd->Branch("elecLeadJetIdNonTrig", &elecLeadJetIdNonTrig_, "elecLeadJetIdNonTrig/F");//IN
+  outTreePtOrd->Branch("elecLeadJetIdTrigNoIP", &elecLeadJetIdTrigNoIP_, "elecLeadJetIdTrigNoIP/F");//IN
+
   int nEntries    = currentTree->GetEntries() ;
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
@@ -1282,6 +1303,15 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("trgTaus"               ,1);//MB
   currentTree->SetBranchStatus("trgTauId"              ,1);//MB
 
+  //Electrons for AntiZee
+  currentTree->SetBranchStatus("elecAntiZeePt"         ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeeEta"        ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeeSCEta"      ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeePhi"        ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeeRelIso"     ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeeIdNonTrig"  ,1);//IN
+  currentTree->SetBranchStatus("elecAntiZeeIdTrigNoIP" ,1);//IN
+
   ////////////////////////////////////////////////////////////////////
 
   std::vector< LV >* jets           = new std::vector< LV >();
@@ -1425,6 +1455,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int index;
   int tightestAntiMuWP, tightestAntiMu2WP; //ND
   float sumEt, caloNoHFsumEt, caloNoHFsumEtCorr; // ND
+  float elecAntiZeePt[4];//IN
+  float elecAntiZeeEta[4];//IN
+  float elecAntiZeeSCEta[4];//IN
+  float elecAntiZeePhi[4];//IN
+  float elecAntiZeeRelIso[4];//IN
+  float elecAntiZeeIdNonTrig[4];//IN
+  float elecAntiZeeIdTrigNoIP[4];//IN
 
   // additional variables for soft analysis ND
   currentTree->SetBranchAddress("sumEt",            &sumEt);
@@ -1535,7 +1572,15 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("leadGenPartPdg",       &leadGenPartPdg);
   currentTree->SetBranchAddress("hepNUP",               &hepNUP);
   currentTree->SetBranchAddress("leadGenPartPt",        &leadGenPartPt);
-  
+  //AntiZeeMVA  
+  currentTree->SetBranchAddress("elecAntiZeePt",        &elecAntiZeePt);//IN
+  currentTree->SetBranchAddress("elecAntiZeeEta",       &elecAntiZeeEta);//IN
+  currentTree->SetBranchAddress("elecAntiZeeSCEta",     &elecAntiZeeSCEta);//IN
+  currentTree->SetBranchAddress("elecAntiZeePhi",       &elecAntiZeePhi);//IN
+  currentTree->SetBranchAddress("elecAntiZeeRelIso",    &elecAntiZeeRelIso);//IN
+  currentTree->SetBranchAddress("elecAntiZeeIdNonTrig", &elecAntiZeeIdNonTrig);//IN
+  currentTree->SetBranchAddress("elecAntiZeeIdTrigNoIP",&elecAntiZeeIdTrigNoIP);//IN
+
 
   RecoilCorrector* recoilCorr = 0;
 
@@ -1650,10 +1695,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
 
   for (int n = 0; n <nEntries  ; n++) {
-//   for (int n = 0; n <80000  ; n++) {
+//   for (int n = 0; n <8000  ; n++) {
 
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
+//     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
     
     // APPLY JSON SELECTION //
     isGoodRun=true;
@@ -1774,6 +1820,54 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       jet1PUMVA = (*jetPUMVA)[lead];
       jet1PUWP  = (*jetPUWP)[lead*3]; // WP loose
 
+      elecLeadJetRelIso_ = -99;
+      elecLeadJetIdNonTrig_ = -99;
+      elecLeadJetIdTrigNoIP_ = -99;
+      if(deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
+	if(DEBUG){
+	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<<endl;
+	  cout<<"elecAntiZeeRelIso[0] "<<elecAntiZeeRelIso[0]<<endl;
+	  cout<<"elecAntiZeeIdNonTrig[0] "<<elecAntiZeeIdNonTrig[0]<<endl;
+	  cout<<"elecAntiZeeTrigNoIP[0] "<<elecAntiZeeIdTrigNoIP[0]<<endl;
+	}
+	elecLeadJetRelIso_ = elecAntiZeeRelIso[0];
+	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
+	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
+      }
+      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
+	if(DEBUG){
+	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<<endl;
+	  cout<<"elecAntiZeeRelIso[1] "<<elecAntiZeeRelIso[1]<<endl;
+	  cout<<"elecAntiZeeIdNonTrig[1] "<<elecAntiZeeIdNonTrig[1]<<endl;
+	  cout<<"elecAntiZeeTrigNoIP[1] "<<elecAntiZeeIdTrigNoIP[1]<<endl;
+	}
+	elecLeadJetRelIso_ = elecAntiZeeRelIso[1];
+	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
+	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
+      }
+      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
+	if(DEBUG){
+	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<<endl;
+	  cout<<"elecAntiZeeRelIso[2] "<<elecAntiZeeRelIso[2]<<endl;
+	  cout<<"elecAntiZeeIdNonTrig[2] "<<elecAntiZeeIdNonTrig[2]<<endl;
+	  cout<<"elecAntiZeeTrigNoIP[2] "<<elecAntiZeeIdTrigNoIP[2]<<endl;
+	}
+	elecLeadJetRelIso_ = elecAntiZeeRelIso[2];
+	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
+	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
+      }
+      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
+	if(DEBUG){
+	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<<endl;
+	  cout<<"elecAntiZeeRelIso[3] "<<elecAntiZeeRelIso[3]<<endl;
+	  cout<<"elecAntiZeeIdNonTrig[3] "<<elecAntiZeeIdNonTrig[3]<<endl;
+	  cout<<"elecAntiZeeTrigNoIP[3] "<<elecAntiZeeIdTrigNoIP[3]<<endl;
+	}
+	elecLeadJetRelIso_ = elecAntiZeeRelIso[3];
+	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
+	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
+      }
+      
       if(trail>=0){
 
 	pt2  = (*jets)[trail].Pt();
