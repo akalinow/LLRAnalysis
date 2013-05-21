@@ -682,6 +682,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // event-related variables
   float numPV_ , sampleWeight, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
+  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -969,6 +970,15 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("puWeightDHigh",      &puWeightDHigh,"puWeightDHigh/F");
   outTreePtOrd->Branch("puWeight2",          &puWeight2,    "puWeight2/F");
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
+  outTreePtOrd->Branch("embeddingFilterEffWeight",&embeddingFilterEffWeight_,"embeddingFilterEffWeight/F");//IN
+  outTreePtOrd->Branch("TauSpinnerWeight",   &TauSpinnerWeight_,"TauSpinnerWeight/F");//IN
+  outTreePtOrd->Branch("ZmumuEffWeight",     &ZmumuEffWeight_,"ZmumuEffWeight/F");//IN
+  outTreePtOrd->Branch("diTauMassVSdiTauPtWeight",&diTauMassVSdiTauPtWeight_,"diTauMassVSdiTauPtWeight/F");//IN
+  outTreePtOrd->Branch("tau2EtaVStau1EtaWeight",&tau2EtaVStau1EtaWeight_,"tau2EtaVStau1EtaWeight/F");//IN
+  outTreePtOrd->Branch("tau2PtVStau1PtWeight",&tau2PtVStau1PtWeight_,"tau2PtVStau1PtWeight/F");//IN
+  outTreePtOrd->Branch("muonRadiationWeight",&muonRadiationWeight_,"muonRadiationWeight/F");//IN
+  outTreePtOrd->Branch("muonRadiationDownWeight",&muonRadiationDownWeight_,"muonRadiationDownWeight/F");//IN
+  outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
@@ -1260,6 +1270,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("lumi"                  ,1);
   currentTree->SetBranchStatus("mcPUweight"            ,1);
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
+  currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
   currentTree->SetBranchStatus("index"                 ,1);
 
   // triggers
@@ -1380,6 +1391,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih, dEta, dPhi, HoE;
   float numPV;
   float mcPUweight,embeddingWeight;
+  std::vector< double >* embeddingWeights = new std::vector< double >();//IN
   int numOfLooseIsoDiTaus;
   int isTauLegMatched,isElecLegMatched,elecFlag,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1,nPUVerticesP1;
@@ -1480,6 +1492,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("numPV",                &numPV);
   currentTree->SetBranchAddress("mcPUweight",           &mcPUweight);
   currentTree->SetBranchAddress("embeddingWeight",      &embeddingWeight);
+  currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
   currentTree->SetBranchAddress("event",                &event);
   currentTree->SetBranchAddress("run",                  &run);
   currentTree->SetBranchAddress("lumi",                 &lumi);
@@ -2203,13 +2216,31 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     sampleWeight        = scaleFactor; 
     if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight        = 1;
     nPUVertices_        = nPUVertices;
-    embeddingWeight_    = embeddingWeight;
+
+    embeddingFilterEffWeight_ = embeddingWeight;
+    TauSpinnerWeight_ = (*embeddingWeights)[0];
+    ZmumuEffWeight_ = (*embeddingWeights)[1];
+    diTauMassVSdiTauPtWeight_ = (*embeddingWeights)[2];
+    tau2EtaVStau1EtaWeight_ = (*embeddingWeights)[3];
+    tau2PtVStau1PtWeight_ = (*embeddingWeights)[4];
+    muonRadiationWeight_ = (*embeddingWeights)[5];
+    muonRadiationDownWeight_ = (*embeddingWeights)[6];
+    muonRadiationUpWeight_ = (*embeddingWeights)[7];
+
+    embeddingWeight_ = embeddingFilterEffWeight_;
+    embeddingWeight_ *=  TauSpinnerWeight_;
+    embeddingWeight_ *=  ZmumuEffWeight_;
+    embeddingWeight_ *=  diTauMassVSdiTauPtWeight_;
+    embeddingWeight_ *=  tau2EtaVStau1EtaWeight_;
+    embeddingWeight_ *=  tau2PtVStau1PtWeight_;
+    embeddingWeight_ *=  muonRadiationWeight_;
 
     if(sample.Contains("Emb") && UnfoldDen1 && genTausP4->size()>1){
       float corrFactorEmbed = (UnfoldDen1->GetBinContent( UnfoldDen1->GetXaxis()->FindBin( (*genTausP4)[0].Eta() ) ,  UnfoldDen1->GetYaxis()->FindBin( (*genTausP4)[1].Eta() ) )); 
       embeddingWeight_ *=  corrFactorEmbed;
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
+
 
     // Reweight W+Jets
     weightHepNup=1;
