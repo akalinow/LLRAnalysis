@@ -396,10 +396,10 @@ Bool_t isbtagged(Bool_t isBQuark, Double_t btagCSV, Bool_t isdata, UInt_t btagef
 int getJetIDMVALoose(double pt, double eta, double rawMVA)
 {
   float eta_bin[] = {0,2.5,2.75,3.0,5.0};
-  float Pt010_Loose[]    = {-0.95,-0.97,-0.97,-0.97};
-  float Pt1020_Loose[]   = {-0.95,-0.97,-0.97,-0.97};
-  float Pt2030_Loose[]   = {-0.80,-0.85,-0.84,-0.85};
-  float Pt3050_Loose[]   = {-0.80,-0.74,-0.68,-0.77};
+  float Pt010_Loose[]    = {-0.95,-0.96,-0.94,-0.95};
+  float Pt1020_Loose[]   = {-0.95,-0.96,-0.94,-0.95};
+  float Pt2030_Loose[]   = {-0.63,-0.60,-0.55,-0.45};
+  float Pt3050_Loose[]   = {-0.63,-0.60,-0.55,-0.45};
 
   int passId = 0;
   for(int i = 0; i < 4; i++){
