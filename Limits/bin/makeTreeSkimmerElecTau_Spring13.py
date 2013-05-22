@@ -778,7 +778,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets_ElecTau.root',
     'sample'         : 'DYJets',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2431175./9669034,##
+    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
     'iJson'          : -1
     } ,
     'TTJets' : {
