@@ -2274,8 +2274,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       newBTagger.insert(       make_pair( newJet->p4().Pt(), jet->bDiscriminator("combinedSecondaryVertexBJetTags") ) );
       
       // is jet matched to a b-quark?
-      bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->genParticleById(5,0,true)).isNonnull()  ) );
-      
+      //bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->genParticleById(5,0,true)).isNonnull()  ) );
+      bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->partonFlavour()) ) );
       // add pu information
       jetPVassociation.insert( make_pair( newJet->p4().Pt(), make_pair(aMap["chFracRawJetE"],
 								       aMap["chFracAllChargE"]) ) );
