@@ -356,7 +356,7 @@ process.selectedDiTauTauUp = process.selectedDiTau.clone(src = cms.InputTag("Mer
 process.selectedDiTauTauUpCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauUp"))
 
 #######################################################################
-getDiTauMassByLeptonPair(process, "", "elecPtEtaIDIso", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauDown")
+getDiTauMassByLeptonPair(process, "", "elecPtEtaIDIso", "tauPtEtaIDAgMuAgElecIsoTauDown", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauDown")
 
 process.selectedDiTauTauDown = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausTauDown:diTaus") )
 process.selectedDiTauTauDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauDown"))
