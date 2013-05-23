@@ -732,10 +732,16 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   ULong64_t event_,run_,lumi_;
   int index_;
 
+  const int nPidx=44; 	 
+  int  pairIndex[nPidx]; 	 
+  bool passQualityCuts[nPidx]; 	 
+  int  counter[nPidx];
+  
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
   //iso and id of electron matching leading jet for antiZeeMVA
-  float elecLeadJetRelIso_,elecLeadJetIdNonTrig_,elecLeadJetIdTrigNoIP_;//IN
+  int elecLeadJetIndex_,elecTrailJetIndex_,elecAntiZeeCat_[4];//IN
+  float elecLeadJetPt_,elecLeadJetEta_,elecLeadJetRelIso_,elecLeadJetIdNonTrig_,elecLeadJetIdTrigNoIP_,elecTrailJetPt_,elecTrailJetEta_,elecTrailJetRelIso_,elecTrailJetIdNonTrig_,elecTrailJetIdTrigNoIP_;//IN
 
   outTreePtOrd->Branch("pt1",  &pt1,"pt1/F");
   outTreePtOrd->Branch("pt2",  &pt2,"pt2/F");
@@ -1089,6 +1095,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
 
+  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex[44]/I");
+
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
   outTreePtOrd->Branch("metParl", &metParl, "metParl/F");
@@ -1097,10 +1105,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("metSigmaPerp", &metSigmaPerp, "metSigmaPerp/F");
 
   //Electrons for AntiZee
+  outTreePtOrd->Branch("elecAntiZeeCat", &elecAntiZeeCat_, "elecAntiZeeCat[4]/I");//IN
+  outTreePtOrd->Branch("elecLeadJetIndex", &elecLeadJetIndex_, "elecLeadJetIndex/I");//IN
+  outTreePtOrd->Branch("elecLeadJetPt", &elecLeadJetPt_, "elecLeadJetPt/F");//IN
+  outTreePtOrd->Branch("elecLeadJetEta", &elecLeadJetEta_, "elecLeadJetEta/F");//IN
   outTreePtOrd->Branch("elecLeadJetRelIso", &elecLeadJetRelIso_, "elecLeadJetRelIso/F");//IN
   outTreePtOrd->Branch("elecLeadJetIdNonTrig", &elecLeadJetIdNonTrig_, "elecLeadJetIdNonTrig/F");//IN
   outTreePtOrd->Branch("elecLeadJetIdTrigNoIP", &elecLeadJetIdTrigNoIP_, "elecLeadJetIdTrigNoIP/F");//IN
-
+  outTreePtOrd->Branch("elecTrailJetIndex", &elecTrailJetIndex_, "elecTrailJetIndex/I");//IN
+  outTreePtOrd->Branch("elecTrailJetPt", &elecTrailJetPt_, "elecTrailJetPt/F");//IN
+  outTreePtOrd->Branch("elecTrailJetEta", &elecTrailJetEta_, "elecTrailJetEta/F");//IN
+  outTreePtOrd->Branch("elecTrailJetRelIso", &elecTrailJetRelIso_, "elecTrailJetRelIso/F");//IN
+  outTreePtOrd->Branch("elecTrailJetIdNonTrig", &elecTrailJetIdNonTrig_, "elecTrailJetIdNonTrig/F");//IN
+  outTreePtOrd->Branch("elecTrailJetIdTrigNoIP", &elecTrailJetIdTrigNoIP_, "elecTrailJetIdTrigNoIP/F");//IN
   int nEntries    = currentTree->GetEntries() ;
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
@@ -1628,6 +1645,21 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     }
   }
 
+  // protection against multiple pairs per event 	 
+  ULong64_t lastEvent = 0; 	 
+  ULong64_t lastRun   = 0; 	 
+  ULong64_t lastLumi  = 0; 	 
+  
+  int counterMoriond  = 0; 	 
+  int counterAntiETightMVA3  = 0; 	 
+  int counterAntiEVTightMVA3  = 0; 	 
+  int counterHPSDB3H  = 0; 	 
+  int counterHPSMVA2  = 0; 	 
+  int counterAntiMu2  = 0; 	 
+  int counterSpring13Tight  = 0; 	 
+  int counterSpring13VTight  = 0; 	 
+  int counterSoft     = 0;
+  
   // define JSON selector //
   int nJson=8;
   string jsonFile[nJson];
@@ -1695,7 +1727,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
 
   for (int n = 0; n <nEntries  ; n++) {
-//   for (int n = 0; n <8000  ; n++) {
+//   for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
@@ -1820,6 +1852,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       jet1PUMVA = (*jetPUMVA)[lead];
       jet1PUWP  = (*jetPUWP)[lead*3]; // WP loose
 
+      ////////////////////////////////
+      // Electrons matching jet
+      elecLeadJetIndex_ = -1.;
+      elecLeadJetPt_ = -99;
+      elecLeadJetEta_ = -99;
       elecLeadJetRelIso_ = -99;
       elecLeadJetIdNonTrig_ = -99;
       elecLeadJetIdTrigNoIP_ = -99;
@@ -1830,6 +1867,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  cout<<"elecAntiZeeIdNonTrig[0] "<<elecAntiZeeIdNonTrig[0]<<endl;
 	  cout<<"elecAntiZeeTrigNoIP[0] "<<elecAntiZeeIdTrigNoIP[0]<<endl;
 	}
+	elecLeadJetIndex_ = 0;
+	elecLeadJetPt_ = elecAntiZeePt[0];
+	elecLeadJetEta_ = elecAntiZeeSCEta[0];
 	elecLeadJetRelIso_ = elecAntiZeeRelIso[0];
 	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
 	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
@@ -1841,6 +1881,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  cout<<"elecAntiZeeIdNonTrig[1] "<<elecAntiZeeIdNonTrig[1]<<endl;
 	  cout<<"elecAntiZeeTrigNoIP[1] "<<elecAntiZeeIdTrigNoIP[1]<<endl;
 	}
+	elecLeadJetIndex_ = 1;
+	elecLeadJetPt_ = elecAntiZeePt[1];
+	elecLeadJetEta_ = elecAntiZeeSCEta[1];
 	elecLeadJetRelIso_ = elecAntiZeeRelIso[1];
 	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
 	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
@@ -1852,6 +1895,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  cout<<"elecAntiZeeIdNonTrig[2] "<<elecAntiZeeIdNonTrig[2]<<endl;
 	  cout<<"elecAntiZeeTrigNoIP[2] "<<elecAntiZeeIdTrigNoIP[2]<<endl;
 	}
+	elecLeadJetIndex_ = 2;
+	elecLeadJetPt_ = elecAntiZeePt[2];
+	elecLeadJetEta_ = elecAntiZeeSCEta[2];
 	elecLeadJetRelIso_ = elecAntiZeeRelIso[2];
 	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
 	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
@@ -1863,11 +1909,15 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  cout<<"elecAntiZeeIdNonTrig[3] "<<elecAntiZeeIdNonTrig[3]<<endl;
 	  cout<<"elecAntiZeeTrigNoIP[3] "<<elecAntiZeeIdTrigNoIP[3]<<endl;
 	}
+	elecLeadJetIndex_ = 3;
+	elecLeadJetPt_ = elecAntiZeePt[3];
+	elecLeadJetEta_ = elecAntiZeeSCEta[3];
 	elecLeadJetRelIso_ = elecAntiZeeRelIso[3];
 	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
 	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
       }
-      
+      // Electrons matching jet
+      ////////////////////////////////
       if(trail>=0){
 
 	pt2  = (*jets)[trail].Pt();
@@ -1908,6 +1958,49 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	jet2PUMVA = (*jetPUMVA)[trail];
 	jet2PUWP  = (*jetPUWP)[trail*3]; // WP loose
 
+	////////////////////////////////
+	// Electrons matching jet
+	elecTrailJetIndex_ = -1.;
+	elecTrailJetPt_ = -99;
+	elecTrailJetEta_ = -99;
+	elecTrailJetRelIso_ = -99;
+	elecTrailJetIdNonTrig_ = -99;
+	elecTrailJetIdTrigNoIP_ = -99;
+	if(deltaR(eta2,phi2,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
+	  elecTrailJetIndex_ = 0;
+	  elecTrailJetPt_ = elecAntiZeePt[0];
+	  elecTrailJetEta_ = elecAntiZeeSCEta[0];
+	  elecTrailJetRelIso_ = elecAntiZeeRelIso[0];
+	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
+	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
+	}
+	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
+	  elecTrailJetIndex_ = 1;
+	  elecTrailJetPt_ = elecAntiZeePt[1];
+	  elecTrailJetEta_ = elecAntiZeeSCEta[1];
+	  elecTrailJetRelIso_ = elecAntiZeeRelIso[1];
+	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
+	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
+	}
+	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
+	  elecTrailJetIndex_ = 2;
+	  elecTrailJetPt_ = elecAntiZeePt[2];
+	  elecTrailJetEta_ = elecAntiZeeSCEta[2];
+	  elecTrailJetRelIso_ = elecAntiZeeRelIso[2];
+	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
+	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
+	}
+	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
+	  elecTrailJetIndex_ = 3;
+	  elecTrailJetPt_ = elecAntiZeePt[3];
+	  elecTrailJetEta_ = elecAntiZeeSCEta[3];
+	  elecTrailJetRelIso_ = elecAntiZeeRelIso[3];
+	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
+	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
+	}
+	// Electrons matching jet
+	////////////////////////////////
+
 	diJetPt  = ((*jets)[lead] + (*jets)[trail]).Pt();
 	diJetPhi =  //((*jets)[lead]-(*jets)[trail]).Phi();
 	  TMath::Abs(  ((*jets)[lead]-(*jets)[trail]).Phi() ) > TMath::Pi() ? 
@@ -1935,6 +2028,33 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       }
 
     }
+
+    ////////////////////////////////
+    //Electrons for AntiZee categories
+    for(int i=0;i<4;i++)
+      elecAntiZeeCat_[i]=-99;
+    for(int i=0;i<4;i++){
+      //matched to Leg1
+      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),elecAntiZeeSCEta[i],elecAntiZeePhi[i])<0.3)
+	elecAntiZeeCat_[i]=-1;
+      //No GsfElectron in the event
+      if(elecAntiZeePt[i]==-999)
+	elecAntiZeeCat_[i]=0;
+      //MatchTauLeg
+      else if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[i],elecAntiZeePhi[i])<0.3)
+	elecAntiZeeCat_[i]=1;
+      //Match Leading jet
+      else if(elecLeadJetIndex_==i)
+	elecAntiZeeCat_[i]=2;
+      //Match Trail jet
+      else if(elecTrailJetIndex_==i)
+	elecAntiZeeCat_[i]=3;
+      else
+	elecAntiZeeCat_[i]=4;
+    }
+    //Electrons for AntiZee categories
+    ////////////////////////////////
+
 
     ptVeto       = (veto>=0) ? (*jets)[veto].Pt() : -99;
     etaVeto      = (veto>=0) ? (*jets)[veto].Eta(): -99;
@@ -2775,6 +2895,103 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     lumi_            = lumi;
     index_           = index;
 
+ 	  	 
+    // pairIndex : Moriond, HPSMVA2, HPSDB3H, AntiMu2, AntiMu2HPSMVA2, AntiMu2HPSDB3H, SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_,  SoftD_, 	 
+    for(int i=0 ; i<nPidx ; i++) { pairIndex[i]=-1; passQualityCuts[i]=false;} 	 
+    
+    bool mvaPOG_e      = (mvaPOGNonTrig>0.925 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGNonTrig>0.975 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGNonTrig>0.985 &&  TMath::Abs(scEtaL1)>1.479); 	 
+    bool mvaPOGNoIP_e  = (mvaPOGTrigNoIP>0.55 && TMath::Abs(scEtaL1)<0.8) || (mvaPOGTrigNoIP>0.9 && TMath::Abs(scEtaL1)>0.8 && TMath::Abs(scEtaL1)<1.479) ||  (mvaPOGTrigNoIP>0.925 &&  TMath::Abs(scEtaL1)>1.479); 	 
+    bool anti_e_old    = (tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1); 	 
+    bool anti_e_new_L  = tightestAntiEMVA3WP > 0 ; 	 
+    bool anti_e_new_M  = tightestAntiEMVA3WP > 1 ; 	 
+    bool anti_e_new_T  = tightestAntiEMVA3WP > 2 ; 	 
+    bool anti_e_new_VT = tightestAntiEMVA3WP > 3 ; 	 
+    
+    // ABCD analysis 	 
+    passQualityCuts[0] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 	 
+    passQualityCuts[1] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
+    passQualityCuts[2] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3AntiMu2HPSDB3H 	 
+    passQualityCuts[3] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
+    passQualityCuts[4] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
+    passQualityCuts[5] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[6] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSDB3HWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSDB3H 	 
+    passQualityCuts[7] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiMu2 	 
+    passQualityCuts[8] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13Tight 	 
+    passQualityCuts[9] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13VTight 	 
+    passQualityCuts[10] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 	 
+    passQualityCuts[11] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
+    passQualityCuts[12] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3AntiMu2HPSDB3H 	 
+    passQualityCuts[13] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
+    passQualityCuts[14] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
+    passQualityCuts[15] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[16] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSDB3HWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSDB3H 	 
+    passQualityCuts[17] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiMu2 	 
+    passQualityCuts[18] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13Tight 	 
+    passQualityCuts[19] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsSpring13VTight 	 
+    
+    // SoftD analysis 	 
+    //// HLT matching 	 
+    passQualityCuts[20] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch 	 
+    passQualityCuts[21] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch 	 
+    passQualityCuts[22] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch 	 
+    passQualityCuts[23] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch 	 
+    passQualityCuts[24] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch 	 
+    passQualityCuts[25] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch 	 
+    passQualityCuts[26] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSMVA2_SoftD_HLTmatch 	 
+    passQualityCuts[27] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchSoft); // AntiMu2HPSDB3H_SoftD_HLTmatch 	 
+    //// L1ETM cut      
+    passQualityCuts[28] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut 	 
+    passQualityCuts[29] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut 	 
+    passQualityCuts[30] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut 	 
+    passQualityCuts[31] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut 	 
+    passQualityCuts[32] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut 	 
+    passQualityCuts[33] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut 	 
+    passQualityCuts[34] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSMVA2_SoftD_L1ETMcut 	 
+    passQualityCuts[35] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && passL1etmCut_); // AntiMu2HPSDB3H_SoftD_L1ETMcut 	 
+    
+    // Soft + tau (w/o L1ETM cut) 	 
+    passQualityCuts[36] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau 	 
+    passQualityCuts[37] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau 	 
+    passQualityCuts[38] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau 	 
+    passQualityCuts[39] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau 	 
+    passQualityCuts[40] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau 	 
+    passQualityCuts[41] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau 	 
+    passQualityCuts[42] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSMVA2WP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSMVA2_Soft_Tau 	 
+    passQualityCuts[43] = (ptL1>14 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_L  && ptL2>20 && tightestAntiMu2WP>0  && tightestHPSDB3HWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatchIsoEle13Tau20); // AntiMu2HPSDB3H_Soft_Tau 	 
+    
+    // Arrived in a new event 	 
+    if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){ 	 
+      
+      // change reference 	 
+      lastEvent = event; 	 
+      lastLumi  = lumi; 	 
+      lastRun   = run; 	 
+      
+      // set back counters to 0 	 
+      for(int i=0 ; i<nPidx ; i++) counter[i]=0; 	 
+      
+      for(int i=0 ; i<nPidx ; i++) { 	 
+	if( passQualityCuts[i] ){ 	 
+	  pairIndex[i] = counter[i]; 	 
+	  counter[i]++; 	 
+	} 	 
+	else pairIndex[i] = -1; 	 
+      } 	 
+    } 	 
+    // This entry is in the same event 	 
+    else{ 	 
+      for(int i=0 ; i<nPidx ; i++) { 	 
+	
+	if( passQualityCuts[i] ){ 	 
+	  pairIndex[i] = counter[i]; 	 
+	  counter[i]++; 	 
+	} 	 
+	else 	 
+	  pairIndex[i] = -1; 	 
+      } 	 
+    } 	 
+    
+    
     outTreePtOrd->Fill();
   }
   
@@ -2892,38 +3109,38 @@ int main(int argc, const char* argv[])
   }
   fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts);
 
-  TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
-  TTree* backgroundDYTauTau, *backgroundDYEtoTau, *backgroundDYJtoTau;
-  TString outName ="";
-  TFile *outFile;// = new TFile(outName,"UPDATE");
+//   TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
+//   TTree* backgroundDYTauTau, *backgroundDYEtoTau, *backgroundDYJtoTau;
+//   TString outName ="";
+//   TFile *outFile;// = new TFile(outName,"UPDATE");
 
-  if(sample=="DYJets") {
-    backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
-    backgroundDYEtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && leptFakeTau"); // g/Z -> mu+mu- mu->tau
-    backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
+//   if(sample=="DYJets") {
+//     backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
+//     backgroundDYEtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && leptFakeTau"); // g/Z -> mu+mu- mu->tau
+//     backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
 
-    cout << "-- copy tree" << endl;
-    if(backgroundDYTauTau) { 
-      outName = dirOut_+"nTupleDYJ_TauTau_"+analysis+".root" ;
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYTauTau->Write();
-      outFile->Close();
-    }
+//     cout << "-- copy tree" << endl;
+//     if(backgroundDYTauTau) { 
+//       outName = dirOut_+"nTupleDYJ_TauTau_"+analysis+".root" ;
+//       outFile = new TFile(outName,"RECREATE");
+//       backgroundDYTauTau->Write();
+//       outFile->Close();
+//     }
     
-    if(backgroundDYEtoTau) {
-      outName = dirOut_+"nTupleDYJ_EToTau_"+analysis+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYEtoTau->Write();
-      outFile->Close();
-    }
+//     if(backgroundDYEtoTau) {
+//       outName = dirOut_+"nTupleDYJ_EToTau_"+analysis+".root";
+//       outFile = new TFile(outName,"RECREATE");
+//       backgroundDYEtoTau->Write();
+//       outFile->Close();
+//     }
     
-    if(backgroundDYJtoTau) {
-      outName = dirOut_+"nTupleDYJ_JetToTau_"+analysis+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYJtoTau->Write();
-      outFile->Close();
-    }
-  }
+//     if(backgroundDYJtoTau) {
+//       outName = dirOut_+"nTupleDYJ_JetToTau_"+analysis+".root";
+//       outFile = new TFile(outName,"RECREATE");
+//       backgroundDYJtoTau->Write();
+//       outFile->Close();
+//     }
+//   }
 
 
   return 0;
