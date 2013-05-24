@@ -44,7 +44,7 @@ else:
 if runOnMC:
     process.GlobalTag.globaltag = cms.string('START53_V15::All')
 else:
-    process.GlobalTag.globaltag = cms.string('GR_P_V42_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
