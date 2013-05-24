@@ -15,7 +15,8 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 runOnMC     = False
 runOnEmbed  = False
 embedType   = "RhEmbedEleTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
-applyTauESCorr= True
+reRunPatJets = True
+applyTauESCorr= False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
@@ -265,6 +266,54 @@ process.puJetIdSequence = cms.Sequence(process.puJetMva)
 #process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSequence *
 #                                        (process.pfMEtMVAsequence*process.patPFMetByMVA))
 
+######################################################
+#ReRun patJet
+process.runPatJets = cms.Sequence()
+
+if reRunPatJets:
+    #process.load("PhysicsTools.PatAlgos.producersLayer1.jetProducer_cff")
+    process.load("PhysicsTools.PatAlgos.patSequences_cff")
+    from PhysicsTools.PatAlgos.tools.jetTools import *
+
+    switchJetCollection(process,cms.InputTag('ak5PFJets'),
+                        doJTA        = True,
+                        doBTagging   = True,
+                        jetCorrLabel = ('AK5PF', ['L2Relative', 'L3Absolute',]),
+                        doType1MET   = False,
+                        genJetCollection=cms.InputTag("ak5GenJets"),
+                        doJetID      = True,
+                        jetIdLabel   = 'ak5',
+                        outputModules = []
+                        )
+
+    JEClevels = cms.vstring(['L2Relative', 'L3Absolute'])
+    if runOnMC:
+        JEClevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
+    else:
+        JEClevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+        
+    process.patJetCorrFactors.levels = JEClevels
+    process.patJetCorrFactors.rho    = cms.InputTag('kt6PFJets','rho')
+    process.patJetCorrFactors.useRho = True
+    
+    process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
+        levels = cms.vstring('L1Offset',
+                             'L2Relative',
+                             'L3Absolute')
+        )
+    process.patJetCorrFactorsL1Offset.useRho = False #MB
+    if runOnMC:
+        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+    else:
+        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+        
+    process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
+                                                         cms.InputTag("patJetCorrFactorsL1Offset"))
+    process.makePatJets.replace(process.patJetCorrFactors,
+                                process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
+    
+    process.runPatJets = cms.Sequence(process.makePatJets*process.selectedPatJets)
+
 ###################################################################################
 process.rescaledTaus = cms.EDProducer(
     "TauRescalerProducer",
@@ -307,7 +356,7 @@ process.selectedDiTauTauUp = process.selectedDiTau.clone(src = cms.InputTag("Mer
 process.selectedDiTauTauUpCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauUp"))
 
 #######################################################################
-getDiTauMassByLeptonPair(process, "", "elecPtEtaIDIso", "tauPtEtaIDAgMuAgElecIsoTauUp", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauDown")
+getDiTauMassByLeptonPair(process, "", "elecPtEtaIDIso", "tauPtEtaIDAgMuAgElecIsoTauDown", runOnMC, useMarkov, useRecoil, doSVFitReco, "TauDown")
 
 process.selectedDiTauTauDown = process.selectedDiTau.clone(src = cms.InputTag("MergedDiTausTauDown:diTaus") )
 process.selectedDiTauTauDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauTauDown"))
@@ -628,6 +677,7 @@ if runOnEmbed:
 #######################################################################
 process.seqNominal = cms.Sequence(
     process.allEventsFilter*
+    process.runPatJets*
     (process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     process.elecPtEtaID* #MB
@@ -652,6 +702,7 @@ process.seqNominal = cms.Sequence(
     )
 process.seqElecUp = cms.Sequence(
     process.allEventsFilter*
+    process.runPatJets*
     process.elecPtEtaID* #MB
     process.elecPtEtaIDIsoPtRel *
     (process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*
@@ -677,6 +728,7 @@ process.seqElecUp = cms.Sequence(
     )
 process.seqElecDown = cms.Sequence(
     process.allEventsFilter*
+    process.runPatJets*
     process.elecPtEtaID* #MB
     process.elecPtEtaIDIsoPtRel *
     (process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*
@@ -703,6 +755,7 @@ process.seqElecDown = cms.Sequence(
 
 process.seqTauUp = cms.Sequence(
     process.allEventsFilter*
+    process.runPatJets*
     process.elecPtEtaID* #MB
     (process.elecPtEtaIDIso*process.elecPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
@@ -728,6 +781,7 @@ process.seqTauUp = cms.Sequence(
     )
 process.seqTauDown = cms.Sequence(
     process.allEventsFilter*
+    process.runPatJets*
     process.elecPtEtaID* #MB
     (process.elecPtEtaIDIso*process.elecPtEtaIDIsoCounter) *
     process.tauPtEtaIDAgMuLAgElec*process.tauPtEtaIDAgMuAgElecScaled*process.tauPtEtaIDAgMuAgElecIsoPtRel*
