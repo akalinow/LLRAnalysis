@@ -605,7 +605,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     genParticles       = cms.InputTag("genParticles"),
     genTaus            = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC               = cms.bool(runOnMC),
-    isRhEmb            = cms.untracked.bool(runOnEmbed),
+    isRhEmb            = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet       = cms.untracked.double(0.5),
     minCorrPt          = cms.untracked.double(15.),
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight

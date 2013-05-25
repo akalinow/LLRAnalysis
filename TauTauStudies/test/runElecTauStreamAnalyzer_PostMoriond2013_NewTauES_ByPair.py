@@ -70,7 +70,8 @@ process.source = cms.Source(
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/PFEmbed/patTuples_LepTauStream_30_1_8a9.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
     )
     )
@@ -605,7 +606,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     genParticles       = cms.InputTag("genParticles"),
     genTaus            = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC               = cms.bool(runOnMC),
-    isRhEmb            = cms.untracked.bool(runOnEmbed),
+    isRhEmb            = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet       = cms.untracked.double(0.5),
     minCorrPt          = cms.untracked.double(15.),
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
