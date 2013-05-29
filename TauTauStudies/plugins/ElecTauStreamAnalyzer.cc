@@ -811,7 +811,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	continue;
       for(unsigned j = 0; j< ((*genParticles)[k].daughterRefVector()).size() ; j++){
 	if( abs(((*genParticles)[k].daughterRef(j))->pdgId()) == 11 ){
-	  genEleFromVP4_->push_back( (*genParticles)[k].p4() );
+	  genEleFromVP4_->push_back( ((*genParticles)[k].daughterRef(j))->p4() );
 	}
       }
       NumEleFromV_=genEleFromVP4_->size();
