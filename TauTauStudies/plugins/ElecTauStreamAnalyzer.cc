@@ -208,6 +208,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   l1ETMP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genMETP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  genEleFromVP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   
   leptonJets_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   extraElectrons_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -372,6 +373,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
   tree_->Branch("genMETP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genMETP4_);
   tree_->Branch("genVP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genVP4_);
+  tree_->Branch("genEleFromVP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genEleFromVP4_);//IN
+  tree_->Branch("NumEleFromV",&NumEleFromV_,"NumEleFromV/I");//IN
   tree_->Branch("genDecay",&genDecay_,"genDecay/I");
   tree_->Branch("parton",&parton_,"parton/I");
   tree_->Branch("genPartMult",&genPartMult_,"genPartMult/I");
@@ -550,7 +553,7 @@ void ElecTauStreamAnalyzer::beginJob(){
 ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete jetsP4_; delete jetsIDP4_; delete jetsIDL1OffsetP4_; delete jetsIDUpP4_; delete jetsIDDownP4_; 
   delete METP4_; delete caloMETNoHFP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
-  delete diTauSVfitP4_; delete genVP4_;
+  delete diTauSVfitP4_; delete genVP4_;delete genEleFromVP4_;
   delete diTauLegsP4_; delete jetsBtagHE_; delete jetsBtagHP_; delete jetsBtagCSV_;
   delete bQuark_; delete diTauLegsAltP4_;
   delete tauXTriggers_; delete triggerBits_; delete sigDCA_;
@@ -575,6 +578,7 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
 void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup){
 
   genVP4_->clear();
+  genEleFromVP4_->clear();
   caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
@@ -794,7 +798,27 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       if(verbose_) cout << "Decays to pdgId " << genDecay_/(*genParticles)[k].pdgId()  << endl;
       break;
     }
-  }
+    //////////////////////IN
+    // Generator level information for electrons from Zee
+    for(unsigned int k = 0; k < genParticles->size(); k ++){
+      if( !( (*genParticles)[k].pdgId() == 23 || 
+	     abs((*genParticles)[k].pdgId()) == 24 || 
+	     (*genParticles)[k].pdgId() == 25 ||
+	     (*genParticles)[k].pdgId() == 35 ||
+             (*genParticles)[k].pdgId() == 36
+	     ) || 
+	  (*genParticles)[k].status()!=3)
+	continue;
+      for(unsigned j = 0; j< ((*genParticles)[k].daughterRefVector()).size() ; j++){
+	if( abs(((*genParticles)[k].daughterRef(j))->pdgId()) == 11 ){
+	  genEleFromVP4_->push_back( (*genParticles)[k].p4() );
+	}
+      }
+      NumEleFromV_=genEleFromVP4_->size();
+    }
+    // Generator level information for electrons from Zee
+    //////////////////////IN
+  }//isMC_
 
   edm::Handle<reco::GenJetCollection> tauGenJetsHandle;
   edm::Handle<std::vector<PileupSummaryInfo> > puInfoH;
@@ -2324,7 +2348,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       rho_ = rhoHandle.isValid() ? (*rhoHandle) : -99;
 
       edm::Handle<double> rhoisoHandle;
-      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rhoiso"), rhoisoHandle);
+//       iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rhoiso"), rhoisoHandle);
+      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rho"), rhoisoHandle);
       rhoiso_ = rhoisoHandle.isValid() ? (*rhoisoHandle) : -99;
 
       edm::Handle<reco::VertexCollection> vC_likelihood;
@@ -2353,6 +2378,12 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
       // generator part
       vector<float> quarkGluonDiscriminatorGen ;
+//       if(newJet->genJet()==0){
+// 	quarkGluonDiscriminatorGen.push_back(-99);
+// 	quarkGluonDiscriminatorGen.push_back(-99);
+// 	quarkGluonDiscriminatorGen.push_back(-99);
+// 	quarkGluonDiscriminatorGen.push_back(-99);
+//       }
       if(newJet->genJet()!=0){
 	quarkGluonDiscriminatorGen.push_back(newJet->partonFlavour());
 	quarkGluonDiscriminatorGen.push_back((newJet->genJet()->getGenConstituents()).size());

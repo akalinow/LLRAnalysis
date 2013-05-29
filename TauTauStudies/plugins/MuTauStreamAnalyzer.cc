@@ -2048,7 +2048,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       rho_ = rhoHandle.isValid() ? (*rhoHandle) : -99;
 
       edm::Handle<double> rhoisoHandle;
-      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rhoiso"), rhoisoHandle);
+      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rho"), rhoisoHandle);
       rhoiso_ = rhoisoHandle.isValid() ? (*rhoisoHandle) : -99;
 
       edm::Handle<reco::VertexCollection> vC_likelihood;
@@ -2077,6 +2077,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
       // generator part
       vector<float> quarkGluonDiscriminatorGen ;
+      if(newJet->genJet()==0){
+	quarkGluonDiscriminatorGen.push_back(-99);
+	quarkGluonDiscriminatorGen.push_back(-99);
+	quarkGluonDiscriminatorGen.push_back(-99);
+	quarkGluonDiscriminatorGen.push_back(-99);
+      }
       if(newJet->genJet()!=0){
 	quarkGluonDiscriminatorGen.push_back(newJet->partonFlavour());
 	quarkGluonDiscriminatorGen.push_back((newJet->genJet()->getGenConstituents()).size());
