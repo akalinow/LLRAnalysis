@@ -2048,7 +2048,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       rho_ = rhoHandle.isValid() ? (*rhoHandle) : -99;
 
       edm::Handle<double> rhoisoHandle;
-      iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rho"), rhoisoHandle);
+      iEvent.getByLabel(edm::InputTag("kt6PFJetsIsoQG","rho"), rhoisoHandle);
       rhoiso_ = rhoisoHandle.isValid() ? (*rhoisoHandle) : -99;
 
       edm::Handle<reco::VertexCollection> vC_likelihood;

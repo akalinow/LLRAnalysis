@@ -2348,7 +2348,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       rho_ = rhoHandle.isValid() ? (*rhoHandle) : -99;
 
       edm::Handle<double> rhoisoHandle;
-//       iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rhoiso"), rhoisoHandle);
+//       iEvent.getByLabel(edm::InputTag("kt6PFJetsIsoQG","rhoiso"), rhoisoHandle);
       iEvent.getByLabel(edm::InputTag("kt6PFJetsQG","rho"), rhoisoHandle);
       rhoiso_ = rhoisoHandle.isValid() ? (*rhoisoHandle) : -99;
 
