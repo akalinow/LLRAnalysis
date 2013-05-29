@@ -504,8 +504,8 @@ MVALooseNew = "((pt<=20 && abs(superCluster.eta)>=0.0 && abs(superCluster.eta)<0
 process.electronsForVeto = cms.EDFilter(
     "PATElectronSelector",
     src = cms.InputTag("electronsForVeto"),
-    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"
-                     +" && "+MVALoose),#use MVAloose for back compability, can be changed in future
+    cut = cms.string("userFloat('nHits')==0 && userInt('antiConv')>0.5"),
+                     ##+" && "+MVALoose),#use MVAloose for back compability, can be changed in future
     filter = cms.bool(False)
     )
 #########
