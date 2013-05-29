@@ -70,9 +70,10 @@ process.source = cms.Source(
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
-    )
+    'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
+  )
     )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -291,6 +292,13 @@ if reRunPatJets:
         JEClevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
     else:
         JEClevels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+        process.makePatJets.remove(process.patJetPartonMatch)
+        process.makePatJets.remove(process.patJetGenJetMatch)
+        process.makePatJets.remove(process.patJetFlavourId)
+        process.patJets.addGenJetMatch = False
+        process.patJets.addGenPartonMatch = False
+        process.patJets.addPartonJetMatch = False
+        process.patJets.getJetMCFlavour = False
         
     process.patJetCorrFactors.levels = JEClevels
     process.patJetCorrFactors.rho    = cms.InputTag('kt6PFJets','rho')
