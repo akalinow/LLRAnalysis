@@ -740,9 +740,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
 
   //iso and id of electron matching leading jet for antiZeeMVA
-  int elecLeadJetIndex_,elecTrailJetIndex_,elecAntiZeeCat_[4];//IN
+  int elecLeadJetIndex_,elecTrailJetIndex_,elecTauIndex_,isAdditionalElec_,genElecMatchIndex_[2];//IN
   float elecLeadJetPt_,elecLeadJetEta_,elecLeadJetRelIso_,elecLeadJetIdNonTrig_,elecLeadJetIdTrigNoIP_,elecTrailJetPt_,elecTrailJetEta_,elecTrailJetRelIso_,elecTrailJetIdNonTrig_,elecTrailJetIdTrigNoIP_;//IN
-
+  float elecTauPt_,elecTauEta_,elecTauRelIso_,elecTauIdNonTrig_,elecTauIdTrigNoIP_;
   outTreePtOrd->Branch("pt1",  &pt1,"pt1/F");
   outTreePtOrd->Branch("pt2",  &pt2,"pt2/F");
   outTreePtOrd->Branch("eta1", &eta1,"eta1/F");
@@ -1105,7 +1105,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("metSigmaPerp", &metSigmaPerp, "metSigmaPerp/F");
 
   //Electrons for AntiZee
-  outTreePtOrd->Branch("elecAntiZeeCat", &elecAntiZeeCat_, "elecAntiZeeCat[4]/I");//IN
+  outTreePtOrd->Branch("isAdditionalElec", &isAdditionalElec_, "isAdditionalElec/I");//IN
   outTreePtOrd->Branch("elecLeadJetIndex", &elecLeadJetIndex_, "elecLeadJetIndex/I");//IN
   outTreePtOrd->Branch("elecLeadJetPt", &elecLeadJetPt_, "elecLeadJetPt/F");//IN
   outTreePtOrd->Branch("elecLeadJetEta", &elecLeadJetEta_, "elecLeadJetEta/F");//IN
@@ -1118,6 +1118,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("elecTrailJetRelIso", &elecTrailJetRelIso_, "elecTrailJetRelIso/F");//IN
   outTreePtOrd->Branch("elecTrailJetIdNonTrig", &elecTrailJetIdNonTrig_, "elecTrailJetIdNonTrig/F");//IN
   outTreePtOrd->Branch("elecTrailJetIdTrigNoIP", &elecTrailJetIdTrigNoIP_, "elecTrailJetIdTrigNoIP/F");//IN
+  outTreePtOrd->Branch("elecTauIndex", &elecTauIndex_, "elecTauIndex/I");//IN
+  outTreePtOrd->Branch("elecTauPt", &elecTauPt_, "elecTauPt/F");//IN
+  outTreePtOrd->Branch("elecTauEta", &elecTauEta_, "elecTauEta/F");//IN
+  outTreePtOrd->Branch("elecTauRelIso", &elecTauRelIso_, "elecTauRelIso/F");//IN
+  outTreePtOrd->Branch("elecTauIdNonTrig", &elecTauIdNonTrig_, "elecTauIdNonTrig/F");//IN
+  outTreePtOrd->Branch("elecTauIdTrigNoIP", &elecTauIdTrigNoIP_, "elecTauIdTrigNoIP/F");//IN
+  outTreePtOrd->Branch("genElecMatchIndex", &genElecMatchIndex_, "genElecMatchIndex[2]/I");//IN
+
   int nEntries    = currentTree->GetEntries() ;
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
@@ -1328,6 +1336,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("elecAntiZeeRelIso"     ,1);//IN
   currentTree->SetBranchStatus("elecAntiZeeIdNonTrig"  ,1);//IN
   currentTree->SetBranchStatus("elecAntiZeeIdTrigNoIP" ,1);//IN
+  currentTree->SetBranchStatus("genEleFromVP4"         ,1);//IN
+  currentTree->SetBranchStatus("NumEleFromV"           ,1);//IN
 
   ////////////////////////////////////////////////////////////////////
 
@@ -1417,6 +1427,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   std::vector< float >* metSgnMatrix = new std::vector< float >();
   currentTree->SetBranchAddress("metSgnMatrix", &metSgnMatrix);
 
+  std::vector< LV >* genEleFromVP4         = new std::vector< LV >();
+  currentTree->SetBranchAddress("genEleFromVP4",          &genEleFromVP4);
+
   // leptons for veto
   std::vector< LV >* vetoElectronsP4 = new std::vector< LV >(); 
   std::vector< int >* vetoElectronsID = new std::vector< int >();//NewEleID 
@@ -1427,6 +1440,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     currentTree->SetBranchAddress("vetoMuonsP4",     &vetoMuonsP4); 
     //std::vector< LV >* vetoTausP4 = new std::vector< LV >();
   }
+
 
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
@@ -1479,6 +1493,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float elecAntiZeeRelIso[4];//IN
   float elecAntiZeeIdNonTrig[4];//IN
   float elecAntiZeeIdTrigNoIP[4];//IN
+  int NumEleFromV; //IN
 
   // additional variables for soft analysis ND
   currentTree->SetBranchAddress("sumEt",            &sumEt);
@@ -1597,6 +1612,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("elecAntiZeeRelIso",    &elecAntiZeeRelIso);//IN
   currentTree->SetBranchAddress("elecAntiZeeIdNonTrig", &elecAntiZeeIdNonTrig);//IN
   currentTree->SetBranchAddress("elecAntiZeeIdTrigNoIP",&elecAntiZeeIdTrigNoIP);//IN
+  currentTree->SetBranchAddress("NumEleFromV"          ,&NumEleFromV);//IN
 
 
   RecoilCorrector* recoilCorr = 0;
@@ -1726,8 +1742,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
 
 
-  for (int n = 0; n <nEntries  ; n++) {
-//   for (int n = 0; n <80000  ; n++) {
+//   for (int n = 0; n <nEntries  ; n++) {
+  for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
@@ -1852,72 +1868,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       jet1PUMVA = (*jetPUMVA)[lead];
       jet1PUWP  = (*jetPUWP)[lead*3]; // WP loose
 
-      ////////////////////////////////
-      // Electrons matching jet
-      elecLeadJetIndex_ = -1.;
-      elecLeadJetPt_ = -99;
-      elecLeadJetEta_ = -99;
-      elecLeadJetRelIso_ = -99;
-      elecLeadJetIdNonTrig_ = -99;
-      elecLeadJetIdTrigNoIP_ = -99;
-      if(deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
-	if(DEBUG){
-	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<<endl;
-	  cout<<"elecAntiZeeRelIso[0] "<<elecAntiZeeRelIso[0]<<endl;
-	  cout<<"elecAntiZeeIdNonTrig[0] "<<elecAntiZeeIdNonTrig[0]<<endl;
-	  cout<<"elecAntiZeeTrigNoIP[0] "<<elecAntiZeeIdTrigNoIP[0]<<endl;
-	}
-	elecLeadJetIndex_ = 0;
-	elecLeadJetPt_ = elecAntiZeePt[0];
-	elecLeadJetEta_ = elecAntiZeeSCEta[0];
-	elecLeadJetRelIso_ = elecAntiZeeRelIso[0];
-	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
-	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
-      }
-      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
-	if(DEBUG){
-	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<<endl;
-	  cout<<"elecAntiZeeRelIso[1] "<<elecAntiZeeRelIso[1]<<endl;
-	  cout<<"elecAntiZeeIdNonTrig[1] "<<elecAntiZeeIdNonTrig[1]<<endl;
-	  cout<<"elecAntiZeeTrigNoIP[1] "<<elecAntiZeeIdTrigNoIP[1]<<endl;
-	}
-	elecLeadJetIndex_ = 1;
-	elecLeadJetPt_ = elecAntiZeePt[1];
-	elecLeadJetEta_ = elecAntiZeeSCEta[1];
-	elecLeadJetRelIso_ = elecAntiZeeRelIso[1];
-	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
-	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
-      }
-      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
-	if(DEBUG){
-	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<<endl;
-	  cout<<"elecAntiZeeRelIso[2] "<<elecAntiZeeRelIso[2]<<endl;
-	  cout<<"elecAntiZeeIdNonTrig[2] "<<elecAntiZeeIdNonTrig[2]<<endl;
-	  cout<<"elecAntiZeeTrigNoIP[2] "<<elecAntiZeeIdTrigNoIP[2]<<endl;
-	}
-	elecLeadJetIndex_ = 2;
-	elecLeadJetPt_ = elecAntiZeePt[2];
-	elecLeadJetEta_ = elecAntiZeeSCEta[2];
-	elecLeadJetRelIso_ = elecAntiZeeRelIso[2];
-	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
-	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
-      }
-      else if(deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
-	if(DEBUG){
-	  cout<<"deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3]) "<<deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<<endl;
-	  cout<<"elecAntiZeeRelIso[3] "<<elecAntiZeeRelIso[3]<<endl;
-	  cout<<"elecAntiZeeIdNonTrig[3] "<<elecAntiZeeIdNonTrig[3]<<endl;
-	  cout<<"elecAntiZeeTrigNoIP[3] "<<elecAntiZeeIdTrigNoIP[3]<<endl;
-	}
-	elecLeadJetIndex_ = 3;
-	elecLeadJetPt_ = elecAntiZeePt[3];
-	elecLeadJetEta_ = elecAntiZeeSCEta[3];
-	elecLeadJetRelIso_ = elecAntiZeeRelIso[3];
-	elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
-	elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
-      }
-      // Electrons matching jet
-      ////////////////////////////////
       if(trail>=0){
 
 	pt2  = (*jets)[trail].Pt();
@@ -1958,49 +1908,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	jet2PUMVA = (*jetPUMVA)[trail];
 	jet2PUWP  = (*jetPUWP)[trail*3]; // WP loose
 
-	////////////////////////////////
-	// Electrons matching jet
-	elecTrailJetIndex_ = -1.;
-	elecTrailJetPt_ = -99;
-	elecTrailJetEta_ = -99;
-	elecTrailJetRelIso_ = -99;
-	elecTrailJetIdNonTrig_ = -99;
-	elecTrailJetIdTrigNoIP_ = -99;
-	if(deltaR(eta2,phi2,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
-	  elecTrailJetIndex_ = 0;
-	  elecTrailJetPt_ = elecAntiZeePt[0];
-	  elecTrailJetEta_ = elecAntiZeeSCEta[0];
-	  elecTrailJetRelIso_ = elecAntiZeeRelIso[0];
-	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
-	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
-	}
-	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
-	  elecTrailJetIndex_ = 1;
-	  elecTrailJetPt_ = elecAntiZeePt[1];
-	  elecTrailJetEta_ = elecAntiZeeSCEta[1];
-	  elecTrailJetRelIso_ = elecAntiZeeRelIso[1];
-	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
-	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
-	}
-	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
-	  elecTrailJetIndex_ = 2;
-	  elecTrailJetPt_ = elecAntiZeePt[2];
-	  elecTrailJetEta_ = elecAntiZeeSCEta[2];
-	  elecTrailJetRelIso_ = elecAntiZeeRelIso[2];
-	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
-	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
-	}
-	else if(deltaR(eta2,phi2,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
-	  elecTrailJetIndex_ = 3;
-	  elecTrailJetPt_ = elecAntiZeePt[3];
-	  elecTrailJetEta_ = elecAntiZeeSCEta[3];
-	  elecTrailJetRelIso_ = elecAntiZeeRelIso[3];
-	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
-	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
-	}
-	// Electrons matching jet
-	////////////////////////////////
-
 	diJetPt  = ((*jets)[lead] + (*jets)[trail]).Pt();
 	diJetPhi =  //((*jets)[lead]-(*jets)[trail]).Phi();
 	  TMath::Abs(  ((*jets)[lead]-(*jets)[trail]).Phi() ) > TMath::Pi() ? 
@@ -2031,27 +1938,156 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     ////////////////////////////////
     //Electrons for AntiZee categories
-    for(int i=0;i<4;i++)
-      elecAntiZeeCat_[i]=-99;
-    for(int i=0;i<4;i++){
-      //matched to Leg1
-      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),elecAntiZeeSCEta[i],elecAntiZeePhi[i])<0.3)
-	elecAntiZeeCat_[i]=-1;
-      //No GsfElectron in the event
-      if(elecAntiZeePt[i]==-999)
-	elecAntiZeeCat_[i]=0;
-      //MatchTauLeg
-      else if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[i],elecAntiZeePhi[i])<0.3)
-	elecAntiZeeCat_[i]=1;
-      //Match Leading jet
-      else if(elecLeadJetIndex_==i)
-	elecAntiZeeCat_[i]=2;
-      //Match Trail jet
-      else if(elecTrailJetIndex_==i)
-	elecAntiZeeCat_[i]=3;
-      else
-	elecAntiZeeCat_[i]=4;
+    ////////////////////////////////
+    // generated electrons from Z matching 
+    genElecMatchIndex_[0]=-99;
+    genElecMatchIndex_[1]=-99;
+    if(NumEleFromV>0){
+      cout<<"Electron pt,eta,phi : "<<(*diTauLegsP4)[0].Pt()<<" "<<(*diTauLegsP4)[0].Eta()<<" "<<(*diTauLegsP4)[0].Phi()<<endl;
+      cout<<"Tau      pt,eta,phi : "<<(*diTauLegsP4)[1].Pt()<<" "<<(*diTauLegsP4)[1].Eta()<<" "<<(*diTauLegsP4)[1].Phi()<<endl;
+      cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[0].Pt()<<" "<<(*genEleFromVP4)[0].Eta()<<" "<<(*genEleFromVP4)[0].Phi()<<endl;
+      cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[1].Pt()<<" "<<(*genEleFromVP4)[1].Eta()<<" "<<(*genEleFromVP4)[1].Phi()<<endl;
+      cout<<endl;
+      //Match Electron ->index 0
+      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[0].Eta(),(*genEleFromVP4)[0].Phi())<0.3)genElecMatchIndex_[0]=0;
+      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[1].Eta(),(*genEleFromVP4)[1].Phi())<0.3)genElecMatchIndex_[1]=0;
+      //Match Tau ->index 1
+      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[0].Eta(),(*genEleFromVP4)[0].Phi())<0.3)genElecMatchIndex_[0]=1;
+      if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[1].Eta(),(*genEleFromVP4)[1].Phi())<0.3)genElecMatchIndex_[1]=1;
+      //Match LeadJet ->index 2
+      if(deltaR(eta1,phi1,(*genEleFromVP4)[0].Eta(),(*genEleFromVP4)[0].Phi())<0.3)genElecMatchIndex_[0]=2;
+      if(deltaR(eta1,phi1,(*genEleFromVP4)[1].Eta(),(*genEleFromVP4)[1].Phi())<0.3)genElecMatchIndex_[1]=2;
+      //Match SubLeadJet ->index 3
+      if(deltaR(eta2,phi2,(*genEleFromVP4)[0].Eta(),(*genEleFromVP4)[0].Phi())<0.3)genElecMatchIndex_[0]=3;
+      if(deltaR(eta2,phi2,(*genEleFromVP4)[1].Eta(),(*genEleFromVP4)[1].Phi())<0.3)genElecMatchIndex_[1]=3;
     }
+    ////////////////////////////////
+    // Electrons matching jet
+    elecLeadJetIndex_ = -1.;
+    elecLeadJetPt_ = -99;
+    elecLeadJetEta_ = -99;
+    elecLeadJetRelIso_ = -99;
+    elecLeadJetIdNonTrig_ = -99;
+    elecLeadJetIdTrigNoIP_ = -99;
+    if(deltaR(eta1,phi1,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
+      elecLeadJetIndex_ = 0;
+      elecLeadJetPt_ = elecAntiZeePt[0];
+      elecLeadJetEta_ = elecAntiZeeSCEta[0];
+      elecLeadJetRelIso_ = elecAntiZeeRelIso[0];
+      elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
+      elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
+    }
+    else if(deltaR(eta1,phi1,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
+      elecLeadJetIndex_ = 1;
+      elecLeadJetPt_ = elecAntiZeePt[1];
+      elecLeadJetEta_ = elecAntiZeeSCEta[1];
+      elecLeadJetRelIso_ = elecAntiZeeRelIso[1];
+      elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
+      elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
+    }
+    else if(deltaR(eta1,phi1,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
+      elecLeadJetIndex_ = 2;
+      elecLeadJetPt_ = elecAntiZeePt[2];
+      elecLeadJetEta_ = elecAntiZeeSCEta[2];
+	  elecLeadJetRelIso_ = elecAntiZeeRelIso[2];
+	  elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
+	  elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
+    }
+    else if(deltaR(eta1,phi1,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
+      elecLeadJetIndex_ = 3;
+      elecLeadJetPt_ = elecAntiZeePt[3];
+      elecLeadJetEta_ = elecAntiZeeSCEta[3];
+      elecLeadJetRelIso_ = elecAntiZeeRelIso[3];
+      elecLeadJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
+      elecLeadJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
+    }
+
+    elecTrailJetIndex_ = -1.;
+    elecTrailJetPt_ = -99;
+    elecTrailJetEta_ = -99;
+    elecTrailJetRelIso_ = -99;
+    elecTrailJetIdNonTrig_ = -99;
+    elecTrailJetIdTrigNoIP_ = -99;
+    if(deltaR(eta2,phi2,elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
+      elecTrailJetIndex_ = 0;
+      elecTrailJetPt_ = elecAntiZeePt[0];
+      elecTrailJetEta_ = elecAntiZeeSCEta[0];
+      elecTrailJetRelIso_ = elecAntiZeeRelIso[0];
+      elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[0];
+      elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
+    }
+    else if(deltaR(eta2,phi2,elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
+      elecTrailJetIndex_ = 1;
+      elecTrailJetPt_ = elecAntiZeePt[1];
+      elecTrailJetEta_ = elecAntiZeeSCEta[1];
+      elecTrailJetRelIso_ = elecAntiZeeRelIso[1];
+      elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[1];
+      elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
+    }
+    else if(deltaR(eta2,phi2,elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
+      elecTrailJetIndex_ = 2;
+      elecTrailJetPt_ = elecAntiZeePt[2];
+      elecTrailJetEta_ = elecAntiZeeSCEta[2];
+	  elecTrailJetRelIso_ = elecAntiZeeRelIso[2];
+	  elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[2];
+	  elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
+    }
+    else if(deltaR(eta2,phi2,elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
+      elecTrailJetIndex_ = 3;
+      elecTrailJetPt_ = elecAntiZeePt[3];
+      elecTrailJetEta_ = elecAntiZeeSCEta[3];
+      elecTrailJetRelIso_ = elecAntiZeeRelIso[3];
+      elecTrailJetIdNonTrig_ = elecAntiZeeIdNonTrig[3];
+      elecTrailJetIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
+    }
+    // Electrons matching jet
+    ////////////////////////////////
+
+    ////////////////////////////////
+    // Electrons matching tau
+    elecTauIndex_ = -1.;
+    elecTauPt_ = -99;
+    elecTauEta_ = -99;
+    elecTauRelIso_ = -99;
+    elecTauIdNonTrig_ = -99;
+    elecTauIdTrigNoIP_ = -99;
+    if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[0],elecAntiZeePhi[0])<0.3){
+      elecTauIndex_ = 0;
+      elecTauPt_ = elecAntiZeePt[0];
+      elecTauEta_ = elecAntiZeeSCEta[0];
+      elecTauRelIso_ = elecAntiZeeRelIso[0];
+      elecTauIdNonTrig_ = elecAntiZeeIdNonTrig[0];
+      elecTauIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[0];
+    }
+    else if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[1],elecAntiZeePhi[1])<0.3){
+      elecTauIndex_ = 1;
+      elecTauPt_ = elecAntiZeePt[1];
+      elecTauEta_ = elecAntiZeeSCEta[1];
+      elecTauRelIso_ = elecAntiZeeRelIso[1];
+      elecTauIdNonTrig_ = elecAntiZeeIdNonTrig[1];
+      elecTauIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[1];
+    }
+    else if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[2],elecAntiZeePhi[2])<0.3){
+      elecTauIndex_ = 2;
+      elecTauPt_ = elecAntiZeePt[2];
+      elecTauEta_ = elecAntiZeeSCEta[2];
+	  elecTauRelIso_ = elecAntiZeeRelIso[2];
+	  elecTauIdNonTrig_ = elecAntiZeeIdNonTrig[2];
+	  elecTauIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[2];
+    }
+    else if(deltaR((*diTauLegsP4)[1].Eta(),(*diTauLegsP4)[1].Phi(),elecAntiZeeSCEta[3],elecAntiZeePhi[3])<0.3){
+      elecTauIndex_ = 3;
+      elecTauPt_ = elecAntiZeePt[3];
+      elecTauEta_ = elecAntiZeeSCEta[3];
+      elecTauRelIso_ = elecAntiZeeRelIso[3];
+      elecTauIdNonTrig_ = elecAntiZeeIdNonTrig[3];
+      elecTauIdTrigNoIP_ = elecAntiZeeIdTrigNoIP[3];
+    }
+    // Electrons matching tau
+    ////////////////////////////////
+    isAdditionalElec_=-1;
+    for(int i=0;i<4;i++)
+      if (elecAntiZeePt[i]>-999)isAdditionalElec_=i;
     //Electrons for AntiZee categories
     ////////////////////////////////
 
