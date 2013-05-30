@@ -1,0 +1,2 @@
+grep USER list_published.txt | awk '{print "echo "$1" ; dbs search --url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet --query=\042find file where dataset="$1"\042 | grep root | wc"}'  > checkPublish.sh 
+chmod u+x checkPublish.sh
