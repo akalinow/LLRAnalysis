@@ -1828,7 +1828,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	nJets20BTaggedLoose++ ;
 
       if( (*jets)[indexes[v]].Pt() > 20 && TMath::Abs((*jets)[indexes[v]].Eta())<2.4){ 
-        int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
+//         int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
+	int jetFlavour = int((*bQuark)[indexes[v]]);
 	bool isBtag = btsf->isbtagged((*jets)[indexes[v]].Pt(), (*jets)[indexes[v]].Eta(), (*jetsBtagCSV)[indexes[v]], jetFlavour, isData ,kNo, kNo, true);
         if(isBtag){
 	  nJets20BTagged++;
@@ -1951,12 +1952,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     // generated electrons from Z matching 
     genElecMatchIndex_[0]=-99;
     genElecMatchIndex_[1]=-99;
-    if(NumEleFromV>0){
-      cout<<"Electron pt,eta,phi : "<<(*diTauLegsP4)[0].Pt()<<" "<<(*diTauLegsP4)[0].Eta()<<" "<<(*diTauLegsP4)[0].Phi()<<endl;
-      cout<<"Tau      pt,eta,phi : "<<(*diTauLegsP4)[1].Pt()<<" "<<(*diTauLegsP4)[1].Eta()<<" "<<(*diTauLegsP4)[1].Phi()<<endl;
-      cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[0].Pt()<<" "<<(*genEleFromVP4)[0].Eta()<<" "<<(*genEleFromVP4)[0].Phi()<<endl;
-      cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[1].Pt()<<" "<<(*genEleFromVP4)[1].Eta()<<" "<<(*genEleFromVP4)[1].Phi()<<endl;
-      cout<<endl;
+    if(!isData && NumEleFromV>0){
+//       cout<<"Electron pt,eta,phi : "<<(*diTauLegsP4)[0].Pt()<<" "<<(*diTauLegsP4)[0].Eta()<<" "<<(*diTauLegsP4)[0].Phi()<<endl;
+//       cout<<"Tau      pt,eta,phi : "<<(*diTauLegsP4)[1].Pt()<<" "<<(*diTauLegsP4)[1].Eta()<<" "<<(*diTauLegsP4)[1].Phi()<<endl;
+//       cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[0].Pt()<<" "<<(*genEleFromVP4)[0].Eta()<<" "<<(*genEleFromVP4)[0].Phi()<<endl;
+//       cout<<"GenEle1  pt,eta,phi : "<<(*genEleFromVP4)[1].Pt()<<" "<<(*genEleFromVP4)[1].Eta()<<" "<<(*genEleFromVP4)[1].Phi()<<endl;
+//       cout<<endl;
       //Match Electron ->index 0
       if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[0].Eta(),(*genEleFromVP4)[0].Phi())<0.3)genElecMatchIndex_[0]=0;
       if(deltaR((*diTauLegsP4)[0].Eta(),(*diTauLegsP4)[0].Phi(),(*genEleFromVP4)[1].Eta(),(*genEleFromVP4)[1].Phi())<0.3)genElecMatchIndex_[1]=0;
