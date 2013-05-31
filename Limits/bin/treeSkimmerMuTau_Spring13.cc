@@ -712,7 +712,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
-  int vetoEvent_, leptonVeto_;
+  int vetoEventOld_;
+  int vetoEventNew_;
   
   //Parton Info for W+NJet
   int parton_, genPartMult_, leadGenPartPdg_, hepNUP_;
@@ -1024,8 +1025,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("isTightMuon",     &isTightMuon_,"isTightMuon/I"); 
   outTreePtOrd->Branch("genDecay",        &genDecay_,"genDecay/I");
   outTreePtOrd->Branch("leptFakeTau",     &leptFakeTau,"leptFakeTau/I");
-  outTreePtOrd->Branch("vetoEvent",       &vetoEvent_, "vetoEvent/I");
-  outTreePtOrd->Branch("leptonVeto",      &leptonVeto_, "leptonVeto/I");
+  outTreePtOrd->Branch("vetoEventOld",    &vetoEventOld_, "vetoEventOld/I");
+  outTreePtOrd->Branch("vetoEventNew",    &vetoEventNew_, "vetoEventNew/I");
 
   outTreePtOrd->Branch("parton", &parton_,"parton/I");
   outTreePtOrd->Branch("genPartMult", &genPartMult_,"genPartMult/I");
@@ -1181,6 +1182,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(doLepVeto) {
     currentTree->SetBranchStatus("vetoMuonsP4"        ,1);
     currentTree->SetBranchStatus("vetoElectronsP4"    ,1);
+    currentTree->SetBranchStatus("vetoElectronsID"    ,1);//NewEleID
   // currentTree->SetBranchStatus("vetoTausP4"         ,1);
   }
 
@@ -1307,9 +1309,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   
   // leptons for veto
   std::vector< LV >* vetoElectronsP4 = new std::vector< LV >();
+  std::vector< int >* vetoElectronsID = new std::vector< int >();//NewEleID 
   std::vector< LV >* vetoMuonsP4 = new std::vector< LV >();
   if(doLepVeto) {
     currentTree->SetBranchAddress("vetoElectronsP4", &vetoElectronsP4);
+    currentTree->SetBranchAddress("vetoElectronsID", &vetoElectronsID);//NewEleID
     currentTree->SetBranchAddress("vetoMuonsP4",     &vetoMuonsP4); 
     //std::vector< LV >* vetoTausP4 = new std::vector< LV >();
   }
@@ -1583,7 +1587,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	nJets20BTaggedLoose++ ;
 
       if( (*jets)[indexes[v]].Pt() > 20 && TMath::Abs((*jets)[indexes[v]].Eta())<2.4){ 
-	int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
+// 	int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
+	int jetFlavour = int((*bQuark)[indexes[v]]);
         //bool isBtag = isbtagged(isbQuark, (*jetsBtagCSV)[indexes[v]], isData, kNo, kNo); 
 	bool isBtag = btsf->isbtagged((*jets)[indexes[v]].Pt(), (*jets)[indexes[v]].Eta(), (*jetsBtagCSV)[indexes[v]], jetFlavour, isData ,kNo, kNo, true);
 	if(isBtag){
@@ -2424,19 +2429,26 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // Third lepton veto
     if(DEBUG) cout << "Third lepton veto" << endl;
-    int nVetoLepton = 0;
+    int nVetoLeptonOld = 0;
+    int nVetoLeptonNew = 0;
     for(size_t imu = 0; imu < vetoMuonsP4->size(); imu++){
       if(deltaR((*diTauLegsP4)[0], (*vetoMuonsP4)[imu]) > 0.3 && 
 // 	 deltaR((*diTauLegsP4)[1], (*vetoMuonsP4)[imu]) > 0.3 &&
-	 (*vetoMuonsP4)[imu].Pt()>10)
-	nVetoLepton++;
+	 (*vetoMuonsP4)[imu].Pt()>10){
+	nVetoLeptonOld++;
+	nVetoLeptonNew++;
+      }
     }
     
     for(size_t imu = 0; imu < vetoElectronsP4->size(); imu++){ 
       // if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 &&  
 //          deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 )
-      if((*vetoElectronsP4)[imu].Pt()>10)
-        nVetoLepton++; 
+      if((*vetoElectronsP4)[imu].Pt()>10&&
+	 ((*vetoElectronsID)[imu]==0 || (*vetoElectronsID)[imu]==2))
+        nVetoLeptonOld++;
+      if((*vetoElectronsP4)[imu].Pt()>10&&
+	 ((*vetoElectronsID)[imu]==1 || (*vetoElectronsID)[imu]==2))
+        nVetoLeptonNew++;  
     } 
     
     //nVetoLepton += vetoElectronsP4->size();
@@ -2446,7 +2458,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     isTightMuon_     = isTightMuon;
     muFlag_          = muFlag;
     genDecay_        = genDecay ;
-    vetoEvent_       = (nVetoLepton > 0) ? 1 : 0; //vetoEvent; 
+//     vetoEvent_       = (nVetoLepton > 0) ? 1 : 0; //vetoEvent; 
+    vetoEventOld_    = (nVetoLeptonOld > 0) ? 1 : 0; //vetoEvent; 
+    vetoEventNew_    = (nVetoLeptonNew > 0) ? 1 : 0; //vetoEvent; //NewEleID
     parton_          = parton;
     genPartMult_     = genPartMult;
     leadGenPartPdg_  = leadGenPartPdg;
