@@ -34,7 +34,7 @@
 
 #define VERBOSE          true
 #define DEBUG            true
-#define NOLOOP           false
+#define LOOP             true
 #define USESSBKG         false
 #define scaleByBinWidth  false
 #define DOSPLIT          false
@@ -207,8 +207,6 @@ void drawHistogram(TCut sbinCat = TCut(""),
   if(tree!=0 && h!=0){
 
     TCut weight   ="run>0";
-    TCut pairIndex="run>0";
-    if(NOLOOP) pairIndex="pairIndex[1]<1";
 
     if(type.Contains("MC")) {
       if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightHepNup*passL1etmCutABC)";
@@ -231,72 +229,79 @@ void drawHistogram(TCut sbinCat = TCut(""),
       }
     }
 
-    // Produce the skim TEntryList from the cut
-    if(DEBUG) cout << "-- produce skim" << endl;
+    // Loop over entries to choose the event's pair instead of using pairIndex
+    if(LOOP) {
+
+      if(DEBUG) cout << "-- produce skim" << endl;
+      tree->Draw(">>+skim", cut ,"entrylist");
+      TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
+      int nEntries = skim->GetN();
+      tree->SetEntryList(skim);
+      if(DEBUG) cout << "-- produced skim : " << skim->GetN() << "entries" << endl;
+
+      if(DEBUG) cout << "Reset h" << endl;
+      h->Reset();
+
+      // Declare tree variables
+      int   run  = 0;
+      int   event= 0; 
+
+      // Declare tree branches
+      if(DEBUG) cout << "-- declare tree branches" << endl;
+      tree->SetBranchStatus("*",  0);   
+      tree->SetBranchStatus("run",    1); tree->SetBranchAddress("run",    &run   );
+      tree->SetBranchStatus("event",  1); tree->SetBranchAddress("event",  &event );
     
-    tree->Draw(">>+skim",cut,"entrylist");
-    TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
-    int nEntries = skim->GetN();
-    tree->SetEntryList(skim);
+      // Variables for the loop
+      int nReject=0, nAccept=0;
+      int treenum, iEntry, chainEntry, lastRun, lastEvent;
+      treenum = iEntry = chainEntry = lastRun = lastEvent = -1;
 
-    if(DEBUG) cout << "-- produced skim : " << skim->GetN() << "entries" << endl;
+      if(DEBUG) cout << "-- loop" << endl;
+      for(Long64_t i=0 ; i<nEntries ; i++) {
+	
+	iEntry     = skim->GetEntryAndTree(i, treenum);
+	chainEntry = iEntry + (tree->GetTreeOffset())[treenum];
+	tree->GetEntry(chainEntry);
+	
+	// reject all pairs of the evt except first passing selection (skim)
+	if(run==lastRun && event==lastEvent) {
+	  
+	  skim->Remove(i, tree);
 
-    if(DEBUG) cout << "Reset h" << endl;
-    h->Reset();
-
-    // Declare tree variables
-    int   run  = 0;
-    int   event= 0; 
-
-    // Declare tree branches
-    if(DEBUG) cout << "-- declare tree branches" << endl;
-    tree->SetBranchStatus("*",  0);   
-    tree->SetBranchStatus("run",    1); tree->SetBranchAddress("run",    &run   );
-    tree->SetBranchStatus("event",  1); tree->SetBranchAddress("event",  &event );
-    
-    // Variables for the loop
-    int treenum, iEntry, chainEntry, lastRun, lastEvent;
-    treenum = iEntry = chainEntry = lastRun = lastEvent = -1;
-
-    // Loop over skimmed entries to choose the best pair
-    if(DEBUG) cout << "-- loop" << endl;
-
-    int nReject=0, nAccept=0;
-    for(Long64_t i=0 ; i<nEntries ; i++) {
-
-      iEntry     = skim->GetEntryAndTree(i, treenum);
-      chainEntry = iEntry + (tree->GetTreeOffset())[treenum];
-      tree->GetEntry(chainEntry);
-
-      // reject all pairs of the evt except first passing selection (skim)
-      if(run==lastRun && event==lastEvent) {
-
-	skim->Remove(i, tree);
-
-	nReject++ ;
-	if(DEBUG && i%500==0) {
-	  cout << "Removed " << nReject << " entries" << endl;
-	  cout << "Run " << run << "   event " << event << endl;
+	  nReject++ ;
+	  if(DEBUG && i%500==0) {
+	    cout << "Removed " << nReject << " entries" << endl;
+	    cout << "Run " << run << "   event " << event << endl;
+	  }
+	}
+	else {
+	  nAccept++ ;
+	  if(DEBUG && i%10000==0) cout << "Accepted " << nAccept << " entries" << endl;
+	  lastRun  = run;
+	  lastEvent= event;
 	}
       }
-      else {
-	nAccept++ ;
-	if(DEBUG && i%10000==0) cout << "Accepted " << nAccept << " entries" << endl;
-	lastRun  = run;
-	lastEvent= event;
-      }
-    }
-    if(DEBUG) cout << "-- end loop" << endl;
-    
-    // Let all branches be readable again
-    tree->SetBranchStatus("*",  1); 
+      if(DEBUG) cout << "-- end loop" << endl;
 
-    // Usual Draw
-    if(DEBUG) cout << "-- setEntryList again" << endl;
-    tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-    if(DEBUG) cout << "-- tree->Draw to histogram" << endl;
-    tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
-    
+      // Let all branches be readable again
+      tree->SetBranchStatus("*",  1); 
+
+      // Usual Draw
+      if(DEBUG) cout << "-- setEntryList again" << endl;
+      tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
+
+      // Reset entry list
+      tree->SetEntryList(0);
+      skim->Reset();
+      if(DEBUG) cout << "-- reset skim : " << skim->GetN() << "entries" << endl;
+    }    
+    else {
+      TCut pairIndex="pairIndex[0]<1";
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
+    }
+
     // Scale the histogram, compute norm and err
     h->Scale(scaleFactor);
     normalization      = h->Integral();
@@ -305,10 +310,6 @@ void drawHistogram(TCut sbinCat = TCut(""),
     if(DEBUG) cout << h->GetEntries() << " entries => integral=" << normalization << endl;
     if(verbose==0) h->Reset();
 
-    // Reset entry list
-    tree->SetEntryList(0);
-    skim->Reset();
-    if(DEBUG) cout << "-- reset skim : " << skim->GetN() << "entries" << endl;
   }
   else{
     cout << "ERROR : drawHistogram => null pointers to tree or histogram. Exit." << endl;
