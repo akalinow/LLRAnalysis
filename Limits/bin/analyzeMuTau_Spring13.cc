@@ -33,7 +33,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define VERBOSE          true
-#define DEBUG            false
+#define DEBUG            true
 #define NOLOOP           false
 #define USESSBKG         false
 #define scaleByBinWidth  false
@@ -239,6 +239,8 @@ void drawHistogram(TCut sbinCat = TCut(""),
     int nEntries = skim->GetN();
     tree->SetEntryList(skim);
 
+    if(DEBUG) cout << "-- produced skim : " << skim->GetN() << "entries" << endl;
+
     if(DEBUG) cout << "Reset h" << endl;
     h->Reset();
 
@@ -259,6 +261,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
     // Loop over skimmed entries to choose the best pair
     if(DEBUG) cout << "-- loop" << endl;
 
+    int nReject=0, nAccept=0;
     for(Long64_t i=0 ; i<nEntries ; i++) {
 
       iEntry     = skim->GetEntryAndTree(i, treenum);
@@ -266,25 +269,40 @@ void drawHistogram(TCut sbinCat = TCut(""),
       tree->GetEntry(chainEntry);
 
       // reject all pairs of the evt except first passing selection (skim)
-      if(run==lastRun && event==lastEvent) skim->Remove(i);
+      if(run==lastRun && event==lastEvent) {
+
+	skim->Remove(i, tree);
+
+	nReject++ ;
+	if(DEBUG && i%500==0) {
+	  cout << "Removed " << nReject << " entries" << endl;
+	  cout << "Run " << run << "   event " << event << endl;
+	}
+      }
       else {
+	nAccept++ ;
+	if(DEBUG && i%10000==0) cout << "Accepted " << nAccept << " entries" << endl;
 	lastRun  = run;
 	lastEvent= event;
       }
     }
     if(DEBUG) cout << "-- end loop" << endl;
-
+    
     // Let all branches be readable again
     tree->SetBranchStatus("*",  1); 
 
     // Usual Draw
+    if(DEBUG) cout << "-- setEntryList again" << endl;
     tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
+    if(DEBUG) cout << "-- tree->Draw to histogram" << endl;
     tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
     
     // Scale the histogram, compute norm and err
     h->Scale(scaleFactor);
     normalization      = h->Integral();
     normalizationError = TMath::Sqrt(h->GetEntries()) * (normalization/h->GetEntries());
+
+    if(DEBUG) cout << h->GetEntries() << " entries => integral=" << normalization << endl;
     if(verbose==0) h->Reset();
 
     // Reset entry list
@@ -898,7 +916,8 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_JetIdFix/MuTau/temp/";
+  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
+  TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -936,7 +955,7 @@ void plotMuTau( Int_t mH_           = 120,
   }
   if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
 
-  if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
+  //if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
 
   // BACKGROUNDS //
   TString treeMC;
@@ -1199,7 +1218,6 @@ void plotMuTau( Int_t mH_           = 120,
 
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
-
   cout << endl;
   cout << "#############################################################" << endl;
   cout << ">>>>>>>>>>> BEGIN Compute inclusive informations <<<<<<<<<<<<" << endl;
@@ -1210,6 +1228,12 @@ void plotMuTau( Int_t mH_           = 120,
   // inclusive DY->tautau:
   TH1F* hExtrap = new TH1F("hExtrap","",nBins , bins.GetArray());
   float Error = 0.;
+
+  // TEST : TO BE REMOVED
+  //cout << "=================> TEST : DATA sbinEmbeddingPZetaRel" << endl;
+  //float NormTest=0;
+  //drawHistogram(sbinCatIncl,"Data", version_, RUN,mapAllTrees["Data"], variable, NormTest,         Error, 1.0, hExtrap, sbinEmbeddingPZetaRel);
+  //
 
   float ExtrapDYInclusive = 0.;
   drawHistogram(sbinCatIncl,"MC", version_, RUN,mapAllTrees["DYToTauTau"], variable, ExtrapDYInclusive,   Error,   Lumi*lumiCorrFactor*hltEff_/1000., hExtrap, sbinInclusive);
@@ -1242,20 +1266,26 @@ void plotMuTau( Int_t mH_           = 120,
   drawHistogram(sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, ExtrapEmbedNum,                 Error, 1.0, hExtrap, sbinEmbedding);
   float ExtrapEmbedNuminSidebandRegion = 0.;
   drawHistogram(sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, ExtrapEmbedNuminSidebandRegion, Error, 1.0, hExtrap, sbinEmbeddingPZetaRel&&apZ);
+
+  if(DEBUG) cout << "drawHistogram Embed sbinEmbeddingPZetaRel" << endl;  
   float ExtrapEmbedNumPZetaRel = 0.;
   drawHistogram(sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, ExtrapEmbedNumPZetaRel,         Error, 1.0, hExtrap, sbinEmbeddingPZetaRel);
+
+  if(DEBUG) cout << "drawHistogram Embed sbinEmbeddingInclusive" << endl;
   float ExtrapEmbedDen = 0.;
   drawHistogram(sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, ExtrapEmbedDen,                 Error, 1.0, hExtrap, sbinEmbeddingInclusive);
+
+  if(DEBUG) cout << "drawHistogram Embed sbinPZetaRelEmbeddingInclusive" << endl;
   float ExtrapEmbedDenPZetaRel = 0.;
   drawHistogram(sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, ExtrapEmbedDenPZetaRel,         Error, 1.0, hExtrap, sbinPZetaRelEmbeddingInclusive);
 
-  ExtrapolationFactorZ             = ExtrapEmbedNum/ExtrapEmbedDen; 
-  ErrorExtrapolationFactorZ        = TMath::Sqrt(ExtrapolationFactorZ*(1-ExtrapolationFactorZ)/ExtrapEmbedDen);
-  ExtrapolationFactorZDataMC       = ExtrapolationFactorZ/ExtrapolationFactorMadGraph;
-  ExtrapolationFactorZFromSideband = ExtrapEmbedDen/ExtrapEmbedDenPZetaRel;
+  ExtrapolationFactorZ             = ExtrapEmbedDen!=0 ? ExtrapEmbedNum/ExtrapEmbedDen : 0; 
+  ErrorExtrapolationFactorZ        = ExtrapEmbedDen!=0 ? TMath::Sqrt(ExtrapolationFactorZ*(1-ExtrapolationFactorZ)/ExtrapEmbedDen) : 0;
+  ExtrapolationFactorZDataMC       = ExtrapolationFactorMadGraph!=0 ? ExtrapolationFactorZ/ExtrapolationFactorMadGraph : 0;
+  ExtrapolationFactorZFromSideband = ExtrapEmbedDenPZetaRel!=0 ? ExtrapEmbedDen/ExtrapEmbedDenPZetaRel : 0;
 
-  float sidebandRatioMadgraph = ExtrapDYNuminSidebandRegion/ExtrapDYNumPZetaRel;
-  float sidebandRatioEmbedded = ExtrapEmbedNuminSidebandRegion/ExtrapEmbedNumPZetaRel;
+  float sidebandRatioMadgraph = ExtrapDYNumPZetaRel!=0 ? ExtrapDYNuminSidebandRegion/ExtrapDYNumPZetaRel : 0;
+  float sidebandRatioEmbedded = ExtrapEmbedNumPZetaRel!=0 ? ExtrapEmbedNuminSidebandRegion/ExtrapEmbedNumPZetaRel : 0;
   ExtrapolationFactorSidebandZDataMC = (sidebandRatioMadgraph > 0) ? sidebandRatioEmbedded/sidebandRatioMadgraph : 1.0;
   if(!useEmbedding_) {
     ExtrapolationFactorZ = ExtrapolationFactorZDataMC = ExtrapolationFactorZFromSideband = sidebandRatioEmbedded = ExtrapolationFactorSidebandZDataMC = 1;
@@ -1269,6 +1299,8 @@ void plotMuTau( Int_t mH_           = 120,
   cout << " ==> data/MC (sideband-to-signal)        = " << ExtrapolationFactorSidebandZDataMC << endl;
   cout << " ==> data (sideband-to-signal inclusive) = " << ExtrapolationFactorZFromSideband << endl;
   
+  //if(DEBUG) return; // TESTING : TO REMOVE !!
+
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
 
