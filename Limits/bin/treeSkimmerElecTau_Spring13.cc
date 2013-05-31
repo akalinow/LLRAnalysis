@@ -190,11 +190,20 @@ float reweightHEPNUPWJets(int hepNUP) {
 //   else if(nJets>=4) return 0.034384641 ;
 //   else return 1 ;
 
+// //JetIDFix,ByPair
+//   if(nJets==0)      return 0.492871535 ;
+//   else if(nJets==1) return 0.181745835 ;
+//   else if(nJets==2) return 0.056192256 ;
+//   else if(nJets==3) return 0.038029369 ;
+//   else if(nJets>=4) return 0.018970657 ;
+//   else return 1 ;
+
+//NewEleIDFix
   if(nJets==0)      return 0.492871535 ;
   else if(nJets==1) return 0.181745835 ;
-  else if(nJets==2) return 0.056192256 ;
-  else if(nJets==3) return 0.038029369 ;
-  else if(nJets>=4) return 0.018970657 ;
+  else if(nJets==2) return 0.105768875 ;
+  else if(nJets==3) return 0.039434502 ;
+  else if(nJets>=4) return 0.027053425 ;
   else return 1 ;
 }
 
@@ -1742,8 +1751,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
 
 
-//   for (int n = 0; n <nEntries  ; n++) {
-  for (int n = 0; n <80000  ; n++) {
+  for (int n = 0; n <nEntries  ; n++) {
+//   for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
