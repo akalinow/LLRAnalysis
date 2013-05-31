@@ -475,6 +475,9 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("event",&event_,"event/l");
   tree_->Branch("lumi",&lumi_,"lumi/l");
   tree_->Branch("numPV",&numPV_,"numPV/F");
+  tree_->Branch("VtxZ",&VtxZ_,"vtxZ/F");
+  tree_->Branch("VtxX",&VtxX_,"vtxX/F");
+  tree_->Branch("VtxY",&VtxY_,"vtxY/F");
   tree_->Branch("numOfDiTaus",&numOfDiTaus_,"numOfDiTaus/I");
   tree_->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   tree_->Branch("decayMode",&decayMode_,"decayMode/I");
@@ -661,6 +664,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   }
   
   numPV_ = vertexes->size();
+  VtxZ_ = vertexes->size()!=0 ? (*vertexes)[0].position().z() : -99;
+  VtxX_ = vertexes->size()!=0 ? (*vertexes)[0].position().x() : -99;
+  VtxY_ = vertexes->size()!=0 ? (*vertexes)[0].position().y() : -99;
 
   const pat::METCollection* met = 0;
   edm::Handle<pat::METCollection> metHandle;
@@ -723,6 +729,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   
   genDecay_ = -99;
   hepNUP_   = -99;
+  NumEleFromV_= -99;
 
   edm::Handle<reco::GenParticleCollection> genHandle;
   const reco::GenParticleCollection* genParticles = 0;
@@ -1735,7 +1742,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	gammadEta_->push_back(  gamma->eta() - leg2->eta() ) ;
       }
       gammaPt_->push_back(  gamma->pt() );
-  }
+    }
     
 
     visibleTauMass_ = leg2->mass();
