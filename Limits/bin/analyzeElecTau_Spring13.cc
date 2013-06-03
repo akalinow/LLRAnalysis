@@ -206,24 +206,26 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
  	else if(version_.Contains("OldEleID")) { // old eleID
 	  pairIndex = "pairIndex[7]<1"; // standard (tau iso biased)
 	}
-	else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
-	  if(version_.Contains("SoftD")) {       // soft D
-	    if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[21]<1"; // with HLTmatch
-	    else                              pairIndex = "pairIndex[25]<1"; // with L1ETM cut
-	  }
-	  else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[29]<1"; // soft lepton + tau (w/o l1etm)
-	  else{
-	    if(version_.Contains("NewEleID")) // new eleID
-	      pairIndex = "pairIndex[18]<1"; // standard (tau iso biased)
-	    else if(version_.Contains("OldEleID")) { // old eleID
-	      pairIndex = "pairIndex[8]<1"; // standard (tau iso biased)
-	    }
-	  }
-	}
-      }   
+      }
     }
-  }
-}   
+    else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
+      if(version_.Contains("SoftD")) {       // soft D
+	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[21]<1"; // with HLTmatch
+	else                              pairIndex = "pairIndex[25]<1"; // with L1ETM cut
+      }
+      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[29]<1"; // soft lepton + tau (w/o l1etm)
+      else{
+	if(version_.Contains("NewEleID")) // new eleID
+	  pairIndex = "pairIndex[18]<1"; // standard (tau iso biased)
+	else if(version_.Contains("OldEleID")) { // old eleID
+	  pairIndex = "pairIndex[8]<1"; // standard (tau iso biased)
+	}
+      }
+    }
+  }   
+}
+
+   
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void createStringsIsoFakeRate(TString fileName = "FakeRate.root",
 			      string& scaleFactElec     = *( new string()), 
