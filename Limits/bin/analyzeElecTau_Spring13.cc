@@ -77,7 +77,7 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& antiele, TCut& pairIndex)
+void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& antiele, TCut& lID, TCut& lveto, TCut& pairIndex)
 {
 
   // Anti-Mu discriminator //
@@ -90,6 +90,14 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   else if(version_.Contains("AntiEle2Tight"))     antiele = "tightestAntiEMVA3WP>2";
   else if(version_.Contains("AntiEle2VeryTight")) antiele = "tightestAntiEMVA3WP>3";
   
+  //ElectronID
+  if(version_.Contains("OldEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+  else if(version_.Contains("NewEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+
+  //Third lepton veto
+  if(version_.Contains("OldEleID")) lveto = "elecFlag==0 && vetoEventOld==0";
+  if(version_.Contains("NewEleID")) lveto = "elecFlag==0 && vetoEventNew==0";
+
   // TauIso1 //
   if(version_.Contains("TauIso1")) {
     tiso   = "tightestHPSMVAWP>=0" ;
@@ -98,18 +106,33 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 
     // pairIndex
     if(version_.Contains("AntiEle1")) { // anti-mu 1
-      pairIndex = "pairIndex[0]<1"; // standard
-      if(version_.Contains("AntiMu2")) pairIndex = "pairIndex[5]<1"; // standard
+      if(version_.Contains("NewEleID")) { // new eleID
+	pairIndex = "pairIndex[10]<1"; // standard
+	if(version_.Contains("AntiMu2")) pairIndex = "pairIndex[6]<1"; // standard
+      }
+      else if(version_.Contains("OldEleID")) { // old eleID
+	pairIndex = "pairIndex[0]<1"; // standard
+	if(version_.Contains("AntiMu2")) pairIndex = "pairIndex[15]<1"; // standard
+      }
     }
     //
     else if(version_.Contains("AntiEle2Medium")) { // anti-e medium 
-      pairIndex = "pairIndex[2]<1"; // standard
+      if(version_.Contains("NewEleID")) // new eleID
+	pairIndex = "pairIndex[11]<1"; // standard
+      else if(version_.Contains("OldEleID")) // old eleID
+	pairIndex = "pairIndex[1]<1"; // standard
     }
     else if(version_.Contains("AntiEle2Tight")) { // anti-e tight
-      pairIndex = "pairIndex[3]<1"; // standard
+      if(version_.Contains("NewEleID")) // new eleID
+	pairIndex = "pairIndex[12]<1"; // standard
+      else if(version_.Contains("OldEleID")) // old eleID
+	pairIndex = "pairIndex[2]<1"; // standard
     }
     else if(version_.Contains("AntiEle2VeryTight")) { // anti-e vtight 
-      pairIndex = "pairIndex[4]<1"; // standard
+      if(version_.Contains("NewEleID")) // new eleID
+	pairIndex = "pairIndex[13]<1"; // standard
+      else if(version_.Contains("OldEleID")) // old eleID
+	pairIndex = "pairIndex[3]<1"; // standard
     }
   }
   
@@ -121,16 +144,24 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 
     // pairIndex
     if(version_.Contains("AntiEle1")) { // anti-mu 1
-      pairIndex = "pairIndex[5]<1";  // standard
+      if(version_.Contains("NewEleID"))  // new eleID
+	pairIndex = "pairIndex[14]<1";  // standard
+      else if(version_.Contains("OldEleID"))  // old eleID
+	pairIndex = "pairIndex[4]<1";  // standard
     }
     //
     else if(version_.Contains("AntiEle2Tight")) { // anti-mu 2
       if(version_.Contains("SoftD")) {       // soft D
-	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[10]<1"; // with HLTmatch
-	else                              pairIndex = "pairIndex[18]<1"; // with L1ETM cut
+	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[20]<1"; // with HLTmatch
+	else                              pairIndex = "pairIndex[28]<1"; // with L1ETM cut
       }
-      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[16]<1"; // soft lepton + tau (w/o l1etm)
-      else                                   pairIndex = "pairIndex[6]<1"; // standard
+      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[26]<1"; // soft lepton + tau (w/o l1etm)
+      else{
+	if(version_.Contains("NewEleID")) // new eleID
+	  pairIndex = "pairIndex[16]<1"; // standard
+	else if(version_.Contains("OldEleID")) // old eleID
+	  pairIndex = "pairIndex[6]<1"; // standard
+      }
     }
     else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
       if(version_.Contains("SoftD")) {       // soft D
@@ -138,40 +169,61 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
 	else                              pairIndex = "pairIndex[14]<1"; // with L1ETM cut
       }
       else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[18]<1"; // soft lepton + tau (w/o l1etm)
-      else                                   pairIndex = "pairIndex[7]<1"; // standard
+      else{
+	if(version_.Contains("NewEleID")) // new eleID
+	  pairIndex = "pairIndex[17]<1"; // standard
+	else if(version_.Contains("OldEleID")) { // old eleID
+	  pairIndex = "pairIndex[7]<1"; // standard
+	}
+      }
     }
   }
   
   // TauIso DB3Hits cut-based //
   else if(version_.Contains("HPSDB3H")) {
-    tiso   = "tightestHPSDB3HWP>=0" ;
+//     tiso   = "tightestHPSDB3HWP>=0" ;
+    tiso   = "hpsDB3H<1.5" ;
     ltiso  = "tightestHPSDB3HWP>-99" ;
     mtiso  = "hpsDB3H>0.7" ;
 
     // pairIndex
     if(version_.Contains("AntiEle1")) { // anti-mu 1
-      pairIndex = "pairIndex[6]<1"; // standard
+      if(version_.Contains("NewEleID")) // new eleID
+	pairIndex = "pairIndex[7]<1"; // standard
+      else if(version_.Contains("OldEleID"))  // old eleID
+	pairIndex = "pairIndex[17]<1"; // standard
     }
     //
     else if(version_.Contains("AntiEle2Tight")) { // anti-mu 2
       if(version_.Contains("SoftD")) {       // soft D
-	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[9]<1"; // with HLTmatch
-	else                              pairIndex = "pairIndex[13]<1"; // with L1ETM cut
+	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[19]<1"; // with HLTmatch
+	else                              pairIndex = "pairIndex[23]<1"; // with L1ETM cut
       }
-      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[17]<1"; // soft lepton + tau (w/o l1etm)
-      else                                   pairIndex = "pairIndex[6]<1"; // standard (tau iso biased)
-    }
-    else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
-      if(version_.Contains("SoftD")) {       // soft D
-	if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[11]<1"; // with HLTmatch
-	else                              pairIndex = "pairIndex[15]<1"; // with L1ETM cut
-      }
-      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[19]<1"; // soft lepton + tau (w/o l1etm)
-      else                                   pairIndex = "pairIndex[7]<1"; // standard (tau iso biased)
+      else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[27]<1"; // soft lepton + tau (w/o l1etm)
+      else{
+	if(version_.Contains("NewEleID")) // new eleID
+	  pairIndex = "pairIndex[17]<1"; // standard (tau iso biased)
+ 	else if(version_.Contains("OldEleID")) { // old eleID
+	  pairIndex = "pairIndex[7]<1"; // standard (tau iso biased)
+	}
+	else if(version_.Contains("AntiEle2VeryTight")) { // anti-mu 2
+	  if(version_.Contains("SoftD")) {       // soft D
+	    if(version_.Contains("HLTmatch")) pairIndex = "pairIndex[21]<1"; // with HLTmatch
+	    else                              pairIndex = "pairIndex[25]<1"; // with L1ETM cut
+	  }
+	  else if(version_.Contains("SoftLTau")) pairIndex = "pairIndex[29]<1"; // soft lepton + tau (w/o l1etm)
+	  else{
+	    if(version_.Contains("NewEleID")) // new eleID
+	      pairIndex = "pairIndex[18]<1"; // standard (tau iso biased)
+	    else if(version_.Contains("OldEleID")) { // old eleID
+	      pairIndex = "pairIndex[8]<1"; // standard (tau iso biased)
+	    }
+	  }
+	}
+      }   
     }
   }
-
-}
+}   
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void createStringsIsoFakeRate(TString fileName = "FakeRate.root",
 			      string& scaleFactElec     = *( new string()), 
@@ -953,7 +1005,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
 		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1177,7 +1230,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_JetIdFix/EleTau/temp/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1352,13 +1405,13 @@ void plotElecTau( Int_t mH_           = 120,
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
   TCut pairIndex("pairIndex[0]<1");
+  TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
 
-  chooseSelection(version_, tiso, ltiso, mtiso, antimu, antiele, pairIndex);
+  chooseSelection(version_, tiso, ltiso, mtiso, antimu, antiele, lID, lveto, pairIndex);
 
   if(VERBOSE) cout << "USING PAIR INDEX : " << pairIndex << endl;
 
    ////// EVENT WISE //////
-  TCut lveto("elecFlag==0 && vetoEvent==0"); //elecFlag==0
   TCut SS("diTauCharge!=0");
   TCut OS("diTauCharge==0");
   TCut pZ( Form("((%s)<%f)",antiWcut.c_str(),antiWsgn));
