@@ -86,6 +86,7 @@ void produce(
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
+	     int useEmb        = 1,
 	     TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
 	     ){
 
@@ -96,8 +97,12 @@ void produce(
   if(analysis_.find("FakeUp")!=string::npos)   analysisFile = "TauUp";
   if(analysis_.find("FakeDown")!=string::npos) analysisFile = "TauDown";
 
+  //cout << endl <<  "Try to get file : " << Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root", outputDir.Data(), 125, bin_.c_str() , analysisFile.c_str(), variable_.c_str()) << endl << endl;
+
   fin = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root", outputDir.Data(), 125, bin_.c_str() , analysisFile.c_str(), variable_.c_str()), "READ");
 
+  TString     nameZtt="hDataEmb";
+  if(!useEmb) nameZtt="hZtt";
 
   ///////////////////////////////////////////////
   TFile* fin_jUp     = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_JetUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
@@ -237,7 +242,7 @@ void produce(
     if(bin_.find("novbf")!=string::npos){
 
       // ZTT: embedded sample
-      TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+      TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
       hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
       hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
 
@@ -278,7 +283,7 @@ void produce(
     else if(bin_.find("boost")!=string::npos){
 
       // ZTT: embedded sample 
-      TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+      TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
       hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
       hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
  
@@ -339,7 +344,7 @@ void produce(
 
     else if(bin_.find("bTag")!=string::npos){
 
-      ((TH1F*)fin->Get("hDataEmb"))->Write(Form("ZTT%s",suffix.c_str()));
+      ((TH1F*)fin->Get(nameZtt))->Write(Form("ZTT%s",suffix.c_str()));
       /*
       // QCD:  low-pt: SS data; high-pt: loose-iso data normalized to SS 
       TH1F* hQCD         = (TH1F*)fin->Get("hQCD");
@@ -414,7 +419,7 @@ void produce(
     else if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 
       // ZTT: embedded sample 
-      TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+      TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
       hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
       hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
  
@@ -448,7 +453,7 @@ void produce(
     }
     else if(bin_.find("vh")!=string::npos){
 
-      ((TH1F*)fin->Get("hDataEmb"))->Write(Form("ZTT%s",suffix.c_str()));
+      ((TH1F*)fin->Get(nameZtt))->Write(Form("ZTT%s",suffix.c_str()));
 
       //((TH1F*)fin->Get("hAntiIsoKeys"))->Write(Form("QCD%s"    ,suffix.c_str()));
       TH1F* hAntiIsoKeys  = (TH1F*)fin->Get("hAntiIsoKeys");
@@ -478,7 +483,7 @@ void produce(
     else{
 
       // ZTT: embedded sample 
-      TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb")); 
+      TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt)); 
       hDataEmb->SetName(Form("ZTT%s",suffix.c_str()));  
       hDataEmb->Write(Form("ZTT%s",suffix.c_str())); 
  
@@ -569,7 +574,7 @@ void produce(
     if(bin_.find("novbf")!=string::npos){
 
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 ){
-	TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+	TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
 	hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
 	hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
       }
@@ -619,7 +624,7 @@ void produce(
     else if(bin_.find("boost")!=string::npos){
 
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 ){
-	TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+	TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
 	hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
 	hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
       }
@@ -690,7 +695,7 @@ void produce(
     else if(bin_.find("bTag")!=string::npos){
       
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 )
-	((TH1F*)fin->Get("hDataEmb"))->Write(Form("ZTT%s"       ,suffix.c_str()));
+	((TH1F*)fin->Get(nameZtt))->Write(Form("ZTT%s"       ,suffix.c_str()));
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 	/*
 	TH1F* hQCD         = (TH1F*)fin->Get("hQCD");
@@ -775,7 +780,7 @@ void produce(
     else if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 ){
-	TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb"));
+	TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
 	hDataEmb->SetName(Form("ZTT%s",suffix.c_str())); 
 	hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
       }
@@ -821,7 +826,7 @@ void produce(
     else if(bin_.find("vh")!=string::npos){
 
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 )
-	((TH1F*)fin->Get("hDataEmb"))->Write(Form("ZTT%s"       ,suffix.c_str()));
+	((TH1F*)fin->Get(nameZtt))->Write(Form("ZTT%s"       ,suffix.c_str()));
 
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 
@@ -864,7 +869,7 @@ void produce(
     else{
 
       if(dir->FindObjectAny(Form("ZTT%s"       ,suffix.c_str()))==0 ){ 
-        TH1F* hDataEmb = ((TH1F*)fin->Get("hDataEmb")); 
+        TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt)); 
         hDataEmb->SetName(Form("ZTT%s",suffix.c_str()));  
         hDataEmb->Write(Form("ZTT%s",suffix.c_str())); 
       } 
@@ -1027,7 +1032,7 @@ void produce(
 	    out <<        hSgn3->Integral();
 	  out << space << hSgn2->Integral()
 	      << space << hSgn1->Integral()
-	      << space << ((TH1F*)fin->Get("hDataEmb"))->Integral()
+	      << space << ((TH1F*)fin->Get(nameZtt))->Integral()
 	      << space << QCDyield
 	      << space << Wyield;
 	  if(binNameSpace.find("0jet_")!=string::npos || binNameSpace.find("boost")!=string::npos){
@@ -1242,7 +1247,7 @@ void produce(
 
 
 
-void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1"){
+void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
 
   const int nVar=1;
   const int nM=15;
@@ -1262,7 +1267,7 @@ void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1"){
       for(int iAn=0 ; iAn<nAn ; iAn++)
 	for(int iCat=0 ; iCat<nCat ; iCat++)
 	  
-	  produce(mH[iM],variables[iVar], analysis[iAn], category[iCat], outputDir);
+	  produce(mH[iM],variables[iVar], analysis[iAn], category[iCat], outputDir, useEmb);
 
   /*
   void produce(   
@@ -1289,12 +1294,13 @@ int main(int argc, const char* argv[])
   AutoLibraryLoader::enable();
 
   TString outputDir="MuTau/res_ABCD_Moriond_v1";
+  int useEmb=1;
+
+  if(argc>=2) outputDir = argv[1];
+  if(argc>=3) useEmb    = (int)atof(argv[2]);
   
-  if(argc==1) produceAll();
-  else if(argc==2) {
-    outputDir = argv[1];
-    produceAll(outputDir);
-  }
+  produceAll(outputDir, useEmb);
+
   /*
   const int nVer=4;
   TString outputDir[nVer];
