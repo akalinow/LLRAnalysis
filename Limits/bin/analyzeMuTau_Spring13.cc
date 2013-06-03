@@ -34,7 +34,7 @@
 
 #define VERBOSE          true
 #define DEBUG            true
-#define LOOP             false
+#define LOOP             true
 #define USESSBKG         false
 #define scaleByBinWidth  false
 #define DOSPLIT          false
