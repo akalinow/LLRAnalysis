@@ -627,9 +627,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
+  float ptAll[50],etaAll[50],phiAll[50];
   float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
+  float ptAllB[50],etaAllB[50],phiAllB[50],csvAllB[50];
   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
@@ -784,6 +786,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("nJets20BTaggedLUp",&nJets20BTaggedLUp,  "nJets20BTaggedLUp/I");
   outTreePtOrd->Branch("nJets20BTaggedLDown",&nJets20BTaggedLDown,  "nJets20BTaggedLDown/I");
   
+  outTreePtOrd->Branch("ptAll",  &ptAll,  "ptAll[nJets30]/F");
+  outTreePtOrd->Branch("etaAll", &etaAll, "etaAll[nJets30]/F");
+  outTreePtOrd->Branch("phiAll", &phiAll, "phiAll[nJets30]/F");
+  outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
+
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
   outTreePtOrd->Branch("phiVeto", &phiVeto,"phiVeto/F");
   outTreePtOrd->Branch("etaVeto", &etaVeto,"etaVeto/F");
@@ -1574,6 +1584,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
     caloMEtNoHFDown_=-99;      caloMEtNoHFDownPhi_=-99;// ND
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
+    for(int i=0 ; i<50 ; i++) {
+      ptAll[i] = etaAll[i] = phiAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] -99;
+    }
+
     // define the relevant jet collection 
     nJets20BTagged = 0; nJets20BTaggedBUp = 0; nJets20BTaggedBDown = 0; nJets20BTaggedLoose = 0;
     nJets20BTaggedLUp = 0; nJets20BTaggedLDown = 0;
@@ -1596,7 +1610,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
     bool isData = sample.Contains("2012");
 
     for(unsigned int v = 0 ; v < indexes.size() ; v++){
-      if( (*jets)[indexes[v]].Pt() > 30 ) nJets30++;
+      if( (*jets)[indexes[v]].Pt() > 30 ) {
+	ptAll[nJets30]  = (*jets)[indexes[v]].Pt();
+	etaAll[nJets30] = (*jets)[indexes[v]].Eta();
+	phiAll[nJets30] = (*jets)[indexes[v]].Phi();
+	nJets30++;
+      }
       if( (*jets)[indexes[v]].Pt() > 20 ) nJets20++;
 
       // b-tag loose
@@ -1608,8 +1627,16 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	int jetFlavour = int((*bQuark)[indexes[v]]);
         //bool isBtag = isbtagged(isbQuark, (*jetsBtagCSV)[indexes[v]], isData, kNo, kNo); 
 	bool isBtag = btsf->isbtagged((*jets)[indexes[v]].Pt(), (*jets)[indexes[v]].Eta(), (*jetsBtagCSV)[indexes[v]], jetFlavour, isData ,kNo, kNo, true);
+
 	if(isBtag){
+
+	  ptAllB[nJets20BTagged]  = (*jets)[indexes[v]].Pt();
+	  etaAllB[nJets20BTagged] = (*jets)[indexes[v]].Eta();
+	  phiAllB[nJets20BTagged] = (*jets)[indexes[v]].Phi();	  
+	  csvAllB[nJets20BTagged] = (*jetsBtagCSV)[indexes[v]];
+
 	  nJets20BTagged++;
+
 	  if(nJets20BTagged<2){
 	    ptB1  = (*jets)[indexes[v]].Pt();
 	    phiB1 = (*jets)[indexes[v]].Phi();
