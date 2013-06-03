@@ -48,11 +48,21 @@ stream = "MuTau"
 #             'SoftABC_L1ETMcut_AntiMu1_TauIso2', 'SoftABC_L1ETMcut_AntiMu1_HPSDB3H', 'SoftABC_L1ETMcut_AntiMu2_TauIso2', 'SoftABC_L1ETMcut_AntiMu2_HPSDB3H',
 #             'SoftLTau_HLTmatch_AntiMu2_TauIso2', 'SoftLTau_HLTmatch_AntiMu2_HPSDB3H', 'SoftLTau_HLTmatch_AntiMu2_TauIso2', 'SoftLTau_HLTmatch_AntiMu2_HPSDB3H']
 
-versionList=['SoftD_L1ETMcut_AntiMu1_TauIso1', 'SoftD_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftD_HLTmatch_AntiMu1_TauIso1', 'SoftD_NoMaxPt_HLTmatch_AntiMu1_TauIso1',
-             'SoftABC_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_HLTmatch_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_HLTmatch_AntiMu1_TauIso1']
+#versionList=['SoftD_L1ETMcut_AntiMu1_TauIso1', 'SoftD_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftD_HLTmatch_AntiMu1_TauIso1', 'SoftD_NoMaxPt_HLTmatch_AntiMu1_TauIso1',
+#             'SoftABC_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_HLTmatch_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_HLTmatch_AntiMu1_TauIso1']
+
+versionList=['SoftD_L1ETMcut_AntiMu1_TauIso2']
 
 #data = 'ABCD'
-iteration = 'v3'
+
+# iterations
+# v9  : no relax Deta in vbfLooseQCD (QCD)
+# v10 : no relax Deta in vbfLoose (W) and vbfLooseQCD (QCD)
+# v11 : no relax Mjj  in    "         and       "
+# v12 : full VBF for QCD, looseVBF for other bkg
+# v13 : full VBF for all bkg, with scaling NAN protection
+
+iteration = 'v15_loop'
 useEmb=0
 
 for version in versionList:
@@ -153,10 +163,12 @@ for version in versionList:
     analyze(125,"inclusive"      ,""   ,"etaL1","'#mu #eta'","units"                         ,outputDir,36,-2.4, 2.4,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"inclusive"      ,""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,36,-2.4, 2.4,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"inclusive"      ,""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,30,0, 120,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"inclusive"      ,""   ,"genVPt","'gen #tau p_{T}'","GeV"                        ,outputDir,30,0, 120,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"inclusive"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"inclusive"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"inclusive"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"inclusive"      ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
     ##
     analyze(125,"inclusive"      ,""   ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version,useEmb);
     analyze(125,"inclusive"      ,""   ,"eta1","'Leading jet #eta'","units"                ,outputDir,25,-4.5, 4.5,5.0,1.0,0,2.,data, stream, version,useEmb);
@@ -184,10 +196,12 @@ for version in versionList:
     analyze(125,"novbfLow",""   ,"etaL1","'#mu #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"novbfLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,10,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"novbfLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"novbfLow",""   ,"genVPt","'gen #tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"novbfLow"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"novbfLow"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"novbfLow"      ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"novbfLow"      ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
     ## novbfHigh
     analyze(125,"novbfHigh"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version,useEmb);
@@ -205,10 +219,12 @@ for version in versionList:
     analyze(125,"novbfHigh",""   ,"etaL1","'#mu #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"novbfHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"novbfHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"novbfHigh",""   ,"genVPt","'gen #tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"novbfHigh"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"novbfHigh"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"novbfHigh"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"novbfHigh"  ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
     ## boostLow
     analyze(125,"boostLow"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version,useEmb);
@@ -226,10 +242,12 @@ for version in versionList:
     analyze(125,"boostLow",""   ,"etaL1","'#mu #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"boostLow",""   ,"etaL2","'#tau #eta'","units"                       ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"boostLow",""   ,"ptL2","'#tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"boostLow",""   ,"genVPt","'gen #tau p_{T}'","GeV"                         ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"boostLow"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"boostLow"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"boostLow"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"boostLow"  ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
     ## boostHigh
     analyze(125,"boostHigh"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version,useEmb);
@@ -247,10 +265,12 @@ for version in versionList:
     analyze(125,"boostHigh",""   ,"etaL1","'#mu #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"boostHigh",""   ,"etaL2","'#tau #eta'","units"                      ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"boostHigh",""   ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"boostHigh",""   ,"genVPt","'gen #tau p_{T}'","GeV"                        ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"boostHigh" ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"boostHigh" ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"boostHigh" ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"boostHigh" ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
     ## vbf
     analyze(125,"vbf"      ,""   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data, stream, version,useEmb);
@@ -268,10 +288,12 @@ for version in versionList:
     analyze(125,"vbf",""   ,"etaL1","'#mu #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0, 2.,data, stream, version,useEmb);
     analyze(125,"vbf",""   ,"etaL2","'#tau #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data, stream, version,useEmb);
     analyze(125,"vbf",""   ,"ptL2","'#tau p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
+    analyze(125,"vbf",""   ,"genVPt","'gen #tau p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data, stream, version,useEmb);
     if 'NoMaxPt' in version:
         analyze(125,"vbf"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
     else:
-        analyze(125,"vbf"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,5,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"vbf"  ,""   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+        analyze(125,"vbf"  ,""   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
 
 ## ## analyze(125,"bTag",""        ,"ptB1", "'leading b-tagged jet p_{T}'","GeV"       ,outputDir,50,30, 330,5.0,1.0,1,100,data, stream, version,useEmb);
