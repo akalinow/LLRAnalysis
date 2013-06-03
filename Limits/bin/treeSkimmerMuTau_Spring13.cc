@@ -636,6 +636,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
   int nJets30, nJets20;
+  float jet1QGmlp, jet1QGlike, jet1QGrhoIso, jet1QGptD, jet1QGaxis1, jet1QGaxis2, jet1QGmult, jet1QGnChg, jet1QGnNeutral, jet1QGflavor, jet1QGNbConst, jet1QGConstId, jet1QGConstPt ;
+  float jet2QGmlp, jet2QGlike, jet2QGrhoIso, jet2QGptD, jet2QGaxis1, jet2QGaxis2, jet2QGmult, jet2QGnChg, jet2QGnNeutral, jet2QGflavor, jet2QGNbConst, jet2QGConstId, jet2QGConstPt ;
+  float jetVetoQGmlp, jetVetoQGrhoIso, jetVetoQGptD, jetVetoQGaxis1, jetVetoQGaxis2, jetVetoQGmult, jetVetoQGnChg, jetVetoQGnNeutral, jetVetoQGlike, jetVetoQGflavor, jetVetoQGNbConst, jetVetoQGConstId, jetVetoQGConstPt ;
 
   // quality cuts of the first 2 jets
   float jetsBtagHE1,jetsBtagHE2,jetsBtagHP1,jetsBtagHP2, jetsBtagCSV1, jetsBtagCSV2;
@@ -767,6 +770,46 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("jet1PUWP",      &jet1PUWP,       "jet1PUWP/F");
   outTreePtOrd->Branch("jet2PUWP",      &jet2PUWP,       "jet2PUWP/F");
   outTreePtOrd->Branch("jetVetoPUWP",   &jetVetoPUWP,    "jetVetoPUWP/F");
+
+  outTreePtOrd->Branch("jet1QGmlp",     &jet1QGmlp,      "jet1QGmlp/F");
+  outTreePtOrd->Branch("jet1QGlike",    &jet1QGlike,     "jet1QGlike/F");
+  outTreePtOrd->Branch("jet1QGrhoIso",  &jet1QGrhoIso,   "jet1QGrhoIso/F");
+  outTreePtOrd->Branch("jet1QGptD",     &jet1QGptD,      "jet1QGptD/F");
+  outTreePtOrd->Branch("jet1QGaxis1",   &jet1QGaxis1,    "jet1QGaxis1/F");
+  outTreePtOrd->Branch("jet1QGaxis2",   &jet1QGaxis2,    "jet1QGaxis2/F");
+  outTreePtOrd->Branch("jet1QGmult",    &jet1QGmult,     "jet1QGmult/F");
+  outTreePtOrd->Branch("jet1QGnChg",    &jet1QGnChg,     "jet1QGnChg/F");
+  outTreePtOrd->Branch("jet1QGnNeutral",&jet1QGnNeutral, "jet1QGnNeutral/F");
+  outTreePtOrd->Branch("jet1QGflavor",  &jet1QGflavor,   "jet1QG/F");
+  outTreePtOrd->Branch("jet1QGNbConst", &jet1QGNbConst,  "jet1QGNbConst/F");
+  outTreePtOrd->Branch("jet1QGConstId", &jet1QGConstId,  "jet1QGConstId/F");
+  outTreePtOrd->Branch("jet1QGConstPt", &jet1QGConstPt,  "jet1QGConstPt/F");
+  outTreePtOrd->Branch("jet2QGmlp",     &jet2QGmlp,      "jet2QGmlp/F");
+  outTreePtOrd->Branch("jet2QGlike",    &jet2QGlike,     "jet2QGlike/F");
+  outTreePtOrd->Branch("jet2QGrhoIso",  &jet2QGrhoIso,   "jet2QGrhoIso/F");
+  outTreePtOrd->Branch("jet2QGptD",     &jet2QGptD,      "jet2QGptD/F");
+  outTreePtOrd->Branch("jet2QGaxis1",   &jet2QGaxis1,    "jet2QGaxis1/F");
+  outTreePtOrd->Branch("jet2QGaxis2",   &jet2QGaxis2,    "jet2QGaxis2/F");
+  outTreePtOrd->Branch("jet2QGmult",    &jet2QGmult,     "jet2QGmult/F");
+  outTreePtOrd->Branch("jet2QGnChg",    &jet2QGnChg,     "jet2QGnChg/F");
+  outTreePtOrd->Branch("jet2QGnNeutral",&jet2QGnNeutral, "jet2QGnNeutral/F");
+  outTreePtOrd->Branch("jet2QGflavor",  &jet2QGflavor,   "jet2QG/F");
+  outTreePtOrd->Branch("jet2QGNbConst", &jet2QGNbConst,  "jet2QGNbConst/F");
+  outTreePtOrd->Branch("jet2QGConstId", &jet2QGConstId,  "jet2QGConstId/F");
+  outTreePtOrd->Branch("jet2QGConstPt", &jet2QGConstPt,  "jet2QGConstPt/F");
+  outTreePtOrd->Branch("jetVetoQGmlp",     &jetVetoQGmlp,      "jetVetoQGmlp/F");
+  outTreePtOrd->Branch("jetVetoQGlike",    &jetVetoQGlike,     "jetVetoQGlike/F");
+  outTreePtOrd->Branch("jetVetoQGrhoIso",  &jetVetoQGrhoIso,   "jetVetoQGrhoIso/F");
+  outTreePtOrd->Branch("jetVetoQGptD",  &jetVetoQGptD,   "jetVetoQGptD/F");
+  outTreePtOrd->Branch("jetVetoQGaxis1",&jetVetoQGaxis1, "jetVetoQGaxis1/F");
+  outTreePtOrd->Branch("jetVetoQGaxis2",&jetVetoQGaxis2, "jetVetoQGaxis2/F");
+  outTreePtOrd->Branch("jetVetoQGmult", &jetVetoQGmult,  "jetVetoQGmult/F");
+  outTreePtOrd->Branch("jetVetoQGnChg", &jetVetoQGnChg,  "jetVetoQGnChg/F");
+  outTreePtOrd->Branch("jetVetoQGnNeutral", &jetVetoQGnNeutral, "jetVetoQGnNeutral/F");
+  outTreePtOrd->Branch("jetVetoQGflavor",  &jetVetoQGflavor,   "jetVetoQG/F");
+  outTreePtOrd->Branch("jetVetoQGNbConst", &jetVetoQGNbConst,  "jetVetoQGNbConst/F");
+  outTreePtOrd->Branch("jetVetoQGConstId", &jetVetoQGConstId,  "jetVetoQGConstId/F");
+  outTreePtOrd->Branch("jetVetoQGConstPt", &jetVetoQGConstPt,  "jetVetoQGConstPt/F");
 
   outTreePtOrd->Branch("jetsBtagHE1",  &jetsBtagHE1,"jetsBtagHE1/F");
   outTreePtOrd->Branch("jetsBtagHE2",  &jetsBtagHE2,"jetsBtagHE2/F");
@@ -1095,6 +1138,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("jetsChEfraction"       ,0);
   currentTree->SetBranchStatus("jetPUMVA"              ,1);
   currentTree->SetBranchStatus("jetPUWP"               ,1);
+  currentTree->SetBranchStatus("jetQuarkGluon"         ,1);
+  currentTree->SetBranchStatus("jetQuarkGluonGen"      ,1);
   currentTree->SetBranchStatus("bQuark"                ,1);
   
   // diTaus
@@ -1265,6 +1310,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   std::vector< float >* jetPUWP =  new std::vector< float >();
   currentTree->SetBranchAddress("jetPUWP", &jetPUWP);
+
+  std::vector< float >* jetQuarkGluon =  new std::vector< float >();
+  currentTree->SetBranchAddress("jetQuarkGluon", &jetQuarkGluon);
+
+  std::vector< float >* jetQuarkGluonGen =  new std::vector< float >();
+  currentTree->SetBranchAddress("jetQuarkGluonGen", &jetQuarkGluonGen);
 
   std::vector< LV >* diTauLegsP4    = new std::vector< LV >();
   currentTree->SetBranchAddress("diTauLegsP4",     &diTauLegsP4);
@@ -1601,6 +1652,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       int passJetID = getJetIDMVALoose((*jets)[l].Pt(), (*jets)[l].Eta(), (*jetPUMVA)[l]);
       if((*jets)[l].Pt()>MINPt1 && TMath::Abs((*jets)[l].Eta())<MAXEta && passJetID>MINJetID)
 	indexes.push_back(l);
+      // check there was no error while filling Quark/gluon info:
+      if (fabs((*jets)[l].Pt()-(*jetQuarkGluon)[l*14])>1e-3) 
+	std::cout<<"ERROR in quark/gluon info: inconsistent jets! "<<(*jets)[l].Pt()<<" "
+		 <<(*jetQuarkGluon)[l*14]<<" "<<(*jetQuarkGluon)[l*14+1]<<" "<<(*jetQuarkGluon)[l*14+2]<<std::endl ;
     }
 
     if(indexes.size()>0) lead  = indexes[0];  
@@ -1682,6 +1737,20 @@ void fillTrees_MuTauStream(TChain* currentTree,
       jet1PUMVA = (*jetPUMVA)[lead];
       jet1PUWP  = (*jetPUWP)[lead*3]; // WP loose
 
+      jet1QGmlp = (*jetQuarkGluon)[lead*14+1] ;
+      jet1QGlike = (*jetQuarkGluon)[lead*14+2] ;
+      jet1QGrhoIso = (*jetQuarkGluon)[lead*14+6] ;
+      jet1QGptD = (*jetQuarkGluon)[lead*14+7] ;
+      jet1QGaxis1 = (*jetQuarkGluon)[lead*14+8] ;
+      jet1QGaxis2 = (*jetQuarkGluon)[lead*14+9] ;
+      jet1QGmult = (*jetQuarkGluon)[lead*14+10] ;
+      jet1QGnChg = (*jetQuarkGluon)[lead*14+11] ;
+      jet1QGnNeutral = (*jetQuarkGluon)[lead*14+13] ;
+      jet1QGflavor = (run < 100)? (*jetQuarkGluonGen)[lead*4+0] : -99 ;
+      jet1QGNbConst = (run < 100)? (*jetQuarkGluonGen)[lead*4+1] : -99 ;
+      jet1QGConstId = (run < 100)? (*jetQuarkGluonGen)[lead*4+2] : -99 ;
+      jet1QGConstPt = (run < 100)? (*jetQuarkGluonGen)[lead*4+3] : -99 ;
+
       // second jet
       if(trail>=0){
 
@@ -1721,6 +1790,20 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	jet2PUMVA = (*jetPUMVA)[trail];
 	jet2PUWP  = (*jetPUWP)[trail*3]; // WP loose
 
+	jet2QGmlp = (*jetQuarkGluon)[trail*14+1] ;
+	jet2QGlike = (*jetQuarkGluon)[trail*14+2] ;
+	jet2QGrhoIso = (*jetQuarkGluon)[trail*14+6] ;
+	jet2QGptD = (*jetQuarkGluon)[trail*14+7] ;
+	jet2QGaxis1 = (*jetQuarkGluon)[trail*14+8] ;
+	jet2QGaxis2 = (*jetQuarkGluon)[trail*14+9] ;
+	jet2QGmult = (*jetQuarkGluon)[trail*14+10] ;
+	jet2QGnChg = (*jetQuarkGluon)[trail*14+11] ;
+	jet2QGnNeutral = (*jetQuarkGluon)[trail*14+13] ;
+	jet2QGflavor = (run < 100)? (*jetQuarkGluonGen)[trail*4+0] : -99 ;
+	jet2QGNbConst = (run < 100)? (*jetQuarkGluonGen)[trail*4+1] : -99 ;
+	jet2QGConstId = (run < 100)? (*jetQuarkGluonGen)[trail*4+2] : -99 ;
+	jet2QGConstPt = (run < 100)? (*jetQuarkGluonGen)[trail*4+3] : -99 ;
+
 	diJetPt  = ((*jets)[lead] + (*jets)[trail]).Pt();
 	diJetPhi =  //((*jets)[lead]-(*jets)[trail]).Phi();
 	  TMath::Abs(  ((*jets)[lead] - (*jets)[trail]).Phi() ) > TMath::Pi() ? 
@@ -1755,6 +1838,20 @@ void fillTrees_MuTauStream(TChain* currentTree,
     chFracPVVeto = (veto>=0) ? (*jetsChNfraction)[veto] : -99; 
     jetVetoPUMVA = (veto>=0) ? (*jetPUMVA)[veto]  : -99;
     jetVetoPUWP  = (veto>=0) ? (*jetPUWP)[veto*3] : -99; // WP loose
+
+    jetVetoQGmlp = (veto>=0) ? (*jetQuarkGluon)[veto*14+1] : -99;
+    jetVetoQGlike = (veto>=0) ? (*jetQuarkGluon)[veto*14+2] : -99;
+    jetVetoQGrhoIso = (veto>=0) ? (*jetQuarkGluon)[veto*14+6] : -99;
+    jetVetoQGptD = (veto>=0) ? (*jetQuarkGluon)[veto*14+7] : -99;
+    jetVetoQGaxis1 = (veto>=0) ? (*jetQuarkGluon)[veto*14+8] : -99;
+    jetVetoQGaxis2 = (veto>=0) ? (*jetQuarkGluon)[veto*14+9] : -99;
+    jetVetoQGmult = (veto>=0) ? (*jetQuarkGluon)[veto*14+10] : -99;
+    jetVetoQGnChg = (veto>=0) ? (*jetQuarkGluon)[veto*14+11] : -99;
+    jetVetoQGnNeutral = (veto>=0) ? (*jetQuarkGluon)[veto*14+13] : -99;
+    jetVetoQGflavor = (veto>=0 && run < 100) ? (*jetQuarkGluonGen)[veto*4+0] : -99;
+    jetVetoQGNbConst = (veto>=0 && run < 100) ? (*jetQuarkGluonGen)[veto*4+1] : -99;
+    jetVetoQGConstId = (veto>=0 && run < 100) ? (*jetQuarkGluonGen)[veto*4+2] : -99;
+    jetVetoQGConstPt = (veto>=0 && run < 100) ? (*jetQuarkGluonGen)[veto*4+3] : -99;
 
     isVetoInJets = 0;
     for(int l = 0 ; l < int(indexes.size()) ; l++){
