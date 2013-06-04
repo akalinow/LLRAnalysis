@@ -36,15 +36,18 @@ if (not runOnMC) and (not runOnEmbed) and applyTauESCorr:
     print "Running on Data, Tau ESCorr should be switched off"
     applyTauESCorr=False 
 
+if applyTauESCorr:
+    print "Apply tau ES correction"
+
 if useMarkov:
     print "Use SVFit with Markov chain integration"
 else:
     print "Use SVFit with VEGAS integration"
     
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V15::All')
+    process.GlobalTag.globaltag = cms.string('START53_V23::All')
 else:
-    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN4::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

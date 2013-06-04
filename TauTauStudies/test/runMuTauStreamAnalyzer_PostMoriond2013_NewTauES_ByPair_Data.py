@@ -42,9 +42,9 @@ else:
     print "Use SVFit with VEGAS integration"
     
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V15::All')
+    process.GlobalTag.globaltag = cms.string('START53_V23::All')
 else:
-    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN4::All')
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
