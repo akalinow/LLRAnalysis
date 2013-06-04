@@ -70,9 +70,9 @@ process.source = cms.Source(
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
-    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
-    'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
+    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
    )
     )
 
@@ -304,21 +304,21 @@ if reRunPatJets:
     process.patJetCorrFactors.rho    = cms.InputTag('kt6PFJets','rho')
     process.patJetCorrFactors.useRho = True
     
-    process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
-        levels = cms.vstring('L1Offset',
-                             'L2Relative',
-                             'L3Absolute')
-        )
-    process.patJetCorrFactorsL1Offset.useRho = False #MB
-    if runOnMC:
-        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
-    else:
-        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
-        
-    process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
-                                                         cms.InputTag("patJetCorrFactorsL1Offset"))
-    process.makePatJets.replace(process.patJetCorrFactors,
-                                process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
+    #process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
+    #    levels = cms.vstring('L1Offset',
+    #                         'L2Relative',
+    #                         'L3Absolute')
+    #    )
+    #process.patJetCorrFactorsL1Offset.useRho = False #MB
+    #if runOnMC:
+    #    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+    #else:
+    #    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+    #    
+    #process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
+    #                                                     cms.InputTag("patJetCorrFactorsL1Offset"))
+    #process.makePatJets.replace(process.patJetCorrFactors,
+    #                            process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
     
     process.runPatJets = cms.Sequence(process.makePatJets*process.selectedPatJets)
 

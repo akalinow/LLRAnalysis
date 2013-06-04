@@ -298,21 +298,21 @@ if reRunPatJets:
     process.patJetCorrFactors.rho    = cms.InputTag('kt6PFJets','rho')
     process.patJetCorrFactors.useRho = True
     
-    process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
-        levels = cms.vstring('L1Offset',
-                             'L2Relative',
-                             'L3Absolute')
-        )
-    process.patJetCorrFactorsL1Offset.useRho = False #MB
-    if runOnMC:
-        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
-    else:
-        process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
-        
-    process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
-                                                         cms.InputTag("patJetCorrFactorsL1Offset"))
-    process.makePatJets.replace(process.patJetCorrFactors,
-                                process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
+    #process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
+    #    levels = cms.vstring('L1Offset',
+    #                         'L2Relative',
+    #                         'L3Absolute')
+    #    )
+    #process.patJetCorrFactorsL1Offset.useRho = False #MB
+    #if runOnMC:
+    #    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+    #else:
+    #    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+    #    
+    #process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
+    #                                                     cms.InputTag("patJetCorrFactorsL1Offset"))
+    #process.makePatJets.replace(process.patJetCorrFactors,
+    #                            process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
     
     process.runPatJets = cms.Sequence(process.makePatJets*process.selectedPatJets)
 
