@@ -164,9 +164,6 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float pZetaSig_;
   float mTauTauMin_;
   float numPV_;
-  float VtxZ_;
-  float VtxX_;
-  float VtxY_;
   int numOfDiTaus_;
   int numOfLooseIsoDiTaus_;
   int decayMode_;
