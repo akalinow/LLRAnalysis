@@ -1566,7 +1566,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // define JSON selector //
   cout << "define JSON selection" << endl;
-  int nJson=7;
+  int nJson=8;
   string jsonFile[nJson];
   string dirJson = "/data_CMS/cms/htautau/JSON/"; 
   jsonFile[0] = dirJson+"/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt"; // ReReco 13Jul 
@@ -1576,6 +1576,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   jsonFile[4] = dirJson+"/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt";         // PromptReco updated
   jsonFile[5] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_lowETM.txt";  // RunD period Low
   jsonFile[6] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_highETM.txt"; // RunD period High
+  jsonFile[7] = dirJson+"/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"; // ReReco 22Jan2013
   map<int, vector<pair<int, int> > > jsonMap[nJson] ;  
   for(int iJ=0 ; iJ<nJson ; iJ++)
     jsonMap[iJ] = readJSONFile(jsonFile[iJ]);
