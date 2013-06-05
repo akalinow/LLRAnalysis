@@ -68,6 +68,7 @@
 #define DOSVFITSTANDALONE false
 #define DOVBFMVA true
 #define DEBUG false
+#define RERECO true
 
 // Weights of differents periods
 #define wA  0.04185 //0.067   L=810.99
@@ -627,7 +628,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
-  float ptAll[50],etaAll[50],phiAll[50];
+  float ptAll[50],etaAll[50],phiAll[50],csvAll[50];
   //float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
@@ -835,6 +836,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("ptAll",  &ptAll,  "ptAll[nJets30]/F");
   outTreePtOrd->Branch("etaAll", &etaAll, "etaAll[nJets30]/F");
   outTreePtOrd->Branch("phiAll", &phiAll, "phiAll[nJets30]/F");
+  outTreePtOrd->Branch("csvAll", &csvAll, "csvAll[nJets30]/F");
   outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
@@ -1281,7 +1283,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("lumi"                  ,1);
   currentTree->SetBranchStatus("mcPUweight"            ,1);
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
-  currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
+
+  if(RERECO) currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
 
   currentTree->SetBranchStatus("index"                 ,1);
 
@@ -1295,8 +1298,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   ////////////////////////////////////////////////////////////////////
   std::vector< double >* embeddingWeights = new std::vector< double >();//IN
-  currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
-
+  if(RERECO) {
+    currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
+  }
   std::vector< LV >* jets           = new std::vector< LV >();
 
   if(analysis_.find("JetUp")!=string::npos) 
@@ -1643,7 +1647,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = csvAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] -99;
     }
 
     // define the relevant jet collection 
@@ -1676,6 +1680,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	ptAll[nJets30]  = (*jets)[indexes[v]].Pt();
 	etaAll[nJets30] = (*jets)[indexes[v]].Eta();
 	phiAll[nJets30] = (*jets)[indexes[v]].Phi();
+	csvAll[nJets30] = (*jetsBtagCSV)[indexes[v]];
 	nJets30++;
       }
       if( (*jets)[indexes[v]].Pt() > 20 ) nJets20++;
@@ -1872,7 +1877,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	isVetoInJets = 1;
     }
 
-    diTauNSVfitMass_        = diTauNSVfitMass;
+    //diTauNSVfitMass_        = diTauNSVfitMass;
+    diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
     diTauNSVfitMassErrUp_   = diTauNSVfitMassErrUp;
     diTauNSVfitMassErrDown_ = diTauNSVfitMassErrDown;
     diTauNSVfitPt_        = diTauNSVfitPt;
@@ -2185,15 +2191,26 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // Embedding Weights
     embeddingFilterEffWeight_ = embeddingWeight;
-    TauSpinnerWeight_ = (*embeddingWeights)[0];
-    ZmumuEffWeight_ = (*embeddingWeights)[1];
-    diTauMassVSdiTauPtWeight_ = (*embeddingWeights)[2];
-    tau2EtaVStau1EtaWeight_ = (*embeddingWeights)[3];
-    tau2PtVStau1PtWeight_ = (*embeddingWeights)[4];
-    muonRadiationWeight_ = (*embeddingWeights)[5];
-    muonRadiationDownWeight_ = (*embeddingWeights)[6];
-    muonRadiationUpWeight_ = (*embeddingWeights)[7];
-
+    if(RERECO) {
+      TauSpinnerWeight_ = (*embeddingWeights)[0];
+      ZmumuEffWeight_ = (*embeddingWeights)[1];
+      diTauMassVSdiTauPtWeight_ = (*embeddingWeights)[2];
+      tau2EtaVStau1EtaWeight_ = (*embeddingWeights)[3];
+      tau2PtVStau1PtWeight_ = (*embeddingWeights)[4];
+      muonRadiationWeight_ = (*embeddingWeights)[5];
+      muonRadiationDownWeight_ = (*embeddingWeights)[6];
+      muonRadiationUpWeight_ = (*embeddingWeights)[7];
+    }      
+    else {
+      TauSpinnerWeight_ = 1;
+      ZmumuEffWeight_ = 1;
+      diTauMassVSdiTauPtWeight_ = 1;
+      tau2EtaVStau1EtaWeight_ = 1;
+      tau2PtVStau1PtWeight_ = 1;
+      muonRadiationWeight_ = 1;
+      muonRadiationDownWeight_ = 1;
+      muonRadiationUpWeight_ = 1;
+    }
     embeddingWeight_ = embeddingFilterEffWeight_;
     embeddingWeight_ *=  TauSpinnerWeight_;
     embeddingWeight_ *=  ZmumuEffWeight_;
@@ -2201,7 +2218,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     embeddingWeight_ *=  tau2EtaVStau1EtaWeight_;
     embeddingWeight_ *=  tau2PtVStau1PtWeight_;
     embeddingWeight_ *=  muonRadiationWeight_;
-
 
     if(sample.Contains("Emb") && UnfoldDen1 && genTausP4->size()>1){
       float corrFactorEmbed = (UnfoldDen1->GetBinContent( UnfoldDen1->GetXaxis()->FindBin( (*genTausP4)[0].Eta() ) ,  UnfoldDen1->GetYaxis()->FindBin( (*genTausP4)[1].Eta() ) )); 
