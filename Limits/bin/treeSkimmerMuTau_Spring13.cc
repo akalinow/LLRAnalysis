@@ -729,7 +729,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // event id
   ULong64_t event_,run_,lumi_;
-  int index_;
+  int index_, pairIndex, counter;
+  bool passQualityCuts;
 
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
   
@@ -1105,6 +1106,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("run",  &run_,  "run/l");
   outTreePtOrd->Branch("lumi", &lumi_, "lumi/l");
   outTreePtOrd->Branch("index", &index_, "index/I");
+  outTreePtOrd->Branch("pairIndex", &pairIndex, "pairIndex/I");
 
   outTreePtOrd->Branch("uParl", &uParl, "uParl/F");
   outTreePtOrd->Branch("uPerp", &uPerp, "uPerp/F");
@@ -2632,9 +2634,43 @@ void fillTrees_MuTauStream(TChain* currentTree,
     lumi_            = lumi;
     index_           = index;   
 
+    // pairIndex
+    counter=0;
+    //passQualityCuts=(muFlag!=1 && vetoEventOld_==0 && isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    passQualityCuts=(isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1);
+    
+    // Arrived in a new event
+    if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
+      
+      // change reference
+      lastEvent = event;
+      lastLumi  = lumi;
+      lastRun   = run;
+      
+      // set back counters to 0
+      counter=0;
+      
+      if( passQualityCuts ){
+	pairIndex = counter;
+	counter++;
+      }
+      else pairIndex = -1;
+    }
+    
+    // This entry is in the same event
+    else{
+      if( passQualityCuts ){
+	pairIndex = counter;
+	counter++;
+      }
+      else
+	pairIndex = -1;
+    }
+    
+    // Fill entry
     outTreePtOrd->Fill();
   }
-
+  
   delete jets; delete jets_v2; delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;
   delete METP4; delete jetsBtagHE; delete jetsBtagHP; delete jetsBtagCSV; delete jetsChNfraction; delete genVP4; delete genMETP4;
