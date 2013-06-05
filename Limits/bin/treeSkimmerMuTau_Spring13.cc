@@ -1638,6 +1638,19 @@ void fillTrees_MuTauStream(TChain* currentTree,
     jetsBtagCSV1 = -99; jetsBtagCSV2 = -99; 
     jet1PUMVA = -99; jet2PUMVA=-99; jetVetoPUMVA=-99; 
     jet1PUWP = -99; jet2PUWP = -99; jetVetoPUWP = -99;
+    jet1QGmlp=-99; jet2QGmlp=-99; jetVetoQGmlp=-99;
+    jet1QGlike=-99; jet2QGlike=-99; jetVetoQGlike=-99;
+    jet1QGrhoIso=-99; jet2QGrhoIso=-99; jetVetoQGrhoIso=-99;
+    jet1QGptD=-99; jet2QGptD=-99; jetVetoQGptD=-99;
+    jet1QGaxis1=-99; jet2QGaxis1=-99; jetVetoQGaxis1=-99;
+    jet1QGaxis2=-99; jet2QGaxis2=-99; jetVetoQGaxis2=-99;
+    jet1QGmult=-99; jet2QGmult=-99; jetVetoQGmult=-99;
+    jet1QGnChg=-99; jet2QGnChg=-99; jetVetoQGnChg=-99;
+    jet1QGnNeutral=-99; jet2QGnNeutral=-99; jetVetoQGnNeutral=-99;
+    jet1QGflavor=-99; jet2QGflavor=-99; jetVetoQGflavor=-99;
+    jet1QGNbConst=-99; jet2QGNbConst=-99; jetVetoQGNbConst=-99;
+    jet1QGConstId=-99; jet2QGConstId=-99; jetVetoQGConstId=-99;
+    jet1QGConstPt=-99; jet2QGConstPt=-99; jetVetoQGConstPt=-99;
     MVAvbf = -99;
     L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
     caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;//MB 
