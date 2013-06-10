@@ -628,7 +628,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
   float ptAll[50],etaAll[50],phiAll[50];
-  float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
+  //float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
   float ptAllB[50],etaAllB[50],phiAllB[50],csvAllB[50],csvAll[50];
@@ -763,7 +763,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("Deta", &Deta,"Deta/F");
   outTreePtOrd->Branch("Dphi", &Dphi,"Dphi/F");
   outTreePtOrd->Branch("Mjj",  &Mjj,"Mjj/F");
-
+  /*
   outTreePtOrd->Branch("pt1_v2",  &pt1_v2,"pt1_v2/F");
   outTreePtOrd->Branch("pt2_v2",  &pt2_v2,"pt2_v2/F");
   outTreePtOrd->Branch("eta1_v2", &eta1_v2,"eta1_v2/F");
@@ -773,7 +773,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("Deta_v2", &Deta_v2,"Deta_v2/F");
   outTreePtOrd->Branch("Dphi_v2", &Dphi_v2,"Dphi_v2/F");
   outTreePtOrd->Branch("Mjj_v2",  &Mjj_v2,"Mjj_v2/F");
-
+  */
   outTreePtOrd->Branch("diJetPt",  &diJetPt , "diJetPt/F");
   outTreePtOrd->Branch("diJetPhi", &diJetPhi , "diJetPhi/F");
   outTreePtOrd->Branch("dPhiHjet", &dPhiHjet ,"dPhiHjet/F");
@@ -1161,7 +1161,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("jetsIDP4"              ,1);
   currentTree->SetBranchStatus("jetsIDUpP4"            ,1);
   currentTree->SetBranchStatus("jetsIDDownP4"          ,1);
-  currentTree->SetBranchStatus("jetsIDL1OffsetP4"      ,1);
+  //currentTree->SetBranchStatus("jetsIDL1OffsetP4"      ,1);
   currentTree->SetBranchStatus("genJetsIDP4"           ,0);
   currentTree->SetBranchStatus("jetsBtagHE"            ,1);
   currentTree->SetBranchStatus("jetsBtagHP"            ,1);
@@ -1369,10 +1369,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     currentTree->SetBranchAddress("jetsIDDownP4",      &jets);
   else
     currentTree->SetBranchAddress("jetsIDP4",          &jets);
-
+  /*
   std::vector< LV >* jets_v2        = new std::vector< LV >();
   currentTree->SetBranchAddress("jetsIDL1OffsetP4",&jets_v2);
-
+  */
   std::vector< float >* jetPUMVA =  new std::vector< float >();
   currentTree->SetBranchAddress("jetPUMVA", &jetPUMVA);
 
@@ -1794,7 +1794,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     // initialize variables filled only in the two jet case
     pt1=-99;pt2=-99;eta1=-99,eta2=-99;Deta=-99;Dphi=-99;Mjj=-99;phi1=-99;phi2=-99;
-    pt1_v2=-99;pt2_v2=-99;eta1_v2=-99,eta2_v2=-99;Deta_v2=-99;Dphi_v2=-99;Mjj_v2=-99;phi1_v2=-99;phi2_v2=-99;
+    //pt1_v2=-99;pt2_v2=-99;eta1_v2=-99,eta2_v2=-99;Deta_v2=-99;Dphi_v2=-99;Mjj_v2=-99;phi1_v2=-99;phi2_v2=-99;
     ptVeto = -99; phiVeto= -99; etaVeto= -99;isVetoInJets=-99;
     ptB1   = -99; phiB1  = -99; etaB1 = -99;
     diJetPt = -99; diJetPhi = -99; dPhiHjet = -99; c1 = -99; c2 = -99;
@@ -1884,10 +1884,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       pt1  = (*jets)[lead].Pt();
       eta1 = (*jets)[lead].Eta();
       phi1 = (*jets)[lead].Phi();
+      /*
       eta1_v2 = (*jets_v2)[lead].Eta();
       pt1_v2  = (*jets_v2)[lead].Pt();
       phi1_v2 = (*jets_v2)[lead].Phi();
-
+      */
       dPhiL1J1 =  abs((*diTauLegsP4)[0].Phi()-phi1) > TMath::Pi() ? 
 	-abs( (*diTauLegsP4)[0].Phi()-phi1 ) + 2*TMath::Pi()  :
 	abs( (*diTauLegsP4)[0].Phi()-phi1 ) ;
@@ -1911,11 +1912,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	pt2  = (*jets)[trail].Pt();
 	eta2 = (*jets)[trail].Eta();
 	phi2 = (*jets)[trail].Phi();
-	
+	/*
 	pt2_v2  = (*jets_v2)[trail].Pt();
 	eta2_v2 = (*jets_v2)[trail].Eta();
 	phi2_v2 = (*jets_v2)[trail].Phi();
-	
+	*/	
 	dPhiL1J2 =  abs((*diTauLegsP4)[0].Phi()-phi2) > TMath::Pi() ? 
 	  -abs( (*diTauLegsP4)[0].Phi()-phi2 ) + 2*TMath::Pi()  :
 	  abs( (*diTauLegsP4)[0].Phi()-phi2 ) ;
@@ -1930,13 +1931,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  -abs( (*jets)[lead].Phi()-(*jets)[trail].Phi() ) + 2*TMath::Pi()  :
 	  abs( (*jets)[lead].Phi()-(*jets)[trail].Phi() ) ;
 	Mjj  = ((*jets)[lead]+(*jets)[trail]).M();
-	
+	/*
 	Deta_v2 = abs(eta1-eta2);
 	Dphi_v2 = abs((*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi()) > TMath::Pi() ? 
 	  -abs( (*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi() ) + 2*TMath::Pi()  :
 	  abs( (*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi() ) ;
 	Mjj_v2  = ((*jets_v2)[lead]+(*jets_v2)[trail]).M();
-	
+	*/	
 	jetsBtagHE2 = (*jetsBtagHE)[trail];
 	jetsBtagHP2 = (*jetsBtagHP)[trail];
 	jetsBtagCSV2= (*jetsBtagCSV)[trail];
@@ -3075,7 +3076,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     outTreePtOrd->Fill();
   }
   
-  delete jets; delete jets_v2; delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
+  delete jets; /*delete jets_v2*/; delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;
   delete METP4; delete jetsBtagHE; delete jetsBtagHP; delete jetsBtagCSV; delete jetsChNfraction; delete genVP4; delete genMETP4;
   delete gammadEta; delete gammadPhi; delete gammaPt;  delete HqT; 
