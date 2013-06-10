@@ -89,10 +89,12 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   else if(version_.Contains("AntiEle2Medium"))     antiele = "tightestAntiEMVA3WP>1";
   else if(version_.Contains("AntiEle2Tight"))     antiele = "tightestAntiEMVA3WP>2";
   else if(version_.Contains("AntiEle2VeryTight")) antiele = "tightestAntiEMVA3WP>3";
+  else if(version_.Contains("AntiEle0p92")) antiele = "AntiEMVA3raw>0.92";
   
   //ElectronID
-  if(version_.Contains("OldEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
-  else if(version_.Contains("NewEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+  lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+//   else if(version_.Contains("NewEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+//   else if(version_.Contains("NewEleID")) lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.7875) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.95) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
 
   //Third lepton veto
   if(version_.Contains("OldEleID")) lveto = "elecFlag==0 && vetoEventOld==0";
@@ -362,13 +364,21 @@ void drawHistogramEmbed(TString version_ = "",
 			){
   if(tree!=0 && h!=0){
     h->Reset();
-
+//     TH1F* hB = 0;
+//     TH1F* hE = 0;
+//     TCut cutB = TCut("(TMath::Abs(etaL1)<1.479)");
+//     TCut cutE = TCut("0.8*(TMath::Abs(etaL1)>=1.479)");
     if(version_.Contains("SoftD"))         tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTauD*HLTEleSoft*passL1etmCut*embeddingWeight)"*cut);
     else if(version_.Contains("SoftLTau")) tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTauD*HLTEleSoft*embeddingWeight)"*cut);
     else if(!version_.Contains("Soft")) {
       if(RUN=="ABC")                       tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTauABC*HLTEleABC*embeddingWeight)"*cut);
       else if(RUN=="D")                    tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTauD*HLTEleD*embeddingWeight)"*cut);
-      else                                 tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTau*HLTElec*embeddingWeight)"*cut);
+      else{
+// 	tree->Draw(variable+">>hB","(HLTTau*HLTElec*embeddingWeight)"*cut*cutB);
+// 	tree->Draw(variable+">>hE","(HLTTau*HLTElec*embeddingWeight)"*cut*cutE);
+// 	h->Add(hB,hE);
+	tree->Draw(variable+">>"+TString(h->GetName()),"(HLTTau*HLTElec*embeddingWeight)"*cut);
+      }
     }
     else {
       cout << "ERROR : Soft analyses need RUN set to ABC or D, nothing else is allowed." << endl;
@@ -1044,6 +1054,8 @@ void plotElecTau( Int_t mH_           = 120,
     selectionBins="novbfHigh";
   if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos )
     selectionBins="vbf";
+  if(selection_.find("btag")!=string::npos )
+    selectionBins="btag";
 
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selectionBins, variable_);
   cout<<"Bins : "<<endl;
@@ -1372,6 +1384,9 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lptMax("ptL1>-999");
   TCut lID("((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1");
 
+//   TCut EleIDSFEmbedded("1");
+  TCut EleIDSFEmbedded("((0.8*(TMath::Abs(etaL1)>1.479))+(TMath::Abs(etaL1)<=1.479))");
+
   if(     version_.Contains("SoftD"))    {lpt="ptL1>14"; lptMax="ptL1<=24"; }
   else if(version_.Contains("SoftLTau")) {lpt="ptL1>14"; lptMax="ptL1<=24"; }
   else if(!version_.Contains("Soft"))    {lpt="ptL1>24"; lptMax="ptL1>-999";}
@@ -1556,8 +1571,8 @@ void plotElecTau( Int_t mH_           = 120,
   // Global TCuts = category && object selection && event selection //
 
   TCut sbinInclusive                     = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut  && hltevent ;
-  TCut sbinEmbeddingInclusive            = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut              ;
-  TCut sbinPZetaRelEmbeddingInclusive    = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge                       ;
+  TCut sbinEmbeddingInclusive            = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut              && EleIDSFEmbedded;
+  TCut sbinPZetaRelEmbeddingInclusive    = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge                       && EleIDSFEmbedded;
   TCut sbinPZetaRelSSInclusive           = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && SS                    && hltevent ;
   TCut sbinPZetaRelInclusive             = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge           && hltevent ;
   TCut sbinSSInclusive                   = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && SS          && MtCut  && hltevent ;
@@ -1574,8 +1589,8 @@ void plotElecTau( Int_t mH_           = 120,
   TCut sbinPZetaRelLtisoInclusive        = lpt && lID && tpt && ltiso && antimu && antiele && liso  && lveto && diTauCharge           && hltevent ;
   
   TCut sbin                   = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut  && hltevent ;
-  TCut sbinEmbedding          = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut              ;
-  TCut sbinEmbeddingPZetaRel  = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge                       ;
+  TCut sbinEmbedding          = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut              && EleIDSFEmbedded;
+  TCut sbinEmbeddingPZetaRel  = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge                       && EleIDSFEmbedded;
   TCut sbinPZetaRel           = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge           && hltevent ;
   TCut sbinPZetaRelaIso       = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && laiso && lveto && diTauCharge           && hltevent ;
   TCut sbinPZetaRelSSaIso     = sbinCat && lpt && lID && tpt && tiso  && antimu && antiele && laiso && lveto && SS                    && hltevent ;
@@ -2043,9 +2058,14 @@ void plotElecTau( Int_t mH_           = 120,
 // 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    float tmpNorm = hCleaner->Integral();
+	    cout<<"tmpNorm = hCleaner->Integral() :"<<hCleaner->Integral()<<endl;
 // 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive&&vbfLooseQCD ,1);
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive&&vbfLooseQCD ,1);
-	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
+
+	    if(tmpNorm==0)
+	      hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(1.0/hCleaner->Integral()));
+	    else
+	      hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
 
 	    //get efficiency of events passing QCD selection to pass the category selection 
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
@@ -2134,6 +2154,7 @@ void plotElecTau( Int_t mH_           = 120,
 // 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
 	    drawHistogramData(currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
+	    cout<<" hDataAntiIsoLooseTauIso->Integral() : "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
 
