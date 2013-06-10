@@ -69,10 +69,10 @@ process.source = cms.Source(
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/MC/file_GG125_patTuples_LepTauStream_10_1_Rs2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/AntiZee/patTuples_LepTauStream_99_1_dw0.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_EmbedLowPt_etau_2012D.root'
-    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/RecHitEmbed/patTuples_LepTauStream_Embed_etau_2012B.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
-    'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
+    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
    )
     )
 
@@ -421,7 +421,8 @@ process.tauPtEtaIDAgMuLAgElec = cms.EDFilter( #apply AntiLep cuts
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuLAgElec"),
     cut = cms.string("tauID('againstMuonLoose2')>0.5 "+
-                     " && tauID('againstElectronTightMVA3')>0.5 "
+##                      " && tauID('againstElectronTightMVA3')>0.5 "
+                     " && tauID('againstElectronLooseMVA3')>0.5 "
                      ),
     filter = cms.bool(False)
     )
@@ -440,7 +441,8 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
                      " && tauID('byLooseIsolationMVA2')>-0.5"+
                      #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5)"
                      #" && tauID('againstElectronMVA')>0.5"
-                     " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -451,7 +453,8 @@ process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
                      " && tauID('byLooseIsolationMVA2')>-0.5"+
                      #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5 )"
                      #" && tauID('againstElectronMVA')>0.5"
-                     " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -465,11 +468,13 @@ if runMoriond:
     process.tauPtEtaIDAgMuLAgElec.cut = cms.string("tauID('againstMuonLoose2')>0.5 || tauID('againstMuonLoose')>0.5")
     process.tauPtEtaIDAgMuAgElecIso.cut = cms.string("pt>20 && abs(eta)<2.3"+
                                                      " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+##                                                      " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
                                                     )
     process.tauPtEtaIDAgMuAgElecIsoPtRel.cut = cms.string("pt>19 && abs(eta)<2.3"+
                                                           " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+##                                                           " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
                                                           )
     
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(

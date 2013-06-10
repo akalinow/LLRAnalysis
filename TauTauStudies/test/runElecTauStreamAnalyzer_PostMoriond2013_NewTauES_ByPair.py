@@ -423,7 +423,8 @@ process.tauPtEtaIDAgMuLAgElec = cms.EDFilter( #apply AntiLep cuts
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuLAgElec"),
     cut = cms.string("tauID('againstMuonLoose2')>0.5 "+
-                     " && tauID('againstElectronTightMVA3')>0.5 "
+##                      " && tauID('againstElectronTightMVA3')>0.5 "
+                     " && tauID('againstElectronLooseMVA3')>0.5 "
                      ),
     filter = cms.bool(False)
     )
@@ -442,7 +443,8 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
                      " && tauID('byLooseIsolationMVA2')>-0.5"+
                      #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5)"
                      #" && tauID('againstElectronMVA')>0.5"
-                     " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -453,7 +455,8 @@ process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
                      " && tauID('byLooseIsolationMVA2')>-0.5"+
                      #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5 )"
                      #" && tauID('againstElectronMVA')>0.5"
-                     " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
                      ),
     filter = cms.bool(False)
     )
@@ -467,11 +470,13 @@ if runMoriond:
     process.tauPtEtaIDAgMuLAgElec.cut = cms.string("tauID('againstMuonLoose2')>0.5 || tauID('againstMuonLoose')>0.5")
     process.tauPtEtaIDAgMuAgElecIso.cut = cms.string("pt>20 && abs(eta)<2.3"+
                                                      " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+##                                                      " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
                                                     )
     process.tauPtEtaIDAgMuAgElecIsoPtRel.cut = cms.string("pt>19 && abs(eta)<2.3"+
                                                           " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+##                                                           " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
+                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
                                                           )
     
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
