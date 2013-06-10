@@ -207,6 +207,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
   // Start processing
   if(tree!=0 && h!=0){
 
+    TCut thirdleptonveto="vetoEventOld==0"; // test purposes (PF embed)
     TCut weight   ="run>0";
 
     if(type.Contains("MC")) {
@@ -220,6 +221,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
       }      
     }
     else if(type.Contains("Embed")) {
+      thirdleptonveto="vetoEventOld==0";
       if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*passL1etmCutABC*embeddingWeight)";
       else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*passL1etmCut*embeddingWeight)";
       else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*embeddingWeight)";
@@ -228,13 +230,21 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*embeddingWeight)";
 	else                                 weight = "(HLTTau*HLTMu*embeddingWeight)";
       }
+      // TEST NEW RecHitEmbed WEIGHTS
+      if(     version_.Contains("Embed1")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight)";
+      else if(version_.Contains("Embed2")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight)";
+      else if(version_.Contains("Embed3")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight)";
+      else if(version_.Contains("Embed4")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight*muonRadiationWeight)";
+      else if(version_.Contains("Embed5")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight*muonRadiationWeight*diTauMassVSdiTauPtWeight)";
+      if(DEBUG) cout << "$$$$$$$$$$$$$$$$$ EMBED WEIGHT = " << weight << endl;
     }
 
     // Loop over entries to choose the event's pair instead of using pairIndex
     if(LOOP) {
 
       if(DEBUG) cout << "-- produce skim" << endl;
-      tree->Draw(">>+skim", cut ,"entrylist");
+      //tree->Draw(">>+skim", cut  ,"entrylist");
+      tree->Draw(">>+skim", cut && thirdleptonveto ,"entrylist");
       TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
       int nEntries = skim->GetN();
       tree->SetEntryList(skim);
@@ -291,16 +301,17 @@ void drawHistogram(TCut sbinCat = TCut(""),
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
-
+      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat*thirdleptonveto);
       // Reset entry list
       tree->SetEntryList(0);
       skim->Reset();
       if(DEBUG) cout << "-- reset skim : " << skim->GetN() << "entries" << endl;
     }    
     else {
-      TCut pairIndex="pairIndex[0]<1";
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
+      TCut pairIndex="pairIndex<1";
+      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat*thirdleptonveto);
     }
 
     // Scale the histogram, compute norm and err
@@ -695,7 +706,7 @@ void plotMuTau( Int_t mH_           = 120,
 		Float_t antiWsdb    = 70,
 		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_p2_topup/src/Bianchi/Limits/bin/results/"
 		//TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_SyncRecoEleIdJEC/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
 
@@ -920,7 +931,8 @@ void plotMuTau( Int_t mH_           = 120,
 
   //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
   //TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
+  TString pathToEmbed= pathToFile; // "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -943,11 +955,11 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *dataEmbedded = new TChain(treeEmbedded);
   //
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+analysis_+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+analysis_+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+analysis_+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012A*Embedded_MuTau_"+analysis_+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012B*Embedded_MuTau_"+analysis_+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012C*Embedded_MuTau_"+analysis_+".root");
   }
-  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+analysis_+".root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToEmbed+"/nTupleRun2012D*Embedded_MuTau_"+analysis_+".root");
 
   //if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
 
@@ -980,10 +992,17 @@ void plotMuTau( Int_t mH_           = 120,
   //
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"+analysis_+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"+analysis_+".root");
+  /*
   backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"+analysis_+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+analysis_+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+analysis_+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+analysis_+".root");
+  */
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_special_"+analysis_+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_special_"+analysis_+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_special_"+analysis_+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_special_"+analysis_+".root");
+
   //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+analysis_+".root");
   backgroundW3Jets = backgroundWJets;
 
@@ -1093,10 +1112,11 @@ void plotMuTau( Int_t mH_           = 120,
   chooseSelection(version_, tiso, ltiso, mtiso, antimu);
 
   ////// EVENT WISE //////
-  TCut lveto;
+  TCut lveto="muFlag!=1";
+  /*
   if(RERECO) lveto = "muFlag!=1 && vetoEventNew==0"; // New = NewEleID
   else       lveto = "muFlag!=1 && vetoEvent==0";    // muFlag==0
-
+  */
   TCut SS("diTauCharge!=0");
   TCut OS("diTauCharge==0");
   TCut pZ( Form("((%s)<%f)",antiWcut.c_str(),antiWsgn));
