@@ -886,7 +886,7 @@ void plotMuTau( Int_t mH_           = 120,
   //SUSYhistos.push_back("SUSYBB180");SUSYhistos.push_back("SUSYBB200"); SUSYhistos.push_back("SUSYBB250"); SUSYhistos.push_back("SUSYBB300");
   //SUSYhistos.push_back("SUSYBB350");SUSYhistos.push_back("SUSYBB400"); SUSYhistos.push_back("SUSYBB450"); SUSYhistos.push_back("SUSYBB500");
   //SUSYhistos.push_back("SUSYBB600");SUSYhistos.push_back("SUSYBB700"); SUSYhistos.push_back("SUSYBB800"); SUSYhistos.push_back("SUSYBB900");
-  std::map<string,TH1F*> mapSUSYhistos;
+  std::map<TString,TH1F*> mapSUSYhistos;
   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
     mapSUSYhistos.insert( make_pair(SUSYhistos[i], 
 				    new TH1F(Form("h%s",SUSYhistos[i].c_str()) ,
@@ -1580,16 +1580,24 @@ void plotMuTau( Int_t mH_           = 120,
 	else if(currentName.Contains("DYMutoTau")){
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){  
             float NormDYMutoTau = 0.;
-	    if(useZDataMC)
+	    //get Norm from Inclusive 
+            float NormDYMutoTauIncl = 0.;
+	    if(useZDataMC){
 	      drawHistogram(twoJets,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
-	    else
+	      drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    }
+	    else{
 	      drawHistogram(twoJets,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+	      drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    }
+	    //get Eff. of Embed from Incl. to Category
             float NormDYMutoTauEmbdLoose = 0.; 
-	    drawHistogram(twoJets,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbin  ,1);
+	    drawHistogram(sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinInclusive  ,1);
 	    hCleaner->Reset();
 	    float NormDYMutoTauEmbd = 0.;
 	    drawHistogram(sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbd,  Error, 1.0 , hCleaner,  sbin  ,1);
-            h1->Scale( NormDYMutoTauEmbdLoose!=0 ? NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose : 1.0 );
+	    NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
+            h1->Scale( NormDYMutoTau/h1->Integral() );
 	    if(h1) {
 	      hZmm->Add(h1, 1.0); //hZmm->Sumw2(); 
 	      hZfakes->Add(h1,1.0); //hZfakes->Sumw2();
@@ -1598,16 +1606,29 @@ void plotMuTau( Int_t mH_           = 120,
           }  
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	    float NormDYMutoTau = 0.; 
-	    if(useZDataMC)
-	      drawHistogram(oneJet,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1); 
-	    else
-	      drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
-	    NormDYMutoTau = 0.;  
-            drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZ*hltEff_/1000., h1, sbinInclusive, 1);
-	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
-	    hZmm->Add(hCleaner, 1.0); //hZmm->Sumw2();  
-            hZfakes->Add(hCleaner,1.0); //hZfakes->Sumw2(); 
-            hEWK->Add(hCleaner,1.0);
+	    //get Norm from Inclusive  
+            float NormDYMutoTauIncl = 0.;
+	    if(useZDataMC){
+	      drawHistogram(oneJet,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
+	      drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    }
+	    else{
+	      drawHistogram(oneJet,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+	      drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+		}
+	    //get Eff. of Embed from Incl. to Category
+	    float NormDYMutoTauEmbdLoose = 0.;
+	    drawHistogram(sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinInclusive  ,1); 
+            hCleaner->Reset(); 
+            float NormDYMutoTauEmbd = 0.; 
+            drawHistogram(sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbd,Error, 1.0 , hCleaner,  sbin  ,1); 
+            NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.; 
+	    h1->Scale( NormDYMutoTau/h1->Integral() ); 
+            if(h1) { 
+              hZmm->Add(h1, 1.0); //hZmm->Sumw2();  
+              hZfakes->Add(h1,1.0); //hZfakes->Sumw2(); 
+              hEWK->Add(h1,1.0);  
+            } 
 	  }
 	  else{
 	    float NormDYMutoTau = 0.;
@@ -1640,7 +1661,10 @@ void plotMuTau( Int_t mH_           = 120,
 	    float NormDYJtoTau = 0.;  
             drawHistogram(oneJet,"MC", version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1); 
             NormDYJtoTau = 0.;  
-            drawHistogram(sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZ*hltEff_/1000., h1, sbinInclusive, 1);  
+	    if(useZDataMC)
+	      drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);  
+	    else
+	      drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
             hCleaner->Scale(h1->Integral()/hCleaner->Integral()); 
             hZmj->Add(hCleaner, 1.0); //hZmj->Sumw2(); 
             hZfakes->Add(hCleaner,1.0); //hZfakes->Sumw2(); 
@@ -1863,11 +1887,22 @@ void plotMuTau( Int_t mH_           = 120,
 	      if(currentName.Contains(nameProd[iP]+nameMasses[iM]))
 		hSignal[iP][iM]->Add(h1,1.0);
 
-// 	  if(currentName.Contains("SUSY")){
-// 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
-// 	    histoSusy->Add(h1,1.0);
-// 	    histoSusy->SetLineWidth(2);
-// 	  }
+ 	  if(currentName.Contains("SUSY")){
+	    //select events within 30% of Higgs mass
+	    TString sampleName = currentName;
+	    if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", "");
+	    else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", "");
+	    float mA = atof(sampleName.Data());
+	    //cout<<" SUSY mass "<<currentName<<" "<<mA<<endl; 
+	    TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
+	    //cout<<" width cut "<<HWidth<<endl; 
+
+	    float NormSign = 0.; 
+	    drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+ 	    TH1F* histoSusy =  (mapSUSYhistos.find( currentName ))->second;
+ 	    histoSusy->Add(h1,1.0);
+ 	    histoSusy->SetLineWidth(2);
+ 	  }
 
 	}
 
@@ -2281,9 +2316,9 @@ void plotMuTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
 
-//   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-//     ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
-//   }
+  for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
+    ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
+  }
  
 
   fout->Write();
@@ -2300,7 +2335,7 @@ void plotMuTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) delete hSignal[iP][iM];
 
-//   for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
+  for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
 
       
   delete aStack;  delete hEWK; delete hSiml; delete hDataEmb;  delete hRatio; delete line;
