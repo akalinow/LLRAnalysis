@@ -1981,26 +1981,51 @@ void plotElecTau( Int_t mH_           = 120,
 	}
 	else if((it->first).find("DYElectoTau")!=string::npos){
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){  
-
 	    // Extract shape from MC (h1)
             float NormDYElectoTau = 0.;
+	    //get Norm from Inclusive
+	    float NormDYElectoTauIncl = 0.;
             TCut sbinVBFLoose = sbinInclusive && twoJets;  
 	    drawHistogramMC(version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbinVBFLoose, 1);
-
-	    // Compute efficiency of sbin wrt sbinVBFLoose in the embedded sample
+	    drawHistogramMC(version_, RUN, currentTree, variable, NormDYElectoTauIncl, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    // Compute efficiency of sbin wrt sbinInclusive in the embedded sample
             float NormDYElectoTauEmbedLoose = 0.; 
-	    drawHistogramEmbed(version_, RUN, dataEmbedded, variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinVBFLoose  ,1);
+	    drawHistogramEmbed(version_, RUN, dataEmbedded, variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinInclusive  ,1);
 	    hCleaner->Reset();
 	    float NormDYElectoTauEmbed = 0.;
 	    drawHistogramEmbed(version_, RUN, dataEmbedded, variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbin  ,1);
 
-	    // Apply to h1 efficiency of 
-            h1->Scale(NormDYElectoTauEmbed/NormDYElectoTauEmbedLoose); // Norm = DYMC(sbinIncl && twoJets)*( Emb(sbin) / Emb(sbinIncl && twoJets) )
-
+	    // Apply eff from Inclusive to category sel.
+	    NormDYElectoTau = (NormDYElectoTauEmbedLoose>0) ? (NormDYElectoTauIncl * NormDYElectoTauEmbed/NormDYElectoTauEmbedLoose) : 0.; 
+            h1->Scale(NormDYElectoTau/h1->Integral()); // Norm = DYMC(sbinIncl && twoJets)*( Emb(sbin) / Emb(sbinIncl && twoJets) )
+	    
 	    hZmm->Add(h1, 1.0); 
 	    hZfakes->Add(h1,1.0); 
 	    //hEWK->Add(h1,1.0);
           }  
+	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){ 
+            // Extract shape from MC (h1) 
+            float NormDYElectoTau = 0.; 
+            //get Norm from Inclusive 
+            float NormDYElectoTauIncl = 0.; 
+	    TCut sbinbTagLoose = sbinInclusive && oneJet;  
+            drawHistogramMC(version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbinbTagLoose, 1); 
+            drawHistogramMC(version_, RUN, currentTree, variable, NormDYElectoTauIncl, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1); 
+            // Compute efficiency of sbin wrt sbinInclusive in the embedded sample 
+            float NormDYElectoTauEmbedLoose = 0.;  
+            drawHistogramEmbed(version_, RUN, dataEmbedded, variable, NormDYElectoTauEmbedLoose,  Error, 1.0 ,hCleaner,  sbinInclusive  ,1); 
+            hCleaner->Reset(); 
+            float NormDYElectoTauEmbed = 0.; 
+            drawHistogramEmbed(version_, RUN, dataEmbedded, variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbin  ,1); 
+ 
+	    // Apply eff from Inclusive to category sel.
+            NormDYElectoTau = (NormDYElectoTauEmbedLoose>0) ? (NormDYElectoTauIncl * NormDYElectoTauEmbed/NormDYElectoTauEmbedLoose) : 0.;  
+            h1->Scale(NormDYElectoTau/h1->Integral());
+             
+	    hZmm->Add(h1, 1.0);  
+	    hZfakes->Add(h1,1.0);  
+	    //hEWK->Add(h1,1.0); 
+	  }   
 	  else{
 	    float NormDYElectoTau = 0.;
 	    drawHistogramMC(version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
@@ -2021,6 +2046,17 @@ void plotElecTau( Int_t mH_           = 120,
 	    hZfakes->Add(hCleaner,1.0); 
 	    //hEWK->Add(hCleaner,1.0); 
 	  }
+	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
+            float NormDYJtoTau = 0.;  
+            TCut sbinbTagLoose = sbinInclusive && oneJet; 
+            drawHistogramMC(version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinbTagLoose, 1); 
+            NormDYJtoTau = 0.;  
+            drawHistogramMC(version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);  
+            hCleaner->Scale(h1->Integral()/hCleaner->Integral()); 
+            hZmj->Add(hCleaner, 1.0);  
+            hZfakes->Add(hCleaner,1.0);  
+            //hEWK->Add(hCleaner,1.0);  
+          } 
 	  else{
 	    float NormDYJtoTau = 0.;
 	    drawHistogramMC(version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
@@ -2274,14 +2310,26 @@ void plotElecTau( Int_t mH_           = 120,
 	      if((it->first).find(nameProd[iP]+nameMasses[iM])!=string::npos)
 		hSignal[iP][iM]->Add(h1,1.0);
 
-// 	  if((it->first).find("SUSY")!=string::npos){
-// 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
-// 	    histoSusy->Add(h1,1.0);
-// 	    histoSusy->SetLineWidth(2);
-// 	  }
-
+	  if((it->first).find("SUSY")!=string::npos){
+	    //select events within 30% of Higgs mass 
+	    TString sampleName = samples[iter]; 
+            if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", ""); 
+            else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", ""); 
+            float mA = atof(sampleName.Data()); 
+            //cout<<" SUSY mass "<<samples[iter]<<" "<<mA<<endl;  
+            TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));   
+            //cout<<" width cut "<<HWidth<<endl;  
+	    
+            float NormSign = 0.;  
+	    drawHistogramMC(version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+	    
+ 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
+ 	    histoSusy->Add(h1,1.0);
+ 	    histoSusy->SetLineWidth(2);
+ 	  }
+	  
 	}
-
+	
       }
 
       else{
