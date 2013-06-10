@@ -66,7 +66,7 @@
 #define USERECOILALGO true
 #define USEFAKERATE false
 #define DOSVFITSTANDALONE false
-#define DOVBFMVA true
+#define DOVBFMVA false
 #define DEBUG false
 #define RERECO true
 
@@ -1134,7 +1134,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("jetsIDP4"              ,1);
   currentTree->SetBranchStatus("jetsIDUpP4"            ,1);
   currentTree->SetBranchStatus("jetsIDDownP4"          ,1);
-  currentTree->SetBranchStatus("jetsIDL1OffsetP4"      ,1);
+  //currentTree->SetBranchStatus("jetsIDL1OffsetP4"      ,1);
   currentTree->SetBranchStatus("genJetsIDP4"           ,0);
   currentTree->SetBranchStatus("jetsBtagHE"            ,1);
   currentTree->SetBranchStatus("jetsBtagHP"            ,1);
@@ -2675,7 +2675,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // pairIndex
     counter=0;
     //passQualityCuts=(muFlag!=1 && vetoEventOld_==0 && isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    passQualityCuts=(isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1);
+    passQualityCuts=(isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
     
     // Arrived in a new event
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
