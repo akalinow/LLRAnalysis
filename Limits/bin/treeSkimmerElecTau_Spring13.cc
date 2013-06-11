@@ -198,12 +198,20 @@ float reweightHEPNUPWJets(int hepNUP) {
 //   else if(nJets>=4) return 0.018970657 ;
 //   else return 1 ;
 
-//NewEleIDFix
-  if(nJets==0)      return 0.492871535 ;
-  else if(nJets==1) return 0.181745835 ;
-  else if(nJets==2) return 0.105768875 ;
-  else if(nJets==3) return 0.039434502 ;
-  else if(nJets>=4) return 0.027053425 ;
+// //NewEleIDFix
+//   if(nJets==0)      return 0.492871535 ;
+//   else if(nJets==1) return 0.181745835 ;
+//   else if(nJets==2) return 0.105768875 ;
+//   else if(nJets==3) return 0.039434502 ;
+//   else if(nJets>=4) return 0.027053425 ;
+//   else return 1 ;
+
+//NewJEC
+  if(nJets==0)      return 0.492871535;
+  else if(nJets==1) return 0.184565169;
+  else if(nJets==2) return 0.056192256;
+  else if(nJets==3) return 0.03876607;
+  else if(nJets>=4) return 0.018970657;
   else return 1 ;
 }
 
@@ -211,11 +219,19 @@ float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   
+//   if(nJets==0)      return 0.115028141 ;
+//   else if(nJets==1) return 0.027710126 ;
+//   else if(nJets==2) return 0.0098376 ;
+//   else if(nJets==3) return 0.005509647 ;
+//   else if(nJets>=4) return 0.004266394 ;
+//   else return 1 ;
+
+//NewJEC
   if(nJets==0)      return 0.115028141 ;
-  else if(nJets==1) return 0.027710126 ;
-  else if(nJets==2) return 0.0098376 ;
-  else if(nJets==3) return 0.005509647 ;
-  else if(nJets>=4) return 0.004266394 ;
+  else if(nJets==1) return 0.027710126;
+  else if(nJets==2) return 0.0098376;
+  else if(nJets==3) return 0.005527209 ;
+  else if(nJets>=4) return 0.004266394;
   else return 1 ;
 }
 
@@ -688,6 +704,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float HoP,EoP, emFraction_, leadPFChargedHadrMva_;
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
+  float VtxX_,VtxY_,VtxZ_,ZimpactTau_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
   float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt;
   float genElecPt, genElecEta;
@@ -876,6 +893,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("VisMassL1J1",&VisMassL1J1,"VisMassL1J1/F");
   outTreePtOrd->Branch("VisMassL1J2",&VisMassL1J2,"VisMassL1J2/F");
 
+  outTreePtOrd->Branch("VtxZ",                    &VtxZ_,"VtxZ/F");
+  outTreePtOrd->Branch("VtxX",                    &VtxX_,"VtxX/F");
+  outTreePtOrd->Branch("VtxY",                    &VtxY_,"VtxY/F");
+  outTreePtOrd->Branch("ZimpactTau",              &ZimpactTau_,"ZimpactTau/F");
   outTreePtOrd->Branch("visibleTauMass",          &visibleTauMass_,"visibleTauMass/F");
   outTreePtOrd->Branch("HoP",                     &HoP,"HoP/F");
   outTreePtOrd->Branch("EoP",                     &EoP,"EoP/F");
@@ -1212,6 +1233,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("nhIsoLeg2"             ,0);
   currentTree->SetBranchStatus("phIsoLeg2"             ,1);
 
+  currentTree->SetBranchStatus("VtxX"                  ,1);
+  currentTree->SetBranchStatus("VtxY"                  ,1);
+  currentTree->SetBranchStatus("VtxZ"                  ,1);
   currentTree->SetBranchStatus("dxy1"                  ,0);
   currentTree->SetBranchStatus("dxy2"                  ,0);
   currentTree->SetBranchStatus("dz1"                   ,0);
@@ -1493,6 +1517,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int signalPFChargedHadrCands, signalPFGammaCands;
   float rhoFastJet,rhoNeutralFastJet;
   float visibleTauMass, visibleGenTauMass;
+  float VtxX,VtxY,VtxZ;//IN
   float dxy1, dxy2, dz1, scEta1;
   float pZetaSig;
   float chIsoLeg2, phIsoLeg2;
@@ -1561,6 +1586,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("tightestAntiMuWP",     &tightestAntiMuWP);    // ND
   currentTree->SetBranchAddress("tightestAntiMu2WP",    &tightestAntiMu2WP);   // ND
 
+  currentTree->SetBranchAddress("VtxX",                 &VtxX);//IN
+  currentTree->SetBranchAddress("VtxY",                 &VtxY);//IN
+  currentTree->SetBranchAddress("VtxZ",                 &VtxZ);//IN
   currentTree->SetBranchAddress("dxy1",                 &dxy1);
   currentTree->SetBranchAddress("dz1",                  &dz1);
   currentTree->SetBranchAddress("dxy2",                 &dxy2);
@@ -2145,7 +2173,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	isVetoInJets = 1;
     }
 
-    diTauNSVfitMass_        = diTauNSVfitMass;
+//     diTauNSVfitMass_        = diTauNSVfitMass;
+    diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
     diTauNSVfitMassErrUp_   = diTauNSVfitMassErrUp;
     diTauNSVfitMassErrDown_ = diTauNSVfitMassErrDown;
     diTauNSVfitPt_        = diTauNSVfitPt;
@@ -2190,6 +2219,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     dz1_     = dz1;
     scEtaL1 = scEta1;
 
+    VtxX_ = VtxX;
+    VtxY_ = VtxY;
+    VtxZ_ = VtxZ;
+    ZimpactTau_ = VtxZ + 130./( TMath::Tan((*diTauLegsP4)[1].Theta()));
     visibleTauMass_ = visibleTauMass;
     diTauCharge_    = diTauCharge;
     chargeL1_       = chargeL1;
