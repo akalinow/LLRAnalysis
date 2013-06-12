@@ -478,6 +478,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 			      float skimEff_ = 0., 
 			      int iJson_=-1,
 			      std::vector< antiElecMVAcutType > antiElecMVAcuts= 0.,
+			      int iDiv = true,
+			      int nDiv = true,
 			      bool doLepVeto=true
 			      )
 {
@@ -1171,11 +1173,25 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
   
+  int nProc,n1,n2;
+  nProc = nEntries/ nDiv ;
+  n1 = iDiv * nProc ;
+  if( iDiv < (nDiv-1) )
+    n2 = (iDiv+1) * nProc ;
+  else if( iDiv == nDiv-1 )
+    n2 = nEntries;
+
+
   TString sample(sample_.c_str());
-  cout << "Processing sample " << sample << endl;
-  cout<< "nEventsRead " << nEventsRead << endl;
-  cout<< "nEntries    = " << nEntries << endl;
-  cout<< "crossSection " << crossSection << " pb ==> scaleFactor " << scaleFactor << endl;
+  cout << "Processing sample " << sample << endl
+       << "nEventsRead " << nEventsRead << endl
+       << "nEntries    = " << nEntries << endl
+       << "iDiv    = " << iDiv << endl
+       << "nDiv    = " << nDiv << endl
+       << "nProc   = " << nProc << endl
+       << "n1      = " << n1 << endl
+       << "n2      = " << n2 << endl
+       << "crossSection " << crossSection << " pb ==> scaleFactor " << scaleFactor << endl;
 
   // jets
   currentTree->SetBranchStatus("jetsP4"                ,0);
@@ -1789,12 +1805,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   readerAntiZeev4->BookMVA("BDTG",WeightAntiZeev4  );
 
 
-
-  for (int n = 0; n <nEntries  ; n++) {
+  for(int n = n1 ; n < n2 ; n++) {
+//   for (int n = 0; n <nEntries  ; n++) {
 //   for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
-    if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
+//     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
+    if(n%1000==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
 //     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
     
     // APPLY JSON SELECTION //
@@ -3141,6 +3158,7 @@ int main(int argc, const char* argv[])
     return 0;
   }
 
+
 //--- read python configuration parameters
   if ( !edm::readPSetsFrom("antiElecMVAcuts.py")->existsAs<edm::ParameterSet>("process") ) 
     throw cms::Exception("antiElecMVAcuts") 
@@ -3171,6 +3189,8 @@ int main(int argc, const char* argv[])
   double xSection = cfgTreeSkimmerElecTauAnalyzer.getParameter<double>("xSection");
   double skimEff = cfgTreeSkimmerElecTauAnalyzer.getParameter<double>("skimEff");
   int iJson = cfgTreeSkimmerElecTauAnalyzer.getParameter<int>("iJson");
+  int iDiv = cfgTreeSkimmerElecTauAnalyzer.getParameter<int>("iDiv");
+  int nDiv = cfgTreeSkimmerElecTauAnalyzer.getParameter<int>("nDiv");
 
   fwlite::InputSource inputFiles(cfg); 
   int maxEvents = inputFiles.maxEvents();
@@ -3221,7 +3241,7 @@ int main(int argc, const char* argv[])
 	inputFileName != inputFiles.files().end() && !maxEvents_processed; ++inputFileName ) {
     currentTree->Add(inputFileName->data());
   }
-  fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts);
+  fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts,iDiv,nDiv);
 
 //   TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
 //   TTree* backgroundDYTauTau, *backgroundDYEtoTau, *backgroundDYJtoTau;
