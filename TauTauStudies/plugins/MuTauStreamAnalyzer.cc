@@ -1126,6 +1126,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//23
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v6");//24
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v7");//25
+    triggerPaths.push_back("HLT_Mu17_Mu8_v16");//26
+    triggerPaths.push_back("HLT_Mu17_Mu8_v17");//27
+    triggerPaths.push_back("HLT_Mu17_Mu8_v18");//28
+    triggerPaths.push_back("HLT_Mu17_Mu8_v19");//29
+    triggerPaths.push_back("HLT_Mu17_Mu8_v20");//30
+    triggerPaths.push_back("HLT_Mu17_Mu8_v21");//31
+    triggerPaths.push_back("HLT_Mu17_Mu8_v22");//32
 
     HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");//1
