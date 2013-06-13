@@ -32,7 +32,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define VERBOSE          true
-#define DEBUG            true
+#define DEBUG            false
 #define LOOP             true
 #define W3JETS           false
 #define USESSBKG         false
@@ -89,10 +89,10 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   
 
   //ElectronID
-  lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+  if(version_.Contains("OldEleID"))  lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
 //   else if(version_.Contains("NewEleID")) 
 //     lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
-//   else if(version_.Contains("NewEleID")) 
+  else if(version_.Contains("NewEleID")) 
     lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.7875) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.95) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
   
   //Third lepton veto
@@ -235,13 +235,13 @@ void drawHistogram(TCut sbinCat = TCut(""),
       }      
     }
     else if(type.Contains("Embed")) {
-      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*embeddingWeight)";
-      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*embeddingWeight)";
-      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*embeddingWeight)";
+      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
+      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight)";
+      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight)";
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*embeddingWeight)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*embeddingWeight)";
-	else                                 weight = "(HLTTau*HLTElec*embeddingWeight)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight)";
+	else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight)";
       }
     }
 
@@ -716,7 +716,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
 		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+// 		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -804,7 +805,8 @@ void plotElecTau( Int_t mH_           = 120,
 
   bool useMt      = true;
   string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
-  float antiWsgn  = useMt ? 20. :  20. ;
+//   float antiWsgn  = useMt ? 20. :  20. ;
+  float antiWsgn  = useMt ? 30. :  20. ; //mt cut at 30
   float antiWsdb  = useMt ? 70. :  40. ; 
 
   bool use2Dcut   = false;
@@ -1121,7 +1123,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
 
   ////// TAU PT+ID+ISO //////
-  TCut tpt("ptL2>20 && TMath::Abs(etaL2)<2.3");
+  TCut tpt("ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
 
   if(selection_.find("High")!=string::npos)
     tpt = tpt&&TCut("ptL2>40");
@@ -1517,7 +1519,7 @@ void plotElecTau( Int_t mH_           = 120,
 		  sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
 // 		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIsoMtiso, 
 		  sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, 
-		  vbfLoose, oneJet, zeroJet, sbinCat, vbfLooseQCD,
+		  vbfLoose, oneJet, zeroJet, sbinCat, sbinCat,
 		  true,true,true);
 
       cout << "************** END QCD evaluation using SS events *******************" << endl;
