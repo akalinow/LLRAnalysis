@@ -1252,6 +1252,15 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     triggerPaths.push_back("HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v1");//18
     triggerPaths.push_back("HLT_Ele13_eta2p1_WP90NoIso_LooseIsoPFTau20_L1ETM36_v1");//19
     triggerPaths.push_back("HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v1");//20
+
+    // Double Muon trigger paths for RH Embed
+    triggerPaths.push_back("HLT_Mu17_Mu8_v16");//26
+    triggerPaths.push_back("HLT_Mu17_Mu8_v17");//27
+    triggerPaths.push_back("HLT_Mu17_Mu8_v18");//28
+    triggerPaths.push_back("HLT_Mu17_Mu8_v19");//29
+    triggerPaths.push_back("HLT_Mu17_Mu8_v20");//30
+    triggerPaths.push_back("HLT_Mu17_Mu8_v21");//31
+    triggerPaths.push_back("HLT_Mu17_Mu8_v22");//32
                               
     HLTfiltersElec.push_back("hltOverlapFilterIsoEle20LooseIsoPFTau20");//0
     HLTfiltersElec.push_back("hltOverlapFilterIsoEle20WP90LooseIsoPFTau20");//1

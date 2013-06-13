@@ -1126,6 +1126,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//23
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v6");//24
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v7");//25
+
+    // Double Muon trigger paths for RH Embed
     triggerPaths.push_back("HLT_Mu17_Mu8_v16");//26
     triggerPaths.push_back("HLT_Mu17_Mu8_v17");//27
     triggerPaths.push_back("HLT_Mu17_Mu8_v18");//28
