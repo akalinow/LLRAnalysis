@@ -225,13 +225,13 @@ void drawHistogram(TCut sbinCat = TCut(""),
     TCut weight   ="run>0";
 
     if(type.Contains("MC")) {
-      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*weightHepNup*passL1etmCutABC*ZeeWeightHCP)";
-      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNup*passL1etmCut*ZeeWeight)";
-      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNup*ZeeWeight)";
+      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*passL1etmCutABC*ZeeWeightHCP)";
+      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight)";
+      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNup*ZeeWeightHCP)";
-	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNup*ZeeWeight)";
-	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
+	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
+	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
       }      
     }
     else if(type.Contains("Embed")) {
@@ -340,23 +340,31 @@ TArrayF createBins(int nBins_ = 80 ,
 		   int& nBins = *(new int()),
 		   string selection_   = "inclusive",
 		   TString variable_   = "diTauVisMass",
+		   TString version_    = "AntiMu2_AntiEle2Tight_HPSDB3H_OldEleID",
 		   //TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/bins/"
 		   TString location    = "/data_CMS/cms/htautau/HCP12/binning/"
 		   ){
 
+
+
   // input txt file with bins
   ifstream is;
-
+  
   TArrayF dummy(2);
   dummy[0] = xMin_; dummy[1] = xMax_;
   
   char* c = new char[10];
-  is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str())); 
+  string filename = Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
+  
+  if(version_.Contains("MSSM")) 
+    filename = Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str());
+  
+  is.open(filename); 
   if(nBins_<0 &&  !is.good()){
     cout << "Bins file not found" << endl;
     return dummy;
   }
-
+  
   int nBinsFromFile = 0;
   while (is.good())     
     {
@@ -753,8 +761,8 @@ void plotElecTau( Int_t mH_           = 120,
     selectionBins="novbfHigh";
   if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos )
     selectionBins="vbf";
-  if(selection_.find("btag")!=string::npos )
-    selectionBins="btag";
+  if(selection_.find("bTag")!=string::npos )
+    selectionBins="bTag";
 
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selectionBins, variable_);
   cout<<"Bins : "<<endl;
@@ -1002,6 +1010,10 @@ void plotElecTau( Int_t mH_           = 120,
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
   backgroundDY      ->Add(pathToFile+"nTupleDYJets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets_ElecTau_"+fileAnalysis+".root");
   backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_ElecTau_"+fileAnalysis+".root");
   //
   backgroundOthers  ->Add(pathToFile+"nTupleT-tW_ElecTau_"+fileAnalysis+".root");
@@ -1068,8 +1080,20 @@ void plotElecTau( Int_t mH_           = 120,
     cout << "FILE ANALYSIS " << fileAnalysis << endl;
     //
     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1JetsTauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2JetsTauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3JetsTauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4JetsTauTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1JetsEToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2JetsEToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3JetsEToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4JetsEToTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1JetsJetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2JetsJetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3JetsJetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4JetsJetToTau_ElecTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
@@ -2156,7 +2180,10 @@ void plotElecTau( Int_t mH_           = 120,
     aStack->Add(hSgn);
   
   leg->AddEntry(hData,"Observed","P");
-  leg->AddEntry(hSgn,Form("(%.0fx) H#rightarrow#tau#tau m_{H}=%d",magnifySgn_,mH_),"F");
+  if(version_.Contains("MSSM")) 
+    leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=%d",magnifySgn_,mH_),"F");
+  else 
+    leg->AddEntry(hSgn,Form("(%.0fx) H#rightarrow#tau#tau m_{H}=%d",magnifySgn_,mH_),"F");
   if(useEmbedding_)
     leg->AddEntry(hDataEmb,"Z#rightarrow#tau#tau (embedded)","F");
   else
@@ -2230,7 +2257,8 @@ void plotElecTau( Int_t mH_           = 120,
     if(TMath::Abs(pull) > maxPull)
       maxPull = TMath::Abs(pull);
   }
-  hRatio->SetAxisRange(TMath::Min(-1.2*maxPull,-1.),TMath::Max(1.2*maxPull,1.),"Y");
+//   hRatio->SetAxisRange(TMath::Min(-1.2*maxPull,-1.),TMath::Max(1.2*maxPull,1.),"Y");
+  hRatio->SetAxisRange(-1.5,1.5,"Y");
   hRatio->Draw("P");
 
   TF1* line = new TF1("line","0",hRatio->GetXaxis()->GetXmin(),hStack->GetXaxis()->GetXmax());
@@ -2241,16 +2269,30 @@ void plotElecTau( Int_t mH_           = 120,
   
   //return;
 
-  c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
-  c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+  if(logy_){
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+  }
+  else{
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+  }
 
   TH1F *hDataBlind, *hRatioBlind;
 
   // Plot blinded histogram
   if(variable_.Contains("Mass")) {
 
-    hDataBlind  = blindHistogram(hData,  100, 160, "hDataBlind");
-    hRatioBlind = blindHistogram(hRatio, 100, 160, "hRatioBlind");
+    if(version_.Contains("MSSM")){
+      hDataBlind  = blindHistogram(hData,  100, 2000, "hDataBlind");
+      hRatioBlind = blindHistogram(hRatio, 100, 2000, "hRatioBlind");
+    }
+    else{
+      hDataBlind  = blindHistogram(hData,  100, 160, "hDataBlind");
+      hRatioBlind = blindHistogram(hRatio, 100, 160, "hRatioBlind");
+    }
+
+
 
     c1 = new TCanvas("c2","",5,30,650,600);
     c1->SetGrid(0,0);
@@ -2305,9 +2347,14 @@ void plotElecTau( Int_t mH_           = 120,
 
     hRatioBlind->Draw("P");  
 
-    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
-    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
-
+    if(logy_){
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    }
+    else{
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    }
   }
 
   // templates for fitting
