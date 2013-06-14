@@ -166,27 +166,42 @@ double deltaR(LV v1, LV v2) {
 float reweightHEPNUPWJets(int hepNUP) {
 
   int nJets = hepNUP-5;
-  /* //old one
-  if(nJets==0)      return 1 ;
-  else if(nJets==1) return 0.368748897 ;
-  else if(nJets==2) return 0.114009944 ;
-  else if(nJets==3) return 0.077158785 ;
-  else if(nJets>=4) return 0.038490064 ;
-  else return 1 ;
-  */
-//   //New Weights specific to mu-tau from Christian 
-//   if(nJets==0)      return 0.502269748 ;  
-//   else if(nJets==1) return 0.183765696 ;  
-//   else if(nJets==2) return 0.057359534 ;  
-//   else if(nJets==3) return 0.038266418 ;  
-//   else if(nJets>=4) return 0.019149548 ;  
-//   else return 1 ;  
+  //   if(nJets==0)      return 1 ;
+  //   else if(nJets==1) return 0.368748897 ;
+  //   else if(nJets==2) return 0.114009944 ;
+  //   else if(nJets==3) return 0.077158785 ;
+  //   else if(nJets>=4) return 0.038490064 ;
+  //   else return 1 ;
 
-  if(nJets==0)      return 0.492871535 ;
-  else if(nJets==1) return 0.181745835 ;
-  else if(nJets==2) return 0.056192256 ;
-  else if(nJets==3) return 0.038029369 ;
-  else if(nJets>=4) return 0.018970657 ;
+  //   if(nJets==0)      return 0.723706428 ;
+  //   else if(nJets==1) return 0.210195224 ;
+  //   else if(nJets==2) return 0.060963485 ;
+  //   else if(nJets==3) return 0.091456958 ;
+  //   else if(nJets>=4) return 0.034384641 ;
+  //   else return 1 ;
+
+  // //JetIDFix,ByPair
+  //   if(nJets==0)      return 0.492871535 ;
+  //   else if(nJets==1) return 0.181745835 ;
+  //   else if(nJets==2) return 0.056192256 ;
+  //   else if(nJets==3) return 0.038029369 ;
+  //   else if(nJets>=4) return 0.018970657 ;
+  //   else return 1 ;
+
+  // //NewEleIDFix
+  //   if(nJets==0)      return 0.492871535 ;
+  //   else if(nJets==1) return 0.181745835 ;
+  //   else if(nJets==2) return 0.105768875 ;
+  //   else if(nJets==3) return 0.039434502 ;
+  //   else if(nJets>=4) return 0.027053425 ;
+  //   else return 1 ;
+  
+  //NewJEC
+  if(nJets==0)      return 0.492871535;
+  else if(nJets==1) return 0.184565169;
+  else if(nJets==2) return 0.056192256;
+  else if(nJets==3) return 0.03876607;
+  else if(nJets>=4) return 0.018970657;
   else return 1 ;
 }
 
@@ -194,11 +209,19 @@ float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   
-  if(nJets==0)      return 0.115028141 ;
-  else if(nJets==1) return 0.027710126 ;
-  else if(nJets==2) return 0.0098376 ;
-  else if(nJets==3) return 0.005509647 ;
-  else if(nJets>=4) return 0.004266394 ;
+  //   if(nJets==0)      return 0.115028141 ;
+  //   else if(nJets==1) return 0.027710126 ;
+  //   else if(nJets==2) return 0.0098376 ;
+  //   else if(nJets==3) return 0.005509647 ;
+  //   else if(nJets>=4) return 0.004266394 ;
+  //   else return 1 ;
+  
+  //NewJEC
+  if(nJets==0)      return 0.115028141;
+  else if(nJets==1) return 0.022330692;
+  else if(nJets==2) return 0.009062541;
+  else if(nJets==3) return 0.005257807;
+  else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
 
@@ -690,7 +713,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
-  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt;
+  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt, genMass;
   float genMuPt, genMuEta;
   int genDecayMode_;
 
@@ -921,7 +944,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
   outTreePtOrd->Branch("genVPt",                  &genVPt,     "genVPt/F");
-  
+  outTreePtOrd->Branch("genMass",                 &genMass,     "genMass/F");
+
   outTreePtOrd->Branch("pfJetPt",                 &pfJetPt_,"pfJetPt/F");
   outTreePtOrd->Branch("fakeRateRun2011",         &fakeRateRun2011,"fakeRateRun2011/F");
   outTreePtOrd->Branch("fakeRateWMC",             &fakeRateWMC,"fakeRateWMC/F");
@@ -1976,6 +2000,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
     diTauCharge_    = diTauCharge;
     chargeL1_       = chargeL1;
 
+    // genMass
+    genMass = 0;
+    if(genTausP4->size()>1) {
+      genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
+    }
+
     // genMu info
     if(genDiTauLegsP4->size()>0) {
       genMuPt   = (*genDiTauLegsP4)[0].Pt();
@@ -2198,7 +2228,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     decayMode_       = decayMode;
     numPV_           = numPV;
-    sampleWeight     = scaleFactor; 
 
     nPUVertices_     = nPUVertices;
 
@@ -2238,21 +2267,29 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
 
+    // SAMPLE WEIGHT //
+    sampleWeight   = scaleFactor; 
+    weightHepNup   = 1;
+    weightHepNupDY = 1;
+
     // Reweight W+Jets
-    weightHepNup=1;
     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
-        ) 
+        ) {
       weightHepNup = reweightHEPNUPWJets( hepNUP_ );
+      sampleWeight = 1;
+    }
 
     // Reweight DY+Jets
-    weightHepNupDY=1;
     if( sample_.find("DYJets")!=string::npos  || 
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
-        ) 
+        ) {
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP_ );
+      sampleWeight   = 1;
+    }
+    ///////////////
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
@@ -2673,9 +2710,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     index_           = index;   
 
     // pairIndex
-    counter=0;
+    //counter=0;
     //passQualityCuts=(muFlag!=1 && vetoEventOld_==0 && isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
-    passQualityCuts=(isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMu2WP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
+    passQualityCuts=(isPFMuon && isTightMuon && ptL1>20 && ptL2>20 && tightestAntiMuWP>2  && hpsDB3H<1.5 && combRelIsoLeg1DBetav2<0.1 && HLTmatch);
     
     // Arrived in a new event
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){
