@@ -227,11 +227,11 @@ float reweightHEPNUPDYJets(int hepNUP) {
 //   else return 1 ;
 
 //NewJEC
-  if(nJets==0)      return 0.115028141 ;
-  else if(nJets==1) return 0.027710126;
-  else if(nJets==2) return 0.0098376;
-  else if(nJets==3) return 0.005527209 ;
-  else if(nJets>=4) return 0.004266394;
+  if(nJets==0)      return 0.1150281410;
+  else if(nJets==1) return 0.0223306920;
+  else if(nJets==2) return 0.0090625410;
+  else if(nJets==3) return 0.0052578070;
+  else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
 
@@ -708,7 +708,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float VtxX_,VtxY_,VtxZ_,ZimpactTau_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
-  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt;
+  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt,genMass;
   float genElecPt, genElecEta;
   int genDecayMode_;
   float leadPFChHadTrackPt_, leadPFChHadTrackEta_,leadPFChHadPt_, leadPFChHadEta_;
@@ -919,6 +919,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
   outTreePtOrd->Branch("genVPt",                &genVPt,     "genVPt/F");
+  outTreePtOrd->Branch("genMass",                 &genMass,     "genMass/F");
 
   outTreePtOrd->Branch("leadPFChHadTrackPt",      &leadPFChHadTrackPt_,"leadPFChHadPt/F");
   outTreePtOrd->Branch("leadPFChHadTrackEta",     &leadPFChHadTrackEta_,"leadPFChHadEta/F");
@@ -2244,6 +2245,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauCharge_    = diTauCharge;
     chargeL1_       = chargeL1;
       
+    // genMass
+    genMass = 0;
+    if(genTausP4->size()>1) 
+      genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
+    
     // genElec Info
     if(genDiTauLegsP4->size()>0) {
       genElecPt   = (*genDiTauLegsP4)[0].Pt();
@@ -2262,6 +2268,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     genDecayMode_ = genDecayMode;
     genVMass     = (genVP4->size() > 0) ? (*genVP4)[0].M() : 0;
     genVPt       = (genVP4->size() > 0) ? (*genVP4)[0].Pt() : 0;
+
     ////////////////////////////////////////////////////////////////////
 
     TLorentzVector corrMET_tmp;
@@ -2558,7 +2565,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     decayMode_          = decayMode;
     numPV_              = numPV;
     sampleWeight        = scaleFactor; 
-    if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight        = 1;
+    if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight = 1;
+    if( sample_.find("DYJets")!=string::npos) sampleWeight = 1;
     nPUVertices_        = nPUVertices;
 
     embeddingFilterEffWeight_ = embeddingWeight;
