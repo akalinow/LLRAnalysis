@@ -1036,7 +1036,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     caloMETNoHFP4_->push_back( (*caloMEtNoHF)[0].p4() );
     caloNoHFsumEt_ = (*caloMEtNoHF)[0].sumEt();
   }
-  iEvent.getByLabel("metNoHFresidualCorrected", caloMEtNoHFCorrHandle);
+  if(!isRhEmb_)
+    iEvent.getByLabel("metNoHFresidualCorrected", caloMEtNoHFCorrHandle);
+  else
+    iEvent.getByLabel("metNoHF", caloMEtNoHFCorrHandle);
   if( !caloMEtNoHFCorrHandle.isValid() )  
     edm::LogError("DataNotAvailable")
       << "No metNoHFresidualCorrected collection available \n";
