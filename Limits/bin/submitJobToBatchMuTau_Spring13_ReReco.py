@@ -31,7 +31,6 @@ def treeSkim( ana, sample, runInSeries=False):
          os.system(runInSeries)
 
     else:
-        print "Creating the shell file for the batch..."
         #nameJob = 'job_'+sample+'_'+ana+'_'+stream
         if 'Data' in sample:
             nameJob = 'job_'+sample+'_'+stream
@@ -39,11 +38,12 @@ def treeSkim( ana, sample, runInSeries=False):
             nameJob = 'job_'+sample+'_'+stream+'_'+ana
         fileJob = 'batch/'+nameJob+'.sh'
         fileLog = 'batch/log/'+nameJob+'.txt'
+        print "Creating the shell file : "+nameJob
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/"\n')
-        f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_SyncRecoEleId/src/LLRAnalysis/Limits/bin/"\n')
+        f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_SyncRecoEleIdJEC/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/"\n')
         f.write('')
         f.write('cd $WORKINGDIR\n')
@@ -53,12 +53,13 @@ def treeSkim( ana, sample, runInSeries=False):
         f.write('source /opt/exp_soft/cms/cms_ui_env_crab.sh\n')
         ##
         configFileName = "./ConfigsReReco/treeSkimmerMuTau_Spring13_%s_%s_cfg.py" % (sample,ana)
-        f.write('treeSkimmer'+stream+'_Spring13 '+configFileName+' > '+fileLog+'\n')
+        f.write('treeSkimmer'+stream+'_Spring13 '+configFileName+' &> '+fileLog+'\n')
         f.close()
         os.system('chmod u+x batch/*.sh')
 
 ###########################################
 ###########################################
+
 ##Data
 ## treeSkim("nominal","Run2012A-13Jul2012-Data",False)
 ## treeSkim("nominal","Run2012B-13Jul2012-p1-Data",False)
@@ -161,7 +162,16 @@ samplesEmb = [
     'Run2012D-22Jan2013-p6-Embedded',
     'Run2012D-22Jan2013-p7-Embedded',
     'Run2012D-22Jan2013-p8-Embedded',
-    'Run2012D-22Jan2013-p9-Embedded'
+    'Run2012D-22Jan2013-p9-Embedded',
+    'Run2012D-22Jan2013-p1-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p2-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p3-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p4-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p5-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p6-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p7-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p8-EmbeddedLowPt',
+    'Run2012D-22Jan2013-p9-EmbeddedLowPt'
     ]
 json    = [1,0,0,2,3]
 
@@ -176,10 +186,19 @@ anaMC = ['nominal','TauUp','TauDown','JetUp','JetDown']
 #anaMC = ['nominal']
 #anaMC = ['TauUp','TauDown','JetUp','JetDown']
 
+ListFinalState = ['TauTau','JetToTau','MuToTau']
+
 for iAnMC in range(0,len(anaMC)):
-## ## ##     ##BkgMC
-    treeSkim( anaMC[iAnMC] , "DYJets"        , False)
-    treeSkim( anaMC[iAnMC] , "DYJets-Ivo"        , False)
+    ## BkgMC
+
+    ## DY
+    for finalState in ListFinalState:
+        treeSkim( anaMC[iAnMC] , "DYJets_"+finalState      , False)
+        treeSkim( anaMC[iAnMC] , "DYJets1Jets_"+finalState , False)
+        treeSkim( anaMC[iAnMC] , "DYJets2Jets_"+finalState , False)
+        treeSkim( anaMC[iAnMC] , "DYJets3Jets_"+finalState , False)
+        treeSkim( anaMC[iAnMC] , "DYJets4Jets_"+finalState , False)
+
     treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
     treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
     treeSkim( anaMC[iAnMC] , "WJets3Jets"    , False)
@@ -196,7 +215,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Nu"  , False)
     treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
 
-#######HiggsMC
+    ## HiggsMC
     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH100"       , False)
@@ -220,7 +239,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
-## ##     treeSkim( anaMC[iAnMC] , "VBFH125-NoRecoil"       , False)
+    ## treeSkim( anaMC[iAnMC] , "VBFH125-NoRecoil"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH140"       , False)
