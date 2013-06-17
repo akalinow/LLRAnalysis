@@ -209,20 +209,20 @@ float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   
-  //   if(nJets==0)      return 0.115028141 ;
-  //   else if(nJets==1) return 0.027710126 ;
-  //   else if(nJets==2) return 0.0098376 ;
-  //   else if(nJets==3) return 0.005509647 ;
-  //   else if(nJets>=4) return 0.004266394 ;
-  //   else return 1 ;
+    if(nJets==0)      return 0.115028141 ;
+    else if(nJets==1) return 0.027710126 ;
+    else if(nJets==2) return 0.0098376 ;
+    else if(nJets==3) return 0.005509647 ;
+    else if(nJets>=4) return 0.004266394 ;
+    else return 1 ;
   
   //NewJEC
-  if(nJets==0)      return 0.115028141;
-  else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009062541;
-  else if(nJets==3) return 0.005257807;
-  else if(nJets>=4) return 0.004113813;
-  else return 1 ;
+//   if(nJets==0)      return 0.115028141;
+//   else if(nJets==1) return 0.022330692;
+//   else if(nJets==2) return 0.009062541;
+//   else if(nJets==3) return 0.005257807;
+//   else if(nJets>=4) return 0.004113813;
+//   else return 1 ;
 }
 
 void createReWeighting3D(){
@@ -703,7 +703,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsDB3H_,hpsMVA_,hpsMVA2_;//IN
   float pfJetPt_;
-  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_, passL1etmCutABC_; // ND
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmPhiCorr_, L1etmWeight_, passL1etmCut_, passL1etmCutABC_; // ND
   float etmCut=20;
   float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
@@ -718,7 +718,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -980,10 +980,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("MEtCov10",    &MEtCov10,   "MEtCov10/F");
   outTreePtOrd->Branch("MEtCov11",    &MEtCov11,   "MEtCov11/F");
 
-  outTreePtOrd->Branch("L1etm",       &L1etm_,     "L1etm/F");//MB
-  outTreePtOrd->Branch("L1etmPhi",    &L1etmPhi_,  "L1etmPhi/F");//MB
-  outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_, "L1etmCorr/F");//MB
-  outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_,"L1etmWeight/F");//MB
+  outTreePtOrd->Branch("L1etm",       &L1etm_,       "L1etm/F");//MB
+  outTreePtOrd->Branch("L1etmPhi",    &L1etmPhi_,    "L1etmPhi/F");//MB
+  outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_,   "L1etmCorr/F");//MB
+  outTreePtOrd->Branch("L1etmPhiCorr",&L1etmPhiCorr_,"L1etmPhiCorr/F");//MB
+  outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_, "L1etmWeight/F");//MB
   outTreePtOrd->Branch("passL1etmCut",&passL1etmCut_,"passL1etmCut/F");//ND
   outTreePtOrd->Branch("passL1etmCutABC",&passL1etmCutABC_,"passL1etmCutABC/F");//ND
   outTreePtOrd->Branch("L1etmCut",    &etmCut,       "L1etm/F");//ND
@@ -1022,14 +1023,16 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("hpsMVA2",          &hpsMVA2_,   "hpsMVA2/F");
   outTreePtOrd->Branch("decayMode",        &decayMode_,"decayMode/I");
 
-  outTreePtOrd->Branch("numPV",              &numPV_,       "numPV/F");
-  outTreePtOrd->Branch("sampleWeight",       &sampleWeight, "sampleWeight/F"); 
-  outTreePtOrd->Branch("puWeight",           &puWeight,     "puWeight/F");
-  outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,  "puWeightHCP/F");
-  outTreePtOrd->Branch("puWeightD",          &puWeightD,    "puWeightD/F");
-  outTreePtOrd->Branch("puWeightDLow",       &puWeightDLow, "puWeightDLow/F");
-  outTreePtOrd->Branch("puWeightDHigh",      &puWeightDHigh,"puWeightDHigh/F");
-  outTreePtOrd->Branch("puWeight2",          &puWeight2,    "puWeight2/F");
+  outTreePtOrd->Branch("numPV",              &numPV_,        "numPV/F");
+  outTreePtOrd->Branch("sampleWeight",       &sampleWeight,  "sampleWeight/F"); 
+  outTreePtOrd->Branch("sampleWeightW",      &sampleWeightW, "sampleWeightW/F"); 
+  outTreePtOrd->Branch("sampleWeightDY",     &sampleWeightDY,"sampleWeightDY/F"); 
+  outTreePtOrd->Branch("puWeight",           &puWeight,      "puWeight/F");
+  outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,   "puWeightHCP/F");
+  outTreePtOrd->Branch("puWeightD",          &puWeightD,     "puWeightD/F");
+  outTreePtOrd->Branch("puWeightDLow",       &puWeightDLow,  "puWeightDLow/F");
+  outTreePtOrd->Branch("puWeightDHigh",      &puWeightDHigh, "puWeightDHigh/F");
+  outTreePtOrd->Branch("puWeight2",          &puWeight2,     "puWeight2/F");
 
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
   outTreePtOrd->Branch("embeddingFilterEffWeight",&embeddingFilterEffWeight_,"embeddingFilterEffWeight/F");//IN
@@ -1676,7 +1679,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     jet1QGConstId=-99; jet2QGConstId=-99; jetVetoQGConstId=-99;
     jet1QGConstPt=-99; jet2QGConstPt=-99; jetVetoQGConstPt=-99;
     MVAvbf = -99;
-    L1etm_=-99; L1etmPhi_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
+    L1etm_=-99; L1etmPhi_=-99; L1etmPhiCorr_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
     caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;//MB 
     caloMEtNoHF_=-99;      caloMEtNoHFPhi_=-99;// MB
     caloMEtNoHFUp_=-99;      caloMEtNoHFUpPhi_=-99;// ND
@@ -2269,6 +2272,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // SAMPLE WEIGHT //
     sampleWeight   = scaleFactor; 
+    sampleWeightW  = 1;
+    sampleWeightDY = 1;
     weightHepNup   = 1;
     weightHepNupDY = 1;
 
@@ -2279,6 +2284,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
         ) {
       weightHepNup = reweightHEPNUPWJets( hepNUP_ );
       sampleWeight = 1;
+      sampleWeightW= scaleFactor; 
     }
 
     // Reweight DY+Jets
@@ -2288,6 +2294,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
         ) {
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP_ );
       sampleWeight   = 1;
+      sampleWeightDY = scaleFactor; 
     }
     ///////////////
 
@@ -2342,8 +2349,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     if( isData && !sample.Contains("Emb") ){
 
-      L1etmWeight_ = 1;    //no correction for data
-      L1etmCorr_ = L1etm_; //no correction for data
+      L1etmWeight_  = 1;          // no correction for data
+      L1etmCorr_    = L1etm_;     
+      L1etmPhiCorr_ = L1etmPhi_; 
 
       if(isPeriodLow)       etmCut=20;
       else if(isPeriodHigh) etmCut=26;
@@ -2472,6 +2480,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	
 	// L1 ETM
 	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
+	L1etmPhiCorr_ = L1etmPhi_; 
+      
 	if(gRandom->Uniform()>(1.0-4.806/7.274) ) etmCut=26;
 	else                                      etmCut=20;
 
@@ -2512,12 +2522,20 @@ void fillTrees_MuTauStream(TChain* currentTree,
       }
       else { // embedded
 	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = 1.0;
-	L1etmCorr_ = L1etm_ ;
+	L1etmCorr_    = L1etm_ ;
+	L1etmPhiCorr_ = L1etmPhi_ ;
 	if(isPeriodLow)       etmCut=20;
 	else if(isPeriodHigh) etmCut=26;
 	else etmCut=20;
 	passL1etmCut_ = float(L1etm_>etmCut);
 	passL1etmCutABC_ = L1etm_>20;
+
+	// Get L1ETM without tau correction (only for embedded)
+	if(l1ETMP4->size()>1){
+	  L1etm_     = (*l1ETMP4)[1].Et(); // ND
+	  L1etmPhi_  = (*l1ETMP4)[1].Phi();// ND
+	}
+
       }
       
       // Weights for both MC and embedded
