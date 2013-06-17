@@ -1622,6 +1622,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   bool isMatched=false;
   bool isPeriodLow=false;
   bool isPeriodHigh=false;
+  //
+  bool dyFinalState=false;
+  bool isData = sample.Contains("2012");
   //////////////////////////
   
   MAPDITAU_run mapDiTau;
@@ -1637,11 +1640,38 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     if(iJson_>=0 && iJson_<=4)
       isGoodRun = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[iJson_]);
-
+    
     if(!isGoodRun) continue;
 
     isPeriodLow  = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[5]);  
     isPeriodHigh = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[6]);  
+    ///////////////////////////
+    // SELECT DY FINAL STATE //
+    ///////////////////////////
+
+    // final state informations //
+    genDecay_        = genDecay ;
+    isTauLegMatched_ = isTauLegMatched;
+    if( !isData ) {
+      if(DEBUG) cout << "!isData --> leptFakeTau = " ;
+      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+      if(DEBUG) cout << leptFakeTau << endl;
+    }
+    else leptFakeTau = -99;
+    //
+    // final state selection //
+    if( sample_.find("DYJets")!=string::npos  || 
+	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+        ) {
+      dyFinalState=false;
+      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
+      else if ( sample_.find("MuToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
+      else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
+      else continue;
+      if(!dyFinalState) continue;
+    }
+    ///////////////////////////
 
     /////////////////////////    
     ptL1     = (*diTauLegsP4)[0].Pt();
@@ -1712,8 +1742,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     if(indexes.size()>0) lead  = indexes[0];  
     if(indexes.size()>1) trail = indexes[1];  
     if(indexes.size()>2) veto  = indexes[2];  
-
-    bool isData = sample.Contains("2012");
 
     for(unsigned int v = 0 ; v < indexes.size() ; v++){
       if( (*jets)[indexes[v]].Pt() > 30 ) {
@@ -2656,15 +2684,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }// end MC/embedded case
    
     if(DEBUG) cout << "End of corrections trigger+SF" << endl;
-
-    isTauLegMatched_ = isTauLegMatched;
-    if( !isData ) {
-      if(DEBUG) cout << "!isData --> leptFakeTau = " ;
-      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
-      if(DEBUG) cout << leptFakeTau << endl;
-    }
-    else 
-      leptFakeTau = -99;
     
     if(DEBUG) cout << "CDF weight" << endl;    
     if(hfakeRateDYJets==0 || hfakeRateRun2011==0){
@@ -2713,7 +2732,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     isPFMuon_        = isPFMuon;
     isTightMuon_     = isTightMuon;
     muFlag_          = muFlag;
-    genDecay_        = genDecay ;
 //     vetoEvent_       = (nVetoLepton > 0) ? 1 : 0; //vetoEvent; 
     vetoEventOld_    = (nVetoLeptonOld > 0) ? 1 : 0; //vetoEvent; 
     vetoEventNew_    = (nVetoLeptonNew > 0) ? 1 : 0; //vetoEvent; //NewEleID
@@ -2950,39 +2968,6 @@ int main(int argc, const char* argv[])
     currentTree->Add(inputFileName->data());
   }
   fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson);
-
-  TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
-  TTree* backgroundDYTauTau, *backgroundDYMutoTau, *backgroundDYJtoTau;
-  TString outName ="";
-  TFile *outFile;// = new TFile(outName,"UPDATE");
-
-  if(sample=="DYJets") {
-    backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
-    backgroundDYMutoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && leptFakeTau"); // g/Z -> mu+mu- mu->tau
-    backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
-
-    cout << "-- copy tree" << endl;
-    if(backgroundDYTauTau) { 
-      outName = dirOut_+"nTupleDYJ_TauTau_"+analysis+".root" ;
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYTauTau->Write();
-      outFile->Close();
-    }
-    
-    if(backgroundDYMutoTau) {
-      outName = dirOut_+"nTupleDYJ_MuToTau_"+analysis+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYMutoTau->Write();
-      outFile->Close();
-    }
-    
-    if(backgroundDYJtoTau) {
-      outName = dirOut_+"nTupleDYJ_JetToTau_"+analysis+".root";
-      outFile = new TFile(outName,"RECREATE");
-      backgroundDYJtoTau->Write();
-      outFile->Close();
-    }
-  }
 
   return 0;
 }
