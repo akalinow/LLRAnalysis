@@ -468,6 +468,22 @@ struct antiElecMVAcutType
   std::vector<double> cuts_;
 };
 
+bool passAntiEMVA(int iCat, float raw, TString WP="Medium") {
+  
+  if(iCat<0 || iCat>15) return true;
+
+  float cutsLoose[16]={0.835,0.831,0.849,0.859,0.873,0.823,0.85,0.855,0.816,0.861,0.862,0.847,0.893,0.82,0.845,0.851};
+  float cutsMedium[16]={0.933,0.921,0.944,0.945,0.918,0.941,0.981,0.943,0.956,0.947,0.951,0.95,0.897,0.958,0.955,0.942};
+  float cutsTight[16]={ 0.96,0.968,0.971,0.972,0.969,0.959,0.981,0.965,0.975,0.972,0.974,0.971,0.897,0.971,0.961,0.97};
+  float cutsVeryTight[16]={0.978,0.98,0.982,0.985,0.977,0.974,0.989,0.977,0.986,0.983,0.984,0.983,0.971,0.987,0.977,0.981};
+  float cut=0;
+  if(WP=="Loose") cut = cutsLoose[iCat];
+  if(WP=="Medium") cut = cutsMedium[iCat];
+  if(WP=="Tight") cut = cutsTight[iCat];
+  if(WP=="VeryTight") cut = cutsVeryTight[iCat];
+  return (raw>cut);
+}
+
 
 void fillTrees_ElecTauStream( TChain* currentTree,
 			      TTree* outTreePtOrd,
@@ -694,7 +710,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float rhoFastJet_;
   float isoLeg1MVA_;
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_,decayMode_;//IN
-  int tightestAntiEMVAWP_, tightestAntiECutWP_,tightestAntiEMVA3WP_,AntiEMVA3category_;//IN
+  int tightestAntiEMVAWP_, tightestAntiECutWP_,tightestAntiEMVA3WP_,tightestAntiEMVA3NewWP_,AntiEMVA3category_;//IN
   float hpsMVA_,hpsMVA2_,hpsDB3H_,AntiEMVA3raw_,AntiEMVA3var_;//IN
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_; // ND
@@ -1007,6 +1023,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("tightestAntiEMVAWP", &tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
   outTreePtOrd->Branch("tightestAntiECutWP", &tightestAntiECutWP_,"tightestAntiECutWP/I");
   outTreePtOrd->Branch("tightestAntiEMVA3WP", &tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
+  outTreePtOrd->Branch("tightestAntiEMVA3NewWP", &tightestAntiEMVA3NewWP_,"tightestAntiEMVA3NewWP/I");
   outTreePtOrd->Branch("AntiEMVA3category", &AntiEMVA3category_,"AntiEMVA3category/I");
   outTreePtOrd->Branch("AntiEMVA3raw", &AntiEMVA3raw_,"AntiEMVA3raw/F");
   outTreePtOrd->Branch("AntiEMVA3var", &AntiEMVA3var_,"AntiEMVA3var/F");
@@ -2466,6 +2483,16 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     mvaPOGTrigNoIP_     = mvaPOGTrigNoIP;
     mitMVA_             = mitMVA;
     isTriggerElectron_  = isTriggerElectron;
+
+    tightestAntiEMVA3NewWP_= -1;
+    if(passAntiEMVA(AntiEMVA3category,AntiEMVA3raw, "Loose")> 0.5)
+      tightestAntiEMVA3NewWP_= 0;
+    if(passAntiEMVA(AntiEMVA3category,AntiEMVA3raw, "Medium")> 0.5)
+      tightestAntiEMVA3NewWP_= 1;
+    if(passAntiEMVA(AntiEMVA3category,AntiEMVA3raw, "Tight")> 0.5)
+      tightestAntiEMVA3NewWP_= 2;
+    if(passAntiEMVA(AntiEMVA3category,AntiEMVA3raw, "VeryTight")> 0.5)
+      tightestAntiEMVA3NewWP_= 3;
 
     tightestAntiECutWP_ = tightestAntiECutWP;
     tightestAntiEMVAWP_ = tightestAntiEMVAWP;
