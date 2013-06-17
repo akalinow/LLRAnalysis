@@ -50,6 +50,8 @@
 
 #include "PhysicsTools/JetMCUtils/interface/JetMCTag.h"
 
+#include "DataFormats/Candidate/interface/CompositeCandidate.h"
+
 ////// for DCA ///////////////////////////////
 
 #include "TrackingTools/Records/interface/TransientTrackRecord.h"
@@ -475,6 +477,7 @@ void MuTauStreamAnalyzer::beginJob(){
 
   tree_->Branch("index",&index_,"index/I");
 
+  tree_->Branch("genDiTauMass",&genDiTauMass_,"genDiTauMass/F");
 }
 
 
@@ -2242,7 +2245,11 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     edm::Handle<double> muonRadiationUpHandle;
     double muonRadiationUpWeight = 1.0;
 
+    edm::Handle< std::vector<reco::CompositeCandidate> > genDiTauHandle;
+    genDiTauMass_ = 9999;
+
     if (isRhEmb_){
+      iEvent.getByLabel("genZdecayToTausForEmbeddingKineReweight", genDiTauHandle);      
       iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
       iEvent.getByLabel(edm::InputTag("ZmumuEvtSelEffCorrWeightProducer","weight"), ZmumuEffHandle);
       if(isMC_){
@@ -2267,6 +2274,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       muonRadiationWeight = muonRadiationHandle.isValid() ? (*muonRadiationHandle) : 1.0;
       muonRadiationDownWeight = muonRadiationDownHandle.isValid() ? (*muonRadiationDownHandle) : 1.0;
       muonRadiationUpWeight = muonRadiationUpHandle.isValid() ? (*muonRadiationUpHandle) : 1.0;
+      genDiTauMass_ = genDiTauHandle.isValid() && genDiTauHandle->size()>0 ? diTauHandle->at(0).mass() : 9999;
     }
     if(verbose_){
       cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
