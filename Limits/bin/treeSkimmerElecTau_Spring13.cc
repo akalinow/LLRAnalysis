@@ -230,7 +230,7 @@ float reweightHEPNUPDYJets(int hepNUP) {
   if(nJets==0)      return 0.1150281410;
   else if(nJets==1) return 0.0223306920;
   else if(nJets==2) return 0.0090625410;
-  else if(nJets==3) return 0.0052578070;
+  else if(nJets==3) return 0.005273798;
   else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
@@ -470,7 +470,8 @@ struct antiElecMVAcutType
 
 bool passAntiEMVA(int iCat, float raw, TString WP="Medium") {
   
-  if(iCat<0 || iCat>15) return true;
+  if(iCat<0)return false;
+  if (iCat>15) return true;
 
   float cutsLoose[16]={0.835,0.831,0.849,0.859,0.873,0.823,0.85,0.855,0.816,0.861,0.862,0.847,0.893,0.82,0.845,0.851};
   float cutsMedium[16]={0.933,0.921,0.944,0.945,0.918,0.941,0.981,0.943,0.956,0.947,0.951,0.95,0.897,0.958,0.955,0.942};
@@ -740,7 +741,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
+  float numPV_ , sampleWeight,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
@@ -1047,6 +1048,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
   outTreePtOrd->Branch("sampleWeight",       &sampleWeight,"sampleWeight/F"); 
+  outTreePtOrd->Branch("sampleWeightDY",     &sampleWeightDY,"sampleWeightDY/F"); 
   outTreePtOrd->Branch("puWeight",           &puWeight,     "puWeight/F");
   outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,  "puWeightHCP/F");
   outTreePtOrd->Branch("puWeightD",          &puWeightD,    "puWeightD/F");
@@ -1780,6 +1782,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   bool isPeriodLow=false;
   bool isPeriodHigh=false;
   //////////////////////////
+  bool dyFinalState=false;
+  bool isData = sample.Contains("2012");
 
   MAPDITAU_run mapDiTau;
 
@@ -1842,6 +1846,34 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     isPeriodLow  = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[5]);  
     isPeriodHigh = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[6]);  
+
+    ///////////////////////////
+    // SELECT DY FINAL STATE //
+    ///////////////////////////
+
+    // final state informations //
+    genDecay_        = genDecay ;
+    isTauLegMatched_ = isTauLegMatched;
+    if( !isData ) {
+      if(DEBUG) cout << "!isData --> leptFakeTau = " ;
+      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+      if(DEBUG) cout << leptFakeTau << endl;
+    }
+    else leptFakeTau = -99;
+    //
+    // final state selection //
+    if( sample_.find("DYJets")!=string::npos  || 
+	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+        ) {
+      dyFinalState=false;
+      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
+      else if ( sample_.find("MuToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
+      else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
+      else continue;
+      if(!dyFinalState) continue;
+    }
+    ///////////////////////////
 
     /////////////////////////    
     ptL1     = (*diTauLegsP4)[0].Pt();
@@ -2593,7 +2625,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     numPV_              = numPV;
     sampleWeight        = scaleFactor; 
     if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight = 1;
-    if( sample_.find("DYJets")!=string::npos) sampleWeight = 1;
+    sampleWeightDY = 1;
+    if( sample_.find("DYJets")!=string::npos) {
+      sampleWeight = 1;
+      sampleWeightDY = scaleFactor;
+    }
+
     nPUVertices_        = nPUVertices;
 
     embeddingFilterEffWeight_ = embeddingWeight;
@@ -3018,8 +3055,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
 	  1.64 : 
 	  0.28;
-	diTauNSVfitMass_ *= 1.015;
-	diTauVisMass *= 1.015;
+// 	diTauNSVfitMass_ *= 1.015;
+// 	diTauVisMass *= 1.015;
       }
     }
 
@@ -3066,30 +3103,31 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     bool anti_e_new_M  = tightestAntiEMVA3WP > 1 ; 	 
     bool anti_e_new_T  = tightestAntiEMVA3WP > 2 ; 	 
     bool anti_e_new_VT = tightestAntiEMVA3WP > 3 ; 	 
-    
-    // ABCD analysis 	 
-    passQualityCuts[0] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 
-    passQualityCuts[1] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
-    passQualityCuts[2] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
-    passQualityCuts[3] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
-    passQualityCuts[4] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
-    passQualityCuts[5] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSDB3HWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSDB3H 	 
-//     passQualityCuts[6] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiMu2 
-	 
-    passQualityCuts[6] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiEMediumMVA3_AntiMu2_HPSDB3H 	 
-    passQualityCuts[7] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiETightMVA3_AntiMu2_HPSDB3H 	 
-    passQualityCuts[8] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiEVTightMVA3_AntiMu2_HPSDB3H 
-	
-    passQualityCuts[9] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiETightMVA3_AntiMu2_HPSDB3HWP 	 
+    bool anti_e_newNew_L  = tightestAntiEMVA3NewWP_ > -1 ; 	 
+    bool anti_e_newNew_M  = tightestAntiEMVA3NewWP_ > 0 ; 	 
+    bool anti_e_newNew_T  = tightestAntiEMVA3NewWP_ > 1 ; 	 
+    bool anti_e_newNew_VT = tightestAntiEMVA3NewWP_ > 2 ; 	 
 
-    //NewEleID	 
-    passQualityCuts[10] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 
-    passQualityCuts[11] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
-    passQualityCuts[12] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
-    passQualityCuts[13] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
-    passQualityCuts[14] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSMVA2WP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
-    passQualityCuts[15] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && tightestHPSDB3HWP>=0 && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSDB3H 	 
-//     passQualityCuts[16] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0 && tightestHPSMVAWP>=0  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiMu2 	 
+    // ABCD analysis 	 
+    passQualityCuts[0] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 
+    passQualityCuts[1] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
+    passQualityCuts[2] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
+    passQualityCuts[3] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
+    passQualityCuts[4] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_L    && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[5] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_M    && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[6] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_T    && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[7] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_VT    && ptL2>20 && tightestAntiMuWP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+	 
+    passQualityCuts[8] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_old    && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsMoriond 
+    passQualityCuts[9] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEMediumMVA3 	 
+    passQualityCuts[10] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiETightMVA3 	 
+    passQualityCuts[11] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_new_VT && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsAntiEVTightMVA3 	 
+    passQualityCuts[12] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_L    && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[13] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_M    && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[14] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_T    && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+    passQualityCuts[15] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOG_e && anti_e_newNew_VT    && ptL2>20 && tightestAntiMu2WP>0  && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // passQualityCutsHPSMVA2 	 
+	 
+    //NewEleID	 	 
     passQualityCuts[16] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_M  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiEMediumMVA3_AntiMu2_HPSDB3H 	 
     passQualityCuts[17] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_T  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiETightMVA3_AntiMu2_HPSDB3H 	 
     passQualityCuts[18] = (ptL1>24 && TMath::Abs(scEtaL1)<2.1 && mvaPOGNoIP_e && anti_e_new_VT  && ptL2>20 && tightestAntiMu2WP>0 && hpsDB3H<1.5  && combRelIsoLeg1DBetav2<0.1 && HLTmatch); // AntiEVTightMVA3_AntiMu2_HPSDB3H 	 
@@ -3277,40 +3315,6 @@ int main(int argc, const char* argv[])
     currentTree->Add(inputFileName->data());
   }
   fillTrees_ElecTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts,iDiv,nDiv);
-
-//   TString dirOut_ = "/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/";
-//   TTree* backgroundDYTauTau, *backgroundDYEtoTau, *backgroundDYJtoTau;
-//   TString outName ="";
-//   TFile *outFile;// = new TFile(outName,"UPDATE");
-
-//   if(sample=="DYJets") {
-//     backgroundDYTauTau  = outTreePtOrd->CopyTree("abs(genDecay)==(23*15)"); // g/Z -> tau+ tau-
-//     backgroundDYEtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && leptFakeTau"); // g/Z -> mu+mu- mu->tau
-//     backgroundDYJtoTau  = outTreePtOrd->CopyTree("abs(genDecay)!=(23*15) && !leptFakeTau"); // g/Z -> mu+mu- jet->tau
-
-//     cout << "-- copy tree" << endl;
-//     if(backgroundDYTauTau) { 
-//       outName = dirOut_+"nTupleDYJ_TauTau_"+analysis+".root" ;
-//       outFile = new TFile(outName,"RECREATE");
-//       backgroundDYTauTau->Write();
-//       outFile->Close();
-//     }
-    
-//     if(backgroundDYEtoTau) {
-//       outName = dirOut_+"nTupleDYJ_EToTau_"+analysis+".root";
-//       outFile = new TFile(outName,"RECREATE");
-//       backgroundDYEtoTau->Write();
-//       outFile->Close();
-//     }
-    
-//     if(backgroundDYJtoTau) {
-//       outName = dirOut_+"nTupleDYJ_JetToTau_"+analysis+".root";
-//       outFile = new TFile(outName,"RECREATE");
-//       backgroundDYJtoTau->Write();
-//       outFile->Close();
-//     }
-//   }
-
 
   return 0;
 }
