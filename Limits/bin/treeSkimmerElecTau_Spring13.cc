@@ -1868,7 +1868,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
         ) {
       dyFinalState=false;
       if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
-      else if ( sample_.find("MuToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
+      else if ( sample_.find("EToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
       else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
       else continue;
       if(!dyFinalState) continue;
