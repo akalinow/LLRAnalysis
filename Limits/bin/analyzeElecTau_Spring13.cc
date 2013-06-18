@@ -239,7 +239,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	  else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
 	}
 	else{//ZeeSelection No ZeeWeight
-	  weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
+	  weight = "(sampleWeight*sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
 	}
       } //NoSoft     
     }//MC
@@ -784,7 +784,7 @@ void plotElecTau( Int_t mH_           = 120,
   if(RUN=="ABC")    Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;       // 2012ABC 
   else if(RUN=="D") Lumi = 7274;                                               // 2012D 
 //   else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
-  else              Lumi = 19789; // ReReco2012ABCD
+  else              Lumi = 19789.; // ReReco2012ABCD
 
   /////////////////
 
@@ -964,7 +964,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewAntiE/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1021,7 +1021,7 @@ void plotElecTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFile+"/temp/DY/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
 //   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p0_ElecTau_"+fileAnalysis+".root");
 //   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p1_ElecTau_"+fileAnalysis+".root");
 //   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p2_ElecTau_"+fileAnalysis+".root");
@@ -1127,129 +1127,12 @@ void plotElecTau( Int_t mH_           = 120,
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     cout << "FILE ANALYSIS " << fileAnalysis << endl;
     //
-    backgroundDYTauTau  ->Add(pathToFile+"/temp/DY/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/temp/DY/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/temp/DY/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets*EToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets*JetToTau_ElecTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
