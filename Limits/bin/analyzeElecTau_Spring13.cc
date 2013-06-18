@@ -780,9 +780,11 @@ void plotElecTau( Int_t mH_           = 120,
   // LUMINOSITY //
   float Lumi = 0.; 
 
+  //PromptReco
   if(RUN=="ABC")    Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;       // 2012ABC 
   else if(RUN=="D") Lumi = 7274;                                               // 2012D 
-  else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
+//   else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
+  else              Lumi = 19789; // ReReco2012ABCD
 
   /////////////////
 
