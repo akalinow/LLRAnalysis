@@ -82,17 +82,20 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   else if(version_.Contains("AntiMu2")) antimu = "tightestAntiMu2WP>0";
 
   // Anti-Ele discriminator //
-  if(version_.Contains("AntiEle1"))               antiele = "tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1";
-  else if(version_.Contains("AntiEle2Medium"))    antiele = "tightestAntiEMVA3WP>1";
-  else if(version_.Contains("AntiEle2Tight"))     antiele = "tightestAntiEMVA3WP>2";
-  else if(version_.Contains("AntiEle2VeryTight")) antiele = "tightestAntiEMVA3WP>3";
-  
+  if(version_.Contains("AntiEle1"))                antiele = "tightestAntiEMVAWP == 3 || tightestAntiEMVAWP > 4) && (tightestAntiECutWP>1";
+  else if(version_.Contains("AntiEle2Medium"))     antiele = "tightestAntiEMVA3WP>1";
+  else if(version_.Contains("AntiEle2Tight"))      antiele = "tightestAntiEMVA3WP>2";
+  else if(version_.Contains("AntiEle2VeryTight"))  antiele = "tightestAntiEMVA3WP>3";
+  else if(version_.Contains("AntiEleNewMedium"))   antiele = "tightestAntiEMVA3NewWP>0";
+  else if(version_.Contains("AntiEleNewTight"))    antiele = "tightestAntiEMVA3NewWP>1";
+  else if(version_.Contains("AntiEleNewVeryTight"))antiele = "tightestAntiEMVA3NewWP>2";
+
 
   //ElectronID
   if(version_.Contains("OldEleID"))  lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
-//   else if(version_.Contains("NewEleID")) 
-//     lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
   else if(version_.Contains("NewEleID")) 
+    lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.55) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.9) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
+  else if(version_.Contains("NewEleID_Tight")) 
     lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGTrigNoIP>0.7875) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGTrigNoIP>0.95) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGTrigNoIP>0.925)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
   
   //Third lepton veto
@@ -229,11 +232,17 @@ void drawHistogram(TCut sbinCat = TCut(""),
       else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight)";
       else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
-	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
-	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
-      }      
-    }
+	if(version_.Contains("ZeeSel")==string::npos){
+	  if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
+	  else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
+	  // 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
+	  else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+	}
+	else{//ZeeSelection No ZeeWeight
+	  weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
+	}
+      } //NoSoft     
+    }//MC
     else if(type.Contains("Embed")) {
       if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
       else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight)";
@@ -815,6 +824,7 @@ void plotElecTau( Int_t mH_           = 120,
   string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
 //   float antiWsgn  = useMt ? 20. :  20. ;
   float antiWsgn  = useMt ? 30. :  20. ; //mt cut at 30
+  if(selection_.find("ZeeSel")!=string::npos) antiWsgn  = useMt ? 40. :  20. ; //mt cut at 40 for ZeeSF
   float antiWsdb  = useMt ? 70. :  40. ; 
 
   bool use2Dcut   = false;
@@ -884,7 +894,7 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hZmmLoose = new TH1F( "hZmmLoose","Z+jets, e->tau"   , nBins , bins.GetArray());         hZmmLoose->SetFillColor(kBlue-2);
   TH1F* hZmj      = new TH1F( "hZmj"    ,"Z+jets, jet to tau", nBins , bins.GetArray());         hZmj->SetFillColor(kBlue-2);
   TH1F* hZmjLoose = new TH1F( "hZmjLoose","Z+jets, jet->tau" , nBins , bins.GetArray());         hZmjLoose->SetFillColor(kBlue-2);
-  TH1F* hZfakes   = new TH1F( "hZfakes" ,"Z+jets, jet to tau", nBins , bins.GetArray());         hZfakes->SetFillColor(kBlue-2);
+  TH1F* hZfakes   = new TH1F( "hZfakes" ,"Z+jets            ", nBins , bins.GetArray());         hZfakes->SetFillColor(kBlue-2);
   TH1F* hTTb      = new TH1F( "hTTb"    ,"ttbar"             , nBins , bins.GetArray());         hTTb->SetFillColor(kBlue-8); 
   TH1F* hQCD      = new TH1F( "hQCD"    ,"QCD"               , nBins , bins.GetArray());         hQCD->SetFillColor(kMagenta-10);
   TH1F* hSS       = new TH1F( "hSS"     ,"same-sign"         , nBins , bins.GetArray());         hSS->SetFillColor(kMagenta-10);
@@ -952,7 +962,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/EleTau/temp/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1009,11 +1019,47 @@ void plotElecTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/DY/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p0_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p1_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p2_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p3_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p4_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p5_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p6_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p7_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p8_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p9_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p0_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p1_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p2_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p3_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p4_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p5_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p6_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p7_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p8_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p9_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p0_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p1_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p2_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p3_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p4_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p5_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p6_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p7_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p8_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p9_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p0_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p1_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p2_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p3_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p4_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p5_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p6_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p7_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p8_ElecTau_"+fileAnalysis+".root");
+//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p9_ElecTau_"+fileAnalysis+".root");
   backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_ElecTau_"+fileAnalysis+".root");
   //
   backgroundOthers  ->Add(pathToFile+"nTupleT-tW_ElecTau_"+fileAnalysis+".root");
@@ -1079,21 +1125,129 @@ void plotElecTau( Int_t mH_           = 120,
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     cout << "FILE ANALYSIS " << fileAnalysis << endl;
     //
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1JetsTauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2JetsTauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3JetsTauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4JetsTauTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1JetsEToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2JetsEToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3JetsEToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4JetsEToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1JetsJetToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2JetsJetToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3JetsJetToTau_ElecTau_"+fileAnalysis+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4JetsJetToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/temp/DY/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p0TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p1TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p2TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p3TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p4TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p5TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p6TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p7TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p8TauTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p9TauTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/temp/DY/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets1Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets2Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets3Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p0EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p1EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p2EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p3EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p4EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p5EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p6EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p7EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p8EToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets4Jets-p9EToTau_ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/temp/DY/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets1Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets2Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets3Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p0JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p1JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p2JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p3JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p4JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p5JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p6JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p7JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p8JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets4Jets-p9JetToTau_ElecTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
@@ -1249,6 +1403,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
   TCut nobTag("nJets30<2 && nJets20BTagged==0");
   TCut novbf("nJets30<1 && nJets20BTagged==0");
+  TCut ZeeSel("MEtMVA<30 && nJets30<2 && ptL2>30");
 
   TCut sbinCat("");
   if(     selection_.find("inclusive")!=string::npos)  sbinCat = "etaL1<999";
@@ -1256,6 +1411,7 @@ void plotElecTau( Int_t mH_           = 120,
   else if(selection_.find("twoJets")!=string::npos)    sbinCat = twoJets;
   else if(selection_.find("vh")!=string::npos)         sbinCat = vh;
   else if(selection_.find("novbf")!=string::npos)      sbinCat = novbf;
+  else if(selection_.find("ZeeSel")!=string::npos)     sbinCat = ZeeSel;
   else if(selection_.find("boostMet0")!=string::npos)  sbinCat = boostMet0;
   else if(selection_.find("boostMet5")!=string::npos)  sbinCat = boostMet5;
   else if(selection_.find("boostMet10")!=string::npos) sbinCat = boostMet10;
@@ -2176,13 +2332,13 @@ void plotElecTau( Int_t mH_           = 120,
     aStack->Add(hDataEmb);
   else
     aStack->Add(hZtt);
-  if(!logy_)
+  if(!logy_ && !version_.Contains("MSSM"))
     aStack->Add(hSgn);
   
   leg->AddEntry(hData,"Observed","P");
-  if(version_.Contains("MSSM")) 
-    leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=%d",magnifySgn_,mH_),"F");
-  else 
+  if(!version_.Contains("MSSM")) 
+//     leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=%d",magnifySgn_,mH_),"F");
+//   else 
     leg->AddEntry(hSgn,Form("(%.0fx) H#rightarrow#tau#tau m_{H}=%d",magnifySgn_,mH_),"F");
   if(useEmbedding_)
     leg->AddEntry(hDataEmb,"Z#rightarrow#tau#tau (embedded)","F");
@@ -2217,7 +2373,7 @@ void plotElecTau( Int_t mH_           = 120,
     hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum(), hSiml->GetMaximum() )*maxY_ ,"Y");
   aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
-  if(logy_)
+  if(logy_ && !version_.Contains("MSSM"))
     hSgn->Draw("HISTSAME");
  
   leg->Draw();
