@@ -11,14 +11,16 @@ import subprocess
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_JetIdFix/EleTau/'
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_ByPair/EleTau/'
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewEleIDFix/EleTau/'
-WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewJEC/EleTau/'
+#WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewJEC/EleTau/'
+WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewAntiE/EleTau/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/SoftAnalysis/iter2/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_SVfitFix/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_JetIdFix/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/EleTau/temp/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/EleTau/temp/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/EleTau/temp/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewAntiE/EleTau/temp/'
 
 options = {
     ###e+tau samples
@@ -959,10 +961,30 @@ options = {
 ##     },
     
     ##Bkg MC
-    'DYJets' : {
+    'DYJetsTauTau' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_EleTau_v2/',
-    'outputFileName' : OutDir+'nTupleDYJets_ElecTau.root',
-    'sample'         : 'DYJets',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsEToTau' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_EleTau_v2/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsJetToTau' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_EleTau_v2/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
     'xSection'       : 3504,
     'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
     'iJson'          : -1,
