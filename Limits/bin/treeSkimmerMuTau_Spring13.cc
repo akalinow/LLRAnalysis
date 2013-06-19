@@ -95,16 +95,14 @@ typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LV;
 
 edm::LumiReWeighting LumiWeights_(   "/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
 				     "/data_CMS/cms/htautau/PostMoriond/tools/Data_Pileup_2012_ReReco-600bins.root","pileup","pileup");
-//edm::LumiReWeighting LumiWeights_( "/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
-//				     "/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_Moriond-600bins.root","pileup","pileup");
 edm::LumiReWeighting LumiWeightsHCP_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
 				     "/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_HCP-600bins.root","pileup","pileup"); 
 edm::LumiReWeighting LumiWeightsD_(  "/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
-				     "/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012_DOnly-600bins.root","pileup","pileup"); 
+				     "/data_CMS/cms/htautau/PostMoriond/tools/Data_Pileup_2012D_22Jan2013ReReco_full-600bins-mbiasXS69400.root","pileup","pileup"); 
 edm::LumiReWeighting LumiWeightsDHigh_("/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
-				       "/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012D_high-600bins-mbiasXS69400.root","pileup","pileup"); 
+				       "/data_CMS/cms/htautau/PostMoriond/tools/Data_Pileup_2012D_22Jan2013ReReco_high-600bins-mbiasXS69400.root","pileup","pileup"); 
 edm::LumiReWeighting LumiWeightsDLow_( "/data_CMS/cms/htautau/Moriond/tools/MC_Summer12_PU_S10-600bins.root",
-				       "/data_CMS/cms/htautau/Moriond/tools/Data_Pileup_2012D_low-600bins-mbiasXS69400.root","pileup","pileup"); 
+				       "/data_CMS/cms/htautau/PostMoriond/tools/Data_Pileup_2012D_22Jan2013ReReco_low-600bins-mbiasXS69400.root","pileup","pileup"); 
 
 enum BVariation{kNo = 0, kDown = 1, kUp = 2};
 BtagSF* btsf = new BtagSF(12345);
@@ -1631,8 +1629,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   jsonFile[2] = dirJson+"/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt";      // PromptReco 
   jsonFile[3] = dirJson+"/Cert_190782-190949_8TeV_06Aug2012ReReco_Collisions12_JSON.txt";    // ReReco 06Aug
   jsonFile[4] = dirJson+"/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt";         // PromptReco updated
-  jsonFile[5] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_lowETM.txt";  // RunD period Low
-  jsonFile[6] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_highETM.txt"; // RunD period High
+  //jsonFile[5] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_lowETM.txt";  // RunD period Low
+  //jsonFile[6] = dirJson+"/Cert_203830-208686_8TeV_PromptReco_Collisions12_JSON_highETM.txt"; // RunD period High
+  jsonFile[5] = dirJson+"/Cert_203830-208686_8TeV_22Jan2013ReReco_Collisions12_JSON_lowETM.txt";  // RunD period Low
+  jsonFile[6] = dirJson+"/Cert_203830-208686_8TeV_22Jan2013ReReco_Collisions12_JSON_highETM.txt"; // RunD period High
   jsonFile[7] = dirJson+"/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt"; // ReReco 22Jan2013
   map<int, vector<pair<int, int> > > jsonMap[nJson] ;  
   for(int iJ=0 ; iJ<nJson ; iJ++)
