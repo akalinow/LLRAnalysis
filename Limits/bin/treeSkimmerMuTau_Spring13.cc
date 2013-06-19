@@ -686,6 +686,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float diTauNSVfitPt_,diTauNSVfitPtErrUp_,diTauNSVfitPtErrDown_;
   float diTauSVFitMass, diTauSVFitMassCal0, diTauSVFitMassCal1, diTauSVFitMassCal2, 
     diTauSVFitPt, diTauSVFitEta , diTauSVFitPhi ;
+  float genDiTauMass_;
   float diTauSVFitMassSA, diTauSVFitMassErrSA;
   float diTauCAMass, diTauCAPt, diTauCAEta, diTauCAPhi;
   float diTauVisMass,diTauVisPt,diTauVisEta,diTauVisPhi;
@@ -1211,6 +1212,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // taus
   currentTree->SetBranchStatus("diTauLegsP4"           ,1);
   currentTree->SetBranchStatus("genDiTauLegsP4"        ,1);
+  currentTree->SetBranchStatus("genDiTauMass"          ,1);
   currentTree->SetBranchStatus("genTausP4"             ,1);
   //currentTree->SetBranchStatus("chIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("nhIsoLeg1v1"           ,0);
@@ -1454,6 +1456,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
+  float genDiTauMass;
   float diTauCharge, chargeL1;
   int tightestHPSWP,tightestHPSDBWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;
   float hpsDB3H,hpsMVA,hpsMVA2;
@@ -1527,6 +1530,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("diTauNSVfitPtErrUp",  &diTauNSVfitPtErrUp);
   currentTree->SetBranchAddress("diTauNSVfitPtErrDown",&diTauNSVfitPtErrDown);
   currentTree->SetBranchAddress("mTauTauMin",            &mTauTauMin);
+
+  currentTree->SetBranchAddress("genDiTauMass",&genDiTauMass);
 
   currentTree->SetBranchAddress("pZetaSig",             &pZetaSig);
 
@@ -1972,6 +1977,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     diTauNSVfitPt_        = diTauNSVfitPt;
     diTauNSVfitPtErrUp_   = diTauNSVfitPtErrUp;
     diTauNSVfitPtErrDown_ = diTauNSVfitPtErrDown;
+
+    genDiTauMass_ = genDiTauMass;
 
     diTauSVFitMass = (*diTauSVfitP4)[0].M();
     diTauSVFitPt   = (*diTauSVfitP4)[0].Pt();
