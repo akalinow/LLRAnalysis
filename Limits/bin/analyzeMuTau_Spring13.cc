@@ -33,6 +33,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define RERECO           true
+#define MSSM             false
 #define VERBOSE          true
 #define DEBUG            false
 #define LOOP             true
@@ -76,8 +77,22 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu)
+void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& liso, TCut& laiso, TCut& lliso, TCut& tpt)
 {
+
+  if(version_.Contains("tauptbin")) tpt="ptL2>45 && ptL2<50";
+  else                              tpt="ptL2>20";
+
+  // Lepton isolation //
+  liso = "combRelIsoLeg1DBetav2<0.10";
+  laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50";
+  lliso = "combRelIsoLeg1DBetav2<0.30";
+
+  if(version_.Contains("TightLiso")) {
+    liso = "combRelIsoLeg1DBetav2<0.06";
+    laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50";
+    lliso = "combRelIsoLeg1DBetav2<0.15";
+  }
 
   // Anti-Mu discriminator //
   if(version_.Contains("AntiMu1"))      antimu = "tightestAntiMuWP>2";
@@ -97,9 +112,18 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   }
   // TauIso DB3Hits cut-based //
   else if(version_.Contains("HPSDB3H")) {
-    tiso   = "hpsDB3H<1.5" ;
-    ltiso  = "hpsDB3H<2.5" ;
-    mtiso  = "hpsDB3H<1" ;
+
+    if(version_.Contains("TightTiso")) {
+      tiso   = "hpsDB3H<1" ;
+      ltiso  = "hpsDB3H<2.5" ;
+      mtiso  = "hpsDB3H<1.5" ;
+    }
+    else {
+      tiso   = "hpsDB3H<1.5" ;
+      ltiso  = "hpsDB3H<2.5" ;
+      //mtiso  = "hpsDB3H<1" ;
+      mtiso  = tiso;
+    }
   }
 
 }
@@ -193,8 +217,15 @@ void drawHistogram(TCut sbinCat = TCut(""),
 		   float& normalizationError = *(new float()), 
 		   float scaleFactor = 1.,
 		   TH1F* h = 0,
+		   //TCut mtc = TCut(""),
 		   TCut cut = TCut(""),
 		   int verbose = 0){
+
+  TCut mtc("run>0");
+  TCut suspect("run!=205921 || event!=791564835");
+  TCut blown("embeddingWeight<10");
+  //TCut blown("run>0");
+  TCut genMass("run>0");
 
   if(DEBUG) cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
 
@@ -207,28 +238,33 @@ void drawHistogram(TCut sbinCat = TCut(""),
   // Start processing
   if(tree!=0 && h!=0){
 
-    TCut thirdleptonveto="vetoEventOld==0"; // test purposes (PF embed)
-    TCut weight   ="run>0";
+    TCut thirdleptonveto = "vetoEventOld==0"; // test purposes (PF embed)
+    TCut weight          = "run>0";
+    TCut sampleWeight    = "run>0";
 
     if(type.Contains("MC")) {
-      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightHepNup*passL1etmCutABC)";
-      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup*passL1etmCut)";
-      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightHepNup)";
+
+      if(version_.Contains("NoDYExcl")) sampleWeight = "sampleWeight*sampleWeightDY*weightHepNup";
+      else                              sampleWeight = "sampleWeight*weightHepNupDY*weightHepNup";
+      
+      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*passL1etmCutABC)";
+      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*passL1etmCut)";
+      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightHepNup)";
-	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightHepNup)";
-	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightHepNup)";
+	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC)";
+	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
+	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
       }      
     }
     else if(type.Contains("Embed")) {
       thirdleptonveto="vetoEventOld==0";
-      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*passL1etmCutABC*embeddingWeight)";
-      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*passL1etmCut*embeddingWeight)";
-      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*embeddingWeight)";
+      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*passL1etmCutABC*embeddingWeight)";
+      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*passL1etmCut*embeddingWeight)";
+      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight)";
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*embeddingWeight)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*embeddingWeight)";
-	else                                 weight = "(HLTTau*HLTMu*embeddingWeight)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight)";
+	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight)";
       }
       // TEST NEW RecHitEmbed WEIGHTS
       if(     version_.Contains("Embed1")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight)";
@@ -236,6 +272,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
       else if(version_.Contains("Embed3")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight)";
       else if(version_.Contains("Embed4")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight*muonRadiationWeight)";
       else if(version_.Contains("Embed5")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight*muonRadiationWeight*diTauMassVSdiTauPtWeight)";
+      else if(version_.Contains("Embed6")) weight = "(HLTTau*HLTMu*embeddingFilterEffWeight*TauSpinnerWeight*muonRadiationWeight*diTauMassVSdiTauPtWeight*tau2EtaVStau1EtaWeight*tau2PtVStau1PtWeight)";
       if(DEBUG) cout << "$$$$$$$$$$$$$$$$$ EMBED WEIGHT = " << weight << endl;
     }
 
@@ -256,12 +293,28 @@ void drawHistogram(TCut sbinCat = TCut(""),
       // Declare tree variables
       int   run  = 0;
       int   event= 0; 
+      float etaL2= 0;
+      float embeddingWeight= 0;
+      int nJets30=0;
+      float pt1=0;
+      float pt2=0;
+      float Mjj=0;
+      float Deta=0;
+      int isVetoInJets=0;
 
       // Declare tree branches
       if(DEBUG) cout << "-- declare tree branches" << endl;
       tree->SetBranchStatus("*",  0);   
       tree->SetBranchStatus("run",    1); tree->SetBranchAddress("run",    &run   );
       tree->SetBranchStatus("event",  1); tree->SetBranchAddress("event",  &event );
+      tree->SetBranchStatus("etaL2",  1); tree->SetBranchAddress("etaL2",  &etaL2 );
+      tree->SetBranchStatus("embeddingWeight",  1); tree->SetBranchAddress("embeddingWeight",  &embeddingWeight );
+      tree->SetBranchStatus("nJets30",  1); tree->SetBranchAddress("nJets30",  &nJets30 );
+      tree->SetBranchStatus("pt1",  1); tree->SetBranchAddress("pt1",  &pt1 );
+      tree->SetBranchStatus("pt2",  1); tree->SetBranchAddress("pt2",  &pt2 );
+      tree->SetBranchStatus("Mjj",  1); tree->SetBranchAddress("Mjj",  &Mjj );
+      tree->SetBranchStatus("Deta",  1); tree->SetBranchAddress("Deta",  &Deta );
+      tree->SetBranchStatus("isVetoInJets",  1); tree->SetBranchAddress("isVetoInJets",  &isVetoInJets );
     
       // Variables for the loop
       int nReject=0, nAccept=0;
@@ -274,6 +327,9 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	iEntry     = skim->GetEntryAndTree(i, treenum);
 	chainEntry = iEntry + (tree->GetTreeOffset())[treenum];
 	tree->GetEntry(chainEntry);
+
+	// TESTING STUFF : remove suspicious 
+	//if(run==205921 && event==791564835) {skim->Remove(i, tree); /*continue;*/}
 	
 	// reject all pairs of the evt except first passing selection (skim)
 	if(run==lastRun && event==lastEvent) {
@@ -292,6 +348,17 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	  lastRun  = run;
 	  lastEvent= event;
 	}
+
+	// TESTING STUFF : RecHit Embed investigation
+	//TCut vbf("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1");
+	if(DEBUG) {
+	  if(etaL2>0.8 && etaL2<0.9) {
+	    cout << "&&&& Spike : " << run << "  " << event << "  " << embeddingWeight ;
+	    if(nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1) cout << " => VBF CAT" << endl;
+	    else cout << endl;
+	  }
+	}
+
       }
       if(DEBUG) cout << "-- end loop" << endl;
 
@@ -302,7 +369,8 @@ void drawHistogram(TCut sbinCat = TCut(""),
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
       //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat*thirdleptonveto);
+
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*mtc*weight*sampleWeight*sbinCat*thirdleptonveto*suspect*blown);
       // Reset entry list
       tree->SetEntryList(0);
       skim->Reset();
@@ -311,7 +379,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
     else {
       TCut pairIndex="pairIndex<1";
       //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat*thirdleptonveto);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*mtc*weight*sampleWeight*pairIndex*sbinCat*thirdleptonveto*suspect*blown);
     }
 
     // Scale the histogram, compute norm and err
@@ -722,26 +790,47 @@ void plotMuTau( Int_t mH_           = 120,
   const int nProd=3;
   const int nMasses=15;
   TString nameProd[nProd]={"GGFH","VBFH","VH"};
-  TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
   int hMasses[nMasses]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
+  TString nameMasses[nMasses];
 
+  if(DEBUG) cout << "build masses string" << endl;
+  for(int iM=0 ; iM<nMasses ; iM++) nameMasses[iM]=TString(Form("%d",hMasses[iM]));
+
+  const int nProdS=2;
+  const int nMassesS=21;
+  TString nameProdS[nProdS]={"GGFH","BBH"};
+  int hMassesS[nMassesS]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
+  TString nameMassesS[nMassesS];
+  if(DEBUG) cout << "build masses string" << endl;
+  for(int iM=0 ; iM<nMassesS ; iM++) nameMassesS[iM]=TString(Form("%d",hMassesS[iM]));
+
+  if(DEBUG) cout << "prepare yields file" << endl;
   ofstream out(Form(location+"/%s/yields/yieldsMuTau_mH%d_%s_%s.txt",
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.Data() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
+
+  if(DEBUG) cout << "createBins" << endl;
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
 
   // LUMINOSITY //
   float Lumi, LumiABC, LumiD, LumiSoftABC;
-  LumiABC     = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ; // 2012ABC 
-  LumiSoftABC = LumiABC;                                      // needs modification ?
-  LumiD   = 7274;                                             // 2012D 
-
+  //
+  if(RERECO) {
+    LumiABC     = 889.362 + 4429 + 7152;
+    LumiD       = 7318;
+  }
+  else {
+    LumiABC     = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ; // 2012ABC 
+    LumiD       = 7274;                                         // 2012D 
+  }
+  //
   if(RUN=="ABC")    Lumi = LumiABC;
   else if(RUN=="D") Lumi = LumiD;
   else              Lumi = LumiABC + LumiD;
-
-  if(version_.Contains("SoftABC"))             Lumi = LumiSoftABC;
+  //
+  LumiSoftABC = LumiABC;            // needs modification ?
+  if(version_.Contains("SoftABC"))  Lumi = LumiSoftABC;
 
   /////////////////
 
@@ -887,25 +976,17 @@ void plotMuTau( Int_t mH_           = 120,
     }
   }
 
-  vector<string> SUSYhistos;
-  //SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
-  //SUSYhistos.push_back("SUSYGG140");SUSYhistos.push_back("SUSYGG160"); SUSYhistos.push_back("SUSYGG180"); SUSYhistos.push_back("SUSYGG200");
-  //SUSYhistos.push_back("SUSYGG250");SUSYhistos.push_back("SUSYGG300"); SUSYhistos.push_back("SUSYGG350"); SUSYhistos.push_back("SUSYGG400");
-  //SUSYhistos.push_back("SUSYGG450");SUSYhistos.push_back("SUSYGG500"); SUSYhistos.push_back("SUSYGG600"); SUSYhistos.push_back("SUSYGG700");
-  //SUSYhistos.push_back("SUSYGG800");SUSYhistos.push_back("SUSYGG900"); SUSYhistos.push_back("SUSYBB90");  SUSYhistos.push_back("SUSYBB100");
-  //SUSYhistos.push_back("SUSYBB120");SUSYhistos.push_back("SUSYBB130"); SUSYhistos.push_back("SUSYBB140"); SUSYhistos.push_back("SUSYBB160");
-  //SUSYhistos.push_back("SUSYBB180");SUSYhistos.push_back("SUSYBB200"); SUSYhistos.push_back("SUSYBB250"); SUSYhistos.push_back("SUSYBB300");
-  //SUSYhistos.push_back("SUSYBB350");SUSYhistos.push_back("SUSYBB400"); SUSYhistos.push_back("SUSYBB450"); SUSYhistos.push_back("SUSYBB500");
-  //SUSYhistos.push_back("SUSYBB600");SUSYhistos.push_back("SUSYBB700"); SUSYhistos.push_back("SUSYBB800"); SUSYhistos.push_back("SUSYBB900");
-  std::map<TString,TH1F*> mapSUSYhistos;
-  for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-    mapSUSYhistos.insert( make_pair(SUSYhistos[i], 
-				    new TH1F(Form("h%s",SUSYhistos[i].c_str()) ,
-					     Form("%s", SUSYhistos[i].c_str()), 
-					     nBins , bins.GetArray()) ) 
-			  );
-  }
+  TH1F* hSusy[nProdS][nMassesS];
 
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++) {
+      for(int iM=0 ; iM<nMassesS ; iM++) {
+	hSusy[iP][iM] = new TH1F("h"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
+	hSusy[iP][iM]->SetLineWidth(2);
+      }
+    }
+  }
+  
   TH1F* hParameters   = new TH1F( "hParameters", "" ,30, 0, 30);
  ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -931,8 +1012,12 @@ void plotMuTau( Int_t mH_           = 120,
 
   //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
   //TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
-  TString pathToEmbed= pathToFile; // "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
+  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
+
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; // data + embed
+  TString pathToEmbed      = pathToFile;//+"/update/"; 
+  TString pathMC        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/update3/"; // all mc except w
+  TString pathW         = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/update2/"; // w
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -978,30 +1063,32 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFile+"nTupleDYJets_MuTau_"+analysis_+".root");
-  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_MuTau_"+analysis_+".root");
+  backgroundDY      ->Add(pathMC+"nTupleDYJets_MuTau_"+analysis_+".root");
+  
+  if(!version_.Contains("NoDYExcl")) {
+    backgroundDY      ->Add(pathMC+"nTupleDYJets1Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathMC+"nTupleDYJets2Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathMC+"nTupleDYJets3Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathMC+"nTupleDYJets4Jets_MuTau_"+analysis_+".root");
+  }
   //
-  backgroundOthers  ->Add(pathToFile+"nTupleT-tW_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleTbar-tW_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleWWJetsTo2L2Nu_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo2L2Q_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo3LNu_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+analysis_+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+analysis_+".root");
+  backgroundTTbar   ->Add(pathMC+"nTupleTTJets_MuTau_"+analysis_+".root");
   //
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"+analysis_+".root");
-  /*
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+analysis_+".root");
-  */
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_special_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_special_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_special_"+analysis_+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_special_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleT-tW_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleTbar-tW_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleWWJetsTo2L2Nu_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleWZJetsTo2L2Q_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleWZJetsTo3LNu_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo2L2Nu_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo2L2Q_MuTau_"+analysis_+".root");
+  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo4L_MuTau_"+analysis_+".root");
+  //
+  backgroundWJets   ->Add(pathW+"nTupleWJets-p1_MuTau_"  +analysis_+".root");
+  backgroundWJets   ->Add(pathW+"nTupleWJets-p2_MuTau_"  +analysis_+".root");
+  backgroundWJets   ->Add(pathW+"nTupleWJets1Jets_MuTau_"+analysis_+".root");
+  backgroundWJets   ->Add(pathW+"nTupleWJets2Jets_MuTau_"+analysis_+".root");
+  backgroundWJets   ->Add(pathW+"nTupleWJets3Jets_MuTau_"+analysis_+".root");
+  backgroundWJets   ->Add(pathW+"nTupleWJets4Jets_MuTau_"+analysis_+".root");
 
   //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+analysis_+".root");
   backgroundW3Jets = backgroundWJets;
@@ -1016,18 +1103,20 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
-      signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+analysis_+".root");
+      signal[iP][iM]->Add(pathMC+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+analysis_+".root");
       if(!signal[iP][iM])cout << "###  NTUPLE Signal " << nameProd[iP]+nameMasses[iM] << " NOT FOUND ###" << endl;  
     }
   }
   
-//   TChain *signalSusy[nProdS][nMassesS];
-//   for(int iP=0 ; iP<nProdS ; iP++) {
-//     for(int iM=0 ; iM<nMasses ; iM++) {
-//       signalSusy[iP][iM] = new TChain(treeMC);
-//       signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_"+analysis_+".root");
-//     }
-//   }
+  TChain *signalSusy[nProdS][nMassesS];
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++) {
+      for(int iM=0 ; iM<nMassesS ; iM++) {
+	signalSusy[iP][iM] = new TChain(treeMC);
+	signalSusy[iP][iM]->Add(pathMC+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_"+analysis_+".root");
+      }
+    }
+  }
 
   // Split DY into 3 sub-samples (TauTau, MuToTau, JetToTau)
   TFile *dummy1;
@@ -1048,9 +1137,16 @@ void plotMuTau( Int_t mH_           = 120,
   else {
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     //
-    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_MuTau_"+analysis_+".root");
-    backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJetsMuToTau_MuTau_"+analysis_+".root");
-    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_MuTau_"+analysis_+".root");
+    if(!version_.Contains("NoDYExcl")) {
+      backgroundDYTauTau  ->Add(pathMC+"/nTupleDYJets*TauTau_MuTau_"+analysis_+".root");
+      backgroundDYMutoTau ->Add(pathMC+"/nTupleDYJets*MuToTau_MuTau_"+analysis_+".root");
+      backgroundDYJtoTau  ->Add(pathMC+"/nTupleDYJets*JetToTau_MuTau_"+analysis_+".root");
+    }
+    else {
+      backgroundDYTauTau  ->Add(pathMC+"/nTupleDYJets_TauTau_MuTau_"+analysis_+".root");
+      backgroundDYMutoTau ->Add(pathMC+"/nTupleDYJets_MuToTau_MuTau_"+analysis_+".root");
+      backgroundDYJtoTau  ->Add(pathMC+"/nTupleDYJets_JetToTau_MuTau_"+analysis_+".root");
+    }
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
@@ -1061,7 +1157,8 @@ void plotMuTau( Int_t mH_           = 120,
   if(VERBOSE) cout << "-- gather the trees" << endl;
 
   const int nVarious = 10;
-  const int nChains  = nVarious + nProd*nMasses;
+  const int nChainsSM= nVarious  + nProd*nMasses;
+  const int nChains  = nChainsSM + nProdS*nMassesS;
   TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYMutoTau","DYJtoTau","Embedded"};
   TChain* chainsVarious[nVarious]   ={data,backgroundWJets,data,backgroundW3Jets,backgroundTTbar,backgroundOthers,
 				      backgroundDYTauTau,backgroundDYMutoTau,backgroundDYJtoTau,dataEmbedded};
@@ -1075,11 +1172,22 @@ void plotMuTau( Int_t mH_           = 120,
       treeNames[iCh] = treeNamesVarious[iCh];
       chains[iCh]    = chainsVarious[iCh];
     }    
-    else { // fill signal names and trees
+    else if(iCh<nChainsSM){ // fill signal names and trees
       treeNames[iCh] = nameProd[ int((iCh-nVarious)/nMasses) ] + nameMasses[ int((iCh-nVarious)%nMasses) ];
       chains[iCh]    = signal[ int((iCh-nVarious)/nMasses) ][ int((iCh-nVarious)%nMasses) ];
     }
+    else { // fill signal names and trees
+      treeNames[iCh] = "SUSY"+nameProdS[ int((iCh-nChainsSM)/nMassesS) ] + nameMassesS[ int((iCh-nChainsSM)%nMassesS) ];
+      chains[iCh]    = signalSusy[ int((iCh-nChainsSM)/nMassesS) ][ int((iCh-nChainsSM)%nMassesS) ];
+    }
     mapAllTrees[ treeNames[iCh] ] = chains[iCh]; // create an entry in the map
+  }
+
+  if(DEBUG) {
+    cout << "######################" << endl
+	 << "### LIST OF CHAINS ###" << endl;
+    for(int iCh=0 ; iCh<nChains ; iCh++) cout << treeNames[iCh] << endl;
+    cout << "######################" << endl;
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1108,8 +1216,9 @@ void plotMuTau( Int_t mH_           = 120,
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
 
-  // Choose tau selection wrt version_
-  chooseSelection(version_, tiso, ltiso, mtiso, antimu);
+  // Choose selection wrt version_
+  chooseSelection(version_, tiso, ltiso, mtiso, antimu,liso,laiso,lliso,tpt);
+  if(selection_.find("vbfRelaxMt")!=string::npos) antiWsgn+=10;
 
   ////// EVENT WISE //////
   TCut lveto="muFlag!=1";
@@ -1386,6 +1495,7 @@ void plotMuTau( Int_t mH_           = 120,
     cout        << currentName << " ##" << endl;
 
     //if(!currentName.Contains("Data")) continue; // TEST : TO REMOVE !
+    //if(!currentName.Contains("Embed")) continue; // TEST : TO REMOVE !
 
     it = mapAllTrees.find(currentName);
     if(it!=mapAllTrees.end()) currentTree = it->second;
@@ -1393,6 +1503,13 @@ void plotMuTau( Int_t mH_           = 120,
       cout << "ERROR : sample not found in the map ! continue;" << endl;
       continue;
     }
+
+    if(!currentTree) {
+      cout << "ERROR : no such tree" << endl;
+      continue;
+    }
+
+    if(!MSSM && currentName.Contains("SUSY")) continue;
 
     h1Name         = "h1_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
@@ -1741,13 +1858,11 @@ void plotMuTau( Int_t mH_           = 120,
 	  
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 
-	    //drawHistogram(sbinCat,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
-	    drawHistogram(sbinCat,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
+	    drawHistogram(sbinCat,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
 	    float tmpNorm = hCleaner->Integral();
 	    hDataAntiIsoLooseTauIsoFullVBF->Add(hCleaner); //ND
 
-	    //drawHistogram(vbfLooseQCD,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive ,1);
-	    drawHistogram(vbfLooseQCD,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
+	    drawHistogram(vbfLooseQCD,"Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive ,1);
 	    hDataAntiIsoLooseTauIsoRelaxVBF->Add(hCleaner); //ND
 
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
@@ -1879,8 +1994,8 @@ void plotMuTau( Int_t mH_           = 120,
 	} 
 	else if(currentName.Contains("VBFH")  || 
 		currentName.Contains("GGFH")  ||
-		currentName.Contains("VH")   ){
-		//currentName.Contains("SUSY")){
+		currentName.Contains("VH")    ||
+		currentName.Contains("SUSY")){
 
 	  float NormSign = 0.;
 	  if(VERBOSE) cout << "SIGNAL " << currentName << " ENTRIES " << currentTree->GetEntries() << endl;
@@ -1907,25 +2022,31 @@ void plotMuTau( Int_t mH_           = 120,
 	      if(currentName.Contains(nameProd[iP]+nameMasses[iM]))
 		hSignal[iP][iM]->Add(h1,1.0);
 
- 	  if(currentName.Contains("SUSY")){
-	    //select events within 30% of Higgs mass
-	    TString sampleName = currentName;
-	    if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", "");
-	    else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", "");
-	    float mA = atof(sampleName.Data());
-	    //cout<<" SUSY mass "<<currentName<<" "<<mA<<endl; 
-	    TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
-	    //cout<<" width cut "<<HWidth<<endl; 
+	  if(MSSM) {
+	    if(currentName.Contains("SUSY")){
+	      //select events within 30% of Higgs mass
+	      TString sampleName = currentName;
+	      if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", "");
+	      else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", "");
+	      float mA = atof(sampleName.Data());
+	      //cout<<" SUSY mass "<<currentName<<" "<<mA<<endl; 
+	      TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
+	      //cout<<" width cut "<<HWidth<<endl; 
 
-	    float NormSign = 0.; 
-	    drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
- 	    TH1F* histoSusy =  (mapSUSYhistos.find( currentName ))->second;
- 	    histoSusy->Add(h1,1.0);
- 	    histoSusy->SetLineWidth(2);
- 	  }
+	      float NormSign = 0.; 
+	      drawHistogram(sbinCat,"MC", version_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
 
+	      for(int iP=0 ; iP<nProdS ; iP++)
+		for(int iM=0 ; iM<nMassesS ; iM++)
+		  if(currentName.Contains(nameProdS[iP]+nameMassesS[iM]))
+		    hSusy[iP][iM]->Add(h1,1.0);
+
+	      //TH1F* histoSusy =  (mapSUSYhistos.find( currentName ))->second;
+	      //histoSusy->Add(h1,1.0);
+	      //histoSusy->SetLineWidth(2);
+	    }
+	  }
 	}
-
       }
 
       else{
@@ -2336,11 +2457,11 @@ void plotMuTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
 
-  for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-    ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++)
+      for(int iM=0 ; iM<nMassesS ; iM++)
+	if(hSusy[iP][iM]) hSusy[iP][iM]->Write(); 
   }
- 
-
   fout->Write();
   fout->Close();
 
@@ -2355,9 +2476,11 @@ void plotMuTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) delete hSignal[iP][iM];
 
-  for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
-
-      
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++)
+      for(int iM=0 ; iM<nMassesS ; iM++)
+	if(hSusy[iP][iM]) delete hSusy[iP][iM];
+  }
   delete aStack;  delete hEWK; delete hSiml; delete hDataEmb;  delete hRatio; delete line;
   delete fout;
 
