@@ -732,7 +732,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int nPUVertices_;
  
   // Event trigger matching
-  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8;
+  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8;
   float HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoMu8Tau20, HLTmatchIsoMu15ETM20, HLTmatchMu8;
 
   // Muon weights
@@ -1084,6 +1084,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HLTmatchIsoMu8Tau20",   &HLTmatchIsoMu8Tau20,   "HLTmatchIsoMu8Tau20/F");
   outTreePtOrd->Branch("HLTxIsoMu15ETM20",      &HLTxIsoMu15ETM20,      "HLTxIsoMu15ETM20/F");
   outTreePtOrd->Branch("HLTmatchIsoMu15ETM20",  &HLTmatchIsoMu15ETM20,  "HLTmatchIsoMu15ETM20/F");
+
+  outTreePtOrd->Branch("HLTxMu17Mu8", &HLTxMu17Mu8, "HLTxMu17Mu8/F");
 
   // muons
   outTreePtOrd->Branch("HLTweightMu",  &HLTweightMu,"HLTweightMu/F");
@@ -2428,6 +2430,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
       HLTxMu8     = 1.0; // ND correct ? trigger not present in data !
       HLTmatchMu8 = 1.0; // ND
+      HLTxMu17Mu8 = 1.0; // required only in embedded
 
       isMatched = false;
       for(int i=0 ; i<9 ; i++)
@@ -2530,7 +2533,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxSoft        = 1.0;
       HLTxQCDSoft     = 1.0;
       HLTxIsoMu8Tau20 = 1.0;
-      
+
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
 	
 	// L1 ETM
@@ -2566,6 +2569,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[6]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
 	HLTmatchIsoMu15ETM20 = float((*tauXTriggers)[4] && (L1etmCorr_>20));     // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
 	HLTmatchMu8          = float((*tauXTriggers)[3]); // hltL3fL1sMu3L3Filtered8
+
+	HLTxMu17Mu8     = 1.0; // required only in embedded
 
 	// emulate matching to SoftMu+L1ETM+Tau
 	isMatched = ( (*tauXTriggers)[3] &&  // HLT_Mu8 (hltL3fL1sMu3L3Filtered8)
@@ -2605,6 +2610,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	passL1etmCutUp_    = passL1etmCutDown_    = passL1etmCut_    = float(L1etm_>etmCut);
 	passL1etmCutABCUp_ = passL1etmCutABCDown_ = passL1etmCutABC_ = float(L1etm_>20);
 
+	// DoubleMu matching
+	isMatched = false;
+	for(int i=26 ; i<33 ; i++)
+	  isMatched = isMatched || (*triggerBits)[i]; // 
+	HLTxMu17Mu8 = isMatched ? 1.0 : 0.0 ;
       }
       
       // Weights for both MC and embedded
