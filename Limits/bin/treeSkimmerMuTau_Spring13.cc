@@ -2007,8 +2007,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     //(*diTauSVfitP4)[0].M() - bias;
 
 
-    diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[0]).Pt();
-    diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[0]).Phi();
+    diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[1]).Pt();
+    diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[1]).Phi();
 
     diTauCAMass = (*diTauCAP4)[0].M();
     diTauCAPt   = (*diTauCAP4)[0].Pt();
