@@ -235,6 +235,65 @@ float reweightHEPNUPDYJets(int hepNUP) {
   else return 1 ;
 }
 
+/////////EleIDSF for RecHitEmbedded
+Float_t elecEffSF(Float_t pt, Float_t eta){
+
+  //Define histogram with weights
+  Double_t xAxis1[10] = {20, 25, 30, 35, 40, 50, 65, 80, 100, 200}; 
+  Double_t yAxis1[4] = {0, 0.8, 1.479, 3}; 
+   
+  TH2F hPtEtaSF("hPtEtaSF","",9,xAxis1, 3,yAxis1);
+  hPtEtaSF.SetBinContent(12,0.94448);
+  hPtEtaSF.SetBinContent(13,0.963498);
+  hPtEtaSF.SetBinContent(14,0.961211);
+  hPtEtaSF.SetBinContent(15,0.97275);
+  hPtEtaSF.SetBinContent(16,0.968306);
+  hPtEtaSF.SetBinContent(17,0.99887);
+  hPtEtaSF.SetBinContent(18,1.00868);
+  hPtEtaSF.SetBinContent(19,1.01449);
+  hPtEtaSF.SetBinContent(20,1.01274);
+  hPtEtaSF.SetBinContent(21,1.01939);
+  hPtEtaSF.SetBinContent(23,0.910509);
+  hPtEtaSF.SetBinContent(24,0.933412);
+  hPtEtaSF.SetBinContent(25,0.937532);
+  hPtEtaSF.SetBinContent(26,0.949103);
+  hPtEtaSF.SetBinContent(27,0.970999);
+  hPtEtaSF.SetBinContent(28,0.978808);
+  hPtEtaSF.SetBinContent(29,0.98384);
+  hPtEtaSF.SetBinContent(30,1.01357);
+  hPtEtaSF.SetBinContent(31,1.02283);
+  hPtEtaSF.SetBinContent(32,1.02455);
+  hPtEtaSF.SetBinContent(34,0.604604);
+  hPtEtaSF.SetBinContent(35,0.696754);
+  hPtEtaSF.SetBinContent(36,0.719897);
+  hPtEtaSF.SetBinContent(37,0.764437);
+  hPtEtaSF.SetBinContent(38,0.793726);
+  hPtEtaSF.SetBinContent(39,0.846174);
+  hPtEtaSF.SetBinContent(40,0.877331);
+  hPtEtaSF.SetBinContent(41,0.943283);
+  hPtEtaSF.SetBinContent(42,1.00928);
+  hPtEtaSF.SetBinContent(43,1.26667);
+  hPtEtaSF.SetEntries(24.8011);
+
+  if(pt>199.99)
+    pt=199.9;
+  eta=fabs(eta);
+  if(eta>2.99)
+    eta=2.99;
+
+  if(pt<20){
+    //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<0<<std::endl;
+    return 0;
+  }
+  Float_t eff=0;
+  Int_t bin = hPtEtaSF.FindFixBin(pt,eta);
+  eff = hPtEtaSF.GetBinContent(bin);
+  //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<eff<<std::endl;
+
+  return eff;
+}
+//////////
+
 void createReWeighting3D(){
 
   // truth
@@ -742,7 +801,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // event-related variables
   float numPV_ , sampleWeight,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
-  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
+  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1065,6 +1124,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("muonRadiationWeight",&muonRadiationWeight_,"muonRadiationWeight/F");//IN
   outTreePtOrd->Branch("muonRadiationDownWeight",&muonRadiationDownWeight_,"muonRadiationDownWeight/F");//IN
   outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
+  outTreePtOrd->Branch("elecEffSF",&elecEffSF_,"elecEffSF/F");//IN
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
@@ -2267,8 +2327,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauVisMassCorr  = (*diTauVisP4)[0].M();
     diTauVisPtOverPtSum = diTauVisPt/(ptL1+ptL2);
 
-    diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[0]).Pt();
-    diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[0]).Phi();
+    diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[1]).Pt();
+    diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[1]).Phi();
 
     diTauMinMass  = mTauTauMin;
   
@@ -2642,6 +2702,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     muonRadiationWeight_ = (*embeddingWeights)[5];
     muonRadiationDownWeight_ = (*embeddingWeights)[6];
     muonRadiationUpWeight_ = (*embeddingWeights)[7];
+    elecEffSF_ = elecEffSF(ptL1, scEtaL1);
 
     embeddingWeight_ = embeddingFilterEffWeight_;
     embeddingWeight_ *=  TauSpinnerWeight_;
@@ -3055,8 +3116,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
 	  1.64 : 
 	  0.28;
-// 	diTauNSVfitMass_ *= 1.015;
-// 	diTauVisMass *= 1.015;
+	diTauNSVfitMass_ *= 1.015;
+	diTauVisMass *= 1.015;
       }
     }
 
