@@ -126,7 +126,7 @@ Double_t myFuncTurnOnEle(Double_t *x, Double_t *par) {
   fitEffEle[4][0] = new ratioEfficiencyTest(21.4136, 0.000422, 2.47314e-06, 1.42487, 1.00104);
   fitEffEle[4][1] = new ratioEfficiencyTest(20.9985, 0.002918, 3.43131e-05, 1.41479, 1.06506);
 					   
-  // ABCD
+  // ABCD           
   fitEffEle[5][0] = new ratioEfficiencyTest(22.9041, 1.04728, 1.38544, 1.22576, 1.13019);
   fitEffEle[5][1] = new ratioEfficiencyTest(21.9941, 1.43419, 1.01152, 2.28622, 0.939872);
 					   
@@ -384,7 +384,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   Int_t emu   = (Int_t)par[3];
 
   const int nEta=2; // EB / EE (1.5)
-  const int nRun=6; // ABC, MC-ABC, D, MC-D, ABCD, MC-ABCD
+  const int nRun=8; // ABC, MC-ABC, D, MC-D, ABCD antiEMed, MC-ABCD antiEMed, ABCD antiETight, MC-ABCD antiETight
   const int nemu=2; // e+tau / mu+tau
 
   // aborting cases //
@@ -396,44 +396,74 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   ratioEfficiencyTest* fitEffTau[nemu][nRun][nEta];
 
   // e+tau channel
+
   // 2012 ABC (took by Ivo from Josh code)
   fitEffTau[0][0][0] = new ratioEfficiencyTest(18.43442868,2.08967536,3.27357845,6.96327309,0.85564484);
   fitEffTau[0][0][1] = new ratioEfficiencyTest(18.16839440,1.86184564,4.39116712,1.01410741,1.39240481);
   // MC ABC (took by Ivo from Josh code)
   fitEffTau[0][1][0] = new ratioEfficiencyTest(18.40815138, 1.53235636, 3.55989632, 1.74542709, 0.90118450);
   fitEffTau[0][1][1] = new ratioEfficiencyTest(18.29028052, 1.56239255, 11.03605631, 155.89290151, 0.85683995);
+
   // 2012 D
   fitEffTau[0][2][0] = new ratioEfficiencyTest(18.73, 0.374578, 0.136068, 5.789410, 0.8638 );
   fitEffTau[0][2][1] = new ratioEfficiencyTest(19.32, 0.146243, 0.123579, 3.126114, 0.8313 );
   // MC D
   fitEffTau[0][3][0] = new ratioEfficiencyTest(19.22, 0.204905, 0.175676, 2.644803, 0.8974);
   fitEffTau[0][3][1] = new ratioEfficiencyTest(18.62, 0.037935, 0.002134, 95.090919, 0.8515 );
+
+  // ABCD      antiEMed
+  fitEffTau[0][4][0] = new ratioEfficiencyTest(18.920740,    1.705521,    1.996879,    35.638721,   0.901402);
+  fitEffTau[0][4][1] = new ratioEfficiencyTest(18.712473,    0.263371,    0.146785,    3.342299,    0.853802);
+  // MC ABCD   antiEMed
+  fitEffTau[0][5][0] = new ratioEfficiencyTest(18.531258,    0.283163,    0.120956,    5.559196,    0.915048);
+  fitEffTau[0][5][1] = new ratioEfficiencyTest(18.641788,    0.742923,    0.598460,    134.920670,  0.865315);
+  
+  // ABCD      antiETight
+  fitEffTau[0][6][0] = new ratioEfficiencyTest(18.895025,    1.695306,    1.922852,    34.020744,   0.903446);
+  fitEffTau[0][6][1] = new ratioEfficiencyTest(18.711233,    0.255624,    0.131574,    3.648101,    0.857139);
+  // MC ABCD   antiETight
+  fitEffTau[0][7][0] = new ratioEfficiencyTest(18.520018,    0.294271,    0.127877,    5.275917,    0.918806);
+  fitEffTau[0][7][1] = new ratioEfficiencyTest(18.657221,    0.770777,    0.648889,    138.380600,  0.870723);
+
+  /* Outdated : above are updated for Summer13 (Jose 19Jun2013)
   // ABCD
   fitEffTau[0][4][0] = new ratioEfficiencyTest(18.686211, 1.993524, 3.202713, 3.612693, 0.871640 );
   fitEffTau[0][4][1] = new ratioEfficiencyTest(18.472954, 1.606388, 3.468975, 55.629620,0.828977 );
   // MC ABCD
   fitEffTau[0][5][0] = new ratioEfficiencyTest(18.431118, 1.572877, 3.301699, 4.760769, 0.899620 );
   fitEffTau[0][5][1] = new ratioEfficiencyTest(18.257217, 1.632443, 9.283116, 40.219585,0.858643 );
+  */
 					   
   // mu+tau channel
+
   // 2012 ABC
   fitEffTau[1][0][0] = new ratioEfficiencyTest(18.50940288, 1.62285299, 2.73232995, 1.79135412, 0.91481432);
   fitEffTau[1][0][1] = new ratioEfficiencyTest(18.45678784, 0.68697618, 0.57008697, 3.73470825, 0.84747211);
   // MC ABC
   fitEffTau[1][1][0] = new ratioEfficiencyTest(18.80484409, 0.19082817, 0.19983010, 1.81979820, 0.93270649);
   fitEffTau[1][1][1] = new ratioEfficiencyTest(18.25975478, 1.32745225, 1.70380810, 149.18410074, 0.87377770);
+
   // 2012 D
   fitEffTau[1][2][0] = new ratioEfficiencyTest(19.09, 0.236111, 0.140104, 2.361672, 0.9137 );
   fitEffTau[1][2][1] = new ratioEfficiencyTest(19.49, 0.003359, 0.005832, 1.000378, 85.3401 );
   // MC D
   fitEffTau[1][3][0] = new ratioEfficiencyTest(18.84, 0.962342, 2.103198, 1.014981, 1.8846 );
   fitEffTau[1][3][1] = new ratioEfficiencyTest(19.01, 0.492647, 0.449299, 137.190323, 0.8850 );
+
   // ABCD
-  fitEffTau[1][4][0] = new ratioEfficiencyTest(18.52036251, 1.47760312, 2.53574445, 1.71202550, 0.93019930 );
-  fitEffTau[1][4][1] = new ratioEfficiencyTest(18.41225333, 0.76598912, 0.60544260, 5.38350881, 0.85870108 );
+  fitEffTau[1][4][0] = new ratioEfficiencyTest(18.444056,    0.363077,    0.126673,    4.798026,    0.932726);
+  fitEffTau[1][4][1] = new ratioEfficiencyTest(18.556707,    0.243482,    0.121221,    2.636403,    0.894483);
   // MC ABCD
-  fitEffTau[1][5][0] = new ratioEfficiencyTest(18.88740627, 0.10718873, 0.12277723, 1.60581265, 0.95041892 );
-  fitEffTau[1][5][1] = new ratioEfficiencyTest(18.30439676, 1.44360240,	3.79358997, 1.07560564, 0.93103925 );
+  fitEffTau[1][5][0] = new ratioEfficiencyTest(18.540892,    1.323321,    2.901140,    1.001297,    12.472203);
+  fitEffTau[1][5][1] = new ratioEfficiencyTest(18.151899,    0.446117,    0.159085,    120.380318,  0.890775);
+
+  // Outdated : above are updated for Summer13 (Jose 19Jun2013)
+  // ABCD
+  fitEffTau[1][6][0] = new ratioEfficiencyTest(18.52036251, 1.47760312, 2.53574445, 1.71202550, 0.93019930 );
+  fitEffTau[1][6][1] = new ratioEfficiencyTest(18.41225333, 0.76598912, 0.60544260, 5.38350881, 0.85870108 );
+  // MC ABCD
+  fitEffTau[1][7][0] = new ratioEfficiencyTest(18.88740627, 0.10718873, 0.12277723, 1.60581265, 0.95041892 );
+  fitEffTau[1][7][1] = new ratioEfficiencyTest(18.30439676, 1.44360240,	3.79358997, 1.07560564, 0.93103925 );
 					   
   // choose iEta //
 //   int iEta;
@@ -460,7 +490,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
 void makeFile(){
 
-  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Spring13.root","RECREATE");
+  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13.root","RECREATE");
   //fout->cd();
 
   // ELECTRON //
@@ -558,9 +588,9 @@ void makeFile(){
   //
   const int nemu=2; // e+tau / mu+tau
   const int nEtaTauT=2; // EB / EE
-  const int nRunTauT=6; // ABC, MC-ABC, D, MC-D, ABCD, MC-ABCD
+  const int nRunTauT=8; // ABC, MC-ABC, D, MC-D, ABCD antiEMed, MC-ABCD antiEMed, ABCD antiETight, MC-ABCD antiETight
   TString nom_emu_tau[nemu]={"etau","mutau"};
-  TString nom_run_tau[nRunTauT]={"ABC","MC-ABC","D","MC-D","ABCD","MC-ABCD"};
+  TString nom_run_tau[nRunTauT]={"ABC","MC-ABC","D","MC-D","ABCD","MC-ABCD","ABCD-Tight","MC-ABCD-Tight"};
   TString nom_eta_tau[nEtaTauT]={"EB","EE"};
 
   TF1 *turnOnTau[nemu][nEtaTauT][nRunTauT];
