@@ -549,8 +549,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Summer13.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13.root");
+  cout << "Using corrections from llrCorrections_Summer13_v2.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v2.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
@@ -2317,6 +2317,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       embeddingWeight_ *=  corrFactorEmbed;
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
+
+    // PROTECTION AGAINST PATHOLOGIC CASES //
+    if(embeddingWeight_>10) embeddingWeight_=10;
 
     // SAMPLE WEIGHT //
     sampleWeight   = scaleFactor; 
