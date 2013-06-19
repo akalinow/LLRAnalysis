@@ -217,14 +217,11 @@ void drawHistogram(TCut sbinCat = TCut(""),
 		   float& normalizationError = *(new float()), 
 		   float scaleFactor = 1.,
 		   TH1F* h = 0,
-		   //TCut mtc = TCut(""),
 		   TCut cut = TCut(""),
 		   int verbose = 0){
 
-  TCut mtc("run>0");
-  TCut suspect("run!=205921 || event!=791564835");
-  TCut blown("embeddingWeight<10");
-  //TCut blown("run>0");
+  //TCut suspect("run!=205921 || event!=791564835");
+  //TCut blown("embeddingWeight<10");
   TCut genMass("run>0");
 
   if(DEBUG) cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
@@ -368,9 +365,9 @@ void drawHistogram(TCut sbinCat = TCut(""),
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
 
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*mtc*weight*sampleWeight*sbinCat*thirdleptonveto*suspect*blown);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*sbinCat*thirdleptonveto);
+
       // Reset entry list
       tree->SetEntryList(0);
       skim->Reset();
@@ -378,8 +375,8 @@ void drawHistogram(TCut sbinCat = TCut(""),
     }    
     else {
       TCut pairIndex="pairIndex<1";
-      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*mtc*weight*sampleWeight*pairIndex*sbinCat*thirdleptonveto*suspect*blown);
+
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*pairIndex*sbinCat*thirdleptonveto);
     }
 
     // Scale the histogram, compute norm and err
