@@ -879,6 +879,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("isVetoInJets", &isVetoInJets,"isVetoInJets/I");
   outTreePtOrd->Branch("chFracPVVeto", &chFracPVVeto,"chFracPVVeto/F"); 
 
+  outTreePtOrd->Branch("genDiTauMass", &genDiTauMass_, "genDiTauMass/F");
+
   outTreePtOrd->Branch("diTauNSVfitMass",       &diTauNSVfitMass_,       "diTauNSVfitMass/F");
   outTreePtOrd->Branch("diTauNSVfitMassErrUp",  &diTauNSVfitMassErrUp_,  "diTauNSVfitMassErrUp/F");
   outTreePtOrd->Branch("diTauNSVfitMassErrDown",&diTauNSVfitMassErrDown_,"diTauNSVfitMassErrDown/F");
