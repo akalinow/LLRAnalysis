@@ -1646,7 +1646,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // APPLY JSON SELECTION //
     isGoodRun=true;
 
-    if(iJson_>=0 && iJson_<=4)
+    if(iJson_>=0 && iJson_<=7)
       isGoodRun = AcceptEventByRunAndLumiSection(run, lumi, jsonMap[iJson_]);
     
     if(!isGoodRun) continue;
