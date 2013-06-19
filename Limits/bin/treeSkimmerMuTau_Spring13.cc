@@ -551,8 +551,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Spring13.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Spring13.root");
+  cout << "Using corrections from llrCorrections_Summer13.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
@@ -590,7 +590,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // Tau trigger (mutau)
   const int nEtaTauT=2; // EB / EE
-  const int nRunTauT=6; // ABC, MC-ABC, D, MC-D, ABCD, MC-ABCD
+  const int nRunTauT=6; // ABC, MC-ABC, D, MC-D, ABCD new, MC-ABCD new, ABCD old, MC-ABCD old
   TString nom_run_tau[nRunTauT]={"ABC","MC-ABC","D","MC-D","ABCD","MC-ABCD"};
   TString nom_eta_tau[nEtaTauT]={"EB","EE"};
 
@@ -711,7 +711,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int tightestHPSWP_,tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVAWP_,tightestHPSMVA2WP_, tightestAntiMuWP_, tightestAntiMu2WP_, decayMode_; //ND
   float hpsDB3H_,hpsMVA_,hpsMVA2_;//IN
   float pfJetPt_;
-  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmPhiCorr_, L1etmWeight_, passL1etmCut_, passL1etmCutABC_; // ND
+  float L1etm_, L1etmPhi_, L1etmCorr_, L1etmPhiCorr_, L1etmCorrUp_, L1etmPhiCorrUp_, L1etmCorrDown_, L1etmPhiCorrDown_,
+    passL1etmCut_, passL1etmCutABC_, passL1etmCutUp_, passL1etmCutABCUp_, passL1etmCutDown_, passL1etmCutABCDown_; // ND
   float etmCut=20;
   float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
@@ -988,23 +989,34 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("MEtCov10",    &MEtCov10,   "MEtCov10/F");
   outTreePtOrd->Branch("MEtCov11",    &MEtCov11,   "MEtCov11/F");
 
+  // L1 ETM //
   outTreePtOrd->Branch("L1etm",       &L1etm_,       "L1etm/F");//MB
   outTreePtOrd->Branch("L1etmPhi",    &L1etmPhi_,    "L1etmPhi/F");//MB
-  outTreePtOrd->Branch("L1etmCorr",   &L1etmCorr_,   "L1etmCorr/F");//MB
-  outTreePtOrd->Branch("L1etmPhiCorr",&L1etmPhiCorr_,"L1etmPhiCorr/F");//MB
-  outTreePtOrd->Branch("L1etmWeight", &L1etmWeight_, "L1etmWeight/F");//MB
-  outTreePtOrd->Branch("passL1etmCut",&passL1etmCut_,"passL1etmCut/F");//ND
-  outTreePtOrd->Branch("passL1etmCutABC",&passL1etmCutABC_,"passL1etmCutABC/F");//ND
   outTreePtOrd->Branch("L1etmCut",    &etmCut,       "L1etm/F");//ND
+  //
+  outTreePtOrd->Branch("L1etmCorr",       &L1etmCorr_,       "L1etmCorr/F");//MB
+  outTreePtOrd->Branch("L1etmPhiCorr",    &L1etmPhiCorr_,    "L1etmPhiCorr/F");//MB
+  outTreePtOrd->Branch("L1etmCorrUp",     &L1etmCorrUp_,     "L1etmCorrUp/F");//MB
+  outTreePtOrd->Branch("L1etmPhiCorrUp",  &L1etmPhiCorrUp_,  "L1etmPhiCorrUp/F");//MB
+  outTreePtOrd->Branch("L1etmCorrDown",   &L1etmCorrDown_,   "L1etmCorrDown/F");//MB
+  outTreePtOrd->Branch("L1etmPhiCorrDown",&L1etmPhiCorrDown_,"L1etmPhiCorrDown/F");//MB
+  //
+  outTreePtOrd->Branch("passL1etmCut",        &passL1etmCut_,       "passL1etmCut/F");//ND
+  outTreePtOrd->Branch("passL1etmCutABC",     &passL1etmCutABC_,    "passL1etmCutABC/F");//ND
+  outTreePtOrd->Branch("passL1etmCutUp",      &passL1etmCutUp_,     "passL1etmCutUp/F");//ND
+  outTreePtOrd->Branch("passL1etmCutABCUp",   &passL1etmCutABCUp_,  "passL1etmCutABCUp/F");//ND
+  outTreePtOrd->Branch("passL1etmCutDown",    &passL1etmCutDown_,   "passL1etmCutDown/F");//ND
+  outTreePtOrd->Branch("passL1etmCutABCDown", &passL1etmCutABCDown_,"passL1etmCutABCDown/F");//ND
 
-  outTreePtOrd->Branch("caloMEtNoHF",         &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
-  outTreePtOrd->Branch("caloMEtNoHFPhi",      &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
+  // CALO MET //
+  outTreePtOrd->Branch("caloMEtNoHF",          &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
+  outTreePtOrd->Branch("caloMEtNoHFPhi",       &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFUncorr",    &caloMEtNoHFUncorr_,    "caloMEtNoHFUncorr/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFUncorrPhi", &caloMEtNoHFUncorrPhi_, "caloMEtNoHFUncorrPhi/F");//MB
-  outTreePtOrd->Branch("caloMEtNoHFUp",       &caloMEtNoHFUp_,       "caloMEtNoHFUp/F");// ND
-  outTreePtOrd->Branch("caloMEtNoHFUpPhi",    &caloMEtNoHFUpPhi_,    "caloMEtNoHFUpPhi/F");// ND
-  outTreePtOrd->Branch("caloMEtNoHFDown",     &caloMEtNoHFDown_,     "caloMEtNoHFDown/F");// ND
-  outTreePtOrd->Branch("caloMEtNoHFDownPhi",  &caloMEtNoHFDownPhi_,  "caloMEtNoHFDownPhi/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFUp",        &caloMEtNoHFUp_,       "caloMEtNoHFUp/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFUpPhi",     &caloMEtNoHFUpPhi_,    "caloMEtNoHFUpPhi/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFDown",      &caloMEtNoHFDown_,     "caloMEtNoHFDown/F");// ND
+  outTreePtOrd->Branch("caloMEtNoHFDownPhi",   &caloMEtNoHFDownPhi_,  "caloMEtNoHFDownPhi/F");// ND
 
   outTreePtOrd->Branch("sumEt",             &sumEt_,             "sumEt/F");// ND
   outTreePtOrd->Branch("caloNoHFsumEt",     &caloNoHFsumEt_,     "caloNoHFsumEt/F");// ND
@@ -1717,7 +1729,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     jet1QGConstId=-99; jet2QGConstId=-99; jetVetoQGConstId=-99;
     jet1QGConstPt=-99; jet2QGConstPt=-99; jetVetoQGConstPt=-99;
     MVAvbf = -99;
-    L1etm_=-99; L1etmPhi_=-99; L1etmPhiCorr_=-99; L1etmCorr_=-99; L1etmWeight_=1;//MB
+    L1etm_=-99; L1etmPhi_=-99; L1etmPhiCorr_=-99; L1etmCorr_=-99; // MB
     caloMEtNoHFUncorr_=-99; caloMEtNoHFUncorrPhi_=-99;//MB 
     caloMEtNoHF_=-99;      caloMEtNoHFPhi_=-99;// MB
     caloMEtNoHFUp_=-99;      caloMEtNoHFUpPhi_=-99;// ND
@@ -2385,16 +2397,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     if( isData && !sample.Contains("Emb") ){
 
-      L1etmWeight_  = 1;          // no correction for data
-      L1etmCorr_    = L1etm_;     
-      L1etmPhiCorr_ = L1etmPhi_; 
+      L1etmCorrDown_    = L1etmCorrUp_    = L1etmCorr_    = L1etm_;     
+      L1etmPhiCorrDown_ = L1etmPhiCorrUp_ = L1etmPhiCorr_ = L1etmPhi_; 
 
       if(isPeriodLow)       etmCut=20;
       else if(isPeriodHigh) etmCut=26;
       else etmCut=20;
-      passL1etmCut_ = float(L1etm_>etmCut);
 
-      passL1etmCutABC_ = L1etm_>20;
+      passL1etmCutUp_    = passL1etmCutDown_    = passL1etmCut_    = float(L1etm_>etmCut);
+      passL1etmCutABCUp_ = passL1etmCutABCDown_ = passL1etmCutABC_ = float(L1etm_>20);
 
       puWeight         = 1.0;
       puWeightHCP      = 1.0;
@@ -2504,8 +2515,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
     else { // MC or embedded
       if(DEBUG) cout << "-- MC or embedded" << endl;
 
-      L1etmWeight_= 1;            
-
       HLTxQCD         = 1.0;
       HLTmatchQCD     = 1.0;
       HLTxSoft        = 1.0;
@@ -2515,10 +2524,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
       if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
 	
 	// L1 ETM
-	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
-	L1etmPhiCorr_ = L1etmPhi_; 
-      
-	if(gRandom->Uniform()>(1.0-4.806/7.274) ) etmCut=26;
+	L1etmCorr_     = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
+	L1etmCorrUp_   = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHFUp_);
+	L1etmCorrDown_ = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHFDown_);
+
+	L1etmPhiCorr_ = L1etmPhiCorrUp_ = L1etmPhiCorrDown_ = L1etmPhi_; 
+	
+	//if(gRandom->Uniform()>(1.0-4.806/7.274) ) etmCut=26;
+	if(gRandom->Uniform()>(1.0-4.848/7.317) ) etmCut=26;
 	else                                      etmCut=20;
 
 	// Pile-Up
@@ -2552,25 +2565,35 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	HLTmatchIsoMu8Tau20 = float(isMatched);
 	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
+
 	passL1etmCut_       = float(L1etmCorr_>etmCut);
 	passL1etmCutABC_    = float(L1etmCorr_>20);
+
+	passL1etmCutUp_     = float(L1etmCorrUp_>etmCut);
+	passL1etmCutABCUp_  = float(L1etmCorrUp_>20);
+
+	passL1etmCutDown_   = float(L1etmCorrDown_>etmCut);
+	passL1etmCutABCDown_= float(L1etmCorrDown_>20);
 
       }
       else { // embedded
 	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = 1.0;
-	L1etmCorr_    = L1etm_ ;
-	L1etmPhiCorr_ = L1etmPhi_ ;
-	if(isPeriodLow)       etmCut=20;
-	else if(isPeriodHigh) etmCut=26;
-	else etmCut=20;
-	passL1etmCut_ = float(L1etm_>etmCut);
-	passL1etmCutABC_ = L1etm_>20;
+
+	L1etmCorrDown_    = L1etmCorrUp_    = L1etmCorr_    = L1etm_ ;
+	L1etmPhiCorrDown_ = L1etmPhiCorrUp_ = L1etmPhiCorr_ = L1etmPhi_ ;
 
 	// Get L1ETM without tau correction (only for embedded)
 	if(l1ETMP4->size()>1){
 	  L1etm_     = (*l1ETMP4)[1].Et(); // ND
 	  L1etmPhi_  = (*l1ETMP4)[1].Phi();// ND
 	}
+
+	if(isPeriodLow)       etmCut=20;
+	else if(isPeriodHigh) etmCut=26;
+	else etmCut=20;
+
+	passL1etmCutUp_    = passL1etmCutDown_    = passL1etmCut_    = float(L1etm_>etmCut);
+	passL1etmCutABCUp_ = passL1etmCutABCDown_ = passL1etmCutABC_ = float(L1etm_>20);
 
       }
       
