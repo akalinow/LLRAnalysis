@@ -292,19 +292,18 @@ void drawHistogram(TCut sbinCat = TCut(""),
       else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight)";
       else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
       else if(!version_.Contains("Soft")) {
-	if(version_.Contains("ZeeSel")==string::npos){
-	  if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
-	  else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
-	  // 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
-	  else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
-	}
-	else{//ZeeSelection No ZeeWeight
-	  weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
-	}
+	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
+	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
+	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
+	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
       } //NoSoft     
     }//MC
-    else if(type.Contains("DY")) weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
-
+    else if(type.Contains("DY")){
+      if(version_.Contains("ZeeSel"))
+	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
+      else 
+	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+    }
     else if(type.Contains("Embed")) {
       if (version_.Contains("NoEleIDSF")){
 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
@@ -1818,10 +1817,10 @@ void plotElecTau( Int_t mH_           = 120,
 	    // Compute efficiency of the full vbf category in the embedded sample
             float NormDYElectoTauEmbedLoose = 0.; 
 	    //drawHistogram(twoJets, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbin  ,1);
-	    drawHistogram(sbinCatIncl, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinInclusive  ,1);
+	    drawHistogram(sbinCatIncl, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1);
 	    hCleaner->Reset();
 	    float NormDYElectoTauEmbed = 0.;
-	    drawHistogram(sbinCat, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbin  ,1);
+	    drawHistogram(sbinCat, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbinEmbedding  ,1);
 
 	    // Apply eff from Inclusive to category sel.
 	    NormDYElectoTau = (NormDYElectoTauEmbedLoose>0) ? (NormDYElectoTauIncl * NormDYElectoTauEmbed/NormDYElectoTauEmbedLoose) : 0.; 
@@ -1844,10 +1843,10 @@ void plotElecTau( Int_t mH_           = 120,
 	    // Compute efficiency of the full vbf category in the embedded sample
             float NormDYElectoTauEmbedLoose = 0.; 
 	    //drawHistogram(twoJets, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbin  ,1);
-	    drawHistogram(sbinCatIncl, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinInclusive  ,1);
+	    drawHistogram(sbinCatIncl, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbedLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1);
 	    hCleaner->Reset();
 	    float NormDYElectoTauEmbed = 0.;
-	    drawHistogram(sbinCat, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbin  ,1);
+	    drawHistogram(sbinCat, "Embed", version_, RUN, mapAllTrees["Embedded"], variable, NormDYElectoTauEmbed,  Error, 1.0 , hCleaner,  sbinEmbedding  ,1);
 
 	    // Apply eff from Inclusive to category sel.
 	    NormDYElectoTau = (NormDYElectoTauEmbedLoose>0) ? (NormDYElectoTauIncl * NormDYElectoTauEmbed/NormDYElectoTauEmbedLoose) : 0.; 
@@ -2374,7 +2373,7 @@ void plotElecTau( Int_t mH_           = 120,
       maxPull = TMath::Abs(pull);
   }
 //   hRatio->SetAxisRange(TMath::Min(-1.2*maxPull,-1.),TMath::Max(1.2*maxPull,1.),"Y");
-  hRatio->SetAxisRange(-1.5,1.5,"Y");
+  hRatio->SetAxisRange(-1.2,1.2,"Y");
   hRatio->Draw("P");
 
   TF1* line = new TF1("line","0",hRatio->GetXaxis()->GetXmin(),hStack->GetXaxis()->GetXmax());
