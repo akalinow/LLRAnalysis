@@ -395,21 +395,23 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
   ratioEfficiencyTest* fitEffTau[nemu][nRun][nEta];
 
+  // UPDATED JOSE 19Jun2013 //
+
   // e+tau channel
 
-  // 2012 ABC (took by Ivo from Josh code)
-  fitEffTau[0][0][0] = new ratioEfficiencyTest(18.43442868,2.08967536,3.27357845,6.96327309,0.85564484);
-  fitEffTau[0][0][1] = new ratioEfficiencyTest(18.16839440,1.86184564,4.39116712,1.01410741,1.39240481);
-  // MC ABC (took by Ivo from Josh code)
-  fitEffTau[0][1][0] = new ratioEfficiencyTest(18.40815138, 1.53235636, 3.55989632, 1.74542709, 0.90118450);
-  fitEffTau[0][1][1] = new ratioEfficiencyTest(18.29028052, 1.56239255, 11.03605631, 155.89290151, 0.85683995);
+  // 2012 ABC 
+  fitEffTau[0][0][0] = new ratioEfficiencyTest(18.950621,    1.628276,    1.900225,    45.753269,   0.900336);
+  fitEffTau[0][0][1] = new ratioEfficiencyTest(18.666002,    0.263605,    0.111819,    5.365893,    0.847341);
+  // MC ABC 
+  fitEffTau[0][1][0] = new ratioEfficiencyTest(18.527735,    0.278572,    0.117046,    5.580345,    0.914990);
+  fitEffTau[0][1][1] = new ratioEfficiencyTest(18.622831,    0.631734,    0.432745,    133.583847,  0.865263);
 
   // 2012 D
-  fitEffTau[0][2][0] = new ratioEfficiencyTest(18.73, 0.374578, 0.136068, 5.789410, 0.8638 );
-  fitEffTau[0][2][1] = new ratioEfficiencyTest(19.32, 0.146243, 0.123579, 3.126114, 0.8313 );
+  fitEffTau[0][2][0] = new ratioEfficiencyTest(18.840761,    1.783221,    2.001567,    15.510686,    0.904269);
+  fitEffTau[0][2][1] = new ratioEfficiencyTest(18.735365,    0.809614,    1.409530,    1.173482,    1.017551);
   // MC D
-  fitEffTau[0][3][0] = new ratioEfficiencyTest(19.22, 0.204905, 0.175676, 2.644803, 0.8974);
-  fitEffTau[0][3][1] = new ratioEfficiencyTest(18.62, 0.037935, 0.002134, 95.090919, 0.8515 );
+  fitEffTau[0][3][0] = new ratioEfficiencyTest(18.530840,    0.281408,    0.119690,    5.554314,    0.915107);
+  fitEffTau[0][3][1] = new ratioEfficiencyTest(18.653790,    1.410397,    3.777847,    169.134155,    0.864934);
 
   // ABCD      antiEMed
   fitEffTau[0][4][0] = new ratioEfficiencyTest(18.920740,    1.705521,    1.996879,    35.638721,   0.901402);
@@ -426,6 +428,21 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   fitEffTau[0][7][1] = new ratioEfficiencyTest(18.657221,    0.770777,    0.648889,    138.380600,  0.870723);
 
   /* Outdated : above are updated for Summer13 (Jose 19Jun2013)
+
+  // 2012 ABC (took by Ivo from Josh code)
+  fitEffTau[0][0][0] = new ratioEfficiencyTest(18.43442868,2.08967536,3.27357845,6.96327309,0.85564484);
+  fitEffTau[0][0][1] = new ratioEfficiencyTest(18.16839440,1.86184564,4.39116712,1.01410741,1.39240481);
+  // MC ABC (took by Ivo from Josh code)
+  fitEffTau[0][1][0] = new ratioEfficiencyTest(18.40815138, 1.53235636, 3.55989632, 1.74542709, 0.90118450);
+  fitEffTau[0][1][1] = new ratioEfficiencyTest(18.29028052, 1.56239255, 11.03605631, 155.89290151, 0.85683995);
+
+  // 2012 D
+  fitEffTau[0][2][0] = new ratioEfficiencyTest(18.73, 0.374578, 0.136068, 5.789410, 0.8638 );
+  fitEffTau[0][2][1] = new ratioEfficiencyTest(19.32, 0.146243, 0.123579, 3.126114, 0.8313 );
+  // MC D
+  fitEffTau[0][3][0] = new ratioEfficiencyTest(19.22, 0.204905, 0.175676, 2.644803, 0.8974);
+  fitEffTau[0][3][1] = new ratioEfficiencyTest(18.62, 0.037935, 0.002134, 95.090919, 0.8515 );
+
   // ABCD
   fitEffTau[0][4][0] = new ratioEfficiencyTest(18.686211, 1.993524, 3.202713, 3.612693, 0.871640 );
   fitEffTau[0][4][1] = new ratioEfficiencyTest(18.472954, 1.606388, 3.468975, 55.629620,0.828977 );
@@ -437,18 +454,18 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   // mu+tau channel
 
   // 2012 ABC
-  fitEffTau[1][0][0] = new ratioEfficiencyTest(18.50940288, 1.62285299, 2.73232995, 1.79135412, 0.91481432);
-  fitEffTau[1][0][1] = new ratioEfficiencyTest(18.45678784, 0.68697618, 0.57008697, 3.73470825, 0.84747211);
+  fitEffTau[1][0][0] = new ratioEfficiencyTest(18.517653,    0.359486,    0.146362,    4.051668,    0.933128);
+  fitEffTau[1][0][1] = new ratioEfficiencyTest(18.349554,    0.329283,    0.127311,    4.701736,    0.876362);
   // MC ABC
-  fitEffTau[1][1][0] = new ratioEfficiencyTest(18.80484409, 0.19082817, 0.19983010, 1.81979820, 0.93270649);
-  fitEffTau[1][1][1] = new ratioEfficiencyTest(18.25975478, 1.32745225, 1.70380810, 149.18410074, 0.87377770);
+  fitEffTau[1][1][0] = new ratioEfficiencyTest(18.540964,    1.328441,    2.915922,    1.001261,    12.719448);
+  fitEffTau[1][1][1] = new ratioEfficiencyTest(18.328148,    1.844240,    3.687733,    134.335556,   0.889851);
 
   // 2012 D
-  fitEffTau[1][2][0] = new ratioEfficiencyTest(19.09, 0.236111, 0.140104, 2.361672, 0.9137 );
-  fitEffTau[1][2][1] = new ratioEfficiencyTest(19.49, 0.003359, 0.005832, 1.000378, 85.3401 );
+  fitEffTau[1][2][0] = new ratioEfficiencyTest(18.434069,    0.530757,    0.201776,    7.190775,    0.932454);
+  fitEffTau[1][2][1] = new ratioEfficiencyTest(18.671316,    1.572636,    3.074206,    1.000632,    41.692646);
   // MC D
-  fitEffTau[1][3][0] = new ratioEfficiencyTest(18.84, 0.962342, 2.103198, 1.014981, 1.8846 );
-  fitEffTau[1][3][1] = new ratioEfficiencyTest(19.01, 0.492647, 0.449299, 137.190323, 0.8850 );
+  fitEffTau[1][3][0] = new ratioEfficiencyTest(18.539244,    1.326609,    2.909963,    1.001269,    12.692931);
+  fitEffTau[1][3][1] = new ratioEfficiencyTest(18.326162,    1.849068,    3.737118,    140.684357,    0.889961);
 
   // ABCD
   fitEffTau[1][4][0] = new ratioEfficiencyTest(18.444056,    0.363077,    0.126673,    4.798026,    0.932726);
@@ -464,7 +481,22 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   // MC ABCD
   fitEffTau[1][7][0] = new ratioEfficiencyTest(18.88740627, 0.10718873, 0.12277723, 1.60581265, 0.95041892 );
   fitEffTau[1][7][1] = new ratioEfficiencyTest(18.30439676, 1.44360240,	3.79358997, 1.07560564, 0.93103925 );
-					   
+
+  /*  // OUTDATED //
+  // 2012 ABC
+  fitEffTau[1][0][0] = new ratioEfficiencyTest(18.50940288, 1.62285299, 2.73232995, 1.79135412, 0.91481432);
+  fitEffTau[1][0][1] = new ratioEfficiencyTest(18.45678784, 0.68697618, 0.57008697, 3.73470825, 0.84747211);
+  // MC ABC
+  fitEffTau[1][1][0] = new ratioEfficiencyTest(18.80484409, 0.19082817, 0.19983010, 1.81979820, 0.93270649);
+  fitEffTau[1][1][1] = new ratioEfficiencyTest(18.25975478, 1.32745225, 1.70380810, 149.18410074, 0.87377770);
+
+  // 2012 D
+  fitEffTau[1][2][0] = new ratioEfficiencyTest(19.09, 0.236111, 0.140104, 2.361672, 0.9137 );
+  fitEffTau[1][2][1] = new ratioEfficiencyTest(19.49, 0.003359, 0.005832, 1.000378, 85.3401 );
+  // MC D
+  fitEffTau[1][3][0] = new ratioEfficiencyTest(18.84, 0.962342, 2.103198, 1.014981, 1.8846 );
+  fitEffTau[1][3][1] = new ratioEfficiencyTest(19.01, 0.492647, 0.449299, 137.190323, 0.8850 );
+   */				   
   // choose iEta //
 //   int iEta;
 //   if(eta < -1.2)      iEta = 0;
@@ -490,7 +522,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
 void makeFile(){
 
-  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13.root","RECREATE");
+  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v2.root","RECREATE");
   //fout->cd();
 
   // ELECTRON //
