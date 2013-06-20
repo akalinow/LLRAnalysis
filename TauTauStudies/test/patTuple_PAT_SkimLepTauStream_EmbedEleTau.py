@@ -24,9 +24,9 @@ embedType   = "RhEmbedElTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
 
 if runOnMC:
-    process.GlobalTag.globaltag = cms.string('START53_V15::All')
+    process.GlobalTag.globaltag = cms.string('START53_V23::All')
 else:
-    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN3::All')
+    process.GlobalTag.globaltag = cms.string('FT_53_V21_AN4::All')
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
@@ -36,12 +36,13 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source.fileNames = cms.untracked.vstring(
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/FE414F4B-F6D2-E111-A4E9-003048674048.root' #12.5k
-    'file:/data_CMS/cms/anayak/HTauTauSynchronization/8TeV/53X/VBF_HToTauTau_M-125_8TeV-powheg-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-1200542B-D9ED-E111-B708-00237DA1A548.root' #7k
+    #'file:/data_CMS/cms/anayak/HTauTauSynchronization/8TeV/53X/VBF_HToTauTau_M-125_8TeV-powheg-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-1200542B-D9ED-E111-B708-00237DA1A548.root' #7k
     #'file:/data_CMS/cms/mbluj/Production/test/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FE4F82A9-68F3-E111-8CD3-003048D476AE.root' #13k
     #'root://node12.datagrid.cea.fr//dpm/datagrid.cea.fr/home/cms/trivcat/store/mc/Summer12_DR53X/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/AODSIM/PU_S10_START53_V7A-v1/0000/0088DD9F-B105-E211-BB06-001E67397D5A.root' #no access??
     #'file:/data_CMS/cms/mbluj/Production/test/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FED775BD-B8E1-E111-8ED5-003048C69036.root' #11k
     #'file:/data_CMS/cms/mbluj/Production/test/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FC3ED802-E606-E211-A0FD-0025B31E330A.root' #9k
     #'file:/data_CMS/cms/mbluj/Production/HToTauTau/simDYmumu_embedded_mutau_2013Feb21_AOD.root'
+    '/store/results/higgs/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/DoubleMuParked/USER/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/0000/00F466CB-9EB0-E211-B414-0023AEFDE9B8.root'
     )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -309,21 +310,22 @@ process.patJetCorrFactors.levels = JEClevels
 process.patJetCorrFactors.rho    = cms.InputTag('kt6PFJets','rho')
 process.patJetCorrFactors.useRho = True
 
-process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
-    levels = cms.vstring('L1Offset',
-                         'L2Relative',
-                         'L3Absolute')
-    )
-process.patJetCorrFactorsL1Offset.useRho = False #MB
-if runOnMC:
-    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
-else:
-    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+#process.patJetCorrFactorsL1Offset = process.patJetCorrFactors.clone(
+#    levels = cms.vstring('L1Offset',
+#                         'L2Relative',
+#                         'L3Absolute')
+#    )
+#process.patJetCorrFactorsL1Offset.useRho = False #MB
+#if runOnMC:
+#    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute']
+#else:
+#    process.patJetCorrFactorsL1Offset.levels = ['L1Offset', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
 process.patJets.jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors"),
-                                                     cms.InputTag("patJetCorrFactorsL1Offset"))
-process.patDefaultSequence.replace(process.patJetCorrFactors,
-                                   process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
+                                                     #cms.InputTag("patJetCorrFactorsL1Offset")
+                                                     )
+#process.patDefaultSequence.replace(process.patJetCorrFactors,
+#                                   process.patJetCorrFactors+process.patJetCorrFactorsL1Offset)
 
 if runOnMC:
     process.load("RecoJets.Configuration.GenJetParticles_cff")
@@ -485,11 +487,14 @@ getattr(process,"selectedPatJets").cut = cms.string('pt>10 && abs(eta)<5.0')
 from PhysicsTools.PatAlgos.tools.trigTools import *
 switchOnTrigger( process )
 process.patTriggerEvent.processName = '*'
+if runOnEmbed:
+    process.patTriggerEvent.processName = 'HLT'
 
 if hasattr(process,"patTrigger"):
     process.patTrigger.processName = '*'
-    
-
+    if runOnEmbed:
+        process.patTrigger.processName = 'HLT'
+        
 ######################## embedding ###############################
 
 process.selectedPatMuonsUserEmbedded = cms.EDProducer(
@@ -665,7 +670,7 @@ process.tausForVeto  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
-                     " && pt>20 && tauID('byLooseIsolationMVA2')>0.5"),
+                     " && pt>20 && (tauID('byLooseIsolationMVA2')>0.5||tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits')>0.5)"),
     filter = cms.bool(False)
     )
 
@@ -1116,6 +1121,11 @@ massSearchReplaceAnyInputTag(process.pfIsolationSequence,
                              "selectedPrimaryVertices",
                              verbose=False)
 
+process.load("LLRAnalysis.Utilities.recoTauMatchedCaloJet_cff")
+process.selectedPatTausForCaloJetMatching.src="tausForVeto"
+process.selectedPatTausForCaloJetMatching.cut="tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits')>0.5"
+process.commonOfflineSequence += process.makeRecoTauMatchedCaloJets
+
 if not runOnMC:
     ##process.skimMuTau1.remove(process.printTree1)
     process.skimMuTau1.remove(process.HLTFilterMuTau)
@@ -1201,8 +1211,8 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_selectedHltPatTaus_*_*',#MB+
     'keep *_reducedEcalRecHitsEB_*_*',
     'keep *_reducedEcalRecHitsEE_*_*',
-    'drop *_TriggerResults_*_HLT',
-    'drop *_TriggerResults_*_RECO',
+    #'drop *_TriggerResults_*_HLT',#MB
+    #'drop *_TriggerResults_*_RECO',#MB
     'drop *_selectedPatElectrons_*_*',
     'drop *_selectedPatMuons_*_*',
     'drop *_selectedPatTaus_*_*',
@@ -1228,14 +1238,15 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_gsfElectrons_*_*',
     'keep *_allConversions_*_*',
     'keep *_genMetTrue_*_*',
-    'keep *_genTauMatchedCaloJet_*_*',
+    'keep *_genTauMatchedCaloJet*_*_*',
     'keep *_genTauMatchedCaloJetElec_*_*',
     'keep *_genTauMatchedCaloJetMu_*_*',    
+    'keep *_patTauMatchedCaloJet_*_*',
     #To re-make patJets
     'keep *_jetTracksAssociatorAtVertex_*_*',
     'keep *_ak5GenJets_*_*',
     'keep *_*JetTagsAOD_*_*',
-    'keep *_TauSpinnerReco_TauSpinnerWT_*',
+    'keep *_TauSpinnerReco_TauSpinnerWT*_*',
     'keep *_ZmumuEvtSelEffCorrWeightProducer_weight_*',
     'keep *_muonRadiationCorrWeightProducer_weight_*',
     'keep *_muonRadiationCorrWeightProducer_weightUp_*',
@@ -1247,6 +1258,7 @@ process.out.outputCommands.extend( cms.vstring(
     'keep *_embeddingKineReweightGENembedding_genTau2EtaVsGenTau1Eta_*',
     'keep *_embeddingKineReweightGENembedding_genDiTauMassVsGenDiTauPt_*',
     'keep *_generator_minVisPtFilter_*',
+    'keep *_goldenZmumuCandidatesGe2IsoMuons_*_*',
     )
 )
 #MB
