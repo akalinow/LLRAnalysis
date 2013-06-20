@@ -9,9 +9,9 @@ tauGenJetsSelectorElectron.select=['electron']
 tauGenJetsSelectorMuon = tauGenJetsSelectorAllHadrons.clone()
 tauGenJetsSelectorMuon.select=['muon']
 genTauMatchedCaloJetElec = genTauMatchedCaloJet.clone()
-genTauMatchedCaloJetElec.genTauJetTag = "tauGenJetsSelectorElectron"
+genTauMatchedCaloJetElec.candidateTag = "tauGenJetsSelectorElectron"
 genTauMatchedCaloJetMu = genTauMatchedCaloJet.clone()
-genTauMatchedCaloJetMu.genTauJetTag = "tauGenJetsSelectorMuon"
+genTauMatchedCaloJetMu.candidateTag = "tauGenJetsSelectorMuon"
 
 makeTauMatchedCaloJets = cms.Sequence(
     tauGenJets +

@@ -1,9 +1,9 @@
 import FWCore.ParameterSet.Config as cms
 
 genTauMatchedCaloJet = cms.EDProducer(
-    "GenTauMatchedCaloJet",
+    "CandidateMatchedCaloJet",
     jetTag = cms.InputTag("ak5CaloJets"),
-    genTauJetTag = cms.InputTag("tauGenJetsSelectorAllHadrons"),
+    candidateTag = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     deltaRMax = cms.double(0.3),
     verbose = cms.untracked.bool(False)
 )
