@@ -36,7 +36,7 @@
 #define MSSM             false
 #define VERBOSE          true
 #define DEBUG            false
-#define LOOP             true
+#define LOOP             false
 #define USESSBKG         false
 #define scaleByBinWidth  false
 #define DOSPLIT          false
@@ -224,7 +224,7 @@ void drawHistogram(TCut sbinPair = TCut(""),
   //TCut suspect("run!=205921 || event!=791564835");
   //TCut blown("embeddingWeight<10");
   TCut genMass("run>0");
-
+  //if(type.Contains("Embed"))genMass = TCut("genDiTauMass>50");
   if(DEBUG) cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
 
   // Special case for data
@@ -367,7 +367,7 @@ void drawHistogram(TCut sbinPair = TCut(""),
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
 
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*sbinCat*thirdleptonveto);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*sbinCat*thirdleptonveto*genMass);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -377,7 +377,7 @@ void drawHistogram(TCut sbinPair = TCut(""),
     else {
       TCut pairIndex="pairIndex<1";
 
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*pairIndex*sbinCat*thirdleptonveto);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*pairIndex*sbinCat*thirdleptonveto*genMass);
     }
 
     // Scale the histogram, compute norm and err
@@ -494,10 +494,10 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_ = "",
   // restore with full cut
   drawHistogram(sbinPairIso,sbinCat,"MC", version_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, sbinPZetaRel&&apZ);
  
-
   float OSTTbarinSidebandRegionMC = 0.;
   drawHistogram(sbinPairIso,sbinCat,"MC", version_, RUN,mapAllTrees["TTbar"],  variable,  OSTTbarinSidebandRegionMC,     Error, scaleFactor*TTxsectionRatio , hWMt, sbinPZetaRel&&apZ);
 
+  /* //Remove this unnecessary sideband TTbar extrapolation
   TCut bTagCut; TCut bTagCutaIso; TCut sbinCatBtag;
   if(selection_.find("novbf")!=string::npos){
     sbinCatBtag = zeroJet && TCut("nJets20BTagged>1");
@@ -544,7 +544,8 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_ = "",
        << ", from others " << OSOthersinSidebandRegionBtagMC << endl;
   cout << "Observed " << OSDatainSidebandRegionBtag << endl;
   cout << "====> scale factor for " << sign << " TTbar is " << scaleFactorTTOS << endl;
-  if(scaleFactorTTOS<0){
+  */
+  if(scaleFactorTTOS<=0){
     cout << "!!! scale factor is negative... set it to 1 !!!" << endl;
     scaleFactorTTOS = 1.0;
   }
@@ -1017,11 +1018,11 @@ void plotMuTau( Int_t mH_           = 120,
   //TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
   //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/"; // data + embed
-  TString pathToEmbed      = pathToFile;//+"/update/"; 
-  TString pathMC        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update3/"; // all mc except w
-  TString pathW         = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update2/"; // w
-
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; // data + embed
+  TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/restrict2/"; //+"/update/"; 
+  TString pathMC        = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update3/"; // all mc except w
+  TString pathW         = pathToEmbed; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update2/"; // w
+  TString pathDY         = pathToEmbed;
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
   if(RUN.Contains("ABC")) {
@@ -1066,13 +1067,13 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathMC+"nTupleDYJets_MuTau_"+analysis_+".root");
+  backgroundDY      ->Add(pathDY+"nTupleDYJets_MuTau_"+analysis_+".root");
   
   if(!version_.Contains("NoDYExcl")) {
-    backgroundDY      ->Add(pathMC+"nTupleDYJets1Jets_MuTau_"+analysis_+".root");
-    backgroundDY      ->Add(pathMC+"nTupleDYJets2Jets_MuTau_"+analysis_+".root");
-    backgroundDY      ->Add(pathMC+"nTupleDYJets3Jets_MuTau_"+analysis_+".root");
-    backgroundDY      ->Add(pathMC+"nTupleDYJets4Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathDY+"nTupleDYJets1Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathDY+"nTupleDYJets2Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathDY+"nTupleDYJets3Jets_MuTau_"+analysis_+".root");
+    backgroundDY      ->Add(pathDY+"nTupleDYJets4Jets_MuTau_"+analysis_+".root");
   }
   //
   backgroundTTbar   ->Add(pathMC+"nTupleTTJets_MuTau_"+analysis_+".root");
