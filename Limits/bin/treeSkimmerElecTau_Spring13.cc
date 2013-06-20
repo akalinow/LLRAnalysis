@@ -665,7 +665,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   cout << "Using corrections from llrCorrections_Spring13.root" << endl;
 
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Spring13.root");
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Spring13_v3.root");
   
   // Ele trigger
   const int nEtaEle=2;
