@@ -236,62 +236,112 @@ float reweightHEPNUPDYJets(int hepNUP) {
 }
 
 /////////EleIDSF for RecHitEmbedded
-Float_t elecEffSF(Float_t pt, Float_t eta){
+// Tight e-Id as in e+tau, Pt>20, |eta|<2.1
+Float_t elecEffSFTight(Float_t pt, Float_t eta){
 
   //Define histogram with weights
-  Double_t xAxis1[10] = {20, 25, 30, 35, 40, 50, 65, 80, 100, 200}; 
-  Double_t yAxis1[4] = {0, 0.8, 1.479, 3}; 
+  Double_t xAxis1[10] = {10, 15, 20, 25, 30, 40, 55, 70, 100, 200}; 
+  Double_t yAxis1[4] = {0, 0.8, 1.479, 2.5}; 
    
-  TH2F hPtEtaSF("hPtEtaSF","",9,xAxis1, 3,yAxis1);
-  hPtEtaSF.SetBinContent(12,0.94448);
-  hPtEtaSF.SetBinContent(13,0.963498);
-  hPtEtaSF.SetBinContent(14,0.961211);
-  hPtEtaSF.SetBinContent(15,0.97275);
-  hPtEtaSF.SetBinContent(16,0.968306);
-  hPtEtaSF.SetBinContent(17,0.99887);
-  hPtEtaSF.SetBinContent(18,1.00868);
-  hPtEtaSF.SetBinContent(19,1.01449);
-  hPtEtaSF.SetBinContent(20,1.01274);
-  hPtEtaSF.SetBinContent(21,1.01939);
-  hPtEtaSF.SetBinContent(23,0.910509);
-  hPtEtaSF.SetBinContent(24,0.933412);
-  hPtEtaSF.SetBinContent(25,0.937532);
-  hPtEtaSF.SetBinContent(26,0.949103);
-  hPtEtaSF.SetBinContent(27,0.970999);
-  hPtEtaSF.SetBinContent(28,0.978808);
-  hPtEtaSF.SetBinContent(29,0.98384);
-  hPtEtaSF.SetBinContent(30,1.01357);
-  hPtEtaSF.SetBinContent(31,1.02283);
-  hPtEtaSF.SetBinContent(32,1.02455);
-  hPtEtaSF.SetBinContent(34,0.604604);
-  hPtEtaSF.SetBinContent(35,0.696754);
-  hPtEtaSF.SetBinContent(36,0.719897);
-  hPtEtaSF.SetBinContent(37,0.764437);
-  hPtEtaSF.SetBinContent(38,0.793726);
-  hPtEtaSF.SetBinContent(39,0.846174);
-  hPtEtaSF.SetBinContent(40,0.877331);
-  hPtEtaSF.SetBinContent(41,0.943283);
-  hPtEtaSF.SetBinContent(42,1.00928);
-  hPtEtaSF.SetBinContent(43,1.26667);
-  hPtEtaSF.SetEntries(24.8011);
+  TH2F hPtEtaSF("hPtEtaSF","",9, xAxis1,3, yAxis1);
+  hPtEtaSF.SetBinContent(14,0.95);
+  hPtEtaSF.SetBinContent(15,0.96);
+  hPtEtaSF.SetBinContent(16,0.97);
+  hPtEtaSF.SetBinContent(17,0.98);
+  hPtEtaSF.SetBinContent(18,1.00);
+  hPtEtaSF.SetBinContent(19,0.98);
+  hPtEtaSF.SetBinContent(20,0.99);
+  hPtEtaSF.SetBinContent(21,1.00);
+  hPtEtaSF.SetBinContent(25,0.89);
+  hPtEtaSF.SetBinContent(26,0.93);
+  hPtEtaSF.SetBinContent(27,0.94);
+  hPtEtaSF.SetBinContent(28,0.98);
+  hPtEtaSF.SetBinContent(29,0.96);
+  hPtEtaSF.SetBinContent(30,0.97);
+  hPtEtaSF.SetBinContent(31,0.98);
+  hPtEtaSF.SetBinContent(32,0.93);
+  hPtEtaSF.SetBinContent(36,0.66);
+  hPtEtaSF.SetBinContent(37,0.75);
+  hPtEtaSF.SetBinContent(38,0.78);
+  hPtEtaSF.SetBinContent(39,0.84);
+  hPtEtaSF.SetBinContent(40,0.89);
+  hPtEtaSF.SetBinContent(41,0.89);
+  hPtEtaSF.SetBinContent(42,0.93);
+  hPtEtaSF.SetBinContent(43,1.00);
+
+  hPtEtaSF.SetMinimum(0.60);
 
   if(pt>199.99)
     pt=199.9;
   eta=fabs(eta);
-  if(eta>2.99)
-    eta=2.99;
+  if(eta>2.49)
+    eta=2.49;
 
-  if(pt<20){
-    //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<0<<std::endl;
+  if(pt<20)
     return 0;
-  }
+
   Float_t eff=0;
   Int_t bin = hPtEtaSF.FindFixBin(pt,eta);
   eff = hPtEtaSF.GetBinContent(bin);
-  //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<eff<<std::endl;
 
   return eff;
 }
+// Float_t elecEffSF(Float_t pt, Float_t eta){
+
+//   //Define histogram with weights
+//   Double_t xAxis1[10] = {20, 25, 30, 35, 40, 50, 65, 80, 100, 200}; 
+//   Double_t yAxis1[4] = {0, 0.8, 1.479, 3}; 
+   
+//   TH2F hPtEtaSF("hPtEtaSF","",9,xAxis1, 3,yAxis1);
+//   hPtEtaSF.SetBinContent(12,0.94448);
+//   hPtEtaSF.SetBinContent(13,0.963498);
+//   hPtEtaSF.SetBinContent(14,0.961211);
+//   hPtEtaSF.SetBinContent(15,0.97275);
+//   hPtEtaSF.SetBinContent(16,0.968306);
+//   hPtEtaSF.SetBinContent(17,0.99887);
+//   hPtEtaSF.SetBinContent(18,1.00868);
+//   hPtEtaSF.SetBinContent(19,1.01449);
+//   hPtEtaSF.SetBinContent(20,1.01274);
+//   hPtEtaSF.SetBinContent(21,1.01939);
+//   hPtEtaSF.SetBinContent(23,0.910509);
+//   hPtEtaSF.SetBinContent(24,0.933412);
+//   hPtEtaSF.SetBinContent(25,0.937532);
+//   hPtEtaSF.SetBinContent(26,0.949103);
+//   hPtEtaSF.SetBinContent(27,0.970999);
+//   hPtEtaSF.SetBinContent(28,0.978808);
+//   hPtEtaSF.SetBinContent(29,0.98384);
+//   hPtEtaSF.SetBinContent(30,1.01357);
+//   hPtEtaSF.SetBinContent(31,1.02283);
+//   hPtEtaSF.SetBinContent(32,1.02455);
+//   hPtEtaSF.SetBinContent(34,0.604604);
+//   hPtEtaSF.SetBinContent(35,0.696754);
+//   hPtEtaSF.SetBinContent(36,0.719897);
+//   hPtEtaSF.SetBinContent(37,0.764437);
+//   hPtEtaSF.SetBinContent(38,0.793726);
+//   hPtEtaSF.SetBinContent(39,0.846174);
+//   hPtEtaSF.SetBinContent(40,0.877331);
+//   hPtEtaSF.SetBinContent(41,0.943283);
+//   hPtEtaSF.SetBinContent(42,1.00928);
+//   hPtEtaSF.SetBinContent(43,1.26667);
+//   hPtEtaSF.SetEntries(24.8011);
+
+//   if(pt>199.99)
+//     pt=199.9;
+//   eta=fabs(eta);
+//   if(eta>2.99)
+//     eta=2.99;
+
+//   if(pt<20){
+//     //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<0<<std::endl;
+//     return 0;
+//   }
+//   Float_t eff=0;
+//   Int_t bin = hPtEtaSF.FindFixBin(pt,eta);
+//   eff = hPtEtaSF.GetBinContent(bin);
+//   //std::cout<<" pt="<<pt<<", eta="<<eta<<", eff="<<eff<<std::endl;
+
+//   return eff;
+// }
 //////////
 
 void createReWeighting3D(){
@@ -2702,7 +2752,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     muonRadiationWeight_ = (*embeddingWeights)[5];
     muonRadiationDownWeight_ = (*embeddingWeights)[6];
     muonRadiationUpWeight_ = (*embeddingWeights)[7];
-    elecEffSF_ = elecEffSF(ptL1, scEtaL1);
+    elecEffSF_ = elecEffSFTight(ptL1, scEtaL1);
 
     embeddingWeight_ = embeddingFilterEffWeight_;
     embeddingWeight_ *=  TauSpinnerWeight_;
@@ -2725,7 +2775,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
         ) 
-      weightHepNup = reweightHEPNUPWJets( hepNUP_ );
+      weightHepNup = reweightHEPNUPWJets( hepNUP );
 
     // Reweight DY+Jets 
     weightHepNupDY=1;
@@ -2733,7 +2783,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) 
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP_ );
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
  
