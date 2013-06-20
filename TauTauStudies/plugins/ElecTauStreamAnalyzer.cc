@@ -2679,7 +2679,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       muonRadiationWeight = muonRadiationHandle.isValid() ? (*muonRadiationHandle) : 1.0;
       muonRadiationDownWeight = muonRadiationDownHandle.isValid() ? (*muonRadiationDownHandle) : 1.0;
       muonRadiationUpWeight = muonRadiationUpHandle.isValid() ? (*muonRadiationUpHandle) : 1.0;
-      genDiTauMass_ = genDiTauHandle.isValid() && genDiTauHandle->size()>0 ? diTauHandle->at(0).mass() : 9999;
+      genDiTauMass_ = genDiTauHandle.isValid() && genDiTauHandle->size()>0 ? genDiTauHandle->at(0).mass() : 9999;
     }
     if(verbose_){
       cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
