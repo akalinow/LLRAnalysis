@@ -1020,9 +1020,10 @@ void plotMuTau( Int_t mH_           = 120,
 
   TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; // data + embed
   TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/restrict2/"; //+"/update/"; 
-  TString pathMC        = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update3/"; // all mc except w
-  TString pathW         = pathToEmbed; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/old/update2/"; // w
-  TString pathDY         = pathToEmbed;
+  TString pathMC        = pathToFile; 
+  TString pathW         = pathToEmbed; 
+  TString pathDY        = pathToEmbed;
+
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
   if(RUN.Contains("ABC")) {
@@ -1037,18 +1038,23 @@ void plotMuTau( Int_t mH_           = 120,
   if(!data) cout << "### DATA NTUPLE NOT FOUND ###" << endl;
 
   // EMBEDDED //
-  TString treeEmbedded;
-  if(analysis_.Contains("TauUp") || analysis_.Contains("TauDown") ) 
+  TString treeEmbedded,fileAnalysisEmbedded;
+  if(analysis_.Contains("TauUp") || analysis_.Contains("TauDown") ){
     treeEmbedded = "outTreePtOrd"+analysis_;
-  else treeEmbedded = "outTreePtOrd";
+    fileAnalysisEmbedded = analysis_; 
+  }
+  else {
+    treeEmbedded = "outTreePtOrd";
+    fileAnalysisEmbedded = "nominal"; 
+  }
   TChain *dataEmbedded = new TChain(treeEmbedded);
   //
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012A*Embedded_MuTau_"+analysis_+".root");
-    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012B*Embedded_MuTau_"+analysis_+".root");
-    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012C*Embedded_MuTau_"+analysis_+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToEmbed+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
   }
-  if(RUN.Contains("D")) dataEmbedded->Add(pathToEmbed+"/nTupleRun2012D*Embedded_MuTau_"+analysis_+".root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToEmbed+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
 
   //if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
 
@@ -1142,14 +1148,14 @@ void plotMuTau( Int_t mH_           = 120,
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     //
     if(!version_.Contains("NoDYExcl")) {
-      backgroundDYTauTau  ->Add(pathMC+"/nTupleDYJets*TauTau_MuTau_"+analysis_+".root");
-      backgroundDYMutoTau ->Add(pathMC+"/nTupleDYJets*MuToTau_MuTau_"+analysis_+".root");
-      backgroundDYJtoTau  ->Add(pathMC+"/nTupleDYJets*JetToTau_MuTau_"+analysis_+".root");
+      backgroundDYTauTau  ->Add(pathDY+"/nTupleDYJets*TauTau_MuTau_"+analysis_+".root");
+      backgroundDYMutoTau ->Add(pathDY+"/nTupleDYJets*MuToTau_MuTau_"+analysis_+".root");
+      backgroundDYJtoTau  ->Add(pathDY+"/nTupleDYJets*JetToTau_MuTau_"+analysis_+".root");
     }
     else {
-      backgroundDYTauTau  ->Add(pathMC+"/nTupleDYJets_TauTau_MuTau_"+analysis_+".root");
-      backgroundDYMutoTau ->Add(pathMC+"/nTupleDYJets_MuToTau_MuTau_"+analysis_+".root");
-      backgroundDYJtoTau  ->Add(pathMC+"/nTupleDYJets_JetToTau_MuTau_"+analysis_+".root");
+      backgroundDYTauTau  ->Add(pathDY+"/nTupleDYJets_TauTau_MuTau_"+analysis_+".root");
+      backgroundDYMutoTau ->Add(pathDY+"/nTupleDYJets_MuToTau_MuTau_"+analysis_+".root");
+      backgroundDYJtoTau  ->Add(pathDY+"/nTupleDYJets_JetToTau_MuTau_"+analysis_+".root");
     }
   }
 
@@ -1761,19 +1767,20 @@ void plotMuTau( Int_t mH_           = 120,
             float NormDYMutoTauIncl = 0.;
 	    if(useZDataMC){
 	      drawHistogram(sbinPresel,twoJets,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
-	      drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      //drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    }
 	    else{
 	      drawHistogram(sbinPresel,twoJets,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
-	      drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      //drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,  Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    }
-	    //get Eff. of Embed from Incl. to Category
+	    //get Eff. of Embed from 2jet sel. to Category
             float NormDYMutoTauEmbdLoose = 0.; 
-	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1);
+	    drawHistogram(sbinEmbeddingPresel,twoJets,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1);
 	    hCleaner->Reset();
 	    float NormDYMutoTauEmbd = 0.;
 	    drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbd,  Error, 1.0 , hCleaner,  sbinEmbedding  ,1);
-	    NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
+	    //NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
+	    NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTau * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
             h1->Scale( NormDYMutoTau/h1->Integral() );
 	    if(h1) {
 	      hZmm->Add(h1, 1.0); //hZmm->Sumw2(); 
@@ -1787,19 +1794,20 @@ void plotMuTau( Int_t mH_           = 120,
             float NormDYMutoTauIncl = 0.;
 	    if(useZDataMC){
 	      drawHistogram(sbinPresel,oneJet,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
-	      drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      //drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    }
 	    else{
 	      drawHistogram(sbinPresel,oneJet,"MC", version_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
-	      drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      //drawHistogram(sbinPresel,sbinCatIncl,"MC", version_, RUN,currentTree, variable, NormDYMutoTauIncl, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
 		}
-	    //get Eff. of Embed from Incl. to Category
+	    //get Eff. of Embed from onejet sel to Category
 	    float NormDYMutoTauEmbdLoose = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1); 
+	    drawHistogram(sbinEmbeddingPresel,oneJet,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbdLoose,  Error, 1.0 , hCleaner,  sbinEmbeddingInclusive  ,1); 
             hCleaner->Reset(); 
             float NormDYMutoTauEmbd = 0.; 
             drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbd,Error, 1.0 , hCleaner,  sbinEmbedding  ,1); 
-            NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.; 
+            //NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.; 
+	    NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTau * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
 	    h1->Scale( NormDYMutoTau/h1->Integral() ); 
             if(h1) { 
               hZmm->Add(h1, 1.0); //hZmm->Sumw2();  
