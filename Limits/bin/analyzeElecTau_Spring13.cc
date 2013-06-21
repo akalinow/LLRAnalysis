@@ -274,6 +274,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
 		   TH1F* h = 0,
 		   TCut cut = TCut(""),
 		   int verbose = 0){
+  TCut genMass("run>0");
   if(DEBUG) cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
 
   // Special case for data
@@ -305,6 +306,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
     }
     else if(type.Contains("Embed")) {
+      //genMass="genDiTauMass>50"; // HLTxMu17Mu8
       if (version_.Contains("NoEleIDSF")){
 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
 	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight)";
@@ -331,7 +333,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
     if(LOOP) {
 
       if(DEBUG) cout << "-- produce skim" << endl;
-      tree->Draw(">>+skim", cut ,"entrylist");
+      tree->Draw(">>+skim", cut  && genMass,"entrylist");
       TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
       int nEntries = skim->GetN();
       tree->SetEntryList(skim);
@@ -388,7 +390,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*genMass*sbinCat);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -397,7 +399,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
     }//if LOOP    
     else {
       TCut pairIndex="pairIndex[0]<1";
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*pairIndex*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*genMass*pairIndex*sbinCat);
     }
 
     // Scale the histogram, compute norm and err
@@ -2373,7 +2375,7 @@ void plotElecTau( Int_t mH_           = 120,
       maxPull = TMath::Abs(pull);
   }
 //   hRatio->SetAxisRange(TMath::Min(-1.2*maxPull,-1.),TMath::Max(1.2*maxPull,1.),"Y");
-  hRatio->SetAxisRange(-1.2,1.2,"Y");
+  hRatio->SetAxisRange(-0.5,0.5,"Y");
   hRatio->Draw("P");
 
   TF1* line = new TF1("line","0",hRatio->GetXaxis()->GetXmin(),hStack->GetXaxis()->GetXmax());
