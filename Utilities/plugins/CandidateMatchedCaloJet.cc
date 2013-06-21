@@ -24,6 +24,9 @@ CandidateMatchedCaloJet::~CandidateMatchedCaloJet(){
 
 void CandidateMatchedCaloJet::produce(edm::Event & iEvent, const edm::EventSetup & iSetup){
 
+  if(verbose_)
+    std::cout<<"[CandidateMatchedCaloJet]: New Event "<<std::endl;
+
   edm::Handle<reco::CaloJetCollection> caloJetsHandle;
   iEvent.getByLabel(jetTag_, caloJetsHandle);
 //   if( !caloJetsHandle.isValid() )  
@@ -36,28 +39,28 @@ void CandidateMatchedCaloJet::produce(edm::Event & iEvent, const edm::EventSetup
 //   if( !candidatesHandle.isValid() )  
 //     edm::LogError("DataNotAvailable")
 //       << "No candidate collection '"<<candidateTag_<<"' available \n";
-  const reco::CandidateView *candidates = candidatesHandle.product();
-
+  const reco::CandidateView *candidates;
 
   std::auto_ptr<reco::CaloJetCollection> matchedJets( new reco::CaloJetCollection() ) ;
 
-  if(verbose_)
-    std::cout<<"[CandidateMatchedCaloJet]: New Event "<<std::endl;
-  for(reco::CaloJetCollection::const_iterator caloJet = caloJets->begin(); 
+  if( candidatesHandle.isValid() ){
+    candidates = candidatesHandle.product();
+    for(reco::CaloJetCollection::const_iterator caloJet = caloJets->begin(); 
 	caloJet != caloJets->end(); ++caloJet) { 
-    for(reco::CandidateView::const_iterator cand = candidates->begin(); 
-	cand != candidates->end(); ++cand) { 
-      float deltaR=reco::deltaR(cand->eta(),  cand->phi(),
-				caloJet->eta(), caloJet->phi() );
-      if(deltaR<deltaRMax_){
-	matchedJets->push_back(*caloJet);
-	if(verbose_)
-	  std::cout<<"\t candidate(Pt,eta,phi): "
-		   <<cand->pt()<<", "<<cand->eta()<<", "<<cand->phi()<<std::endl
-		   <<"\t caloJet(Pt,eta,phi):   "
-		   <<caloJet->pt()<<", "<<caloJet->eta()<<", "<<caloJet->phi()<<std::endl
-		   <<"deltaR(jet,tau) = "<<deltaR<<std::endl
-		   <<std::endl;
+      for(reco::CandidateView::const_iterator cand = candidates->begin(); 
+	  cand != candidates->end(); ++cand) { 
+	float deltaR=reco::deltaR(cand->eta(),  cand->phi(),
+				  caloJet->eta(), caloJet->phi() );
+	if(deltaR<deltaRMax_){
+	  matchedJets->push_back(*caloJet);
+	  if(verbose_)
+	    std::cout<<"\t candidate(Pt,eta,phi): "
+		     <<cand->pt()<<", "<<cand->eta()<<", "<<cand->phi()<<std::endl
+		     <<"\t caloJet(Pt,eta,phi):   "
+		     <<caloJet->pt()<<", "<<caloJet->eta()<<", "<<caloJet->phi()<<std::endl
+		     <<"deltaR(jet,tau) = "<<deltaR<<std::endl
+		     <<std::endl;
+	}
       }
     }
   }
