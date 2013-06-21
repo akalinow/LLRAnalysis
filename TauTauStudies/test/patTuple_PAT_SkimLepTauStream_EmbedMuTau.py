@@ -40,9 +40,9 @@ process.source.fileNames = cms.untracked.vstring(
     #'file:/data_CMS/cms/mbluj/Production/test/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FE4F82A9-68F3-E111-8CD3-003048D476AE.root' #13k
     #'root://node12.datagrid.cea.fr//dpm/datagrid.cea.fr/home/cms/trivcat/store/mc/Summer12_DR53X/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/AODSIM/PU_S10_START53_V7A-v1/0000/0088DD9F-B105-E211-BB06-001E67397D5A.root' #no access??
     #'file:/data_CMS/cms/mbluj/Production/test/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FED775BD-B8E1-E111-8ED5-003048C69036.root' #11k
-    #'file:/data_CMS/cms/mbluj/Production/test/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FC3ED802-E606-E211-A0FD-0025B31E330A.root' #9k
+    'file:/data_CMS/cms/mbluj/Production/test/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FC3ED802-E606-E211-A0FD-0025B31E330A.root' #9k
     #'file:/data_CMS/cms/mbluj/Production/HToTauTau/simDYmumu_embedded_mutau_2013Feb21_AOD.root'
-    '/store/results/higgs/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/DoubleMuParked/USER/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/0000/00F466CB-9EB0-E211-B414-0023AEFDE9B8.root'
+    #'/store/results/higgs/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/DoubleMuParked/USER/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/0000/00F466CB-9EB0-E211-B414-0023AEFDE9B8.root' #emb
     )
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -1125,6 +1125,9 @@ process.load("LLRAnalysis.Utilities.recoTauMatchedCaloJet_cff")
 process.selectedPatTausForCaloJetMatching.src="tausForVeto"
 process.selectedPatTausForCaloJetMatching.cut="tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits')>0.5"
 process.commonOfflineSequence += process.makeRecoTauMatchedCaloJets
+if runOnMC or runOnEmbed:
+    process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
+    process.commonOfflineSequence += process.makeTauMatchedCaloJets
 
 if not runOnMC:
     ##process.skimMuTau1.remove(process.printTree1)
@@ -1137,8 +1140,6 @@ if runOnMC and runOnEmbed:
     process.skimMuTau1.remove(process.HLTFilterMuTau)
     process.skimElecTau1.remove(process.HLTFilterEleTau)
 if runOnEmbed:
-    process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
-    process.commonOfflineSequence += process.makeTauMatchedCaloJets
     if "RhEmbed" in embedType:
         process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
         if not runOnMC:
