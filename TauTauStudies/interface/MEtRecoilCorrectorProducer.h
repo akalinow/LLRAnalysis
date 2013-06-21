@@ -50,7 +50,7 @@ class MEtRecoilCorrectorProducer : public edm::EDProducer{
   double numOfSigmas_;
   int eventCounter_;
   int genDecay_;
-
+  int idxTau_;
 };
 
 

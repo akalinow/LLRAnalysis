@@ -18,7 +18,8 @@ MEtRecoilCorrectorProducer::MEtRecoilCorrectorProducer(const edm::ParameterSet &
   jetTag_          = iConfig.getParameter<edm::InputTag>("jetTag");
   minJetPt_        = iConfig.getParameter<double>("minJetPt");
   numOfSigmas_     = iConfig.getParameter<double>("numOfSigmas");
-
+  idxTau_          = iConfig.getParameter<int>("idxTau");
+  
   verbose_  = iConfig.getParameter<bool>("verbose");
   isMC_     = iConfig.getParameter<bool>("isMC");
   
@@ -547,11 +548,16 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
       }
 
       int nJets30 = 0;  
+      //Take the tau Candidate for W+Jets, from the diTau pair
+      math::XYZTLorentzVectorD fakeTauP4(0,0,0,0);
+      if(idxTau_>=0 && idxTau_ < int(taus->size()))fakeTauP4 = (*taus)[idxTau_].p4();
       for(unsigned int jet = 0 ; jet<jets->size(); jet++){  
         bool matchedToLept = false;  
         if(Geom::deltaR( leptonLeg1P4, (*jets)[jet].p4())<0.3)
           matchedToLept = true;  
-         
+	if(fakeTauP4.pt() > 0 && Geom::deltaR( fakeTauP4, (*jets)[jet].p4())<0.3)
+	  matchedToLept = true;
+	
         if(!matchedToLept && (*jets)[jet].pt()>minJetPt_ && TMath::Abs((*jets)[jet].eta())<4.5)   
           nJets30++;  
       }  

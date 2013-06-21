@@ -34,6 +34,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         minJetPt            = cms.double(30.0),
         verbose             = cms.bool(False),
         isMC                = cms.bool(runOnMC),
+        idxTau              = cms.int32(-1),
     )
 
     process.rescaledMET = cms.EDProducer(
@@ -176,6 +177,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                     moduleRecoilMET.electronTag  = cms.InputTag(electronColl)
                     moduleRecoilMET.muonTag = cms.InputTag("")
                 moduleRecoilMET.tauTag  = cms.InputTag(tauColl)
+                moduleRecoilMET.idxTau  = cms.int32(idxTau)
                 setattr(process, moduleNameRecoilMET, moduleRecoilMET)
                 runMETByPairsSequence += moduleRecoilMET
 
