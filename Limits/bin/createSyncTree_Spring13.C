@@ -225,13 +225,14 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
    float   lmetPullParl    = 0; lOTree->Branch("metPullParl"        ,&lmetPullParl,        "metPullParl/F"); 
    float   lmetPullPerp    = 0; lOTree->Branch("metPullPerp"        ,&lmetPullPerp,        "metPullPerp/F");
 
+   float lembeddedWeight = 0; lOTree->Branch("embeddedWeight" ,&lembeddedWeight,   "embeddedWeight/F");
    /////////////////////////////////////////////////////////////////////////////////////////////////////
    /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
    //TFile *file = new TFile(("./batch/nTuple"+sample+"_Open_"+stream+"Stream.root").c_str(),"READ");
    //TFile *file = new TFile(("/data_CMS/cms/anayak/H2TauTauHCP/Moriond/MuTauStream/NtuplesMoriondNewRecoilV1/nTuple"+sample+".root").c_str(),"READ");
-   TFile *file = new TFile(("./batch/nTuple"+sample+".root").c_str(),"READ"); 
+   TFile *file = new TFile(("./batch/Sync/nTuple"+sample+".root").c_str(),"READ"); 
    TTree *tree = (TTree*)file->Get("outTreePtOrd");
 
 
@@ -260,9 +261,9 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
    TCut massCatUp = zerojetLow && TCut("m_sv_Up<80");
    TCut massCatDown = zerojetLow && TCut("m_sv_Down<80");
 
-   //int iPairIndex      ; tree->SetBranchAddress("pairIndex"     ,&iPairIndex);
+   int iPairIndex      ; tree->SetBranchAddress("pairIndex"     ,&iPairIndex);
    //int iPairIndex      ; tree->SetBranchAddress("pairIndexMoriond"     ,&iPairIndex);
-   int   iPairIndex[26]; tree->SetBranchAddress("pairIndex"   ,iPairIndex); 
+   //int   iPairIndex[26]; tree->SetBranchAddress("pairIndex"   ,iPairIndex); 
    //int   iPairIndexOS[6]; tree->SetBranchAddress("pairIndexOS"  ,iPairIndexOS);
    //int   isDiTauOS[6]; tree->SetBranchAddress("isDiTauOS"  ,isDiTauOS);
 
@@ -288,18 +289,23 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
    //float iWeight      ; tree->SetBranchAddress("weight"     ,&iWeight      );//mcweight*puweight*effweight
 
    float iHLTweightTau ; tree->SetBranchAddress("HLTweightTau", &iHLTweightTau);
+   float iHLTTau ; tree->SetBranchAddress("HLTTau", &iHLTTau);
    float iSFTau   ; tree->SetBranchAddress("SFTau", &iSFTau);
    float iHLTweightMu, iSFMu, iSFMuID, iSFMuIso;
+   float iHLTMu;
    if(stream.find("MuTau")!=string::npos ) {
      tree->SetBranchAddress("HLTweightMu", &iHLTweightMu); 
+     tree->SetBranchAddress("HLTMu", &iHLTMu);
      tree->SetBranchAddress("SFMu", &iSFMu);
      tree->SetBranchAddress("SFMuID", &iSFMuID);
      tree->SetBranchAddress("SFMuIso", &iSFMuIso);
    }
    else{ iHLTweightMu  = 0; iSFMu = 0; iSFMuID = 0; iSFMuIso = 0;}
    float iHLTweightElec, iSFElec, iSFElecID, iSFElecIso; 
+   float iHLTElec;
    if(stream.find("ElecTau")!=string::npos ) { 
      tree->SetBranchAddress("HLTweightElec", &iHLTweightElec);  
+     tree->SetBranchAddress("HLTElec", &iHLTElec);
      tree->SetBranchAddress("SFElec", &iSFElec); 
      tree->SetBranchAddress("SFElecID", &iSFElecID);
      tree->SetBranchAddress("SFElecIso", &iSFElecIso);
@@ -372,9 +378,11 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
      
    int  iPassId2      ; tree->SetBranchAddress("tightestHPSMVAWP"   ,&iPassId2      );//Whether it passes id  (not necessarily iso)
    int iAntiMu        ; tree->SetBranchAddress("tightestAntiMuWP"   ,&iAntiMu      );
+   int iAntiMu2       ; tree->SetBranchAddress("tightestAntiMu2WP"   ,&iAntiMu2      );
+   
    //bool  lPassIso2    ; tree->SetBranchAddress("passiso_2"  ,&iPassIso2     );//Whether it passes iso (not necessarily id)
    float iMt2         ; tree->SetBranchAddress("MtLeg2MVA"       ,&iMt2             );//mT of 2nd lepton wrt to MVA met
-   int  ivetoEvent    ; tree->SetBranchAddress("vetoEvent"   ,&ivetoEvent      ); //three lepton veto
+   int  ivetoEvent    ; tree->SetBranchAddress("vetoEventOld"   ,&ivetoEvent      ); //three lepton veto
 
    //Met related variables
    float iMet         ; tree->SetBranchAddress("MEt"        ,&iMet             ); //pfmet
@@ -448,29 +456,30 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
    float   imetSigmaParl    ; tree->SetBranchAddress("metSigmaParl"        ,&imetSigmaParl); 
    float   imetSigmaPerp    ; tree->SetBranchAddress("metSigmaPerp"        ,&imetSigmaPerp); 
 
+   float iembeddingWeight = 0; tree->SetBranchAddress("embeddingWeight" ,&iembeddingWeight);
+   
    for (Long64_t i0=0; i0<tree->GetEntries();i0++) {
      //if (i0 % 1000 == 0) std::cout << "--- ... Processing event: " << double(i0)/10. << std::endl;
 
      tree->GetEntry(i0);
      
-     //if(iEvt!=406680 && iEvt!=482593 && iEvt!=519213 && iEvt!=539152 && iEvt!=736253 && iEvt!=771985 && iEvt!=999640 && iEvt!=16216 && iEvt!=291530 )continue;
+     //if(iEvt!=15658705 && iEvt!=79045633 && iEvt!=166390474 && iEvt!=217289014 && iEvt!=288718887 && iEvt!=43254671 && iEvt!=4103081 && iEvt!=109554240 && iEvt!=177270849 && iEvt!=20712802 && iEvt!=337831558)continue;
+
+     //std::cout<<"Event     HLTx     HLTmatch    Pt1     Pt2     scEta1     Eta1     Eta2    ElecMVA    VetoFlag    eIso    tauIso     tauAntiE1 tauAntiE2  3rdLepVeto  pairIndex"<<std::endl;
      
-     //std::cout<<"Event     HLTx     HLTmatch    Pt1     Pt2     scEta1     Eta1     Eta2    ElecMVA    VetoFlag    eIso    tauIso     tauAntiE1 tauAntiE2  3rdLepVeto "<<std::endl;
-     
-     //cout<<iEvt<<"  "<<iHLTx<<"  "<<iHLTmatch<<"  "<<iPt1<<"  "<<iPt2<<"  "<<iscEta1<<"  "<<iEta1<<"  "<<iEta2<<"  "<<iPassId1T_F<<"  "<<iMuFlag<<"  "<<iIso1<<"  "<<iPassId2<<"  "<<iMVA2<<"   "<<iMVA3<<"   "<<ivetoEvent<<endl;
+     //cout<<iEvt<<"  "<<iHLTx<<"  "<<iHLTmatch<<"  "<<iPt1<<"  "<<iPt2<<"  "<<iscEta1<<"  "<<iEta1<<"  "<<iEta2<<"  "<<iPassId1T_F<<"  "<<iMuFlag<<"  "<<iIso1<<"  "<<ihpsDB3H<<"  "<<iMVA2<<"   "<<iMVA3<<"   "<<ivetoEvent<<"  "<<iPairIndex<<endl;
      //cout<<iEvt<<"  "<<iPt2<<"  "<<iEta2<<"  "<<iPassId2<<endl; 
      
      //cout<<iRun<<"  "<<iLumi<<"  "<<iEvt<<"  "<<iMVAMet<<endl;
 
-     //int jPairIndex = (isDiTauOS[0] > 0) ? iPairIndexOS[0] : iPairIndex[0];
-     int jPairIndex = iPairIndex[0];
+     int jPairIndex = iPairIndex; //iPairIndex[5];
      
-     if( stream.find("MuTau")!=string::npos   &&   !(iHLTx>0.5 && iHLTmatch>0.5 && iPt1>20 && iPt2>20 && iPassId1L && iPassId1T      && iIso1<0.1 && iPassId2>=0 && iAntiMu >= 3 && iMuFlag!=1 && ivetoEvent==0 && jPairIndex<1))
+     if( stream.find("MuTau")!=string::npos   &&   !(iHLTx>0.5 && iHLTmatch>0.5 && iPt1>20 && iPt2>20 && iPassId1L && iPassId1T  && iIso1<0.1 && /*iPassId2>=0*/ ihpsDB3H<1.5 && iAntiMu >= 3 && iMuFlag!=1 && ivetoEvent==0 && jPairIndex<1))
        continue;
      //if( stream.find("ElecTau")!=string::npos &&  !(iHLTx>0.5 && iHLTmatch>0.5 && iPt1>24 && iPt2>20 && iPassId1L && iPassId1T_F>-99 && iIso1<0.1 && iPassId2>=0 && iMuFlag==0 && ivetoEvent==0 && iPairIndex<1 && iMVA2>1 && iDiTauCharge==0))
      if( stream.find("ElecTau")!=string::npos &&  !(iHLTx>0.5 && iHLTmatch>0.5 && iPt1>24 && iPt2>20 && /*iPassId1L &&*/
 						     inHits < 0.5 &&
-						    ((TMath::Abs(iscEta1)<0.80 && iPassId1T_F>0.925) || (TMath::Abs(iscEta1)<1.479 && TMath::Abs(iscEta1)>0.80 && iPassId1T_F>0.975) || (TMath::Abs(iscEta1)>1.479 && iPassId1T_F>0.985)) && iIso1<0.1 && iPassId2>=0 && iAntiMu >= 1 && iMuFlag!=1 && ivetoEvent==0 && jPairIndex<1 && iMVA2>1 &&(iMVA3>4 || iMVA3 == 3)/* iMVA4>=4 */))
+						    ((TMath::Abs(iscEta1)<0.80 && iPassId1T_F>0.925) || (TMath::Abs(iscEta1)<1.479 && TMath::Abs(iscEta1)>0.80 && iPassId1T_F>0.975) || (TMath::Abs(iscEta1)>1.479 && iPassId1T_F>0.985)) && iIso1<0.1 && /*iPassId2>=0*/ ihpsDB3H<1.5 && iAntiMu >= 1 && iMuFlag!=1 && ivetoEvent==0 && jPairIndex<1 && /*iMVA2>1 &&(iMVA3>4 || iMVA3 == 3)*/ iMVA4>2))
        continue;
 
      if(incl && !(iDiTauCharge == 0 && iMt1 < 20)) continue; //inclusive selection
@@ -478,7 +487,7 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
      //cout<<iRun<<"  "<<iLumi<<"  "<<iEvt<<endl;
      //cout << iMVA2 << endl;
 
-     lPairIndex  = iPairIndex;
+     lPairIndex  = jPairIndex;
      lMuFlag     = iMuFlag;
      lTriLepVeto = ivetoEvent;
 
@@ -498,7 +507,11 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
      //Event Weights
      lMCWeight    = iMCWeight1*iMCWeight2 ;
      lPUWeight    = iPUWeight;
-     lEffWeight   = stream.find("MuTau")!=string::npos ? iHLTweightTau*iHLTweightMu*iSFTau*iSFMu : iHLTweightTau*iHLTweightElec*iSFTau*iSFElec;
+     if(sample.find("Emb") != string::npos){
+       lEffWeight   = stream.find("MuTau")!=string::npos ? iHLTTau*iHLTMu*iSFMuID : iHLTTau*iHLTElec*iSFElecID;
+     }
+     else
+       lEffWeight   = stream.find("MuTau")!=string::npos ? iHLTweightTau*iHLTweightMu*iSFTau*iSFMu : iHLTweightTau*iHLTweightElec*iSFTau*iSFElec;
      lWeight      = lMCWeight*lPUWeight*lEffWeight;
      lTrigweight_1 = stream.find("MuTau")!=string::npos ? iHLTweightMu : iHLTweightElec;
      lTrigweight_2 = iHLTweightTau;
@@ -625,6 +638,7 @@ void synchNtuple(string sample = "GGFH125", string stream = "MuTau", bool incl=f
      lmetPullParl    = (imetSigmaParl > 0) ? imetParl/imetSigmaParl : -999.; 
      lmetPullPerp    = (imetSigmaPerp > 0) ? imetPerp/imetSigmaPerp : -999.; 
 
+     lembeddedWeight = iembeddingWeight;
      lOTree->Fill();
    }  
    /*
