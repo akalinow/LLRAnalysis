@@ -88,7 +88,7 @@ void produce(
 	     string bin_       = "inclusive",
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
 	     int useEmb        = 1,
-	     TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+	     TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_tree/src/LLRAnalysis/Limits/bin/results/"
 	     ){
 
 
@@ -110,7 +110,7 @@ void produce(
   TFile* fin_jDown   = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_JetDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   TFile* fin_tUp     = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_TauUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   TFile* fin_tDown   = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_TauDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_nominal = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s__%s.root",        outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_nominal = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_nominal_%s.root",        outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   ///////////////////////////////////////////////
 
   float rescaleggH = RESCALETO1PB ? higgsXsection(mH_,"ggH") : 1.0;
@@ -1233,7 +1233,7 @@ void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
   string variables[nVar]={"diTauNSVfitMass"};
   int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
 
-  string analysis[nAn]={"","TauUp","TauDown","JetUp","JetDown"};
+  string analysis[nAn]={"nominal","TauUp","TauDown","JetUp","JetDown"};
   //string category[nCat]={"inclusive","novbfLow","novbfHigh","boostLow","boostHigh","vbf"}; //old
   string category[nCat]={"inclusive","novbfLow","novbfMedium","novbfHigh","boostMedium","boostHighhighhiggs","boostHighlowhiggs","vbf","vbfTight"};
   //string category[nCat]={"inclusive","bTag", "nobTag"}; //for MSSM
