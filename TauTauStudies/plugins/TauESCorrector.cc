@@ -34,8 +34,10 @@ class TauESCorrector : public edm::EDProducer{
       pat::Tau aTau( (*taus)[i] );
 
       double shift = 1;
-      if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0)
+      if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
 	shift = (1.015 +  0.001  * TMath::Min(TMath::Max(aTau.pt()-45.,0.),10.)); //1prong +pi0
+	shift *= 1.012; //New correction for Summer2013
+      }
       else if((aTau.signalPFChargedHadrCands()).size()==3)
 	shift = (1.012 + 0.001 * TMath::Min(TMath::Max(aTau.pt()-32.,0.),18.)); //3 prongs
       
