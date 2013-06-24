@@ -84,7 +84,8 @@ void produce(
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "ABC",
-	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+// 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
 	     )
 {
@@ -100,7 +101,7 @@ void produce(
   TFile* fin_jDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_JetDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   TFile* fin_tUp     = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   TFile* fin_tDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_nominal = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s__%s.root",        outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_nominal = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_nominal_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   ///////////////////////////////////////////////
 
   float rescaleGGFH = RESCALETO1PB ? higgsXsection(mH_,"GGFH") : 1.0;
@@ -1097,63 +1098,63 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   for(unsigned int i = 0 ; i < variables.size(); i++){
     for(unsigned j = 0; j < mH.size(); j++){
       //       if(!DO2DFIT){
-	produce(mH[j],variables[i], ""        , "inclusive", outputDir);
+	produce(mH[j],variables[i], "nominal" , "inclusive", outputDir);
 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
 	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir);
 	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir);
 
-	produce(mH[j],variables[i], ""        , "novbfLow", outputDir);
+	produce(mH[j],variables[i], "nominal" , "novbfLow", outputDir);
 	produce(mH[j],variables[i], "TauUp"   , "novbfLow", outputDir);
 	produce(mH[j],variables[i], "TauDown" , "novbfLow", outputDir);
 	produce(mH[j],variables[i], "JetUp"   , "novbfLow", outputDir);
 	produce(mH[j],variables[i], "JetDown" , "novbfLow", outputDir);
 
-	produce(mH[j],variables[i], ""        , "novbfMedium", outputDir); 
+	produce(mH[j],variables[i], "nominal" , "novbfMedium", outputDir); 
         produce(mH[j],variables[i], "TauUp"   , "novbfMedium", outputDir); 
         produce(mH[j],variables[i], "TauDown" , "novbfMedium", outputDir); 
         produce(mH[j],variables[i], "JetUp"   , "novbfMedium", outputDir); 
         produce(mH[j],variables[i], "JetDown" , "novbfMedium", outputDir);
 
-	produce(mH[j],variables[i], ""        , "novbfHigh", outputDir);
+	produce(mH[j],variables[i], "nominal" , "novbfHigh", outputDir);
 	produce(mH[j],variables[i], "TauUp"   , "novbfHigh", outputDir);
 	produce(mH[j],variables[i], "TauDown" , "novbfHigh", outputDir);
 	produce(mH[j],variables[i], "JetUp"   , "novbfHigh", outputDir);
 	produce(mH[j],variables[i], "JetDown" , "novbfHigh", outputDir);
 	/* //old
-	produce(mH[j],variables[i], ""        , Form("boost%sLow",boostLabel.Data()), outputDir);
+	produce(mH[j],variables[i], "nominal"        , Form("boost%sLow",boostLabel.Data()), outputDir);
 	produce(mH[j],variables[i], "TauUp"   , Form("boost%sLow",boostLabel.Data()), outputDir);
 	produce(mH[j],variables[i], "TauDown" , Form("boost%sLow",boostLabel.Data()), outputDir);
 	produce(mH[j],variables[i], "JetUp"   , Form("boost%sLow",boostLabel.Data()), outputDir);
 	produce(mH[j],variables[i], "JetDown" , Form("boost%sLow",boostLabel.Data()), outputDir);
 	*/
 
-	produce(mH[j],variables[i], ""        , "boostMedium", outputDir); 
+	produce(mH[j],variables[i], "nominal" , "boostMedium", outputDir); 
         produce(mH[j],variables[i], "TauUp"   , "boostMedium", outputDir); 
         produce(mH[j],variables[i], "TauDown" , "boostMedium", outputDir); 
         produce(mH[j],variables[i], "JetUp"   , "boostMedium", outputDir); 
         produce(mH[j],variables[i], "JetDown" , "boostMedium", outputDir);
 
 
-	produce(mH[j],variables[i], ""        , "boostHighhighhiggs", outputDir);  
+	produce(mH[j],variables[i], "nominal" , "boostHighhighhiggs", outputDir);  
         produce(mH[j],variables[i], "TauUp"   , "boostHighhighhiggs", outputDir);  
         produce(mH[j],variables[i], "TauDown" , "boostHighhighhiggs", outputDir);  
         produce(mH[j],variables[i], "JetUp"   , "boostHighhighhiggs", outputDir);  
         produce(mH[j],variables[i], "JetDown" , "boostHighhighhiggs", outputDir);
 
-	produce(mH[j],variables[i], ""        , "boostHighlowhiggs", outputDir);   
+	produce(mH[j],variables[i], "nominal" , "boostHighlowhiggs", outputDir);   
         produce(mH[j],variables[i], "TauUp"   , "boostHighlowhiggs", outputDir);   
         produce(mH[j],variables[i], "TauDown" , "boostHighlowhiggs", outputDir);   
         produce(mH[j],variables[i], "JetUp"   , "boostHighlowhiggs", outputDir);   
         produce(mH[j],variables[i], "JetDown" , "boostHighlowhiggs", outputDir);
 
-	produce(mH[j],variables[i], ""        , "vbf", outputDir);
+	produce(mH[j],variables[i], "nominal" , "vbf", outputDir);
 	produce(mH[j],variables[i], "TauUp"   , "vbf", outputDir);
 	produce(mH[j],variables[i], "TauDown" , "vbf", outputDir);
 	produce(mH[j],variables[i], "JetUp"   , "vbf", outputDir);
 	produce(mH[j],variables[i], "JetDown" , "vbf", outputDir);
 
-	produce(mH[j],variables[i], ""        , "vbfTight", outputDir); 
+	produce(mH[j],variables[i], "nominal" , "vbfTight", outputDir); 
         produce(mH[j],variables[i], "TauUp"   , "vbfTight", outputDir); 
         produce(mH[j],variables[i], "TauDown" , "vbfTight", outputDir); 
         produce(mH[j],variables[i], "JetUp"   , "vbfTight", outputDir); 
@@ -1167,7 +1168,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){
-  produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_Datacards");
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
 }
 
 
