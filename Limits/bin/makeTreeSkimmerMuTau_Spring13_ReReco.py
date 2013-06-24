@@ -6,8 +6,8 @@ import shlex
 import string
 import subprocess
 
-WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewJEC/MuTau/'
-OutDir     = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/update2/'
+WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewRecoil/MuTau/'
+OutDir     = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/MuTau/'
 
 options = {
     ###e+tau samples
@@ -383,7 +383,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p1-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p1/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-EmbeddedLowPt',
     'xSection'       : 0,
@@ -391,7 +391,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p2-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p2/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-EmbeddedLowPt',
     'xSection'       : 0,
@@ -399,7 +399,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p3-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p3/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-EmbeddedLowPt',
     'xSection'       : 0,
@@ -407,7 +407,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p4-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p4/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-EmbeddedLowPt',
     'xSection'       : 0,
@@ -415,7 +415,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p5-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p5/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-EmbeddedLowPt',
     'xSection'       : 0,
@@ -423,7 +423,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p6-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p6/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-EmbeddedLowPt',
     'xSection'       : 0,
@@ -431,7 +431,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p7-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p7/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-EmbeddedLowPt',
     'xSection'       : 0,
@@ -439,7 +439,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p8-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p8/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-EmbeddedLowPt',
     'xSection'       : 0,
@@ -447,396 +447,16 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p9-EmbeddedLowPt' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p9/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedLowPt/EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_06Mar13_Trees_v8_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-EmbeddedLowPt_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-EmbeddedLowPt',
     'xSection'       : 0,
     'skimEff'        : 0,
     'iJson'          : 7
     },    
-##     # PromptReco Data and Embedded
-##     ##DATA
-##     'Run2012A-13Jul2012-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012A_ReReco13J_HTT_06Mar2013_Trees_MuTau_v9/',
-##     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Data_MuTau.root',
-##     'sample'         : 'Run2012A-13Jul2012-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p1-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v9_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p1-Data_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p1-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p2-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v9_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p2-Data_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p2-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p3-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v9_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p3-Data_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p3-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p4-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v9_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Data_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p4-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p5-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012B_ReReco13J_HTT_06Mar2013_Trees_v9_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Data_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p5-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },   
-##     'Run2012C-24Aug2012-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_ReReco24A_HTT_06Mar2013_Trees_MuTau_v9/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Data_MuTau.root',
-##     'sample'         : 'Run2012C-24Aug2012-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 2
-##     },
-##     'Run2012C-PromptReco-v2-p1-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p1-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p2-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p2-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p2-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p3-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p3-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p3-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p4-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p4-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p4-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p5-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p5-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p5-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p6-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p6/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p6-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p6-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p7-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v9_p7/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p7-Data_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p7-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p1-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p1-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p2-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p2-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p3-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p3-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p4-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p4-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p5-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p5-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p6-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p6/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p6-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p7-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p7/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p7-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p8-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p8/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p8-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p9-Data' : {
-##     'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v9_p9/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Data_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p9-Data',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     ##Embedded
-##     'Run2012A-13Jul2012-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012A_ReReco13J_HTT_06Mar2013_Trees_MuTau_v6/',
-##     'outputFileName' : OutDir+'nTupleRun2012A-13Jul2012-Embedded_MuTau.root',
-##     'sample'         : 'Run2012A-13Jul2012-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012A-06Aug2012-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012A_Recov06Aug_HTT_06Mar2013_Trees_MuTau_v7/',
-##     'outputFileName' : OutDir+'nTupleRun2012A-06Aug2012-Embedded_MuTau.root',
-##     'sample'         : 'Run2012A-06Aug2012-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 3
-##     },
-##     'Run2012B-13Jul2012-p1-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v7_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p1-Embedded_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p1-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p2-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v7_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p2-Embedded_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p2-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p3-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v7_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p3-Embedded_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p3-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p4-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v7_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p4-Embedded_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p4-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012B-13Jul2012-p5-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012B_ReReco13J_HTT_06Mar2013_Trees_MuTau_v7_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012B-13Jul2012-p5-Embedded_MuTau.root',
-##     'sample'         : 'Run2012B-13Jul2012-p5-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 0
-##     },
-##     'Run2012C-24Aug2012-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_ReReco24A_HTT_06Mar2013_Trees_MuTau_v7/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-24Aug2012-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-24Aug2012-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 2
-##     },
-##     'Run2012C-PromptReco-v2-p1-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p1-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p1-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p2-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p2-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p2-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p3-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p3-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p3-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p4-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p4-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p4-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p5-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p5-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p5-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p6-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p6/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p6-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p6-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012C-PromptReco-v2-p7-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012C_PRV2_HTT_06Mar2013_Trees_MuTau_v7_p7/',
-##     'outputFileName' : OutDir+'nTupleRun2012C-PromptReco-v2-p7-Embedded_MuTau.root',
-##     'sample'         : 'Run2012C-PromptReco-v2-p7-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p1-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p1/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p1-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p1-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p2-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p2/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p2-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p2-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p3-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p3/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p3-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p3-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p4-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p4/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p4-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p4-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p5-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p5/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p5-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p5-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p6-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p6/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p6-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p6-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p7-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p7/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p7-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p7-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p8-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p8/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p8-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p8-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-##     'Run2012D-PromptReco-v1-p9-Embedded' : {
-##     'inputFilePath'  : WorkdirLoc+'Embedded/Embed_mutau_2012D_PRV1_HTT_06Mar2013_Trees_MuTau_v7_p9/',
-##     'outputFileName' : OutDir+'nTupleRun2012D-PromptReco-v1-p9-Embedded_MuTau.root',
-##     'sample'         : 'Run2012D-PromptReco-v1-p9-Embedded',
-##     'xSection'       : 0,
-##     'skimEff'        : 0,
-##     'iJson'          : 4
-##     },
-    
     ##Bkg MC
     'DYJets_TauTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets_TauTau_MuTau.root',
     'sample'         : 'DYJets_TauTau',
     'xSection'       : 3504,
@@ -844,7 +464,7 @@ options = {
     'iJson'          : -1
     } ,
     'DYJets_JetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets_JetToTau_MuTau.root',
     'sample'         : 'DYJets_JetToTau',
     'xSection'       : 3504,
@@ -852,7 +472,7 @@ options = {
     'iJson'          : -1
     } ,
     'DYJets_MuToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets_MuToTau_MuTau.root',
     'sample'         : 'DYJets_MuToTau',
     'xSection'       : 3504,
@@ -860,103 +480,103 @@ options = {
     'iJson'          : -1
     } ,
     'DYJets1Jets_TauTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets1Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets1Jets_TauTau',
-    'xSection'       : 3504,
+    'xSection'       : 561,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1
     } ,
     'DYJets1Jets_JetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets1Jets_JetToTau_MuTau.root',
     'sample'         : 'DYJets1Jets_JetToTau',
-    'xSection'       : 3504,
+    'xSection'       : 561,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1
     } ,
     'DYJets1Jets_MuToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets1Jets_MuToTau_MuTau.root',
     'sample'         : 'DYJets1Jets_MuToTau',
-    'xSection'       : 3504,
+    'xSection'       : 561,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1
     } ,
     'DYJets2Jets_TauTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets2Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets2Jets_TauTau',
-    'xSection'       : 3504,
+    'xSection'       : 181,
     'skimEff'        : 1.0 * 1.0 * 5354820./21852156,
     'iJson'          : -1
     } ,
     'DYJets2Jets_JetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets2Jets_JetToTau_MuTau.root',
     'sample'         : 'DYJets2Jets_JetToTau',
-    'xSection'       : 3504,
+    'xSection'       : 181,
     'skimEff'        : 1.0 * 1.0 * 5354820./21852156,
     'iJson'          : -1
     } ,
     'DYJets2Jets_MuToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets2Jets_MuToTau_MuTau.root',
     'sample'         : 'DYJets2Jets_MuToTau',
-    'xSection'       : 3504,
+    'xSection'       : 181,
     'skimEff'        : 1.0 * 1.0 * 5354820./21852156,
     'iJson'          : -1
     } ,
     'DYJets3Jets_TauTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets3Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets3Jets_TauTau',
-    'xSection'       : 3504,
+    'xSection'       : 51.1,
     'skimEff'        : 1.0 * 1.0 * 3736521./10980445,
     'iJson'          : -1
     } ,
     'DYJets3Jets_JetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets3Jets_JetToTau_MuTau.root',
     'sample'         : 'DYJets3Jets_JetToTau',
-    'xSection'       : 3504,
+    'xSection'       : 51.1,
     'skimEff'        : 1.0 * 1.0 * 3736521./10980445,
     'iJson'          : -1
     } ,
     'DYJets3Jets_MuToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets3Jets_MuToTau_MuTau.root',
     'sample'         : 'DYJets3Jets_MuToTau',
-    'xSection'       : 3504,
+    'xSection'       : 51.1,
     'skimEff'        : 1.0 * 1.0 * 3736521./10980445,
     'iJson'          : -1
     } ,
     'DYJets4Jets_TauTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets4Jets_TauTau',
-    'xSection'       : 3504,
+    'xSection'       : 23,
     'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
     'iJson'          : -1
     } ,
     'DYJets4Jets_JetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_JetToTau_MuTau.root',
     'sample'         : 'DYJets4Jets_JetToTau',
-    'xSection'       : 3504,
+    'xSection'       : 23,
     'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
     'iJson'          : -1
     } ,
     'DYJets4Jets_MoToTau' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_MuToTau_MuTau.root',
     'sample'         : 'DYJets4Jets_MuToTau',
-    'xSection'       : 3504,
+    'xSection'       : 23,
     'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
     'iJson'          : -1
     } ,
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -964,7 +584,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p1' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets-p1_MuTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
@@ -972,7 +592,7 @@ options = {
     'iJson'          : -1
     },
     'WJets-p2' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets-p2_MuTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
@@ -980,7 +600,7 @@ options = {
     'iJson'          : -1
     },
     'WJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets1Jets_MuTau.root',
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
@@ -990,7 +610,7 @@ options = {
     'iJson'          : -1
     },
     'WJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets2Jets_MuTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
@@ -1000,7 +620,7 @@ options = {
     'iJson'          : -1
     },
     'WJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets3Jets_MuTau.root',
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
@@ -1010,7 +630,7 @@ options = {
     'iJson'          : -1
     },
     'WJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W4Jets-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWJets4Jets_MuTau.root',
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
@@ -1020,7 +640,7 @@ options = {
     'iJson'          : -1
     },
     'T-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-powheg-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-powheg-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleT-tW_MuTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
@@ -1028,7 +648,7 @@ options = {
     'iJson'          : -1
     },
     'Tbar-tW' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleTbar-tW_MuTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
@@ -1036,7 +656,7 @@ options = {
     'iJson'          : -1
     },
     'WWJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_MuTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
@@ -1044,7 +664,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_MuTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
@@ -1052,7 +672,7 @@ options = {
     'iJson'          : -1
     },
     'WZJetsTo3LNu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_MuTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
@@ -1060,7 +680,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_MuTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -1068,7 +688,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_MuTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -1076,7 +696,7 @@ options = {
     'iJson'          : -1
     },
     'ZZJetsTo4L' : {
-    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_10May2013_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_MuTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
