@@ -214,21 +214,22 @@ float reweightHEPNUPWJets(int hepNUP) {
 float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
-  
+  /* //wrong one
     if(nJets==0)      return 0.115028141 ;
     else if(nJets==1) return 0.027710126 ;
     else if(nJets==2) return 0.0098376 ;
     else if(nJets==3) return 0.005509647 ;
     else if(nJets>=4) return 0.004266394 ;
     else return 1 ;
+  */
   
   //NewJEC
-//   if(nJets==0)      return 0.115028141;
-//   else if(nJets==1) return 0.022330692;
-//   else if(nJets==2) return 0.009062541;
-//   else if(nJets==3) return 0.005257807;
-//   else if(nJets>=4) return 0.004113813;
-//   else return 1 ;
+  if(nJets==0)      return 0.115028141;
+  else if(nJets==1) return 0.022330692;
+  else if(nJets==2) return 0.009062541;
+  else if(nJets==3) return 0.005257807;
+  else if(nJets>=4) return 0.004113813;
+  else return 1 ;
 }
 
 void createReWeighting3D(){
@@ -726,7 +727,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1069,6 +1070,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
+  outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
+  outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
 
@@ -1600,26 +1603,32 @@ void fillTrees_MuTauStream(TChain* currentTree,
   } 
     
 
-  TFile* HqT      = 0;
+  TFile* HqT      = 0; 
   int mH          = 125;
-  TH1F* histo     = 0;
+  TH1F* histo     = 0; TH1F* histoUp     = 0; TH1F* histoDown     = 0;
   if(sample_.find("GGFH")!=string::npos){
+    if(sample_.find("GGFH90")!=string::npos) mH = 100;
+    if(sample_.find("GGFH95")!=string::npos) mH = 100;
     if(sample_.find("GGFH100")!=string::npos) mH = 100;
-    if(sample_.find("GGFH105")!=string::npos) mH = 105;
-    if(sample_.find("GGFH110")!=string::npos) mH = 110;
-    if(sample_.find("GGFH115")!=string::npos) mH = 115;
-    if(sample_.find("GGFH120")!=string::npos) mH = 120;
+    if(sample_.find("GGFH105")!=string::npos) mH = 100;
+    if(sample_.find("GGFH110")!=string::npos) mH = 100;
+    if(sample_.find("GGFH115")!=string::npos) mH = 125;
+    if(sample_.find("GGFH120")!=string::npos) mH = 125;
     if(sample_.find("GGFH125")!=string::npos) mH = 125;
-    if(sample_.find("GGFH130")!=string::npos) mH = 130;
-    if(sample_.find("GGFH135")!=string::npos) mH = 135;
-    if(sample_.find("GGFH140")!=string::npos) mH = 140;
-    if(sample_.find("GGFH145")!=string::npos) mH = 145;
-    if(sample_.find("GGFH160")!=string::npos) mH = 160;
+    if(sample_.find("GGFH130")!=string::npos) mH = 125;
+    if(sample_.find("GGFH135")!=string::npos) mH = 125;
+    if(sample_.find("GGFH140")!=string::npos) mH = 150;
+    if(sample_.find("GGFH145")!=string::npos) mH = 150;
+    if(sample_.find("GGFH150")!=string::npos) mH = 150;
+    if(sample_.find("GGFH155")!=string::npos) mH = 150;
+    if(sample_.find("GGFH160")!=string::npos) mH = 150;
     cout << "Reweighting powheg with HqT mH=" << mH << endl;
-    HqT = new TFile(Form("../../Utilities/dataForSkimmer/HqTFeHiPro/weight_ptH_%d.root", mH));
+    HqT = new TFile(Form("../../Utilities/dataForSkimmer/HqTWeights/HRes_weight_pTH_mH%d_8TeV.root", mH));
     if(!HqT) cout << "Cannot find HqT file..." << endl;
     else{
-      histo = (TH1F*)(HqT->Get(Form("powheg_weight/weight_hqt_fehipro_fit_%d",mH)));
+      histo = (TH1F*)(HqT->Get("Nominal"));
+      histoUp = (TH1F*)(HqT->Get("Up"));
+      histoDown = (TH1F*)(HqT->Get("Down"));
     }
   }
 
@@ -2361,6 +2370,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     ///////////////
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightUp = histo!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightDown = histo!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 
