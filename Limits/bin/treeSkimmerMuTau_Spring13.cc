@@ -550,8 +550,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Summer13_v2.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v2.root");
+  cout << "Using corrections from llrCorrections_Summer13_v4.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v4.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
@@ -2353,7 +2353,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
         ) {
-      weightHepNup = reweightHEPNUPWJets( hepNUP_ );
+      weightHepNup = reweightHEPNUPWJets( hepNUP );
       sampleWeight = 1;
       sampleWeightW= scaleFactor; 
     }
@@ -2363,7 +2363,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP_ );
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
     }
@@ -2592,6 +2592,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
 	HLTmatchIsoMu8Tau20 = float(isMatched);
 	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
+	//HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
 
 	passL1etmCut_       = float(L1etmCorr_>etmCut);
