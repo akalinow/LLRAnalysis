@@ -275,6 +275,14 @@ void drawHistogram(TCut sbinPair,
 	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
 	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
       }      
+      /* //to be used when weight is available
+      if(type.Contains("GGFHUp")) 
+	weight *= "HqTWeightUp"; 
+      else if(type.Contains("GGFHDown"))  
+	weight *= "HqTWeightDown";
+      else
+	weight *= "HqTWeight";
+      */
     }
     else if(type.Contains("Embed")) {
       if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight)";
@@ -997,6 +1005,15 @@ void plotMuTau( Int_t mH_           = 120,
       hSignal[iP][iM]->SetLineWidth(2);
     }
   }
+  //GGH Higgs pT weights up/down
+  TH1F* hGGFHUp[nMasses]; TH1F* hGGFHDown[nMasses];
+  for(int iM=0 ; iM<nMasses ; iM++) {
+    hGGFHUp[iM] = new TH1F("hGGFH"+nameMasses[iM]+"Up", "GGFH"+nameMasses[iM]+"Up", nBins , bins.GetArray()); 
+    hGGFHUp[iM]->SetLineWidth(2);
+    hGGFHDown[iM] = new TH1F("hGGFH"+nameMasses[iM]+"Down", "GGFH"+nameMasses[iM]+"Down", nBins , bins.GetArray());  
+    hGGFHDown[iM]->SetLineWidth(2); 
+  }
+  
 
   TH1F* hSusy[nProdS][nMassesS];
 
@@ -1040,7 +1057,7 @@ void plotMuTau( Int_t mH_           = 120,
   TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/restrict2/"; //+"/update/"; 
   TString pathMC        = pathToFile; 
   TString pathW         = pathToEmbed; 
-  TString pathDY        = pathToEmbed;
+  TString pathDY        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/newDYWeight/";
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -2124,7 +2141,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  }
 	  //hDataAntiIsoLooseTauIsoQCD->Sumw2();
 	  //hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
-
+	  /* //Not necessary for the analysis at the moment
 	  drawHistogram(sbinlIsoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner,  sbinSSlIso1 ,1);
 	  hLooseIso1->Add(hCleaner, 1.0);
 	  drawHistogram(sbinlIsoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner,  sbinSSlIso2 ,1);
@@ -2148,7 +2165,7 @@ void plotMuTau( Int_t mH_           = 120,
  			Lumi*hltEff_/1000., SSWinSidebandRegionDATA/SSWinSidebandRegionMC, 
  			TTxsectionRatio*scaleFactorTTSS, MutoTauCorrectionFactor*lumiCorrFactor, 
  			JtoTauCorrectionFactor*lumiCorrFactor, lumiCorrFactor*ExtrapolationFactorZDataMC,sbinSSlIso3,sbinCat,sbinlIsoPresel);
-
+			
 
 	  drawHistogram(sbinPresel,vbfLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner,  sbinSSInclusive , 1);
 	  hSSLooseVBF->Add(hCleaner, 1.0);
@@ -2157,7 +2174,7 @@ void plotMuTau( Int_t mH_           = 120,
  			TTxsectionRatio*scaleFactorTTSS, MutoTauCorrectionFactor*lumiCorrFactor, 
  			JtoTauCorrectionFactor*lumiCorrFactor, lumiCorrFactor*ExtrapolationFactorZDataMC,sbinSSInclusive,vbfLoose,sbinPresel);
 	  hSSLooseVBF->Scale(hSS->Integral()/hSSLooseVBF->Integral());
-
+	  */
 	} 
 	else if(currentName.Contains("VBFH")  || 
 		currentName.Contains("GGFH")  ||
@@ -2188,7 +2205,18 @@ void plotMuTau( Int_t mH_           = 120,
 	    for(int iM=0 ; iM<nMasses ; iM++)
 	      if(currentName.Contains(nameProd[iP]+nameMasses[iM]))
 		hSignal[iP][iM]->Add(h1,1.0);
-
+	  /* //to be used when weight is available
+	  for(int iM=0 ; iM<nMasses ; iM++){
+	    if(currentName.Contains("GGFH"+nameMasses[iM])){
+	      hCleaner->Reset(); float NormSignUp = 0.;
+	      drawHistogram(sbinPresel,sbinCat,"MCGGFHUp", version_, analysis_,RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., hCleaner, sbin, 1);
+	      hGGFHUp[iM]->Add(hCleaner,1.0);
+	      hCleaner->Reset(); float NormSignDown = 0.;
+	      drawHistogram(sbinPresel,sbinCat,"MCGGFHDown", version_, analysis_,RUN,currentTree, variable, NormSignDown, Error,   Lumi*hltEff_/1000., hCleaner, sbin, 1);
+	      hGGFHDown[iM]->Add(hCleaner,1.0);
+	    }
+	  }
+	  */
 	  if(MSSM) {
 	    if(currentName.Contains("SUSY")){
 	      //select events within 30% of Higgs mass
@@ -2634,7 +2662,10 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
-
+  for(int iM=0 ; iM<nMasses ; iM++){
+    hGGFHUp[iM]->Write();
+    hGGFHDown[iM]->Write();
+  }
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
@@ -2656,7 +2687,9 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) delete hSignal[iP][iM];
-
+  for(int iM=0 ; iM<nMasses ; iM++){
+    delete hGGFHUp[iM]; delete hGGFHDown[iM];
+  }
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
