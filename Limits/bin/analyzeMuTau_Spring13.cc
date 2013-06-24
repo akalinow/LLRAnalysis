@@ -41,7 +41,7 @@
 #define scaleByBinWidth  false
 #define DOSPLIT          false
 #define useZDataMC       false
-#define OldCat           false
+
 typedef map<TString, TChain* >  mapchain;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1284,7 +1284,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut twoJets("nJets30>=2");
   TCut vbfTight("nJets30>=2 && pt1>30 && pt2>30 && Mjj>700 && Deta>4.0 && isVetoInJets!=1 && diTauRecoPt>100 && nJets20BTagged<1");
   TCut vbf;
-  if (OldCat)
+  if (selection_.find("vbfOld")!=string::npos)
     vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1");
   else{
     vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1 && nJets20BTagged<1");
@@ -1307,29 +1307,26 @@ void plotMuTau( Int_t mH_           = 120,
   TCut nobTag("nJets30<2 && nJets20BTagged==0");
   TCut novbf("nJets30<1 && nJets20BTagged==0");
 
-  if(OldCat){
-    if(selection_.find("High")!=string::npos) {
-      boost = boost&&TCut("ptL2>40"); 
-      novbf = novbf&&TCut("ptL2>40");
-    }
-    else if(selection_.find("Low")!=string::npos){
-      boost = boost&&TCut("ptL2<40"); 
-      novbf = novbf&&TCut("ptL2<40"); 
-    }
+  if(selection_.find("High")!=string::npos) {
+    boost = boost&&TCut("ptL2>45");
+    novbf = novbf&&TCut("ptL2>45");
   }
-  else{
-    if(selection_.find("High")!=string::npos) {
-      boost = boost&&TCut("ptL2>45");
-      novbf = novbf&&TCut("ptL2>45");
-    }
-    else if(selection_.find("Medium")!=string::npos){
-      boost = boost&&TCut("ptL2>30 && ptL2<45");
-      novbf = novbf&&TCut("ptL2>30 && ptL2<45");
-    }
-    else if(selection_.find("Low")!=string::npos){
-      boost = boost&&TCut("ptL2<30");
-      novbf = novbf&&TCut("ptL2<30");
-    }
+  else if(selection_.find("Medium")!=string::npos){
+    boost = boost&&TCut("ptL2>30 && ptL2<45");
+    novbf = novbf&&TCut("ptL2>30 && ptL2<45");
+  }
+  else if(selection_.find("Low")!=string::npos){
+    boost = boost&&TCut("ptL2<30");
+    novbf = novbf&&TCut("ptL2<30");
+  }
+
+  if(selection_.find("OldHigh")!=string::npos) {
+    boost = boost&&TCut("ptL2>40"); 
+    novbf = novbf&&TCut("ptL2>40");
+  }
+  else if(selection_.find("OldLow")!=string::npos){
+    boost = boost&&TCut("ptL2<40"); 
+    novbf = novbf&&TCut("ptL2<40"); 
   }
 
   if(selection_.find("highhiggs")!=string::npos) {
