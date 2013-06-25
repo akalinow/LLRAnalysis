@@ -1781,7 +1781,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  if(selection_.find("vbfTight")!=string::npos)
 	    drawHistogram(sbinPresel,vbfRelaxedTight,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusiveRelaxedCharge, 1);
 	  else
-	    drawHistogram(sbinPresel,vbfLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    drawHistogram(sbinPresel,vbfLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusiveRelaxedCharge, 1);
 	  hW3JetsMediumTauIsoRelVBF->Add(hCleaner,  hW3Jets->Integral()/hCleaner->Integral());
 	  
 	  hW3JetsMediumTauIsoRelVBFMinusSS->Add(h1, (1-OStoSSRatioQCD*SSWinSidebandRegionDATA/OSWinSidebandRegionDATAW3Jets));
