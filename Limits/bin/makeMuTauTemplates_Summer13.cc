@@ -242,6 +242,17 @@ void produce(
       else
 	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
 
+      if(analysis_.find("nominal")!=string::npos){
+	TH1F* hSgn2_HqTUp = (TH1F*)fin->Get(Form("hGGFH%dUp",mH_)); 
+	hSgn2_HqTUp->Scale(1./rescaleggH); 
+	hSgn2_HqTUp->SetName(Form("ggH%d_QCDscale_ggH1inUp" ,mH_)); 
+	hSgn2_HqTUp->Write(Form("ggH%d_QCDscale_ggH1inUp" ,mH_));
+
+	TH1F* hSgn2_HqTDown = (TH1F*)fin->Get(Form("hGGFH%dDown",mH_));  
+        hSgn2_HqTDown->Scale(1./rescaleggH);  
+        hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));  
+        hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
+      }
     }
     else{
       TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
