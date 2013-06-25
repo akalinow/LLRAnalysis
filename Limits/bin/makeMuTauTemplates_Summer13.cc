@@ -20,6 +20,20 @@
 
 using namespace std;
 
+//void checkValidity(TH1F* h, ofstream& f, ofstream& g) {
+void checkValidity(TH1F* h){
+  int nBins = h->GetNbinsX();
+  
+  for(int i=1 ; i<=nBins+1 ; i++) {
+    //f << h->GetBinContent(i) << " | " ;
+    if(h->GetBinContent(i) < 0) {
+      h->SetBinContent(i,0);
+      //h->SetBinContent(i,1e-6);
+    }
+    //if(h->GetBinContent(i) == 0) h->SetBinContent(i,1e-6);
+  }
+
+}
 float higgsXsection(int mH = 125, string process = "ggH"){
 
   float xsection = 1.0;
@@ -146,7 +160,7 @@ void produce(
       binNameSpace =  "1jet_medium";
     
     if(bin_.find("boostHighhighhiggs")!=string::npos) 
-      binNameSpace =  "1jet_high_highhiggs";
+      binNameSpace =  "1jet_high_mediumhiggs";
     
     if(bin_.find("boostHighlowhiggs")!=string::npos)
       binNameSpace =  "1jet_high_lowhiggs";
@@ -241,7 +255,7 @@ void produce(
       }
       else
 	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
-
+      /*
       if(analysis_.find("nominal")!=string::npos){
 	TH1F* hSgn2_HqTUp = (TH1F*)fin->Get(Form("hGGFH%dUp",mH_)); 
 	hSgn2_HqTUp->Scale(1./rescaleggH); 
@@ -252,7 +266,7 @@ void produce(
         hSgn2_HqTDown->Scale(1./rescaleggH);  
         hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));  
         hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
-      }
+	}*/
     }
     else{
       TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
@@ -287,6 +301,7 @@ void produce(
       if( bin_.find("High")!=string::npos ){
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
       else {
@@ -347,11 +362,13 @@ void produce(
 	  hQCDUp->Write("QCD_CMS_htt_QCDShape_mutau_boost_low_8TeVUp");
 	  hQCDDown->Write("QCD_CMS_htt_QCDShape_mutau_boost_low_8TeVDown");
 	}
+	checkValidity(hQCD);
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
       else {
         TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	checkValidity(hQCD);
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
 
@@ -395,16 +412,19 @@ void produce(
       if(bin_.find("nobTag")!=string::npos){
 	TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
       else{
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
 
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb")); 
       hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str())); 
+      checkValidity(hQCD_fb);
       hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
 
       // ----- W ------
@@ -470,6 +490,7 @@ void produce(
       // ----- QCD ------ 
       TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
       hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+      checkValidity(hQCD);
       hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       
       // ----- W ------ 
@@ -626,6 +647,7 @@ void produce(
 	if( bin_.find("High")!=string::npos ){
 	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
 	else {
@@ -695,11 +717,13 @@ void produce(
 	    hQCDUp->Write("QCD_CMS_htt_QCDShape_mutau_boost_low_8TeVUp"); 
 	    hQCDDown->Write("QCD_CMS_htt_QCDShape_mutau_boost_low_8TeVDown");
 	  }
+	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
 	else {
           TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
           hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
           hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
         }
       }
@@ -752,16 +776,19 @@ void produce(
 	if(bin_.find("nobTag")!=string::npos){
 	  TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
 	else{
 	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
 
 	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));  
 	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));  
+	checkValidity(hQCD_fb);
 	hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
@@ -840,6 +867,7 @@ void produce(
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
 
