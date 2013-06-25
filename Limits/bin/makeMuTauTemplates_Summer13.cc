@@ -375,6 +375,11 @@ void produce(
       hDataEmb->SetName(Form("ZTT%s",suffix.c_str()));
       hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
 
+      TString nameZtt_fb = nameZtt+"_fb";
+      TH1F* hDataEmb_fb = ((TH1F*)fin->Get(nameZtt_fb)); 
+      hDataEmb_fb->SetName(Form("ZTT_fine_binning%s",suffix.c_str())); 
+      hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
+
       // ----- QCD ------
       if(bin_.find("nobTag")!=string::npos){
 	TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
@@ -386,6 +391,10 @@ void produce(
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
+
+      TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb")); 
+      hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str())); 
+      hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
 
       // ----- W ------
       if(bin_.find("nobTag")!=string::npos){
@@ -399,6 +408,10 @@ void produce(
         hW->Write(Form("W%s"           ,suffix.c_str()));
       }
 
+      TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb")); 
+      hW_fb->SetName(Form("W_fine_binning%s"           ,suffix.c_str())); 
+      hW_fb->Write(Form("W_fine_binning%s"           ,suffix.c_str()));
+
       // ----- Fakes ------
       TH1F* hZmj = ((TH1F*)fin->Get("hZmj"));
       hZmj->SetName(Form("ZJ%s"        ,suffix.c_str()));
@@ -410,12 +423,31 @@ void produce(
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str()));
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
 
+      TH1F* hZmj_fb = ((TH1F*)fin->Get("hZmj_fb")); 
+      hZmj_fb->SetName(Form("ZJ_fine_binning%s"        ,suffix.c_str())); 
+      hZmj_fb->Write(Form("ZJ_fine_binning%s"        ,suffix.c_str())); 
+      TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb")); 
+      hZmm_fb->SetName(Form("ZL_fine_binning%s"        ,suffix.c_str())); 
+      hZmm_fb->Write(Form("ZL_fine_binning%s"        ,suffix.c_str())); 
+      TH1F* hZfakes_fb = ((TH1F*)fin->Get("hZmj_fb")); 
+      hZfakes_fb->Add(hZmm_fb);
+      hZfakes_fb->SetName(Form("ZLL_fine_binning%s"    ,suffix.c_str())); 
+      hZfakes_fb->Write(Form("ZLL_fine_binning%s"    ,suffix.c_str())); 
+
+
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
       hTTb->Write(Form("TT%s"        ,suffix.c_str()));
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
       hVV->Write(Form("VV%s"         ,suffix.c_str()));
+
+      TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb")); 
+      hTTb_fb->SetName(Form("TT_fine_binning%s"        ,suffix.c_str())); 
+      hTTb_fb->Write(Form("TT_fine_binning%s"        ,suffix.c_str())); 
+      TH1F* hVV_fb = ((TH1F*)fin->Get("hVV")); 
+      hVV_fb->SetName(Form("VV_fine_binning%s"         ,suffix.c_str())); 
+      hVV_fb->Write(Form("VV_fine_binning%s"         ,suffix.c_str()));
     }
     else if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 
@@ -699,6 +731,11 @@ void produce(
 	TH1F* hDataEmb = ((TH1F*)fin->Get(nameZtt));
 	hDataEmb->SetName(Form("ZTT%s",suffix.c_str()));
 	hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
+
+	TString nameZtt_fb = nameZtt+"_fb"; 
+	TH1F* hDataEmb_fb = ((TH1F*)fin->Get(nameZtt_fb));  
+	hDataEmb_fb->SetName(Form("ZTT_fine_binning%s",suffix.c_str()));  
+	hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 	if(bin_.find("nobTag")!=string::npos){
@@ -711,6 +748,10 @@ void produce(
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
+
+	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));  
+	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));  
+	hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
 	if(bin_.find("nobTag")!=string::npos){
@@ -723,34 +764,60 @@ void produce(
 	  hW->SetName(Form("W%s"           ,suffix.c_str()));
 	  hW->Write(Form("W%s"           ,suffix.c_str()));
 	}
+
+	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));  
+	hW_fb->SetName(Form("W_fine_binning%s"           ,suffix.c_str()));  
+	hW_fb->Write(Form("W_fine_binning%s"           ,suffix.c_str()));
       }
 
       if(dir->FindObjectAny(Form("ZJ%s"       ,suffix.c_str()))==0 ){
         TH1F* hZmj = ((TH1F*)fin->Get("hZmj"));
         hZmj->SetName(Form("ZJ%s"        ,suffix.c_str()));
         hZmj->Write(Form("ZJ%s"        ,suffix.c_str()));
+
+	TH1F* hZmj_fb = ((TH1F*)fin->Get("hZmj_fb"));   
+	hZmj_fb->SetName(Form("ZJ_fine_binning%s"        ,suffix.c_str()));   
+	hZmj_fb->Write(Form("ZJ_fine_binning%s"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ZL%s"       ,suffix.c_str()))==0 ){
         TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
         hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
         hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+
+	TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));   
+	hZmm_fb->SetName(Form("ZL_fine_binning%s"        ,suffix.c_str()));   
+	hZmm_fb->Write(Form("ZL_fine_binning%s"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ){
         TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
         hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str()));
 	hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
+
+	TH1F* hZfakes_fb = ((TH1F*)fin->Get("hZmj_fb"));
+	TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));
+	hZfakes_fb->Add(hZmm_fb);  
+	hZfakes_fb->SetName(Form("ZLL_fine_binning%s"    ,suffix.c_str()));   
+	hZfakes_fb->Write(Form("ZLL_fine_binning%s"    ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("TT%s"       ,suffix.c_str()))==0 ){
         TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
         hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
         hTTb->Write(Form("TT%s"        ,suffix.c_str()));
+
+	TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));   
+	hTTb_fb->SetName(Form("TT_fine_binning%s"        ,suffix.c_str()));   
+	hTTb_fb->Write(Form("TT_fine_binning%s"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("VV%s"       ,suffix.c_str()))==0 ){
         TH1F* hVV = ((TH1F*)fin->Get("hVV"));
         hVV->SetName(Form("VV%s"         ,suffix.c_str()));
         hVV->Write(Form("VV%s"         ,suffix.c_str()));
-      }
 
+	TH1F* hVV_fb = ((TH1F*)fin->Get("hVV"));   
+	hVV_fb->SetName(Form("VV_fine_binning%s"         ,suffix.c_str()));   
+	hVV_fb->Write(Form("VV_fine_binning%s"         ,suffix.c_str()));
+      }
+      
     }
     else if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 
