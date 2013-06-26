@@ -750,6 +750,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau;
+  float weightDecayMode_;
 
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
@@ -1143,6 +1144,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HLTTauMCABC",    &HLTTauMCABC,"HLTTauMCABC/F");
   //
   outTreePtOrd->Branch("SFTau",        &SFTau,"SFTau/F");
+  outTreePtOrd->Branch("weightDecayMode",  &weightDecayMode_, "weightDecayMode/F");
 
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("muFlag",          &muFlag_,"muFlag/I"); 
@@ -2373,6 +2375,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     HqTWeightUp = histo!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightDown = histo!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
+    
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 
     float sumPt  = 0;
@@ -2393,7 +2396,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       dEta2 += (pt_k*eta_k*eta_k);
       dPhi2 += (pt_k*phi_k*phi_k);  
     }
-
+    
     gammaFrac = 0.;
     if(sumPt>0){
       dEta2 /= sumPt;
@@ -2651,6 +2654,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightTauD   = HLTTauMCD   != 0 ? HLTTauD   / HLTTauMCD   : 0;
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
+      weightDecayMode_ = 1.0;
+      if( sample.Contains("Emb") ){
+	if(decayMode == 0) weightDecayMode_ = 0.88;
+      }
+      else{
+	if(isTauLegMatched>0 && decayMode == 0)
+	  weightDecayMode_ = 0.88; 
+      }
+      
       // Muon
       // trigger
       //

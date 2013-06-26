@@ -876,7 +876,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau, SFEtoTau;
-
+  float weightDecayMode_;
+  
   int isTauLegMatched_,isElecLegMatched_,elecFlag_,genDecay_, leptFakeTau;
   int vetoEventOld_;
   int vetoEventNew_;
@@ -1251,7 +1252,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   //
   outTreePtOrd->Branch("SFTau",        &SFTau,"SFTau/F");
   outTreePtOrd->Branch("SFEtoTau",     &SFEtoTau,"SFEtoTau/F");
-
+  outTreePtOrd->Branch("weightDecayMode",  &weightDecayMode_, "weightDecayMode/F");
   //
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isElecLegMatched",&isElecLegMatched_,"isElecLegMatched/I");
@@ -2996,6 +2997,15 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTweightTauD   = HLTTauMCD   != 0 ? HLTTauD   / HLTTauMCD   : 0;
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
+      weightDecayMode_ = 1.0; 
+      if( sample.Contains("Emb") ){ 
+        if(decayMode == 0) weightDecayMode_ = 0.88; 
+      } 
+      else{ 
+        if(isTauLegMatched>0 && decayMode == 0) 
+          weightDecayMode_ = 0.88;  
+      } 
+      
       // Electron
       // trigger
       //
