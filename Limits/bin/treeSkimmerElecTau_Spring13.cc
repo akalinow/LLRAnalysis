@@ -796,7 +796,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float diTauSVFitMass, diTauSVFitMassCal0, diTauSVFitMassCal1, diTauSVFitMassCal2, 
     diTauSVFitPt, diTauSVFitEta , diTauSVFitPhi ;
   float diTauNSVfitMassCorr_;
-//   float genDiTauMass_;
+  float genDiTauMass_;
   float diTauSVFitMassSA, diTauSVFitMassErrSA; 
   float diTauCAMass, diTauCAPt, diTauCAEta, diTauCAPhi;
   float diTauVisMass,diTauVisPt,diTauVisEta,diTauVisPhi;
@@ -978,7 +978,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("isVetoInJets", &isVetoInJets,"isVetoInJets/I");
   outTreePtOrd->Branch("chFracPVVeto", &chFracPVVeto,"chFracPVVeto/F"); 
 
-//   outTreePtOrd->Branch("genDiTauMass", &genDiTauMass_, "genDiTauMass/F");
+  outTreePtOrd->Branch("genDiTauMass", &genDiTauMass_, "genDiTauMass/F");
 
   outTreePtOrd->Branch("diTauNSVfitMass",       &diTauNSVfitMass_,       "diTauNSVfitMass/F");
   outTreePtOrd->Branch("diTauNSVfitMassErrUp",  &diTauNSVfitMassErrUp_,  "diTauNSVfitMassErrUp/F");
@@ -1363,7 +1363,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // taus
   currentTree->SetBranchStatus("diTauLegsP4"           ,1);
   currentTree->SetBranchStatus("genDiTauLegsP4"        ,1); // ND
-//   currentTree->SetBranchStatus("genDiTauMass"          ,1);//IN
+  currentTree->SetBranchStatus("genDiTauMass"          ,1);//IN
   currentTree->SetBranchStatus("genTausP4"             ,1);
   //currentTree->SetBranchStatus("chIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("nhIsoLeg1v1"           ,0);
@@ -1641,7 +1641,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   // auxiliary float to store branch values
   float diTauNSVfitMass,diTauNSVfitMassErrUp,diTauNSVfitMassErrDown,
     diTauNSVfitPt,diTauNSVfitPtErrUp,diTauNSVfitPtErrDown,mTauTauMin;
-//   float genDiTauMass;
+  float genDiTauMass;
   float diTauCharge, chargeL1;
   int tightestHPSDBWP,tightestHPSWP,tightestHPSDB3HWP,tightestHPSMVAWP,tightestHPSMVA2WP, decayMode, genDecayMode;//IN
   int tightestAntiEMVAWP, tightestAntiECutWP,tightestAntiEMVA3WP,AntiEMVA3category;//IN
@@ -1762,7 +1762,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("diTauNSVfitPtErrDown", &diTauNSVfitPtErrDown);
   currentTree->SetBranchAddress("mTauTauMin",           &mTauTauMin);
 
-//   currentTree->SetBranchAddress("genDiTauMass",         &genDiTauMass);
+  currentTree->SetBranchAddress("genDiTauMass",         &genDiTauMass);
 
   currentTree->SetBranchAddress("pZetaSig",             &pZetaSig);
 
@@ -2371,7 +2371,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauNSVfitPtErrUp_   = diTauNSVfitPtErrUp;
     diTauNSVfitPtErrDown_ = diTauNSVfitPtErrDown;
 
-//     genDiTauMass_ = genDiTauMass;
+    genDiTauMass_ = genDiTauMass;
 
     diTauNSVfitMassCorr_    = diTauNSVfitMass;
 
@@ -3183,17 +3183,32 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //       }
 //     }
 
+//Moriond
+//       if(decayMode==0 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  0.85 : 
+// 	  1.85;
+//       }
+//       else if (decayMode==1 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.64 : 
+// 	  0.28;
+// // 	diTauNSVfitMass_ *= 1.015;
+// // 	diTauVisMass *= 1.015;
+//       }
+//     }
+
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  0.85 : 
-	  1.85;
+	  1.37 : 
+	  1.11;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.64 : 
-	  0.28;
-	diTauNSVfitMass_ *= 1.015;
-	diTauVisMass *= 1.015;
+	  2.18 : 
+	  0.47;
+// 	diTauNSVfitMass_ *= 1.015;
+// 	diTauVisMass *= 1.015;
       }
     }
 
