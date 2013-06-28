@@ -2730,7 +2730,9 @@ options = {
     'sample'         : 'SUSYGGH80',
     'xSection'       : 1.0,
     'skimEff'        : 0.104221299534 * 55755./103014,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH90' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-pythia-PUS10_EleTau_Trees_v3/',
@@ -2738,7 +2740,9 @@ options = {
     'sample'         : 'SUSYGGH90',
     'xSection'       : 1.0,
     'skimEff'        : 0.130604288499 * 73465./130650,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH100' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-pythia-PUS10_EleTau_Trees_v3/',
@@ -2746,7 +2750,9 @@ options = {
     'sample'         : 'SUSYGGH100',
     'xSection'       : 1.0,
     'skimEff'        : 0.156415486761 * 90127./156428,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH110' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-pythia-PUS10_EleTau_Trees_v3/',
@@ -2754,7 +2760,9 @@ options = {
     'sample'         : 'SUSYGGH110',
     'xSection'       : 1.0,
     'skimEff'        : 0.182624446693 * 106926./182688,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH120' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-pythia-PUS10_EleTau_Trees_v3/',
@@ -2762,7 +2770,9 @@ options = {
     'sample'         : 'SUSYGGH120',
     'xSection'       : 1.0,
     'skimEff'        : 0.208174931542 * 123290./208304,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH130' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-pythia-PUS10_EleTau_Trees_v3/',
@@ -2770,7 +2780,9 @@ options = {
     'sample'         : 'SUSYGGH130',
     'xSection'       : 1.0,
     'skimEff'        : 0.232187901671 * 137499./231222,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH140' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-pythia-PUS10_EleTau_Trees_v3/',
@@ -2778,7 +2790,9 @@ options = {
     'sample'         : 'SUSYGGH140',
     'xSection'       : 1.0,
     'skimEff'        : 0.256235995519 * 153919./256154,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH160' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-pythia-PUS10_EleTau_Trees_v3/',
@@ -2786,7 +2800,9 @@ options = {
     'sample'         : 'SUSYGGH160',
     'xSection'       : 1.0,
     'skimEff'        : 0.298341423948 * 178301./295000,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH180' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-pythia-PUS10_EleTau_Trees_v3/',
@@ -2794,7 +2810,9 @@ options = {
     'sample'         : 'SUSYGGH180',
     'xSection'       : 1.0,
     'skimEff'        : 0.336519253911 * 204775./335577,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH200' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-pythia-PUS10_EleTau_Trees_v3/',
@@ -2802,7 +2820,9 @@ options = {
     'sample'         : 'SUSYGGH200',
     'xSection'       : 1.0,
     'skimEff'        : 0.368996454854 * 222769./363777,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH250' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-pythia-PUS10_EleTau_Trees_v3/',
@@ -2810,7 +2830,9 @@ options = {
     'sample'         : 'SUSYGGH250',
     'xSection'       : 1.0,
     'skimEff'        : 0.43499716625 * 268579./435189,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH300' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-pythia-PUS10_EleTau_Trees_v3/',
@@ -2818,7 +2840,9 @@ options = {
     'sample'         : 'SUSYGGH300',
     'xSection'       : 1.0,
     'skimEff'        : 0.48091174761 * 296334./476572,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH350' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-pythia-PUS10_EleTau_Trees_v3/',
@@ -2826,7 +2850,9 @@ options = {
     'sample'         : 'SUSYGGH350',
     'xSection'       : 1.0,
     'skimEff'        : 0.499360752503 * 312599./499558,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH400' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-pythia-PUS10_EleTau_Trees_v3/',
@@ -2834,7 +2860,9 @@ options = {
     'sample'         : 'SUSYGGH400',
     'xSection'       : 1.0,
     'skimEff'        : 0.518683274021 * 326585./516538,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH450' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-pythia-PUS10_EleTau_Trees_v3/',
@@ -2842,7 +2870,9 @@ options = {
     'sample'         : 'SUSYGGH450',
     'xSection'       : 1.0,
     'skimEff'        : 0.521099815897 * 331358./520808,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH500' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-pythia-PUS10_EleTau_Trees_v3/',
@@ -2850,7 +2880,9 @@ options = {
     'sample'         : 'SUSYGGH500',
     'xSection'       : 1.0,
     'skimEff'        : 0.500466543342 * 314766./491302,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH600' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-pythia-PUS10_EleTau_Trees_v3/',
@@ -2858,7 +2890,9 @@ options = {
     'sample'         : 'SUSYGGH600',
     'xSection'       : 1.0,
     'skimEff'        : 0.276240518363 * 174464./270803,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH700' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-pythia-PUS10_EleTau_Trees_v3/',
@@ -2866,7 +2900,9 @@ options = {
     'sample'         : 'SUSYGGH700',
     'xSection'       : 1.0,
     'skimEff'        : 0.222982349361 * 142697./219816,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH800' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-pythia-PUS10_EleTau_Trees_v3/',
@@ -2874,7 +2910,9 @@ options = {
     'sample'         : 'SUSYGGH800',
     'xSection'       : 1.0,
     'skimEff'        : 0.18059437019 * 115548./178355,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH900' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-pythia-PUS10_EleTau_Trees_v3/',
@@ -2882,7 +2920,9 @@ options = {
     'sample'         : 'SUSYGGH900',
     'xSection'       : 1.0,
     'skimEff'        : 0.14921024367 * 94040./145591,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYGGH1000' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-pythia-PUS10_EleTau_Trees_v3/',
@@ -2890,7 +2930,9 @@ options = {
     'sample'         : 'SUSYGGH1000',
     'xSection'       : 1.0,
     'skimEff'        : 0.126561286395 * 81354./126609,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH80' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-pythia-PUS10_EleTau_Trees_v3/',
@@ -2898,7 +2940,9 @@ options = {
     'sample'         : 'SUSYBBH80',
     'xSection'       : 1.0,
     'skimEff'        : 0.0925855314913 * 47010./92270,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH90' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-pythia-PUS10_EleTau_Trees_v3/',
@@ -2906,7 +2950,9 @@ options = {
     'sample'         : 'SUSYBBH90',
     'xSection'       : 1.0,
     'skimEff'        : 0.118757029242 * 63712./118263,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH100' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-pythia-PUS10_EleTau_Trees_v3/',
@@ -2914,7 +2960,9 @@ options = {
     'sample'         : 'SUSYBBH100',
     'xSection'       : 1.0,
     'skimEff'        : 0.146602087332 * 81635./146649,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH110' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-pythia-PUS10_EleTau_Trees_v3/',
@@ -2922,7 +2970,9 @@ options = {
     'sample'         : 'SUSYBBH110',
     'xSection'       : 1.0,
     'skimEff'        : 0.173093237295 * 98647./173024,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH120' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-pythia-PUS10_EleTau_Trees_v3/',
@@ -2930,7 +2980,9 @@ options = {
     'sample'         : 'SUSYBBH120',
     'xSection'       : 1.0,
     'skimEff'        : 0.200630498844 * 114705./199008,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH130' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-pythia-PUS10_EleTau_Trees_v3/',
@@ -2938,7 +2990,9 @@ options = {
     'sample'         : 'SUSYBBH130',
     'xSection'       : 1.0,
     'skimEff'        : 0.22481120151 * 131242./224813,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH140' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-pythia-PUS10_EleTau_Trees_v3/',
@@ -2946,7 +3000,9 @@ options = {
     'sample'         : 'SUSYBBH140',
     'xSection'       : 1.0,
     'skimEff'        : 0.25027979066 * 146177./248678,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH160' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-pythia-PUS10_EleTau_Trees_v3/',
@@ -2954,7 +3010,9 @@ options = {
     'sample'         : 'SUSYBBH160',
     'xSection'       : 1.0,
     'skimEff'        : 0.295152820513 * 170912./287774,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH180' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-pythia-PUS10_EleTau_Trees_v3/',
@@ -2962,7 +3020,9 @@ options = {
     'sample'         : 'SUSYBBH180',
     'xSection'       : 1.0,
     'skimEff'        : 0.333586810489 * 195229./327256,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH200' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-pythia-PUS10_EleTau_Trees_v3/',
@@ -2970,7 +3030,9 @@ options = {
     'sample'         : 'SUSYBBH200',
     'xSection'       : 1.0,
     'skimEff'        : 0.370115108144 * 221906./369896,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH250' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-pythia-PUS10_EleTau_Trees_v3/',
@@ -2978,7 +3040,9 @@ options = {
     'sample'         : 'SUSYBBH250',
     'xSection'       : 1.0,
     'skimEff'        : 0.437450920866 * 262237./432289,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH300' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-pythia-PUS10_EleTau_Trees_v3/',
@@ -2986,7 +3050,9 @@ options = {
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
     'skimEff'        : 0.487159715972 * 0.588319,
-    'iJson'          : -1
+   'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH350' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-pythia-PUS10_EleTau_Trees_v3/',
@@ -2994,7 +3060,9 @@ options = {
     'sample'         : 'SUSYBBH350',
     'xSection'       : 1.0,
     'skimEff'        : 0.524930759205 * 316045./515524,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH400' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-pythia-PUS10_EleTau_Trees_v3/',
@@ -3002,7 +3070,9 @@ options = {
     'sample'         : 'SUSYBBH400',
     'xSection'       : 1.0,
     'skimEff'        : 0.554657946014 * 341667./553938,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH450' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-pythia-PUS10_EleTau_Trees_v3/',
@@ -3010,7 +3080,9 @@ options = {
     'sample'         : 'SUSYBBH450',
     'xSection'       : 1.0,
     'skimEff'        : 0.578385344465 * 349676./563249,
-    'iJson'          : -1
+   'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH500' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-pythia-PUS10_EleTau_Trees_v3/',
@@ -3018,7 +3090,9 @@ options = {
     'sample'         : 'SUSYBBH500',
     'xSection'       : 1.0,
     'skimEff'        : 0.595235285647 * 372346./595221,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH600' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-pythia-PUS10_EleTau_Trees_v3/',
@@ -3026,7 +3100,9 @@ options = {
     'sample'         : 'SUSYBBH600',
     'xSection'       : 1.0,
     'skimEff'        : 0.614847426291 * 387790./610581,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH700' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-pythia-PUS10_EleTau_Trees_v3/',
@@ -3034,7 +3110,9 @@ options = {
     'sample'         : 'SUSYBBH700',
     'xSection'       : 1.0,
     'skimEff'        : 0.62296681913 * 399540./621073,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH800' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-pythia-PUS10_EleTau_Trees_v3/',
@@ -3042,7 +3120,9 @@ options = {
     'sample'         : 'SUSYBBH800',
     'xSection'       : 1.0,
     'skimEff'        : 0.625660317922 * 402974./617674,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH900' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-pythia-PUS10_EleTau_Trees_v3/',
@@ -3050,7 +3130,9 @@ options = {
     'sample'         : 'SUSYBBH900',
     'xSection'       : 1.0,
     'skimEff'        : 0.622572102711 * 409592./621124,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'SUSYBBH1000' : {
     'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-pythia-PUS10_EleTau_Trees_v3/',
@@ -3058,7 +3140,9 @@ options = {
     'sample'         : 'SUSYBBH1000',
     'xSection'       : 1.0,
     'skimEff'        : 0.615910570101 * 402063./604487,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
 
 }
