@@ -730,7 +730,7 @@ void evaluateQCD(mapchain mapAllTrees, TString version_, TString analysis_,
   drawHistogram(sbinPairAiso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["TTbar"], variable, SSTTbarinSignalRegionMCInclaIso,   Error,   scaleFactor*scaleFactorTTSSIncl , hExtrap, sbinPZetaRelaIsoSideband&&pZ);
   cout << "Anti-isolated " << sign << " events inclusive = " << SSQCDinSignalRegionDATAInclaIso << ", of which we expect "
        << SSWinSignalRegionMCInclaIso << " from W+jets " << " and " << SSTTbarinSignalRegionMCInclaIso << " from TTbar" << endl;
-
+  
   SSIsoToSSAIsoRatioQCD = (SSQCDinSignalRegionDATAIncl)/(SSQCDinSignalRegionDATAInclaIso-SSWinSignalRegionMCInclaIso-SSTTbarinSignalRegionMCInclaIso) ;
   cout << "The extrapolation factor Iso<0.1 / Iso>0.2 is " << SSIsoToSSAIsoRatioQCD << endl;
 
@@ -1792,7 +1792,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  hW3JetsLooseTauIso->Add(hCleaner,  hW3Jets->Integral()/hCleaner->Integral());
 	  
 	  if(selection_.find("vbfTight")!=string::npos)
-	    drawHistogram(sbinPresel,vbfRelaxedTight,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinChargeRelInclusive, 1);
+	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinChargeRelLtisoInclusive, 1);
 	  else
 	    drawHistogram(sbinPresel,vbfLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormW3Jets, Error,   Lumi*hltEff_/1000., hCleaner, sbinChargeRelInclusive, 1);
 	  hW3JetsMediumTauIsoRelVBF->Add(hCleaner,  hW3Jets->Integral()/hCleaner->Integral());
@@ -1916,13 +1916,14 @@ void plotMuTau( Int_t mH_           = 120,
 	    drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_,analysis_, RUN,mapAllTrees["Embedded"], variable, NormDYMutoTauEmbd,  Error, 1.0 , hCleaner,  sbinEmbedding  ,1);
 	    //NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTauIncl * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
 	    NormDYMutoTau = NormDYMutoTauEmbdLoose!=0 ? (NormDYMutoTau * NormDYMutoTauEmbd/NormDYMutoTauEmbdLoose) : 0.;
-            //h1->Scale( NormDYMutoTau/h1->Integral() );
+            h1->Scale( NormDYMutoTau/h1->Integral() );
+	    //Take the shape from relaxed VBF cuts with jet Pt 20 GeV (update for summer)
 	    float NormDYMutoTauShape = 0.; hCleaner->Reset();
 	    if(selection_.find("vbfTight")!=string::npos)
 	      drawHistogram(sbinPresel,vbfRelaxedTightZL,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTauShape, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    else
 	      drawHistogram(sbinPresel,vbfRelaxedZL,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTauShape, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
-	    hCleaner->Scale( NormDYMutoTau/h1->Integral() );
+	    hCleaner->Scale( NormDYMutoTau/hCleaner->Integral() );
 	    if(hCleaner) {
 	      hZmm->Add(hCleaner, 1.0); //hZmm->Sumw2(); 
 	      hZfakes->Add(hCleaner,1.0); //hZfakes->Sumw2();
