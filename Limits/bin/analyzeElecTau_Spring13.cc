@@ -911,7 +911,7 @@ void plotElecTau( Int_t mH_           = 120,
 
   TCanvas *c1 = new TCanvas("c1","",5,30,650,600);
   c1->SetGrid(0,0);
-  c1->SetFillStyle(4000);
+ c1->SetFillStyle(4000);
   c1->SetFillColor(10);
   c1->SetTicky();
   c1->SetObjectStat(0);
@@ -1092,11 +1092,13 @@ void plotElecTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFile+"/temp/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets1Jets*_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets2Jets*_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets3Jets*_ElecTau_"+fileAnalysis+".root");
-  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets4Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJets1Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJets2Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJets3Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/nTupleDYJets4Jets*_ElecTau_"+fileAnalysis+".root");
 
   backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_ElecTau_"+fileAnalysis+".root");
   //
@@ -1166,9 +1168,9 @@ void plotElecTau( Int_t mH_           = 120,
     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/temp/nTupleDYJets*TauTau*ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/temp/nTupleDYJets*EToTau*ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/temp/nTupleDYJets*JetToTau*ElecTau_"+fileAnalysis+".root");
+    backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau*ElecTau_"+fileAnalysis+".root");
+    backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets*EToTau*ElecTau_"+fileAnalysis+".root");
+    backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets*JetToTau*ElecTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
