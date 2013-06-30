@@ -860,7 +860,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float AntiZeeMVAv4raw_;
 
   // object-related weights and triggers
-  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8;
+  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8, HLTxMu17Mu8;
   float HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoEle13Tau20, HLTmatchEle8;
 
   float HLTEleA, HLTEleB, HLTEleC, HLTEleD, HLTEleMCold, HLTEleABCD, HLTEleMCnew, HLTEleABC, HLTElec, HLTEleSoft, HLTEleSoftMC, HLTEleShift, HLTEleShiftMC;
@@ -1201,6 +1201,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   outTreePtOrd->Branch("HLTxIsoEle13Tau20",&HLTxIsoEle13Tau20,"HLTxIsoEle13Tau20/F");// ND
   outTreePtOrd->Branch("HLTmatchIsoEle13Tau20",&HLTmatchIsoEle13Tau20,"HLTmatchIsoEle13Tau20/F");// ND
+
+  outTreePtOrd->Branch("HLTxMu17Mu8", &HLTxMu17Mu8, "HLTxMu17Mu8/F");
 
   // Electron
   outTreePtOrd->Branch("HLTweightElec", &HLTweightElec,"HLTweightElec/F");
@@ -2832,6 +2834,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       // HLT Paths matching
 
       HLTxEle8 = 1.0;
+      HLTxMu17Mu8 = 1.0; // required only in embedded
 
       isMatched = false;
       for(int i=0 ; i<9 ; i++)
@@ -2957,6 +2960,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	// NO SoftEle+ETM trigger :-(
 	HLTmatchEle8 = float((*tauXTriggers)[3]);
 
+	HLTxMu17Mu8     = 1.0; // required only in embedded
+
 	// emulate matching to SoftEle+L1ETM+Tau
 	isMatched = ( (*tauXTriggers)[2] && // HLT_Ele8 (hltEle8TightIdLooseIsoTrackIsoFilter)
 		      (*tauXTriggers)[3] && // L1IsoEG
@@ -2974,7 +2979,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	if(isPeriodLow)       etmCut=30;
 	else if(isPeriodHigh) etmCut=36;
 	else etmCut=30;
-	passL1etmCut_ = float(L1etm_>etmCut);	
+	passL1etmCut_ = float(L1etm_>etmCut);
+
+	// DoubleMu matching
+	isMatched = false;
+	for(int i=21 ; i<28 ; i++)
+	  isMatched = isMatched || (*triggerBits)[i]; // 
+	HLTxMu17Mu8 = isMatched ? 1.0 : 0.0 ;	
       }
       
       // Weights for both MC and embedded

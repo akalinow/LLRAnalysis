@@ -301,12 +301,14 @@ void drawHistogram(TCut sbinCat = TCut(""),
     }//MC
     else if(type.Contains("DY")){
       if(version_.Contains("ZeeSel"))
-	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
+// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
+	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY)";
       else 
-	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*ZeeWeight)";
     }
     else if(type.Contains("Embed")) {
-      //genMass="genDiTauMass>50"; // HLTxMu17Mu8
+      genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
       if (version_.Contains("NoEleIDSF")){
 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
 	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight)";
@@ -439,7 +441,7 @@ TArrayF createBins(int nBins_ = 80 ,
   
   char* c = new char[10];
   string filename = Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
-  
+  cout<<"bins file : "<<filename<<endl;
   if(version_.Contains("MSSM")) 
     filename = Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str());
   
@@ -832,23 +834,10 @@ void plotElecTau( Int_t mH_           = 120,
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
-  string selectionBins;
-  if(selection_.find("inclusive")!=string::npos)
-    selectionBins="inclusive";
-  if(selection_.find("boost")!=string::npos && selection_.find("Low")!=string::npos)
-    selectionBins="boostLow";
-  if(selection_.find("boost")!=string::npos && selection_.find("High")!=string::npos)
-    selectionBins="boostHigh";
-  if(selection_.find("novbfLow")!=string::npos)
-    selectionBins="novbfLow";
-  if(selection_.find("novbfHigh")!=string::npos)
-    selectionBins="novbfHigh";
-  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos )
-    selectionBins="vbf";
-  if(selection_.find("bTag")!=string::npos )
-    selectionBins="bTag";
 
-  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selectionBins, variable_);
+  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
+  if(selection_.find("ZeeSel")!=string::npos)
+    bins = createBins(nBins_, xMin_, xMax_, nBins, "inclusive", variable_);
   cout<<"Bins : "<<endl;
   for(int i=0 ; i<bins.GetSize() ; i++)cout<<"bin "<<i<<"   "<<bins[i]<<endl;
   
@@ -998,15 +987,15 @@ void plotElecTau( Int_t mH_           = 120,
   }
 
   vector<string> SUSYhistos;
-  //SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
-  //SUSYhistos.push_back("SUSYGG140");SUSYhistos.push_back("SUSYGG160"); SUSYhistos.push_back("SUSYGG180"); SUSYhistos.push_back("SUSYGG200");
-  //SUSYhistos.push_back("SUSYGG250");SUSYhistos.push_back("SUSYGG300"); SUSYhistos.push_back("SUSYGG350"); SUSYhistos.push_back("SUSYGG400");
-  //SUSYhistos.push_back("SUSYGG450");SUSYhistos.push_back("SUSYGG500"); SUSYhistos.push_back("SUSYGG600"); SUSYhistos.push_back("SUSYGG700");
-  //SUSYhistos.push_back("SUSYGG800");SUSYhistos.push_back("SUSYGG900"); SUSYhistos.push_back("SUSYBB90");  SUSYhistos.push_back("SUSYBB100");
-  //SUSYhistos.push_back("SUSYBB120");SUSYhistos.push_back("SUSYBB130"); SUSYhistos.push_back("SUSYBB140"); SUSYhistos.push_back("SUSYBB160");
-  //SUSYhistos.push_back("SUSYBB180");SUSYhistos.push_back("SUSYBB200"); SUSYhistos.push_back("SUSYBB250"); SUSYhistos.push_back("SUSYBB300");
-  //SUSYhistos.push_back("SUSYBB350");SUSYhistos.push_back("SUSYBB400"); SUSYhistos.push_back("SUSYBB450"); SUSYhistos.push_back("SUSYBB500");
-  //SUSYhistos.push_back("SUSYBB600");SUSYhistos.push_back("SUSYBB700"); SUSYhistos.push_back("SUSYBB800"); SUSYhistos.push_back("SUSYBB900");
+  SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
+  SUSYhistos.push_back("SUSYGG140");SUSYhistos.push_back("SUSYGG160"); SUSYhistos.push_back("SUSYGG180"); SUSYhistos.push_back("SUSYGG200");
+  SUSYhistos.push_back("SUSYGG250");SUSYhistos.push_back("SUSYGG300"); SUSYhistos.push_back("SUSYGG350"); SUSYhistos.push_back("SUSYGG400");
+  SUSYhistos.push_back("SUSYGG450");SUSYhistos.push_back("SUSYGG500"); SUSYhistos.push_back("SUSYGG600"); SUSYhistos.push_back("SUSYGG700");
+  SUSYhistos.push_back("SUSYGG800");SUSYhistos.push_back("SUSYGG900"); SUSYhistos.push_back("SUSYBB90");  SUSYhistos.push_back("SUSYBB100");
+  SUSYhistos.push_back("SUSYBB120");SUSYhistos.push_back("SUSYBB130"); SUSYhistos.push_back("SUSYBB140"); SUSYhistos.push_back("SUSYBB160");
+  SUSYhistos.push_back("SUSYBB180");SUSYhistos.push_back("SUSYBB200"); SUSYhistos.push_back("SUSYBB250"); SUSYhistos.push_back("SUSYBB300");
+  SUSYhistos.push_back("SUSYBB350");SUSYhistos.push_back("SUSYBB400"); SUSYhistos.push_back("SUSYBB450"); SUSYhistos.push_back("SUSYBB500");
+  SUSYhistos.push_back("SUSYBB600");SUSYhistos.push_back("SUSYBB700"); SUSYhistos.push_back("SUSYBB800"); SUSYhistos.push_back("SUSYBB900");
   std::map<string,TH1F*> mapSUSYhistos;
   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
     mapSUSYhistos.insert( make_pair(SUSYhistos[i], 
@@ -1039,7 +1028,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewAntiE/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1096,47 +1085,12 @@ void plotElecTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFile+"/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p0_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p1_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p2_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p3_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p4_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p5_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p6_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p7_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p8_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets-p9_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p0_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p1_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p2_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p3_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p4_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p5_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p6_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p7_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p8_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets-p9_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p0_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p1_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p2_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p3_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p4_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p5_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p6_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p7_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p8_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets-p9_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p0_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p1_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p2_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p3_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p4_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p5_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p6_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p7_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p8_ElecTau_"+fileAnalysis+".root");
-//   backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets-p9_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/nTupleDYJets_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets1Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets2Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets3Jets*_ElecTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"/temp/DYNoShift/nTupleDYJets4Jets*_ElecTau_"+fileAnalysis+".root");
+
   backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_ElecTau_"+fileAnalysis+".root");
   //
   backgroundOthers  ->Add(pathToFile+"nTupleT-tW_ElecTau_"+fileAnalysis+".root");
@@ -1203,11 +1157,11 @@ void plotElecTau( Int_t mH_           = 120,
     cout << "FILE ANALYSIS " << fileAnalysis << endl;
     //
     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJetsTauTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJetsEToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYElectoTau ->Add(pathToFile+"/nTupleDYJets*EToTau_ElecTau_"+fileAnalysis+".root");
     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJetsJetToTau_ElecTau_"+fileAnalysis+".root");
-//     backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets*JetToTau_ElecTau_"+fileAnalysis+".root");
+//     backgroundDYTauTau  ->Add(pathToFile+"/temp/nTupleDYJets*TauTau*ElecTau_"+fileAnalysis+".root");
+//     backgroundDYElectoTau ->Add(pathToFile+"/temp/nTupleDYJets*EToTau*ElecTau_"+fileAnalysis+".root");
+//     backgroundDYJtoTau  ->Add(pathToFile+"/temp/nTupleDYJets*JetToTau*ElecTau_"+fileAnalysis+".root");
   }
 
   cout << backgroundDYTauTau->GetEntries()  << " come from DY->tautau"         << endl;
@@ -1975,11 +1929,13 @@ void plotElecTau( Int_t mH_           = 120,
 	  
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 // 	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
-	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
-	    float tmpNorm = hCleaner->Integral();
+	    //drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
+	    //float tmpNorm = hCleaner->Integral();
 // 	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtisoInclusive&&vbfLooseQCD ,1);
 	    drawHistogram(vbfLooseQCD, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
-	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
+	    //hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD*(tmpNorm/hCleaner->Integral()));
+	    hDataAntiIsoLooseTauIso->Add(hCleaner);
+	    cout<<"vbfLoose shape integral :"<< hDataAntiIsoLooseTauIso->Integral()<<endl;
 
 	    //get efficiency of events passing QCD selection to pass the category selection 
 	    drawHistogram(sbinCatIncl, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
@@ -1989,6 +1945,8 @@ void plotElecTau( Int_t mH_           = 120,
 	    float effQCDToCatSel = tmpNormCatSel/tmpNormQCDSel;
 	    //Normalize to Inclusive measured QCD times the above efficiency
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
+	    cout<<"effQCDToCatSel*SSQCDinSignalRegionDATAIncl :"<<effQCDToCatSel*SSQCDinSignalRegionDATAIncl<<endl;
+	    cout<<"hDataAntiIsoLooseTauIsoQCD->Integral() :"<<hDataAntiIsoLooseTauIsoQCD->Integral()<<endl;
 	  }
 	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boost")!=string::npos){
 	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
@@ -2066,7 +2024,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 
 	  //hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
-
+	  /* //Not necessary for the analysis at the moment
 	  drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner,  sbinSSlIso1 ,1);
 	  hLooseIso1->Add(hCleaner, 1.0);
 	  drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner,  sbinSSlIso2 ,1);
@@ -2099,7 +2057,7 @@ void plotElecTau( Int_t mH_           = 120,
  			TTxsectionRatio*scaleFactorTTSS, ElectoTauCorrectionFactor*lumiCorrFactor, 
  			JtoTauCorrectionFactor*lumiCorrFactor, lumiCorrFactor*ExtrapolationFactorZDataMC,sbinSSInclusive,vbfLoose);
 	  hSSLooseVBF->Scale(hSS->Integral()/hSSLooseVBF->Integral());
-
+	  */
 	}
 
 	else if(currentName.Contains("VBFH")  || 
@@ -2383,9 +2341,9 @@ void plotElecTau( Int_t mH_           = 120,
   hStack->SetTitleSize(0.05,"Y");
   hStack->SetTitleOffset(0.95,"Y");
   if(!logy_)
-    hData->SetAxisRange(0.0, TMath::Max( hData->GetMaximum(), hSiml->GetMaximum() )*maxY_ ,"Y");
+    hData->SetAxisRange(0.0, TMath::Max( hData->GetMaximum() + hSgn->GetMaximum(), hSiml->GetMaximum() + hSgn->GetMaximum() )*maxY_ ,"Y");
   else
-    hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum(), hSiml->GetMaximum() )*maxY_ ,"Y");
+    hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum() + hSgn->GetMaximum(), hSiml->GetMaximum() + hSgn->GetMaximum() )*maxY_ ,"Y");
   aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
   if(logy_ && !version_.Contains("MSSM"))
