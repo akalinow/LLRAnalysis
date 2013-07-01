@@ -1213,10 +1213,11 @@ void plotElecTau( Int_t mH_           = 120,
   if(VERBOSE) cout << "-- gather the trees" << endl;
 
   const int nVarious = 10;
-  const int nChains  = nVarious + nProd*nMasses;
-  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYElectoTau","DYJtoTau","Embedded"};
+  const int nChainsSM= nVarious  + nProd*nMasses;
+  const int nChains  = nChainsSM + nProdS*nMassesS;
+  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYMutoTau","DYJtoTau","Embedded"};
   TChain* chainsVarious[nVarious]   ={data,backgroundWJets,data,backgroundW3Jets,backgroundTTbar,backgroundOthers,
-				      backgroundDYTauTau,backgroundDYElectoTau,backgroundDYJtoTau,dataEmbedded};
+				      backgroundDYTauTau,backgroundDYMutoTau,backgroundDYJtoTau,dataEmbedded};
   TString  treeNames[nChains];
   TChain*  chains[nChains];
   mapchain mapAllTrees;
@@ -1227,9 +1228,13 @@ void plotElecTau( Int_t mH_           = 120,
       treeNames[iCh] = treeNamesVarious[iCh];
       chains[iCh]    = chainsVarious[iCh];
     }    
-    else { // fill signal names and trees
+    else if(iCh<nChainsSM){ // fill signal names and trees
       treeNames[iCh] = nameProd[ int((iCh-nVarious)/nMasses) ] + nameMasses[ int((iCh-nVarious)%nMasses) ];
       chains[iCh]    = signal[ int((iCh-nVarious)/nMasses) ][ int((iCh-nVarious)%nMasses) ];
+    }
+    else { // fill signal names and trees
+      treeNames[iCh] = "SUSY"+nameProdS[ int((iCh-nChainsSM)/nMassesS) ] + nameMassesS[ int((iCh-nChainsSM)%nMassesS) ];
+      chains[iCh]    = signalSusy[ int((iCh-nChainsSM)/nMassesS) ][ int((iCh-nChainsSM)%nMassesS) ];
     }
     mapAllTrees[ treeNames[iCh] ] = chains[iCh]; // create an entry in the map
   }
@@ -2366,7 +2371,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      // 	    histoSusy->SetLineWidth(2);
 	    
 	    }
-	  }
+	  }//SUSY
 	}
       }
       else{
