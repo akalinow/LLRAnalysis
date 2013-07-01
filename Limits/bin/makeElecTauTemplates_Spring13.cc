@@ -83,7 +83,8 @@ void produce(
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "ABC",
-	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+// 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
 	     )
 {
@@ -1726,38 +1727,57 @@ void produceAll(){
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met45");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2VeryTight_TauIso1_Met45");
 
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met0","Met0");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met5","Met5");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met10","Met10");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met15","Met15");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met20","Met20");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met25","Met25");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met35","Met35");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met40","Met40");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met45","Met45");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met0","Met0");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met5","Met5");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met10","Met10");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met15","Met15");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met20","Met20");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met25","Met25");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met35","Met35");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met40","Met40");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_Met45","Met45");
   
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09","AntiZee09");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099","AntiZee099");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09","AntiZee09");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099","AntiZee099");
   // produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0995","AntiZee0995");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0996","AntiZee0996");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0997","AntiZee0997");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0999","AntiZee0999");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09995","AntiZee09995");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee0999","AntiZee0999");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09995","AntiZee09995");
 
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee09","AntiZee09");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee099","AntiZee099");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee0999","AntiZee0999");
 // produceOne("Results_ABCD_AntiMu1_AntiEle2Medium_TauIso1_AntiZee09995","AntiZee09995");
 
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met10","AntiZee09Met10");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met20","AntiZee09Met20");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met30","AntiZee09Met30");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met40","AntiZee09Met40");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met10","AntiZee09Met10");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met20","AntiZee09Met20");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met30","AntiZee09Met30");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee09Met40","AntiZee09Met40");
   
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met10","AntiZee099Met10");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met20","AntiZee099Met20");
-  produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met30","AntiZee099Met30");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met10","AntiZee099Met10");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met20","AntiZee099Met20");
+//   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met30","AntiZee099Met30");
   //   produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_TauIso1_AntiZee099Met40","AntiZee099Met40");
+
+  //NewEleID
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_OldEleID_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_NewEleID_Datacards");
+// produceOne("Results_ABCD_AntiMu2_AntiEle2Tight_HPSDB3H_OldEleID_Datacards");
+// produceOne("Results_ABCD_AntiMu2_AntiEle2Tight_HPSDB3H_NewEleID_Datacards");
+// produceOne("Results_ABCD_AntiMu2_AntiEle2Tight_HPSDB3H_NewEleIDLooseWP_Datacards");
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_NewEleID_Tight_Datacards");
+// produceOne("Results_ABCD_AntiMu2_AntiEle2Tight_HPSDB3H_NewEleID_Tight_Datacards");
+
+// produceOne("Results_ABCD_AntiMu1_AntiEle1_TauIso1_NewEleID_Tight_Datacards");
+// produceOne("Results_ABCD_AntiMu2_AntiEle2Tight_HPSDB3H_NewEleID_Tight_Datacards");
+
+produceOne("Results_ABCD_AntiMu1_AntiEle1_HPSDB3H_OldEleID_Datacards");
+produceOne("Results_ABCD_AntiMu1_AntiEle2Tight_HPSDB3H_OldEleID_Datacards");
+produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
+produceOne("Results_ABCD_AntiMu1_AntiEleNewTight_HPSDB3H_OldEleID_Datacards");
+produceOne("Results_ABCD_AntiMu1_AntiEleNewVeryTight_HPSDB3H_OldEleID_Datacards");
+
 }
 
 
