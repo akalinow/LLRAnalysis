@@ -67,6 +67,9 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
     return;
   }
 
+
+
+
   for(int k = 1 ; k <= hDensity->GetNbinsX(); k++){
     float bink   = hDensity->GetBinContent(k);
     float widthk = hHistogram->GetBinWidth(k);
@@ -74,6 +77,10 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
   }
   hDensity->Scale(hHistogram->Integral()/hDensity->Integral());
 }
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& antiele, TCut& lID, TCut& lveto)
@@ -290,14 +297,14 @@ void drawHistogram(TCut sbinCat = TCut(""),
     TCut weight   ="run>0";
 
     if(type.Contains("MC")) {
-      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*passL1etmCutABC*ZeeWeightHCP)";
-      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight)";
-      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
+      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*passL1etmCutABC*ZeeWeightHCP*weightDecayMode)";
+      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight*weightDecayMode)";
+      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP)";
-	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight)";
-	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
-	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
+	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
+	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
+	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight*weightDecayMode)";
       } //NoSoft     
       //weights for GGFH pT re-weight
       if(type.Contains("GGFHUp"))
@@ -309,32 +316,32 @@ void drawHistogram(TCut sbinCat = TCut(""),
     }//MC
     else if(type.Contains("DY")){
       if(version_.Contains("ZeeSel"))
-// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup)";
-	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY)";
+// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightDecayMode)";
+	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*weightDecayMode)";
       else 
-// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
-	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*ZeeWeight)";
+// 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight*weightDecayMode)";
+	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*ZeeWeight*weightDecayMode)";
     }
     else if(type.Contains("Embed")) {
       genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
       if (version_.Contains("NoEleIDSF")){
-	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight)";
-	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight)";
-	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight)";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*weightDecayMode)";
 	else if(!version_.Contains("Soft")) {
-	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight)";
-	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight)";
-	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight)";
+	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*weightDecayMode)";
+	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*weightDecayMode)";
+	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*weightDecayMode)";
 	}
       }
       else{
-	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*elecEffSF)";
-	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*elecEffSF)";
-	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*elecEffSF)";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
 	else if(!version_.Contains("Soft")) {
-	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*elecEffSF)";
-	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*elecEffSF)";
-	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*elecEffSF)";
+	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
 	}
       }
     }
