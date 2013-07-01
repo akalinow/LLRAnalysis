@@ -851,6 +851,14 @@ void plotElecTau( Int_t mH_           = 120,
   TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
   int hMasses[nMasses]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};  
 
+  const int nProdS=2;
+  const int nMassesS=21;
+  TString nameProdS[nProdS]={"GGH","BBH"};
+  int hMassesS[nMassesS]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
+  TString nameMassesS[nMassesS];
+  if(DEBUG) cout << "build masses string" << endl;
+  for(int iM=0 ; iM<nMassesS ; iM++) nameMassesS[iM]=TString(Form("%d",hMassesS[iM]));
+  
   ofstream out(Form(location+"/%s/yields/yieldsElecTau_mH%d_%s_%s.txt",
 		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
   out.precision(5);
@@ -1026,23 +1034,15 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHDown[iM]->SetLineWidth(2);
   }
   
-  vector<string> SUSYhistos;
-  SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
-  SUSYhistos.push_back("SUSYGG140");SUSYhistos.push_back("SUSYGG160"); SUSYhistos.push_back("SUSYGG180"); SUSYhistos.push_back("SUSYGG200");
-  SUSYhistos.push_back("SUSYGG250");SUSYhistos.push_back("SUSYGG300"); SUSYhistos.push_back("SUSYGG350"); SUSYhistos.push_back("SUSYGG400");
-  SUSYhistos.push_back("SUSYGG450");SUSYhistos.push_back("SUSYGG500"); SUSYhistos.push_back("SUSYGG600"); SUSYhistos.push_back("SUSYGG700");
-  SUSYhistos.push_back("SUSYGG800");SUSYhistos.push_back("SUSYGG900"); SUSYhistos.push_back("SUSYBB90");  SUSYhistos.push_back("SUSYBB100");
-  SUSYhistos.push_back("SUSYBB120");SUSYhistos.push_back("SUSYBB130"); SUSYhistos.push_back("SUSYBB140"); SUSYhistos.push_back("SUSYBB160");
-  SUSYhistos.push_back("SUSYBB180");SUSYhistos.push_back("SUSYBB200"); SUSYhistos.push_back("SUSYBB250"); SUSYhistos.push_back("SUSYBB300");
-  SUSYhistos.push_back("SUSYBB350");SUSYhistos.push_back("SUSYBB400"); SUSYhistos.push_back("SUSYBB450"); SUSYhistos.push_back("SUSYBB500");
-  SUSYhistos.push_back("SUSYBB600");SUSYhistos.push_back("SUSYBB700"); SUSYhistos.push_back("SUSYBB800"); SUSYhistos.push_back("SUSYBB900");
-  std::map<string,TH1F*> mapSUSYhistos;
-  for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-    mapSUSYhistos.insert( make_pair(SUSYhistos[i], 
-				    new TH1F(Form("h%s",SUSYhistos[i].c_str()) ,
-					     Form("%s", SUSYhistos[i].c_str()), 
-					     nBins , bins.GetArray()) ) 
-			  );
+  TH1F* hSusy[nProdS][nMassesS];
+
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++) {
+      for(int iM=0 ; iM<nMassesS ; iM++) {
+        hSusy[iP][iM] = new TH1F("h"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
+        hSusy[iP][iM]->SetLineWidth(2);
+      }
+    }
   }
 
   TH1F* hParameters   = new TH1F( "hParameters", "" ,30, 0, 30);
@@ -1170,13 +1170,13 @@ void plotElecTau( Int_t mH_           = 120,
     }
   }
   
-//   TChain *signalSusy[nProdS][nMassesS];
-//   for(int iP=0 ; iP<nProdS ; iP++) {
-//     for(int iM=0 ; iM<nMasses ; iM++) {
-//       signalSusy[iP][iM] = new TChain(treeMC);
-//       signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_ElecTau_"+fileAnalysis+".root");
-//     }
-//   }
+  TChain *signalSusy[nProdS][nMassesS];
+  for(int iP=0 ; iP<nProdS ; iP++) {
+    for(int iM=0 ; iM<nMasses ; iM++) {
+      signalSusy[iP][iM] = new TChain(treeMC);
+      signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_ElecTau_"+fileAnalysis+".root");
+    }
+  }
 
   // Split DY into 3 sub-samples (TauTau, ElecToTau, JetToTau)
   TFile *dummy1;
@@ -1680,6 +1680,13 @@ void plotElecTau( Int_t mH_           = 120,
       continue;
     }
 
+    if(!currentTree) {
+      cout << "ERROR : no such tree" << endl;
+      continue;
+    }
+
+    if(!MSSM && currentName.Contains("SUSY")) continue;
+    
     h1Name         = "h1_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
     TH1F* hCleaner = new TH1F("hCleaner","",nBins , bins.GetArray());
@@ -2300,8 +2307,8 @@ void plotElecTau( Int_t mH_           = 120,
 
 	else if(currentName.Contains("VBFH")  || 
 		currentName.Contains("GGFH")  ||
-		currentName.Contains("VH")   ){
-		//currentName.Contains("SUSY")){
+		currentName.Contains("VH")    ||
+		currentName.Contains("SUSY")){
 
 	  float NormSign = 0.;
 	  drawHistogram(sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, sbin, 1);
@@ -2337,16 +2344,32 @@ void plotElecTau( Int_t mH_           = 120,
               hGGFHDown[iM]->Add(hCleaner,1.0);
             }
           }
-// 	  if(currentName.Contains("SUSY")){
-// 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
-// 	    histoSusy->Add(h1,1.0);
-// 	    histoSusy->SetLineWidth(2);
-// 	  }
 
+	  if(MSSM) {
+	    if(currentName.Contains("SUSY")){
+              //select events within 30% of Higgs mass
+              TString sampleName = currentName;
+              if(sampleName.Contains("SUSYGGH"))sampleName.ReplaceAll("SUSYGGH", "");
+              else if(sampleName.Contains("SUSYBBH"))sampleName.ReplaceAll("SUSYBBH", "");
+              float mA = atof(sampleName.Data());
+              //cout<<" SUSY mass "<<currentName<<" "<<mA<<endl;
+              TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));
+              //cout<<" width cut "<<HWidth<<endl;
+	      
+	      drawHistogram(sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+              for(int iP=0 ; iP<nProdS ; iP++)
+                for(int iM=0 ; iM<nMassesS ; iM++)
+                  if(currentName.Contains(nameProdS[iP]+nameMassesS[iM]))
+                    hSusy[iP][iM]->Add(h1,1.0);
+
+	      // 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
+	      // 	    histoSusy->Add(h1,1.0);
+	      // 	    histoSusy->SetLineWidth(2);
+	    
+	    }
+	  }
 	}
-
       }
-
       else{
 	if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 	  float NormEmbed = 0.;
@@ -2793,9 +2816,11 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHUp[iM]->Write();
     hGGFHDown[iM]->Write();
   }
-//   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-//     ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
-//   }
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++)
+      for(int iM=0 ; iM<nMassesS ; iM++)
+        if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
+  }
 
   if(variable_.Contains("Mass")) hDataBlind->Write();
 
@@ -2805,6 +2830,14 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) delete hSignal[iP][iM];
+  for(int iM=0 ; iM<nMasses ; iM++){
+    delete hGGFHUp[iM]; delete hGGFHDown[iM];
+  }
+  if(MSSM) {
+    for(int iP=0 ; iP<nProdS ; iP++)
+      for(int iM=0 ; iM<nMassesS ; iM++)
+        if(hSusy[iP][iM]) delete hSusy[iP][iM];
+  }
 
   delete hQCD; delete hSS; delete hSSLooseVBF; delete hZmm; delete hZmj; delete hZfakes; delete hTTb; delete hZtt; 
   delete hW; delete hWSS; delete hWMinusSS; delete hW3Jets; delete hAntiIso; delete hAntiIsoFR;
@@ -2827,10 +2860,11 @@ void plotElecTau( Int_t mH_           = 120,
       delete signal[iP][iM];
     }
   }
-//   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-//     (mapSUSYfiles.find( SUSYhistos[i] )->second)->Close();
-//     delete mapSUSYfiles.find( SUSYhistos[i] )->second ;
-//   }
+  for(int iP=0 ; iP<nProdS ; iP++) {
+    for(int iM=0 ; iM<nMasses ; iM++) {
+      delete signalSusy[iP][iM];
+    }
+  }
 
 }
 
