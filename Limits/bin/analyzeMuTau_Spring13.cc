@@ -824,7 +824,7 @@ void plotMuTau( Int_t mH_           = 120,
 
   const int nProdS=2;
   const int nMassesS=21;
-  TString nameProdS[nProdS]={"GGFH","BBH"};
+  TString nameProdS[nProdS]={"GGH","BBH"};
   int hMassesS[nMassesS]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
   TString nameMassesS[nMassesS];
   if(DEBUG) cout << "build masses string" << endl;
@@ -2323,8 +2323,8 @@ void plotMuTau( Int_t mH_           = 120,
 	    if(currentName.Contains("SUSY")){
 	      //select events within 30% of Higgs mass
 	      TString sampleName = currentName;
-	      if(sampleName.Contains("SUSYGG"))sampleName.ReplaceAll("SUSYGG", "");
-	      else if(sampleName.Contains("SUSYBB"))sampleName.ReplaceAll("SUSYBB", "");
+	      if(sampleName.Contains("SUSYGGH"))sampleName.ReplaceAll("SUSYGGH", "");
+	      else if(sampleName.Contains("SUSYBBH"))sampleName.ReplaceAll("SUSYBBH", "");
 	      float mA = atof(sampleName.Data());
 	      //cout<<" SUSY mass "<<currentName<<" "<<mA<<endl; 
 	      TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
@@ -2806,12 +2806,11 @@ void plotMuTau( Int_t mH_           = 120,
       delete signal[iP][iM];
     }
   }
-
-//   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
-//     (mapSUSYfiles.find( SUSYhistos[i] )->second)->Close();
-//     delete mapSUSYfiles.find( SUSYhistos[i] )->second ;
-//   }
-
+  for(int iP=0 ; iP<nProdS ; iP++) {
+    for(int iM=0 ; iM<nMasses ; iM++) {
+      delete signalSusy[iP][iM];
+    }
+  }
   
 }
 
