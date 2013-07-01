@@ -14,6 +14,7 @@ import subprocess
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewJEC/EleTau/'
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewAntiE/EleTau/'
 WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewAntiE/EleTau/'
+WorkdirLocEmb = '/data_CMS/cms/htautau/PostMoriond/TREES_NewEmbedLLR/EleTau/'
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewRecoil/EleTau/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/SoftAnalysis/iter2/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES/EleTau/temp/'
@@ -261,7 +262,7 @@ options = {
     },
     ##Embedded
     'Run2012A-22Jan2013-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012A_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012A_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4/',
     'outputFileName' : OutDir+'nTupleRun2012A-22Jan2013-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-22Jan2013-Embedded',
     'xSection'       : 0,
@@ -271,7 +272,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -281,7 +282,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -291,7 +292,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -301,7 +302,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -311,7 +312,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012B_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -321,7 +322,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p0-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p0/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p0/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p0-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p0-Embedded',
     'xSection'       : 0,
@@ -331,7 +332,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -341,7 +342,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -351,7 +352,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -361,7 +362,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -371,7 +372,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -381,7 +382,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p6/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p6-Embedded',
     'xSection'       : 0,
@@ -391,7 +392,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p7/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012C_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p7-Embedded',
     'xSection'       : 0,
@@ -401,7 +402,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -411,7 +412,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -421,7 +422,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -431,7 +432,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -441,7 +442,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -451,7 +452,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p6/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-Embedded',
     'xSection'       : 0,
@@ -461,7 +462,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p7/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-Embedded',
     'xSection'       : 0,
@@ -471,7 +472,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p8-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p8/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-Embedded',
     'xSection'       : 0,
@@ -481,7 +482,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p9-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p9/',
+    'inputFilePath'  : WorkdirLocEmb+'Embedded/Embed_etau_2012D_ReReco22Jan_HTT_06Mar2013_Trees_EleTau_v4_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-Embedded',
     'xSection'       : 0,
@@ -3049,7 +3050,7 @@ options = {
     'outputFileName' : OutDir+'nTupleSUSYBBH300_ElecTau.root',
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
-    'skimEff'        : 0.487159715972 * 0.588319,
+    'skimEff'        : 0.487159715972 * 297096./487111,
    'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
