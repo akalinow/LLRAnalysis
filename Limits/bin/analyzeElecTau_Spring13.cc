@@ -33,7 +33,6 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define VERBOSE          true
-#define MSSM             false
 #define DEBUG            false
 #define LOOP             true
 #define W3JETS           false
@@ -1036,7 +1035,7 @@ void plotElecTau( Int_t mH_           = 120,
   
   TH1F* hSusy[nProdS][nMassesS];
 
-  if(MSSM) {
+  if(version_.Contains("MSSM")){
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
         hSusy[iP][iM] = new TH1F("h"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
@@ -1685,7 +1684,7 @@ void plotElecTau( Int_t mH_           = 120,
       continue;
     }
 
-    if(!MSSM && currentName.Contains("SUSY")) continue;
+    if(!version_.Contains("MSSM") && currentName.Contains("SUSY")) continue;
     
     h1Name         = "h1_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
@@ -2345,7 +2344,7 @@ void plotElecTau( Int_t mH_           = 120,
             }
           }
 
-	  if(MSSM) {
+	  if(version_.Contains("MSSM")) {
 	    if(currentName.Contains("SUSY")){
               //select events within 30% of Higgs mass
               TString sampleName = currentName;
@@ -2583,13 +2582,20 @@ void plotElecTau( Int_t mH_           = 120,
     aStack->Add(hDataEmb);
   else
     aStack->Add(hZtt);
-  if(!logy_ && !version_.Contains("MSSM"))
+
+  TH1F* hSgnSUSY = (TH1F*)hSusy[0][4]->Clone("hSgnSUSY");
+  hSgnSUSY->Add(hSusy[1][4]);
+  hSgnSUSY->Scale(magnifySgn_);
+  if(version_.Contains("MSSM")){
+    aStack->Add(hSgnSUSY);
+  }
+  else if(!logy_)
     aStack->Add(hSgn);
-  
+
   leg->AddEntry(hData,"Observed","P");
-  if(!version_.Contains("MSSM")) 
-//     leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=%d",magnifySgn_,mH_),"F");
-//   else 
+  if(version_.Contains("MSSM")) 
+    leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=120",magnifySgn_),"F");
+  else 
     leg->AddEntry(hSgn,Form("(%.0fx) H#rightarrow#tau#tau m_{H}=%d",magnifySgn_,mH_),"F");
   if(useEmbedding_)
     leg->AddEntry(hDataEmb,"Z#rightarrow#tau#tau (embedded)","F");
@@ -2794,6 +2800,7 @@ void plotElecTau( Int_t mH_           = 120,
   hSgn1->Write();
   hSgn2->Write();
   hSgn3->Write();
+  hSgnSUSY->Write();
   hW3JetsLooseTauIso->Write();
   hW3JetsMediumTauIso->Write();
   hW3JetsMediumTauIsoRelVBF->Write();
@@ -2816,7 +2823,7 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHUp[iM]->Write();
     hGGFHDown[iM]->Write();
   }
-  if(MSSM) {
+  if(version_.Contains("MSSM")) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
         if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
@@ -2833,7 +2840,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iM=0 ; iM<nMasses ; iM++){
     delete hGGFHUp[iM]; delete hGGFHDown[iM];
   }
-  if(MSSM) {
+  if(version_.Contains("MSSM")) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
         if(hSusy[iP][iM]) delete hSusy[iP][iM];
