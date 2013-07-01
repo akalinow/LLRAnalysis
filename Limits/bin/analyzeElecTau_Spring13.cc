@@ -1739,7 +1739,7 @@ void plotElecTau( Int_t mH_           = 120,
 
       //fine binning for MSSM
       if(selection_.find("nobTag")!=string::npos){
-        TH1F* h1fb = new TH1F("h1fb","",400, 0., 2000.); //fine binning hostogram for MSSM
+        TH1F* h1fb = new TH1F("h1fb","",400, 0., 2000.); //fine binning histogram for MSSM
 	if ( !h1fb->GetSumw2N() ) h1fb->Sumw2();
 	
 	evaluateQCD(mapAllTrees, version_, RUN, h1fb, hCleanerfb, true, "SS", false, removeMtCut, selection_,
@@ -2018,7 +2018,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    float NormDYElectoTau = 0.;
 	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
 	    //shape from loose bTag selection
-	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbinInclusive, 1);
+	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
 	    hZmm->Add(hCleaner, 1.0); 
 	    hZfakes->Add(hCleaner,1.0); 
