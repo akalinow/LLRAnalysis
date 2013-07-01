@@ -298,6 +298,13 @@ void drawHistogram(TCut sbinCat = TCut(""),
 	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight)";
 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight)";
       } //NoSoft     
+      //weights for GGFH pT re-weight
+      if(type.Contains("GGFHUp"))
+        weight *= "HqTWeightUp";
+      else if(type.Contains("GGFHDown"))
+        weight *= "HqTWeightDown";
+      else
+        weight *= "HqTWeight";
     }//MC
     else if(type.Contains("DY")){
       if(version_.Contains("ZeeSel"))
@@ -992,7 +999,15 @@ void plotElecTau( Int_t mH_           = 120,
       hSignal[iP][iM]->SetLineWidth(2);
     }
   }
-
+  //GGH Higgs pT weights up/down
+  TH1F* hGGFHUp[nMasses]; TH1F* hGGFHDown[nMasses];
+  for(int iM=0 ; iM<nMasses ; iM++) {
+    hGGFHUp[iM] = new TH1F("hGGFH"+nameMasses[iM]+"Up", "GGFH"+nameMasses[iM]+"Up", nBins , bins.GetArray());
+    hGGFHUp[iM]->SetLineWidth(2);
+    hGGFHDown[iM] = new TH1F("hGGFH"+nameMasses[iM]+"Down", "GGFH"+nameMasses[iM]+"Down", nBins , bins.GetArray());
+    hGGFHDown[iM]->SetLineWidth(2);
+  }
+  
   vector<string> SUSYhistos;
   SUSYhistos.push_back("SUSYGG90"); SUSYhistos.push_back("SUSYGG100"); SUSYhistos.push_back("SUSYGG120"); SUSYhistos.push_back("SUSYGG130");
   SUSYhistos.push_back("SUSYGG140");SUSYhistos.push_back("SUSYGG160"); SUSYhistos.push_back("SUSYGG180"); SUSYhistos.push_back("SUSYGG200");
@@ -2182,6 +2197,16 @@ void plotElecTau( Int_t mH_           = 120,
 	      if(currentName.Contains(nameProd[iP]+nameMasses[iM]))
 		hSignal[iP][iM]->Add(h1,1.0);
 
+	  for(int iM=0 ; iM<nMasses ; iM++){
+            if(currentName.Contains("GGFH"+nameMasses[iM])){
+              hCleaner->Reset(); float NormSignUp = 0.;
+	      drawHistogram(sbinCat, "MCGGFHUp",version_, RUN, currentTree, variable, NormSignUp, Error,    Lumi*hltEff_/1000., hCleaner, sbin, 1);
+	      hGGFHUp[iM]->Add(hCleaner,1.0);
+              hCleaner->Reset(); float NormSignDown = 0.;
+	      drawHistogram(sbinCat, "MCGGFHDown",version_, RUN, currentTree, variable, NormSignDown, Error,    Lumi*hltEff_/1000., hCleaner, sbin, 1);
+              hGGFHDown[iM]->Add(hCleaner,1.0);
+            }
+          }
 // 	  if(currentName.Contains("SUSY")){
 // 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
 // 	    histoSusy->Add(h1,1.0);
@@ -2622,7 +2647,10 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
-
+  for(int iM=0 ; iM<nMasses ; iM++){
+    hGGFHUp[iM]->Write();
+    hGGFHDown[iM]->Write();
+  }
 //   for(unsigned int i = 0; i < SUSYhistos.size() ; i++){
 //     ((mapSUSYhistos.find( SUSYhistos[i] ))->second)->Write();
 //   }
