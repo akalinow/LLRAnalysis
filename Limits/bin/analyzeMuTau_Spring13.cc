@@ -256,7 +256,6 @@ void drawHistogram(TCut sbinPair,
 
     // GenMass cut //
     TCut genMass("run>0");
-    //if(type.Contains("Embed")) genMass = TCut("genDiTauMass>50");
 
     // Reweighting
     TCut weight       = "run>0";
@@ -267,31 +266,32 @@ void drawHistogram(TCut sbinPair,
       if(version_.Contains("NoDYExcl")) sampleWeight = "sampleWeight*sampleWeightDY*weightHepNup";
       else                              sampleWeight = "sampleWeight*weightHepNupDY*weightHepNup";
       
-      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC)";
-      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
-      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
+      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
+      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
+      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC)";
-	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
-	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
+	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightDecayMode)";
+	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode)";
       }      
-      /* //to be used when weight is available
+      //to be used when weight is available
       if(type.Contains("GGFHUp")) 
 	weight *= "HqTWeightUp"; 
       else if(type.Contains("GGFHDown"))  
 	weight *= "HqTWeightDown";
       else
 	weight *= "HqTWeight";
-      */
+      
     }
     else if(type.Contains("Embed")) {
-      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight)";
-      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight)";
-      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight)";
+      genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
+      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
+      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
+      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight)";
-	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
+	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight*weightDecayMode)";
       }
     }
 
@@ -299,7 +299,7 @@ void drawHistogram(TCut sbinPair,
     if(LOOP) {
 
       if(DEBUG) cout << "-- produce skim" << endl;
-      tree->Draw(">>+skim", sbinPair ,"entrylist");
+      tree->Draw(">>+skim", sbinPair && genMass,"entrylist");
       TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
       int nEntries = skim->GetN();
       tree->SetEntryList(skim);
@@ -1059,11 +1059,11 @@ void plotMuTau( Int_t mH_           = 120,
   //TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
   //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; // data + embed
-  TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/restrict2/"; //+"/update/"; 
-  TString pathMC        = pathToFile; 
-  TString pathW         = pathToEmbed; 
-  TString pathDY        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/newDYWeight/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; //data
+  TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewNadir/MuTau/"; 
+  TString pathMC        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/MuTau/update/";
+  TString pathW         = pathMC; 
+  TString pathDY        = pathMC;
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -2307,7 +2307,7 @@ void plotMuTau( Int_t mH_           = 120,
 	    for(int iM=0 ; iM<nMasses ; iM++)
 	      if(currentName.Contains(nameProd[iP]+nameMasses[iM]))
 		hSignal[iP][iM]->Add(h1,1.0);
-	  /* //to be used when weight is available
+	  //to be used when weight is available
 	  for(int iM=0 ; iM<nMasses ; iM++){
 	    if(currentName.Contains("GGFH"+nameMasses[iM])){
 	      hCleaner->Reset(); float NormSignUp = 0.;
@@ -2318,7 +2318,7 @@ void plotMuTau( Int_t mH_           = 120,
 	      hGGFHDown[iM]->Add(hCleaner,1.0);
 	    }
 	  }
-	  */
+	  
 	  if(MSSM) {
 	    if(currentName.Contains("SUSY")){
 	      //select events within 30% of Higgs mass
@@ -2401,7 +2401,7 @@ void plotMuTau( Int_t mH_           = 120,
     out << string(c) << "  //" << (it->first) << endl;
     delete c;
 
-    delete hCleaner;
+    delete hCleaner; delete hCleanerfb;
   }
   out.close();
 
