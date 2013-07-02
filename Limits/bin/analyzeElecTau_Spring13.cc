@@ -455,10 +455,11 @@ TArrayF createBins(int nBins_ = 80 ,
   
   char* c = new char[10];
   string filename = Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
-  cout<<"bins file : "<<filename<<endl;
-  if(version_.Contains("MSSM")) 
+  if(version_.Contains("MSSM"))
     filename = Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str());
-  
+
+  cout<<"bins file : "<<filename<<endl;
+
   is.open(filename); 
   if(nBins_<0 &&  !is.good()){
     cout << "Bins file not found" << endl;
@@ -863,7 +864,7 @@ void plotElecTau( Int_t mH_           = 120,
   out.precision(5);
   int nBins = nBins_;
 
-  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
+  TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_,version_ );
   if(selection_.find("ZeeSel")!=string::npos)
     bins = createBins(nBins_, xMin_, xMax_, nBins, "inclusive", variable_);
   cout<<"Bins : "<<endl;
@@ -1215,9 +1216,9 @@ void plotElecTau( Int_t mH_           = 120,
   const int nVarious = 10;
   const int nChainsSM= nVarious  + nProd*nMasses;
   const int nChains  = nChainsSM + nProdS*nMassesS;
-  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYMutoTau","DYJtoTau","Embedded"};
+  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYElectoTau","DYJtoTau","Embedded"};
   TChain* chainsVarious[nVarious]   ={data,backgroundWJets,data,backgroundW3Jets,backgroundTTbar,backgroundOthers,
-				      backgroundDYTauTau,backgroundDYMutoTau,backgroundDYJtoTau,dataEmbedded};
+				      backgroundDYTauTau,backgroundDYElectoTau,backgroundDYJtoTau,dataEmbedded};
   TString  treeNames[nChains];
   TChain*  chains[nChains];
   mapchain mapAllTrees;
@@ -2558,6 +2559,8 @@ void plotElecTau( Int_t mH_           = 120,
 
   hSiml->Add(hTTb,1.0);
 
+  aStack->Add(hTTb);
+
   if(!USESSBKG){
     if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
       aStack->Add(hDataAntiIsoLooseTauIsoQCD);
@@ -2580,8 +2583,6 @@ void plotElecTau( Int_t mH_           = 120,
   aStack->Add(hZmm);
   if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
     aStack->Add(hZmj);
-
-  aStack->Add(hTTb);
 
   if(useEmbedding_)
     aStack->Add(hDataEmb);
