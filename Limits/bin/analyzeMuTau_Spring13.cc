@@ -1289,6 +1289,12 @@ void plotMuTau( Int_t mH_           = 120,
   //TCut apZ2(Form("((%s)>%f && (%s)<120)",antiWcut.c_str(),antiWsdb,antiWcut.c_str()));
   TCut apZ2(Form("((%s)>60 && (%s)<120)",antiWcut.c_str(),antiWcut.c_str()));
 
+  // Check OS vs SS distributions (e.g. QCD)
+  if(version_.Contains("OS")) { 
+    SS=OS;
+    OStoSSRatioQCD=1.0;
+  }
+
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
   TCut MtCut       = removeMtCut     ? "(etaL1<999)" : pZ;
@@ -1314,7 +1320,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut vbfRelaxedTight("nJets30>=2 && pt1>30 && pt2>30 && isVetoInJets!=1 && Mjj>200 && Deta>2 && diTauRecoPt>100");
   TCut vbfRelaxedTightQCD("nJets20>=2 && pt1>20 && pt2>20 && isVetoInJets!=1 && Mjj>200 && Deta>2 && diTauRecoPt>100");
   TCut vbf;
-  if (selection_.find("vbfOld")!=string::npos)
+  if (version_.Contains("OldCat"))  
     vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1");
   else{
     vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1 && nJets20BTagged<1");
@@ -1333,42 +1339,47 @@ void plotMuTau( Int_t mH_           = 120,
 
   TCut vh("pt1>30 && pt2>30 && Mjj>70 && Mjj<120 && diJetPt>150 && MVAvbf<0.80 && nJets20BTagged<1");
   TCut boost("nJets30>0 && pt1>30 && nJets20BTagged<1");
-  boost = boost && !vbf && !vbfTight /*&& !vh*/;
+  boost = boost && !vbf /*&& !vh*/;
+  if(!version_.Contains("OldCat")) boost = boost && !vbfTight ;
+
   TCut bTag("nJets30<2 && nJets20BTagged>0");
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
   //TCut bTagLoose("nJets30<2 && nJets20>=1");
   TCut nobTag("nJets30<2 && nJets20BTagged==0");
+
   TCut novbf("nJets30<1 && nJets20BTagged==0");
 
-  if(selection_.find("High")!=string::npos) {
-    boost = boost&&TCut("ptL2>45");
-    novbf = novbf&&TCut("ptL2>45");
+  // SWITCH TO OLD CATEGORIES //
+  if(version_.Contains("OldCat") && !version_.Contains("OldCatVBF")) {
+    if(selection_.find("High")!=string::npos) {
+      boost = boost&&TCut("ptL2>40"); 
+      novbf = novbf&&TCut("ptL2>40");
+    }
+    else if(selection_.find("Low")!=string::npos){
+      boost = boost&&TCut("ptL2<40"); 
+      novbf = novbf&&TCut("ptL2<40"); 
+    }
   }
-  else if(selection_.find("Medium")!=string::npos){
-    boost = boost&&TCut("ptL2>30 && ptL2<45");
-    novbf = novbf&&TCut("ptL2>30 && ptL2<45");
+  else {
+    if(selection_.find("High")!=string::npos) {
+      boost = boost&&TCut("ptL2>45");
+      novbf = novbf&&TCut("ptL2>45");
+    }
+    else if(selection_.find("Medium")!=string::npos){
+      boost = boost&&TCut("ptL2>30 && ptL2<45");
+      novbf = novbf&&TCut("ptL2>30 && ptL2<45");
+    }
+    else if(selection_.find("Low")!=string::npos){
+      boost = boost&&TCut("ptL2<30");
+      novbf = novbf&&TCut("ptL2<30");
+    }
+    if(selection_.find("highhiggs")!=string::npos) {
+      boost = boost&&TCut("diTauRecoPt>100");
+    }
+    else if(selection_.find("lowhiggs")!=string::npos) {
+      boost = boost&&TCut("diTauRecoPt<100");
+    }
   }
-  else if(selection_.find("Low")!=string::npos){
-    boost = boost&&TCut("ptL2<30");
-    novbf = novbf&&TCut("ptL2<30");
-  }
-
-  if(selection_.find("OldHigh")!=string::npos) {
-    boost = boost&&TCut("ptL2>40"); 
-    novbf = novbf&&TCut("ptL2>40");
-  }
-  else if(selection_.find("OldLow")!=string::npos){
-    boost = boost&&TCut("ptL2<40"); 
-    novbf = novbf&&TCut("ptL2<40"); 
-  }
-
-  if(selection_.find("highhiggs")!=string::npos) {
-    boost = boost&&TCut("diTauRecoPt>100");
-  }
-  else if(selection_.find("lowhiggs")!=string::npos) {
-    boost = boost&&TCut("diTauRecoPt<100");
-  }
-
   TCut sbinCatIncl("etaL1<999");
   TCut sbinCat("");
   if(     selection_.find("inclusive")!=string::npos) sbinCat = "etaL1<999";
@@ -1888,6 +1899,13 @@ void plotMuTau( Int_t mH_           = 120,
             float NormWJets_NoOS = 0; hCleaner->Reset();
 	    
             drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormWJets_NoOS,Error,   Lumi*hltEff_/1000., hCleaner, sbinChargeRelLtisoInclusive, 1);
+            hW->Add(hCleaner, h1->Integral()/hCleaner->Integral());
+            hEWK->Add(hCleaner, h1->Integral()/hCleaner->Integral());
+          }
+	  else if(selection_.find("boostHigh")!=string::npos){
+            float NormWJets_NoOS = 0; hCleaner->Reset();
+	    
+	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormWJets_NoOS,Error,   Lumi*hltEff_/1000., hCleaner, sbinChargeRelInclusive, 1);
             hW->Add(hCleaner, h1->Integral()/hCleaner->Integral());
             hEWK->Add(hCleaner, h1->Integral()/hCleaner->Integral());
           }
