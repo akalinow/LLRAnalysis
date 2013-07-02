@@ -428,7 +428,11 @@ TArrayF createBins(int nBins_ = 80 ,
   dummy[0] = xMin_; dummy[1] = xMax_;
   
   char* c = new char[10];
-  is.open(Form(location+"/bins_muTau_%s_%s.txt",variable_.Data(), selection_.c_str())); 
+  string filename = Form(location+"/bins_muTau_%s_%s.txt",variable_.Data(), selection_.c_str());
+  if(MSSM)
+    filename = Form(location+"/bins_muTau_%s_%s_mssm.txt",variable_.Data(), selection_.c_str());
+  
+  is.open(filename);
   if(nBins_<0 &&  !is.good()){
     cout << "Bins file not found" << endl;
     return dummy;
@@ -450,7 +454,8 @@ TArrayF createBins(int nBins_ = 80 ,
   cout << "Making histograms with " << nBins << " bins:" << endl;
 
   is.close();
-  is.open(Form(location+"/bins_muTau_%s_%s.txt",variable_.Data(), selection_.c_str())); 
+  //is.open(Form(location+"/bins_muTau_%s_%s.txt",variable_.Data(), selection_.c_str())); 
+  is.open(filename);
   
   nBinsFromFile = 0;
 
