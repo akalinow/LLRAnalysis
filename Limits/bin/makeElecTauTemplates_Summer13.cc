@@ -16,11 +16,25 @@
 #include <string>
 
 #define RESCALETO1PB true
-#define DOSUSY false
 #define DO2DFIT false
 #define OldCat false
 
 using namespace std;
+
+//void checkValidity(TH1F* h, ofstream& f, ofstream& g) {
+void checkValidity(TH1F* h){
+  int nBins = h->GetNbinsX();
+  
+  for(int i=1 ; i<=nBins+1 ; i++) {
+    //f << h->GetBinContent(i) << " | " ;
+    if(h->GetBinContent(i) < 0) {
+      h->SetBinContent(i,0);
+      //h->SetBinContent(i,1e-6);
+    }
+    //if(h->GetBinContent(i) == 0) h->SetBinContent(i,1e-6);
+  }
+
+}
 
 float higgsXsection(int mH = 125, string process = "GGFH"){
   float xsection = 1.0;
@@ -84,6 +98,7 @@ void produce(
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "ABC",
+	     bool DOSUSY = false,
 // 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
@@ -136,7 +151,7 @@ void produce(
       binNameSpace =  "1jet_medium";
     
     if(bin_.find("boostHighhighhiggs")!=string::npos) 
-      binNameSpace =  "1jet_high_highhiggs";
+      binNameSpace =  "1jet_high_mediumhiggs";
     
     if(bin_.find("boostHighlowhiggs")!=string::npos)
       binNameSpace =  "1jet_high_lowhiggs";
@@ -242,11 +257,11 @@ void produce(
       }
     }
     else{//SUSY
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
+      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
       hSgn2->Write(Form("bbH%d%s"   ,mH_,suffix.c_str()));
 
@@ -273,6 +288,7 @@ void produce(
       if( bin_.find("High")!=string::npos ){
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"  ,suffix.c_str())); 
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
       else {
@@ -353,6 +369,7 @@ void produce(
       // ----- QCD ------ 
       TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
       hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+      checkValidity(hQCD);
       hQCD->Write(Form("QCD%s"      ,suffix.c_str()));
       // ----- W ------ 
       TH1F* hW = ((TH1F*)fin->Get("hW3JetsMediumTauIsoRelVBF"));
@@ -527,13 +544,13 @@ void produce(
       }
     }
     else{//SUSY
-      if(dir->FindObjectAny(Form("VBFH%d%s"         ,mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
-	hSgn1->SetName(Form("GGFH%d%s" ,mH_,suffix.c_str()));
-        hSgn1->Write(Form("GGFH%d%s" ,mH_,suffix.c_str()));
+      if(dir->FindObjectAny(Form("GGH%d%s"         ,mH_,suffix.c_str()))==0 ){
+        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
+        hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
-      if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
+      if(dir->FindObjectAny(Form("BBH%d%s"          , mH_,suffix.c_str()))==0 ){
+        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
       }
@@ -728,11 +745,13 @@ void produce(
         if(bin_.find("nobTag")!=string::npos){
           TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
           hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
           hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
         }
         else{
           TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
           hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
           hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
         }
 
@@ -1149,7 +1168,7 @@ void produce(
 }//produce
 
 
-void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Datacards",TString boostLabel = "" ){
+void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Datacards",bool DOSUSY = false,TString boostLabel = "" ){
 
   vector<string> variables;
   vector<int> mH;
@@ -1158,25 +1177,51 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   //variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
 
-  mH.push_back(90);
-  mH.push_back(95);
-  mH.push_back(100);
-  mH.push_back(105);
-  mH.push_back(110);
-  mH.push_back(115);
-  mH.push_back(120);
-  mH.push_back(125);
-  mH.push_back(130);
-  mH.push_back(135);
-  mH.push_back(140);
-  mH.push_back(145);
-  mH.push_back(150);
-  mH.push_back(155);
-  mH.push_back(160);
+  if(!DOSUSY){
+    mH.push_back(90);
+    mH.push_back(95);
+    mH.push_back(100);
+    mH.push_back(105);
+    mH.push_back(110);
+    mH.push_back(115);
+    mH.push_back(120);
+    mH.push_back(125);
+    mH.push_back(130);
+    mH.push_back(135);
+    mH.push_back(140);
+    mH.push_back(145);
+    mH.push_back(150);
+    mH.push_back(155);
+    mH.push_back(160);
+  }
+  else{
+    mH.push_back(80);
+    mH.push_back(90);
+    mH.push_back(100);
+    mH.push_back(110);
+    mH.push_back(120);
+    mH.push_back(130);
+    mH.push_back(140);
+    mH.push_back(160);
+    mH.push_back(180);
+    mH.push_back(200);
+    mH.push_back(250);
+    mH.push_back(300);
+    mH.push_back(350);
+    mH.push_back(400);
+    mH.push_back(450);
+    mH.push_back(500);
+    mH.push_back(600);
+    mH.push_back(700);
+    mH.push_back(800);
+    mH.push_back(900);
+    mH.push_back(1000);
+  }
 
   for(unsigned int i = 0 ; i < variables.size(); i++){
     for(unsigned j = 0; j < mH.size(); j++){
       //       if(!DO2DFIT){
+      if(!DOSUSY){
 	produce(mH[j],variables[i], "nominal" , "inclusive", outputDir);
 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir);
 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir);
@@ -1238,8 +1283,26 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
         produce(mH[j],variables[i], "TauDown" , "vbfTight", outputDir); 
         produce(mH[j],variables[i], "JetUp"   , "vbfTight", outputDir); 
         produce(mH[j],variables[i], "JetDown" , "vbfTight", outputDir);
+      }
+      else {//SUSY
+	produce(mH[j],variables[i], "nominal" , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir,true);
 
-     
+	produce(mH[j],variables[i], "nominal" , "bTag", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "bTag", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "bTag", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "bTag", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "bTag", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTag", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTag", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTag", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTag", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTag", outputDir,true);
+      }     
     }//mH
   }//variables
 }
@@ -1247,7 +1310,9 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){
-  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
+//   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_ZeeSel_Datacards");
 }
 
 
