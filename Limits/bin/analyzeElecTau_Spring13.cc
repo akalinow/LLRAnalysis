@@ -482,8 +482,11 @@ TArrayF createBins(int nBins_ = 80 ,
   cout << "Making histograms with " << nBins << " bins:" << endl;
 
   is.close();
-  is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str())); 
-  
+  if(version_.Contains("MSSM"))
+    is.open(Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str())); 
+  else
+    Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
+
   nBinsFromFile = 0;
 
   if(nBins_>0){
