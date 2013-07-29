@@ -40,6 +40,8 @@
 #define scaleByBinWidth  false
 #define DOSPLIT          false
 #define OldCat           false
+#define useZDataMC       false
+
 typedef map<TString, TChain* >  mapchain;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -350,6 +352,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
 
       if(DEBUG) cout << "-- produce skim" << endl;
       tree->Draw(">>+skim", cut  && genMass,"entrylist");
+//       tree->Draw(">>+skim", cut  && genMass,"entrylist",100);
       TEntryList *skim = (TEntryList*)gDirectory->Get("skim");
       int nEntries = skim->GetN();
       tree->SetEntryList(skim);
@@ -485,7 +488,7 @@ TArrayF createBins(int nBins_ = 80 ,
   if(version_.Contains("MSSM"))
     is.open(Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str())); 
   else
-    Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
+    is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str()));
 
   nBinsFromFile = 0;
 
@@ -614,8 +617,10 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_ = "",
   float OSOthersinSidebandRegionMC   = 0.;
   drawHistogram(sbinCat, "MC",version_, RUN, mapAllTrees["Others"],    variable, OSOthersinSidebandRegionMC  ,Error,  scaleFactor , hWMt, sbinPZetaRel&&apZ);
   float OSDYtoTauinSidebandRegionMC  = 0.;
-//   drawHistogram(sbinCat, "MC",version_, RUN, mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor*ExtrapolationFactorSidebandZDataMC*ExtrapolationFactorZDataMC , hWMt, sbinPZetaRel&&apZ);
-  drawHistogram(sbinCat, "DY",version_, RUN, mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor , hWMt, sbinPZetaRel&&apZ);
+  if(useZDataMC)
+    drawHistogram(sbinCat, "MC",version_, RUN, mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor*ExtrapolationFactorSidebandZDataMC*ExtrapolationFactorZDataMC , hWMt, sbinPZetaRel&&apZ);
+    else
+      drawHistogram(sbinCat, "DY",version_, RUN, mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor , hWMt, sbinPZetaRel&&apZ);
   float OSDYJtoTauinSidebandRegionMC = 0.;
   drawHistogram(sbinCat, "DY",version_, RUN, mapAllTrees["DYJtoTau"],  variable, OSDYJtoTauinSidebandRegionMC ,Error, scaleFactor*lumiCorrFactor*JtoTauCorrectionFactor , hWMt, sbinPZetaRel&&apZ);
   float OSDYElectoTauinSidebandRegionMC = 0.;
@@ -726,8 +731,10 @@ void evaluateQCD(mapchain mapAllTrees, TString version_ = "",
 
   float SSDYtoTauinSidebandRegionMCIncl = 0.;
   if(substractDYTT) {
-//     drawHistogram(sbinCatForSbin, "MC",version_, RUN, mapAllTrees["DYToTauTau"],  variable, SSDYtoTauinSidebandRegionMCIncl,    Error, lumiCorrFactor*scaleFactor*ExtrapolationFactorZDataMC, hExtrap, sbin,1);
-    drawHistogram(sbinCatForSbin, "DY",version_, RUN, mapAllTrees["DYToTauTau"],  variable, SSDYtoTauinSidebandRegionMCIncl,    Error, lumiCorrFactor*scaleFactor, hExtrap, sbin,1);
+    if(useZDataMC)
+      drawHistogram(sbinCatForSbin, "MC",version_, RUN, mapAllTrees["DYToTauTau"],  variable, SSDYtoTauinSidebandRegionMCIncl,    Error, lumiCorrFactor*scaleFactor*ExtrapolationFactorZDataMC, hExtrap, sbin,1);
+    else
+      drawHistogram(sbinCatForSbin, "DY",version_, RUN, mapAllTrees["DYToTauTau"],  variable, SSDYtoTauinSidebandRegionMCIncl,    Error, lumiCorrFactor*scaleFactor, hExtrap, sbin,1);
     if(qcdHisto!=0) qcdHisto->Add(hExtrap, -1.0);
     if(ssHisto !=0) ssHisto->Add( hExtrap, -1.0);
   }
@@ -1175,7 +1182,7 @@ void plotElecTau( Int_t mH_           = 120,
   
   TChain *signalSusy[nProdS][nMassesS];
   for(int iP=0 ; iP<nProdS ; iP++) {
-    for(int iM=0 ; iM<nMasses ; iM++) {
+    for(int iM=0 ; iM<nMassesS ; iM++) {
       signalSusy[iP][iM] = new TChain(treeMC);
       signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_ElecTau_"+fileAnalysis+".root");
     }
@@ -1832,9 +1839,12 @@ void plotElecTau( Int_t mH_           = 120,
 	  cout << "************** BEGIN W+3jets normalization using high-Mt sideband *******************" << endl;
 
 	  TCut sbinCatForWextrapolation = sbinCat;
-	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
+	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 	    sbinCatForWextrapolation = vbfLoose;
-
+	    if(selection_.find("vbfTight")!=string::npos)
+	      sbinCatForWextrapolation = vbfRelaxedTight;
+	  }
+	  
 	  evaluateWextrapolation(mapAllTrees, version_, RUN, "OS", false, selection_, 
 				 extrapFactorWOSW3Jets, 
 				 OSWinSignalRegionDATAW3Jets,   OSWinSignalRegionMCW3Jets,
@@ -1846,7 +1856,7 @@ void plotElecTau( Int_t mH_           = 120,
 				 ElectoTauCorrectionFactor, JtoTauCorrectionFactor,
 				 antiWsdb, antiWsgn, useMt,
 				 sbinCatForWextrapolation,
-				 sbinPZetaRel, sbinPZetaRel,
+				 sbinPZetaRel, sbinChargeRelPZetaRelInclusive,
 				 pZ, apZ2, sbinPZetaRelInclusive, 
 				 sbinPZetaRelaIsoInclusive, sbinPZetaRelaIso, vbfLoose, oneJet, zeroJet, sbinCat);
 
@@ -1903,7 +1913,7 @@ void plotElecTau( Int_t mH_           = 120,
 				 ElectoTauCorrectionFactor, JtoTauCorrectionFactor,
 				 antiWsdb, antiWsgn, useMt,
 				 sbinCatForWextrapolation,
-				 sbinPZetaRel, sbinPZetaRel,
+				 sbinPZetaRel, sbinChargeRelPZetaRelInclusive,
 				 pZ, apZ, sbinPZetaRelInclusive, 
 				 sbinPZetaRelaIsoInclusive, sbinPZetaRelaIso, vbfLoose, boost, zeroJet, sbinCat);
 	  delete hExtrapW;
@@ -1970,11 +1980,28 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	}
 	else if(currentName.Contains("DYElectoTau")){
-	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){  
+	  if(selection_.find("vbfTight")!=string::npos){
+	    float NormDYElectoTau = 0.;
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+	    //Take the shape from relaxed VBF cuts with jet Pt 20 GeV (update for summer)
+            float NormDYElectoTauShape = 0.; hCleaner->Reset();
+	    drawHistogram(vbfRelaxedTightZL,"DY", version_, RUN,currentTree, variable, NormDYElectoTauShape, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+            hCleaner->Scale( h1->Integral()/hCleaner->Integral() );
+            hZmm->Add(hCleaner, 1.0);
+            hZfakes->Add(hCleaner,1.0);
+	    //hEWK->Add(h1,1.0);
+	  }
+	  else if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){  
 
 	    // Shape from MC (h1) with the twoJets selection
             float NormDYElectoTau = 0.;
-	    drawHistogram(twoJets, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    if(useZDataMC)
+	      drawHistogram(twoJets, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    else
+	      drawHistogram(twoJets, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 
 	    // Norm from MC with the inclusive selection
 	    //float NormDYElectoTauIncl = 0.;
@@ -1993,10 +2020,12 @@ void plotElecTau( Int_t mH_           = 120,
             h1->Scale(NormDYElectoTau/h1->Integral()); // Norm = DYMC(sbinIncl && twoJets)*( Emb(sbin) / Emb(sbinIncl && twoJets) )
 	    //Take the shape from relaxed VBF cuts with jet Pt 20 GeV (update for summer)
 	    float NormDYElectoTauShape = 0.; hCleaner->Reset();
+	    /*
 	    if(selection_.find("vbfTight")!=string::npos)
               drawHistogram(vbfRelaxedTightZL,"DY", version_, RUN,currentTree, variable, NormDYElectoTauShape, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
             else
-	      drawHistogram(vbfRelaxedZL,"DY", version_, RUN,currentTree, variable, NormDYElectoTauShape, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    */
+	    drawHistogram(vbfRelaxedZL,"DY", version_, RUN,currentTree, variable, NormDYElectoTauShape, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    hCleaner->Scale( NormDYElectoTau/hCleaner->Integral() );
 	    hZmm->Add(hCleaner, 1.0); 
 	    hZfakes->Add(hCleaner,1.0); 
@@ -2025,9 +2054,12 @@ void plotElecTau( Int_t mH_           = 120,
             h1->Scale(NormDYElectoTau/h1->Integral()); // Norm = DYMC(sbinIncl && twoJets)*( Emb(sbin) / Emb(sbinIncl && twoJets) )
 	    */
 	    float NormDYElectoTau = 0.;
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 	    //shape from loose bTag selection
-	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
 	    hZmm->Add(hCleaner, 1.0); 
 	    hZfakes->Add(hCleaner,1.0); 
@@ -2035,12 +2067,15 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    //fine binning for MSSM
             hCleanerfb->Reset();hZmm_fb->Reset(); float NormDYElectoTau_fb = 0;
-	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
+	    drawHistogram(bTagLoose, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
             hZmm_fb->Add(hCleanerfb, hZmm->Integral()/hCleanerfb->Integral());
           }
 	  else{
 	    float NormDYElectoTau = 0.;
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 	    hZmm->Add(h1, 1.0);
 	    hZfakes->Add(h1,1.0);
 	    //hEWK->Add(h1,1.0);
@@ -2048,7 +2083,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    //fine binning for MSSM
             if(selection_.find("nobTag")!=string::npos){
               hCleanerfb->Reset();hZmm_fb->Reset(); float NormDYElectoTau_fb = 0.;
-	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbin, 1);
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbin, 1);
               hZmm_fb->Add(hCleanerfb, hZmm->Integral()/hCleanerfb->Integral());
             }
 	  }
@@ -2057,11 +2092,14 @@ void plotElecTau( Int_t mH_           = 120,
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){   
             float NormDYJtoTau = 0.; 
 	    if(selection_.find("vbfTight")!=string::npos)
-	      drawHistogram(vbfRelaxedTight, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1);
+	      drawHistogram(vbfRelaxedTight, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
 	    else
-	      drawHistogram(vbfLoose, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1);
+	      drawHistogram(vbfLoose, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
 	    NormDYJtoTau = 0.; 
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
 	    hZmj->Add(hCleaner, 1.0); 
 	    hZfakes->Add(hCleaner,1.0); 
@@ -2069,9 +2107,12 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){   
             float NormDYJtoTau = 0.; 
-            drawHistogram(oneJet, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1);
+            drawHistogram(oneJet, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
 	    NormDYJtoTau = 0.; 
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 	    hCleaner->Scale(h1->Integral()/hCleaner->Integral());
 	    hZmj->Add(hCleaner, 1.0); 
 	    hZfakes->Add(hCleaner,1.0); 
@@ -2079,12 +2120,15 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    //fine binning for MSSM
             hCleanerfb->Reset();hZmj_fb->Reset(); float NormDYJtoTau_fb = 0.;
-	    drawHistogram(oneJet, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbin, 1);
+	    drawHistogram(oneJet, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbin, 1);
             hZmj_fb->Add(hCleanerfb, hZmj->Integral()/hCleanerfb->Integral());
 	  } 
 	  else{
 	    float NormDYJtoTau = 0.;
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
 	    hZmj->Add(h1, 1.0);
 	    hZfakes->Add(h1,1.0);
 	    hEWK->Add(h1,1.0);
@@ -2092,7 +2136,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    //fine binning for MSSM
             if(selection_.find("nobTag")!=string::npos){
               hCleanerfb->Reset();hZmj_fb->Reset(); float NormDYJtoTau_fb = 0.;
-	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbin, 1);
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbin, 1);
               hZmj_fb->Add(hCleanerfb, hZmj->Integral()/hCleanerfb->Integral());
             }
 
@@ -2234,17 +2278,23 @@ void plotElecTau( Int_t mH_           = 120,
 	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIso ,1);
             hQCD_fb->Add(hCleanerfb);
             float NormDYElectoTau = 0; 
-            drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinSSaIso, 1); 
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinSSaIso, 1); 
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinSSaIso, 1);
             hDataAntiIsoLooseTauIso->Add(hCleaner, -1.0); 
 	    hCleanerfb->Reset(); float NormDYElectoTau_fb = 0.;
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbinSSaIso, 1);
+	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYElectoTau_fb, Error,   Lumi*lumiCorrFactor*ElectoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbinSSaIso, 1);
             hQCD_fb->Add(hCleanerfb, -1.0);
 
             float NormDYJtoTau = 0.;  
-            drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinSSaIso, 1); 
+	    if(useZDataMC)
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinSSaIso, 1); 
+	    else
+	      drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinSSaIso, 1);
             hDataAntiIsoLooseTauIso->Add(hCleaner, -1.0); 
 	    hCleanerfb->Reset(); float NormDYJtoTau_fb = 0.;
-	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleanerfb, sbinSSaIso, 1);
+	    drawHistogram(sbinCat, "DY",version_, RUN, currentTree, variable, NormDYJtoTau_fb, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleanerfb, sbinSSaIso, 1);
             hQCD_fb->Add(hCleanerfb, -1.0);
 
             float NormTTjets = 0.;  
@@ -2592,10 +2642,11 @@ void plotElecTau( Int_t mH_           = 120,
   else
     aStack->Add(hZtt);
 
-  TH1F* hSgnSUSY = (TH1F*)hSusy[0][4]->Clone("hSgnSUSY");
-  hSgnSUSY->Add(hSusy[1][4]);
-  hSgnSUSY->Scale(magnifySgn_);
+  TH1F* hSgnSUSY ;
   if(version_.Contains("MSSM")){
+    hSgnSUSY = (TH1F*)hSusy[0][4]->Clone("hSgnSUSY");
+    hSgnSUSY->Add(hSusy[1][4]);
+    hSgnSUSY->Scale(magnifySgn_);
     aStack->Add(hSgnSUSY);
   }
   else if(!logy_)
@@ -2622,6 +2673,7 @@ void plotElecTau( Int_t mH_           = 120,
   aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
   
+
   TH1F* hStack = (TH1F*)aStack->GetHistogram();
   hStack->SetXTitle(XTitle_+" ("+Unities_+")");
   if(scaleByBinWidth && variable_.Contains("diTauNSVfitMass")){
@@ -2809,7 +2861,8 @@ void plotElecTau( Int_t mH_           = 120,
   hSgn1->Write();
   hSgn2->Write();
   hSgn3->Write();
-  hSgnSUSY->Write();
+  if(version_.Contains("MSSM"))
+    hSgnSUSY->Write();
   hW3JetsLooseTauIso->Write();
   hW3JetsMediumTauIso->Write();
   hW3JetsMediumTauIsoRelVBF->Write();
@@ -2877,7 +2930,7 @@ void plotElecTau( Int_t mH_           = 120,
     }
   }
   for(int iP=0 ; iP<nProdS ; iP++) {
-    for(int iM=0 ; iM<nMasses ; iM++) {
+    for(int iM=0 ; iM<nMassesS ; iM++) {
       delete signalSusy[iP][iM];
     }
   }

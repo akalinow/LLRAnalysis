@@ -2803,8 +2803,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-    HqTWeightUp = histo!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-    HqTWeightDown = histo!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
  
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 

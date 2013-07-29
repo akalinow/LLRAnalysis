@@ -52,12 +52,15 @@ stream = "MuTau"
 #versionList=['SoftD_L1ETMcut_AntiMu1_TauIso1', 'SoftD_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftD_HLTmatch_AntiMu1_TauIso1', 'SoftD_NoMaxPt_HLTmatch_AntiMu1_TauIso1',
 #             'SoftABC_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_L1ETMcut_AntiMu1_TauIso1', 'SoftABC_HLTmatch_AntiMu1_TauIso1', 'SoftABC_NoMaxPt_HLTmatch_AntiMu1_TauIso1']
 
+#versionList=['SoftD_L1ETMcut_AntiMu2_HPSDB3H','SoftD_L1ETMcut_AntiMu2_HPSDB3H_TightLiso',
+#             'SoftD_L1ETMcut_AntiMu2_HPSDB3H_TightTiso','SoftD_L1ETMcut_AntiMu2_HPSDB3H_TightTiso_TightLiso']
+
 versionList=['SoftD_L1ETMcut_AntiMu2_HPSDB3H']
 
 #data = 'ABCD'
 
-iteration = 'v1'
-useEmb=0
+iteration = 'v7_newcat'
+useEmb=1
 
 antiWsgnList=[20,25,30,35,40]
 antiWsdbList=[45,50,55,60,70]
@@ -78,40 +81,61 @@ for version in versionList:
             outputDir = 'res_'+data+'_'+version+'_'+iteration+'/sgn'+str(antiWsgn)+'_sdb'+str(antiWsdb)
 
             # Mass
-            analyze(125,"inclusive","nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"inclusive" ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"      ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"inclusive" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"inclusive" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"inclusive" ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","L1EtmUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"inclusive" ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","L1EtmDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+
+            analyze(125,"inclusive" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+
+            analyze(125,"inclusive" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfLow"  ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"novbfHigh" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostLow"  ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"boostHigh" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbf"       ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
             # Visible mass
             analyze(125,"inclusive","nominal"      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
@@ -120,34 +144,39 @@ for version in versionList:
             analyze(125,"boostLow" ,"nominal"      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
             analyze(125,"boostHigh","nominal"      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
             analyze(125,"vbf"      ,"nominal"      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"      ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"inclusive","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfLow" ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfHigh","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostLow" ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostHigh","TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbf"      ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbfRelaxMt"      ,"TauUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"inclusive","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfLow" ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfHigh","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostLow" ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostHigh","TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbf"      ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbfRelaxMt"      ,"TauDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"inclusive","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfLow" ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfHigh","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostLow" ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostHigh","JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbf"      ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbfRelaxMt"      ,"JetUp" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
-            analyze(125,"inclusive","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfLow" ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"novbfHigh","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostLow" ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"boostHigh","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
-            analyze(125,"vbf"      ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"inclusive","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfLow" ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"novbfHigh","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostLow" ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"boostHigh","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbf"      ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+##             analyze(125,"vbfRelaxMt"      ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
 
             ##  Control
             analyze(125,"inclusive"      ,"nominal"   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
@@ -297,3 +326,25 @@ for version in versionList:
                 analyze(125,"vbf"  ,"nominal"   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
                 analyze(125,"vbf"  ,"nominal"   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
+            ## vbfRelaxMt
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"caloMEtNoHFUncorr","'Uncorr caloMEtNoHF'","GeV"        ,outputDir,20,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"caloMEtNoHF","'Corr caloMEtNoHF'","GeV"                ,outputDir,20,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"L1etm","'Uncorr L1ETM'","GeV"                          ,outputDir,24,0,120,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"L1etmCorr","'Corr L1ETM'","GeV"                        ,outputDir,24,0,120,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"caloMEtNoHFUncorrPhi","'Uncorr caloMEtNoHF Phi'","rad" ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"caloMEtNoHFPhi","'Corr caloMEtNoHF Phi'","rad"         ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt"      ,"nominal"   ,"L1etmPhi","'Uncorr L1ETM Phi'","rad"                   ,outputDir,20,-3.2,3.2,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            ##
+            analyze(125,"vbfRelaxMt","nominal"   ,"MEt","'Uncorr MET'","GeV"                                   ,outputDir,10,0,100,5.0,1.0,0, 1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"MEtMVA","'MET'","GeV"                                   ,outputDir,10,0,100,5.0,1.0,0, 1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"MEtMVAPhi","'MET #phi'","units"                         ,outputDir,16,-3.2,3.2,   5.0,1.0,0,1.5,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfNoMt","nominal"   ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,16,0,160,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"etaL1","'#mu #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0, 2.,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"etaL2","'#tau #eta'","units"                            ,outputDir,50,-2.5, 2.5,5.0,1.0,0,2.,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"ptL2","'#tau p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            analyze(125,"vbfRelaxMt","nominal"   ,"genVPt","'gen #tau p_{T}'","GeV"                              ,outputDir,16, 15, 95,5.0,1.0,0,1.2,data,stream,version,useEmb,antiWsgn,antiWsdb);
+            if 'NoMaxPt' in version:
+                analyze(125,"vbfRelaxMt"  ,"nominal"   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,30,0,120,5.0,1.0,0,1.2,data, stream, version, useEmb);
+            else:
+                analyze(125,"vbfRelaxMt"  ,"nominal"   ,"ptL1","'#mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
+                analyze(125,"vbfRelaxMt"  ,"nominal"   ,"genMuPt","'gen #mu p_{T}'","GeV"                       ,outputDir,25,0,25,5.0,1.0,0,1.2,data, stream, version, useEmb);
