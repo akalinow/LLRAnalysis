@@ -323,29 +323,52 @@ void drawHistogram(TCut sbinCat = TCut(""),
 // 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight*weightDecayMode)";
 	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*ZeeWeight*weightDecayMode)";
     }
-    else if(type.Contains("Embed")) {
+    else if(type.Contains("Embed")) {//PFEmbedding
       genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
       if (version_.Contains("NoEleIDSF")){
-	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*weightDecayMode)";
-	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*weightDecayMode)";
-	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*weightDecayMode)";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingFilterEffWeight*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingFilterEffWeight*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingFilterEffWeight*weightDecayMode)";
 	else if(!version_.Contains("Soft")) {
-	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*weightDecayMode)";
-	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*weightDecayMode)";
-	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*weightDecayMode)";
+	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingFilterEffWeight*weightDecayMode)";
+	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingFilterEffWeight*weightDecayMode)";
+	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingFilterEffWeight*weightDecayMode)";
 	}
       }
       else{
-	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
-	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
-	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
 	else if(!version_.Contains("Soft")) {
-	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
-	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
-	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
+	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
+	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingFilterEffWeight*elecEffSF*weightDecayMode)";
 	}
       }
     }
+//     else if(type.Contains("Embed")) {//RHEmbedding
+//       genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
+//       if (version_.Contains("NoEleIDSF")){
+// 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*weightDecayMode)";
+// 	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*weightDecayMode)";
+// 	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*weightDecayMode)";
+// 	else if(!version_.Contains("Soft")) {
+// 	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*weightDecayMode)";
+// 	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*weightDecayMode)";
+// 	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*weightDecayMode)";
+// 	}
+//       }
+//       else{
+// 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTEleSoft*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	else if(!version_.Contains("Soft")) {
+// 	  if(RUN=="ABC")                       weight = "(HLTTauABC*HLTEleABC*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	  else if(RUN=="D")                    weight = "(HLTTauD*HLTEleD*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	  else                                 weight = "(HLTTau*HLTElec*SFElec*embeddingWeight*elecEffSF*weightDecayMode)";
+// 	}
+//       }
+//     }
 
     // Loop over entries to choose the event's pair instead of using pairIndex
     if(LOOP) {
@@ -1078,7 +1101,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_NoTES/EleTau/";
 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1110,13 +1133,21 @@ void plotElecTau( Int_t mH_           = 120,
     fileAnalysisEmbedded = "nominal";
   }
   TChain *dataEmbedded = new TChain(treeEmbedded);
-  //
+  //PFEmbed
   if(RUN.Contains("ABC")) {
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
-    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012A*EmbeddedPF_ElecTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012B*EmbeddedPF_ElecTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012C*EmbeddedPF_ElecTau_"+fileAnalysisEmbedded+".root");
   }
-  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
+  if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedPF_ElecTau_"+fileAnalysisEmbedded+".root");
+
+  //RHEmbed
+//   if(RUN.Contains("ABC")) {
+//     dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
+//     dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
+//     dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
+//   }
+//   if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_ElecTau_"+fileAnalysisEmbedded+".root");
 
   if(!dataEmbedded) cout << "### EMBEDDED NTUPLE NOT FOUND ###" << endl;
 
@@ -2226,7 +2257,7 @@ void plotElecTau( Int_t mH_           = 120,
             //Normalize to Inclusive measured QCD times the above efficiency
             hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boost")!=string::npos){
+	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
 	    drawHistogram(sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner);
 	    /* //No need to subtract anyother background contributions, summer recommendation
@@ -2244,7 +2275,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    */
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfLow")!=string::npos) {
+	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("boostMedium")!=string::npos) {
 	    TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
 	    float dummy1 = 0.;      
 	    evaluateQCD(mapAllTrees, version_, RUN, hDataAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
