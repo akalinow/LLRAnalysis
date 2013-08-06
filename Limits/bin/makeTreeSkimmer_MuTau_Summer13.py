@@ -467,6 +467,14 @@ options = {
     'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
     'iJson'          : -1
     } ,
+    'DYJets_ZTTL' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets_ZTTL_MuTau.root',
+    'sample'         : 'DYJets_ZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'iJson'          : -1
+    } ,
     'DYJets_JetToTau' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets_JetToTau_MuTau.root',
@@ -487,6 +495,14 @@ options = {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets1Jets_TauTau',
+    'xSection'       : 561,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1
+    } ,
+    'DYJets1Jets_ZTTL' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY1Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_ZTTL_MuTau.root',
+    'sample'         : 'DYJets1Jets_ZTTL',
     'xSection'       : 561,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1
@@ -515,6 +531,14 @@ options = {
     'skimEff'        : 1.0 * 1.0 * 5354820./21852156,
     'iJson'          : -1
     } ,
+    'DYJets2Jets_ZTTL' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_ZTTL_MuTau.root',
+    'sample'         : 'DYJets2Jets_ZTTL',
+    'xSection'       : 181,
+    'skimEff'        : 1.0 * 1.0 * 5354820./21852156,
+    'iJson'          : -1
+    } ,
     'DYJets2Jets_JetToTau' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY2Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2Jets_JetToTau_MuTau.root',
@@ -535,6 +559,14 @@ options = {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3Jets_TauTau_MuTau.root',
     'sample'         : 'DYJets3Jets_TauTau',
+    'xSection'       : 51.1,
+    'skimEff'        : 1.0 * 1.0 * 3736521./10980445,
+    'iJson'          : -1
+    } ,
+    'DYJets3Jets_ZTTL' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY3Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_ZTTL_MuTau.root',
+    'sample'         : 'DYJets3Jets_ZTTL',
     'xSection'       : 51.1,
     'skimEff'        : 1.0 * 1.0 * 3736521./10980445,
     'iJson'          : -1
@@ -563,6 +595,14 @@ options = {
     'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
     'iJson'          : -1
     } ,
+    'DYJets4Jets_ZTTL' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets4Jets_ZTTL_MuTau.root',
+    'sample'         : 'DYJets4Jets_ZTTL',
+    'xSection'       : 23,
+    'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
+    'iJson'          : -1
+    } ,
     'DYJets4Jets_JetToTau' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_JetToTau_MuTau.root',
@@ -571,7 +611,7 @@ options = {
     'skimEff'        : 1.0 * 1.0 * 2859057./6402827,
     'iJson'          : -1
     } ,
-    'DYJets4Jets_MoToTau' : {
+    'DYJets4Jets_MuToTau' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/DY4Jets-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_MuToTau_MuTau.root',
     'sample'         : 'DYJets4Jets_MuToTau',
@@ -585,6 +625,30 @@ options = {
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
     'skimEff'        : 1.0 * 0.503752 * 2553164./3487856,
+    'iJson'          : -1
+    },
+    'TTJets_SemiLept' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-SemiLeptMGDecays_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_SemiLept_MuTau.root',
+    'sample'         : 'TTJets',
+    'xSection'       : 249.5,
+    'skimEff'        : 0.438 * 0.561995,
+    'iJson'          : -1
+    },
+    'TTJets_FullLept' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-FullLeptMGDecay_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_MuTau.root',
+    'sample'         : 'TTJets',
+    'xSection'       : 249.5,
+    'skimEff'        : 0.105 * 0.648373,
+    'iJson'          : -1
+    },
+    'TTJets_Had' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-HadronicMGDecays_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_Had_MuTau.root',
+    'sample'         : 'TTJets',
+    'xSection'       : 249.5,
+    'skimEff'        : 0.457 * 0.120926,
     'iJson'          : -1
     },
     'WJets-p1' : {
@@ -1525,7 +1589,7 @@ process.treeSkimmerMuTau = cms.PSet(
 ''')
 
 currentDirectory    = os.getcwd()
-submissionDirectory = os.path.join(currentDirectory, "ConfigsReReco")
+submissionDirectory = os.path.join(currentDirectory, "Configs")
 
 for sample, option in options.items():
     for analysis in [ 'nominal', 'TauUp', 'TauDown','JetUp','JetDown','MuUp','MuDown' ]:

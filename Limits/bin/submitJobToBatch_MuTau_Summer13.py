@@ -21,7 +21,7 @@ def treeSkim( ana, sample, runInSeries=False):
         stream = "MuTau"
     print "Stream ", stream
 
-    os.system('python makeTreeSkimmerMuTau_Summer13.py')
+    os.system('python makeTreeSkimmer_MuTau_Summer13.py')
     
     if runInSeries:
          print "Running in series via the command ..."
