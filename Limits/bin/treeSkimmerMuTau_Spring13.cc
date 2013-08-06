@@ -1694,7 +1694,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     isTauLegMatched_ = isTauLegMatched;
     if( !isData ) {
       if(DEBUG) cout << "!isData --> leptFakeTau = " ;
-      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>8) ? 1 : 0;
       if(DEBUG) cout << leptFakeTau << endl;
     }
     else leptFakeTau = -99;
@@ -1705,9 +1705,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
       dyFinalState=false;
-      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
-      else if ( sample_.find("MuToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
-      else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
+      if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1); }
+      else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0); }
+      else if ( sample_.find("MuToTau") !=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau); }
+      else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau); }
       else continue;
       if(!dyFinalState) continue;
     }
@@ -1985,8 +1986,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	isVetoInJets = 1;
     }
 
-    //diTauNSVfitMass_        = diTauNSVfitMass;
-    diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
+    diTauNSVfitMass_        = diTauNSVfitMass; // no re-calibration needed with VEGAS
+    //diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
     diTauNSVfitMassErrUp_   = diTauNSVfitMassErrUp;
     diTauNSVfitMassErrDown_ = diTauNSVfitMassErrDown;
     diTauNSVfitPt_        = diTauNSVfitPt;
@@ -2237,6 +2238,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     (*metsig)[0][1] = (*metSgnMatrix)[1]; 
     (*metsig)[1][0] = (*metSgnMatrix)[1]; 
     (*metsig)[1][1] = (*metSgnMatrix)[2]; */
+
+    // NO NEED FOR STANDALONE
+    /* 
     NSVfitStandalone::Vector measuredMET( (*METP4)[1].Px(), (*METP4)[1].Py(), 0);
     std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons;
     NSVfitStandalone::LorentzVector p1( (*diTauLegsP4)[1] );
@@ -2262,15 +2266,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
       ptTau2Fit           = -99;//((algo.fittedTauLeptons())[0]).Pt();
     }
     else{
-      diTauSVFitMassSA    = -99; 
-      diTauSVFitMassErrSA = -99;
-      etaTau1Fit          = -99;
-      etaTau2Fit          = -99;
-      phiTau1Fit          = -99;
-      phiTau2Fit          = -99;
-      ptTau1Fit           = -99;
-      ptTau2Fit           = -99;
-    }
+    */
+    diTauSVFitMassSA    = -99; 
+    diTauSVFitMassErrSA = -99;
+    etaTau1Fit          = -99;
+    etaTau2Fit          = -99;
+    phiTau1Fit          = -99;
+    phiTau2Fit          = -99;
+    ptTau1Fit           = -99;
+    ptTau2Fit           = -99;
     ////////////////////////////////////////////////
 
     combRelIsoLeg1         = (chIsoLeg1+nhIsoLeg1+phIsoLeg1)/(*diTauLegsP4)[0].Pt();
