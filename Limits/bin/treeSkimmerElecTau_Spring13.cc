@@ -2365,8 +2365,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	isVetoInJets = 1;
     }
 
-//     diTauNSVfitMass_        = diTauNSVfitMass;
-    diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
+    diTauNSVfitMass_        = diTauNSVfitMass;
+//     diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
     diTauNSVfitMassErrUp_   = diTauNSVfitMassErrUp;
     diTauNSVfitMassErrDown_ = diTauNSVfitMassErrDown;
     diTauNSVfitPt_        = diTauNSVfitPt;
