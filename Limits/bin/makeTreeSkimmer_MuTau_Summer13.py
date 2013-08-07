@@ -630,7 +630,7 @@ options = {
     'TTJets_SemiLept' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-SemiLeptMGDecays_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_MuTau.root',
-    'sample'         : 'TTJets',
+    'sample'         : 'TTJets_SemiLept',
     'xSection'       : 249.5,
     'skimEff'        : 0.438 * 0.561995,
     'iJson'          : -1
@@ -638,7 +638,7 @@ options = {
     'TTJets_FullLept' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-FullLeptMGDecay_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_MuTau.root',
-    'sample'         : 'TTJets',
+    'sample'         : 'TTJets_FullLept',
     'xSection'       : 249.5,
     'skimEff'        : 0.105 * 0.648373,
     'iJson'          : -1
@@ -646,7 +646,7 @@ options = {
     'TTJets_Had' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-HadronicMGDecays_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_MuTau.root',
-    'sample'         : 'TTJets',
+    'sample'         : 'TTJets_Had',
     'xSection'       : 249.5,
     'skimEff'        : 0.457 * 0.120926,
     'iJson'          : -1

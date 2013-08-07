@@ -150,6 +150,9 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "WJets-p2"      , False)
 
     treeSkim( anaMC[iAnMC] , "TTJets"        , False)
+    treeSkim( anaMC[iAnMC] ,"TTJets_SemiLept", False)
+    treeSkim( anaMC[iAnMC] ,"TTJets_FullLept", False)
+    treeSkim( anaMC[iAnMC] ,"TTJets_Had"     , False)
     treeSkim( anaMC[iAnMC] , "T-tW"          , False)
     treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
     treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
