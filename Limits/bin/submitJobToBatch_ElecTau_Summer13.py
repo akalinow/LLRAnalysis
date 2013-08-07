@@ -113,30 +113,6 @@ samplesEmb = [
 ##     'Run2012D-22Jan2013-p7-Embedded',
 ##     'Run2012D-22Jan2013-p8-Embedded',
 ##     'Run2012D-22Jan2013-p9-Embedded'
-
-##     'Run2012A-22Jan2013-EmbeddedPF',
-##     'Run2012B-22Jan2013-p1-EmbeddedPF',
-##     'Run2012B-22Jan2013-p2-EmbeddedPF',
-##     'Run2012B-22Jan2013-p3-EmbeddedPF',
-##     'Run2012B-22Jan2013-p4-EmbeddedPF',
-##     'Run2012B-22Jan2013-p5-EmbeddedPF',
-##     'Run2012C-22Jan2013-p0-EmbeddedPF',
-##     'Run2012C-22Jan2013-p1-EmbeddedPF',
-##     'Run2012C-22Jan2013-p2-EmbeddedPF',
-##     'Run2012C-22Jan2013-p3-EmbeddedPF',
-##     'Run2012C-22Jan2013-p4-EmbeddedPF',
-##     'Run2012C-22Jan2013-p5-EmbeddedPF',
-##     'Run2012C-22Jan2013-p6-EmbeddedPF',
-##     'Run2012C-22Jan2013-p7-EmbeddedPF',    
-##     'Run2012D-22Jan2013-p1-EmbeddedPF',
-##     'Run2012D-22Jan2013-p2-EmbeddedPF',
-##     'Run2012D-22Jan2013-p3-EmbeddedPF',
-##     'Run2012D-22Jan2013-p4-EmbeddedPF',
-##     'Run2012D-22Jan2013-p5-EmbeddedPF',
-##     'Run2012D-22Jan2013-p6-EmbeddedPF',
-##     'Run2012D-22Jan2013-p7-EmbeddedPF',
-##     'Run2012D-22Jan2013-p8-EmbeddedPF',
-##     'Run2012D-22Jan2013-p9-EmbeddedPF'
     
     ]
 json    = [1,0,0,2,3]
@@ -156,48 +132,48 @@ ListFinalState = ['TauTau','JetToTau','EToTau','ZTTL']
 for iAnMC in range(0,len(anaMC)):
 ## ## ##     ##BkgMC
         ## DY
-    for finalState in ListFinalState:
-        treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p0" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p1" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p2" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p3" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p4" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p5" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p6" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p7" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p8" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p9" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p0" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p1" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p2" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p3" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p4" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p5" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p6" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p7" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p8" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p9" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p0" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p1" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p2" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p3" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p4" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p5" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p6" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p7" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p8" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p9" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p0" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p1" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p2" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p3" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p4" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p5" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p6" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p7" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p8" , False)
-        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p9" , False)
+##     for finalState in ListFinalState:
+##         treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p0" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p1" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p2" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p3" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p4" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p5" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p6" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p7" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p8" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p9" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p0" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p1" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p2" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p3" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p4" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p5" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p6" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p7" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p8" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState+"-p9" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p0" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p1" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p2" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p3" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p4" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p5" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p6" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p7" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p8" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState+"-p9" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p0" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p1" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p2" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p3" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p4" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p5" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p6" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p7" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p8" , False)
+##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState+"-p9" , False)
 
     ## W
 ##     treeSkim( anaMC[iAnMC] , "WJets-p1"            , False)
@@ -241,6 +217,10 @@ for iAnMC in range(0,len(anaMC)):
         
 
 ##     treeSkim( anaMC[iAnMC] , "TTJets"              , False)
+##         treeSkim( anaMC[iAnMC] ,"TTJets_SemiLept", False)
+##         treeSkim( anaMC[iAnMC] ,"TTJets_FullLept", False)
+##         treeSkim( anaMC[iAnMC] ,"TTJets_Had"     , False)
+    
 ##     treeSkim( anaMC[iAnMC] , "T-tW"                , False)
 ##     treeSkim( anaMC[iAnMC] , "Tbar-tW"             , False)
 ##     treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu"       , False)
