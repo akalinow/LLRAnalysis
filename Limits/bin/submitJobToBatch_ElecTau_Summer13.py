@@ -21,7 +21,7 @@ def treeSkim( ana, sample, runInSeries=False):
         stream = "ElecTau"
     print "Stream ", stream
 
-    os.system('python makeTreeSkimmerElecTau_Spring13.py')
+    os.system('python makeTreeSkimmer_ElecTau_Summer13.py')
 
     if runInSeries:
          print "Running in series via the command ..."
@@ -42,7 +42,7 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/"\n')
+        f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/"\n')
         f.write('')
         f.write('cd $WORKINGDIR\n')
@@ -51,7 +51,7 @@ def treeSkim( ana, sample, runInSeries=False):
         f.write('eval `scram runtime -sh`\n')
         f.write('source /opt/exp_soft/cms/cms_ui_env_crab.sh\n')
         ##
-        configFileName = "./Configs/treeSkimmerElecTau_Spring13_%s_%s_cfg.py" % (sample,ana)
+        configFileName = "./Configs/treeSkimmerElecTau_Summer13_%s_%s_cfg.py" % (sample,ana)
         f.write('treeSkimmer'+stream+'_Spring13 '+configFileName+' > '+fileLog+'\n')
         f.close()
         os.system('chmod u+x batch/*.sh')
@@ -255,7 +255,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "VBFH110"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
-##     treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
+    treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH140"       , False)

@@ -2593,7 +2593,9 @@ options = {
     'sample'         : 'TTJets_SemiLept',
     'xSection'       : 249.5,
     'skimEff'        : 0.438 * 0.561995,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'TTJets_FullLept' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-FullLeptMGDecay_MC_Bkg_HTT_25July2013_Trees_MuTau_v5/',
@@ -2601,7 +2603,9 @@ options = {
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 249.5,
     'skimEff'        : 0.105 * 0.648373,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'TTJets_Had' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-HadronicMGDecays_MC_Bkg_HTT_25July2013_Trees_MuTau_v5/',
@@ -2609,7 +2613,9 @@ options = {
     'sample'         : 'TTJets_Had',
     'xSection'       : 249.5,
     'skimEff'        : 0.457 * 0.120926,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'T-tW' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/T-tW-powheg-PUS10_MC_Bkg_HTT_12July2013_Trees_EleTau_v1/',
@@ -2693,7 +2699,7 @@ options = {
     },
     ##Higgs MC
     'GGFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH90_ElecTau.root',
     'sample'         : 'GGFH90',
     'xSection'       : 36.80 ,
@@ -2703,7 +2709,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH95_ElecTau.root',
     'sample'         : 'GGFH95',
     'xSection'       : 33.19 ,
@@ -2713,7 +2719,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH100_ElecTau.root',
     'sample'         : 'GGFH100',
     'xSection'       : 30.12 ,
@@ -2723,7 +2729,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH105_ElecTau.root',
     'sample'         : 'GGFH105',
     'xSection'       : 27.39 ,
@@ -2733,7 +2739,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH110_ElecTau.root',
     'sample'         : 'GGFH110',
     'xSection'       : 25.04 ,
@@ -2743,7 +2749,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH115_ElecTau.root',
     'sample'         : 'GGFH115',
     'xSection'       : 22.96 ,
@@ -2753,7 +2759,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH120_ElecTau.root',
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
@@ -2763,7 +2769,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH125_ElecTau.root',
     'sample'         : 'GGFH125',
     'xSection'       : 19.52,
@@ -2773,7 +2779,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH130_ElecTau.root',
     'sample'         : 'GGFH130',
     'xSection'       : 18.07 ,
@@ -2783,7 +2789,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH135_ElecTau.root',
     'sample'         : 'GGFH135',
     'xSection'       : 16.79,
@@ -2793,7 +2799,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH140_ElecTau.root',
     'sample'         : 'GGFH140',
     'xSection'       : 15.63,
@@ -2803,7 +2809,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH145_ElecTau.root',
     'sample'         : 'GGFH145',
     'xSection'       : 14.59,
@@ -2813,7 +2819,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH150_ElecTau.root',
     'sample'         : 'GGFH150',
     'xSection'       : 13.65,
@@ -2823,7 +2829,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH155_ElecTau.root',
     'sample'         : 'GGFH155',
     'xSection'       : 12.79,
@@ -2833,7 +2839,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH160_ElecTau.root',
     'sample'         : 'GGFH160',
     'xSection'       : 11.95,
@@ -2843,7 +2849,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH90_ElecTau.root',
     'sample'         : 'VBFH90',
     'xSection'       : 2.191 ,
@@ -2853,7 +2859,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH95_ElecTau.root',
     'sample'         : 'VBFH95',
     'xSection'       : 2.084 ,
@@ -2863,7 +2869,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH100_ElecTau.root',
     'sample'         : 'VBFH100',
     'xSection'       : 1.988,
@@ -2873,7 +2879,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH105_ElecTau.root',
     'sample'         : 'VBFH105',
     'xSection'       : 1.897,
@@ -2883,7 +2889,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH110_ElecTau.root',
     'sample'         : 'VBFH110',
     'xSection'       : 1.809,
@@ -2893,7 +2899,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH115_ElecTau.root',
     'sample'         : 'VBFH115',
     'xSection'       : 1.729,
@@ -2903,7 +2909,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH120_ElecTau.root',
     'sample'         : 'VBFH120',
     'xSection'       : 1.649,
@@ -2913,7 +2919,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVBFH125_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -2923,7 +2929,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH130_ElecTau.root',
     'sample'         : 'VBFH130',
     'xSection'       : 1.511,
@@ -2933,7 +2939,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH135_ElecTau.root',
     'sample'         : 'VBFH135',
     'xSection'       : 1.448,
@@ -2943,7 +2949,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH140_ElecTau.root',
     'sample'         : 'VBFH140',
     'xSection'       : 1.389,
@@ -2953,7 +2959,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH145_ElecTau.root',
     'sample'         : 'VBFH145',
     'xSection'       : 1.333,
@@ -2963,7 +2969,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH150_ElecTau.root',
     'sample'         : 'VBFH150',
     'xSection'       : 1.280 ,
@@ -2973,7 +2979,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH155_ElecTau.root',
     'sample'         : 'VBFH155',
     'xSection'       : 1.231 ,
@@ -2983,7 +2989,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_12July2013_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH160_ElecTau.root',
     'sample'         : 'VBFH160',
     'xSection'       : 1.185 ,
@@ -2993,7 +2999,7 @@ options = {
     'nDiv'           : 1
     },
     'VH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH90_ElecTau.root',
     'sample'         : 'VH90',
     'xSection'       : (1.972 + 1.057 + 0.3233) ,
@@ -3003,7 +3009,7 @@ options = {
     'nDiv'           : 1
     },
     'VH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH95_ElecTau.root',
     'sample'         : 'VH95',
     'xSection'       : (1.676 + 0.9060 + 0.2812) ,
@@ -3013,7 +3019,7 @@ options = {
     'nDiv'           : 1
     },
     'VH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH100_ElecTau.root',
     'sample'         : 'VH100',
     'xSection'       : (1.432 + 0.7807 + 0.2454) ,
@@ -3023,7 +3029,7 @@ options = {
     'nDiv'           : 1
     },
     'VH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH105_ElecTau.root',
     'sample'         : 'VH105',
     'xSection'       : (1.229 + 0.6750 + 0.2149) ,
@@ -3033,7 +3039,7 @@ options = {
     'nDiv'           : 1
     },
     'VH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH110_ElecTau.root',
     'sample'         : 'VH110',
     'xSection'       : (1.060+0.5869+0.1887) ,
@@ -3043,7 +3049,7 @@ options = {
     'nDiv'           : 1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH115_ElecTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),
@@ -3053,7 +3059,7 @@ options = {
     'nDiv'           : 1
     },
     'VH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH120_ElecTau.root',
     'sample'         : 'VH120',
     'xSection'       : (0.7966+0.4483+0.1470),
@@ -3063,7 +3069,7 @@ options = {
     'nDiv'           : 1
     },
     'VH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH125_ElecTau.root',
     'sample'         : 'VH125',
     'xSection'       : (0.6966+0.3943+0.1302),
@@ -3073,7 +3079,7 @@ options = {
     'nDiv'           : 1
     },
     'VH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH130_ElecTau.root',
     'sample'         : 'VH130',
     'xSection'       : (0.6095+0.3473+0.1157),
@@ -3083,7 +3089,7 @@ options = {
     'nDiv'           : 1
     },
     'VH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH135_ElecTau.root',
     'sample'         : 'VH135',
     'xSection'       : (0.5351+0.3074+0.1031),
@@ -3093,7 +3099,7 @@ options = {
     'nDiv'           : 1
     },
     'VH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH140_ElecTau.root',
     'sample'         : 'VH140',
     'xSection'       : (0.4713+0.2728+0.09207),
@@ -3103,7 +3109,7 @@ options = {
     'nDiv'           : 1
     },
     'VH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH145_ElecTau.root',
     'sample'         : 'VH145',
     'xSection'       : (0.4164+0.2424+0.08246),
@@ -3113,7 +3119,7 @@ options = {
     'nDiv'           : 1
     },
     'VH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH150_ElecTau.root',
     'sample'         : 'VH150',
     'xSection'       : (0.3681 + 0.2159 + 0.07403),
@@ -3123,7 +3129,7 @@ options = {
     'nDiv'           : 1
     },
     'VH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH155_ElecTau.root',
     'sample'         : 'VH155',
     'xSection'       : (0.3252 + 0.1923 + 0.06664),
@@ -3133,7 +3139,7 @@ options = {
     'nDiv'           : 1
     },
     'VH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_06Mar2013_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH160_ElecTau.root',
     'sample'         : 'VH160',
     'xSection'       : (0.2817 + 0.1687 + 0.06013),
@@ -3144,7 +3150,7 @@ options = {
     },
     ######MSSM
     'SUSYGGH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH80_ElecTau.root',
     'sample'         : 'SUSYGGH80',
     'xSection'       : 1.0,
@@ -3154,7 +3160,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH90_ElecTau.root',
     'sample'         : 'SUSYGGH90',
     'xSection'       : 1.0,
@@ -3164,7 +3170,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH100_ElecTau.root',
     'sample'         : 'SUSYGGH100',
     'xSection'       : 1.0,
@@ -3174,7 +3180,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH110_ElecTau.root',
     'sample'         : 'SUSYGGH110',
     'xSection'       : 1.0,
@@ -3184,7 +3190,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH120_ElecTau.root',
     'sample'         : 'SUSYGGH120',
     'xSection'       : 1.0,
@@ -3194,7 +3200,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH130_ElecTau.root',
     'sample'         : 'SUSYGGH130',
     'xSection'       : 1.0,
@@ -3204,7 +3210,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH140_ElecTau.root',
     'sample'         : 'SUSYGGH140',
     'xSection'       : 1.0,
@@ -3214,7 +3220,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH160_ElecTau.root',
     'sample'         : 'SUSYGGH160',
     'xSection'       : 1.0,
@@ -3224,7 +3230,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH180_ElecTau.root',
     'sample'         : 'SUSYGGH180',
     'xSection'       : 1.0,
@@ -3234,7 +3240,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH200_ElecTau.root',
     'sample'         : 'SUSYGGH200',
     'xSection'       : 1.0,
@@ -3244,7 +3250,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH250_ElecTau.root',
     'sample'         : 'SUSYGGH250',
     'xSection'       : 1.0,
@@ -3254,7 +3260,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH300_ElecTau.root',
     'sample'         : 'SUSYGGH300',
     'xSection'       : 1.0,
@@ -3264,7 +3270,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH350_ElecTau.root',
     'sample'         : 'SUSYGGH350',
     'xSection'       : 1.0,
@@ -3274,7 +3280,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH400_ElecTau.root',
     'sample'         : 'SUSYGGH400',
     'xSection'       : 1.0,
@@ -3284,7 +3290,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH450_ElecTau.root',
     'sample'         : 'SUSYGGH450',
     'xSection'       : 1.0,
@@ -3294,7 +3300,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH500_ElecTau.root',
     'sample'         : 'SUSYGGH500',
     'xSection'       : 1.0,
@@ -3304,7 +3310,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH600_ElecTau.root',
     'sample'         : 'SUSYGGH600',
     'xSection'       : 1.0,
@@ -3314,7 +3320,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH700_ElecTau.root',
     'sample'         : 'SUSYGGH700',
     'xSection'       : 1.0,
@@ -3324,7 +3330,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH800_ElecTau.root',
     'sample'         : 'SUSYGGH800',
     'xSection'       : 1.0,
@@ -3334,7 +3340,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH900_ElecTau.root',
     'sample'         : 'SUSYGGH900',
     'xSection'       : 1.0,
@@ -3344,7 +3350,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYGGH1000_ElecTau.root',
     'sample'         : 'SUSYGGH1000',
     'xSection'       : 1.0,
@@ -3354,7 +3360,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH80_ElecTau.root',
     'sample'         : 'SUSYBBH80',
     'xSection'       : 1.0,
@@ -3364,7 +3370,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH90_ElecTau.root',
     'sample'         : 'SUSYBBH90',
     'xSection'       : 1.0,
@@ -3374,7 +3380,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH100_ElecTau.root',
     'sample'         : 'SUSYBBH100',
     'xSection'       : 1.0,
@@ -3384,7 +3390,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH110_ElecTau.root',
     'sample'         : 'SUSYBBH110',
     'xSection'       : 1.0,
@@ -3394,7 +3400,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH120_ElecTau.root',
     'sample'         : 'SUSYBBH120',
     'xSection'       : 1.0,
@@ -3404,7 +3410,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH130_ElecTau.root',
     'sample'         : 'SUSYBBH130',
     'xSection'       : 1.0,
@@ -3414,7 +3420,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH140_ElecTau.root',
     'sample'         : 'SUSYBBH140',
     'xSection'       : 1.0,
@@ -3424,7 +3430,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH160_ElecTau.root',
     'sample'         : 'SUSYBBH160',
     'xSection'       : 1.0,
@@ -3434,7 +3440,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH180_ElecTau.root',
     'sample'         : 'SUSYBBH180',
     'xSection'       : 1.0,
@@ -3444,7 +3450,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH200_ElecTau.root',
     'sample'         : 'SUSYBBH200',
     'xSection'       : 1.0,
@@ -3454,7 +3460,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH250_ElecTau.root',
     'sample'         : 'SUSYBBH250',
     'xSection'       : 1.0,
@@ -3464,7 +3470,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH300_ElecTau.root',
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
@@ -3474,7 +3480,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH350_ElecTau.root',
     'sample'         : 'SUSYBBH350',
     'xSection'       : 1.0,
@@ -3484,7 +3490,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH400_ElecTau.root',
     'sample'         : 'SUSYBBH400',
     'xSection'       : 1.0,
@@ -3494,7 +3500,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH450_ElecTau.root',
     'sample'         : 'SUSYBBH450',
     'xSection'       : 1.0,
@@ -3504,7 +3510,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH500_ElecTau.root',
     'sample'         : 'SUSYBBH500',
     'xSection'       : 1.0,
@@ -3514,7 +3520,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH600_ElecTau.root',
     'sample'         : 'SUSYBBH600',
     'xSection'       : 1.0,
@@ -3524,7 +3530,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH700_ElecTau.root',
     'sample'         : 'SUSYBBH700',
     'xSection'       : 1.0,
@@ -3534,7 +3540,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH800_ElecTau.root',
     'sample'         : 'SUSYBBH800',
     'xSection'       : 1.0,
@@ -3544,7 +3550,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH900_ElecTau.root',
     'sample'         : 'SUSYBBH900',
     'xSection'       : 1.0,
@@ -3554,7 +3560,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-pythia-PUS10_EleTau_Trees_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-pythia-PUS10_27July2013_EleTau_Trees_v2/',
     'outputFileName' : OutDir+'nTupleSUSYBBH1000_ElecTau.root',
     'sample'         : 'SUSYBBH1000',
     'xSection'       : 1.0,
@@ -3609,7 +3615,7 @@ for sample, option in options.items():
         configOptions['analysis'] = analysis
         if  re.search("Data",sample)==None :
             configOptions['outputFileName'] = configOptions['outputFileName'].replace('.root', '_%s.root' % analysis) 
-        configFileName = "treeSkimmerElecTau_Spring13_%s_%s_cfg.py" % (sample,analysis)
+        configFileName = "treeSkimmerElecTau_Summer13_%s_%s_cfg.py" % (sample,analysis)
         configFileName_full = os.path.join(submissionDirectory, configFileName)
         configFile = open(configFileName_full, 'w')
         configConfig = config_template.substitute(configOptions)
