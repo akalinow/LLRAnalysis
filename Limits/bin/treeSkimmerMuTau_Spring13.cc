@@ -170,7 +170,7 @@ double deltaR(LV v1, LV v2) {
 
 }
 
-float reweightHEPNUPWJets(int hepNUP) {
+float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   //   if(nJets==0)      return 1 ;
@@ -204,12 +204,24 @@ float reweightHEPNUPWJets(int hepNUP) {
   //   else return 1 ;
   
   //NewJEC
-  if(nJets==0)      return 0.492871535;
-  else if(nJets==1) return 0.184565169;
-  else if(nJets==2) return 0.056192256;
-  else if(nJets==3) return 0.03876607;
-  else if(nJets>=4) return 0.018970657;
+  if(set==0) { // usual set of samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.184565169;
+    else if(nJets==2) return 0.056192256;
+    else if(nJets==3) return 0.03876607;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
+  else if(set==1) { // adding new high stat samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.100275621;
+    else if(nJets==2) return 0.031239069;
+    else if(nJets==3) return 0.019961638;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
   else return 1 ;
+
 }
 
 float reweightHEPNUPDYJets(int hepNUP) {
@@ -728,7 +740,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1069,7 +1082,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("muonRadiationDownWeight",&muonRadiationDownWeight_,"muonRadiationDownWeight/F");//IN
   outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
 
-  outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNup",         &weightHepNup,         "weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNupHighStatW",&weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
@@ -2356,6 +2370,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     sampleWeightW  = 1;
     sampleWeightDY = 1;
     weightHepNup   = 1;
+    weightHepNupHighStatW =1;
     weightHepNupDY = 1;
 
     // Reweight W+Jets
@@ -2363,7 +2378,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
         ) {
-      weightHepNup = reweightHEPNUPWJets( hepNUP );
+      weightHepNup          = reweightHEPNUPWJets( hepNUP, 0 );
+      weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
       sampleWeight = 1;
       sampleWeightW= scaleFactor; 
     }
