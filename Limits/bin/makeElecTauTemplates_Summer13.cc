@@ -274,7 +274,7 @@ void produce(
       hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
 
       TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-      hSMSgn1->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+      hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
     }
 
@@ -330,11 +330,43 @@ void produce(
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"  ,suffix.c_str())); 
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+	//shape syst. for qcd
+	if(suffix == ""){
+          TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+          QCDShape = QCDShape+"_"+binNameSpace;
+          TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+          TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+          for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+            if(hQCD->GetBinCenter(b)<=60.){
+              hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+              hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+            }
+          }
+          hQCDUp->Write(QCDShape+"_8TeVUp");
+          hQCDDown->Write(QCDShape+"_8TeVDown");
+        }//suffix
+
       }
       else {
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"  ,suffix.c_str()));
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+	//shape syst. for qcd
+	if(suffix == ""){
+          TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+          QCDShape = QCDShape+"_"+binNameSpace;
+          TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+          TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+          for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+            if(hQCD->GetBinCenter(b)<=60.){
+              hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+              hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+            }
+          }
+          hQCDUp->Write(QCDShape+"_8TeVUp");
+          hQCDDown->Write(QCDShape+"_8TeVDown");
+        }//suffix
+
       }
       // ----- W ------ 
       TH1F* hW = ((TH1F*)fin->Get("hW"));
@@ -371,6 +403,22 @@ void produce(
       hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
       checkValidity(hQCD);
       hQCD->Write(Form("QCD%s"      ,suffix.c_str()));
+      //shape syst. for qcd
+      if(suffix == ""){
+	TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+	QCDShape = QCDShape+"_"+binNameSpace;
+	TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	  if(hQCD->GetBinCenter(b)<=60.){
+	    hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	    hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	  }
+	}
+	hQCDUp->Write(QCDShape+"_8TeVUp");
+	hQCDDown->Write(QCDShape+"_8TeVDown");
+      }//suffix
+
       // ----- W ------ 
       TH1F* hW = ((TH1F*)fin->Get("hW3JetsMediumTauIsoRelVBF"));
       hW->SetName(Form("W%s"        ,suffix.c_str()));
@@ -415,6 +463,23 @@ void produce(
         TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+
+	//shape syst. for qcd
+	if(suffix == ""){
+	  TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+	  QCDShape = QCDShape+"_"+binNameSpace;
+	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	    if(hQCD->GetBinCenter(b)<=60.){
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	    }
+	  }
+	  hQCDUp->Write(QCDShape+"_8TeVUp");
+	  hQCDDown->Write(QCDShape+"_8TeVDown");
+	}//suffix
+	
       }
 
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
@@ -634,30 +699,30 @@ void produce(
       }
       // ----- QCD ------ 
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
-	if( bin_.find("High")!=string::npos ) {
-	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
-	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
-	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	}
-	else {
-	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
-	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
-	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	  //for 1Jet_low, need to scale by 15% below 60 GeV and add a shape systematic for QCD  
-	  // if(suffix == ""){ 
-// 	    TH1F* hQCDUp=(TH1F*)hQCD->Clone("QCD_CMS_htt_QCDShape_etau_boost_low_8TeVUp"); 
-// 	    TH1F* hQCDDown=(TH1F*)hQCD->Clone("QCD_CMS_htt_QCDShape_etau_boost_low_8TeVDown"); 
-// 	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
-// 	      if(hQCD->GetBinCenter(b)<=60.){ 
-// 		hQCDUp->SetBinContent(b,1.15*hQCDUp->GetBinContent(b)); 
-// 		hQCDDown->SetBinContent(b,0.85*hQCDDown->GetBinContent(b)); 
-// 	      } 
-// 	    } 
-// 	    hQCDUp->Write("QCD_CMS_htt_QCDShape_etau_boost_low_8TeVUp"); 
-// 	    hQCDDown->Write("QCD_CMS_htt_QCDShape_etau_boost_low_8TeVDown");
-// 	  }
-	  //suffix	  
-	}//low
+	//if( bin_.find("High")!=string::npos ) {
+	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
+	hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+	//}
+	//else {
+	//TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
+	//hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	//hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+	if(suffix == ""){ 
+	  TString QCDShape("QCD_CMS_htt_QCDShape_etau");  
+	  QCDShape = QCDShape+"_"+binNameSpace;
+	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
+	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
+	    if(hQCD->GetBinCenter(b)<=60.){ 
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
+	    } 
+	  } 
+	  hQCDUp->Write(QCDShape+"_8TeVUp");  
+	  hQCDDown->Write(QCDShape+"_8TeVDown");
+	}//suffix	  
+	//}//low
       }
       // ----- W ------ 
       if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
@@ -707,6 +772,22 @@ void produce(
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+
+	if(suffix == ""){
+          TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+          QCDShape = QCDShape+"_"+binNameSpace;
+          TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+          TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+          for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+            if(hQCD->GetBinCenter(b)<=60.){
+              hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+              hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+            }
+          }
+          hQCDUp->Write(QCDShape+"_8TeVUp");
+          hQCDDown->Write(QCDShape+"_8TeVDown");
+        }//suffix
+	
       }
       // ----- W ------ 
       if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
@@ -766,6 +847,23 @@ void produce(
           hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	  checkValidity(hQCD);
           hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+
+	  //shape syst. for qcd
+	  if(suffix == ""){
+	    TString QCDShape("QCD_CMS_htt_QCDShape_etau");
+	    QCDShape = QCDShape+"_"+binNameSpace;
+	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	      if(hQCD->GetBinCenter(b)<=60.){
+		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	      }
+	    }
+	    hQCDUp->Write(QCDShape+"_8TeVUp");
+	    hQCDDown->Write(QCDShape+"_8TeVDown");
+	  }//suffix
+	  
         }
 
 	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
