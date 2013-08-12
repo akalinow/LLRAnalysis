@@ -249,7 +249,7 @@ void drawHistogram(TCut sbinPair,
     TCut hltMatch("run>0");
     if(version_.Contains("SoftD")) {
       if(type.Contains("Data"))    hltMatch = "HLTmatchSoft";
-      else if(type.Contains("MC")) hltMatch = "HLTmatchIsoMu8Tau20";
+      //else if(type.Contains("MC")) hltMatch = "HLTmatchIsoMu8Tau20";
     }
 
     // L1ETM CUT //
@@ -269,21 +269,26 @@ void drawHistogram(TCut sbinPair,
     TCut genMass("run>0");
 
     // Reweighting
-    TCut weight       = "run>0";
-    TCut sampleWeight = "run>0";
+    TCut weight         = "run>0";
+    TCut sampleWeight   = "run>0";
+    TCut weightDY = "run>0";
+    TCut weightW  = "run>0";
 
     if(type.Contains("MC")) {
 
-      if(version_.Contains("NoDYExcl")) sampleWeight = "sampleWeight*sampleWeightDY*weightHepNup";
-      else                              sampleWeight = "sampleWeight*weightHepNupDY*weightHepNup";
+      sampleWeight = "sampleWeight";
+      if(version_.Contains("NoDYExcl"))    weightDY = "sampleWeightDY";
+      else                                 weightDY = "weightHepNupDY";
+      if(version_.Contains("NoWHighStat")) weightW  = "weightHepNup";
+      else                                 weightW  = "weightHepNupHighStatW";
       
-      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
-      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
-      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
+      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC)";
+      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
+      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightDecayMode)";
-	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode)";
+	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC)";
+	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
+	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
       }      
       //to be used when weight is available
       if(type.Contains("GGFHUp")) 
@@ -297,13 +302,13 @@ void drawHistogram(TCut sbinPair,
     else if(type.Contains("Embed")) {
       //genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
       genMass = "genDiTauMass>50"; // HLTxMu17Mu8
-      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
-      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
-      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
+      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight)";
+      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight)";
+      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight)";
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
-	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight*weightDecayMode)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight)";
+	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight)";
       }
     }
 
@@ -400,7 +405,7 @@ void drawHistogram(TCut sbinPair,
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
 
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*sbinCat*genMass*passL1ETMCut*hltMatch);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -409,7 +414,7 @@ void drawHistogram(TCut sbinPair,
     }    
     else {
       TCut pairIndex="pairIndex<1";
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
     }
 
     // Scale the histogram, compute norm and err
@@ -882,11 +887,14 @@ void plotMuTau( Int_t mH_           = 120,
   /////////////////
 
   float lumiCorrFactor                     = 1 ;    //= (1-0.056);
-  float TTxsectionRatio                    = 0.98; //lumiCorrFactor*(165.8/157.5) ;
+  //float TTxsectionRatio                    = 0.98; //lumiCorrFactor*(165.8/157.5) ;
+  float TTxsectionRatio                    = 0.96; // Summer13 value from twiki
   float OStoSSRatioQCD                     = 1.06;
   float SSIsoToSSAIsoRatioQCD              = 1.0;
-  float MutoTauCorrectionFactor            = 0.976;
-  float JtoTauCorrectionFactor             = 0.976;
+  float MutoTauCorrectionFactor            = 1.0;
+  float JtoTauCorrectionFactor             = 1.0;
+//   float MutoTauCorrectionFactor            = 0.976;
+//   float JtoTauCorrectionFactor             = 0.976;
   float ExtrapolationFactorZ               = 1.0;
   float ErrorExtrapolationFactorZ          = 1.0;
   float ExtrapolationFactorZDataMC         = 1.0;
@@ -1076,16 +1084,7 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_ByPair/MuTau/";
-  //TString pathToFile = "/data_CMS/cms/anayak/H2TauTau2013/MuTauStream/PostMoriondV5/Ntuple/";
-  //TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewEleIDFix/MuTau/update/";
-
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewJEC/MuTau/"; //data
-  TString pathToEmbed   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewNadir/MuTau/"; 
-  TString pathToEmbedLow= "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/MuTau/old/";
-  TString pathMC        = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewRecoil/MuTau/update/";
-  TString pathW         = pathMC; 
-  TString pathDY        = pathMC;
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/";
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -1114,14 +1113,14 @@ void plotMuTau( Int_t mH_           = 120,
   //
   if(!version_.Contains("Soft")) {
     if(RUN.Contains("ABC")) {
-      dataEmbedded->Add(pathToEmbed+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToEmbed+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToEmbed+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
     }
-    if(RUN.Contains("D")) dataEmbedded->Add(pathToEmbed+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
   }
   else {
-    dataEmbedded->Add(pathToEmbedLow+"/nTupleRun2012D*EmbeddedLowPt_MuTau_"+fileAnalysisEmbedded+".root");
+    dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedLowPt_MuTau_"+fileAnalysisEmbedded+".root");
   }
 
   //cout << "FILE EMBEDDED #1 : " << dataEmbedded->GetFile()->GetName() << endl;
@@ -1148,32 +1147,32 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathDY+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFile+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
   
   if(!version_.Contains("NoDYExcl")) {
-    backgroundDY      ->Add(pathDY+"nTupleDYJets1Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathDY+"nTupleDYJets2Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathDY+"nTupleDYJets3Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathDY+"nTupleDYJets4Jets_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFile+"nTupleDYJets1Jets_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFile+"nTupleDYJets2Jets_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFile+"nTupleDYJets3Jets_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets_MuTau_"+fileAnalysis+".root");
   }
   //
-  backgroundTTbar   ->Add(pathMC+"nTupleTTJets_MuTau_"+fileAnalysis+".root");
+  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_MuTau_"+fileAnalysis+".root");
   //
-  backgroundOthers  ->Add(pathMC+"nTupleT-tW_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleTbar-tW_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleWWJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleWZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleWZJetsTo3LNu_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathMC+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleT-tW_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleTbar-tW_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWWJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo3LNu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
+  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
   //
-  backgroundWJets   ->Add(pathW+"nTupleWJets-p1_MuTau_"  +fileAnalysis+".root");
-  backgroundWJets   ->Add(pathW+"nTupleWJets-p2_MuTau_"  +fileAnalysis+".root");
-  backgroundWJets   ->Add(pathW+"nTupleWJets1Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathW+"nTupleWJets2Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathW+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathW+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"  +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"  +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
 
   //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
   backgroundW3Jets = backgroundWJets;
@@ -1188,7 +1187,7 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
-      signal[iP][iM]->Add(pathMC+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+fileAnalysis+".root");
+      signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_MuTau_"+fileAnalysis+".root");
       if(!signal[iP][iM])cout << "###  NTUPLE Signal " << nameProd[iP]+nameMasses[iM] << " NOT FOUND ###" << endl;  
     }
   }
@@ -1198,7 +1197,7 @@ void plotMuTau( Int_t mH_           = 120,
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
 	signalSusy[iP][iM] = new TChain(treeMC);
-	signalSusy[iP][iM]->Add(pathMC+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_"+fileAnalysis+".root");
+	signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_MuTau_"+fileAnalysis+".root");
       }
     }
   }
@@ -1223,14 +1222,14 @@ void plotMuTau( Int_t mH_           = 120,
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     //
     if(!version_.Contains("NoDYExcl")) {
-      backgroundDYTauTau  ->Add(pathDY+"/nTupleDYJets*TauTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYMutoTau ->Add(pathDY+"/nTupleDYJets*MuToTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYJtoTau  ->Add(pathDY+"/nTupleDYJets*JetToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJets*MuToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets*JetToTau_MuTau_"+fileAnalysis+".root");
     }
     else {
-      backgroundDYTauTau  ->Add(pathDY+"/nTupleDYJets_TauTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYMutoTau ->Add(pathDY+"/nTupleDYJets_MuToTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYJtoTau  ->Add(pathDY+"/nTupleDYJets_JetToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets_TauTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJets_MuToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets_JetToTau_MuTau_"+fileAnalysis+".root");
     }
   }
 
