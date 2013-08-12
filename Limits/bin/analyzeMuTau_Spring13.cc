@@ -1113,11 +1113,11 @@ void plotMuTau( Int_t mH_           = 120,
   //
   if(!version_.Contains("Soft")) {
     if(RUN.Contains("ABC")) {
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012A*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012B*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012C*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
     }
-    if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+    if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
   }
   else {
     dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedLowPt_MuTau_"+fileAnalysisEmbedded+".root");
@@ -1156,7 +1156,7 @@ void plotMuTau( Int_t mH_           = 120,
     backgroundDY      ->Add(pathToFile+"nTupleDYJets4Jets_MuTau_"+fileAnalysis+".root");
   }
   //
-  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_MuTau_"+fileAnalysis+".root");
+  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_*_MuTau_"+fileAnalysis+".root");
   //
   backgroundOthers  ->Add(pathToFile+"nTupleT-tW_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleTbar-tW_MuTau_"+fileAnalysis+".root");
@@ -1167,12 +1167,16 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
   //
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"  +fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"  +fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"     +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"     +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets1Jets_MuTau_"   +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets_MuTau_"   +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"   +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets_MuTau_"   +fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets1JetsV19_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets2JetsV19_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets3JetsV19_MuTau_"+fileAnalysis+".root");
+  backgroundWJets   ->Add(pathToFile+"nTupleWJets4JetsV19_MuTau_"+fileAnalysis+".root");
 
   //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
   backgroundW3Jets = backgroundWJets;
