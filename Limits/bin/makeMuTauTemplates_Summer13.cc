@@ -30,7 +30,7 @@ void checkValidity(TH1F* h){
       //h->SetBinContent(i,0);
       h->SetBinContent(i,1e-9);
     }
-    //if(h->GetBinContent(i) == 0) h->SetBinContent(i,1e-6);
+    if(h->GetBinContent(i) == 0) h->SetBinContent(i,1e-9);
   }
 
 }
@@ -102,8 +102,7 @@ void produce(
 	     string bin_       = "inclusive",
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
 	     int useEmb        = 1,
-	     //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_tree/src/LLRAnalysis/Limits/bin/results/"
-	     TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_SyncRecoEleIdJEC/src/LLRAnalysis/Limits/bin/"
+	     TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_tree/src/LLRAnalysis/Limits/bin/results/"
 	     ){
 
 
@@ -345,11 +344,11 @@ void produce(
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 
-	//for 1Jet_low, need to scale by 15% below 60 GeV and add a shape systematic for QCD 
+	//for 1Jet_low/medium, need to scale by 10% below 60 GeV and add a 10% shape systematic for QCD 
 	if(suffix == ""){
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
 	    if(hQCD->GetBinCenter(b)<=60.){ 
-	      hQCD->SetBinContent(b,1.15*hQCD->GetBinContent(b)); 
+	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b)); 
 	    }
 	  }
 	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau_1jet_low");
@@ -360,8 +359,8 @@ void produce(
 	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
 	    if(hQCD->GetBinCenter(b)<=60.){
-	      hQCDUp->SetBinContent(b,1.15*hQCDUp->GetBinContent(b));
-	      hQCDDown->SetBinContent(b,0.85*hQCDDown->GetBinContent(b));
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
 	    }
 	  }
 	  hQCDUp->Write(QCDShape+"_8TeVUp");
@@ -373,6 +372,29 @@ void produce(
       else {
         TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+
+	if(suffix == ""){
+	  /*
+          for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+            if(hQCD->GetBinCenter(b)<=60.){
+              hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
+            }
+          }
+	  */
+          TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	  QCDShape = QCDShape+"_"+binNameSpace;
+
+          TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+          TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+            if(hQCD->GetBinCenter(b)<=60.){
+              hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+              hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+            }
+          }
+          hQCDUp->Write(QCDShape+"_8TeVUp");
+          hQCDDown->Write(QCDShape+"_8TeVDown");
+	}
 	checkValidity(hQCD);
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
@@ -414,18 +436,46 @@ void produce(
       hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
 
       // ----- QCD ------
-      if(bin_.find("nobTag")!=string::npos){
+      /*if(bin_.find("nobTag")!=string::npos){
 	TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-      }
-      else{
+	}
+	else{
+	*/
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	if(bin_.find("nobTag")!=string::npos){
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	    if(hQCD->GetBinCenter(b)<=60.){
+	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
+	    }
+	  }
+	}
 	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-      }
+
+	//Add a 10% shape uncert. to QCD for mass < 60 GeV
+	if(suffix == ""){
+	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	  QCDShape = QCDShape+"_"+binNameSpace;
+	  
+	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	    if(hQCD->GetBinCenter(b)<=60.){
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	    }
+	  }
+	  checkValidity(hQCDUp);
+	  hQCDUp->Write(QCDShape+"_8TeVUp");
+	  checkValidity(hQCDDown);
+	  hQCDDown->Write(QCDShape+"_8TeVDown");
+	}
+	
+	//}
 
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb")); 
       hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str())); 
@@ -495,6 +545,24 @@ void produce(
       // ----- QCD ------ 
       TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
       hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+
+      //Add a 10% shape uncert. to QCD for mass < 60 GeV
+      if(suffix == ""){
+	TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	QCDShape = QCDShape+"_"+binNameSpace;
+
+	TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	  if(hQCD->GetBinCenter(b)<=60.){
+	    hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	    hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	  }
+	}
+	hQCDUp->Write(QCDShape+"_8TeVUp");
+	hQCDDown->Write(QCDShape+"_8TeVDown");
+      }
+
       checkValidity(hQCD);
       hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       
@@ -715,11 +783,11 @@ void produce(
 	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 
-	  //for 1Jet_low, need to scale by 15% below 60 GeV and add a shape systematic for QCD  
+	  //for 1Jet_low, need to scale by 10% below 60 GeV and add a shape systematic for QCD  
 	  if(suffix == ""){ 
 	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){  
 	      if(hQCD->GetBinCenter(b)<=60.){  
-		hQCD->SetBinContent(b,1.15*hQCD->GetBinContent(b));  
+		hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));  
 	      } 
 	    } 
 	    
@@ -731,8 +799,8 @@ void produce(
 	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
 	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
 	      if(hQCD->GetBinCenter(b)<=60.){ 
-		hQCDUp->SetBinContent(b,1.15*hQCDUp->GetBinContent(b)); 
-		hQCDDown->SetBinContent(b,0.85*hQCDDown->GetBinContent(b)); 
+		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
+		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
 	      } 
 	    } 
 	    hQCDUp->Write(QCDShape+"_8TeVUp"); 
@@ -744,6 +812,24 @@ void produce(
 	else {
           TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
           hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+
+	  //Add a 10% shape uncert. to QCD for mass < 60 GeV 
+	  if(suffix == ""){ 
+	    TString QCDShape("QCD_CMS_htt_QCDShape_mutau"); 
+	    QCDShape = QCDShape+"_"+binNameSpace; 
+	    
+	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
+	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
+	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
+	      if(hQCD->GetBinCenter(b)<=60.){ 
+		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
+		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
+	      } 
+	    } 
+	    hQCDUp->Write(QCDShape+"_8TeVUp"); 
+	    hQCDDown->Write(QCDShape+"_8TeVDown"); 
+	  } 
+	  
 	  checkValidity(hQCD);
           hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
         }
@@ -794,18 +880,47 @@ void produce(
 	hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
+	/*
 	if(bin_.find("nobTag")!=string::npos){
 	  TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	}
-	else{
+	  }
+	  else{
+	*/
 	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  if(bin_.find("nobTag")!=string::npos){
+	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	      if(hQCD->GetBinCenter(b)<=60.){
+		hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
+	      }
+	    }
+	  }
 	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	}
+	  
+	  //Add a 10% shape uncert. to QCD for mass < 60 GeV
+	  if(suffix == ""){
+	    TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	    QCDShape = QCDShape+"_"+binNameSpace;
+	    
+	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	      if(hQCD->GetBinCenter(b)<=60.){
+		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	      }
+	    }
+	    checkValidity(hQCDUp);
+	    hQCDUp->Write(QCDShape+"_8TeVUp");
+	    checkValidity(hQCDDown);
+	    hQCDDown->Write(QCDShape+"_8TeVDown");
+	  }
+
+	  //}
 
 	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));  
 	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));  
@@ -888,6 +1003,24 @@ void produce(
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str())); 
+
+	//Add a 10% shape uncert. to QCD for mass < 60 GeV 
+	if(suffix == ""){ 
+	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau"); 
+	  QCDShape = QCDShape+"_"+binNameSpace; 
+	  
+	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
+	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
+	    if(hQCD->GetBinCenter(b)<=60.){ 
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
+	    } 
+	  } 
+	  hQCDUp->Write(QCDShape+"_8TeVUp"); 
+	  hQCDDown->Write(QCDShape+"_8TeVDown"); 
+	} 
+	
 	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
@@ -1353,19 +1486,20 @@ void produce(
 void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
 
   const int nVar=1;
-  const int nM=15; // 15 for sm, 21 for mssm
-  const int nCat=9; //9 sm; //6 before including "inclusive", 3 for MSSM
+  const int nM=21; // 15 for sm, 21 for mssm
+  const int nCat=3; //9 sm; //6 before including "inclusive", 3 for MSSM
   const int nAn=5;
 
-  string variables[nVar]={"diTauNSVfitMass"};
+  //string variables[nVar]={"diTauNSVfitMass"};
   //string variables[nVar]={"diTauVisMass"};
-  int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
-  //int mH[nM]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
+  string variables[nVar]={"diTauCDFMass"};
+  //int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
+  int mH[nM]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
 
   string analysis[nAn]={"nominal","TauUp","TauDown","JetUp","JetDown"};
   //string category[nCat]={"inclusive","novbfLow","novbfHigh","boostLow","boostHigh","vbf"}; //old
-  string category[nCat]={"inclusive","novbfLow","novbfMedium","novbfHigh","boostMedium","boostHighhighhiggs","boostHighlowhiggs","vbf","vbfTight"};
-  //string category[nCat]={"inclusive","bTag", "nobTag"}; //for MSSM
+  //string category[nCat]={"inclusive","novbfLow","novbfMedium","novbfHigh","boostMedium","boostHighhighhiggs","boostHighlowhiggs","vbf","vbfTight"};
+  string category[nCat]={"inclusive","bTag", "nobTag"}; //for MSSM
 
   for(int iVar = 0 ; iVar < nVar; iVar++)
     for(int iM = 0; iM < nM; iM++)
