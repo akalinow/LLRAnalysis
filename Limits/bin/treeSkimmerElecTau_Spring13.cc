@@ -172,7 +172,7 @@ double deltaR(LV v1, LV v2) {
 // }
 
 
-float reweightHEPNUPWJets(int hepNUP) {
+float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   
@@ -207,11 +207,22 @@ float reweightHEPNUPWJets(int hepNUP) {
 //   else return 1 ;
 
 //NewJEC
-  if(nJets==0)      return 0.492871535;
-  else if(nJets==1) return 0.184565169;
-  else if(nJets==2) return 0.056192256;
-  else if(nJets==3) return 0.03876607;
-  else if(nJets>=4) return 0.018970657;
+  if(set==0) { // usual set of samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.184565169;
+    else if(nJets==2) return 0.056192256;
+    else if(nJets==3) return 0.03876607;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
+  else if(set==1) { // adding new high stat samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.100275621;
+    else if(nJets==2) return 0.031239069;
+    else if(nJets==3) return 0.019961638;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
   else return 1 ;
 }
 
@@ -665,7 +676,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   cout << "Using corrections from llrCorrections_Spring13.root" << endl;
 
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v5.root");
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Ele trigger
   const int nEtaEle=2;
@@ -851,7 +862,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
+  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupHighStatW,weightHepNupDY;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
@@ -1160,6 +1171,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
   outTreePtOrd->Branch("sampleWeight",       &sampleWeight,"sampleWeight/F"); 
+  outTreePtOrd->Branch("sampleWeightW",      &sampleWeightW, "sampleWeightW/F"); 
   outTreePtOrd->Branch("sampleWeightDY",     &sampleWeightDY,"sampleWeightDY/F"); 
   outTreePtOrd->Branch("puWeight",           &puWeight,     "puWeight/F");
   outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,  "puWeightHCP/F");
@@ -1179,6 +1191,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
   outTreePtOrd->Branch("elecEffSF",&elecEffSF_,"elecEffSF/F");//IN
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNupHighStatW",       &weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
@@ -1819,7 +1832,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("elecAntiZeeIdTrigNoIP",&elecAntiZeeIdTrigNoIP);//IN
   currentTree->SetBranchAddress("NumEleFromV"          ,&NumEleFromV);//IN
 
-
   RecoilCorrector* recoilCorr = 0;
 
   if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
@@ -1958,7 +1970,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     currentTree->GetEntry(n);
 //     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
-    if(n%1000==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
+    if(n%1==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
 //     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
     
     // APPLY JSON SELECTION //
@@ -1976,15 +1988,21 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     // SELECT DY FINAL STATE //
     ///////////////////////////
 
+
     // final state informations //
     genDecay_        = genDecay ;
     isTauLegMatched_ = isTauLegMatched;
+    cout<<"HELP1"<<endl;
+    cout<<"SIZE :"<<genDiTauLegsP4->size()<<endl;
     if( !isData ) {
       if(DEBUG) cout << "!isData --> leptFakeTau = " ;
-      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+//       leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+      leptFakeTau      = 0;
       if(DEBUG) cout << leptFakeTau << endl;
     }
     else leptFakeTau = -99;
+    cout<<"HELP2"<<endl;
+
     //
     // final state selection //
     if( sample_.find("DYJets")!=string::npos  || 
@@ -1992,7 +2010,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
       dyFinalState=false;
-      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
+      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1);}
+      else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0); }
       else if ( sample_.find("EToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
       else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
       else continue;
@@ -2425,7 +2444,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     genMass = 0;
     if(genTausP4->size()>1) 
       genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
-    
+
     // genElec Info
     if(genDiTauLegsP4->size()>0) {
       genElecPt   = (*genDiTauLegsP4)[0].Pt();
@@ -2553,6 +2572,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     ////////////////////////////////////////////////
     
+
     MEtCov00   = (*metSgnMatrix)[0]; 
     MEtCov01   = (*metSgnMatrix)[1]; 
     MEtCov10   = (*metSgnMatrix)[1]; 
@@ -2785,15 +2805,17 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
 
-
     // Reweight W+Jets
     weightHepNup=1;
     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
-        ) 
-      weightHepNup = reweightHEPNUPWJets( hepNUP );
-
+        ) {
+      weightHepNup = reweightHEPNUPWJets( hepNUP , 0 );
+      weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
+      sampleWeight = 1;
+      sampleWeightW= scaleFactor; 
+    }
     // Reweight DY+Jets 
     weightHepNupDY=1;
     if( sample_.find("DYJets")!=string::npos  || 
@@ -3094,6 +3116,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
  
     isTauLegMatched_ = isTauLegMatched;
     isElecLegMatched_ = isElecLegMatched;
+//     cout<<"HELPo"<<endl;
 
     if(!isData)
       leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
@@ -3208,6 +3231,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // // 	diTauVisMass *= 1.015;
 //       }
 //     }
+//     cout<<"HELPo"<<endl;
 
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
@@ -3222,6 +3246,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // 	diTauVisMass *= 1.015;
       }
     }
+//     cout<<"HELPo"<<endl;
 
     ZeeWeightHCP = 1;
     if( sample_.find("DYJets")!=string::npos ){

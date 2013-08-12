@@ -295,17 +295,27 @@ void drawHistogram(TCut sbinCat = TCut(""),
   // Start processing
   if(tree!=0 && h!=0){
 
+    TCut sampleWeight ="run>0";
     TCut weight   ="run>0";
+    TCut weightDY ="run>0";
+    TCut weightW  ="run>0";
 
     if(type.Contains("MC")) {
-      if(     version_.Contains("SoftABC"))  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*passL1etmCutABC*ZeeWeightHCP*weightDecayMode)";
-      else if(version_.Contains("SoftD"))    weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*passL1etmCut*ZeeWeight*weightDecayMode)";
-      else if(version_.Contains("SoftLTau")) weight = "(sampleWeight*puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
+
+      sampleWeight = "sampleWeight";
+      if(version_.Contains("NoDYExcl"))    weightDY = "sampleWeightDY";
+      else                                 weightDY = "weightHepNupDY";
+      if(version_.Contains("NoWHighStat")) weightW  = "weightHepNup";
+      else                                 weightW  = "weightHepNupHighStatW";      
+
+      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightEleABCShift*SFTau*SFEle_ABC*passL1etmCutABC*ZeeWeightHCP*weightDecayMode)";
+      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*passL1etmCut*ZeeWeight*weightDecayMode)";
+      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTEleSoft*SFTau*SFEle_D*ZeeWeight*weightDecayMode)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(sampleWeight*puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*weightHepNupDY*weightHepNup*ZeeWeightHCP*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(sampleWeight*puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
+	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*ZeeWeightHCP*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*ZeeWeight*weightDecayMode)";
 	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
-	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight*weightDecayMode)";
+	else                                 weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*ZeeWeight*weightDecayMode)";
       } //NoSoft     
       //weights for GGFH pT re-weight
       if(type.Contains("GGFHUp"))
@@ -318,10 +328,10 @@ void drawHistogram(TCut sbinCat = TCut(""),
     else if(type.Contains("DY")){
       if(version_.Contains("ZeeSel"))
 // 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightDecayMode)";
-	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*weightDecayMode)";
+	weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightDecayMode)";
       else 
 // 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*ZeeWeight*weightDecayMode)";
-	weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightHepNupDY*ZeeWeight*weightDecayMode)";
+	weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*ZeeWeight*weightDecayMode)";
     }
     else if(type.Contains("Embed")) {//PFEmbedding
       genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
@@ -432,7 +442,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*genMass*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*sampleWeight*weightDY*weightW*weight*genMass*sbinCat);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -441,7 +451,7 @@ void drawHistogram(TCut sbinCat = TCut(""),
     }//if LOOP    
     else {
       TCut pairIndex="pairIndex[0]<1";
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*genMass*pairIndex*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*sampleWeight*weightDY*weightW*weight*genMass*pairIndex*sbinCat);
     }
 
     // Scale the histogram, compute norm and err
@@ -915,11 +925,14 @@ void plotElecTau( Int_t mH_           = 120,
   /////////////////
 
   float lumiCorrFactor                     = 1 ;    //= (1-0.056);
-  float TTxsectionRatio                    = 0.92; //lumiCorrFactor*(165.8/157.5) ;
+//   float TTxsectionRatio                    = 0.92; //lumiCorrFactor*(165.8/157.5) ;
+  float TTxsectionRatio                    = 0.96; // Summer13 value from twiki
   float OStoSSRatioQCD                     = 1.06;
   float SSIsoToSSAIsoRatioQCD              = 1.0;
-  float ElectoTauCorrectionFactor          = 0.976;
-  float JtoTauCorrectionFactor             = 0.976;
+  float ElectoTauCorrectionFactor          = 1.0;
+  float JtoTauCorrectionFactor             = 1.0;
+//   float ElectoTauCorrectionFactor          = 0.976;
+//   float JtoTauCorrectionFactor             = 0.976;
   float ExtrapolationFactorZ               = 1.0;
   float ErrorExtrapolationFactorZ          = 1.0;
   float ExtrapolationFactorZDataMC         = 1.0;
