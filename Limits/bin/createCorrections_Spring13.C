@@ -145,8 +145,10 @@ Double_t myFuncTurnOnEle(Double_t *x, Double_t *par) {
   fitEffEle[4][1] = new ratioEfficiencyTest(20.9985, 0.002918, 3.43131e-05, 1.41479, 1.06506);
 					   
   // ABCD           
-  fitEffEle[5][0] = new ratioEfficiencyTest(22.9041, 1.04728, 1.38544, 1.22576, 1.13019);
-  fitEffEle[5][1] = new ratioEfficiencyTest(21.9941, 1.43419, 1.01152, 2.28622, 0.939872);
+//   fitEffEle[5][0] = new ratioEfficiencyTest(22.9041, 1.04728, 1.38544, 1.22576, 1.13019);
+//   fitEffEle[5][1] = new ratioEfficiencyTest(21.9941, 1.43419, 1.01152, 2.28622, 0.939872);
+  fitEffEle[5][0] = new ratioEfficiencyTest(22.9704, 	1.0258, 	1.26889, 	1.31024, 	1.06409);
+  fitEffEle[5][1] = new ratioEfficiencyTest(21.9816, 	1.40993, 	0.978597, 	2.33144, 	0.937552);
 					   
   // MC-new
   fitEffEle[6][0] = new ratioEfficiencyTest(21.7243, 0.619015, 0.739301, 1.34903, 1.02594);
@@ -329,12 +331,21 @@ Double_t myFuncTurnOnMu(Double_t *x, Double_t *par) {
   fitEffMu[2][5] = new ratioEfficiencyTest(16.0051, -4.10239e-05, 1.15509e-08, 1.82463, 0.865417);
 
   // 2012D ( computed for abs(eta) )
-  fitEffMu[3][0] = new ratioEfficiencyTest(15.9994, 7.37077e-05, 7.21076e-08, 1.58178, 0.861339);
-  fitEffMu[3][1] = new ratioEfficiencyTest(16.7041, 0.383545,    0.467605,    1.59941, 0.882451);
-  fitEffMu[3][2] = new ratioEfficiencyTest(15.9852, 0.0428581,   0.0160247,   1.69952, 0.971443);
-  fitEffMu[3][3] = new ratioEfficiencyTest(15.9852, 0.0428581,   0.0160247,   1.69952, 0.971443);
-  fitEffMu[3][4] = new ratioEfficiencyTest(16.7041, 0.383545,    0.467605,    1.59941, 0.882451);
-  fitEffMu[3][5] = new ratioEfficiencyTest(15.9994, 7.37077e-05, 7.21076e-08, 1.58178, 0.861339);
+
+//   fitEffMu[3][0] = new ratioEfficiencyTest(15.9994, 7.37077e-05, 7.21076e-08, 1.58178, 0.861339);
+//   fitEffMu[3][1] = new ratioEfficiencyTest(16.7041, 0.383545,    0.467605,    1.59941, 0.882451);
+//   fitEffMu[3][2] = new ratioEfficiencyTest(15.9852, 0.0428581,   0.0160247,   1.69952, 0.971443);
+//   fitEffMu[3][3] = new ratioEfficiencyTest(15.9852, 0.0428581,   0.0160247,   1.69952, 0.971443);
+//   fitEffMu[3][4] = new ratioEfficiencyTest(16.7041, 0.383545,    0.467605,    1.59941, 0.882451);
+//   fitEffMu[3][5] = new ratioEfficiencyTest(15.9994, 7.37077e-05, 7.21076e-08, 1.58178, 0.861339);
+
+  // update Rebecca (not abs eta)
+  fitEffMu[3][0] = new ratioEfficiencyTest(16.6377, 	-1.23117, 	2.14735, 	1.17365, 	0.957028 );
+  fitEffMu[3][1] = new ratioEfficiencyTest(17.1986, 	0.649411, 	1.0234, 	1.45531, 	0.888363 );
+  fitEffMu[3][2] = new ratioEfficiencyTest(15.9819, 	0.0376022, 	0.0180587, 	1.58457, 	0.97677 );
+  fitEffMu[3][3] = new ratioEfficiencyTest(15.9894, 	0.0362229, 	0.0132101, 	1.65758, 	0.975996 );
+  fitEffMu[3][4] = new ratioEfficiencyTest(16.5276, 	0.28491, 	0.342352, 	1.49551, 	0.894305 );
+  fitEffMu[3][5] = new ratioEfficiencyTest(17.184, 	-1.44981, 	3.08139, 	1.01062, 	2.25017 );
 					   
   // MC-old
   fitEffMu[4][0] = new ratioEfficiencyTest(15.997,  8.73042e-05, 5.36172e-08, 1.67934, 0.871415);
@@ -345,13 +356,22 @@ Double_t myFuncTurnOnMu(Double_t *x, Double_t *par) {
   fitEffMu[4][5] = new ratioEfficiencyTest(15.9974, 8.50572e-05, 5.53033e-08, 1.64714, 0.888026);
 					   
   // ABCD
-  fitEffMu[5][0] = new ratioEfficiencyTest(15.9825, 7.90724e-05, 5.49275e-08, 1.6403,  0.858285);
-  fitEffMu[5][1] = new ratioEfficiencyTest(17.3283, 0.707103,    1.2047,      1.3732,  0.900519);
-  fitEffMu[5][2] = new ratioEfficiencyTest(15.9828, 0.0412999,   0.0177441,   1.66934, 0.970097);
-  fitEffMu[5][3] = new ratioEfficiencyTest(15.9802, 0.0548775,   0.020313,    1.79791, 0.968398);
-  fitEffMu[5][4] = new ratioEfficiencyTest(16.8396, 0.458636,    0.633185,    1.5706,  0.8848);
-  fitEffMu[5][5] = new ratioEfficiencyTest(15.9987, 8.94398e-05, 5.18549e-08, 1.8342,  0.854625);
-					   
+
+//   fitEffMu[5][0] = new ratioEfficiencyTest(15.9825, 7.90724e-05, 5.49275e-08, 1.6403,  0.858285);
+//   fitEffMu[5][1] = new ratioEfficiencyTest(17.3283, 0.707103,    1.2047,      1.3732,  0.900519);
+//   fitEffMu[5][2] = new ratioEfficiencyTest(15.9828, 0.0412999,   0.0177441,   1.66934, 0.970097);
+//   fitEffMu[5][3] = new ratioEfficiencyTest(15.9802, 0.0548775,   0.020313,    1.79791, 0.968398);
+//   fitEffMu[5][4] = new ratioEfficiencyTest(16.8396, 0.458636,    0.633185,    1.5706,  0.8848);
+//   fitEffMu[5][5] = new ratioEfficiencyTest(15.9987, 8.94398e-05, 5.18549e-08, 1.8342,  0.854625);
+
+  // Update Rebecca
+  fitEffMu[5][0] = new ratioEfficiencyTest(15.9977, 	7.64004e-05, 	6.4951e-08, 	1.57403, 	0.865325);
+  fitEffMu[5][1] = new ratioEfficiencyTest(17.3974, 	0.804001, 	1.47145, 	1.24295, 	0.928198);
+  fitEffMu[5][2] = new ratioEfficiencyTest(16.4307, 	0.226312, 	0.265553, 	1.55756, 	0.974462);
+  fitEffMu[5][3] = new ratioEfficiencyTest(17.313, 	0.662731, 	1.3412, 	1.05778, 	1.26624);
+  fitEffMu[5][4] = new ratioEfficiencyTest(16.9966, 	0.550532, 	0.807863, 	1.55402, 	0.885134);
+  fitEffMu[5][5] = new ratioEfficiencyTest(15.9962, 	0.000106195, 	4.95058e-08, 	1.9991, 	0.851294);
+
   // MC-new
   fitEffMu[6][0] = new ratioEfficiencyTest(16.0051, 2.45144e-05, 4.3335e-09,  1.66134, 0.87045);
   fitEffMu[6][1] = new ratioEfficiencyTest(17.3135, 0.747636,    1.21803,     1.40611, 0.934983);
@@ -576,7 +596,8 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
 void makeFile(){
 
-  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v5.root","RECREATE");
+  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root","RECREATE");
+
   //fout->cd();
 
   // ELECTRON //
