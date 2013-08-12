@@ -1,3 +1,4 @@
+// treeSkimmerMuTau
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 
 #include "TTree.h"
@@ -550,8 +551,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Summer13_v5.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v5.root");
+  cout << "Using corrections from llrCorrections_Summer13_v6.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
@@ -2347,6 +2348,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // PROTECTION AGAINST PATHOLOGIC CASES //
     if(embeddingWeight_>10) embeddingWeight_=10;
 
+    // SWITCH BACK TO SIMPLE WEIGHT FOR PF EMBEDDED //
+    if(sample.Contains("Emb") && sample.Contains("PF")) embeddingWeight_ = embeddingWeight ;
+
     // SAMPLE WEIGHT //
     sampleWeight   = scaleFactor; 
     sampleWeightW  = 1;
@@ -2752,8 +2756,18 @@ void fillTrees_MuTauStream(TChain* currentTree,
       SFMuIso_ABC = EffMuIso_ABC_MC!=0 ? EffMuIso_ABC / EffMuIso_ABC_MC : 0;
       SFMu_ABC    = SFMuID_ABC*SFMuIso_ABC;
 
+      // Run 2012D SFs
       SFMuID_D  = EffMuID_D_MC !=0 ? EffMuID_D  / EffMuID_D_MC  : 0;
       SFMuIso_D = EffMuIso_D_MC!=0 ? EffMuIso_D / EffMuIso_D_MC : 0;
+      //
+      // SF 2012D Low Pt from Andrew
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 < 0.8)                    { SFMuID_D = 0.9790; SFMuIso_D = 0.9963; }
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 >= 0.8 && etaL1 < 1.2)    { SFMuID_D = 0.9809; SFMuIso_D = 0.9769; }
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 >= 1.2)                   { SFMuID_D = 0.9967; SFMuIso_D = 0.9870; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 < 0.8)                    { SFMuID_D = 0.9746; SFMuIso_D = 0.9842; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 >= 0.8 && etaL1 < 1.2)    { SFMuID_D = 0.9796; SFMuIso_D = 0.9664; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 >= 1.2)                   { SFMuID_D = 0.9864; SFMuIso_D = 0.9795; }      
+      //
       SFMu_D    = SFMuID_D*SFMuIso_D;
       
       SFMu    = SFMu_ABCD;
