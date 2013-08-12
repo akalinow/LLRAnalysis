@@ -1140,6 +1140,7 @@ void plotMuTau( Int_t mH_           = 120,
   //
   TChain *backgroundDY         = new TChain(treeMC);
   TChain *backgroundDYTauTau   = new TChain(treeMC);
+  TChain *backgroundDYTauTauLL = new TChain(treeMC);
   TChain *backgroundDYMutoTau  = new TChain(treeMC);
   TChain *backgroundDYJtoTau   = new TChain(treeMC);
   TChain *backgroundTTbar      = new TChain(treeMC);
@@ -1226,12 +1227,14 @@ void plotMuTau( Int_t mH_           = 120,
     cout << "USE DY SEPARATE SUB-SAMPLES" << endl;
     //
     if(!version_.Contains("NoDYExcl")) {
-      backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJets*MuToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets*TauTau_MuTau_"  +fileAnalysis+".root");
+      backgroundDYTauTauLL->Add(pathToFile+"/nTupleDYJets*ZTTL_MuTau_"    +fileAnalysis+".root");
+      backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJets*MuToTau_MuTau_" +fileAnalysis+".root");
       backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets*JetToTau_MuTau_"+fileAnalysis+".root");
     }
     else {
       backgroundDYTauTau  ->Add(pathToFile+"/nTupleDYJets_TauTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTauLL->Add(pathToFile+"/nTupleDYJets_ZTTL_MuTau_"    +fileAnalysis+".root");
       backgroundDYMutoTau ->Add(pathToFile+"/nTupleDYJets_MuToTau_MuTau_"+fileAnalysis+".root");
       backgroundDYJtoTau  ->Add(pathToFile+"/nTupleDYJets_JetToTau_MuTau_"+fileAnalysis+".root");
     }
@@ -1244,12 +1247,12 @@ void plotMuTau( Int_t mH_           = 120,
   // MAPPING //
   if(VERBOSE) cout << "-- gather the trees" << endl;
 
-  const int nVarious = 10;
+  const int nVarious = 11;
   const int nChainsSM= nVarious  + nProd*nMasses;
   const int nChains  = nChainsSM + nProdS*nMassesS;
-  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYMutoTau","DYJtoTau","Embedded"};
+  TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYToTauTauLL","DYMutoTau","DYJtoTau","Embedded"};
   TChain* chainsVarious[nVarious]   ={data,backgroundWJets,data,backgroundW3Jets,backgroundTTbar,backgroundOthers,
-				      backgroundDYTauTau,backgroundDYMutoTau,backgroundDYJtoTau,dataEmbedded};
+				      backgroundDYTauTau,backgroundDYTauTauLL,backgroundDYMutoTau,backgroundDYJtoTau,dataEmbedded};
   TString  treeNames[nChains];
   TChain*  chains[nChains];
   mapchain mapAllTrees;
