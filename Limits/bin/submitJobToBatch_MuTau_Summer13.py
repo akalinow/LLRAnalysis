@@ -88,29 +88,29 @@ anaEmb = ['nominal','TauUp','TauDown']
 
 samplesEmb = [
     
-    'Run2012A-22Jan2013-Embedded',
-    'Run2012B-22Jan2013-p1-Embedded',
-    'Run2012B-22Jan2013-p2-Embedded',
-    'Run2012B-22Jan2013-p3-Embedded',
-    'Run2012B-22Jan2013-p4-Embedded',
-    'Run2012B-22Jan2013-p5-Embedded',
-    'Run2012C-22Jan2013-p0-Embedded',
-    'Run2012C-22Jan2013-p1-Embedded',
-    'Run2012C-22Jan2013-p2-Embedded',
-    'Run2012C-22Jan2013-p3-Embedded',
-    'Run2012C-22Jan2013-p4-Embedded',
-    'Run2012C-22Jan2013-p5-Embedded',
-    'Run2012C-22Jan2013-p6-Embedded',
-    'Run2012C-22Jan2013-p7-Embedded',    
-    'Run2012D-22Jan2013-p1-Embedded',
-    'Run2012D-22Jan2013-p2-Embedded',
-    'Run2012D-22Jan2013-p3-Embedded',
-    'Run2012D-22Jan2013-p4-Embedded',
-    'Run2012D-22Jan2013-p5-Embedded',
-    'Run2012D-22Jan2013-p6-Embedded',
-    'Run2012D-22Jan2013-p7-Embedded',
-    'Run2012D-22Jan2013-p8-Embedded',
-    'Run2012D-22Jan2013-p9-Embedded',
+    'Run2012A-22Jan2013-EmbeddedPF',
+    'Run2012B-22Jan2013-p1-EmbeddedPF',
+    'Run2012B-22Jan2013-p2-EmbeddedPF',
+    'Run2012B-22Jan2013-p3-EmbeddedPF',
+    'Run2012B-22Jan2013-p4-EmbeddedPF',
+    'Run2012B-22Jan2013-p5-EmbeddedPF',
+    'Run2012C-22Jan2013-p0-EmbeddedPF',
+    'Run2012C-22Jan2013-p1-EmbeddedPF',
+    'Run2012C-22Jan2013-p2-EmbeddedPF',
+    'Run2012C-22Jan2013-p3-EmbeddedPF',
+    'Run2012C-22Jan2013-p4-EmbeddedPF',
+    'Run2012C-22Jan2013-p5-EmbeddedPF',
+    'Run2012C-22Jan2013-p6-EmbeddedPF',
+    'Run2012C-22Jan2013-p7-EmbeddedPF',    
+    'Run2012D-22Jan2013-p1-EmbeddedPF',
+    'Run2012D-22Jan2013-p2-EmbeddedPF',
+    'Run2012D-22Jan2013-p3-EmbeddedPF',
+    'Run2012D-22Jan2013-p4-EmbeddedPF',
+    'Run2012D-22Jan2013-p5-EmbeddedPF',
+    'Run2012D-22Jan2013-p6-EmbeddedPF',
+    'Run2012D-22Jan2013-p7-EmbeddedPF',
+    'Run2012D-22Jan2013-p8-EmbeddedPF',
+    'Run2012D-22Jan2013-p9-EmbeddedPF',
     'Run2012D-22Jan2013-p1-EmbeddedLowPt',
     'Run2012D-22Jan2013-p2-EmbeddedLowPt',
     'Run2012D-22Jan2013-p3-EmbeddedLowPt',
@@ -142,6 +142,9 @@ for iAnMC in range(0,len(anaMC)):
         treeSkim( anaMC[iAnMC] , "DYJets4Jets_"+finalState , False)
 
     ## W
+    treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
+    treeSkim( anaMC[iAnMC] , "WJets2JetsV19"    , False)
+    treeSkim( anaMC[iAnMC] , "WJets3JetsV19"    , False)
     treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
     treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
     treeSkim( anaMC[iAnMC] , "WJets3Jets"    , False)
@@ -178,6 +181,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "GGFH150"       , False)
     treeSkim( anaMC[iAnMC] , "GGFH155"       , False)
     treeSkim( anaMC[iAnMC] , "GGFH160"       , False)
+    
     treeSkim( anaMC[iAnMC] , "VBFH90"        , False)
     treeSkim( anaMC[iAnMC] , "VBFH95"        , False)
     treeSkim( anaMC[iAnMC] , "VBFH100"       , False)
@@ -193,6 +197,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "VBFH150"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH155"       , False)
     treeSkim( anaMC[iAnMC] , "VBFH160"       , False)
+    
     treeSkim( anaMC[iAnMC] , "VH90"          , False)
     treeSkim( anaMC[iAnMC] , "VH95"          , False)
     treeSkim( anaMC[iAnMC] , "VH100"         , False)
@@ -231,6 +236,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "SUSYGGH800"        , False)
     treeSkim( anaMC[iAnMC] , "SUSYGGH900"        , False)
     treeSkim( anaMC[iAnMC] , "SUSYGGH1000"       , False)
+
     treeSkim( anaMC[iAnMC] , "SUSYBBH80"         , False)
     treeSkim( anaMC[iAnMC] , "SUSYBBH90"         , False)
     treeSkim( anaMC[iAnMC] , "SUSYBBH100"        , False)
