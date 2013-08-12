@@ -1,3 +1,4 @@
+// treeSkimmerMuTau
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 
 #include "TTree.h"
@@ -169,7 +170,7 @@ double deltaR(LV v1, LV v2) {
 
 }
 
-float reweightHEPNUPWJets(int hepNUP) {
+float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   //   if(nJets==0)      return 1 ;
@@ -203,12 +204,24 @@ float reweightHEPNUPWJets(int hepNUP) {
   //   else return 1 ;
   
   //NewJEC
-  if(nJets==0)      return 0.492871535;
-  else if(nJets==1) return 0.184565169;
-  else if(nJets==2) return 0.056192256;
-  else if(nJets==3) return 0.03876607;
-  else if(nJets>=4) return 0.018970657;
+  if(set==0) { // usual set of samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.184565169;
+    else if(nJets==2) return 0.056192256;
+    else if(nJets==3) return 0.03876607;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
+  else if(set==1) { // adding new high stat samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.100275621;
+    else if(nJets==2) return 0.031239069;
+    else if(nJets==3) return 0.019961638;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
   else return 1 ;
+
 }
 
 float reweightHEPNUPDYJets(int hepNUP) {
@@ -550,8 +563,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Summer13_v5.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v5.root");
+  cout << "Using corrections from llrCorrections_Summer13_v6.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[
@@ -727,7 +740,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,weightHepNup,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1068,7 +1082,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("muonRadiationDownWeight",&muonRadiationDownWeight_,"muonRadiationDownWeight/F");//IN
   outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
 
-  outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNup",         &weightHepNup,         "weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNupHighStatW",&weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
@@ -2347,11 +2362,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // PROTECTION AGAINST PATHOLOGIC CASES //
     if(embeddingWeight_>10) embeddingWeight_=10;
 
+    // SWITCH BACK TO SIMPLE WEIGHT FOR PF EMBEDDED //
+    if(sample.Contains("Emb") && sample.Contains("PF")) embeddingWeight_ = embeddingWeight ;
+
     // SAMPLE WEIGHT //
     sampleWeight   = scaleFactor; 
     sampleWeightW  = 1;
     sampleWeightDY = 1;
     weightHepNup   = 1;
+    weightHepNupHighStatW =1;
     weightHepNupDY = 1;
 
     // Reweight W+Jets
@@ -2359,7 +2378,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
         ) {
-      weightHepNup = reweightHEPNUPWJets( hepNUP );
+      weightHepNup          = reweightHEPNUPWJets( hepNUP, 0 );
+      weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
       sampleWeight = 1;
       sampleWeightW= scaleFactor; 
     }
@@ -2752,8 +2772,18 @@ void fillTrees_MuTauStream(TChain* currentTree,
       SFMuIso_ABC = EffMuIso_ABC_MC!=0 ? EffMuIso_ABC / EffMuIso_ABC_MC : 0;
       SFMu_ABC    = SFMuID_ABC*SFMuIso_ABC;
 
+      // Run 2012D SFs
       SFMuID_D  = EffMuID_D_MC !=0 ? EffMuID_D  / EffMuID_D_MC  : 0;
       SFMuIso_D = EffMuIso_D_MC!=0 ? EffMuIso_D / EffMuIso_D_MC : 0;
+      //
+      // SF 2012D Low Pt from Andrew
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 < 0.8)                    { SFMuID_D = 0.9790; SFMuIso_D = 0.9963; }
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 >= 0.8 && etaL1 < 1.2)    { SFMuID_D = 0.9809; SFMuIso_D = 0.9769; }
+      if (ptL1 > 8.0  && ptL1 <= 15.0 && etaL1 >= 1.2)                   { SFMuID_D = 0.9967; SFMuIso_D = 0.9870; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 < 0.8)                    { SFMuID_D = 0.9746; SFMuIso_D = 0.9842; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 >= 0.8 && etaL1 < 1.2)    { SFMuID_D = 0.9796; SFMuIso_D = 0.9664; }
+      if (ptL1 > 15.0 && ptL1 <= 20.0 && etaL1 >= 1.2)                   { SFMuID_D = 0.9864; SFMuIso_D = 0.9795; }      
+      //
       SFMu_D    = SFMuID_D*SFMuIso_D;
       
       SFMu    = SFMu_ABCD;
