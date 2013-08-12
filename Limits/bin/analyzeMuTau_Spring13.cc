@@ -1773,12 +1773,20 @@ void plotMuTau( Int_t mH_           = 120,
 	  float NormDYToTauTau = 0.;
 	  drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYToTauTau, Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbin, 1);
 	  hZtt->Add(h1, ExtrapolationFactorZFromSideband);
+	  float NormDYToTauTauLL = 0.;
+	  drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleaner, sbin, 1);
+          hZtt->Add(hCleaner, 1.0);
 
 	  //fine binning for MSSM
 	  if(selection_.find("bTag")!=string::npos){
 	    hCleanerfb->Reset(); float NormDYToTauTau_fb = 0.;
 	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYToTauTau_fb, Error,  Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbin, 1);
-	    hZtt_fb->Add(hCleanerfb, hZtt->Integral()/hCleanerfb->Integral());
+	    hZtt_fb->Add(hCleanerfb, ExtrapolationFactorZFromSideband);
+	    hCleanerfb->Reset();
+	    float NormDYToTauTauLL_fb = 0.;
+	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL_fb, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbin, 1);
+	    hZtt_fb->Add(hCleanerfb, 1.0);
+	    hZtt_fb->Scale(hZtt->Integral()/hZtt_fb->Integral());
 	    hCleanerfb->Reset();
 	  }
 	}
@@ -2456,17 +2464,36 @@ void plotMuTau( Int_t mH_           = 120,
           drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_,analysis_, RUN,currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1); 
           h1->Scale( (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband)/h1->Integral()); 
           hDataEmb->Add(h1, 1.0); 
+
+	  //Add ZTTLL
+	  float NormDYToTauTauLL = 0.;
+          drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleaner, sbin, 1);
+          hDataEmb->Add(hCleaner, 1.0);
 	}
 	else{
 	  float NormEmbed = 0.;
 	  drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_,analysis_, RUN,currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1);
 	  h1->Scale( (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband)/h1->Integral());
 	  hDataEmb->Add(h1, 1.0);
+
+	  //Add ZTTLL
+          float NormDYToTauTauLL = 0.;
+          drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleaner, sbin, 1);
+          hDataEmb->Add(hCleaner, 1.0);
+	  
 	  //fine binning for MSSM
 	  if(selection_.find("bTag")!=string::npos){ 
 	    hCleanerfb->Reset(); float NormEmbed_fb = 0.;
 	    drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_,analysis_, RUN,currentTree, variable, NormEmbed_fb, Error, 1.0 , hCleanerfb,  sbinEmbedding  ,1);
-	    hDataEmb_fb->Add(hCleanerfb, hDataEmb->Integral()/hCleanerfb->Integral());
+	    //hDataEmb_fb->Add(hCleanerfb, hDataEmb->Integral()/hCleanerfb->Integral());
+	    hDataEmb_fb->Add(hCleanerfb, (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband));
+
+	    //Add ZTTLL
+	    float NormDYToTauTauLL_fb = 0.; 
+	    hCleanerfb->Reset();
+	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL_fb, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbin, 1);
+	    hDataEmb_fb->Add(hCleanerfb, 1.0);
+	    hDataEmb_fb->Scale(hDataEmb->Integral()/hDataEmb_fb->Integral());
 	  }
 	}
       }
