@@ -2578,6 +2578,260 @@ options = {
     'iDiv'           : 9,
     'nDiv'           : 10
     },
+    # High stat samples V19
+    'WJets1JetsV19-p0' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets1JetsV19-p0_ElecTau.root',
+    'sample'         : 'WJets1JetsV19-p0',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 1490832./23141598,##
+    'skimEff'        :  1.0 * 1486190./22581598 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 2
+    },
+    'WJets1JetsV19-p1' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W1Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets1JetsV19-p1_ElecTau.root',
+    'sample'         : 'WJets1JetsV19-p1',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 1490832./23141598,##
+    'skimEff'        :  1.0 * 1486190./22581598 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 2
+    },
+    'WJets2JetsV19-p0' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p0_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p0',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p1' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2JetsV19-madgraph-PUS10_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p1_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p1',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p2' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p2_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p2',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p3' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p3_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p3',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p4' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p4_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p4',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p5' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p5_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p5',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p6' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p6_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p6',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p7' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p7_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p7',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p8' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p8_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p8',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'WJets2JetsV19-p9' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W2Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets2JetsV19-p9_ElecTau.root',
+    'sample'         : 'WJets2JetsV19-p9',
+    'xSection'       : 36257,
+##     'skimEff'        : 1.0 * 1034822./34044921,##
+    'skimEff'        : 1.0 * 5021879./34044921,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'WJets3Jets' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3Jets_ElecTau.root',
+    'sample'         : 'WJets3Jets',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'WJets3JetsV19-p0' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p0_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p0',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p1' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p1_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p1',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p2' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p2_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p2',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p3' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p3_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p3',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p4' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p4_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p4',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p5' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p5_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p5',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p6' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p6_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p6',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p7' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p7_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p7',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p8' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p8_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p8',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'WJets3JetsV19-p9' : {
+    'inputFilePath'  : WorkdirLoc+'BackgroundsMC/W3Jets-madgraph-PUS10-v19-HighStats_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
+    'outputFileName' : OutDir+'nTupleWJets3JetsV19-p9_ElecTau.root',
+    'sample'         : 'WJets3JetsV19-p9',
+    'xSection'       : 36257,
+##     'skimEff'        :  1.0 * 3353306./15539503,##
+    'skimEff'        :  1.0 * 3371272./15219503,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
     'TTJets' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/TTJets-madgraph-PUS10_MC_Bkg_HTT_12July2013_Trees_EleTau_v6/',
     'outputFileName' : OutDir+'nTupleTTJets_ElecTau.root',
