@@ -60,29 +60,29 @@ def treeSkim( ana, sample, runInSeries=False):
 ###########################################
 ###########################################
 ##Data  
-treeSkim("nominal","Run2012A-22Jan2013-Data",False)
-treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
-treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
-treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
-treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
-treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p4-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p6-Data",False)
-treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p3-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p8-Data",False)
-treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
+## treeSkim("nominal","Run2012A-22Jan2013-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p6-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p8-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
 
 ###Embedded samples
 #anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
@@ -131,7 +131,7 @@ ListFinalState = ['TauTau','JetToTau','EToTau','ZTTL']
 
 for iAnMC in range(0,len(anaMC)):
 ## ## ##     ##BkgMC
-        ## DY
+##         ## DY
 ##     for finalState in ListFinalState:
 ##         treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState+"-p0" , False)
@@ -215,7 +215,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "WJets4Jets-p8"    , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets4Jets-p9"    , False)
         
-##High stats WJets
+## ##High stats WJets
 ##     treeSkim( anaMC[iAnMC] , "WJets1JetsV19-p0"    , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets1JetsV19-p1"    , False)
     
@@ -257,7 +257,7 @@ for iAnMC in range(0,len(anaMC)):
     
 
     
-## ## #######HiggsMC
+## #######HiggsMC
     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH100"       , False)
@@ -304,7 +304,7 @@ for iAnMC in range(0,len(anaMC)):
     treeSkim( anaMC[iAnMC] , "VH155"         , False)
     treeSkim( anaMC[iAnMC] , "VH160"         , False)
 
-## ## #######MSSMHiggsMC
+## #######MSSMHiggsMC
     treeSkim( anaMC[iAnMC] , "SUSYGGH80"         , False)
     treeSkim( anaMC[iAnMC] , "SUSYGGH90"         , False)
     treeSkim( anaMC[iAnMC] , "SUSYGGH100"        , False)

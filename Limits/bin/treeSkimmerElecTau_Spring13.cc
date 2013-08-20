@@ -1970,7 +1970,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     currentTree->GetEntry(n);
 //     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
-    if(n%1==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
+    if(n%1000==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
 //     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
     
     // APPLY JSON SELECTION //
@@ -1992,16 +1992,16 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     // final state informations //
     genDecay_        = genDecay ;
     isTauLegMatched_ = isTauLegMatched;
-    cout<<"HELP1"<<endl;
-    cout<<"SIZE :"<<genDiTauLegsP4->size()<<endl;
+//     cout<<"HELP1"<<endl;
+//     cout<<"SIZE :"<<genDiTauLegsP4->size()<<endl;
     if( !isData ) {
       if(DEBUG) cout << "!isData --> leptFakeTau = " ;
-//       leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
-      leptFakeTau      = 0;
+      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+//       leptFakeTau      = 0;
       if(DEBUG) cout << leptFakeTau << endl;
     }
     else leptFakeTau = -99;
-    cout<<"HELP2"<<endl;
+//     cout<<"HELP2"<<endl;
 
     //
     // final state selection //
@@ -2770,13 +2770,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     decayMode_          = decayMode;
     numPV_              = numPV;
-    sampleWeight        = scaleFactor; 
-    if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight = 1;
-    sampleWeightDY = 1;
-    if( sample_.find("DYJets")!=string::npos) {
-      sampleWeight = 1;
-      sampleWeightDY = scaleFactor;
-    }
+
 
     nPUVertices_        = nPUVertices;
 
@@ -2805,24 +2799,50 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
 
-    // Reweight W+Jets
+    // SAMPLE WEIGHT //
+    sampleWeight        = scaleFactor; 
+    sampleWeightW  = 1;
+    sampleWeightDY = 1;
     weightHepNup=1;
-    if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
-	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
-	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
-        ) {
-      weightHepNup = reweightHEPNUPWJets( hepNUP , 0 );
-      weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
-      sampleWeight = 1;
-      sampleWeightW= scaleFactor; 
-    }
-    // Reweight DY+Jets 
+    weightHepNupHighStatW = 1;
     weightHepNupDY=1;
+
+    // Reweight W+Jets
+    int localNup=0;
+    if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) ||
+        sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos ||
+        sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+        ) {
+      //cout << "=> computing weight : hepNUP=" << hepNUP ;                                                             
+      if(     sample_.find("1Jets")!=string::npos) localNup=6;
+      else if(sample_.find("2Jets")!=string::npos) localNup=7;
+      else if(sample_.find("3Jets")!=string::npos) localNup=8;
+      else if(sample_.find("4Jets")!=string::npos) localNup=9;
+      if(hepNUP>=5 && hepNUP<=9) localNup=hepNUP;
+      
+      weightHepNup          = reweightHEPNUPWJets( localNup, 0 );
+      weightHepNupHighStatW = reweightHEPNUPWJets( localNup, 1 );
+      sampleWeight = 1;
+      sampleWeightW= scaleFactor;
+    }
+//     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
+// 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
+// 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+//         ) {
+//       weightHepNup = reweightHEPNUPWJets( hepNUP , 0 );
+//       weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
+//       sampleWeight = 1;
+//       sampleWeightW= scaleFactor; 
+//     }
+    // Reweight DY+Jets 
     if( sample_.find("DYJets")!=string::npos  || 
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
-        ) 
+        ) {
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
+      sampleWeight   = 1;
+      sampleWeightDY = scaleFactor; 
+    }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;

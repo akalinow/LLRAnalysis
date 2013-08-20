@@ -100,7 +100,7 @@ void produce(
 	     TString outputDir = "ABC",
 	     bool DOSUSY = false,
 // 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
-	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_analysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
 	     )
 {
@@ -1285,7 +1285,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  //variables.push_back("diTauVisMass");
+//   variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
 
   if(!DOSUSY){
@@ -1422,7 +1422,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 void produceAll(){
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
-  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_DatacardsTailFit",true);
+//   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_ZeeSel_Datacards");
 }
 
