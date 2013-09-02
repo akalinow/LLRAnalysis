@@ -15,7 +15,7 @@
 
 
 #define RESCALETO1PB true
-#define DOSUSY false
+#define DOSUSY true
 #define OldCat false
 
 using namespace std;
@@ -102,7 +102,7 @@ void produce(
 	     string bin_       = "inclusive",
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
 	     int useEmb        = 1,
-	     TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_tree/src/LLRAnalysis/Limits/bin/results/"
+	     TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
 	     ){
 
 
@@ -246,15 +246,15 @@ void produce(
       hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
       
       // in VBF, take the di-tau mass shape from GGF sample
-      if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
+      /*if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 	float VHyield = hSgn3->Integral();
 	hSgn3->Reset();
 	hSgn3->Add(hSgn2,1.0);
 	hSgn3->Scale(VHyield/hSgn3->Integral());
 	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
       }
-      else
-	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
+      else*/
+      hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
       
       if(analysis_.find("nominal")!=string::npos){
 	TH1F* hSgn2_HqTUp = (TH1F*)fin->Get(Form("hGGFH%dUp",mH_)); 
@@ -307,6 +307,7 @@ void produce(
       else {
 	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	checkValidity(hQCD);
 	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
       // ----- W ------
@@ -321,6 +322,15 @@ void produce(
       TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
       hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
       hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+      if(suffix == ""){
+	TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+        hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+      }
+
       TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str())); 
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
@@ -345,12 +355,12 @@ void produce(
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 
 	//for 1Jet_low/medium, need to scale by 10% below 60 GeV and add a 10% shape systematic for QCD 
-	if(suffix == ""){
-	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
-	    if(hQCD->GetBinCenter(b)<=60.){ 
-	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b)); 
-	    }
+	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
+	  if(hQCD->GetBinCenter(b)<=50.){ 
+	    hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b)); 
 	  }
+	}
+	if(suffix == ""){
 	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau_1jet_low");
 	  if(bin_.find("Medium")!=string::npos)
 	    QCDShape = TString("QCD_CMS_htt_QCDShape_mutau_1jet_medium");
@@ -358,11 +368,13 @@ void produce(
 	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
 	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	    if(hQCD->GetBinCenter(b)<=60.){
+	    if(hQCD->GetBinCenter(b)<=50.){
 	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
 	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
 	    }
 	  }
+	  checkValidity(hQCDUp);
+	  checkValidity(hQCDDown);
 	  hQCDUp->Write(QCDShape+"_8TeVUp");
 	  hQCDDown->Write(QCDShape+"_8TeVDown");
 	}
@@ -373,21 +385,21 @@ void produce(
         TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
         hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 
-	if(suffix == ""){
-	  /*
+	/*
           for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-            if(hQCD->GetBinCenter(b)<=60.){
-              hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
-            }
+	  if(hQCD->GetBinCenter(b)<=50.){
+	  hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
+	  }
           }
-	  */
+	*/
+	if(suffix == ""){
           TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
 	  QCDShape = QCDShape+"_"+binNameSpace;
-
+	  
           TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
           TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-            if(hQCD->GetBinCenter(b)<=60.){
+            if(hQCD->GetBinCenter(b)<=50.){
               hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
               hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
             }
@@ -398,7 +410,7 @@ void produce(
 	checkValidity(hQCD);
         hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
       }
-
+      
       // ----- W ------ 
       TH1F* hW = ((TH1F*)fin->Get("hW"));
       hW->SetName(Form("W%s"           ,suffix.c_str()));
@@ -411,6 +423,14 @@ void produce(
       TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
       hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
       hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+      if(suffix == ""){
+        TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+        hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+      }
       TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str())); 
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
@@ -436,52 +456,75 @@ void produce(
       hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
 
       // ----- QCD ------
-      /*if(bin_.find("nobTag")!=string::npos){
-	TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
+      float maxBin = 50.;
+      if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos)
+        maxBin = 40.;
+      TH1F *hQCD;
+      if(bin_.find("nobTag")!=string::npos){
+	hQCD = ((TH1F*)fin->Get("hQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
-	checkValidity(hQCD);
-	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	}
-	else{
-	*/
-	TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
-	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
-	if(bin_.find("nobTag")!=string::npos){
-	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	    if(hQCD->GetBinCenter(b)<=60.){
-	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
-	    }
+	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	  if(hQCD->GetBinCenter(b)<=maxBin){
+	    hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
 	  }
 	}
-	checkValidity(hQCD);
-	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+      }
+      else{
+	hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
+	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+      }
+      checkValidity(hQCD);
+      hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 
-	//Add a 10% shape uncert. to QCD for mass < 60 GeV
-	if(suffix == ""){
-	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
-	  QCDShape = QCDShape+"_"+binNameSpace;
-	  
-	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
-	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
-	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	    if(hQCD->GetBinCenter(b)<=60.){
-	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
-	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
-	    }
-	  }
-	  checkValidity(hQCDUp);
-	  hQCDUp->Write(QCDShape+"_8TeVUp");
-	  checkValidity(hQCDDown);
-	  hQCDDown->Write(QCDShape+"_8TeVDown");
-	}
+      //Add a 10% shape uncert. to QCD for mass < 60 GeV
+      if(suffix == ""){
+	TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	QCDShape = QCDShape+"_"+binNameSpace;
 	
-	//}
-
+	TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	  if(hQCD->GetBinCenter(b)<=maxBin){
+	    hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	    hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
+	  }
+	}
+	checkValidity(hQCDUp);
+	hQCDUp->Write(QCDShape+"_8TeVUp");
+	checkValidity(hQCDDown);
+	hQCDDown->Write(QCDShape+"_8TeVDown");
+      }
+	
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb")); 
       hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str())); 
+      if(bin_.find("nobTag")!=string::npos){
+	for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	  if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	    hQCD_fb->SetBinContent(b,1.1*hQCD_fb->GetBinContent(b));
+	  }
+	}
+      }
       checkValidity(hQCD_fb);
       hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
-
+      //Add a 10% shape uncert. to QCD for mass < 60 GeV
+      if(suffix == ""){
+	TString QCDShapeFb("QCD_fine_binning_CMS_htt_QCDShape_mutau");
+	QCDShapeFb = QCDShapeFb+"_"+binNameSpace;
+	
+	TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp");
+	TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown");
+	for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	  if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	    hQCD_fbUp->SetBinContent(b,1.1*hQCD_fbUp->GetBinContent(b));
+	    hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
+	  }
+	}
+	checkValidity(hQCD_fbUp);
+	hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp");
+	checkValidity(hQCD_fbDown);
+	hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown");
+      }
+      
       // ----- W ------
       if(bin_.find("nobTag")!=string::npos){
 	TH1F* hW = ((TH1F*)fin->Get("hW"));
@@ -505,6 +548,14 @@ void produce(
       TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
       hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
       hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+      if(suffix == ""){
+        TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+        hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+      }
       TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str()));
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
@@ -554,11 +605,13 @@ void produce(
 	TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
 	TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
 	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	  if(hQCD->GetBinCenter(b)<=60.){
+	  if(hQCD->GetBinCenter(b)<=40.){
 	    hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
 	    hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
 	  }
 	}
+	checkValidity(hQCDUp);
+	checkValidity(hQCDDown);
 	hQCDUp->Write(QCDShape+"_8TeVUp");
 	hQCDDown->Write(QCDShape+"_8TeVDown");
       }
@@ -578,6 +631,14 @@ void produce(
       TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
       hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
       hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+      if(suffix == ""){
+        TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+        hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+      }
       TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str())); 
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
@@ -642,6 +703,14 @@ void produce(
       TH1F* hZmm = ((TH1F*)fin->Get("hZmm")); 
       hZmm->SetName(Form("ZL%s"        ,suffix.c_str())); 
       hZmm->Write(Form("ZL%s"        ,suffix.c_str())); 
+      if(suffix == ""){
+        TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+        hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+      }
       TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes")); 
       hZfakes->SetName(Form("ZLL%s"    ,suffix.c_str()));  
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str())); 
@@ -681,7 +750,7 @@ void produce(
 	TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
 	hSgn3->Scale(1./rescaleVH);
 	hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
-	if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
+	/*if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 	  TH1F* hSgn2 = (TH1F*)fin->Get(Form("hVBFH%d",mH_));
 	  float VHyield = hSgn3->Integral();
 	  hSgn3->Reset();
@@ -689,8 +758,8 @@ void produce(
 	  hSgn3->Scale(VHyield/hSgn3->Integral());
 	  hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
 	}
-	else
-	  hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
+	else*/
+	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
 	
 	if(analysis_.find("nominal")!=string::npos){
 	  TH1F* hSgn2_HqTUp = (TH1F*)fin->Get(Form("hGGFH%dUp",mH_));
@@ -737,6 +806,7 @@ void produce(
 	else {
 	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  checkValidity(hQCD);
 	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	}
       }
@@ -754,6 +824,14 @@ void produce(
 	TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
 	hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
 	hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+	if(suffix == ""){
+	  TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	  hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+	  hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	  hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	}
       }
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ) {
 	TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
@@ -784,13 +862,12 @@ void produce(
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 
 	  //for 1Jet_low, need to scale by 10% below 60 GeV and add a shape systematic for QCD  
-	  if(suffix == ""){ 
-	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){  
-	      if(hQCD->GetBinCenter(b)<=60.){  
-		hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));  
-	      } 
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){  
+	    if(hQCD->GetBinCenter(b)<=50.){  
+	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));  
 	    } 
-	    
+	  } 
+	  if(suffix == ""){
 	    TString QCDShape("QCD_CMS_htt_QCDShape_mutau_1jet_low");
 	    if(bin_.find("Medium")!=string::npos)
 	      QCDShape = TString("QCD_CMS_htt_QCDShape_mutau_1jet_medium");
@@ -798,11 +875,13 @@ void produce(
 	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
 	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
 	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
-	      if(hQCD->GetBinCenter(b)<=60.){ 
+	      if(hQCD->GetBinCenter(b)<=50.){ 
 		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
 		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
 	      } 
 	    } 
+	    checkValidity(hQCDUp);
+	    checkValidity(hQCDDown);
 	    hQCDUp->Write(QCDShape+"_8TeVUp"); 
 	    hQCDDown->Write(QCDShape+"_8TeVDown");
 	  }
@@ -821,11 +900,13 @@ void produce(
 	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
 	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
 	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
-	      if(hQCD->GetBinCenter(b)<=60.){ 
+	      if(hQCD->GetBinCenter(b)<=50.){ 
 		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
 		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
 	      } 
 	    } 
+	    checkValidity(hQCDUp);
+	    checkValidity(hQCDDown);
 	    hQCDUp->Write(QCDShape+"_8TeVUp"); 
 	    hQCDDown->Write(QCDShape+"_8TeVDown"); 
 	  } 
@@ -849,6 +930,14 @@ void produce(
 	TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
 	hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
 	hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+	if(suffix == ""){
+	  TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	  hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+	  hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	  hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	}
       }
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ){
 	TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
@@ -880,52 +969,77 @@ void produce(
 	hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
-	/*
+	float maxBin = 50.;
+        if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos)
+          maxBin = 40.;
+	TH1F *hQCD;
 	if(bin_.find("nobTag")!=string::npos){
-	  TH1F *hQCD = ((TH1F*)fin->Get("hQCD"));
+	  hQCD = ((TH1F*)fin->Get("hQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
-	  checkValidity(hQCD);
-	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
-	  }
-	  else{
-	*/
-	  TH1F *hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
-	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
-	  if(bin_.find("nobTag")!=string::npos){
-	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	      if(hQCD->GetBinCenter(b)<=60.){
-		hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
-	      }
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	    if(hQCD->GetBinCenter(b)<=maxBin){
+	      hQCD->SetBinContent(b,1.1*hQCD->GetBinContent(b));
 	    }
 	  }
-	  checkValidity(hQCD);
-	  hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
+	}
+	else{
+	  hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
+	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	}
+	checkValidity(hQCD);
+	hQCD->Write(Form("QCD%s"    ,suffix.c_str()));
 	  
-	  //Add a 10% shape uncert. to QCD for mass < 60 GeV
-	  if(suffix == ""){
-	    TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
-	    QCDShape = QCDShape+"_"+binNameSpace;
-	    
-	    TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
-	    TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
-	    for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
-	      if(hQCD->GetBinCenter(b)<=60.){
-		hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
-		hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
-	      }
+	//Add a 10% shape uncert. to QCD for mass < 60 GeV
+	if(suffix == ""){
+	  TString QCDShape("QCD_CMS_htt_QCDShape_mutau");
+	  QCDShape = QCDShape+"_"+binNameSpace;
+	  
+	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp");
+	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown");
+	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
+	    if(hQCD->GetBinCenter(b)<=maxBin){
+	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b));
+	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
 	    }
-	    checkValidity(hQCDUp);
-	    hQCDUp->Write(QCDShape+"_8TeVUp");
-	    checkValidity(hQCDDown);
-	    hQCDDown->Write(QCDShape+"_8TeVDown");
 	  }
+	  checkValidity(hQCDUp);
+	  hQCDUp->Write(QCDShape+"_8TeVUp");
+	  checkValidity(hQCDDown);
+	  hQCDDown->Write(QCDShape+"_8TeVDown");
+	}
 
-	  //}
+	//}
 
-	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));  
-	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));  
+	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
+	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));
+	if(bin_.find("nobTag")!=string::npos){
+	  for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	    if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	      hQCD_fb->SetBinContent(b,1.1*hQCD_fb->GetBinContent(b));
+	    }
+	  }
+	}
 	checkValidity(hQCD_fb);
 	hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
+	//Add a 10% shape uncert. to QCD for mass < 60 GeV
+	if(suffix == ""){
+	  TString QCDShapeFb("QCD_fine_binning_CMS_htt_QCDShape_mutau");
+	  QCDShapeFb = QCDShapeFb+"_"+binNameSpace;
+	  
+	  TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp");
+	  TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown");
+	  for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	    if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	      hQCD_fbUp->SetBinContent(b,1.1*hQCD_fbUp->GetBinContent(b));
+	      hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
+	    }
+	  }
+	  checkValidity(hQCD_fbUp);
+	  hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp");
+	  checkValidity(hQCD_fbDown);
+	  hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown");
+	}
+
       }
       if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
 	if(bin_.find("nobTag")!=string::npos){
@@ -958,6 +1072,15 @@ void produce(
         hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
         hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
 
+	if(suffix == ""){
+	  TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	  hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+	  hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	  hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	}
+	
 	TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));   
 	hZmm_fb->SetName(Form("ZL_fine_binning%s"        ,suffix.c_str()));   
 	hZmm_fb->Write(Form("ZL_fine_binning%s"        ,suffix.c_str()));
@@ -1012,11 +1135,13 @@ void produce(
 	  TH1F* hQCDUp=(TH1F*)hQCD->Clone(QCDShape+"_8TeVUp"); 
 	  TH1F* hQCDDown=(TH1F*)hQCD->Clone(QCDShape+"_8TeVDown"); 
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){ 
-	    if(hQCD->GetBinCenter(b)<=60.){ 
+	    if(hQCD->GetBinCenter(b)<=50.){ 
 	      hQCDUp->SetBinContent(b,1.1*hQCDUp->GetBinContent(b)); 
 	      hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b)); 
 	    } 
 	  } 
+	  checkValidity(hQCDUp);
+	  checkValidity(hQCDDown);
 	  hQCDUp->Write(QCDShape+"_8TeVUp"); 
 	  hQCDDown->Write(QCDShape+"_8TeVDown"); 
 	} 
@@ -1040,6 +1165,15 @@ void produce(
 	TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
 	hZmm->SetName(Form("ZL%s"        ,suffix.c_str()));
 	hZmm->Write(Form("ZL%s"        ,suffix.c_str()));
+
+	if(suffix == ""){
+	  TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	  hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+	  hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	  hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	}
       }
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ){
 	TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
@@ -1127,6 +1261,15 @@ void produce(
         TH1F* hZmm = ((TH1F*)fin->Get("hZmm")); 
         hZmm->SetName(Form("ZL%s"        ,suffix.c_str())); 
         hZmm->Write(Form("ZL%s"        ,suffix.c_str())); 
+
+	if(suffix == ""){
+	  TH1F* hZmm_Up = ((TH1F*)fin->Get("hZmm_Up"));
+	  hZmm_Up->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  hZmm_Up->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+	  TH1F* hZmm_Down = ((TH1F*)fin->Get("hZmm_Down"));
+	  hZmm_Down->SetName(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	  hZmm_Down->Write(Form("ZL%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+	}
       } 
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ) { 
         TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes")); 
@@ -1490,9 +1633,9 @@ void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
   const int nCat=3; //9 sm; //6 before including "inclusive", 3 for MSSM
   const int nAn=5;
 
-  //string variables[nVar]={"diTauNSVfitMass"};
+  string variables[nVar]={"diTauNSVfitMass"};
   //string variables[nVar]={"diTauVisMass"};
-  string variables[nVar]={"diTauCDFMass"};
+  //string variables[nVar]={"diTauCDFMass"};
   //int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
   int mH[nM]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
 
@@ -1515,7 +1658,7 @@ void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
 	     string analysis_  = "",
 	     string bin_       = "inclusive",
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
-	     TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
+	     TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_git/src/LLRAnalysis/Limits/bin/results/"
   */
 
 }

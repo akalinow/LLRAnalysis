@@ -172,7 +172,7 @@ double deltaR(LV v1, LV v2) {
 // }
 
 
-float reweightHEPNUPWJets(int hepNUP) {
+float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   
@@ -207,11 +207,22 @@ float reweightHEPNUPWJets(int hepNUP) {
 //   else return 1 ;
 
 //NewJEC
-  if(nJets==0)      return 0.492871535;
-  else if(nJets==1) return 0.184565169;
-  else if(nJets==2) return 0.056192256;
-  else if(nJets==3) return 0.03876607;
-  else if(nJets>=4) return 0.018970657;
+  if(set==0) { // usual set of samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.184565169;
+    else if(nJets==2) return 0.056192256;
+    else if(nJets==3) return 0.03876607;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
+  else if(set==1) { // adding new high stat samples
+    if(nJets==0)      return 0.492871535;
+    else if(nJets==1) return 0.100275621;
+    else if(nJets==2) return 0.031239069;
+    else if(nJets==3) return 0.019961638;
+    else if(nJets>=4) return 0.018970657;
+    else return 1 ;
+  }
   else return 1 ;
 }
 
@@ -665,7 +676,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   cout << "Using corrections from llrCorrections_Spring13.root" << endl;
 
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v5.root");
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Ele trigger
   const int nEtaEle=2;
@@ -792,6 +803,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // diTau related variables
   float diTauNSVfitMass_,diTauNSVfitMassErrUp_,diTauNSVfitMassErrDown_;
+  float diTauNSVfitMassZLUp_,diTauNSVfitMassZLDown_;
   float diTauNSVfitPt_,diTauNSVfitPtErrUp_,diTauNSVfitPtErrDown_;
   float diTauSVFitMass, diTauSVFitMassCal0, diTauSVFitMassCal1, diTauSVFitMassCal2, 
     diTauSVFitPt, diTauSVFitEta , diTauSVFitPhi ;
@@ -804,7 +816,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float diTauRecoPt,diTauRecoPhi;
   float diTauMinMass;
   float diTauVisPtOverPtSum;
-
+  float diTauVisMassZLUp, diTauVisMassZLDown;
+  
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
@@ -851,7 +864,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupDY;
+  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupHighStatW,weightHepNupDY;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
@@ -879,6 +892,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float weightDecayMode_;
   
   int isTauLegMatched_,isElecLegMatched_,elecFlag_,genDecay_, leptFakeTau;
+  int isTauLegMatchedToLep_;
   int vetoEventOld_;
   int vetoEventNew_;
   
@@ -983,6 +997,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("diTauNSVfitMass",       &diTauNSVfitMass_,       "diTauNSVfitMass/F");
   outTreePtOrd->Branch("diTauNSVfitMassErrUp",  &diTauNSVfitMassErrUp_,  "diTauNSVfitMassErrUp/F");
   outTreePtOrd->Branch("diTauNSVfitMassErrDown",&diTauNSVfitMassErrDown_,"diTauNSVfitMassErrDown/F");
+  outTreePtOrd->Branch("diTauNSVfitMassZLUp",  &diTauNSVfitMassZLUp_,  "diTauNSVfitMassZLUp/F");
+  outTreePtOrd->Branch("diTauNSVfitMassZLDown",&diTauNSVfitMassZLDown_,"diTauNSVfitMassZLDown/F");
   outTreePtOrd->Branch("diTauNSVfitPt",       &diTauNSVfitPt_,       "diTauNSVfitPt/F");
   outTreePtOrd->Branch("diTauNSVfitPtErrUp",  &diTauNSVfitPtErrUp_,  "diTauNSVfitPtErrUp/F");
   outTreePtOrd->Branch("diTauNSVfitPtErrDown",&diTauNSVfitPtErrDown_,"diTauNSVfitPtErrDown/F");
@@ -1007,6 +1023,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("diTauVisPhi", &diTauVisPhi,"diTauVisPhi/F");
   outTreePtOrd->Branch("diTauVisMassCorr",&diTauVisMassCorr,"diTauVisMassCorr/F");
   outTreePtOrd->Branch("diTauVisPtOverPtSum",&diTauVisPtOverPtSum,"diTauVisPtOverPtSum/F");//IN
+  outTreePtOrd->Branch("diTauVisMassZLUp",&diTauVisMassZLUp,"diTauVisMassZLUp/F");
+  outTreePtOrd->Branch("diTauVisMassZLDown",&diTauVisMassZLDown,"diTauVisMassZLDown/F");
 
   outTreePtOrd->Branch("diTauMinMass",&diTauMinMass,"diTauMisMass/F");
 
@@ -1160,6 +1178,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
   outTreePtOrd->Branch("sampleWeight",       &sampleWeight,"sampleWeight/F"); 
+  outTreePtOrd->Branch("sampleWeightW",      &sampleWeightW, "sampleWeightW/F"); 
   outTreePtOrd->Branch("sampleWeightDY",     &sampleWeightDY,"sampleWeightDY/F"); 
   outTreePtOrd->Branch("puWeight",           &puWeight,     "puWeight/F");
   outTreePtOrd->Branch("puWeightHCP",        &puWeightHCP,  "puWeightHCP/F");
@@ -1179,6 +1198,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("muonRadiationUpWeight",&muonRadiationUpWeight_,"muonRadiationUpWeight/F");//IN
   outTreePtOrd->Branch("elecEffSF",&elecEffSF_,"elecEffSF/F");//IN
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
+  outTreePtOrd->Branch("weightHepNupHighStatW",       &weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
@@ -1257,6 +1277,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("weightDecayMode",  &weightDecayMode_, "weightDecayMode/F");
   //
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
+  outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
   outTreePtOrd->Branch("isElecLegMatched",&isElecLegMatched_,"isElecLegMatched/I");
   outTreePtOrd->Branch("elecFlag",        &elecFlag_,"elecFlag/I"); 
   outTreePtOrd->Branch("genDecay",        &genDecay_,"genDecay/I");
@@ -1416,6 +1437,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("visibleGenTauMass"     ,1); //ND
   currentTree->SetBranchStatus("genDecayMode"          ,1); //ND
   currentTree->SetBranchStatus("isTauLegMatched"       ,1);
+  currentTree->SetBranchStatus("isTauLegMatchedToLep"  ,1);
   currentTree->SetBranchStatus("isElecLegMatched"      ,1);
   currentTree->SetBranchStatus("hasKft"                ,0);
   currentTree->SetBranchStatus("leadPFCandPt"          ,1);
@@ -1658,7 +1680,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float mcPUweight,embeddingWeight;
   std::vector< double >* embeddingWeights = new std::vector< double >();//IN
   int numOfLooseIsoDiTaus;
-  int isTauLegMatched,isElecLegMatched,elecFlag,genDecay, vetoEvent;
+  int isTauLegMatched,isTauLegMatchedToLep,isElecLegMatched,elecFlag,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1,nPUVerticesP1;
   float leadPFChargedHadrCandTrackPt;
   float leadPFChargedHadrCandTrackP;
@@ -1784,6 +1806,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("numOfLooseIsoDiTaus",  &numOfLooseIsoDiTaus);
   currentTree->SetBranchAddress("elecFlag",             &elecFlag);
   currentTree->SetBranchAddress("isTauLegMatched",      &isTauLegMatched);
+  currentTree->SetBranchAddress("isTauLegMatchedToLep", &isTauLegMatchedToLep);
   currentTree->SetBranchAddress("isElecLegMatched",     &isElecLegMatched);
   currentTree->SetBranchAddress("vetoEvent",            &vetoEvent);
   currentTree->SetBranchAddress("visibleTauMass",       &visibleTauMass);
@@ -1819,7 +1842,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("elecAntiZeeIdTrigNoIP",&elecAntiZeeIdTrigNoIP);//IN
   currentTree->SetBranchAddress("NumEleFromV"          ,&NumEleFromV);//IN
 
-
   RecoilCorrector* recoilCorr = 0;
 
   if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
@@ -1844,7 +1866,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   TFile* HqT      = 0;
   int mH          = 120;
   TH1F* histo     = 0; TH1F* histoUp     = 0; TH1F* histoDown     = 0;
-  if(sample_.find("GGFH")!=string::npos){
+  if(sample_.find("GGFH")!=string::npos && sample_.find("GGFHWW")==string::npos){
     if(sample_.find("GGFH90")!=string::npos ) mH = 100;
     if(sample_.find("GGFH95")!=string::npos ) mH = 100;
     if(sample_.find("GGFH100")!=string::npos) mH = 100;
@@ -1976,15 +1998,22 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     // SELECT DY FINAL STATE //
     ///////////////////////////
 
+
     // final state informations //
     genDecay_        = genDecay ;
     isTauLegMatched_ = isTauLegMatched;
+    isTauLegMatchedToLep_ = isTauLegMatchedToLep;
+//     cout<<"HELP1"<<endl;
+//     cout<<"SIZE :"<<genDiTauLegsP4->size()<<endl;
     if( !isData ) {
       if(DEBUG) cout << "!isData --> leptFakeTau = " ;
-      leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+      leptFakeTau      = (isTauLegMatched==0 && isTauLegMatchedToLep>0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
+//       leptFakeTau      = 0;
       if(DEBUG) cout << leptFakeTau << endl;
     }
     else leptFakeTau = -99;
+//     cout<<"HELP2"<<endl;
+
     //
     // final state selection //
     if( sample_.find("DYJets")!=string::npos  || 
@@ -1992,9 +2021,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
       dyFinalState=false;
-      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15));}
+      if(       sample_.find("TauTau")  !=string::npos ) {dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1 && isTauLegMatchedToLep==0);}
+      else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep>0); }
       else if ( sample_.find("EToTau") !=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau);}
       else if ( sample_.find("JetToTau")!=string::npos ) {dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau);}
+      else if(  sample_.find("ZTTJ")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0); }
       else continue;
       if(!dyFinalState) continue;
     }
@@ -2369,6 +2400,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //     diTauNSVfitMass_        = diTauNSVfitMass*0.985; // re-calibration plugin wrt standalone
     diTauNSVfitMassErrUp_   = diTauNSVfitMassErrUp;
     diTauNSVfitMassErrDown_ = diTauNSVfitMassErrDown;
+    diTauNSVfitMassZLUp_   = diTauNSVfitMass*1.02;
+    diTauNSVfitMassZLDown_ = diTauNSVfitMass*0.98;
     diTauNSVfitPt_        = diTauNSVfitPt;
     diTauNSVfitPtErrUp_   = diTauNSVfitPtErrUp;
     diTauNSVfitPtErrDown_ = diTauNSVfitPtErrDown;
@@ -2393,7 +2426,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     diTauVisPhi   = (*diTauVisP4)[0].Phi();
     diTauVisMassCorr  = (*diTauVisP4)[0].M();
     diTauVisPtOverPtSum = diTauVisPt/(ptL1+ptL2);
-
+    diTauVisMassZLUp  = (*diTauVisP4)[0].M()*1.02;
+    diTauVisMassZLDown  = (*diTauVisP4)[0].M()*0.98;
+    
     diTauRecoPt  = ((*diTauVisP4)[0]+(*METP4)[1]).Pt();
     diTauRecoPhi = ((*diTauVisP4)[0]+(*METP4)[1]).Phi();
 
@@ -2425,7 +2460,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     genMass = 0;
     if(genTausP4->size()>1) 
       genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
-    
+
     // genElec Info
     if(genDiTauLegsP4->size()>0) {
       genElecPt   = (*genDiTauLegsP4)[0].Pt();
@@ -2553,6 +2588,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     ////////////////////////////////////////////////
     
+
     MEtCov00   = (*metSgnMatrix)[0]; 
     MEtCov01   = (*metSgnMatrix)[1]; 
     MEtCov10   = (*metSgnMatrix)[1]; 
@@ -2750,13 +2786,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
     decayMode_          = decayMode;
     numPV_              = numPV;
-    sampleWeight        = scaleFactor; 
-    if( sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) sampleWeight = 1;
-    sampleWeightDY = 1;
-    if( sample_.find("DYJets")!=string::npos) {
-      sampleWeight = 1;
-      sampleWeightDY = scaleFactor;
-    }
+
 
     nPUVertices_        = nPUVertices;
 
@@ -2785,22 +2815,50 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       //cout << "Correcting with " << corrFactorEmbed << endl;
     }
 
+    // SAMPLE WEIGHT //
+    sampleWeight        = scaleFactor; 
+    sampleWeightW  = 1;
+    sampleWeightDY = 1;
+    weightHepNup=1;
+    weightHepNupHighStatW = 1;
+    weightHepNupDY=1;
 
     // Reweight W+Jets
-    weightHepNup=1;
-    if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
-	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
-	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
-        ) 
-      weightHepNup = reweightHEPNUPWJets( hepNUP );
-
+    int localNup=0;
+    if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) ||
+        sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos ||
+        sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+        ) {
+      //cout << "=> computing weight : hepNUP=" << hepNUP ;                                                             
+      if(     sample_.find("1Jets")!=string::npos) localNup=6;
+      else if(sample_.find("2Jets")!=string::npos) localNup=7;
+      else if(sample_.find("3Jets")!=string::npos) localNup=8;
+      else if(sample_.find("4Jets")!=string::npos) localNup=9;
+      if(hepNUP>=5 && hepNUP<=9) localNup=hepNUP;
+      
+      weightHepNup          = reweightHEPNUPWJets( localNup, 0 );
+      weightHepNupHighStatW = reweightHEPNUPWJets( localNup, 1 );
+      sampleWeight = 1;
+      sampleWeightW= scaleFactor;
+    }
+//     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) || 
+// 	sample_.find("W1Jets")!=string::npos || sample_.find("W2Jets")!=string::npos || 
+// 	sample_.find("W3Jets")!=string::npos || sample_.find("W4Jets")!=string::npos
+//         ) {
+//       weightHepNup = reweightHEPNUPWJets( hepNUP , 0 );
+//       weightHepNupHighStatW = reweightHEPNUPWJets( hepNUP, 1 );
+//       sampleWeight = 1;
+//       sampleWeightW= scaleFactor; 
+//     }
     // Reweight DY+Jets 
-    weightHepNupDY=1;
     if( sample_.find("DYJets")!=string::npos  || 
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
-        ) 
+        ) {
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
+      sampleWeight   = 1;
+      sampleWeightDY = scaleFactor; 
+    }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
@@ -3094,6 +3152,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
  
     isTauLegMatched_ = isTauLegMatched;
     isElecLegMatched_ = isElecLegMatched;
+//     cout<<"HELPo"<<endl;
 
     if(!isData)
       leptFakeTau      = (isTauLegMatched==0 && (*genDiTauLegsP4)[1].E()>0) ? 1 : 0;
@@ -3208,6 +3267,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // // 	diTauVisMass *= 1.015;
 //       }
 //     }
+//     cout<<"HELPo"<<endl;
 
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
@@ -3222,6 +3282,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // 	diTauVisMass *= 1.015;
       }
     }
+//     cout<<"HELPo"<<endl;
 
     ZeeWeightHCP = 1;
     if( sample_.find("DYJets")!=string::npos ){
