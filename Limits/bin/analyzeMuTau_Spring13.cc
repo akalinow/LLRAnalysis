@@ -41,7 +41,7 @@
 #define scaleByBinWidth  false
 #define DOSPLIT          false
 #define useZDataMC       false
-
+#define StudyQCD         false
 typedef map<TString, TChain* >  mapchain;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,6 +99,12 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
     laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50";
     lliso = "combRelIsoLeg1DBetav2<0.15";
   }
+
+  // scan anti-iso trend
+  if(     version_.Contains("LAiso1")) laiso = "combRelIsoLeg1DBetav2>0.10 && combRelIsoLeg1DBetav2<=0.20";
+  else if(version_.Contains("LAiso2")) laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<=0.30";
+  else if(version_.Contains("LAiso3")) laiso = "combRelIsoLeg1DBetav2>0.30 && combRelIsoLeg1DBetav2<=0.40";
+  else if(version_.Contains("LAiso4")) laiso = "combRelIsoLeg1DBetav2>0.40 && combRelIsoLeg1DBetav2<=0.50";
 
   // Anti-Mu discriminator //
   if(version_.Contains("AntiMu1"))      antimu = "tightestAntiMuWP>2";
@@ -279,6 +285,7 @@ void drawHistogram(TCut sbinPair,
     TCut sampleWeight   = "run>0";
     TCut weightDY = "run>0";
     TCut weightW  = "run>0";
+    TCut weightEmb= "run>0";
 
     if(type.Contains("MC")) {
 
@@ -306,15 +313,18 @@ void drawHistogram(TCut sbinPair,
       
     }
     else if(type.Contains("Embed")) {
-      genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
-      //genMass = "genDiTauMass>50"; // HLTxMu17Mu8
-      if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
-      else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
-      else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
+      genMass     = "genDiTauMass>50 && HLTxMu17Mu8>0.5"; // HLTxMu17Mu8
+      weightEmb   = "embeddingWeight";
+      if(version_.Contains("Soft")) {
+	weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*weightDecayMode)";
+      }
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*embeddingWeight*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*embeddingWeight*weightDecayMode)";
-	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*embeddingWeight*weightDecayMode)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*weightDecayMode)";
+	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*weightDecayMode)";
       }
     }
     
@@ -411,7 +421,8 @@ void drawHistogram(TCut sbinPair,
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
 
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch);
+      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*weightEmb*sbinCat*genMass*passL1ETMCut*hltMatch);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -420,7 +431,8 @@ void drawHistogram(TCut sbinPair,
     }    
     else {
       TCut pairIndex="pairIndex<1";
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
+      //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*weightEmb*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
     }
 
     // Scale the histogram, compute norm and err
@@ -537,12 +549,15 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
     drawHistogram(sbinPairIso,sbinCatForWextrapolation,"MC", version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRelInclusive&&pZ);
     drawHistogram(sbinPairIso,sbinCatForWextrapolation,"MC", version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, sbinPZetaRelInclusive&&apZ);
   }
-  scaleFactorOS      = OSWinSignalRegionMC>0 ? OSWinSidebandRegionMC/OSWinSignalRegionMC : 1.0 ;
+  //scaleFactorOS      = OSWinSignalRegionMC>0 ? OSWinSidebandRegionMC/OSWinSignalRegionMC : 1.0 ;
+  scaleFactorOS      = OSWinSidebandRegionMC>0 ? OSWinSignalRegionMC/OSWinSidebandRegionMC : 1.0 ;
   float scaleFactorOSError = scaleFactorOS*(ErrorW1/OSWinSignalRegionMC + ErrorW2/OSWinSidebandRegionMC);
   if(useMt)
     cout << "Extrap. factor for W " << sign << " : P(Mt>"     << antiWsdb << ")/P(Mt<"   << antiWsgn << ") ==> " <<OSWinSidebandRegionMC<<"/"<<OSWinSignalRegionMC<<" = "<< scaleFactorOS << " +/- " << scaleFactorOSError << endl;
   else
     cout << "Extrap. factor for W " << sign << " : P(pZeta<- "<< antiWsdb << ")/P(pZeta>"<< antiWsgn << ") ==> " << scaleFactorOS << " +/- " << scaleFactorOSError << endl;    
+
+  cout << OSWinSignalRegionMC << "/" << OSWinSidebandRegionMC << " = " << scaleFactorOS << " +/- " << scaleFactorOSError << endl;
 
   // restore with full cut
   drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRel&&pZ);
@@ -550,7 +565,8 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, sbinPZetaRel&&apZ);
  
   float OSTTbarinSidebandRegionMC = 0.;
-  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["TTbar"],  variable,  OSTTbarinSidebandRegionMC,     Error, scaleFactor*TTxsectionRatio , hWMt, sbinPZetaRel&&apZ);
+  float ErrorTT = 0.;
+  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["TTbar"],  variable,  OSTTbarinSidebandRegionMC,     ErrorTT, scaleFactor*TTxsectionRatio , hWMt, sbinPZetaRel&&apZ);
 
   /* //Remove this unnecessary sideband TTbar extrapolation
   TCut bTagCut; TCut bTagCutaIso; TCut sbinCatBtag;
@@ -604,23 +620,32 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
     cout << "!!! scale factor is negative... set it to 1 !!!" << endl;
     scaleFactorTTOS = 1.0;
   }
-  OSTTbarinSidebandRegionMC *= scaleFactorTTOS; // to comment
+  //OSTTbarinSidebandRegionMC *= scaleFactorTTOS; // to comment
   cout << "Contribution from TTbar in " << sign << " is " << OSTTbarinSidebandRegionMC << endl;
 
   float OSOthersinSidebandRegionMC   = 0.;
-  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["Others"],    variable, OSOthersinSidebandRegionMC  ,Error,  scaleFactor , hWMt, sbinPZetaRel&&apZ);
+  float ErrorVV = 0 ;
+  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["Others"],    variable, OSOthersinSidebandRegionMC  ,ErrorVV,  scaleFactor , hWMt, sbinPZetaRel&&apZ);
+
   float OSDYtoTauinSidebandRegionMC  = 0.;
+  float ErrorDYTauTau = 0;
   if(useZDataMC)
-    drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor*ExtrapolationFactorSidebandZDataMC*ExtrapolationFactorZDataMC , hWMt, sbinPZetaRel&&apZ);
+    drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,ErrorDYTauTau,  scaleFactor*lumiCorrFactor*ExtrapolationFactorSidebandZDataMC*ExtrapolationFactorZDataMC , hWMt, sbinPZetaRel&&apZ);
   else 
-    drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor, hWMt, sbinPZetaRel&&apZ);
+    drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTau"],  variable, OSDYtoTauinSidebandRegionMC ,ErrorDYTauTau,  scaleFactor*lumiCorrFactor, hWMt, sbinPZetaRel&&apZ);
+
   float OSDYJtoTauinSidebandRegionMC = 0.;
-  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYJtoTau"],  variable, OSDYJtoTauinSidebandRegionMC ,Error, scaleFactor*lumiCorrFactor*JtoTauCorrectionFactor , hWMt, sbinPZetaRel&&apZ);
+  float ErrorDYJet = 0;
+  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYJtoTau"],  variable, OSDYJtoTauinSidebandRegionMC ,ErrorDYJet, scaleFactor*lumiCorrFactor*JtoTauCorrectionFactor , hWMt, sbinPZetaRel&&apZ);
+
+  float ErrorDYMu = 0;
   float OSDYMutoTauinSidebandRegionMC = 0.;
-  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYMutoTau"], variable, OSDYMutoTauinSidebandRegionMC ,Error,scaleFactor*lumiCorrFactor*MutoTauCorrectionFactor , hWMt, sbinPZetaRel&&apZ);
+  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYMutoTau"], variable, OSDYMutoTauinSidebandRegionMC ,ErrorDYMu,scaleFactor*lumiCorrFactor*MutoTauCorrectionFactor , hWMt, sbinPZetaRel&&apZ);
+
   //check this one
   float OSDYtoTauLLinSidebandRegionMC  = 0.;
-  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTauLL"],  variable, OSDYtoTauLLinSidebandRegionMC ,Error,  scaleFactor*lumiCorrFactor, hWMt, sbinPZetaRel&&apZ);
+  float ErrorZTTLL=0;
+  drawHistogram(sbinPairIso,sbinCat,"MC", version_,analysis_, RUN,mapAllTrees["DYToTauTauLL"],  variable, OSDYtoTauLLinSidebandRegionMC ,ErrorZTTLL,  scaleFactor*lumiCorrFactor, hWMt, sbinPZetaRel&&apZ);
 
   float OSQCDinSidebandRegionData = 0.; float OSAIsoEventsinSidebandRegionData = 0.;
   drawHistogram(sbinPairAiso,sbinCat,"Data_FR", version_,analysis_, RUN, mapAllTrees["Data"],  variable,        OSQCDinSidebandRegionData,   Error, 1.0         , hWMt, sbinPZetaRelaIso&&apZ);
@@ -629,31 +654,49 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   drawHistogram(sbinPairAiso,sbinCat,"MC_FR", version_,analysis_, RUN,mapAllTrees["WJets"], variable,OSWinSidebandRegionAIsoMC,   Error, scaleFactor , hWMt, sbinPZetaRelaIso&&apZ);
   OSAIsoEventsWinSidebandRegionAIsoMC = (OSWinSidebandRegionAIsoMC/Error)*(OSWinSidebandRegionAIsoMC/Error)*scaleFactor; 
 
-  drawHistogram(sbinPairIso,sbinCat,"Data", version_,analysis_, RUN, mapAllTrees["Data"], variable, OSWinSignalRegionDATA ,Error, 1.0 , hWMt, sbinPZetaRel&&apZ, 1);
-  if(selection_.find("vbfTight")!=string::npos)OSWinSignalRegionDATA = hWMt->GetEntries();
-  cout << "Selected events in " << sign << " data from high Mt sideband " << OSWinSignalRegionDATA << endl;
-  OSWinSignalRegionDATA -= OSTTbarinSidebandRegionMC;
-  OSWinSignalRegionDATA -= OSOthersinSidebandRegionMC;
-  OSWinSignalRegionDATA -= OSDYtoTauinSidebandRegionMC;
-  OSWinSignalRegionDATA -= OSDYJtoTauinSidebandRegionMC;
-  OSWinSignalRegionDATA -= OSDYMutoTauinSidebandRegionMC;
-  OSWinSignalRegionDATA -= OSDYtoTauLLinSidebandRegionMC;
-  if(useFakeRate) OSWinSignalRegionDATA -= (OSQCDinSidebandRegionData-OSWinSidebandRegionAIsoMC);
-  OSWinSignalRegionDATA /= scaleFactorOS;
-  cout << "- expected from TTbar          " << OSTTbarinSidebandRegionMC << endl;
-  cout << "- expected from Others         " << OSOthersinSidebandRegionMC << endl;
-  cout << "- expected from DY->tautau     " << OSDYtoTauinSidebandRegionMC << endl;
-  cout << "- expected from DY->ll, l->tau " << OSDYMutoTauinSidebandRegionMC << endl;
-  cout << "- expected from DY->ll, j->tau " << OSDYJtoTauinSidebandRegionMC  << endl;
+  float ErrorData=0;
+  drawHistogram(sbinPairIso,sbinCat,"Data", version_,analysis_, RUN, mapAllTrees["Data"], variable, OSWinSidebandRegionDATA ,ErrorData, 1.0 , hWMt, sbinPZetaRel&&apZ);
+
+  cout << "Selected events in "          << sign 
+       << " data from high Mt sideband " << OSWinSidebandRegionDATA 
+       << " +/- "                        << ErrorData << endl;
+
+  if(selection_.find("vbfTight")!=string::npos)OSWinSidebandRegionDATA = hWMt->GetEntries();
+  cout << "Selected events in " << sign << " data from high Mt sideband " << OSWinSidebandRegionDATA << endl;
+
+  OSWinSidebandRegionDATA -= OSTTbarinSidebandRegionMC;
+  OSWinSidebandRegionDATA -= OSOthersinSidebandRegionMC;
+  OSWinSidebandRegionDATA -= OSDYtoTauinSidebandRegionMC;
+  OSWinSidebandRegionDATA -= OSDYJtoTauinSidebandRegionMC;
+  OSWinSidebandRegionDATA -= OSDYMutoTauinSidebandRegionMC;
+  OSWinSidebandRegionDATA -= OSDYtoTauLLinSidebandRegionMC;
+  if(useFakeRate) OSWinSidebandRegionDATA -= (OSQCDinSidebandRegionData-OSWinSidebandRegionAIsoMC);
+
+  float SquaredErrorWsdb = ErrorData*ErrorData + ErrorDYMu*ErrorDYMu + ErrorDYJet*ErrorDYJet + ErrorDYTauTau*ErrorDYTauTau + ErrorVV*ErrorVV + ErrorTT*ErrorTT + ErrorZTTLL*ErrorZTTLL;
+  float ErrorWsdb = SquaredErrorWsdb>=0 ? TMath::Sqrt(SquaredErrorWsdb) : -1.0;
+
+  OSWinSignalRegionDATA = OSWinSidebandRegionDATA * scaleFactorOS ;
+
+  float SquaredErrorWsgn = scaleFactorOS*scaleFactorOS*ErrorWsdb*ErrorWsdb + scaleFactorOSError*scaleFactorOSError*OSWinSidebandRegionDATA*OSWinSidebandRegionDATA;
+  float ErroWsgn         = SquaredErrorWsgn>=0 ? TMath::Sqrt(SquaredErrorWsgn) : -1.0;
+
+  cout << "- expected from TTbar          " << OSTTbarinSidebandRegionMC     << " +/- " << ErrorTT       << endl;
+  cout << "- expected from Others         " << OSOthersinSidebandRegionMC    << " +/- " << ErrorVV       << endl;
+  cout << "- expected from DY->tautau     " << OSDYtoTauinSidebandRegionMC   << " +/- " << ErrorDYTauTau << endl;
+  cout << "- expected from DY->ll, l->tau " << OSDYMutoTauinSidebandRegionMC << " +/- " << ErrorDYMu     << endl;
+  cout << "- expected from DY->ll, j->tau " << OSDYJtoTauinSidebandRegionMC  << " +/- " << ErrorDYJet    << endl;
   cout << "- expected from DY->tautau, ll " << OSDYtoTauLLinSidebandRegionMC << endl;
   cout << "- expected from QCD " << OSQCDinSidebandRegionData << ", obtained from " << OSAIsoEventsinSidebandRegionData << " anti-isolated events " << endl;
   cout << "  (MC predicts " << OSWinSidebandRegionAIsoMC << " W events in the aIso region, from a total of " << OSAIsoEventsWinSidebandRegionAIsoMC << " events)" << endl;
   if(!useFakeRate) cout << " !!! QCD with fake-rate not subtracted !!!" << endl;
-  cout << "W+jets in " << sign << " region is estimated to be " <<  OSWinSignalRegionDATA*scaleFactorOS << "/" << scaleFactorOS
-       << " = " <<  OSWinSignalRegionDATA << endl;
-  cout << " ==> the MC prediction is " << OSWinSignalRegionMC << " +/- " << ErrorW1 << endl;
 
-  OSWinSidebandRegionDATA = OSWinSignalRegionDATA*scaleFactorOS;
+  cout << "W NORMALIZATION PARAMETERS"  << endl
+       << " ==> OSWinSignalRegionMC     = " << OSWinSignalRegionMC     << " +/- " << ErrorW1   << endl
+       << " ==> OSWinSidebandRegionMC   = " << OSWinSidebandRegionMC   << " +/- " << ErrorW2   << endl
+       << " ==> OSWinSidebandRegionDATA = " << OSWinSidebandRegionDATA << " +/- " << ErrorWsdb << endl
+       << " ==> OSWinSignalRegionDATA   = " << OSWinSignalRegionDATA   << " +/- " << ErroWsgn  << endl
+       << " ==> scaleFactorOS           = " << scaleFactorOS           << " +/- " << scaleFactorOSError << endl;
+
 }
 
 void evaluateQCD(mapchain mapAllTrees, TString version_, TString analysis_,
@@ -1059,6 +1102,16 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hDataAntiIsoLooseTauIso        = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray()); hDataAntiIsoLooseTauIso   ->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD     = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins, bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
 
+  // QCD shapes
+  // SS anti-iso
+  TH1F* hDataSSAntiIsoLooseTauIso= new TH1F( "hDataSSAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray());hDataSSAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
+  // SS Iso
+  TH1F* hDataSSIsoLooseTauIso = new TH1F( "hDataSSIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray()); hDataSSIsoLooseTauIso   ->SetFillColor(kMagenta-10);
+  // OS anti-iso
+  TH1F* hDataOSAntiIsoLooseTauIso = new TH1F( "hDataOSAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray()); hDataOSAntiIsoLooseTauIso   ->SetFillColor(kMagenta-10);
+  // OS iso
+  TH1F* hDataOSIsoLooseTauIso = new TH1F( "hDataOSIsoLooseTauIso"   ,"data anti-iso, loose tau-iso,relax vbf", nBins, bins.GetArray()); hDataOSIsoLooseTauIso   ->SetFillColor(kMagenta-10);
+
   //histograms with fine binning for MSSM
   TH1F* hDataEmb_fb  = new TH1F( "hDataEmb_fb","Embedded"          , 400, 0., 2000.); hDataEmb_fb->SetFillColor(kOrange-4); 
   TH1F* hW_fb        = new TH1F( "hW_fb"      ,"W+jets"            , 400, 0., 2000.); hW_fb->SetFillColor(kRed+2);
@@ -1398,6 +1451,7 @@ void plotMuTau( Int_t mH_           = 120,
     OS=SS;
     OStoSSRatioQCD=1.0;
   }
+  if(version_.Contains("aIso")) liso=laiso;
 
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
@@ -2329,6 +2383,93 @@ void plotMuTau( Int_t mH_           = 120,
 	  //continue;
 
 	  if ( !hData->GetSumw2N() )hData->Sumw2();
+
+	  // Other QCD shapes
+	  TH1F* hExtrapNadir = new TH1F("hExtrapNadir","",nBins , bins.GetArray());
+	  float dummy1 = 0.;
+	  TCut sbinCatNadir = sbinCat;
+	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos) sbinCatNadir = vbfLooseQCD;
+	  
+	  if(StudyQCD) {
+	    evaluateQCD(mapAllTrees, version_,analysis_, RUN, hDataSSAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			extrapFactorWSS, 
+			SSWinSignalRegionDATA, SSWinSignalRegionMC,
+			SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			hExtrapNadir, variable,
+			Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			MutoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			OStoSSRatioQCD,
+			antiWsdb, antiWsgn, useMt,
+			sbinSSaIso,
+			sbinCatNadir,
+			sbinPZetaRelSSaIso, pZ, apZ, sbinPZetaRelSSaIsoInclusive, 
+			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, // useless arguments
+			vbfLoose, oneJet, zeroJet, sbinCatNadir, sbinCatNadir, sbinaIsoPresel, sbinaIsoPresel, true, true);
+	    hCleaner->Reset();
+	    hExtrapNadir->Reset();
+
+	    evaluateQCD(mapAllTrees, version_,analysis_, RUN, hDataSSIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			extrapFactorWSS, 
+			SSWinSignalRegionDATA, SSWinSignalRegionMC,
+			SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			hExtrapNadir, variable,
+			Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			MutoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			OStoSSRatioQCD,
+			antiWsdb, antiWsgn, useMt,
+			sbinSS,
+			sbinCatNadir,
+			sbinPZetaRelSS, pZ, apZ, sbinPZetaRelSSInclusive, 
+			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, // useless
+			vbfLoose, oneJet, zeroJet, sbinCatNadir, sbinCatNadir, sbinPresel, sbinaIsoPresel, true, true);
+	    hCleaner->Reset();
+	    hExtrapNadir->Reset();
+
+	    evaluateQCD(mapAllTrees, version_,analysis_, RUN, hDataOSAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			extrapFactorWSS, 
+			SSWinSignalRegionDATA, SSWinSignalRegionMC,
+			SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			hExtrapNadir, variable,
+			Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			MutoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			OStoSSRatioQCD,
+			antiWsdb, antiWsgn, useMt,
+			sbinAiso,
+			sbinCatNadir,
+			sbinPZetaRelaIso, pZ, apZ, sbinPZetaRelaIsoInclusive, 
+			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, // useless
+			vbfLoose, oneJet, zeroJet, sbinCatNadir, sbinCatNadir, sbinaIsoPresel, sbinaIsoPresel, true, true);
+	    hCleaner->Reset();
+	    hExtrapNadir->Reset();
+
+	    evaluateQCD(mapAllTrees, version_,analysis_, RUN, hDataOSIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			extrapFactorWSS, 
+			SSWinSignalRegionDATA, SSWinSignalRegionMC,
+			SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			hExtrapNadir, variable,
+			Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			MutoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			OStoSSRatioQCD,
+			antiWsdb, antiWsgn, useMt,
+			sbin,
+			sbinCatNadir,
+			sbinPZetaRel, pZ, apZ, sbinPZetaRelInclusive, 
+			sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIso, sbinPZetaRelSSaIso, // useless
+			vbfLoose, oneJet, zeroJet, sbinCatNadir, sbinCatNadir, sbinPresel, sbinaIsoPresel, true, true);
+	    hCleaner->Reset();
+	    hExtrapNadir->Reset();
+	  
+	    delete hExtrapNadir;
+	    hCleaner->Reset();
+	  }
 	  
 	  if(selection_.find("vbfTight")!=string::npos && selection_.find("novbf")==string::npos){ 
 	    
@@ -3025,6 +3166,14 @@ void plotMuTau( Int_t mH_           = 120,
   hDataAntiIsoLooseTauIsoFullVBF->Write();
   hDataAntiIsoLooseTauIsoRelaxVBF->Write();
   hDataAntiIsoLooseTauIsoQCD->Write();
+
+  if(StudyQCD) {
+    hDataSSAntiIsoLooseTauIso->Write();
+    hDataSSIsoLooseTauIso->Write();
+    hDataOSAntiIsoLooseTauIso->Write();
+    hDataOSIsoLooseTauIso->Write();
+  }
+
   hData->Write();
   hParameters->Write();
 
@@ -3057,6 +3206,13 @@ void plotMuTau( Int_t mH_           = 120,
   delete hVV; delete hSgn; delete hSgn1; delete hSgn2; delete hSgn3; delete hData; delete hParameters;
   delete hW3JetsLooseTauIso; delete hW3JetsMediumTauIso; delete hW3JetsMediumTauIsoRelVBF; delete hW3JetsMediumTauIsoRelVBFMinusSS; delete hWLooseBTag;
   delete hDataAntiIsoLooseTauIso; delete hDataAntiIsoLooseTauIsoQCD; delete hDataAntiIsoLooseTauIsoFullVBF;
+
+  if(StudyQCD) {
+    delete hDataSSAntiIsoLooseTauIso;
+    delete hDataSSIsoLooseTauIso;
+    delete hDataOSAntiIsoLooseTauIso;
+    delete hDataOSIsoLooseTauIso;
+  }
 
   delete hDataEmb_fb; delete hZtt_fb; delete hW_fb; delete hZmm_fb; delete hZmj_fb; delete hTTb_fb;
   delete hQCD_fb; delete hVV_fb;

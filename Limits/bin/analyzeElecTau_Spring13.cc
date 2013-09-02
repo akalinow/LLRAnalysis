@@ -912,7 +912,6 @@ void plotElecTau( Int_t mH_           = 120,
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
 		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
 // 		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/"
 		  TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
@@ -1157,7 +1156,6 @@ void plotElecTau( Int_t mH_           = 120,
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/";
   TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateZTT1/";
-  
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
   if(Tanalysis_=="") fileAnalysis = "nominal";
@@ -2289,6 +2287,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    float NormDYTTJtoTau_fb = 0; hCleanerfb->Reset();
             drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, mapAllTrees["DYToTauTauJJ"], variable, NormDYTTJtoTau_fb, Error,    Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbin, 1);
             hZmj_fb->Add(hCleanerfb, 1.0);
+
 	  } 
 	  else{
 	    float NormDYJtoTau = 0.;
