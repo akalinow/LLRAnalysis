@@ -931,6 +931,15 @@ void plotElecTau( Int_t mH_           = 120,
   TString nameMasses[nMasses]={"90","95","100","105","110","115","120","125","130","135","140","145","150","155","160"};
   int hMasses[nMasses]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};  
 
+  const int nProdWW=2;
+  const int nMassesWW=11;
+  TString nameProdWW[nProdWW]={"GGFHWW","VBFHWW"};
+  int hMassesWW[nMassesWW]={110,115,120,125,130,135,140,145,150,155,160};
+  TString nameMassesWW[nMassesWW];
+
+  if(DEBUG) cout << "build masses string" << endl;
+  for(int iM=0 ; iM<nMassesWW ; iM++) nameMassesWW[iM]=TString(Form("%d",hMassesWW[iM]));
+
   const int nProdS=2;
   const int nMassesS=21;
   TString nameProdS[nProdS]={"GGH","BBH"};
@@ -1120,6 +1129,14 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHDown[iM]->SetLineWidth(2);
   }
   
+  TH1F* hSignalWW[nProdWW][nMassesWW];
+  for(int iP=0 ; iP<nProdWW ; iP++) {
+    for(int iM=0 ; iM<nMassesWW ; iM++) {
+      hSignalWW[iP][iM] = new TH1F("h"+nameProdWW[iP]+nameMassesWW[iM], nameProdWW[iP]+nameMassesWW[iM], nBins , bins.GetArray());
+      hSignalWW[iP][iM]->SetLineWidth(2);
+    }
+  }
+
   TH1F* hSusy[nProdS][nMassesS];
 
   if(version_.Contains("MSSM")){
@@ -1268,7 +1285,14 @@ void plotElecTau( Int_t mH_           = 120,
       if(!signal[iP][iM])cout << "###  NTUPLE Signal " << nameProd[iP]+nameMasses[iM] << " NOT FOUND ###" << endl;  
     }
   }
-  
+  TChain *signalWW[nProdWW][nMassesWW];
+  for(int iP=0 ; iP<nProdWW ; iP++) {
+    for(int iM=0 ; iM<nMassesWW ; iM++) {
+      signalWW[iP][iM] = new TChain(treeMC);
+      signalWW[iP][iM]->Add(pathToFileDY+"/nTuple"+nameProdWW[iP]+nameMassesWW[iM]+"_ElecTau_"+fileAnalysis+".root");
+      if(!signalWW[iP][iM])cout << "###  NTUPLE Signal " << nameProdWW[iP]+nameMassesWW[iM] << " NOT FOUND ###" << endl;
+    }
+  }
   TChain *signalSusy[nProdS][nMassesS];
   for(int iP=0 ; iP<nProdS ; iP++) {
     for(int iM=0 ; iM<nMassesS ; iM++) {
@@ -1318,7 +1342,8 @@ void plotElecTau( Int_t mH_           = 120,
   if(VERBOSE) cout << "-- gather the trees" << endl;
 
   const int nVarious = 12;
-  const int nChainsSM= nVarious  + nProd*nMasses;
+  const int nChainsSM1= nVarious  + nProd*nMasses;
+  const int nChainsSM = nChainsSM1 + nProdWW*nMassesWW;
   const int nChains  = nChainsSM + nProdS*nMassesS;
   TString treeNamesVarious[nVarious]={"SS","WJets","Data","W3Jets","TTbar","Others","DYToTauTau","DYToTauTauLL","DYToTauTauJJ","DYElectoTau","DYJtoTau","Embedded"};
   TChain* chainsVarious[nVarious]   ={data,backgroundWJets,data,backgroundW3Jets,backgroundTTbar,backgroundOthers,
@@ -1333,9 +1358,13 @@ void plotElecTau( Int_t mH_           = 120,
       treeNames[iCh] = treeNamesVarious[iCh];
       chains[iCh]    = chainsVarious[iCh];
     }    
-    else if(iCh<nChainsSM){ // fill signal names and trees
+    else if(iCh<nChainsSM1){ // fill signal names and trees
       treeNames[iCh] = nameProd[ int((iCh-nVarious)/nMasses) ] + nameMasses[ int((iCh-nVarious)%nMasses) ];
       chains[iCh]    = signal[ int((iCh-nVarious)/nMasses) ][ int((iCh-nVarious)%nMasses) ];
+    }
+    else if(iCh<nChainsSM){ // fill signal names and trees
+      treeNames[iCh] = nameProdWW[ int((iCh-nChainsSM1)/nMassesWW) ] + nameMassesWW[ int((iCh-nChainsSM1)%nMassesWW) ];
+      chains[iCh]    = signalWW[ int((iCh-nChainsSM1)/nMassesWW) ][ int((iCh-nChainsSM1)%nMassesWW) ];
     }
     else { // fill signal names and trees
       treeNames[iCh] = "SUSY"+nameProdS[ int((iCh-nChainsSM)/nMassesS) ] + nameMassesS[ int((iCh-nChainsSM)%nMassesS) ];
@@ -2587,6 +2616,11 @@ void plotElecTau( Int_t mH_           = 120,
             }
           }
 
+	  for(int iP=0 ; iP<nProdWW ; iP++)
+            for(int iM=0 ; iM<nMassesWW ; iM++)
+              if(currentName.Contains(nameProdWW[iP]+nameMassesWW[iM]))
+                hSignalWW[iP][iM]->Add(h1,1.0);
+	  
 	  if(version_.Contains("MSSM")) {
 	    if(currentName.Contains("SUSY")){
               //select events within 30% of Higgs mass
@@ -3090,6 +3124,9 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHUp[iM]->Write();
     hGGFHDown[iM]->Write();
   }
+  for(int iP=0 ; iP<nProdWW ; iP++)
+    for(int iM=0 ; iM<nMassesWW ; iM++)
+      if(hSignalWW[iP][iM]) hSignalWW[iP][iM]->Write();
   if(version_.Contains("MSSM")) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
@@ -3107,6 +3144,9 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iM=0 ; iM<nMasses ; iM++){
     delete hGGFHUp[iM]; delete hGGFHDown[iM];
   }
+  for(int iP=0 ; iP<nProdWW ; iP++)
+    for(int iM=0 ; iM<nMassesWW ; iM++)
+      if(hSignalWW[iP][iM]) delete hSignalWW[iP][iM];
   if(version_.Contains("MSSM")) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
@@ -3132,6 +3172,11 @@ void plotElecTau( Int_t mH_           = 120,
     for(int iM=0 ; iM<nMasses ; iM++) {
       //fSignal[iP][iM]->Close();
       delete signal[iP][iM];
+    }
+  }
+  for(int iP=0 ; iP<nProdWW ; iP++) {
+    for(int iM=0 ; iM<nMassesWW ; iM++) {
+      delete signalWW[iP][iM];
     }
   }
   for(int iP=0 ; iP<nProdS ; iP++) {
