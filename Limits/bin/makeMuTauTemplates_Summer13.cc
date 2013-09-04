@@ -15,7 +15,7 @@
 
 
 #define RESCALETO1PB true
-#define DOSUSY true
+#define DOSUSY false
 #define OldCat false
 
 using namespace std;
@@ -266,6 +266,18 @@ void produce(
         hSgn2_HqTDown->Scale(1./rescaleggH);  
         hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));  
         hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
+      }
+      //Add also HWW signal
+      if(mH_ >= 110){
+	TH1F* hSgn4 = (TH1F*)fin->Get(Form("hGGFHWW%d",mH_));
+	//hSgn4->Scale(1./rescaleggH); //already norm to 1.
+	hSgn4->SetName(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+	hSgn4->Write(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+	
+	TH1F* hSgn5 = (TH1F*)fin->Get(Form("hVBFHWW%d",mH_));
+	//hSgn5->Scale(1./rescaleqqH); //already norm to 1.
+	hSgn5->SetName(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+	hSgn5->Write(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
       }
     }
     else{
@@ -772,10 +784,25 @@ void produce(
 	  hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
 	  hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
 	}
+	//Add also HWW signal
+	if(mH_ >= 110){
+	  if(dir->FindObjectAny(Form("ggH_hww%d%s"          , mH_,suffix.c_str()))==0 ){
+	    TH1F* hSgn4 = (TH1F*)fin->Get(Form("hGGFHWW%d",mH_));
+	    //hSgn4->Scale(1./rescaleggH); //already norm to 1.
+	    hSgn4->SetName(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+	    hSgn4->Write(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+	  }
+	  if(dir->FindObjectAny(Form("qqH_hww%d%s"         ,mH_,suffix.c_str()))==0 ){
+	    TH1F* hSgn5 = (TH1F*)fin->Get(Form("hVBFHWW%d",mH_));
+	    //hSgn5->Scale(1./rescaleqqH); //already norm to 1.
+	    hSgn5->SetName(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+	    hSgn5->Write(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+	  }
+	}
       }
     }
     else{
-      if(dir->FindObjectAny(Form("qqH%d%s"         ,mH_,suffix.c_str()))==0 ){
+      if(dir->FindObjectAny(Form("ggH%d%s"         ,mH_,suffix.c_str()))==0 ){
         TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
@@ -784,6 +811,21 @@ void produce(
         TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+	TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
+	hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+	TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
+	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+	hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+	TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
+	hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+	hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
       }
     }
 
@@ -1629,20 +1671,20 @@ void produce(
 void produceAll(TString outputDir="MuTau/res_ABCD_Moriond_v1", int useEmb=1){
 
   const int nVar=1;
-  const int nM=21; // 15 for sm, 21 for mssm
-  const int nCat=3; //9 sm; //6 before including "inclusive", 3 for MSSM
+  const int nM=15; // 15 for sm, 21 for mssm
+  const int nCat=9; //9 sm; //6 before including "inclusive", 3 for MSSM
   const int nAn=5;
 
   string variables[nVar]={"diTauNSVfitMass"};
   //string variables[nVar]={"diTauVisMass"};
   //string variables[nVar]={"diTauCDFMass"};
-  //int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
-  int mH[nM]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
+  int mH[nM]={90,95,100,105,110,115,120,125,130,135,140,145,150,155,160};
+  //int mH[nM]={80,90,100,110,120,130,140,160,180,200,250,300,350,400,450,500,600,700,800,900,1000};
 
   string analysis[nAn]={"nominal","TauUp","TauDown","JetUp","JetDown"};
   //string category[nCat]={"inclusive","novbfLow","novbfHigh","boostLow","boostHigh","vbf"}; //old
-  //string category[nCat]={"inclusive","novbfLow","novbfMedium","novbfHigh","boostMedium","boostHighhighhiggs","boostHighlowhiggs","vbf","vbfTight"};
-  string category[nCat]={"inclusive","bTag", "nobTag"}; //for MSSM
+  string category[nCat]={"inclusive","novbfLow","novbfMedium","novbfHigh","boostMedium","boostHighhighhiggs","boostHighlowhiggs","vbf","vbfTight"};
+  //string category[nCat]={"inclusive","bTag", "nobTag"}; //for MSSM
 
   for(int iVar = 0 ; iVar < nVar; iVar++)
     for(int iM = 0; iM < nM; iM++)

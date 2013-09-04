@@ -655,7 +655,7 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   OSAIsoEventsWinSidebandRegionAIsoMC = (OSWinSidebandRegionAIsoMC/Error)*(OSWinSidebandRegionAIsoMC/Error)*scaleFactor; 
 
   float ErrorData=0;
-  drawHistogram(sbinPairIso,sbinCat,"Data", version_,analysis_, RUN, mapAllTrees["Data"], variable, OSWinSidebandRegionDATA ,ErrorData, 1.0 , hWMt, sbinPZetaRel&&apZ);
+  drawHistogram(sbinPairIso,sbinCat,"Data", version_,analysis_, RUN, mapAllTrees["Data"], variable, OSWinSidebandRegionDATA ,ErrorData, 1.0 , hWMt, sbinPZetaRel&&apZ, 1);
 
   cout << "Selected events in "          << sign 
        << " data from high Mt sideband " << OSWinSidebandRegionDATA 
@@ -685,7 +685,7 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   cout << "- expected from DY->tautau     " << OSDYtoTauinSidebandRegionMC   << " +/- " << ErrorDYTauTau << endl;
   cout << "- expected from DY->ll, l->tau " << OSDYMutoTauinSidebandRegionMC << " +/- " << ErrorDYMu     << endl;
   cout << "- expected from DY->ll, j->tau " << OSDYJtoTauinSidebandRegionMC  << " +/- " << ErrorDYJet    << endl;
-  cout << "- expected from DY->tautau, ll " << OSDYtoTauLLinSidebandRegionMC << endl;
+  cout << "- expected from DY->tautau, ll " << OSDYtoTauLLinSidebandRegionMC << " +/- " << ErrorZTTLL    << endl;
   cout << "- expected from QCD " << OSQCDinSidebandRegionData << ", obtained from " << OSAIsoEventsinSidebandRegionData << " anti-isolated events " << endl;
   cout << "  (MC predicts " << OSWinSidebandRegionAIsoMC << " W events in the aIso region, from a total of " << OSAIsoEventsWinSidebandRegionAIsoMC << " events)" << endl;
   if(!useFakeRate) cout << " !!! QCD with fake-rate not subtracted !!!" << endl;

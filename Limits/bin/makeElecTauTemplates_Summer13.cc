@@ -234,7 +234,7 @@ void produce(
       TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
       hSgn3->Scale(1./rescaleVH);
       hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
-      // in VBF, take the di-tau mass shape from GGF sample
+      /* // in VBF, take the di-tau mass shape from GGF sample
       if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 	float VHyield = hSgn3->Integral();
 	hSgn3->Reset();
@@ -242,19 +242,31 @@ void produce(
 	hSgn3->Scale(VHyield/hSgn3->Integral());
 	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
       }
-      else
-	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
+      else*/
+      hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
       //Higgs pT weight Up/Down
       if(analysis_.find("nominal")!=string::npos){
         TH1F* hSgn2_HqTUp = (TH1F*)fin->Get(Form("hGGFH%dUp",mH_));
         hSgn2_HqTUp->Scale(1./rescaleGGFH);
         hSgn2_HqTUp->SetName(Form("ggH%d_QCDscale_ggH1inUp" ,mH_));
 	hSgn2_HqTUp->Write(Form("ggH%d_QCDscale_ggH1inUp" ,mH_));
-
+	
         TH1F* hSgn2_HqTDown = (TH1F*)fin->Get(Form("hGGFH%dDown",mH_));
         hSgn2_HqTDown->Scale(1./rescaleGGFH);
 	hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
         hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
+      }
+      //Add also HWW signal
+      if(mH_ >= 110){
+        TH1F* hSgn4 = (TH1F*)fin->Get(Form("hGGFHWW%d",mH_));
+        //hSgn4->Scale(1./rescaleggH); //already norm to 1.
+	hSgn4->SetName(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+        hSgn4->Write(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+	
+        TH1F* hSgn5 = (TH1F*)fin->Get(Form("hVBFHWW%d",mH_));
+        //hSgn5->Scale(1./rescaleqqH); //already norm to 1.
+        hSgn5->SetName(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+        hSgn5->Write(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
       }
     }
     else{//SUSY
@@ -659,7 +671,7 @@ void produce(
 	TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
 	hSgn3->Scale(1./rescaleVH);
 	hSgn3->SetName(Form("VH%d%s" ,mH_,suffix.c_str()));
-	if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
+	/*if(bin_.find("vbf")!=string::npos && bin_.find("novbf")==string::npos){
 	  TH1F* hSgn2 = (TH1F*)fin->Get(Form("hVBFH%d",mH_));
 	  float VHyield = hSgn3->Integral();
 	  hSgn3->Reset();
@@ -667,8 +679,8 @@ void produce(
 	  hSgn3->Scale(VHyield/hSgn3->Integral());
 	  hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
 	}
-	else
-	  hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
+	else*/
+	hSgn3->Write(Form("VH%d%s" ,mH_,suffix.c_str()));
 
 	//Higgs pT weight Up/Down
 	if(analysis_.find("nominal")!=string::npos){
@@ -682,18 +694,48 @@ void produce(
 	  hSgn2_HqTDown->SetName(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
 	  hSgn2_HqTDown->Write(Form("ggH%d_QCDscale_ggH1inDown" ,mH_));
 	}
+	//Add also HWW signal
+        if(mH_ >= 110){
+          if(dir->FindObjectAny(Form("ggH_hww%d%s"          , mH_,suffix.c_str()))==0 ){
+            TH1F* hSgn4 = (TH1F*)fin->Get(Form("hGGFHWW%d",mH_));
+            //hSgn4->Scale(1./rescaleggH); //already norm to 1.
+            hSgn4->SetName(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+            hSgn4->Write(Form("ggH_hww%d%s" ,mH_,suffix.c_str()));
+          }
+          if(dir->FindObjectAny(Form("qqH_hww%d%s"         ,mH_,suffix.c_str()))==0 ){
+            TH1F* hSgn5 = (TH1F*)fin->Get(Form("hVBFHWW%d",mH_));
+            //hSgn5->Scale(1./rescaleqqH); //already norm to 1.
+	    hSgn5->SetName(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+            hSgn5->Write(Form("qqH_hww%d%s" ,mH_,suffix.c_str()));
+          }
+        }
       }
     }
     else{//SUSY
-      if(dir->FindObjectAny(Form("GGH%d%s"         ,mH_,suffix.c_str()))==0 ){
+      if(dir->FindObjectAny(Form("ggH%d%s"         ,mH_,suffix.c_str()))==0 ){
         TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
-      if(dir->FindObjectAny(Form("BBH%d%s"          , mH_,suffix.c_str()))==0 ){
+      if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
         TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+        TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
+        hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+        TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
+	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+        hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+        TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
+        hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+        hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
       }
     }
 
@@ -1411,8 +1453,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-//   variables.push_back("diTauVisMass");
-  variables.push_back("diTauNSVfitMass");
+  variables.push_back("diTauVisMass");
+  //variables.push_back("diTauNSVfitMass");
 
   if(!DOSUSY){
     mH.push_back(90);
@@ -1552,7 +1594,7 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_ZeeSel_Datacards");
 
-  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards_v2");
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards_v4");
   //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards_v2",true); 
   //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_FB_Datacards_v2",true); 
 }
