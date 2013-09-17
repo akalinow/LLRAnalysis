@@ -77,12 +77,14 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& liso, TCut& laiso, TCut& lliso, TCut& tpt)
+void chooseSelection(TString version_, string selection_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& liso, TCut& laiso, TCut& lliso, TCut& tpt)
 {
 
   if(version_.Contains("tauptbin")) tpt="ptL2>45 && ptL2<50";
-  else                              tpt="ptL2>20";
-
+  else{
+    if(selection_.find("novbfLow")!=string::npos)tpt="ptL2>20";
+    else                            tpt="ptL2>30";      
+  }
   // Lepton isolation //
   liso = "combRelIsoLeg1DBetav2<0.10";
   laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50";
@@ -1419,14 +1421,14 @@ void plotMuTau( Int_t mH_           = 120,
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
 
   ////// TAU PT+ID+ISO //////
-  TCut tpt("ptL2>20");
+  TCut tpt("ptL2>30");
   TCut antimu("tightestAntiMuWP>2");
   TCut tiso("tightestHPSMVAWP>=0");
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
 
   // Choose selection wrt version_
-  chooseSelection(version_, tiso, ltiso, mtiso, antimu,liso,laiso,lliso,tpt);
+  chooseSelection(version_, selection_, tiso, ltiso, mtiso, antimu,liso,laiso,lliso,tpt);
   if(selection_.find("vbfRelaxMt")!=string::npos) antiWsgn+=10;
 
   ////// EVENT WISE //////
