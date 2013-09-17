@@ -2006,8 +2006,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     // final state informations //
     genDecay_        = genDecay ;
     isTauLegMatched_ = isTauLegMatched;
-    isTauLegMatchedToLep_ = isTauLegMatchedToLep;
-//     cout<<"HELP1"<<endl;
+    isTauLegMatchedToLep_ = 0;
+    if( sample_.find("DYJets")!=string::npos  || 
+	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+        ) 
+      isTauLegMatchedToLep_ = isTauLegMatchedToLep;
+      //     cout<<"HELP1"<<endl;
 //     cout<<"SIZE :"<<genDiTauLegsP4->size()<<endl;
     if( !isData ) {
       if(DEBUG) cout << "!isData --> leptFakeTau = " ;
