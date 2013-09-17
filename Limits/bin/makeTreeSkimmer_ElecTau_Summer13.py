@@ -9,7 +9,8 @@ import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_Summer13_TES/EleTau/'
 WorkdirLocNoTES = '/data_CMS/cms/htautau/PostMoriond/TREES_Summer13_NoTES/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/temp/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/temp/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateWJet/'
 
 options = {
     ###e+tau samples
@@ -2926,7 +2927,7 @@ options = {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_12July2013_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
-    'xSection'       : 2.502,
+    'xSection'       : 0.716,
     'skimEff'        : 0.468227 * 144262./437751,
     'iJson'          : -1,
     'iDiv'           : 0,

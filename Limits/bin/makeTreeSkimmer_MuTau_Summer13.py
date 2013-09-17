@@ -7,7 +7,8 @@ import string
 import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_Summer13_TES/MuTau/'
-OutDir     = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/'
+#OutDir     = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/'
+OutDir     = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/updateWJet/'
 
 options = {
     ###mu+tau samples
