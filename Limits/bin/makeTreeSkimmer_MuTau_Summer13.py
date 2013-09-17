@@ -782,8 +782,8 @@ options = {
     'ZZJetsTo2L2Nu' : {
     'inputFilePath'  : WorkdirLoc+'BackgroundsMC/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_25July2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_MuTau.root',
-    'sample'         : 'ZZJetsTo2L2Q',
-    'xSection'       : 2.502,
+    'sample'         : 'ZZJetsTo2L2Nu',
+    'xSection'       : 0.716,
     'skimEff'        : 0.468227 * 144262./437751,
     'iJson'          : -1
     },
