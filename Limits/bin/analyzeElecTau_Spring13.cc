@@ -911,8 +911,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
 		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-// 		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1416,8 +1416,56 @@ void plotElecTau( Int_t mH_           = 120,
   if(selection_.find("EC")!=string::npos)
     tpt = tpt&&TCut("TMath::Abs(etaL2)>1.5");
 
+  //AntiEcategory selection
+  if(selection_.find("AntiECat0")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==0");
+  if(selection_.find("AntiECat1")!=string::npos &&
+     selection_.find("AntiECat10")==string::npos &&
+     selection_.find("AntiECat11")==string::npos &&
+     selection_.find("AntiECat12")==string::npos &&
+     selection_.find("AntiECat13")==string::npos &&
+     selection_.find("AntiECat14")==string::npos &&
+     selection_.find("AntiECat15")==string::npos &&
+     selection_.find("AntiECat16")==string::npos &&
+     selection_.find("AntiECat17")==string::npos
+     )
+    tpt = tpt&&TCut("AntiEMVA3category==1");
+  if(selection_.find("AntiECat2")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==2");
+  if(selection_.find("AntiECat3")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==3");
+  if(selection_.find("AntiECat4")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==4");
+  if(selection_.find("AntiECat5")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==5");
+  if(selection_.find("AntiECat6")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==6");
+  if(selection_.find("AntiECat7")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==7");
+  if(selection_.find("AntiECat8")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==8");
+  if(selection_.find("AntiECat9")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==9");
+  if(selection_.find("AntiECat10")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==10");
+  if(selection_.find("AntiECat11")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==11");
+  if(selection_.find("AntiECat12")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==12");
+  if(selection_.find("AntiECat13")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==13");
+  if(selection_.find("AntiECat14")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==14");
+  if(selection_.find("AntiECat15")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==15");
+  if(selection_.find("AntiECat16")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==16");
+  if(selection_.find("AntiECat17")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==17");
+
   TCut antimu("tightestAntiMuWP>0");
-  TCut antiele("tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)");
+//   TCut antiele("tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)");
+  TCut antiele("");
   TCut tiso("tightestHPSMVAWP>=0");
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
@@ -2530,7 +2578,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral()); 
 	    }
 	    else{
-	      cout<<" =  "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
+	      cout<<"hDataAntiIsoLooseTauIso->Integral() =  "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
 	      hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	      hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 	    }

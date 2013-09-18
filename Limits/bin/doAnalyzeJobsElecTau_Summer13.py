@@ -81,6 +81,7 @@ versionList=[##'AntiMu2_AntiEle2Medium_HPSDB3H',
     #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_NoWHighStat_MSSM',
     #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM',
     'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID'
+    #'AntiMu1_HPSDB3H_OldEleID'
              ]
 
 data = 'ABCD'
@@ -89,7 +90,8 @@ data = 'ABCD'
 #iteration = 'ControlZeeSFv3'
 #iteration = 'Shift'
 #iteration = 'DatacardsTailFit'
-iteration = 'Datacards'
+iteration = 'Datacards_TauPt30New'
+#iteration = 'AntiEControl'
 
 
 useEmb=1
@@ -98,7 +100,7 @@ for version in versionList:
     
     outputDir = 'Results_'+data+'_'+version+'_'+iteration
 
-##     ##### Datacards
+    ### Datacards
     analyze(125,"inclusive"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     analyze(125,"novbfLow"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     analyze(125,"novbfMedium"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
@@ -156,7 +158,7 @@ for version in versionList:
     analyze(125,"vbf"               ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     analyze(125,"vbfTight"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
 
-###VisMass
+#VisMass
     analyze(125,"inclusive"         ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     analyze(125,"novbfLow"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     analyze(125,"novbfMedium"       ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
@@ -256,6 +258,29 @@ for version in versionList:
 ##     analyze(125,"bTag"              ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"nobTag"            ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 
+##AntiE Control plots
+##     analyze(125,"inclusive"         ,"nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"bTag"              ,"nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"nobTag"            ,"nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat0","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 0'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat1","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 1'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat2","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 2'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat3","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 3'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat4","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 4'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat5","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 5'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat6","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 6'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat7","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 7'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat8","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 8'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat9","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 9'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat10","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 10'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat11","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 11'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat12","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 12'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat13","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 13'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat14","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 14'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat15","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 15'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat16","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 16'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusiveAntiECat17","nominal" ,"AntiEMVA3raw" ,"'AntiEMVA3 BDT cat 17'","units",outputDir,40,0.9,1,5.0,1.0,0,1.2,data,stream,version,useEmb);
+     
 ## ##ZeeSF
 ##     analyze(125,"inclusive"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"ZeeSel1Prong0Pi0BL"    ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
