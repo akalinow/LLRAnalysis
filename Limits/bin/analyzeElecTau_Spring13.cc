@@ -966,7 +966,7 @@ void plotElecTau( Int_t mH_           = 120,
   if(RUN=="ABC")    Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;       // 2012ABC 
   else if(RUN=="D") Lumi = 7274;                                               // 2012D 
 //   else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
-  else              Lumi = 19789.; // ReReco2012ABCD
+  else              Lumi = 19712.0; //19789.; // ReReco2012ABCD
 
   /////////////////
 
@@ -1172,7 +1172,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/";
-  TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateZTT1/";
+  TString pathToFileDY = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateZTT1/";
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
   if(Tanalysis_=="") fileAnalysis = "nominal";
@@ -1396,7 +1396,9 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
 
   ////// TAU PT+ID+ISO //////
-  TCut tpt("ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
+  TCut tpt("ptL2>30 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
+  if(selection_.find("novbfLow")!=string::npos)
+    tpt= "ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)";
   /*
   if(selection_.find("High")!=string::npos)
     tpt = tpt&&TCut("ptL2>40");
@@ -1626,12 +1628,12 @@ void plotElecTau( Int_t mH_           = 120,
 
   // Global TCuts = category && object selection && event selection //
 
-  TCut sbinPresel           = lpt && lID && tpt && tiso  && antimu && liso  && lveto && hltevent   ;
-  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && antimu && liso  && lveto               ;
-  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && antimu && laiso && lveto && hltevent   ;
-  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && antimu && lliso && lveto && hltevent   ;
-  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso && antimu && laiso && lveto && hltevent  ;
-  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso && antimu && liso && lveto && hltevent  ;
+  TCut sbinPresel           = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && hltevent   ;
+  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto               ;
+  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && antimu && antiele && laiso && lveto && hltevent   ;
+  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && antimu && antiele && lliso && lveto && hltevent   ;
+  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso && antimu && antiele && laiso && lveto && hltevent  ;
+  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso && antimu && antiele && liso && lveto && hltevent  ;
 
   TCut sbinInclusive                     = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut  && hltevent ;
   TCut sbinChargeRelInclusive            = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto &&                MtCut  && hltevent ;
@@ -2432,7 +2434,8 @@ void plotElecTau( Int_t mH_           = 120,
             //Normalize to Inclusive measured QCD times the above efficiency
             hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	  //else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boostHigh")!=string::npos){
 	    drawHistogram(sbinaIsoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner);
 	    /* //No need to subtract anyother background contributions, summer recommendation
@@ -2450,7 +2453,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    */
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("boostMedium")!=string::npos) {
+	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostMedium")!=string::npos) {
 	    TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
 	    float dummy1 = 0.;      
 	    evaluateQCD(mapAllTrees, version_, RUN, hDataAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
