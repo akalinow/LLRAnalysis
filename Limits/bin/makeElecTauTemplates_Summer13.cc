@@ -100,9 +100,9 @@ void produce(
 	     TString outputDir = "ABC",
 	     bool DOSUSY = false,
 // 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/ElecTau/"
-	     //TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     //TString location  = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534_TopUp/src/LLRAnalysis/Limits/bin/results/"
-	     TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/ElecTau/"
 	     )
 {
   cout << "Now doing mass mH=" << mH_ << ", for variable " << variable_ 
@@ -188,7 +188,7 @@ void produce(
 
   string theory =  !DOSUSY ? "SM" : "MSSM" ;
 
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s.root",outputDir.Data(), theory.c_str()),"UPDATE");
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str()),"UPDATE");
   
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -1454,7 +1454,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<std::string> analysis;
 
   variables.push_back("diTauVisMass");
-  //variables.push_back("diTauNSVfitMass");
+  variables.push_back("diTauNSVfitMass");
 
   if(!DOSUSY){
     mH.push_back(90);
@@ -1594,7 +1594,8 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_ZeeSel_Datacards");
 
-  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards_v4");
+//   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards");
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards_TauPt30");
   //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards_v2",true); 
   //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_FB_Datacards_v2",true); 
 }

@@ -911,8 +911,8 @@ void plotElecTau( Int_t mH_           = 120,
 		  TString version_    = "Moriond",
 		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
 		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-// 		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/"
+		  //TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -966,7 +966,7 @@ void plotElecTau( Int_t mH_           = 120,
   if(RUN=="ABC")    Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 ;       // 2012ABC 
   else if(RUN=="D") Lumi = 7274;                                               // 2012D 
 //   else              Lumi = 791.872 + 4434.0 + 495.003 + 6174 + 206.196 + 7274; // 2012ABCD
-  else              Lumi = 19789.; // ReReco2012ABCD
+  else              Lumi = 19712.0; //19789.; // ReReco2012ABCD
 
   /////////////////
 
@@ -1172,7 +1172,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/";
-  TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateZTT1/";
+  TString pathToFileDY = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateZTT1/";
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
   if(Tanalysis_=="") fileAnalysis = "nominal";
@@ -1396,7 +1396,9 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
 
   ////// TAU PT+ID+ISO //////
-  TCut tpt("ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
+  TCut tpt("ptL2>30 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
+  if(selection_.find("novbfLow")!=string::npos)
+    tpt= "ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)";
   /*
   if(selection_.find("High")!=string::npos)
     tpt = tpt&&TCut("ptL2>40");
@@ -1414,8 +1416,56 @@ void plotElecTau( Int_t mH_           = 120,
   if(selection_.find("EC")!=string::npos)
     tpt = tpt&&TCut("TMath::Abs(etaL2)>1.5");
 
+  //AntiEcategory selection
+  if(selection_.find("AntiECat0")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==0");
+  if(selection_.find("AntiECat1")!=string::npos &&
+     selection_.find("AntiECat10")==string::npos &&
+     selection_.find("AntiECat11")==string::npos &&
+     selection_.find("AntiECat12")==string::npos &&
+     selection_.find("AntiECat13")==string::npos &&
+     selection_.find("AntiECat14")==string::npos &&
+     selection_.find("AntiECat15")==string::npos &&
+     selection_.find("AntiECat16")==string::npos &&
+     selection_.find("AntiECat17")==string::npos
+     )
+    tpt = tpt&&TCut("AntiEMVA3category==1");
+  if(selection_.find("AntiECat2")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==2");
+  if(selection_.find("AntiECat3")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==3");
+  if(selection_.find("AntiECat4")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==4");
+  if(selection_.find("AntiECat5")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==5");
+  if(selection_.find("AntiECat6")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==6");
+  if(selection_.find("AntiECat7")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==7");
+  if(selection_.find("AntiECat8")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==8");
+  if(selection_.find("AntiECat9")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==9");
+  if(selection_.find("AntiECat10")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==10");
+  if(selection_.find("AntiECat11")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==11");
+  if(selection_.find("AntiECat12")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==12");
+  if(selection_.find("AntiECat13")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==13");
+  if(selection_.find("AntiECat14")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==14");
+  if(selection_.find("AntiECat15")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==15");
+  if(selection_.find("AntiECat16")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==16");
+  if(selection_.find("AntiECat17")!=string::npos)
+    tpt = tpt&&TCut("AntiEMVA3category==17");
+
   TCut antimu("tightestAntiMuWP>0");
-  TCut antiele("tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)");
+//   TCut antiele("tightestAntiECutWP>1 && (tightestAntiEMVAWP>4 || tightestAntiEMVAWP==3)");
+  TCut antiele("");
   TCut tiso("tightestHPSMVAWP>=0");
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
@@ -1626,12 +1676,12 @@ void plotElecTau( Int_t mH_           = 120,
 
   // Global TCuts = category && object selection && event selection //
 
-  TCut sbinPresel           = lpt && lID && tpt && tiso  && antimu && liso  && lveto && hltevent   ;
-  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && antimu && liso  && lveto               ;
-  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && antimu && laiso && lveto && hltevent   ;
-  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && antimu && lliso && lveto && hltevent   ;
-  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso && antimu && laiso && lveto && hltevent  ;
-  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso && antimu && liso && lveto && hltevent  ;
+  TCut sbinPresel           = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && hltevent   ;
+  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto               ;
+  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && antimu && antiele && laiso && lveto && hltevent   ;
+  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && antimu && antiele && lliso && lveto && hltevent   ;
+  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso && antimu && antiele && laiso && lveto && hltevent  ;
+  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso && antimu && antiele && liso && lveto && hltevent  ;
 
   TCut sbinInclusive                     = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto && diTauCharge && MtCut  && hltevent ;
   TCut sbinChargeRelInclusive            = lpt && lID && tpt && tiso  && antimu && antiele && liso  && lveto &&                MtCut  && hltevent ;
@@ -2432,7 +2482,8 @@ void plotElecTau( Int_t mH_           = 120,
             //Normalize to Inclusive measured QCD times the above efficiency
             hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	  //else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boostHigh")!=string::npos){
 	    drawHistogram(sbinaIsoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner);
 	    /* //No need to subtract anyother background contributions, summer recommendation
@@ -2450,7 +2501,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    */
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("boostMedium")!=string::npos) {
+	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boostMedium")!=string::npos) {
 	    TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
 	    float dummy1 = 0.;      
 	    evaluateQCD(mapAllTrees, version_, RUN, hDataAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
@@ -2527,7 +2578,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral()); 
 	    }
 	    else{
-	      cout<<" =  "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
+	      cout<<"hDataAntiIsoLooseTauIso->Integral() =  "<<hDataAntiIsoLooseTauIso->Integral()<<endl;
 	      hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	      hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 	    }

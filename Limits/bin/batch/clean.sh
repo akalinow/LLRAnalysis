@@ -1,1 +1,1 @@
-rm job*.sh log/* hadder/hadd_*.sh hadder/log/* analyze/job*.sh analyze/log/*
+rm job*.sh  hadder/hadd_*.sh hadder/log/* analyze/job*.sh analyze/log/*
