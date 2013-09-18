@@ -9,7 +9,8 @@ import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_Summer13_TES/EleTau/'
 WorkdirLocNoTES = '/data_CMS/cms/htautau/PostMoriond/TREES_Summer13_NoTES/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/temp/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/temp/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/EleTau/updateWJet/'
 
 options = {
     ###e+tau samples
