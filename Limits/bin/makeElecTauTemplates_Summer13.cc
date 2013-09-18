@@ -487,8 +487,8 @@ void produce(
       hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
 
       TH1F* hDataEmb_fb = ((TH1F*)fin->Get("hDataEmb_fb"));
-      hDataEmb_fb->SetName(Form("ZTT_fine_binning%s",suffix.c_str()));
-      hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
+      hDataEmb_fb->SetName(Form("ZTT%s_fine_binning",suffix.c_str()));
+      hDataEmb_fb->Write(Form("ZTT%s_fine_binning",suffix.c_str()));
       
       // ----- QCD ------
       float maxBin = 50.;
@@ -523,27 +523,27 @@ void produce(
       }//suffix
       
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
-      hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));
-      checkValidity(hQCD_fb);
-      hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
+      hQCD_fb->SetName(Form("QCD%s_fine_binning"    ,suffix.c_str()));
+      //checkValidity(hQCD_fb);
+      hQCD_fb->Write(Form("QCD%s_fine_binning"    ,suffix.c_str()));
 
       //Add a 10% shape uncert. to QCD for mass < 60 GeV
       if(suffix == ""){
-        TString QCDShapeFb("QCD_fine_binning_CMS_htt_QCDShape_etau");
+        TString QCDShapeFb("QCD_CMS_htt_QCDShape_etau");
         QCDShapeFb = QCDShapeFb+"_"+binNameSpace;
 
-        TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp");
-        TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown");
+        TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp_fine_binning");
+        TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown_fine_binning");
         for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
           if(hQCD_fb->GetBinCenter(b)<=maxBin){
             hQCD_fbUp->SetBinContent(b,1.1*hQCD_fbUp->GetBinContent(b));
             hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
           }
         }
-        checkValidity(hQCD_fbUp);
-        hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp");
-        checkValidity(hQCD_fbDown);
-        hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown");
+        //checkValidity(hQCD_fbUp);
+        hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp_fine_binning");
+        //checkValidity(hQCD_fbDown);
+        hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown_fine_binning");
       }
 
       // ----- W ------
@@ -551,16 +551,46 @@ void produce(
         TH1F* hW = ((TH1F*)fin->Get("hW"));
         hW->SetName(Form("W%s"           ,suffix.c_str()));
         hW->Write(Form("W%s"           ,suffix.c_str()));
+
+	//Up/Down for TauFake weight
+        if(suffix == ""){
+          TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+          hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+          hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+          TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+          hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+          hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+        }
       }
       else{
         TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
         hW->SetName(Form("W%s"           ,suffix.c_str()));
         hW->Write(Form("W%s"           ,suffix.c_str()));
+
+	//Up/Down for TauFake weight
+        if(suffix == ""){
+          TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+          hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+          hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+          TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+          hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+          hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+        }
       }
 
       TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
-      hW_fb->SetName(Form("W_fine_binning%s"           ,suffix.c_str()));
-      hW_fb->Write(Form("W_fine_binning%s"           ,suffix.c_str()));
+      hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));
+      hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
+      
+      //Up/Down for TauFake weight
+      if(suffix == ""){
+        TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+        hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+        hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+        TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+        hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+        hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+      }
       
       // ----- Fakes ------
       TH1F* hZmj = ((TH1F*)fin->Get("hZmj"));
@@ -582,15 +612,15 @@ void produce(
       hZfakes->Write(Form("ZLL%s"    ,suffix.c_str()));
 
       TH1F* hZmj_fb = ((TH1F*)fin->Get("hZmj_fb"));
-      hZmj_fb->SetName(Form("ZJ_fine_binning%s"        ,suffix.c_str()));
-      hZmj_fb->Write(Form("ZJ_fine_binning%s"        ,suffix.c_str()));
+      hZmj_fb->SetName(Form("ZJ%s_fine_binning"        ,suffix.c_str()));
+      hZmj_fb->Write(Form("ZJ%s_fine_binning"        ,suffix.c_str()));
       TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));
-      hZmm_fb->SetName(Form("ZL_fine_binning%s"        ,suffix.c_str()));
-      hZmm_fb->Write(Form("ZL_fine_binning%s"        ,suffix.c_str()));
+      hZmm_fb->SetName(Form("ZL%s_fine_binning"        ,suffix.c_str()));
+      hZmm_fb->Write(Form("ZL%s_fine_binning"        ,suffix.c_str()));
       TH1F* hZfakes_fb = ((TH1F*)fin->Get("hZmj_fb"));
       hZfakes_fb->Add(hZmm_fb);
-      hZfakes_fb->SetName(Form("ZLL_fine_binning%s"    ,suffix.c_str()));
-      hZfakes_fb->Write(Form("ZLL_fine_binning%s"    ,suffix.c_str()));
+      hZfakes_fb->SetName(Form("ZLL%s_fine_binning"    ,suffix.c_str()));
+      hZfakes_fb->Write(Form("ZLL%s_fine_binning"    ,suffix.c_str()));
 
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
@@ -600,11 +630,11 @@ void produce(
       hVV->Write(Form("VV%s"         ,suffix.c_str()));
       
       TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));
-      hTTb_fb->SetName(Form("TT_fine_binning%s"        ,suffix.c_str()));
-      hTTb_fb->Write(Form("TT_fine_binning%s"        ,suffix.c_str()));
+      hTTb_fb->SetName(Form("TT%s_fine_binning"        ,suffix.c_str()));
+      hTTb_fb->Write(Form("TT%s_fine_binning"        ,suffix.c_str()));
       TH1F* hVV_fb = ((TH1F*)fin->Get("hVV"));
-      hVV_fb->SetName(Form("VV_fine_binning%s"         ,suffix.c_str()));
-      hVV_fb->Write(Form("VV_fine_binning%s"         ,suffix.c_str()));
+      hVV_fb->SetName(Form("VV%s_fine_binning"         ,suffix.c_str()));
+      hVV_fb->Write(Form("VV%s_fine_binning"         ,suffix.c_str()));
 
     } //bTag
 
@@ -961,8 +991,8 @@ void produce(
         hDataEmb->Write(Form("ZTT%s",suffix.c_str()));
 
         TH1F* hDataEmb_fb = ((TH1F*)fin->Get("hDataEmb_fb"));
-        hDataEmb_fb->SetName(Form("ZTT_fine_binning%s",suffix.c_str()));
-        hDataEmb_fb->Write(Form("ZTT_fine_binning%s",suffix.c_str()));
+        hDataEmb_fb->SetName(Form("ZTT%s_fine_binning",suffix.c_str()));
+        hDataEmb_fb->Write(Form("ZTT%s_fine_binning",suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("QCD%s"       ,suffix.c_str()))==0 ){
 	TH1F *hQCD;
@@ -997,27 +1027,27 @@ void produce(
 	}//suffix
 	
 	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
-	hQCD_fb->SetName(Form("QCD_fine_binning%s"    ,suffix.c_str()));
-	checkValidity(hQCD_fb);
-	hQCD_fb->Write(Form("QCD_fine_binning%s"    ,suffix.c_str()));
+	hQCD_fb->SetName(Form("QCD%s_fine_binning"    ,suffix.c_str()));
+	//checkValidity(hQCD_fb);
+	hQCD_fb->Write(Form("QCD%s_fine_binning"    ,suffix.c_str()));
 
 	//Add a 10% shape uncert. to QCD for mass < 60 GeV
 	if(suffix == ""){
-	  TString QCDShapeFb("QCD_fine_binning_CMS_htt_QCDShape_etau");
+	  TString QCDShapeFb("QCD_CMS_htt_QCDShape_etau");
 	  QCDShapeFb = QCDShapeFb+"_"+binNameSpace;
 	  
-	  TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp");
-	  TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown");
+	  TH1F* hQCD_fbUp=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVUp_fine_binning");
+	  TH1F* hQCD_fbDown=(TH1F*)hQCD_fb->Clone(QCDShapeFb+"_8TeVDown_fine_binning");
 	  for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
 	    if(hQCD_fb->GetBinCenter(b)<=maxBin){
 	      hQCD_fbUp->SetBinContent(b,1.1*hQCD_fbUp->GetBinContent(b));
 	      hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
 	    }
 	  }
-	  checkValidity(hQCD_fbUp);
-	  hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp");
-	  checkValidity(hQCD_fbDown);
-	  hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown");
+	  //checkValidity(hQCD_fbUp);
+	  hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp_fine_binning");
+	  //checkValidity(hQCD_fbDown);
+	  hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown_fine_binning");
 	}
       }
       
@@ -1026,16 +1056,46 @@ void produce(
           TH1F* hW = ((TH1F*)fin->Get("hW"));
           hW->SetName(Form("W%s"           ,suffix.c_str()));
           hW->Write(Form("W%s"           ,suffix.c_str()));
+	  
+	  //Up/Down for TauFake weight
+          if(suffix == ""){
+            TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+            hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+            TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+            hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+            hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+          }
         }
         else{
           TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
           hW->SetName(Form("W%s"           ,suffix.c_str()));
           hW->Write(Form("W%s"           ,suffix.c_str()));
+
+	  //Up/Down for TauFake weight
+          if(suffix == ""){
+            TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+            hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+            TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+            hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+            hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+          }
         }
 
 	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
-        hW_fb->SetName(Form("W_fine_binning%s"           ,suffix.c_str()));
-        hW_fb->Write(Form("W_fine_binning%s"           ,suffix.c_str()));
+        hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));
+        hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
+
+	//Up/Down for TauFake weight
+        if(suffix == ""){
+          TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+          hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+          hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+          TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+          hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+          hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+        }
       }
 
       if(dir->FindObjectAny(Form("ZJ%s"       ,suffix.c_str()))==0 ){
@@ -1044,8 +1104,8 @@ void produce(
         hZmj->Write(Form("ZJ%s"        ,suffix.c_str()));
 
 	TH1F* hZmj_fb = ((TH1F*)fin->Get("hZmj_fb"));
-        hZmj_fb->SetName(Form("ZJ_fine_binning%s"        ,suffix.c_str()));
-        hZmj_fb->Write(Form("ZJ_fine_binning%s"        ,suffix.c_str()));
+        hZmj_fb->SetName(Form("ZJ%s_fine_binning"        ,suffix.c_str()));
+        hZmj_fb->Write(Form("ZJ%s_fine_binning"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ZL%s"       ,suffix.c_str()))==0 ){
         TH1F* hZmm = ((TH1F*)fin->Get("hZmm"));
@@ -1062,8 +1122,8 @@ void produce(
 	}
 
 	TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));
-        hZmm_fb->SetName(Form("ZL_fine_binning%s"        ,suffix.c_str()));
-        hZmm_fb->Write(Form("ZL_fine_binning%s"        ,suffix.c_str()));
+        hZmm_fb->SetName(Form("ZL%s_fine_binning"        ,suffix.c_str()));
+        hZmm_fb->Write(Form("ZL%s_fine_binning"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ZLL%s"       ,suffix.c_str()))==0 ){
         TH1F* hZfakes = ((TH1F*)fin->Get("hZfakes"));
@@ -1073,8 +1133,8 @@ void produce(
 	TH1F* hZfakes_fb = ((TH1F*)fin->Get("hZmj_fb"));
         TH1F* hZmm_fb = ((TH1F*)fin->Get("hZmm_fb"));
         hZfakes_fb->Add(hZmm_fb);
-        hZfakes_fb->SetName(Form("ZLL_fine_binning%s"    ,suffix.c_str()));
-        hZfakes_fb->Write(Form("ZLL_fine_binning%s"    ,suffix.c_str()));
+        hZfakes_fb->SetName(Form("ZLL%s_fine_binning"    ,suffix.c_str()));
+        hZfakes_fb->Write(Form("ZLL%s_fine_binning"    ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("TT%s"       ,suffix.c_str()))==0 ){
         TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
@@ -1082,8 +1142,8 @@ void produce(
         hTTb->Write(Form("TT%s"        ,suffix.c_str()));
 	
 	TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));
-        hTTb_fb->SetName(Form("TT_fine_binning%s"        ,suffix.c_str()));
-        hTTb_fb->Write(Form("TT_fine_binning%s"        ,suffix.c_str()));
+        hTTb_fb->SetName(Form("TT%s_fine_binning"        ,suffix.c_str()));
+        hTTb_fb->Write(Form("TT%s_fine_binning"        ,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("VV%s"       ,suffix.c_str()))==0 ){
         TH1F* hVV = ((TH1F*)fin->Get("hVV"));
@@ -1091,8 +1151,8 @@ void produce(
         hVV->Write(Form("VV%s"         ,suffix.c_str()));
 
 	TH1F* hVV_fb = ((TH1F*)fin->Get("hVV"));
-        hVV_fb->SetName(Form("VV_fine_binning%s"         ,suffix.c_str()));
-        hVV_fb->Write(Form("VV_fine_binning%s"         ,suffix.c_str()));
+        hVV_fb->SetName(Form("VV%s_fine_binning"         ,suffix.c_str()));
+        hVV_fb->Write(Form("VV%s_fine_binning"         ,suffix.c_str()));
       }
     }//bTag
     else{//inclusive
@@ -1594,9 +1654,9 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_ZeeSel_Datacards");
 
-  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Datacards_v4");
-  //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards_v2",true); 
-  //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_FB_Datacards_v2",true); 
+  produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_Tau30_Datacards_v1");
+  //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_Datacards_v4",true); 
+  //produceOne("Results_ABCD_AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM_FB_Datacards_v4",true); 
 }
 
 
