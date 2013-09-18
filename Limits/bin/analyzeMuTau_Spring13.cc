@@ -960,7 +960,7 @@ void plotMuTau( Int_t mH_           = 120,
   //
   if(RUN=="ABC")    Lumi = LumiABC;
   else if(RUN=="D") Lumi = LumiD;
-  else              Lumi = LumiABC + LumiD;
+  else              Lumi = 19712.0; //LumiABC + LumiD;
   //
   LumiSoftABC = LumiABC;            // needs modification ?
   if(version_.Contains("SoftABC"))  Lumi = LumiSoftABC;
@@ -1185,10 +1185,10 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  //TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update/";
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update3/";
-  TString pathToFileDY    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update4/";
-  TString pathToFileHWW   = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/updateHWW/";
+  //TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update3/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update6/";
+  TString pathToFileDY    = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update4/";
+  TString pathToFileHWW   = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/updateHWW/";
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
   if(RUN.Contains("ABC")) {
@@ -2532,7 +2532,8 @@ void plotMuTau( Int_t mH_           = 120,
             hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
 	    cout<<"QCD in 1jet_high_highhiggs : Ref. yield "<<SSQCDinSignalRegionDATAIncl<<" eff. "<<tmpNormCatSel<<"/"<<tmpNormQCDSel<<"="<<effQCDToCatSel<<" , Total QCD "<<hDataAntiIsoLooseTauIsoQCD->Integral()<<endl;
           }
-	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boost")!=string::npos){
+	  //else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boost")!=string::npos){
+	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boost")!=string::npos){
 	    drawHistogram(sbinaIsoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner);
 	    /* //No need to subtract anyother background contributions, summer recommendation 
@@ -2548,7 +2549,7 @@ void plotMuTau( Int_t mH_           = 120,
 	    */
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
-	  else if(selection_.find("novbfLow")!=string::npos) {
+	  else if(selection_.find("novbfLow")!=string::npos || selection_.find("novbfMedium")!=string::npos ) {
 	    TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
 	    float dummy1 = 0.;      
 	    evaluateQCD(mapAllTrees, version_,analysis_, RUN, hDataAntiIsoLooseTauIso, hCleaner, true, "SS", false, removeMtCut, selection_, 
