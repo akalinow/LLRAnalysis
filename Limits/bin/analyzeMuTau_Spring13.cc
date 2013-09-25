@@ -1191,8 +1191,8 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update6/";
-  TString pathToFileDY    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update6/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update7/";
+  TString pathToFileDY    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update7/";
   TString pathToFileHWW   = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/updateHWW/";
 
   // DATA //
@@ -1492,7 +1492,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut vbfRelaxedTightQCD("nJets20>=2 && pt1>20 && pt2>20 && isVetoInJets!=1 && Mjj>200 && Deta>2 && diTauRecoPt>100");
   TCut vbf;
   if (version_.Contains("OldCat"))  
-    vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1");
+    vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1 && nJets20BTagged<1");
   else{
     vbf = TCut("nJets30>=2 && pt1>30 && pt2>30 && Mjj>500 && Deta>3.5 && isVetoInJets!=1 && nJets20BTagged<1");
     vbf = vbf && !vbfTight;
@@ -1502,12 +1502,12 @@ void plotMuTau( Int_t mH_           = 120,
   TCut vbfRelaxedTightZL("nJets20>=2 && pt1>20 && pt2>20 && isVetoInJets!=1 && Mjj>200 && Deta>2 && diTauRecoPt>100");
 
   TCut vbfLooseQCD("nJets20>=2 && pt1>20 && pt2>20 && isVetoInJets!=1 && Mjj>200 && Deta>2");
-
+  /*
   if(version_.Contains("Soft")) {
     vbfLooseQCD = vbf;
     vbfLoose = vbf;
   }
-
+  */
   TCut vh("pt1>30 && pt2>30 && Mjj>70 && Mjj<120 && diJetPt>150 && MVAvbf<0.80 && nJets20BTagged<1");
   TCut boost("nJets30>0 && pt1>30 && nJets20BTagged<1");
   boost = boost && !vbf /*&& !vh*/;
@@ -1765,8 +1765,8 @@ void plotMuTau( Int_t mH_           = 120,
   float OSWinSignalRegionDATAW3Jets = 0.; float OSWinSignalRegionMCW3Jets = 0.; float OSWinSidebandRegionDATAW3Jets = 0.; float OSWinSidebandRegionMCW3Jets = 0.;
   float extrapFactorWOSWJets  = 0.; 
   float OSWinSignalRegionDATAWJets  = 0.; float OSWinSignalRegionMCWJets  = 0.; float OSWinSidebandRegionDATAWJets  = 0.; float OSWinSidebandRegionMCWJets  = 0.; 
-  float scaleFactorTTOSW3Jets = 0.;
-  float scaleFactorTTOSWJets  = 0.;
+  float scaleFactorTTOSW3Jets = 1.;
+  float scaleFactorTTOSWJets  = 1.;
 
   mapchain::iterator it;
   TString currentName, h1Name;
@@ -1928,13 +1928,18 @@ void plotMuTau( Int_t mH_           = 120,
 	if(currentName.Contains("TTbar")){
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){ 
 	    float NormTTjets = 0.; 
+
 	    if(selection_.find("vbfTight")!=string::npos)
-	      drawHistogram(sbinPresel,vbfRelaxedTight,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets, Error,   Lumi*TTxsectionRatio*scaleFactorTTOSWJets*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      drawHistogram(sbinPresel,vbfRelaxedTight,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets, Error,   Lumi*TTxsectionRatio*scaleFactorTTOSW3Jets*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	    else
-	      drawHistogram(sbinPresel,vbfLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets,     Error,   Lumi*TTxsectionRatio*scaleFactorTTOSWJets*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	      drawHistogram(sbinPresel,vbfLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets,     Error,   Lumi*TTxsectionRatio*scaleFactorTTOSW3Jets*hltEff_/1000., hCleaner, sbinInclusive, 1);
+
 	    hTTb->Add(hCleaner, 1.0);
+	    cout << "--- TTbar shape histogram has Integral=" << hTTb->Integral() << endl;
 	    NormTTjets = 0.;
-	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets,     Error,   Lumi*TTxsectionRatio*scaleFactorTTOSWJets*hltEff_/1000., h1, sbin, 1);
+
+	    drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormTTjets,     Error,   Lumi*TTxsectionRatio*scaleFactorTTOSW3Jets*hltEff_/1000., h1, sbin, 1);
+	    cout << "--- TTbar Norm histogram has Integral=" << h1->Integral() << endl;
 	    hTTb->Scale( hTTb->Integral()!=0 ? h1->Integral()/hTTb->Integral() : 1.0 ); 
 	  } 
 	  else{
@@ -2518,7 +2523,7 @@ void plotMuTau( Int_t mH_           = 120,
 	    hDataAntiIsoLooseTauIsoFullVBF->Add(hCleaner); //ND
 
 	    if(version_.Contains("Soft"))
-	      drawHistogram(sbinaIsoPresel,vbfLooseQCD,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtisoInclusive ,1);
+	      drawHistogram(sbinaIsoLtisoPresel,vbfLooseQCD,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtisoInclusive ,1);
 	    else
 	      drawHistogram(sbinaIsoPresel,vbfLooseQCD,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
 	    hDataAntiIsoLooseTauIsoRelaxVBF->Add(hCleaner); //ND
@@ -2550,6 +2555,12 @@ void plotMuTau( Int_t mH_           = 120,
             hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, (effQCDToCatSel*SSQCDinSignalRegionDATAIncl)/hDataAntiIsoLooseTauIso->Integral());
 	    cout<<"QCD in 1jet_high_highhiggs : Ref. yield "<<SSQCDinSignalRegionDATAIncl<<" eff. "<<tmpNormCatSel<<"/"<<tmpNormQCDSel<<"="<<effQCDToCatSel<<" , Total QCD "<<hDataAntiIsoLooseTauIsoQCD->Integral()<<endl;
           }
+	  //else if(selection_.find("boostHighlowhiggs")!=string::npos || selection_.find("boostMedium")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	  else if(selection_.find("boostHighlowhiggs")!=string::npos || selection_.find("boostHigh")!=string::npos){
+	    drawHistogram(sbinaIsoLtisoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
+            hDataAntiIsoLooseTauIso->Add(hCleaner);
+	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
+	  }
 	  //else if(selection_.find("novbfHigh")!=string::npos || selection_.find("novbfMedium")!=string::npos || selection_.find("boost")!=string::npos){
 	  else if(selection_.find("novbfHigh")!=string::npos || selection_.find("boost")!=string::npos){
 	    drawHistogram(sbinaIsoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
