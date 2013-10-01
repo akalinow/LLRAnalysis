@@ -84,7 +84,7 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& antiele, TCut& lID, TCut& lveto)
+void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& antiele, TCut& lID, TCut& lveto, TCut& svfit)
 {
 
   // Anti-Mu discriminator //
@@ -99,7 +99,6 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
   else if(version_.Contains("AntiEleNewMedium"))   antiele = "tightestAntiEMVA3NewWP>0";
   else if(version_.Contains("AntiEleNewTight"))    antiele = "tightestAntiEMVA3NewWP>1";
   else if(version_.Contains("AntiEleNewVeryTight"))antiele = "tightestAntiEMVA3NewWP>2";
-
 
   //ElectronID
   if(version_.Contains("OldEleID"))  lID = "((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1";
@@ -132,6 +131,13 @@ void chooseSelection(TString version_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCu
     ltiso  = "hpsDB3H<10.0" ;
     mtiso  = "hpsDB3H<5.0" ;
   }
+
+  // SVFit selection cut //
+  if(version_.Contains("SVFit200"))      svfit = "diTauNSVfitMass<200";
+  else if(version_.Contains("200SVFit400")) svfit = "diTauNSVfitMass>200 && diTauNSVfitMass<400";
+  else if(version_.Contains("400SVFit600")) svfit = "diTauNSVfitMass>400 && diTauNSVfitMass<600";
+  else if(version_.Contains("SVFit600")) svfit = "diTauNSVfitMass>600";
+
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void createStringsIsoFakeRate(TString fileName = "FakeRate.root",
@@ -1470,8 +1476,9 @@ void plotElecTau( Int_t mH_           = 120,
   TCut ltiso("tightestHPSMVAWP>-99");
   TCut mtiso("hpsMVA>0.7");
   TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
+  TCut svfit("diTauNSVfitMass>-999"); 
 
-  chooseSelection(version_, tiso, ltiso, mtiso, antimu, antiele, lID, lveto);
+  chooseSelection(version_, tiso, ltiso, mtiso, antimu, antiele, lID, lveto,svfit);
 
    ////// EVENT WISE //////
   TCut SS("diTauCharge!=0");

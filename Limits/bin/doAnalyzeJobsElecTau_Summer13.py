@@ -79,18 +79,21 @@ versionList=[##'AntiMu2_AntiEle2Medium_HPSDB3H',
 
 
     #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_NoWHighStat_MSSM',
-    #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM',
-    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID'
+    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_SVFit200_MSSM',
+    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_200SVFit400_MSSM',
+    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_400SVFit600_MSSM',
+    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_SVFit600_MSSM'
+    #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID'
     #'AntiMu1_HPSDB3H_OldEleID'
              ]
 
 data = 'ABCD'
-#iteration = 'Control'
+iteration = 'Control'
 #iteration = 'ControlZeeSFv2'
 #iteration = 'ControlZeeSFv3'
 #iteration = 'Shift'
 #iteration = 'DatacardsTailFit'
-iteration = 'Datacards_TauPt30New'
+#iteration = 'Datacards_TauPt30New'
 #iteration = 'AntiEControl'
 
 
@@ -100,121 +103,121 @@ for version in versionList:
     
     outputDir = 'Results_'+data+'_'+version+'_'+iteration
 
-    ### Datacards
-    analyze(125,"inclusive"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-##     analyze(125,"bTag"     ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-##     analyze(125,"nobTag"   ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     ### Datacards
+##     analyze(125,"inclusive"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+## ##     analyze(125,"bTag"     ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+## ##     analyze(125,"nobTag"   ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"TauUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"TauDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"JetUp" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"JetDown" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
 
-#VisMass
-    analyze(125,"inclusive"         ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-##     analyze(125,"bTag"     ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-##     analyze(125,"nobTag"   ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+## #VisMass
+##     analyze(125,"inclusive"         ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+## ##     analyze(125,"bTag"     ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+## ##     analyze(125,"nobTag"   ,"nominal" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"TauUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"TauDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
     
-    analyze(125,"inclusive"         ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfLow"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfMedium"       ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"novbfHigh"         ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostLow"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostMedium"       ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighlowhiggs" ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"boostHighhighhiggs","JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbf"               ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"vbfTight"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"inclusive"         ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
 
 
 ##     ##     ##### Datacards MSSM
@@ -305,6 +308,11 @@ for version in versionList:
 ##     analyze(125,"ZeeSel1Prong1Pi0EC"    ,"" ,"diTauNSVfitMass","'SVfit Mass'","GeV"         ,outputDir,-1,0,100 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 
 
+###### TauPt
+    analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+    analyze(125,"bTag"         ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+    analyze(125,"nobTag"       ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+
 ## ##     ##  Control plots MSSM
 ##     analyze(125,"inclusive"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"inclusive"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
@@ -324,9 +332,9 @@ for version in versionList:
 ##     analyze(125,"inclusiveNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"inclusive"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"inclusive"      ,""   ,"diTauVisMass" ,"'Vis mass'","GeV"             ,outputDir,-1,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
-##     analyze(125,"inclusive"      ,""   ,"ptAllB","'All b-jets p_{T}'","GeV"                ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
-##     analyze(125,"inclusive"      ,""   ,"csvAllB","'b-discriminator'","units"              ,outputDir,40,0, 1.,5.0,1.0,0,2.,data, stream, version, useEmb); 
-##     analyze(125,"inclusive"      ,""   ,"ptAll","'Al jets p_{T}'","GeV"                    ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
+##     analyze(125,"inclusive"      ,""   ,"ptAllB","'All b-jets p_{T}'","GeV"            ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
+##     analyze(125,"inclusive"      ,""   ,"csvAllB","'b-discriminator'","units"          ,outputDir,40,0, 1.,5.0,1.0,0,2.,data, stream, version, useEmb); 
+##     analyze(125,"inclusive"      ,""   ,"ptAll","'Al jets p_{T}'","GeV"                ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
 
 ##     analyze(125,"bTag"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"bTag"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
@@ -366,6 +374,139 @@ for version in versionList:
 ##     analyze(125,"nobTag"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"nobTag"      ,""   ,"diTauVisMass" ,"'Vis mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data, stream, version, useEmb);
 
+##     analyze(125,"novbfLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLowNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"novbfMedium"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfMedium"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfMedium"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMediumNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"novbfHigh"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfHigh"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"novbfHigh"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHighNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"boostLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLowNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostLow"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"boostMedium"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostMedium"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostMedium"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMediumNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggsNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggsNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
 ##     analyze(125,"vbf"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"vbf"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"vbf"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
@@ -385,6 +526,37 @@ for version in versionList:
 ##     analyze(125,"vbf"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"vbf"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
 
+##     analyze(125,"vbfTight"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"vbfTight"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb); 
+##     analyze(125,"vbfTight"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTightNoMt","" ,"MtLeg1MVA","'M_{T}(e#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
+
+##     analyze(125,"inclusive"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"novbfHigh"         ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostLow"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostMedium"       ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighlowhiggs" ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"boostHighhighhiggs","JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbf"               ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+##     analyze(125,"vbfTight"          ,"JetUp" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,1.0,1.0,0,1.2,data,stream,version,useEmb);
+
+    
 ##     analyze(125,"novbf"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"novbf"    ,"" ,"ptL1","'e p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"novbf"    ,"" ,"etaL1","'e #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
