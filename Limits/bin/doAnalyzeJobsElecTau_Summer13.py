@@ -79,6 +79,7 @@ versionList=[##'AntiMu2_AntiEle2Medium_HPSDB3H',
 
 
     #'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_NoWHighStat_MSSM',
+    'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_MSSM',
     'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_SVFit200_MSSM',
     'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_200SVFit400_MSSM',
     'AntiMu1_AntiEleNewMedium_HPSDB3H_OldEleID_400SVFit600_MSSM',
