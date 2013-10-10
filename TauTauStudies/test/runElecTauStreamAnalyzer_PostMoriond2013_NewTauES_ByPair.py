@@ -21,7 +21,7 @@ doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 useAntiZee   = True
-useLepTauPAT = Tre
+useLepTauPAT = True
 useMarkov   = False
 
 #if runOnEmbed and runOnMC:

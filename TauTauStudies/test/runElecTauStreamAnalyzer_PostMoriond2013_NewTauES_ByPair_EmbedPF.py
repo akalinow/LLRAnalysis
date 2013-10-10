@@ -14,7 +14,7 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 runOnMC     = False
 runOnEmbed  = True
-embedType   = "RhEmbedEleTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
+embedType   = "PfEmbedEleTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
 applyTauESCorr= False
 doSVFitReco = True
