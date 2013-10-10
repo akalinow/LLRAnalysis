@@ -1,7 +1,7 @@
 ###############################################################################
 ## Pat-tuple for l+tau analysis
 ## 
-## Last modificaion: 10/10/2013 Ivo
+## Last modificaion: 12/02/2013 Michal
 ## TODO: synch tests
 ##
 ##
@@ -16,9 +16,9 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
-runOnMC     = False
-runOnEmbed  = True
-embedType   = "RhEmbedElTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
+runOnMC     = True
+runOnEmbed  = False
+embedType   = "RhEmbedMuTau" #"PfEmbed" or "RhEmbedMuTau" or "RhEmbedElTau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -30,7 +30,7 @@ else:
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 10
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 

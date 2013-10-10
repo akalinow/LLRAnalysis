@@ -1,7 +1,7 @@
 ###############################################################################
 ## Pat-tuple for l+tau analysis
 ## 
-## Last modificaion: 12/02/2013 Michal
+## Last modificaion: 10/10/2013 Ivo
 ## TODO: synch tests
 ##
 ##
@@ -34,7 +34,10 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
-process.source.fileNames = cms.untracked.vstring(
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+    #'file:/data_CMS/cms/ivo/RootFiles/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/tautauSkimmAOD_99_1_sTF.root'
+    'file:/data_CMS/cms/ivo/RootFiles/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/tautauSkimmAOD_6_1_7nf.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/FE414F4B-F6D2-E111-A4E9-003048674048.root' #12.5k
     #'file:/data_CMS/cms/anayak/HTauTauSynchronization/8TeV/53X/VBF_HToTauTau_M-125_8TeV-powheg-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-1200542B-D9ED-E111-B708-00237DA1A548.root' #7k
     #'file:/data_CMS/cms/mbluj/Production/test/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FE4F82A9-68F3-E111-8CD3-003048D476AE.root' #13k
@@ -42,8 +45,17 @@ process.source.fileNames = cms.untracked.vstring(
     #'file:/data_CMS/cms/mbluj/Production/test/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FED775BD-B8E1-E111-8ED5-003048C69036.root' #11k
     #'file:/data_CMS/cms/mbluj/Production/test/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FC3ED802-E606-E211-A0FD-0025B31E330A.root' #9k
     #'file:/data_CMS/cms/mbluj/Production/HToTauTau/simDYmumu_embedded_mutau_2013Feb21_AOD.root'
-    '/store/results/higgs/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/DoubleMuParked/USER/StoreResults-Run2012B_22Jan2013_v1_RHembedded_trans1_tau116_ptmu1_16had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/0000/00F466CB-9EB0-E211-B414-0023AEFDE9B8.root'
+    ),
+    dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
+    inputCommands=cms.untracked.vstring(
+        'keep *',
+        'drop patTaus_selectedHltPatTaus__AODSkimm',
+        'drop *PFTau*_*_*_*'
     )
+)
+
+
+#process.add_(cms.Service("PrintLoadingPlugins"))
 
 #process.source.eventsToProcess = cms.untracked.VEventRange(
 #    '1:751063'
@@ -183,15 +195,15 @@ process.load("LLRAnalysis.TauTauStudies.emulateHLTPFTau_cff")
 process.pseudoMuTauETMtriggerSequence = cms.Sequence(
     #process.HLTFilterSingleMu+
     #process.goodL1Mu7er+
-    process.goodL1ETM20+
-    process.hltPFTauSequence
+    process.goodL1ETM20#+
+    #process.hltPFTauSequence
     #+process.hltPFTauFilterSeqence
     )
 process.pseudoEleTauETMtriggerSequence = cms.Sequence(
     #process.HLTFilterSingleEle+
     #process.goodL1IsoEG12er+
-    process.goodL1ETM30+
-    process.hltPFTauSequence
+    process.goodL1ETM30#+
+    #process.hltPFTauSequence
     #+process.hltPFTauFilterSeqence
     )
 
@@ -213,9 +225,11 @@ process.load("LLRAnalysis.TauTauStudies.sumCaloTowersInEtaSlices_cfi")
 #Add process.sumCaloTowersInEtaSlicesNoHF to cms path
 ################### bTag ##############################
 
+process.load('RecoBTag.Configuration.RecoBTag_cff')
+process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
 if runOnEmbed:
-    process.load('RecoBTag.Configuration.RecoBTag_cff')
-    process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
+    #process.load('RecoBTag.Configuration.RecoBTag_cff')
+    #process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
     process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
     if "PfEmbed" in embedType:
         process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
@@ -662,7 +676,8 @@ process.tauPtEtaID  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEta.cut.value()+
-                     " && tauID('decayModeFinding')>0.5"+
+                     ##" && tauID('decayModeFinding')>0.5"+
+                     " && (tauID('decayModeFindingNewDMs')>0.5 | tauID('decayModeFindingOldDMs')>0.5)"+ ## IN newTauID
                      " && abs(userFloat('dzWrtPV'))<0.2"),
     filter = cms.bool(False)
     )
@@ -670,7 +685,8 @@ process.tausForVeto  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
-                     " && pt>20 && (tauID('byLooseIsolationMVA2')>0.5||tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits')>0.5)"),
+                     " && pt>20 && (tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5)"), ##IN newTauID
+                     ##" && pt>20 && (tauID('byLooseIsolationMVA2')>0.5||tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits')>0.5)"),
     filter = cms.bool(False)
     )
 
@@ -689,7 +705,8 @@ process.tauPtEtaIDAgMu  = cms.EDFilter(
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
                      #" && tauID('againstMuonTight')>0.5"),
-                     " && ( tauID('againstMuonTight')>0.5 || tauID('againstMuonTight2')>0.5 )"),
+                     ##" && ( tauID('againstMuonTight')>0.5 || tauID('againstMuonTight2')>0.5 )"),
+                     " && ( tauID('againstMuonLoose3')>0.5 || tauID('againstMuonLooseMVA')>0.5)"),### IN NewTauID
     filter = cms.bool(False)
     )
 
@@ -706,7 +723,8 @@ process.tauPtEtaIDAgMuAgElec  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaIDAgMu.cut.value()+
-                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronLooseMVA3')>0.5 )"),
+                     ##" && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronLooseMVA3')>0.5 )"),
+                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"),## IN NewTauID
     filter = cms.bool(False)
     )
 
@@ -724,7 +742,8 @@ process.tauPtEtaIDAgMuAgElecRelIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaIDAgMuAgElec.cut.value()+
-                     " && tauID('byVLooseCombinedIsolationDeltaBetaCorr')>0.5"),
+                     ##" && tauID('byVLooseCombinedIsolationDeltaBetaCorr')>0.5"),
+                     " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"),## IN NewTauID
     filter = cms.bool(False)
     )
 
@@ -886,7 +905,8 @@ process.tauPtEtaIDAgMuL  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaID.cut.value()+
-                     " && ( tauID('againstMuonLoose')>0.5 || tauID('againstMuonLoose2')>0.5 )"),
+                     ##" && ( tauID('againstMuonLoose')>0.5 || tauID('againstMuonLoose2')>0.5 )"),
+                     " && ( tauID('againstMuonLoose3')>0.5 || tauID('againstMuonLooseMVA')>0.5)"),### IN NewTauID
     filter = cms.bool(False)
     )
 
@@ -905,7 +925,8 @@ process.tauPtEtaIDAgMuLAgElec  = cms.EDFilter(
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaIDAgMuL.cut.value()+
                      #" && tauID('againstElectronLoose')>0.5"),
-                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronLooseMVA3')>0.5 )"),
+                     ##" && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronLooseMVA5')>0.5 )"),
+                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"),## IN NewTauID
     filter = cms.bool(False)
     )
     
@@ -923,7 +944,8 @@ process.tauPtEtaIDAgMuLAgElecRelIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("selectedPatTausUserEmbedded"),
     cut = cms.string(process.tauPtEtaIDAgMuLAgElec.cut.value()+
-                     " && tauID('byVLooseCombinedIsolationDeltaBetaCorr')>0.5"),
+                     ##" && tauID('byVLooseCombinedIsolationDeltaBetaCorr')>0.5"),
+                     " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"),## IN NewTauID
     filter = cms.bool(False)
     )
 
@@ -1036,7 +1058,7 @@ process.commonOfflineSequence = cms.Sequence(
     process.patLeptonsUserEmbeddedSequnce*
     process.looseLeptonsSequence*
     process.leptonsForVetoSequence
-    +process.hltPFTauSequence
+    #+process.hltPFTauSequence
     )
 
 process.skimMuTau1 = cms.Sequence(
@@ -1288,7 +1310,7 @@ process.out.fileName = cms.untracked.string('patTuples_LepTauStream.root')
 
 process.outpath = cms.EndPath(process.out)
 
-###MB FIXME: do we really need the following??
+####MB FIXME: do we really need the following??
 #processDumpFile = open('patTuplePATSkimLepTauStream.dump', 'w')
 #print >> processDumpFile, process.dumpPython()
 

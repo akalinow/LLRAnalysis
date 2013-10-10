@@ -1,7 +1,7 @@
 ###############################################################################
 ## Pat-tuple for l+tau analysis
 ## 
-## Last modificaion: 12/02/2013 Michal
+## Last modificaion: 10/10/2013 Ivo
 ## TODO: synch tests
 ##
 ##
