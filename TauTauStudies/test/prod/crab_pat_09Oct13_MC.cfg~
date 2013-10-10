@@ -1,0 +1,46 @@
+[CMSSW]
+#dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+
+#datasetpath=/TauPlusX/Run2012D-PromptReco-v1/AOD
+#lumi_mask=/data_CMS/cms/htautau/JSON/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+#runselection = 160329-161313
+
+pset = ../../../patTuple_PAT_SkimLepTauStream_MC.py
+
+#total_number_of_lumis=-1
+#lumis_per_job=150
+
+output_file=skimLepTauStream.root, patTuples_LepTauStream.root
+
+[USER]
+return_data=0
+copy_data=1
+#storage_element=T2_FR_GRIF_LLR
+#ui_working_dir=/home/llr/cms/ndaci/CRABBY/HTauTau/Analysis/MuTau/TauPlusX2012B_Skim_PAT/
+#user_remote_dir=HTauTau/Analysis/MuTau/TauPlusX2012A_Skim_PAT/
+#storage_path=/dpm/in2p3.fr/home/cms/trivcat/store/user/...
+
+publish_data=1
+#publish_data_name = HTT_PAT_EleTau_20Jan2013_DATA_2012D
+dbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet
+
+[CRAB]
+jobtype = cmssw
+scheduler = remoteGlidein
+#scheduler = glite
+#server_name = in2p3
+use_server = 0
+
+[GRID]
+#rb=CERN
+#wms_service=https://grid25.lal.in2p3.fr:7443/glite_wms_wmproxy_server
+#wms_service=https://grid007.lal.in2p3.fr:7443/glite_wms_wmproxy_server
+#wms_service=https://node04.datagrid.cea.fr:7443/glite_wms_wmproxy_server
+#ce_white_list= polgrid1.in2p3.fr
+#se_white_list=node12.datagrid.cea.fr 
+#dont_check_proxy= 1 
+#user has to take care of the proxy.
+#virtual_organization= vo.llr.in2p3.fr 
+#ce_white_list= srm-cms.cern.ch,ccsrm.in2p3.fr,caf.cern.ch
+#ce_black_list=heplnx206.pp.rl.ac.uk

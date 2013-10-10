@@ -1,0 +1,92 @@
+[MULTICRAB]
+cfg=crab_pat_06Mar13_embed_mutau.cfg
+
+[COMMON]
+USER.storage_element = T2_FR_GRIF_LLR
+CMSSW.lumi_mask      = ../../../../../Utilities/data/jsons/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt
+#GRID.se_black_list=T2_EE_Estonia
+
+############################################
+## 2012 D ReReco22Jan : low pT restricted ##
+############################################
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p1]    
+## lumi=762.743/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 203773-204566
+CMSSW.total_number_of_lumis = -1  
+CMSSW.lumis_per_job = 20
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p1
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p2]     
+## lumi=1,067/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 204567-205617
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 20    
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p2
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p3]     
+## lumi=677.889/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 205618-206097
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 15    
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p3
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p4]     
+## lumi=1,198/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 206098-206538
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 20    
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p4
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p5]     
+## lumi=798.245/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 206539-206939
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 15
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p5
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p6]     
+## lumi=949.416/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 206940-207468
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 20    
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p6
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p7]     
+## lumi=531.597/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 207469-207897
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 15
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p7
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p8]     
+## lumi=603.725/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER 
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 207898-208356
+CMSSW.total_number_of_lumis = -1    
+CMSSW.lumis_per_job = 15
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p8
+
+[EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p9]
+## lumi=179.503/pb
+CMSSW.datasetpath= /DoubleMuParked/aburgmei-Run2012D_22Jan2013_v1_NoMuRadCorr_RHembedded_trans1_tau116_ptmu1_7to25had1_15_v3-f456bdbb960236e5c696adfe9b04eaae/USER
+#CMSSW.lumi_mask=../../../Utilities/data/jsons/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt
+CMSSW.runselection = 208357-208686
+CMSSW.total_number_of_lumis = -1
+CMSSW.lumis_per_job = 15
+USER.publish_data_name = EmbedLowPt_mutau_2012D_ReReco22Jan_HTT_17Jul13_PAT_v6_p9

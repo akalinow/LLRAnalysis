@@ -1,0 +1,349 @@
+# section for multicrab: now has just the template crab.cfg, but more
+# keys might appear in the future
+[MULTICRAB]
+cfg=crab_pat_06Mar13_MC.cfg
+
+[COMMON]
+USER.storage_element = T2_FR_GRIF_LLR
+#USER.storage_element = T2_FR_GRIF_IRFU
+#USER.user_remote_dir = 
+#USER.publish_data_name = LepTauTrg-Skim_AOD_22Nov2012
+#USER.publish_data_name = HTT_MSSM_PAT_03Jul2013_v4
+
+# MSSM Signal ######
+
+[SUSYGGH80-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-80_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH80-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH90-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-90_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH90-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH100-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-100_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH100-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH110-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-110_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH110-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH120-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-120_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH120-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH130-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-130_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH130-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH140-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-140_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH140-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH160-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-160_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH160-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH180-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-180_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH180-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH200-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-200_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH200-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH250-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-250_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH250-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH300-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH300-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH350-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-350_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH350-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH400-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-400_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH400-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH450-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-450_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH450-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH500-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-500_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH500-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH600-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-600_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH600-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH700-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-700_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH700-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH800-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-800_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH800-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH900-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-900_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH900-MC_HTT_05July2013_PAT_v4
+
+[SUSYGGH1000-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYGluGluToHToTauTau_M-1000_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYGGH1000-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH80-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-80_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH80-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH90-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-90_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH90-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH100-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-100_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH100-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH110-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-110_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH110-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH120-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-120_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH120-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH130-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-130_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH130-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH140-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-140_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH140-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH160-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-160_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH160-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH180-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-180_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH180-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH200-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-200_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH200-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH250-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-250_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH250-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH300-MC_HTT_05July2013_PAT_v4]
+#sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH300-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH350-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-350_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH350-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH400-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-400_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH400-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH450-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-450_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH450-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH500-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-500_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH500-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH600-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-600_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH600-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH700-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-700_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH700-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH800-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-800_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH800-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH900-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-900_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH900-MC_HTT_05July2013_PAT_v4
+
+[SUSYBBH1000-MC_HTT_05July2013_PAT_v4]
+# sigma
+CMSSW.datasetpath=/SUSYBBHToTauTau_M-1000_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 2000
+#CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+USER.publish_data_name = SUSYBBH1000-MC_HTT_05July2013_PAT_v4

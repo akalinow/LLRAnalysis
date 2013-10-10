@@ -1,0 +1,84 @@
+[MULTICRAB]
+cfg=crab_pat_06Mar13_MC.cfg
+
+[COMMON]
+###USER.storage_element = T2_PL_Warsaw
+#USER.storage_element = T2_FR_GRIF_LLR
+USER.storage_element = T2_FR_GRIF_IRFU
+CMSSW.dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+GRID.ce_black_list=T2_US_Florida,T2_US_Nebraska
+
+
+########################
+## EXCLUSIVE DY+NJETS ##
+########################
+
+[DY1JetsToLL_MC_Bkg_HTT_30May2013_PAT_v3]
+## sigma 
+CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+CMSSW.datasetpath= /DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 15000
+USER.publish_data_name = DY1JetsToLL_MC_Bkg_HTT_30May2013_PAT_v3
+
+[DY2JetsToLL_MC_Bkg_HTT_30May2013_PAT_v3]
+## sigma 
+CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+CMSSW.datasetpath= /DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 15000
+USER.publish_data_name = DY2JetsToLL_MC_Bkg_HTT_30May2013_PAT_v3
+
+#[DY3JetsToLL_MC_Bkg_HTT_30May2013_PAT_v2]
+## sigma 
+#CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+#CMSSW.datasetpath=  /DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM 
+#CMSSW.total_number_of_events= -1
+#CMSSW.events_per_job = 7000
+#USER.publish_data_name = DY3JetsToLL_MC_Bkg_HTT_30May2013_PAT_v2
+
+#[DY4JetsToLL_MC_Bkg_HTT_30May2013_PAT_v2]
+### sigma 
+#CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+#CMSSW.datasetpath=   /DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+#CMSSW.total_number_of_events= -1
+#CMSSW.events_per_job = 7000
+#USER.publish_data_name = DY4JetsToLL_MC_Bkg_HTT_30May2013_PAT_v2
+
+
+#######################
+## EXCLUSIVE W+NJETS ##
+#######################
+
+#[W1Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2]
+##sigma 
+#CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+#CMSSW.datasetpath=/W1JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+#CMSSW.total_number_of_events= -1
+#CMSSW.events_per_job = 50000
+#USER.publish_data_name = W1Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2
+
+[W2Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v3]
+##sigma 
+CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+CMSSW.datasetpath=/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 20000
+USER.publish_data_name = W2Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v3
+
+#[W3Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2]
+##sigma 
+#CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+#CMSSW.datasetpath=/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+#CMSSW.total_number_of_events= -1
+#CMSSW.events_per_job = 40000
+#USER.publish_data_name = W3Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2
+
+#[W4Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2]
+###sigma 
+#CMSSW.dbs_url=http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet
+#CMSSW.datasetpath=/W4JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
+#CMSSW.total_number_of_events= -1
+#CMSSW.events_per_job = 7000
+#USER.publish_data_name = W4Jets-madgraph-PUS10_MC_Bkg_HTT_30May2013_PAT_v2
+
