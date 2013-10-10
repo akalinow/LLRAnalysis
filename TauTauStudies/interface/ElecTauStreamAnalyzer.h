@@ -12,7 +12,6 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 
 #include "FWCore/ParameterSet/interface/FileInPath.h"
-//#include "LLRAnalysis/Utilities/interface/AntiElectronIDMVA.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 
@@ -80,7 +79,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
-  bool doIsoMVAOrdering_;
+  bool doIsoOrdering_;
 
   std::vector< double >* jetsBtagHE_;
   std::vector< double >* jetsBtagHP_;
@@ -211,7 +210,9 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float emFraction_;
   float hasGsf_;
 
+  //EleID
   int tightestCutBasedWP_;
+  int tightestCiCWP_;
   int tightestMVAWP_;
   float mvaPOGTrig_;
   float mvaPOGTrigNoIP_;
@@ -221,23 +222,33 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float mitMVA_;
   int antiConv_;
   int isTriggerElectron_;
-  int tightestAntiEWP_;
-  int tightestAntiEMVAWP_;
-  int tightestAntiEMVA3WP_;
-  float AntiEMVA3raw_;
-  int AntiEMVA3category_;
+
+  //TauID
+  int decayModeFinding_;
+  int decayModeFindingNewDM_;
+  int decayModeFindingOldDM_;
+  int AntiEDeadEcal_;
   int tightestAntiECutWP_;
+  int tightestAntiEMVA5WP_;
+  float AntiEMVA5raw_;
+  int AntiEMVA5category_;
   int tightestAntiMuWP_;
   int tightestAntiMu2WP_;
-  int tightestCiCWP_;
-  int tightestHPSWP_;
+  int tightestAntiMu3WP_;
+  int tightestAntiMuMVAWP_;
+  float AntiMuMVAraw_;
   int tightestHPSDBWP_;
   int tightestHPSDB3HWP_;
-  int tightestHPSMVAWP_;
-  int tightestHPSMVA2WP_;
-  float hpsMVA_;
-  float hpsMVA2_;
   float hpsDB3H_;
+  int tightestHPSMVA3newDMwLTWP_;
+  float hpsMVA3newDMwLT_;
+  int tightestHPSMVA3newDMwoLTWP_;
+  float hpsMVA3newDMwoLT_;
+  int tightestHPSMVA3oldDMwLTWP_;
+  float hpsMVA3oldDMwLT_;
+  int tightestHPSMVA3oldDMwoLTWP_;
+  float hpsMVA3oldDMwoLT_;
+
   int isTauLegMatched_;
   int isElecLegMatched_;
   int elecFlag_, elecFlagSoft_;
@@ -286,15 +297,6 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float mcPUweight_;
 
   std::map<std::string,float> calcLikelihoodVariables(const pat::Jet *jet, edm::Handle<reco::VertexCollection> vC, std::string type);
-
-  //AntiElectronIDMVA* antiE_;
-  //edm::FileInPath inputFileNameX0BL_;
-  //edm::FileInPath inputFileName11BL_;
-  //edm::FileInPath inputFileName01BL_;
-  //edm::FileInPath inputFileNameX0EC_;
-  //edm::FileInPath inputFileName11EC_;
-  //edm::FileInPath inputFileName01EC_;
-  //float mvaAntiE_;
 
   bool doElecIsoMVA_;
   float isoLeg1MVA_;

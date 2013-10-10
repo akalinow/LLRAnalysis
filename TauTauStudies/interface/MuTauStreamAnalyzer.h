@@ -79,7 +79,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float minCorrPt_;
   float minJetID_;
   float deltaRLegJet_;
-  bool doIsoMVAOrdering_;
+  bool doIsoOrdering_;
 
   std::vector< double >* jetsBtagHE_;
   std::vector< double >* jetsBtagHP_;
@@ -137,8 +137,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* pfMuons_; 
   std::vector<int>* vetoElectronsID_;
 
-  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* trgTaus_;
-  std::vector<int>* trgTauId_;
+/*   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* trgTaus_; */
+/*   std::vector<int>* trgTauId_; */
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* l1Muons_;
 
   unsigned long run_,event_,lumi_;
@@ -206,20 +206,32 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float emFraction_;
   float hasGsf_;
 
-  int tightestHPSWP_;
+  //TauID
+  int decayModeFinding_;
+  int decayModeFindingNewDM_;
+  int decayModeFindingOldDM_;
+  int AntiEDeadEcal_;
+  int tightestAntiECutWP_;
+  int tightestAntiEMVA5WP_;
+  float AntiEMVA5raw_;
+  int AntiEMVA5category_;
+  int tightestAntiMuWP_;
+  int tightestAntiMu2WP_;
+  int tightestAntiMu3WP_;
+  int tightestAntiMuMVAWP_;
+  float AntiMuMVAraw_;
   int tightestHPSDBWP_;
   int tightestHPSDB3HWP_;
-  int tightestHPSMVAWP_;
-  int tightestHPSMVA2WP_;
-  int tightestAntiECutWP_; 
-  int tightestAntiEMVA3WP_; 
-  float AntiEMVA3raw_; 
-  int AntiEMVA3category_; 
-  int tightestAntiMuWP_; 
-  int tightestAntiMu2WP_;
-  float hpsMVA_;
-  float hpsMVA2_;
   float hpsDB3H_;
+  int tightestHPSMVA3newDMwLTWP_;
+  float hpsMVA3newDMwLT_;
+  int tightestHPSMVA3newDMwoLTWP_;
+  float hpsMVA3newDMwoLT_;
+  int tightestHPSMVA3oldDMwLTWP_;
+  float hpsMVA3oldDMwLT_;
+  int tightestHPSMVA3oldDMwoLTWP_;
+  float hpsMVA3oldDMwoLT_;
+
   int isTauLegMatched_;
   int isMuLegMatched_;
   int muFlag_, muFlagSoft_;

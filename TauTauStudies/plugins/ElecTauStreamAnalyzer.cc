@@ -135,7 +135,7 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
-  doIsoMVAOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoMVAOrdering", false);
+  doIsoOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoOrdering", false);
   
   doElecIsoMVA_      = iConfig.getUntrackedParameter<bool>("doElecIsoMVA", false);
 //  if( doElecIsoMVA_ ){
@@ -514,7 +514,6 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("hpsMVA3oldDMwLT",&hpsMVA3oldDMwLT_,"hpsMVA3oldDMwLT/F");
   tree_->Branch("tightestHPSMVA3oldDMwoLTWP",&tightestHPSMVA3oldDMwoLTWP_,"tightestHPSMVA3oldDMwoLTWP/I");
   tree_->Branch("hpsMVA3oldDMwoLT",&hpsMVA3oldDMwoLT_,"hpsMVA3oldDMwoLT/F");
-
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
   tree_->Branch("visibleGenTauMass",&visibleGenTauMass_,"visibleGenTauMass/F");
 
@@ -1328,9 +1327,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-    float isoMVA = ((*diTaus)[i].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+    float isoTau = ((*diTaus)[i].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
     float isoEle = ((*diTaus)[i].leg1())->userFloat("PFRelIsoDB04v3");
-    float sortVariable = (doIsoMVAOrdering_) ? (isoMVA-isoEle) : sumPt;
+    float sortVariable = (doIsoOrdering_) ? (isoTau-isoEle) : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
        //tau_i->tauID("byLooseIsolationMVA")>0.5 )
@@ -1788,52 +1787,93 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     emFraction_ = leg2->emFraction();
     hasGsf_     = ((leg2->leadPFChargedHadrCand())->gsfTrackRef()).isNonnull() ? 1. : 0.;
     
+    //TauID
+    decayModeFinding_ = leg2->tauID("decayModeFinding");
+    decayModeFindingNewDM_ = leg2->tauID("decayModeFindingNewDMs");
+    decayModeFindingOldDM_ = leg2->tauID("decayModeFindingOldDMs");
+
     tightestHPSDBWP_ = -1;
-    if(leg2->tauID("byVLooseCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_++;
-    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
-    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_++;
-    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
+    if(leg2->tauID("byVLooseCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_=0;
+    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_=1;
+    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_=2;
+    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_=3;
     tightestHPSDB3HWP_ = -1; 
-    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++; 
-    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5) tightestHPSDB3HWP_++; 
-    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++;
+    if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_=0; 
+    if(leg2->tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")>0.5) tightestHPSDB3HWP_=1; 
+    if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_=2;
     hpsDB3H_  = leg2->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
 
     tightestHPSMVA3newDMwLTWP_ = -1;
-    if(leg2->tauID("byVLooseIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
-    if(leg2->tauID("byLooseIsolationMVA3newDMwLT")>0.5)   tightestHPSMVA3newDMwLTWP_++;
-    if(leg2->tauID("byMediumIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
-    if(leg2->tauID("byTightIsolationMVA3newDMwLT") >0.5)  tightestHPSMVA3newDMwLTWP_++;
-    if(leg2->tauID("byVTightIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
-    if(leg2->tauID("byVVTightIsolationMVA3newDMwLT") >0.5)tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byVLooseIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_=0;
+    if(leg2->tauID("byLooseIsolationMVA3newDMwLT")>0.5)   tightestHPSMVA3newDMwLTWP_=1;
+    if(leg2->tauID("byMediumIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_=2;
+    if(leg2->tauID("byTightIsolationMVA3newDMwLT") >0.5)  tightestHPSMVA3newDMwLTWP_=3;
+    if(leg2->tauID("byVTightIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_=4;
+    if(leg2->tauID("byVVTightIsolationMVA3newDMwLT") >0.5)tightestHPSMVA3newDMwLTWP_=5;
     hpsMVA3newDMwLT_  = leg2->tauID("byIsolationMVA3newDMwLTraw");
 
     tightestHPSMVA3newDMwoLTWP_ = -1;
-    if(leg2->tauID("byVLooseIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
-    if(leg2->tauID("byLooseIsolationMVA3newDMwoLT")>0.5)   tightestHPSMVA3newDMwoLTWP_++;
-    if(leg2->tauID("byMediumIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
-    if(leg2->tauID("byTightIsolationMVA3newDMwoLT") >0.5)  tightestHPSMVA3newDMwoLTWP_++;
-    if(leg2->tauID("byVTightIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
-    if(leg2->tauID("byVVTightIsolationMVA3newDMwoLT") >0.5)tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byVLooseIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_=0;
+    if(leg2->tauID("byLooseIsolationMVA3newDMwoLT")>0.5)   tightestHPSMVA3newDMwoLTWP_=1;
+    if(leg2->tauID("byMediumIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_=2;
+    if(leg2->tauID("byTightIsolationMVA3newDMwoLT") >0.5)  tightestHPSMVA3newDMwoLTWP_=3;
+    if(leg2->tauID("byVTightIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_=4;
+    if(leg2->tauID("byVVTightIsolationMVA3newDMwoLT") >0.5)tightestHPSMVA3newDMwoLTWP_=5;
     hpsMVA3newDMwoLT_  = leg2->tauID("byIsolationMVA3newDMwoLTraw");
 
     tightestHPSMVA3oldDMwLTWP_ = -1;
-    if(leg2->tauID("byVLooseIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
-    if(leg2->tauID("byLooseIsolationMVA3oldDMwLT")>0.5)   tightestHPSMVA3oldDMwLTWP_++;
-    if(leg2->tauID("byMediumIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
-    if(leg2->tauID("byTightIsolationMVA3oldDMwLT") >0.5)  tightestHPSMVA3oldDMwLTWP_++;
-    if(leg2->tauID("byVTightIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
-    if(leg2->tauID("byVVTightIsolationMVA3oldDMwLT") >0.5)tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byVLooseIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_=0;
+    if(leg2->tauID("byLooseIsolationMVA3oldDMwLT")>0.5)   tightestHPSMVA3oldDMwLTWP_=1;
+    if(leg2->tauID("byMediumIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_=2;
+    if(leg2->tauID("byTightIsolationMVA3oldDMwLT") >0.5)  tightestHPSMVA3oldDMwLTWP_=3;
+    if(leg2->tauID("byVTightIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_=4;
+    if(leg2->tauID("byVVTightIsolationMVA3oldDMwLT") >0.5)tightestHPSMVA3oldDMwLTWP_=5;
     hpsMVA3oldDMwLT_  = leg2->tauID("byIsolationMVA3oldDMwLTraw");
 
     tightestHPSMVA3oldDMwoLTWP_ = -1;
-    if(leg2->tauID("byVLooseIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
-    if(leg2->tauID("byLooseIsolationMVA3oldDMwoLT")>0.5)   tightestHPSMVA3oldDMwoLTWP_++;
-    if(leg2->tauID("byMediumIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
-    if(leg2->tauID("byTightIsolationMVA3oldDMwoLT") >0.5)  tightestHPSMVA3oldDMwoLTWP_++;
-    if(leg2->tauID("byVTightIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
-    if(leg2->tauID("byVVTightIsolationMVA3oldDMwoLT") >0.5)tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byVLooseIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_=0;
+    if(leg2->tauID("byLooseIsolationMVA3oldDMwoLT")>0.5)   tightestHPSMVA3oldDMwoLTWP_=1;
+    if(leg2->tauID("byMediumIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_=2;
+    if(leg2->tauID("byTightIsolationMVA3oldDMwoLT") >0.5)  tightestHPSMVA3oldDMwoLTWP_=3;
+    if(leg2->tauID("byVTightIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_=4;
+    if(leg2->tauID("byVVTightIsolationMVA3oldDMwoLT") >0.5)tightestHPSMVA3oldDMwoLTWP_=5;
     hpsMVA3oldDMwoLT_  = leg2->tauID("byIsolationMVA3oldDMwoLTraw");
+
+    tightestAntiMuWP_ = 0; 
+    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
+    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 
+    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3; 
+
+    tightestAntiMu2WP_ = 0;   
+    if( leg2->tauID("againstMuonLoose2")>0.5 )tightestAntiMu2WP_ = 1;   
+    if( leg2->tauID("againstMuonMedium2")>0.5 )tightestAntiMu2WP_ = 2;   
+    if( leg2->tauID("againstMuonTight2")>0.5 )tightestAntiMu2WP_ = 3;   
+
+    tightestAntiMu3WP_ = 0;   
+    if( leg2->tauID("againstMuonLoose3")>0.5 )tightestAntiMu3WP_ = 1;   
+    if( leg2->tauID("againstMuonTight3")>0.5 )tightestAntiMu3WP_ = 2;   
+
+    tightestAntiMuMVAWP_ = 0;   
+    if( leg2->tauID("againstMuonLooseMVA")>0.5 )tightestAntiMuMVAWP_ = 1;   
+    if( leg2->tauID("againstMuonMediumMVA")>0.5 )tightestAntiMuMVAWP_ = 2;   
+    if( leg2->tauID("againstMuonTightMVA")>0.5 )tightestAntiMuMVAWP_ = 3;   
+    AntiMuMVAraw_ = leg2->tauID("againstMuonMVAraw");   
+
+    tightestAntiECutWP_ = 0;
+    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;
+    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;
+    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;
+
+    AntiEDeadEcal_ = leg2->tauID("againstElectronDeadECAL");
+
+    tightestAntiEMVA5WP_ = 0;
+    if( leg2->tauID("againstElectronVLooseMVA5")>0.5) tightestAntiEMVA5WP_  = 1;
+    if( leg2->tauID("againstElectronLooseMVA5")>0.5)  tightestAntiEMVA5WP_  = 2;
+    if( leg2->tauID("againstElectronMediumMVA5")>0.5) tightestAntiEMVA5WP_  = 3;
+    if( leg2->tauID("againstElectronTightMVA5")>0.5)  tightestAntiEMVA5WP_  = 4;
+    if( leg2->tauID("againstElectronVTightMVA5")>0.5) tightestAntiEMVA5WP_  = 5;
+    AntiEMVA5raw_ = leg2->tauID("againstElectronMVA5raw");
+    AntiEMVA5category_ = leg2->tauID("againstElectronMVA5category");
 
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
     pfJetEtaMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->etaetaMoment() : -99;
@@ -2119,47 +2159,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGTrigNoIP")>0.925); 
     if(passesMVAPOGTrigNoIP) tightestMVAPOGTrigNoIPWP_ = 1;
 
-    //TauID
-    decayModeFinding_ = leg2->tauID("decayModeFinding");
-    decayModeFindingNewDM_ = leg2->tauID("decayModeFindingNewDMs");
-    decayModeFindingOldDM_ = leg2->tauID("decayModeFindingOldDMs");
-
-    tightestAntiMuWP_ = 0; 
-    if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
-    if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 
-    if( leg2->tauID("againstMuonTight")>0.5 )tightestAntiMuWP_ = 3; 
-
-    tightestAntiMu2WP_ = 0;   
-    if( leg2->tauID("againstMuonLoose2")>0.5 )tightestAntiMu2WP_ = 1;   
-    if( leg2->tauID("againstMuonMedium2")>0.5 )tightestAntiMu2WP_ = 2;   
-    if( leg2->tauID("againstMuonTight2")>0.5 )tightestAntiMu2WP_ = 3;   
-
-    tightestAntiMu3WP_ = 0;   
-    if( leg2->tauID("againstMuonLoose3")>0.5 )tightestAntiMu3WP_ = 1;   
-    if( leg2->tauID("againstMuonTight3")>0.5 )tightestAntiMu3WP_ = 2;   
-
-    tightestAntiMuMVAWP_ = 0;   
-    if( leg2->tauID("againstMuonLooseMVA")>0.5 )tightestAntiMuMVAWP_ = 1;   
-    if( leg2->tauID("againstMuonMediumMVA")>0.5 )tightestAntiMuMVAWP_ = 2;   
-    if( leg2->tauID("againstMuonTightMVA")>0.5 )tightestAntiMuMVAWP_ = 3;   
-    AntiMuMVAraw_ = leg2->tauID("againstMuonMVAraw");   
-
-    tightestAntiECutWP_ = 0;
-    if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;
-    if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;
-    if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;
-
-    AntiEDeadEcal_ = leg2->tauID("againstElectronDeadECAL");
-
-    tightestAntiEMVA5WP_ = 0;
-    if( leg2->tauID("againstElectronVLooseMVA5")>0.5) tightestAntiEMVA5WP_  = 1;
-    if( leg2->tauID("againstElectronLooseMVA5")>0.5)  tightestAntiEMVA5WP_  = 2;
-    if( leg2->tauID("againstElectronMediumMVA5")>0.5) tightestAntiEMVA5WP_  = 3;
-    if( leg2->tauID("againstElectronTightMVA5")>0.5)  tightestAntiEMVA5WP_  = 4;
-    if( leg2->tauID("againstElectronVTightMVA5")>0.5) tightestAntiEMVA5WP_  = 5;
-    AntiEMVA5raw_ = leg2->tauID("againstElectronMVA5raw");
-    AntiEMVA5category_ = leg2->tauID("againstElectronMVA5category");
-    
     diTauVisP4_->push_back( theDiTau->p4Vis() );
     diTauCAP4_->push_back(  theDiTau->p4CollinearApprox() );
     diTauICAP4_->push_back( theDiTau->p4ImprovedCollinearApprox() );
