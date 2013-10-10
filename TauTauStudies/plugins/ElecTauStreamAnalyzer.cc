@@ -220,22 +220,12 @@ void ElecTauStreamAnalyzer::beginJob(){
   pfElectrons_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   vetoElectronsID_    = new std::vector< int >();
 
-  trgTaus_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
-  trgTauId_= new std::vector< int >();
+//   trgTaus_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+//   trgTauId_= new std::vector< int >();
   l1IsoElectrons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   l1NoIsoElectrons_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
   embeddingWeights_ = new std::vector< double >();
-
-  //antiE_  = new AntiElectronIDMVA();
-  //antiE_->Initialize("BDT",
-  //	     inputFileNameX0BL_.fullPath().data(),
-  //	     inputFileName11BL_.fullPath().data(),
-  //	     inputFileName01BL_.fullPath().data(),
-  //	     inputFileNameX0EC_.fullPath().data(),
-  //	     inputFileName11EC_.fullPath().data(),
-  //	     inputFileName01EC_.fullPath().data()
-  //	     );
 
   // Summer12: truth (from twiki)
   std::vector< float > Summer12Lumi;
@@ -393,8 +383,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("vetoElectronsID","std::vector< int >",&vetoElectronsID_);
 
   tree_->Branch("l1ETMP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1ETMP4_);
-  tree_->Branch("trgTaus","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&trgTaus_);
-  tree_->Branch("trgTauId","std::vector<int>",&trgTauId_);
+//   tree_->Branch("trgTaus","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&trgTaus_);
+//   tree_->Branch("trgTauId","std::vector<int>",&trgTauId_);
   tree_->Branch("l1IsoElectrons","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1IsoElectrons_);
   tree_->Branch("l1NoIsoElectrons","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&l1NoIsoElectrons_);
 
@@ -485,6 +475,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("decayMode",&decayMode_,"decayMode/I");
   tree_->Branch("genDecayMode",&genDecayMode_,"genDecayMode/I");
   tree_->Branch("genPolarization",&genPolarization_,"genPolarization/I");
+  
+  //EleID
   tree_->Branch("tightestCiCWP",&tightestCiCWP_,"tightestCiCWP/I");
   tree_->Branch("tightestCutBasedWP",&tightestCutBasedWP_,"tightestCutBasedWP/I");
   tree_->Branch("tightestMVAWP",&tightestMVAWP_,"tightestMVAWP/I");
@@ -497,22 +489,32 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("antiConv",&antiConv_,"antiConv/I");
   tree_->Branch("isTriggerElectron",&isTriggerElectron_,"isTriggerElectron/I");
 
-  tree_->Branch("tightestAntiEWP",&tightestAntiEWP_,"tightestAntiEWP/I");
-  tree_->Branch("tightestAntiEMVAWP",&tightestAntiEMVAWP_,"tightestAntiEMVAWP/I");
-  tree_->Branch("tightestAntiEMVA3WP",&tightestAntiEMVA3WP_,"tightestAntiEMVA3WP/I");
-  tree_->Branch("AntiEMVA3category",&AntiEMVA3category_,"AntiEMVA3category/I");
-  tree_->Branch("AntiEMVA3raw",&AntiEMVA3raw_,"AntiEMVA3raw/F");
+  //TauID
+  tree_->Branch("decayModeFinding",&decayModeFinding_,"decayModeFinding/I");
+  tree_->Branch("decayModeFindingNewDM",&decayModeFindingNewDM_,"decayModeFindingNewDM/I");
+  tree_->Branch("decayModeFindingOldDM",&decayModeFindingOldDM_,"decayModeFindingOldDM/I");
+  tree_->Branch("AntiEDeadEcal",&AntiEDeadEcal_,"AntiEDeadEcal/I");
   tree_->Branch("tightestAntiECutWP",&tightestAntiECutWP_,"tightestAntiECutWP/I");
+  tree_->Branch("tightestAntiEMVA5WP",&tightestAntiEMVA5WP_,"tightestAntiEMVA5WP/I");
+  tree_->Branch("AntiEMVA5category",&AntiEMVA5category_,"AntiEMVA5category/I");
+  tree_->Branch("AntiEMVA5raw",&AntiEMVA5raw_,"AntiEMVA5raw/F");
   tree_->Branch("tightestAntiMuWP",&tightestAntiMuWP_,"tightestAntiMuWP/I");
   tree_->Branch("tightestAntiMu2WP",&tightestAntiMu2WP_,"tightestAntiMu2WP/I");
-  tree_->Branch("tightestHPSWP",&tightestHPSWP_,"tightestHPSWP/I");
+  tree_->Branch("tightestAntiMu3WP",&tightestAntiMu3WP_,"tightestAntiMu3WP/I");
+  tree_->Branch("tightestAntiMuMVAWP",&tightestAntiMuMVAWP_,"tightestAntiMuMVAWP/I");
+  tree_->Branch("AntiMuMVAraw",&AntiMuMVAraw_,"AntiMuMVAraw/F");
   tree_->Branch("tightestHPSDBWP",&tightestHPSDBWP_,"tightestHPSDBWP/I");
   tree_->Branch("tightestHPSDB3HWP",&tightestHPSDB3HWP_,"tightestHPSDB3HWP/I");
   tree_->Branch("hpsDB3H",&hpsDB3H_,"hpsDB3H/F");
-  tree_->Branch("tightestHPSMVAWP",&tightestHPSMVAWP_,"tightestHPSMVAWP/I");
-  tree_->Branch("hpsMVA",&hpsMVA_,"hpsMVA/F");
-  tree_->Branch("tightestHPSMVA2WP",&tightestHPSMVA2WP_,"tightestHPSMVA2WP/I"); 
-  tree_->Branch("hpsMVA2",&hpsMVA2_,"hpsMVA2/F");
+  tree_->Branch("tightestHPSMVA3newDMwLTWP",&tightestHPSMVA3newDMwLTWP_,"tightestHPSMVA3newDMwLTWP/I");
+  tree_->Branch("hpsMVA3newDMwLT",&hpsMVA3newDMwLT_,"hpsMVA3newDMwLT/F");
+  tree_->Branch("tightestHPSMVA3newDMwoLTWP",&tightestHPSMVA3newDMwoLTWP_,"tightestHPSMVA3newDMwoLTWP/I");
+  tree_->Branch("hpsMVA3newDMwoLT",&hpsMVA3newDMwoLT_,"hpsMVA3newDMwoLT/F");
+  tree_->Branch("tightestHPSMVA3oldDMwLTWP",&tightestHPSMVA3oldDMwLTWP_,"tightestHPSMVA3oldDMwLTWP/I");
+  tree_->Branch("hpsMVA3oldDMwLT",&hpsMVA3oldDMwLT_,"hpsMVA3oldDMwLT/F");
+  tree_->Branch("tightestHPSMVA3oldDMwoLTWP",&tightestHPSMVA3oldDMwoLTWP_,"tightestHPSMVA3oldDMwoLTWP/I");
+  tree_->Branch("hpsMVA3oldDMwoLT",&hpsMVA3oldDMwoLT_,"hpsMVA3oldDMwoLT/F");
+
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
   tree_->Branch("visibleGenTauMass",&visibleGenTauMass_,"visibleGenTauMass/F");
 
@@ -532,7 +534,6 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("hasGsf",&hasGsf_,"hasGsf/F");
   tree_->Branch("signalPFChargedHadrCands",&signalPFChargedHadrCands_,"signalPFChargedHadrCands/I");
   tree_->Branch("signalPFGammaCands",&signalPFGammaCands_,"signalPFGammaCands/I");
-  //tree_->Branch("mvaAntiE",&mvaAntiE_,"mvaAntiE/F");
 
   tree_->Branch("isTauLegMatched",&isTauLegMatched_,"isTauLegMatched/I");
   tree_->Branch("isElecLegMatched",&isElecLegMatched_,"isElecLegMatched/I");
@@ -565,7 +566,8 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete genJetsIDP4_; delete genDiTauLegsP4_; delete genMETP4_;delete extraElectrons_; 
   delete vetoElectronsP4_; delete vetoTausP4_; delete vetoMuonsP4_; 
   delete vetoElectronsID_;
-  delete l1ETMP4_; delete trgTaus_; delete trgTauId_; delete l1IsoElectrons_; delete l1NoIsoElectrons_;
+  delete l1ETMP4_; // delete trgTaus_; delete trgTauId_;
+  delete l1IsoElectrons_; delete l1NoIsoElectrons_;
   delete pfElectrons_;
   delete genTausP4_;
   delete jetsChNfraction_; delete jetsChEfraction_; delete jetMoments_;
@@ -573,7 +575,6 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
   delete leptonJets_;
   delete embeddingWeights_;
-  //delete antiE_;
   delete metSgnMatrix_;
   if( doElecIsoMVA_ && fElectronIsoMVA_!=0) delete fElectronIsoMVA_;
   delete jetQuarkGluon_; delete jetQuarkGluonGen_;    // Quark/gluon id
@@ -596,8 +597,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   l1IsoElectrons_->clear();
   l1NoIsoElectrons_->clear();
   l1ETMP4_->clear();
-  trgTaus_->clear();
-  trgTauId_->clear();
+//   trgTaus_->clear();
+//   trgTauId_->clear();
 
 
   edm::ESHandle<TransientTrackBuilder> builder;
@@ -1019,8 +1020,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   const l1extra::L1EtMissParticleCollection* l1etm = 0;
   edm::Handle<reco::CaloMETCollection> caloL1etmHandle;
   const reco::CaloMETCollection* caloL1etm = 0;
-  edm::Handle<pat::TauCollection> trgTausHandle;
-  const pat::TauCollection* trgTaus = 0;
+//   edm::Handle<pat::TauCollection> trgTausHandle;
+//   const pat::TauCollection* trgTaus = 0;
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFHandle;
   const reco::CaloMETCollection* caloMEtNoHF = 0;
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrHandle;
@@ -1114,24 +1115,25 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       }
     }
   }
-  iEvent.getByLabel("selectedHltPatTaus", trgTausHandle);
-  if( !trgTausHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No trgTau collection available \n";
-  else{
-    trgTaus = trgTausHandle.product();
-    for(unsigned int i=0; i<trgTaus->size(); ++i){
-      trgTaus_->push_back( (*trgTaus)[i].p4() );
-      int id=0;
-      if( (*trgTaus)[i].tauID("decayModeFinding")>0.5){
-	id++;
-	if( (*trgTaus)[i].tauID("byIsolation")>0.5){
-	  id++;
-	}
-      }
-      trgTauId_->push_back(id);
-    }
-  }
+  //HLT taus for soft analysis
+//   iEvent.getByLabel("selectedHltPatTaus", trgTausHandle);
+//   if( !trgTausHandle.isValid() )  
+//     edm::LogError("DataNotAvailable")
+//       << "No trgTau collection available \n";
+//   else{
+//     trgTaus = trgTausHandle.product();
+//     for(unsigned int i=0; i<trgTaus->size(); ++i){
+//       trgTaus_->push_back( (*trgTaus)[i].p4() );
+//       int id=0;
+//       if( (*trgTaus)[i].tauID("decayModeFinding")>0.5){
+// 	id++;
+// 	if( (*trgTaus)[i].tauID("byIsolation")>0.5){
+// 	  id++;
+// 	}
+//       }
+//       trgTauId_->push_back(id);
+//     }
+//   }
 
   //////////////////////
   // Quark/gluon id
@@ -1315,9 +1317,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     else triggerBits_->push_back(0);
   }
 
-
-  unsigned int index = 0;
-
+//   unsigned int index = 0;
  
   //////////////// pair-ordering by sumPt ////////////////////////
   std::map<double, unsigned int , ElecTauStreamAnalyzer::more> sortedDiTaus;
@@ -1328,12 +1328,13 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-    float isoMVA = ((*diTaus)[i].leg2())->tauID("byIsolationMVA2raw");
+    float isoMVA = ((*diTaus)[i].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
     float isoEle = ((*diTaus)[i].leg1())->userFloat("PFRelIsoDB04v3");
     float sortVariable = (doIsoMVAOrdering_) ? (isoMVA-isoEle) : sumPt;
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
-       tau_i->tauID("byLooseIsolationMVA")>0.5 )
+       //tau_i->tauID("byLooseIsolationMVA")>0.5 )
+       tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5 )
       sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
     sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
@@ -1347,10 +1348,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     sortDiTauInfo.diTauCharge_ = pairCharge; 
     sortDiTauInfos.push_back(sortDiTauInfo); 
   }
-  if( sortedDiTausOS.size()>0 ) 
-    index = (sortedDiTausOS.begin())->second ;
-  else
-    index = (sortedDiTausSS.begin())->second ;
+//   if( sortedDiTausOS.size()>0 ) 
+//     index = (sortedDiTausOS.begin())->second ;
+//   else
+//     index = (sortedDiTausSS.begin())->second ;
     
   numOfLooseIsoDiTaus_ = sortedDiTausLooseIso.size();
   
@@ -1522,12 +1523,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       cout << "DCA3DE: " << iDCA3DE << endl;
     }
 
-    //mvaAntiE_ = antiE_->MVAValue( leg2 );
-    //if(verbose_)
-    //cout << "//Event " << iEvent.run() << ":" << (iEvent.eventAuxiliary()).event() << ":" << iEvent.luminosityBlock()
-    // << antiE_->MVAValue( leg2 ) 
-    // << endl;
-  
     for(unsigned int i=0 ; i< HLTfiltersElec.size() ; i++){
       bool matched = false;
       for(pat::TriggerObjectStandAloneCollection::const_iterator it = triggerObjs->begin() ; it !=triggerObjs->end() ; it++){
@@ -1597,28 +1592,29 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	else cout << "!!! Tau is not trigger matched within dR=0.5 !!!" << endl;
       }
     }
-    if(trgTaus){//check matching with HltTau@Offline, Pt>20, LooseIso
-      bool matched = false;
-      for(unsigned int i=0; i<trgTaus->size(); ++i){
-	if( (*trgTaus)[i].pt()<20 ) continue;
-	if( (*trgTaus)[i].tauID("decayModeFinding")<0.5 || 
-	    (*trgTaus)[i].tauID("byIsolation")<0.5 ) continue;
-	if( Geom::deltaR( (*trgTaus)[i].p4(), leg2->p4() )<0.5 ){
-	  matched = true;
-	  break;
-	}
-      }
-      if(matched) 
-	tauXTriggers_->push_back(1);
-      else 
-	tauXTriggers_->push_back(0);
-      if(verbose_){
-	if(matched) cout << "Tau matched within dR=0.5 with HLTPFTau@offline pt>20" << endl;
-	else cout << "!!! Tau is not matched to HLTPFTau@offline pt>20 !!!" << endl;
-      }
-    }
-    else
-      tauXTriggers_->push_back(0);
+
+//     if(trgTaus){//check matching with HltTau@Offline, Pt>20, LooseIso
+//       bool matched = false;
+//       for(unsigned int i=0; i<trgTaus->size(); ++i){
+// 	if( (*trgTaus)[i].pt()<20 ) continue;
+// 	if( (*trgTaus)[i].tauID("decayModeFinding")<0.5 || 
+// 	    (*trgTaus)[i].tauID("byIsolation")<0.5 ) continue;
+// 	if( Geom::deltaR( (*trgTaus)[i].p4(), leg2->p4() )<0.5 ){
+// 	  matched = true;
+// 	  break;
+// 	}
+//       }
+//       if(matched) 
+// 	tauXTriggers_->push_back(1);
+//       else 
+// 	tauXTriggers_->push_back(0);
+//       if(verbose_){
+// 	if(matched) cout << "Tau matched within dR=0.5 with HLTPFTau@offline pt>20" << endl;
+// 	else cout << "!!! Tau is not matched to HLTPFTau@offline pt>20 !!!" << endl;
+//       }
+//     }
+//     else
+//       tauXTriggers_->push_back(0);
     
     // triggers Elec
     if(verbose_){
@@ -1744,7 +1740,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     else  decayMode_ = -99;
     
     for(unsigned int k = 0 ; k < (leg2->signalPFGammaCands()).size() ; k++){
-      reco::PFCandidateRef gamma = (leg2->signalPFGammaCands()).at(k);
+      reco::PFCandidatePtr gamma = (leg2->signalPFGammaCands()).at(k);
       if( (leg2->leadPFChargedHadrCand()).isNonnull() ){
 	gammadR_->push_back(   Geom::deltaR( gamma->p4(), leg2->leadPFChargedHadrCand()->p4() ) );
 	gammadPhi_->push_back( Geom::deltaPhi( gamma->p4(), leg2->leadPFChargedHadrCand()->p4() ) );
@@ -1792,12 +1788,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     emFraction_ = leg2->emFraction();
     hasGsf_     = ((leg2->leadPFChargedHadrCand())->gsfTrackRef()).isNonnull() ? 1. : 0.;
     
-    
-    tightestHPSWP_ = -1;
-    if(leg2->tauID("byVLooseIsolation")>0.5) tightestHPSWP_++;
-    if(leg2->tauID("byLooseIsolation")>0.5)  tightestHPSWP_++;
-    if(leg2->tauID("byMediumIsolation")>0.5) tightestHPSWP_++;
-    if(leg2->tauID("byTightIsolation")>0.5)  tightestHPSWP_++;
     tightestHPSDBWP_ = -1;
     if(leg2->tauID("byVLooseCombinedIsolationDeltaBetaCorr")>0.5) tightestHPSDBWP_++;
     if(leg2->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5)  tightestHPSDBWP_++;
@@ -1809,16 +1799,41 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     if(leg2->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")>0.5)  tightestHPSDB3HWP_++;
     hpsDB3H_  = leg2->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
 
-    tightestHPSMVAWP_ = -1;
-    if(leg2->tauID("byLooseIsolationMVA") >0.5) tightestHPSMVAWP_++;
-    if(leg2->tauID("byMediumIsolationMVA")>0.5) tightestHPSMVAWP_++;
-    if(leg2->tauID("byTightIsolationMVA") >0.5) tightestHPSMVAWP_++;
-    hpsMVA_  = leg2->tauID("byIsolationMVAraw");
-    tightestHPSMVA2WP_ = -1; 
-    if(leg2->tauID("byLooseIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
-    if(leg2->tauID("byMediumIsolationMVA2")>0.5) tightestHPSMVA2WP_++; 
-    if(leg2->tauID("byTightIsolationMVA2") >0.5) tightestHPSMVA2WP_++; 
-    hpsMVA2_  = leg2->tauID("byIsolationMVA2raw"); 
+    tightestHPSMVA3newDMwLTWP_ = -1;
+    if(leg2->tauID("byVLooseIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byLooseIsolationMVA3newDMwLT")>0.5)   tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byMediumIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byTightIsolationMVA3newDMwLT") >0.5)  tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byVTightIsolationMVA3newDMwLT") >0.5) tightestHPSMVA3newDMwLTWP_++;
+    if(leg2->tauID("byVVTightIsolationMVA3newDMwLT") >0.5)tightestHPSMVA3newDMwLTWP_++;
+    hpsMVA3newDMwLT_  = leg2->tauID("byIsolationMVA3newDMwLTraw");
+
+    tightestHPSMVA3newDMwoLTWP_ = -1;
+    if(leg2->tauID("byVLooseIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byLooseIsolationMVA3newDMwoLT")>0.5)   tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byMediumIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byTightIsolationMVA3newDMwoLT") >0.5)  tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byVTightIsolationMVA3newDMwoLT") >0.5) tightestHPSMVA3newDMwoLTWP_++;
+    if(leg2->tauID("byVVTightIsolationMVA3newDMwoLT") >0.5)tightestHPSMVA3newDMwoLTWP_++;
+    hpsMVA3newDMwoLT_  = leg2->tauID("byIsolationMVA3newDMwoLTraw");
+
+    tightestHPSMVA3oldDMwLTWP_ = -1;
+    if(leg2->tauID("byVLooseIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byLooseIsolationMVA3oldDMwLT")>0.5)   tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byMediumIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byTightIsolationMVA3oldDMwLT") >0.5)  tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byVTightIsolationMVA3oldDMwLT") >0.5) tightestHPSMVA3oldDMwLTWP_++;
+    if(leg2->tauID("byVVTightIsolationMVA3oldDMwLT") >0.5)tightestHPSMVA3oldDMwLTWP_++;
+    hpsMVA3oldDMwLT_  = leg2->tauID("byIsolationMVA3oldDMwLTraw");
+
+    tightestHPSMVA3oldDMwoLTWP_ = -1;
+    if(leg2->tauID("byVLooseIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byLooseIsolationMVA3oldDMwoLT")>0.5)   tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byMediumIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byTightIsolationMVA3oldDMwoLT") >0.5)  tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byVTightIsolationMVA3oldDMwoLT") >0.5) tightestHPSMVA3oldDMwoLTWP_++;
+    if(leg2->tauID("byVVTightIsolationMVA3oldDMwoLT") >0.5)tightestHPSMVA3oldDMwoLTWP_++;
+    hpsMVA3oldDMwoLT_  = leg2->tauID("byIsolationMVA3oldDMwoLTraw");
 
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
     pfJetEtaMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->etaetaMoment() : -99;
@@ -2104,6 +2119,11 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       (leg1->pt()>20 && fabs(leg1->superClusterPosition().Eta())>=1.479 && leg1->userFloat("mvaPOGTrigNoIP")>0.925); 
     if(passesMVAPOGTrigNoIP) tightestMVAPOGTrigNoIPWP_ = 1;
 
+    //TauID
+    decayModeFinding_ = leg2->tauID("decayModeFinding");
+    decayModeFindingNewDM_ = leg2->tauID("decayModeFindingNewDMs");
+    decayModeFindingOldDM_ = leg2->tauID("decayModeFindingOldDMs");
+
     tightestAntiMuWP_ = 0; 
     if( leg2->tauID("againstMuonLoose")>0.5 )tightestAntiMuWP_ = 1; 
     if( leg2->tauID("againstMuonMedium")>0.5 )tightestAntiMuWP_ = 2; 
@@ -2114,54 +2134,31 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     if( leg2->tauID("againstMuonMedium2")>0.5 )tightestAntiMu2WP_ = 2;   
     if( leg2->tauID("againstMuonTight2")>0.5 )tightestAntiMu2WP_ = 3;   
 
+    tightestAntiMu3WP_ = 0;   
+    if( leg2->tauID("againstMuonLoose3")>0.5 )tightestAntiMu3WP_ = 1;   
+    if( leg2->tauID("againstMuonTight3")>0.5 )tightestAntiMu3WP_ = 2;   
+
+    tightestAntiMuMVAWP_ = 0;   
+    if( leg2->tauID("againstMuonLooseMVA")>0.5 )tightestAntiMuMVAWP_ = 1;   
+    if( leg2->tauID("againstMuonMediumMVA")>0.5 )tightestAntiMuMVAWP_ = 2;   
+    if( leg2->tauID("againstMuonTightMVA")>0.5 )tightestAntiMuMVAWP_ = 3;   
+    AntiMuMVAraw_ = leg2->tauID("againstMuonMVAraw");   
+
     tightestAntiECutWP_ = 0;
     if( leg2->tauID("againstElectronLoose")>0.5 )tightestAntiECutWP_ = 1;
     if( leg2->tauID("againstElectronMedium")>0.5 )tightestAntiECutWP_ = 2;
     if( leg2->tauID("againstElectronTight")>0.5 )tightestAntiECutWP_ = 3;
 
-    tightestAntiEWP_ = 0;
-    if( leg2->tauID("againstElectronTight")>0.5 && leg2->tauID("againstElectronMVA")<0.5) tightestAntiEWP_ = 1;
-    if( leg2->tauID("againstElectronTight")<0.5 && leg2->tauID("againstElectronMVA")>0.5) tightestAntiEWP_ = 2;
-    if( leg2->tauID("againstElectronTight")>0.5 && leg2->tauID("againstElectronMVA")>0.5) tightestAntiEWP_ = 3;
+    AntiEDeadEcal_ = leg2->tauID("againstElectronDeadECAL");
 
-//     cout << leg2->tauID("againstElectronLooseMVA2") << endl;
-
-    tightestAntiEMVAWP_ = 0;
-    if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") <0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  <0.5) tightestAntiEMVAWP_ = 1; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  <0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") >0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  <0.5) tightestAntiEMVAWP_ = 2; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  <0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") <0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 3; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") >0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  <0.5) tightestAntiEMVAWP_ = 4; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  <0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") >0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 5; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") <0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 6; 
- 
-    if( leg2->tauID("againstElectronLooseMVA2")  >0.5 &&  
-        leg2->tauID("againstElectronMediumMVA2") >0.5 && 
-        leg2->tauID("againstElectronTightMVA2")  >0.5) tightestAntiEMVAWP_ = 7; 
-    
-    tightestAntiEMVA3WP_ = 0;
-    if( leg2->tauID("againstElectronLooseMVA3")>0.5)  tightestAntiEMVA3WP_  = 1;
-    if( leg2->tauID("againstElectronMediumMVA3")>0.5) tightestAntiEMVA3WP_  = 2;
-    if( leg2->tauID("againstElectronTightMVA3")>0.5)  tightestAntiEMVA3WP_  = 3;
-    if( leg2->tauID("againstElectronVTightMVA3")>0.5) tightestAntiEMVA3WP_  = 4;
-    AntiEMVA3raw_ = leg2->tauID("againstElectronMVA3raw");
-    AntiEMVA3category_ = leg2->tauID("againstElectronMVA3category");
+    tightestAntiEMVA5WP_ = 0;
+    if( leg2->tauID("againstElectronVLooseMVA5")>0.5) tightestAntiEMVA5WP_  = 1;
+    if( leg2->tauID("againstElectronLooseMVA5")>0.5)  tightestAntiEMVA5WP_  = 2;
+    if( leg2->tauID("againstElectronMediumMVA5")>0.5) tightestAntiEMVA5WP_  = 3;
+    if( leg2->tauID("againstElectronTightMVA5")>0.5)  tightestAntiEMVA5WP_  = 4;
+    if( leg2->tauID("againstElectronVTightMVA5")>0.5) tightestAntiEMVA5WP_  = 5;
+    AntiEMVA5raw_ = leg2->tauID("againstElectronMVA5raw");
+    AntiEMVA5category_ = leg2->tauID("againstElectronMVA5category");
     
     diTauVisP4_->push_back( theDiTau->p4Vis() );
     diTauCAP4_->push_back(  theDiTau->p4CollinearApprox() );
@@ -2532,7 +2529,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     float idMax0,idMax1,idMax2,idMax3;
     float idNewMax0,idNewMax1,idNewMax2,idNewMax3;
     float isoMax0,isoMax1,isoMax2,isoMax3;
-    int kMax0,kMax1,kMax2,kMax3;
     ptMax0= ptMax1= ptMax2= ptMax3=-999;
     etaMax0= etaMax1= etaMax2= etaMax3=-999;
     scEtaMax0= scEtaMax1= scEtaMax2= scEtaMax3=-999;
@@ -2540,11 +2536,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     idMax0= idMax1= idMax2= idMax3=-999;
     idNewMax0= idNewMax1= idNewMax2= idNewMax3=-999;
     isoMax0= isoMax1= isoMax2= isoMax3=-999;
-    kMax0=kMax1=kMax2=kMax3=-999;
 
     for(unsigned int k=0; k<electronsAntiZee->size(); k++){
       if((*electronsAntiZee)[k].pt()>ptMax0){
-	kMax0=k;
 	ptMax0=(*electronsAntiZee)[k].pt();
 	etaMax0=(*electronsAntiZee)[k].eta();
 	scEtaMax0=(*electronsAntiZee)[k].superClusterPosition().Eta();
@@ -2554,7 +2548,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	isoMax0=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax1){
-	kMax1=k;
 	ptMax1=(*electronsAntiZee)[k].pt();
 	etaMax1=(*electronsAntiZee)[k].eta();
 	scEtaMax1=(*electronsAntiZee)[k].superClusterPosition().Eta();
@@ -2564,7 +2557,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	isoMax1=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax2){
-	kMax2=k;
 	ptMax2=(*electronsAntiZee)[k].pt();
 	etaMax2=(*electronsAntiZee)[k].eta();
 	scEtaMax2=(*electronsAntiZee)[k].superClusterPosition().Eta();
@@ -2574,7 +2566,6 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	isoMax2=(*electronsAntiZee)[k].userFloat("PFRelIsoDB04v3");
       }
       else if((*electronsAntiZee)[k].pt()>ptMax3){
-	kMax3=k;
 	ptMax3=(*electronsAntiZee)[k].pt();
 	etaMax3=(*electronsAntiZee)[k].eta();
 	scEtaMax3=(*electronsAntiZee)[k].superClusterPosition().Eta();
