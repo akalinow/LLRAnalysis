@@ -250,6 +250,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float hpsMVA3oldDMwoLT_;
 
   int isTauLegMatched_;
+  int isTauLegMatchedToLep_;
   int isElecLegMatched_;
   int elecFlag_, elecFlagSoft_;
   int vetoEvent_;

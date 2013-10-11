@@ -535,6 +535,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("signalPFGammaCands",&signalPFGammaCands_,"signalPFGammaCands/I");
 
   tree_->Branch("isTauLegMatched",&isTauLegMatched_,"isTauLegMatched/I");
+  tree_->Branch("isTauLegMatchedToLep",&isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
   tree_->Branch("isElecLegMatched",&isElecLegMatched_,"isElecLegMatched/I");
 
   tree_->Branch("diTauCharge",&diTauCharge_,"diTauCharge/F");
@@ -1459,6 +1460,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     isElecLegMatched_  = 0;
     isTauLegMatched_   = 0;
+    isTauLegMatchedToLep_ = 0;
 
     const pat::Electron* leg1 = dynamic_cast<const pat::Electron*>( (theDiTau->leg1()).get() );
     const pat::Tau*      leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
@@ -1681,7 +1683,19 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	  genElecP4 = (*genParticles)[k].p4();
 	}
       }
-      
+      bool leg2IsFromMu = false;
+      math::XYZTLorentzVectorD genMuP4(0,0,0,0);
+      for(unsigned int k = 0; k < genParticles->size(); k ++){
+        //if( abs((*genParticles)[k].pdgId()) != 13  || (*genParticles)[k].status()!=3 )
+        if( abs((*genParticles)[k].pdgId()) != 13)  //update to new prescription
+          continue;
+        //if(Geom::deltaR( (*genParticles)[k].p4(),leg2->p4())<0.15){
+        if(Geom::deltaR( (*genParticles)[k].p4(),leg2->p4())<0.5 && (*genParticles)[k].p4().pt() > 8.0){
+          leg2IsFromMu = true;
+          genMuP4 = (*genParticles)[k].p4();
+        }
+      }
+
       if( leg2->genJet() !=0 ) 
 	genDiTauLegsP4_->push_back(leg2->genJet()->p4());
       else if(leg2IsFromElec)
@@ -1691,6 +1705,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	if(verbose_) cout << "WARNING: no genJet matched to the leg2 with eta,phi " << leg2->eta() << ", " << leg2->phi() << endl;
       }
       
+      if(leg2IsFromMu || leg2IsFromElec)isTauLegMatchedToLep_ = 1;
+
       bool tauHadMatched = false;
       for(unsigned int k = 0; k < tauGenJets->size(); k++){
 	if( Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.15 ) tauHadMatched = true;

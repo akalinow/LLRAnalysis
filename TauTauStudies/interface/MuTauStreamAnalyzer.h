@@ -233,6 +233,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float hpsMVA3oldDMwoLT_;
 
   int isTauLegMatched_;
+  int isTauLegMatchedToLep_;
   int isMuLegMatched_;
   int muFlag_, muFlagSoft_;
   int vetoEvent_;
