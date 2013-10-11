@@ -75,7 +75,7 @@ void compareSync(TString myGroup,TString myPath,TString myRootFile, TString myTr
   cout<<"Other: "<<Fother.GetName()<<endl;
   TCanvas C;
 
-  TString filename=myGroup+"_"+myRootFile+"_"+group+"_"+groupRootFile+"_diff.pdf";
+  TString filename="./myGroup+"_"+myRootFile+"_"+group+"_"+groupRootFile+"_diff.pdf";
   C.Print(filename+"[");  
 
 
