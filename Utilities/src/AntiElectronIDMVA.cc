@@ -263,7 +263,7 @@ double AntiElectronIDMVA::MVAValue(const pat::Tau* myTau){
   vector<float> GammasPt;
 
   for(unsigned int k = 0 ; k < (myTau->signalPFGammaCands()).size() ; k++){
-    reco::PFCandidateRef gamma = (myTau->signalPFGammaCands()).at(k);
+    reco::PFCandidatePtr gamma = (myTau->signalPFGammaCands()).at(k);
     if( (myTau->leadPFChargedHadrCand()).isNonnull() ){
       GammasdEta.push_back( gamma->eta() - myTau->leadPFChargedHadrCand()->eta() );
       GammasdPhi.push_back( gamma->phi() - myTau->leadPFChargedHadrCand()->phi() );

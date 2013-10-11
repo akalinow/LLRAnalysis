@@ -423,7 +423,7 @@ void TauNTuplizer::analyze(const edm::Event & iEvent, const edm::EventSetup & iS
 	signalPFGammaCands_       = (*taus)[i].signalPFGammaCands().size();
 
 	for(unsigned int k = 0 ; k < ((*taus)[i].signalPFGammaCands()).size() ; k++){
-	  reco::PFCandidateRef gamma = ((*taus)[i].signalPFGammaCands()).at(k);
+	  reco::PFCandidatePtr gamma = ((*taus)[i].signalPFGammaCands()).at(k);
 	  if( ((*taus)[i].leadPFChargedHadrCand()).isNonnull() ){
 	    gammadEta_->push_back( gamma->eta() - (*taus)[i].leadPFChargedHadrCand()->eta() );
 	    gammadPhi_->push_back( gamma->phi() - (*taus)[i].leadPFChargedHadrCand()->phi() );
