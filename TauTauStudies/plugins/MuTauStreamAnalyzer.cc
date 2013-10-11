@@ -1603,8 +1603,6 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	  && tauHadMatched ){
 	isTauLegMatched_ = 1;
 	if(leg2->genJet()){
-
-	  //cout << "Tau Mass = " << (leg2->genJet()->p4()).M() << endl;
 	  string genTauDecay = JetMCTagUtils::genTauDecayMode( *(leg2->genJet()) );
 	  if( genTauDecay.find("oneProng0Pi0")!=string::npos ) 
 	    genDecayMode_ = 0;
@@ -1614,14 +1612,22 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	    genDecayMode_ = 2;
 	  else if( genTauDecay.find("oneProngOther")!=string::npos )
 	    genDecayMode_ = 3;
-	  else if( genTauDecay.find("threeProng0Pi0")!=string::npos )
+	  if( genTauDecay.find("twoProng0Pi0")!=string::npos ) 
 	    genDecayMode_ = 4;
-	  else if( genTauDecay.find("threeProng1Pi0")!=string::npos )
+	  else if( genTauDecay.find("twoProng1Pi0")!=string::npos )
 	    genDecayMode_ = 5;
-	  else if( genTauDecay.find("threeProngOther")!=string::npos )
+	  else if( genTauDecay.find("twoProng2Pi0")!=string::npos )
 	    genDecayMode_ = 6;
-	  else if( genTauDecay.find("rare")!=string::npos )
+	  else if( genTauDecay.find("twoProngOther")!=string::npos )
 	    genDecayMode_ = 7;
+	  else if( genTauDecay.find("threeProng0Pi0")!=string::npos )
+	    genDecayMode_ = 8;
+	  else if( genTauDecay.find("threeProng1Pi0")!=string::npos )
+	    genDecayMode_ = 9;
+	  else if( genTauDecay.find("threeProngOther")!=string::npos )
+	    genDecayMode_ = 10;
+	  else if( genTauDecay.find("rare")!=string::npos )
+	    genDecayMode_ = 11;
 	  else
 	    genDecayMode_ = 99;
 	}
@@ -1636,14 +1642,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       }
     }
     
-    
     if((leg2->signalPFChargedHadrCands()).size()==1 && (leg2->signalPFGammaCands()).size()==0) decayMode_ = 0; 
     else if((leg2->signalPFChargedHadrCands()).size()==1 && (leg2->signalPFGammaCands()).size()>0)  decayMode_ = 1; 
-    else if((leg2->signalPFChargedHadrCands()).size()==3) decayMode_ = 2; 
+    else if((leg2->signalPFChargedHadrCands()).size()==2 && (leg2->signalPFGammaCands()).size()==0)  decayMode_ = 2; 
+    else if((leg2->signalPFChargedHadrCands()).size()==2 && (leg2->signalPFGammaCands()).size()>0)  decayMode_ = 3; 
+    else if((leg2->signalPFChargedHadrCands()).size()==3) decayMode_ = 4; 
     else  decayMode_ = -99;
-    
-    
-    
+
     for(unsigned int k = 0 ; k < (leg2->signalPFGammaCands()).size() ; k++){
       reco::PFCandidatePtr gamma = (leg2->signalPFGammaCands()).at(k);
       if( (leg2->leadPFChargedHadrCand()).isNonnull() ){
