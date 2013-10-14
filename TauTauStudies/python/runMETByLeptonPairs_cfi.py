@@ -78,7 +78,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
     process.diTau.srcMET   = cms.InputTag("metRecoilCorrector",  "N")
     process.diTau.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
     process.diTau.dRmin12  = cms.double(0.5)
-    process.diTau.doSVreco = cms.bool(doSVFitReco)
+    process.diTau.doSVreco = cms.bool(False)  #False, to run Standalone SVFit
     if useMarkov:
         process.diTau.nSVfit.psKine_MEt_int.algorithm = cms.PSet(
             pluginName = cms.string("nSVfitAlgorithmByIntegration2"),
