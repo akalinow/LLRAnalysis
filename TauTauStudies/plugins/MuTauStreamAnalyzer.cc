@@ -75,7 +75,8 @@
 
 #include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
-
+//Standalone SVFit///
+#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 
 #include <vector>
 #include <utility>
@@ -1578,9 +1579,11 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       bool leg2IsFromMu = false;
       math::XYZTLorentzVectorD genMuP4(0,0,0,0);
       for(unsigned int k = 0; k < genParticles->size(); k ++){
-	if( abs((*genParticles)[k].pdgId()) != 13  || (*genParticles)[k].status()!=3 )
+	//if( abs((*genParticles)[k].pdgId()) != 13  || (*genParticles)[k].status()!=3 )
+	if( abs((*genParticles)[k].pdgId()) != 13)  //update to new prescription
 	  continue;
-	if(Geom::deltaR( (*genParticles)[k].p4(),leg2->p4())<0.15){
+	//if(Geom::deltaR( (*genParticles)[k].p4(),leg2->p4())<0.15){
+	if(Geom::deltaR( (*genParticles)[k].p4(),leg2->p4())<0.5 && (*genParticles)[k].p4().pt() > 8.0){
 	  leg2IsFromMu = true;
 	  genMuP4 = (*genParticles)[k].p4();
 	}
@@ -1602,6 +1605,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	genDiTauLegsP4_->push_back(leg2->genJet()->p4());
       else if(leg2IsFromMu)
 	genDiTauLegsP4_->push_back( genMuP4 );
+      else if(leg2IsFromEle) 
+        genDiTauLegsP4_->push_back( genEleP4 );
       else{
 	genDiTauLegsP4_->push_back( math::XYZTLorentzVectorD(0,0,0,0) );
 	if(verbose_) cout << "WARNING: no genJet matched to the leg2 with eta,phi " << leg2->eta() << ", " << leg2->phi() << endl;
@@ -1611,7 +1616,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
       bool tauHadMatched = false;
       for(unsigned int k = 0; k < tauGenJets->size(); k++){
-	if( Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.15 ) tauHadMatched = true;
+	if( Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.5 && (*tauGenJets)[k].p4().pt() > 8.0) tauHadMatched = true; //update to new prescription
       }
       
       if( ( (leg2->genParticleById( 15,0,true)).isNonnull() || 
@@ -1942,26 +1947,39 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     }
     diTauSVfitP4_->push_back( nSVfitIntP4  );
         
-
-    int errFlag = 0;
-    //diTauSVfitMassErrUp_    = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrUp()   : -99; 
-    //diTauSVfitMassErrDown_  = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrDown() : -99; 
-
-    diTauNSVfitIsValid_     = (int)(theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() );
-    diTauNSVfitMass_        = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->mass()        : -99; 
-    diTauNSVfitMassErrUp_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrUp()   : -99; 
-    diTauNSVfitMassErrDown_ = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrDown() : -99; 
-    diTauNSVfitPt_          = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->pt()          : -99;
-    diTauNSVfitPtErrUp_     = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrUp()     : -99;
-    diTauNSVfitPtErrDown_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
-      ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrDown()   : -99;
+    ///Commented out the plugin version of SVFit for now////
+    //int errFlag = 0;
+    ////diTauSVfitMassErrUp_    = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrUp()   : -99; 
+    ////diTauSVfitMassErrDown_  = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_logM_fit",&errFlag)!=0 /*&& theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution()*/ ) ? theDiTau->nSVfitSolution("psKine_MEt_logM_fit",0)->massErrDown() : -99; 
+    //
+    //diTauNSVfitIsValid_     = (int)(theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() );
+    //diTauNSVfitMass_        = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->mass()        : -99; 
+    //diTauNSVfitMassErrUp_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrUp()   : -99; 
+    //diTauNSVfitMassErrDown_ = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->massErrDown() : -99; 
+    //diTauNSVfitPt_          = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->pt()          : -99;
+    //diTauNSVfitPtErrUp_     = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrUp()     : -99;
+    //diTauNSVfitPtErrDown_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
+    //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrDown()   : -99;
     
-
+    //Run Standalone SVFit  
+    std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons; 
+    NSVfitStandalone::Vector measuredMET( theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), 0); 
+    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay, leg1->p4())); 
+    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg2->p4())); 
+    NSVfitStandaloneAlgorithm algo(measuredTauLeptons, measuredMET, cov, 0); 
+    algo.addLogM(false); 
+    //algo.integrateMarkovChain(); 
+    algo.integrateVEGAS(); 
+    diTauNSVfitMass_ = algo.getMass(); 
+    diTauNSVfitMassErrUp_ = algo.massUncert(); 
+    diTauNSVfitPt_ = algo.pt();  
+    diTauNSVfitPtErrUp_ = algo.ptUncert();
+  
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJets;
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJetsIDL1Offset;
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJetsID;
