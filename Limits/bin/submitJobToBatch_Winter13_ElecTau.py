@@ -21,7 +21,7 @@ def treeSkim( ana, sample, runInSeries=False):
         stream = "ElecTau"
     print "Stream ", stream
 
-    os.system('python makeTreeSkimmerElecTau_Winter13.py')
+    #os.system('python makeTreeSkimmerElecTau_Winter13.py')
 
     if runInSeries:
          print "Running in series via the command ..."
@@ -42,7 +42,8 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/data_CMS/cms/ivo/HTauTauAnalysis/CMSSWRelesases/CMSSW_5_3_11_p6_prodv3/src/LLRAnalysis/Limits/bin/"\n')
+        f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/"\n')
+        #f.write('export WORKINGDIR="/data_CMS/cms/ivo/HTauTauAnalysis/CMSSWRelesases/CMSSW_5_3_11_p6_prodv3/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Winter13_Trees/src/LLRAnalysis/Limits/bin/"\n')
         f.write('')
         f.write('cd $WORKINGDIR\n')
@@ -56,7 +57,8 @@ def treeSkim( ana, sample, runInSeries=False):
         f.close()
         os.system('chmod u+x batch/*.sh')
 
-  
+os.system('python makeTreeSkimmerElecTau_Winter13.py')
+
 ###########################################
 ###########################################
 ##Data
