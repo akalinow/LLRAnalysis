@@ -60,53 +60,29 @@ def treeSkim( ana, sample, runInSeries=False):
 ###########################################
 ###########################################
 ##Data
-## treeSkim("nominal","Run2012A-13Jul2012-Data",False)
-## treeSkim("nominal","Run2012B-13Jul2012-p1-Data",False)
-## treeSkim("nominal","Run2012B-13Jul2012-p2-Data",False)
-## treeSkim("nominal","Run2012B-13Jul2012-p3-Data",False)
-## treeSkim("nominal","Run2012B-13Jul2012-p4-Data",False)
-## treeSkim("nominal","Run2012B-13Jul2012-p5-Data",False)
-## treeSkim("nominal","Run2012C-24Aug2012-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p1-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p2-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p3-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p4-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p5-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p6-Data",False)
-## treeSkim("nominal","Run2012C-PromptReco-v2-p7-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p1-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p2-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p3-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p4-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p5-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p6-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p7-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p8-Data",False)
-## treeSkim("nominal","Run2012D-PromptReco-v1-p9-Data",False)
-        
-## treeSkim("nominal","Run2012A-22Jan2013-Data",False)
-## treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
-## treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
-## treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
-## treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
-## treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
+treeSkim("nominal","Run2012A-22Jan2013-Data",False)
+treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
+treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
+treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
+treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
+treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
 ## treeSkim("nominal","Run2012C-22Jan2013-p4-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
 ## treeSkim("nominal","Run2012C-22Jan2013-p6-Data",False)
-## treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
+treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
 ## treeSkim("nominal","Run2012D-22Jan2013-p3-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
 ## treeSkim("nominal","Run2012D-22Jan2013-p8-Data",False)
-## treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
+treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
 
 ###Embedded samples
 #anaEmb = ['nominal','TauUp','TauDown','ElecUp','ElecDown']
@@ -114,56 +90,30 @@ anaEmb = ['nominal','TauUp','TauDown']
 #anaEmb = ['TauUp','TauDown','ElecUp','ElecDown']
 
 samplesEmb = [
-##     'Run2012A-06Aug2012-Embedded',
-##     'Run2012A-13Jul2012-Embedded',
-##     'Run2012B-13Jul2012-p1-Embedded',
-##     'Run2012B-13Jul2012-p2-Embedded',
-##     'Run2012B-13Jul2012-p3-Embedded',
-##     'Run2012B-13Jul2012-p4-Embedded',
-##     'Run2012B-13Jul2012-p5-Embedded',
-##     'Run2012C-24Aug2012-Embedded',
-##     'Run2012C-PromptReco-v2-p1-Embedded',
-##     'Run2012C-PromptReco-v2-p2-Embedded',
-##     'Run2012C-PromptReco-v2-p3-Embedded',
-##     'Run2012C-PromptReco-v2-p4-Embedded',
-##     'Run2012C-PromptReco-v2-p5-Embedded',
-##     'Run2012C-PromptReco-v2-p6-Embedded',
-##     'Run2012C-PromptReco-v2-p7-Embedded',    
-##     'Run2012D-PromptReco-v1-p1-Embedded',
-##     'Run2012D-PromptReco-v1-p2-Embedded',
-##     'Run2012D-PromptReco-v1-p3-Embedded',
-##     'Run2012D-PromptReco-v1-p4-Embedded',
-##     'Run2012D-PromptReco-v1-p5-Embedded',
-##     'Run2012D-PromptReco-v1-p6-Embedded',
-##     'Run2012D-PromptReco-v1-p7-Embedded',
-##     'Run2012D-PromptReco-v1-p8-Embedded',
-##     'Run2012D-PromptReco-v1-p9-Embedded'
-    
-##     'Run2012A-22Jan2013-Embedded',
-##     'Run2012B-22Jan2013-p1-Embedded',
-##     'Run2012B-22Jan2013-p2-Embedded',
-##     'Run2012B-22Jan2013-p3-Embedded',
-##     'Run2012B-22Jan2013-p4-Embedded',
-##     'Run2012B-22Jan2013-p5-Embedded',
-##     'Run2012C-22Jan2013-p0-Embedded',
-##     'Run2012C-22Jan2013-p1-Embedded',
-##     'Run2012C-22Jan2013-p2-Embedded',
-##     'Run2012C-22Jan2013-p3-Embedded',
-##     'Run2012C-22Jan2013-p4-Embedded',
-##     'Run2012C-22Jan2013-p5-Embedded',
-##     'Run2012C-22Jan2013-p6-Embedded',
-##     'Run2012C-22Jan2013-p7-Embedded',    
-##     'Run2012D-22Jan2013-p1-Embedded',
-##     'Run2012D-22Jan2013-p2-Embedded',
-##     'Run2012D-22Jan2013-p3-Embedded',
-##     'Run2012D-22Jan2013-p4-Embedded',
-##     'Run2012D-22Jan2013-p5-Embedded',
-##     'Run2012D-22Jan2013-p6-Embedded',
-##     'Run2012D-22Jan2013-p7-Embedded',
-##     'Run2012D-22Jan2013-p8-Embedded',
-##     'Run2012D-22Jan2013-p9-Embedded'
+    'Run2012A-22Jan2013-Embedded',
+    'Run2012B-22Jan2013-p1-Embedded',
+    'Run2012B-22Jan2013-p2-Embedded',
+    'Run2012B-22Jan2013-p3-Embedded',
+    'Run2012B-22Jan2013-p4-Embedded',
+    'Run2012B-22Jan2013-p5-Embedded',
+    'Run2012C-22Jan2013-p0-Embedded',
+    'Run2012C-22Jan2013-p1-Embedded',
+    'Run2012C-22Jan2013-p2-Embedded',
+    'Run2012C-22Jan2013-p3-Embedded',
+    'Run2012C-22Jan2013-p4-Embedded',
+    'Run2012C-22Jan2013-p5-Embedded',
+    'Run2012C-22Jan2013-p6-Embedded',
+    'Run2012C-22Jan2013-p7-Embedded',    
+    'Run2012D-22Jan2013-p1-Embedded',
+    'Run2012D-22Jan2013-p2-Embedded',
+    'Run2012D-22Jan2013-p3-Embedded',
+    'Run2012D-22Jan2013-p4-Embedded',
+    'Run2012D-22Jan2013-p5-Embedded',
+    'Run2012D-22Jan2013-p6-Embedded',
+    'Run2012D-22Jan2013-p7-Embedded',
+    'Run2012D-22Jan2013-p8-Embedded',
+    'Run2012D-22Jan2013-p9-Embedded'
     ]
-json    = [1,0,0,2,3]
 
 for iSEmb in range(0,len(samplesEmb)):
     for iAnEmb in range(0,len(anaEmb)):
@@ -176,7 +126,7 @@ anaMC = ['nominal','TauUp','TauDown','JetUp','JetDown']
 #anaMC = ['nominal']
 #anaMC = ['TauUp','TauDown','JetUp','JetDown']
 
-for iAnMC in range(0,len(anaMC)):
+## for iAnMC in range(0,len(anaMC)):
 ## ## ##     ##BkgMC
 ##     treeSkim( anaMC[iAnMC] , "DYJets"        , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets-p1"      , False)
@@ -302,7 +252,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "VBFH110"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH115"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH120"       , False)
-    treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
+##     treeSkim( anaMC[iAnMC] , "VBFH125"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH130"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH135"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH140"       , False)
