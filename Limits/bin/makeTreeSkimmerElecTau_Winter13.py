@@ -480,7 +480,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsTauTau_ElecTau.root',
     'sample'         : 'DYJetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -490,7 +490,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsEToTau_ElecTau.root',
     'sample'         : 'DYJetsEToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -500,7 +500,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsJetToTau_ElecTau.root',
     'sample'         : 'DYJetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -511,7 +511,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1Jets_ElecTau.root',
     'sample'         : 'DYJets1Jets',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746/24045248 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -521,7 +521,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p0_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -531,7 +531,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p1_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -541,7 +541,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p2_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -551,7 +551,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p3_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -561,7 +561,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p4_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -571,7 +571,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p5_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -581,7 +581,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p6_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -591,7 +591,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p7_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -601,7 +601,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p8_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -611,7 +611,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau-p9_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -621,7 +621,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p0_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -631,7 +631,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p1_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -641,7 +641,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p2_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -651,7 +651,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p3_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -661,7 +661,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p4_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -671,7 +671,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p5_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -681,7 +681,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p6_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -691,7 +691,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p7_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -701,7 +701,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p8_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -711,7 +711,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau-p9_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -721,7 +721,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p0_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -731,7 +731,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p1_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -741,7 +741,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p2_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -751,7 +751,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p3_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -761,7 +761,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p4_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -771,7 +771,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p5_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -781,7 +781,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p6_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -791,7 +791,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p7_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -801,7 +801,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p8_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -811,7 +811,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau-p9_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 3814746./24045248 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -822,7 +822,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2Jets_ElecTau.root',
     'sample'         : 'DYJets2Jets',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -832,7 +832,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p0_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -842,7 +842,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p1_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -852,7 +852,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p2_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -862,7 +862,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p3_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -872,7 +872,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p4_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -882,7 +882,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p5_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -892,7 +892,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p6_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -902,7 +902,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p7_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -912,7 +912,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p8_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -922,7 +922,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau-p9_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -932,7 +932,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p0_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -942,7 +942,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p1_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -952,7 +952,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p2_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -962,7 +962,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p3_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -972,7 +972,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p4_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -982,7 +982,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p5_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -992,7 +992,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p6_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -1002,7 +1002,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p7_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -1012,7 +1012,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p8_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -1022,7 +1022,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau-p9_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -1032,7 +1032,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p0_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p0',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -1042,7 +1042,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p1_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p1',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -1052,7 +1052,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p2_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p2',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -1062,7 +1062,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p3_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p3',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -1072,7 +1072,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p4_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p4',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -1082,7 +1082,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p5_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p5',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -1092,7 +1092,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p6_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p6',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -1102,7 +1102,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p7_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p7',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -1112,7 +1112,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p8_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p8',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -1122,7 +1122,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau-p9_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau-p9',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'skimEff'        : 1.0 * 1.0 * 6111403./21837156 ,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -1755,7 +1755,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets-p1_ElecTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.108752 * 450650./2000279,
+    'skimEff'        : 1.0 * 0.108752 * 533250./2000279,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1765,7 +1765,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets-p2_ElecTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.108710 * 1415230./6273656,
+    'skimEff'        : 1.0 * 0.108710 * 1674658./6273656,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1775,8 +1775,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets1Jets_ElecTau.root',
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
-##     'skimEff'        :  1.0 * 1490832./23141598,##
-    'skimEff'        :  1.0 * 1486190./22581598 ,
+    'skimEff'        :  1.0 * 1850955./22581598 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1786,8 +1785,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets1Jets-p0_ElecTau.root',
     'sample'         : 'WJets1Jets-p0',
     'xSection'       : 36257,
-##     'skimEff'        :  1.0 * 1490832./23141598,##
-    'skimEff'        :  1.0 * 1486190./22581598 ,
+    'skimEff'        :  1.0 * 1850955./22581598 ,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 2
@@ -1797,8 +1795,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets1Jets-p1_ElecTau.root',
     'sample'         : 'WJets1Jets-p1',
     'xSection'       : 36257,
-##     'skimEff'        :  1.0 * 1490832./23141598,##
-    'skimEff'        :  1.0 * 1486190./22581598 ,
+    'skimEff'        :  1.0 * 1850955./22581598 ,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 2
@@ -1808,8 +1805,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets2Jets_ElecTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
-##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1819,8 +1815,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets2Jets-p0_ElecTau.root',
     'sample'         : 'WJets2Jets-p0',
     'xSection'       : 36257,
-##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -1831,7 +1826,7 @@ options = {
     'sample'         : 'WJets2Jets-p1',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -1842,7 +1837,7 @@ options = {
     'sample'         : 'WJets2Jets-p2',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -1853,7 +1848,7 @@ options = {
     'sample'         : 'WJets2Jets-p3',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -1864,7 +1859,7 @@ options = {
     'sample'         : 'WJets2Jets-p4',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -1875,7 +1870,7 @@ options = {
     'sample'         : 'WJets2Jets-p5',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -1886,7 +1881,7 @@ options = {
     'sample'         : 'WJets2Jets-p6',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -1897,7 +1892,7 @@ options = {
     'sample'         : 'WJets2Jets-p7',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -1908,7 +1903,7 @@ options = {
     'sample'         : 'WJets2Jets-p8',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -1919,7 +1914,7 @@ options = {
     'sample'         : 'WJets2Jets-p9',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 1034822./34044921,##
-    'skimEff'        : 1.0 * 5021879./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -1930,7 +1925,7 @@ options = {
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1941,7 +1936,7 @@ options = {
     'sample'         : 'WJets3Jets-p0',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -1952,7 +1947,7 @@ options = {
     'sample'         : 'WJets3Jets-p1',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -1963,7 +1958,7 @@ options = {
     'sample'         : 'WJets3Jets-p2',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -1974,7 +1969,7 @@ options = {
     'sample'         : 'WJets3Jets-p3',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -1985,7 +1980,7 @@ options = {
     'sample'         : 'WJets3Jets-p4',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -1996,7 +1991,7 @@ options = {
     'sample'         : 'WJets3Jets-p5',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -2007,7 +2002,7 @@ options = {
     'sample'         : 'WJets3Jets-p6',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -2018,7 +2013,7 @@ options = {
     'sample'         : 'WJets3Jets-p7',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -2029,7 +2024,7 @@ options = {
     'sample'         : 'WJets3Jets-p8',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -2040,7 +2035,7 @@ options = {
     'sample'         : 'WJets3Jets-p9',
     'xSection'       : 36257,
 ##     'skimEff'        :  1.0 * 3353306./15539503,##
-    'skimEff'        :  1.0 * 3371272./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -2051,7 +2046,7 @@ options = {
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -2062,7 +2057,7 @@ options = {
     'sample'         : 'WJets4Jets-p0',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -2073,7 +2068,7 @@ options = {
     'sample'         : 'WJets4Jets-p1',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -2084,7 +2079,7 @@ options = {
     'sample'         : 'WJets4Jets-p2',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -2095,7 +2090,7 @@ options = {
     'sample'         : 'WJets4Jets-p3',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -2106,7 +2101,7 @@ options = {
     'sample'         : 'WJets4Jets-p4',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -2117,7 +2112,7 @@ options = {
     'sample'         : 'WJets4Jets-p5',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -2128,7 +2123,7 @@ options = {
     'sample'         : 'WJets4Jets-p6',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -2139,7 +2134,7 @@ options = {
     'sample'         : 'WJets4Jets-p7',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -2150,7 +2145,7 @@ options = {
     'sample'         : 'WJets4Jets-p8',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -2161,7 +2156,7 @@ options = {
     'sample'         : 'WJets4Jets-p9',
     'xSection'       : 36257,
 ##     'skimEff'        : 1.0 * 3993529./13382803,##
-    'skimEff'        : 1.0 * 4114405./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,##
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -2171,7 +2166,7 @@ options = {
     'outputFileName' : OutDir+'nTupleTTJets_ElecTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
-    'skimEff'        : 1.0 * 0.503752 * 2553164./3487856,
+    'skimEff'        : 1.0 * 0.503752 * 2660824./3487856,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -2181,7 +2176,8 @@ options = {
     'outputFileName' : OutDir+'nTupleT-tW_ElecTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
-    'skimEff'        : 0.437682 * 150203./217816,
+    #'skimEff'        : 0.437682 * 160607./490658,
+    'skimEff'        : 1.0 * 160607./490658,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -2191,7 +2187,8 @@ options = {
     'outputFileName' : OutDir+'nTupleTbar-tW_ElecTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
-    'skimEff'        : 0.437851 * 148847./216062,
+    #'skimEff'        : 0.437851 * 148847./216062,
+    'skimEff'        : 1.0 * 161536./493460,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -2211,7 +2208,8 @@ options = {
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
-    'skimEff'        : 0.471732 * 1011659./1517085,
+    #'skimEff'        : 0.471732 * 1011659./1517085,
+    'skimEff'        : 1.0 * 1135312./3215990,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -2231,7 +2229,8 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
-    'skimEff'        : 0.468227 * 144262./437751,
+    #'skimEff'        : 0.468227 * 144262./437751,
+    'skimEff'        : 1.0 * 170171./954911,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
