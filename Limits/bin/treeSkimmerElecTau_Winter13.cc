@@ -788,11 +788,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
-  float ptAll[50],etaAll[50],phiAll[50];
+  float ptAll[50],etaAll[50],phiAll[50],energyAll[50];
   //float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
-  float ptAllB[50],etaAllB[50],phiAllB[50],csvAllB[50],csvAll[50];
+  float ptAllB[50],etaAllB[50],phiAllB[50],energyAllB[50],csvAllB[50],csvAll[50];
 //   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
@@ -985,10 +985,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("ptAll",  &ptAll,  "ptAll[nJets30]/F");
   outTreePtOrd->Branch("etaAll", &etaAll, "etaAll[nJets30]/F");
   outTreePtOrd->Branch("phiAll", &phiAll, "phiAll[nJets30]/F");
+  outTreePtOrd->Branch("energyAll",&energyAll,"energyAll[nJets30]/F");
   outTreePtOrd->Branch("csvAll", &csvAll, "csvAll[nJets30]/F");
   outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("energyAllB",&energyAllB,"energyAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
 
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
@@ -2017,7 +2019,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] = csvAll[i] = -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = energyAllB[i] = csvAllB[i] = csvAll[i] = -99;
     }
 
     // define the relevant jet collection
@@ -2045,6 +2047,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	ptAll[nJets30]  = (*jets)[indexes[v]].Pt();
 	etaAll[nJets30] = (*jets)[indexes[v]].Eta();
 	phiAll[nJets30] = (*jets)[indexes[v]].Phi();
+	energyAll[nJets30] = (*jets)[indexes[v]].E();
 	csvAll[nJets30] = (*jetsBtagCSV)[indexes[v]];
 	nJets30++;
       }
@@ -2063,6 +2066,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  ptAllB[nJets20BTagged]  = (*jets)[indexes[v]].Pt();
 	  etaAllB[nJets20BTagged] = (*jets)[indexes[v]].Eta();
 	  phiAllB[nJets20BTagged] = (*jets)[indexes[v]].Phi();	  
+	  energyAllB[nJets20BTagged] = (*jets)[indexes[v]].E();	  
 	  csvAllB[nJets20BTagged] = (*jetsBtagCSV)[indexes[v]];
 
 	  nJets20BTagged++;
