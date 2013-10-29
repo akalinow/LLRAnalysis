@@ -20,7 +20,7 @@ applyTauESCorr= False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-useMarkov   = True
+useMarkov   = False
 
 #if runOnEmbed and runOnMC:
 #    print "Running on Embedded, runOnMC should be switched off"
