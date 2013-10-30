@@ -33,7 +33,7 @@
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
 #define RERECO           true
-#define MSSM             false
+#define MSSM             true
 #define VERBOSE          true
 #define DEBUG            false
 #define LOOP             true
@@ -78,7 +78,19 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_, string selection_, TCut& tiso, TCut& ltiso, TCut& mtiso, TCut& antimu, TCut& liso, TCut& laiso, TCut& lliso, TCut& tpt)
+void chooseSelection(TString version_,
+		     string selection_, 
+		     TCut& tiso, 
+		     TCut& tdecaymode, 
+		     TCut& ltiso,
+		     TCut& mtiso, 
+		     TCut& antimu, 
+		     TCut& antiele, 
+		     TCut& liso,
+		     TCut& laiso,
+		     TCut& lliso,
+		     TCut& tpt
+		     )
 {
 
   if(version_.Contains("tauptbin")) tpt="ptL2>45 && ptL2<50";
@@ -110,45 +122,59 @@ void chooseSelection(TString version_, string selection_, TCut& tiso, TCut& ltis
   else if(version_.Contains("LAiso4")) laiso = "combRelIsoLeg1DBetav2>0.40 && combRelIsoLeg1DBetav2<=0.50";
 
   // Anti-Mu discriminator //
-  if(version_.Contains("AntiMu1"))      antimu = "tightestAntiMuWP>2";
-  else if(version_.Contains("AntiMu2")) antimu = "tightestAntiMu2WP>2";
-  
-  // TauIso1 //
-  if(version_.Contains("TauIso1")) {
-    tiso   = "tightestHPSMVAWP>=0" ;
-    ltiso  = "tightestHPSMVAWP>-99" ;
-    mtiso  = "hpsMVA>0.7" ;
-  }
-  // TauIso2 //
-  else if(version_.Contains("TauIso2")) {
-    tiso   = "tightestHPSMVA2WP>=0" ;
-    ltiso  = "tightestHPSMVA2WP>-99" ;
-    mtiso  = "hpsMVA2>0.7" ;
-  }
-  // TauIso DB3Hits cut-based //
-  else if(version_.Contains("HPSDB3H")) {
+  if(version_.Contains("AntiMu1Loose"))         antimu = "tightestAntiMuWP>0";
+  else if(version_.Contains("AntiMu1Medium"))   antimu = "tightestAntiMuWP>1";
+  else if(version_.Contains("AntiMu1Tight"))    antimu = "tightestAntiMuWP>2";
+  else if(version_.Contains("AntiMu2Loose"))    antimu = "tightestAntiMu2WP>0";
+  else if(version_.Contains("AntiMu2Medium"))   antimu = "tightestAntiMu2WP>1";
+  else if(version_.Contains("AntiMu2Tight"))    antimu = "tightestAntiMu2WP>2";
+  else if(version_.Contains("AntiMu3Loose"))    antimu = "tightestAntiMu3WP>0";
+  else if(version_.Contains("AntiMu3Medium"))   antimu = "tightestAntiMu3WP>1";
+  else if(version_.Contains("AntiMu3Tight"))    antimu = "tightestAntiMu3WP>2";
+  else if(version_.Contains("AntiMuMVALoose"))  antimu = "tightestAntiMuMVAWP>0";
+  else if(version_.Contains("AntiMuMVAMedium")) antimu = "tightestAntiMuMVAWP>1";
+  else if(version_.Contains("AntiMuMVATight"))  antimu = "tightestAntiMuMVAWP>2";
 
-    if(version_.Contains("VeryTightTiso")) {
-      tiso   = "hpsDB3H<0.5" ;
-      ltiso  = "hpsDB3H<1.5" ;
-      mtiso  = "hpsDB3H<1" ;
-    }
-    else if(version_.Contains("TightTiso")) {
-      tiso   = "hpsDB3H<0.8" ;
-      ltiso  = "hpsDB3H<2" ;
-      mtiso  = "hpsDB3H<1.5" ;
-    }
-    else if(version_.Contains("MediumTiso")) {
-      tiso   = "hpsDB3H<5.0" ;
-      ltiso  = "hpsDB3H<10.0" ;
-      mtiso  = "hpsDB3H<5.0" ;
-    }
-    else {
-      tiso   = "hpsDB3H<1.5" ;
-      ltiso  = "hpsDB3H<10.0" ;
-      //mtiso  = "hpsDB3H<1" ;
-      mtiso  = "hpsDB3H<5.0";
-    }
+  // Anti-Ele discriminator //
+  if(version_.Contains("AntiEleLoose"))        antiele = "tightestAntiECutWP > 0";
+  else if(version_.Contains("AntiEleMedium"))  antiele = "tightestAntiECutWP > 1";
+  else if(version_.Contains("AntiEleTight"))   antiele = "tightestAntiECutWP > 2";
+  else if(version_.Contains("AntiEle5VLoose")) antiele = "tightestAntiEMVA5WP > 0";
+  else if(version_.Contains("AntiEle5Loose"))  antiele = "tightestAntiEMVA5WP > 1";
+  else if(version_.Contains("AntiEle5Medium")) antiele = "tightestAntiEMVA5WP > 2";
+  else if(version_.Contains("AntiEle5Tight"))  antiele = "tightestAntiEMVA5WP > 3";
+  else if(version_.Contains("AntiEle5VTight")) antiele = "tightestAntiEMVA5WP > 4";
+
+  //TauID
+  if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0";
+  else if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingNewDM>0";
+
+  // TauIso
+  // TauIso DB3Hits cut-based //
+  if(version_.Contains("HPSDB3H")) {
+    tiso   = "hpsDB3H<1.5" ;
+    ltiso  = "hpsDB3H<10.0" ;
+    mtiso  = "hpsDB3H<5.0" ;
+  }
+  else if(version_.Contains("HPSMVA3newDMwLT")) {
+    tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
+    ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
+  }
+  else if(version_.Contains("HPSMVA3newDMw0LT")) {
+    tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
+    ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
+  }
+  else if(version_.Contains("HPSMVA3oldDMwLT")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>2" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
+  }
+  else if(version_.Contains("HPSMVA3oldDMw0LT")) {
+    tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
   }
 
 }
@@ -901,10 +927,7 @@ void plotMuTau( Int_t mH_           = 120,
 		TString version_    = "AntiMu1_TauIso1",
 		Float_t antiWsgn    = 20,
 		Float_t antiWsdb    = 70,
-		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_p2_topup/src/Bianchi/Limits/bin/results/"
-		//TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_GIT/src/LLRAnalysis/Limits/bin/results/"
-		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
 
@@ -1191,9 +1214,9 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update7/";
-  TString pathToFileDY    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/update7/";
-  TString pathToFileHWW   = pathToFile; //"/data_CMS/cms/htautau/PostMoriond/NTUPLES_Summer13_TES/MuTau/updateHWW/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauID/MuTau/";
+  TString pathToFileDY    = pathToFile;
+  TString pathToFileHWW   = pathToFile; 
 
   // DATA //
   TChain *data = new TChain("outTreePtOrd");
@@ -1429,13 +1452,15 @@ void plotMuTau( Int_t mH_           = 120,
   ////// TAU PT+ID+ISO //////
   //TCut tpt("ptL2>20");
   TCut tpt("ptL2>30");
-  TCut antimu("tightestAntiMuWP>2");
-  TCut tiso("tightestHPSMVAWP>=0");
-  TCut ltiso("tightestHPSMVAWP>-99");
-  TCut mtiso("hpsMVA>0.7");
+  TCut antimu("tightestAntiMuWP>0");
+  TCut antiele("tightestAntiEMVA5WP > 0");
+  TCut tiso("hpsDB3H<1.5");
+  TCut tdecaymode("decayModeFindingOldDM>0");
+  TCut ltiso("hpsDB3H<10.0");
+  TCut mtiso("hpsDB3H<5.0");
 
   // Choose selection wrt version_
-  chooseSelection(version_, selection_, tiso, ltiso, mtiso, antimu,liso,laiso,lliso,tpt);
+  chooseSelection(version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele,liso,laiso,lliso,tpt);
   if(selection_.find("vbfRelaxMt")!=string::npos) antiWsgn+=10;
 
   ////// EVENT WISE //////
@@ -1573,57 +1598,57 @@ void plotMuTau( Int_t mH_           = 120,
   // difference between pairIndex and inclusive selections :
   // lID, lveto, diTauCharge, MtCut
 
-  TCut sbinPresel           = lpt && lID && tpt && tiso  && antimu && liso  && lveto && hltevent   ;
-  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && antimu && liso  && lveto               ;
-  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && antimu && laiso && lveto && hltevent   ;
-  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && antimu && lliso && lveto && hltevent   ;
-  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso  && antimu && laiso && lveto && hltevent  ;
-  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso  && antimu && liso  && lveto && hltevent   ;
+  TCut sbinPresel           = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && hltevent   ;
+  TCut sbinEmbeddingPresel  = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto               ;
+  TCut sbinaIsoPresel       = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && hltevent   ;
+  TCut sbinlIsoPresel       = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && lliso && lveto && hltevent   ;
+  TCut sbinaIsoLtisoPresel  = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && laiso && lveto && hltevent  ;
+  TCut sbinLtisoPresel      = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && hltevent   ;
 
-  TCut sbinInclusive                     = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinChargeRelInclusive        = lpt && lID && tpt && tiso  && antimu && liso  && lveto                 && MtCut  && hltevent   ;
-  TCut sbinChargeRelLtisoInclusive   = lpt && lID && tpt && ltiso  && antimu && liso  && lveto                && MtCut  && hltevent   ;
-  TCut sbinChargeRelPZetaRelInclusive = lpt && lID && tpt && tiso  && antimu && liso  && lveto                          && hltevent   ;
-  TCut sbinEmbeddingInclusive            = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge  && MtCut                ;
-  TCut sbinPZetaRelEmbeddingInclusive    = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge                          ;
-  TCut sbinPZetaRelSSInclusive           = lpt && lID && tpt && tiso  && antimu && liso  && lveto && SS                     && hltevent   ;
-  TCut sbinPZetaRelInclusive             = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge            && hltevent   ;
-  TCut sbinSSInclusive                   = lpt && lID && tpt && tiso  && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSaIsoInclusive               = lpt && lID && tpt && tiso  && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinAisoInclusive                 = lpt && lID && tpt && tiso  && antimu && laiso && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinPZetaRelSSaIsoInclusive       = lpt && lID && tpt && tiso  && antimu && laiso && lveto && SS                     && hltevent   ;
-  TCut sbinPZetaRelSSaIsoMtisoInclusive  = lpt && lID && tpt && mtiso && antimu && laiso && lveto && SS                     && hltevent   ;
+  TCut sbinInclusive                     = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinChargeRelInclusive            = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto                 && MtCut  && hltevent   ;
+  TCut sbinChargeRelLtisoInclusive       = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto                && MtCut  && hltevent   ;
+  TCut sbinChargeRelPZetaRelInclusive    = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto                          && hltevent   ;
+  TCut sbinEmbeddingInclusive            = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut                ;
+  TCut sbinPZetaRelEmbeddingInclusive    = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge                          ;
+  TCut sbinPZetaRelSSInclusive           = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && SS                     && hltevent   ;
+  TCut sbinPZetaRelInclusive             = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge            && hltevent   ;
+  TCut sbinSSInclusive                   = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSaIsoInclusive               = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinAisoInclusive                 = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinPZetaRelSSaIsoInclusive       = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && SS                     && hltevent   ;
+  TCut sbinPZetaRelSSaIsoMtisoInclusive  = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && laiso && lveto && SS                     && hltevent   ;
 
-  TCut sbinSSaIsoLtisoInclusive          = lpt && lID && tpt && ltiso && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSaIsoMtisoInclusive          = lpt && lID && tpt && mtiso && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinPZetaRelaIsoInclusive         = lpt && lID && tpt && tiso  && antimu && laiso && lveto && diTauCharge            && hltevent   ;
+  TCut sbinSSaIsoLtisoInclusive          = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSaIsoMtisoInclusive          = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinPZetaRelaIsoInclusive         = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && diTauCharge            && hltevent   ;
 
-  TCut sbinSSltisoInclusive              = lpt && lID && tpt && ltiso && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinLtisoInclusive                = lpt && lID && tpt && ltiso && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinMtisoInclusive                = lpt && lID && tpt && mtiso && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinPZetaRelLtisoInclusive        = lpt && lID && tpt && ltiso && antimu && liso  && lveto && diTauCharge            && hltevent   ;
+  TCut sbinSSltisoInclusive              = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinLtisoInclusive                = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinMtisoInclusive                = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinPZetaRelLtisoInclusive        = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge            && hltevent   ;
 
-  TCut sbin                   = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinEmbedding          = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge  && MtCut                ;
-  TCut sbinEmbeddingPZetaRel  = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge                          ;
-  TCut sbinPZetaRel           = lpt && lID && tpt && tiso  && antimu && liso  && lveto && diTauCharge            && hltevent   ;
-  TCut sbinPZetaRelaIso       = lpt && lID && tpt && tiso  && antimu && laiso && lveto && diTauCharge            && hltevent   ;
-  TCut sbinPZetaRelSSaIso     = lpt && lID && tpt && tiso  && antimu && laiso && lveto && SS                     && hltevent   ;
-  TCut sbinSS                 = lpt && lID && tpt && tiso  && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinPZetaRelSS         = lpt && lID && tpt && tiso  && antimu && liso  && lveto && SS                     && hltevent   ;
-  TCut sbinAiso               = lpt && lID && tpt && tiso  && antimu && laiso && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinSSaIso             = lpt && lID && tpt && tiso  && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSlIso1            = lpt && lID && tpt && tiso  && antimu && lliso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSlIso2            = lpt && lID && tpt && mtiso && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSlIso3            = lpt && lID && tpt && mtiso && antimu && lliso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSaIsoLtiso        = lpt && lID && tpt && ltiso && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSaIsoMtiso        = lpt && lID && tpt && mtiso && antimu && laiso && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSltiso            = lpt && lID && tpt && ltiso && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinSSmtiso            = lpt && lID && tpt && mtiso && antimu && liso  && lveto && SS           && MtCut  && hltevent   ;
-  TCut sbinLtiso              = lpt && lID && tpt && ltiso && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinMtiso              = lpt && lID && tpt && mtiso && antimu && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
-  TCut sbinPZetaRelMtiso      = lpt && lID && tpt && mtiso && antimu && liso  && lveto && diTauCharge            && hltevent   ;
-  TCut sbinPZetaRelSSaIsoMtiso= lpt && lID && tpt && mtiso && antimu && laiso && lveto && SS                     && hltevent   ;
+  TCut sbin                   = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinEmbedding          = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut                ;
+  TCut sbinEmbeddingPZetaRel  = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge                          ;
+  TCut sbinPZetaRel           = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge            && hltevent   ;
+  TCut sbinPZetaRelaIso       = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && diTauCharge            && hltevent   ;
+  TCut sbinPZetaRelSSaIso     = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && SS                     && hltevent   ;
+  TCut sbinSS                 = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinPZetaRelSS         = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && liso  && lveto && SS                     && hltevent   ;
+  TCut sbinAiso               = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinSSaIso             = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSlIso1            = lpt && lID && tpt && tiso  && tdecaymode && antimu && antiele && lliso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSlIso2            = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSlIso3            = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && lliso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSaIsoLtiso        = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSaIsoMtiso        = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && laiso && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSltiso            = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinSSmtiso            = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && SS           && MtCut  && hltevent   ;
+  TCut sbinLtiso              = lpt && lID && tpt && ltiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinMtiso              = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge  && MtCut  && hltevent   ;
+  TCut sbinPZetaRelMtiso      = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge            && hltevent   ;
+  TCut sbinPZetaRelSSaIsoMtiso= lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && laiso && lveto && SS                     && hltevent   ;
 
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,7 @@
 
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
+#define MSSM             true
 #define VERBOSE          true
 #define DEBUG            false
 #define LOOP             true
@@ -133,8 +134,8 @@ void chooseSelection(TString version_,
   if(version_.Contains("NewEleID")) lveto = "elecFlag==0 && vetoEventNew==0";
 
   //TauID
-  if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDMs>0";
-  else if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingNewDMs>0";
+  if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0";
+  else if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingNewDM>0";
 
   // TauIso
   // TauIso DB3Hits cut-based //
@@ -537,7 +538,7 @@ TArrayF createBins(int nBins_ = 80 ,
   
   char* c = new char[10];
   string filename = Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str());
-  if(version_.Contains("MSSM"))
+  if(MSSM)
     filename = Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str());
 
   cout<<"bins file : "<<filename<<endl;
@@ -564,10 +565,8 @@ TArrayF createBins(int nBins_ = 80 ,
   cout << "Making histograms with " << nBins << " bins:" << endl;
 
   is.close();
-  if(version_.Contains("MSSM"))
-    is.open(Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str())); 
-  else
-    is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str()));
+//     is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str()));
+  is.open(filename);
 
   nBinsFromFile = 0;
 
@@ -947,10 +946,7 @@ void plotElecTau( Int_t mH_           = 120,
 		  Float_t maxY_       = 1.2,
 		  TString RUN         = "ABCD",
 		  TString version_    = "Moriond",
-		  //TString location  = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_Sep12/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Spring13_Trees/src/LLRAnalysis/Limits/bin/results/"
-		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/"
-		  //TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
+		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
 
@@ -1177,7 +1173,7 @@ void plotElecTau( Int_t mH_           = 120,
 
   TH1F* hSusy[nProdS][nMassesS];
 
-  if(version_.Contains("MSSM")){
+  if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
         hSusy[iP][iM] = new TH1F("h"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
@@ -1504,7 +1500,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut antimu("tightestAntiMuWP>0");
   TCut antiele("tightestAntiEMVA5WP > 0");
   TCut tiso("hpsDB3H<1.5");
-  TCut tdecaymode("decayModeFindingOldDMs>0");
+  TCut tdecaymode("decayModeFindingOldDM>0");
   TCut ltiso("hpsDB3H<10.0");
   TCut mtiso("hpsDB3H<5.0");
   TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
@@ -1856,7 +1852,7 @@ void plotElecTau( Int_t mH_           = 120,
       continue;
     }
 
-    if(!version_.Contains("MSSM") && currentName.Contains("SUSY")) continue;
+    if(!MSSM && currentName.Contains("SUSY")) continue;
     
     h1Name         = "h1_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
@@ -2647,7 +2643,7 @@ void plotElecTau( Int_t mH_           = 120,
               if(currentName.Contains(nameProdWW[iP]+nameMassesWW[iM]))
                 hSignalWW[iP][iM]->Add(h1,1.0);
 	  
-	  if(version_.Contains("MSSM")) {
+	  if(MSSM) {
 	    if(currentName.Contains("SUSY")){
               //select events within 30% of Higgs mass
               TString sampleName = currentName;
@@ -2906,7 +2902,7 @@ void plotElecTau( Int_t mH_           = 120,
     aStack->Add(hZtt);
 
   TH1F* hSgnSUSY ;
-  if(version_.Contains("MSSM")){
+  if(MSSM) {
     hSgnSUSY = (TH1F*)hSusy[0][4]->Clone("hSgnSUSY");
     hSgnSUSY->Add(hSusy[1][4]);
     hSgnSUSY->Scale(magnifySgn_);
@@ -2916,7 +2912,7 @@ void plotElecTau( Int_t mH_           = 120,
     aStack->Add(hSgn);
 
   leg->AddEntry(hData,"Observed","P");
-  if(version_.Contains("MSSM")) 
+  if(MSSM) 
     leg->AddEntry(hSgn,Form("(%.0fx) #phi#rightarrow#tau#tau m_{A}=120",magnifySgn_),"F");
   else 
     leg->AddEntry(hSgn,Form("(%.0fx) H#rightarrow#tau#tau m_{H}=%d",magnifySgn_,mH_),"F");
@@ -2954,7 +2950,7 @@ void plotElecTau( Int_t mH_           = 120,
     hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum() + hSgn->GetMaximum(), hSiml->GetMaximum() + hSgn->GetMaximum() )*maxY_ ,"Y");
   aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
-  if(logy_ && !version_.Contains("MSSM"))
+  if(logy_ && !MSSM) 
     hSgn->Draw("HISTSAME");
  
   leg->Draw();
@@ -3020,7 +3016,7 @@ void plotElecTau( Int_t mH_           = 120,
   // Plot blinded histogram
   if(variable_.Contains("Mass")) {
 
-    if(version_.Contains("MSSM")){
+    if(MSSM) {
       hDataBlind  = blindHistogram(hData,  100, 2000, "hDataBlind");
       hRatioBlind = blindHistogram(hRatio, 100, 2000, "hRatioBlind");
     }
@@ -3126,7 +3122,7 @@ void plotElecTau( Int_t mH_           = 120,
   hSgn1->Write();
   hSgn2->Write();
   hSgn3->Write();
-  if(version_.Contains("MSSM"))
+  if(MSSM) 
     hSgnSUSY->Write();
   hW3JetsLooseTauIso->Write();
   hW3JetsMediumTauIso->Write();
@@ -3153,7 +3149,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdWW ; iP++)
     for(int iM=0 ; iM<nMassesWW ; iM++)
       if(hSignalWW[iP][iM]) hSignalWW[iP][iM]->Write();
-  if(version_.Contains("MSSM")) {
+  if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
         if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
@@ -3173,7 +3169,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdWW ; iP++)
     for(int iM=0 ; iM<nMassesWW ; iM++)
       if(hSignalWW[iP][iM]) delete hSignalWW[iP][iM];
-  if(version_.Contains("MSSM")) {
+  if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
         if(hSusy[iP][iM]) delete hSusy[iP][iM];
