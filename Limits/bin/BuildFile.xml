@@ -18,6 +18,16 @@
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
 
+<bin   file="analyzeMuTau_Winter13.cc"  name="analyzeMuTau_Winter13">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
+
+<bin   file="analyzeElecTau_Winter13.cc"  name="analyzeElecTau_Winter13">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
+
 <bin   file="processMuTau_Pascal.cc"  name="processMuTau_Pascal">
   <use   name="FWCore/FWLite"/>
   <use   name="HiggsAnalysis/CombinedLimit"/>
