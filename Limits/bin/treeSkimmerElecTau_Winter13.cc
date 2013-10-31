@@ -182,38 +182,8 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   
-//   if(nJets==0)      return 1 ;
-//   else if(nJets==1) return 0.368748897 ;
-//   else if(nJets==2) return 0.114009944 ;
-//   else if(nJets==3) return 0.077158785 ;
-//   else if(nJets>=4) return 0.038490064 ;
-//   else return 1 ;
-
-//   if(nJets==0)      return 0.723706428 ;
-//   else if(nJets==1) return 0.210195224 ;
-//   else if(nJets==2) return 0.060963485 ;
-//   else if(nJets==3) return 0.091456958 ;
-//   else if(nJets>=4) return 0.034384641 ;
-//   else return 1 ;
-
-// //JetIDFix,ByPair
-//   if(nJets==0)      return 0.492871535 ;
-//   else if(nJets==1) return 0.181745835 ;
-//   else if(nJets==2) return 0.056192256 ;
-//   else if(nJets==3) return 0.038029369 ;
-//   else if(nJets>=4) return 0.018970657 ;
-//   else return 1 ;
-
-// //NewEleIDFix
-//   if(nJets==0)      return 0.492871535 ;
-//   else if(nJets==1) return 0.181745835 ;
-//   else if(nJets==2) return 0.105768875 ;
-//   else if(nJets==3) return 0.039434502 ;
-//   else if(nJets>=4) return 0.027053425 ;
-//   else return 1 ;
-
-//NewJEC
-  if(set==0) { // usual set of samples
+  //Winter13
+  if(set==0) { // usual set of samples OLD
     if(nJets==0)      return 0.492871535;
     else if(nJets==1) return 0.184565169;
     else if(nJets==2) return 0.056192256;
@@ -221,12 +191,12 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
     else if(nJets>=4) return 0.018970657;
     else return 1 ;
   }
-  else if(set==1) { // adding new high stat samples
+  else if(set==1) { // adding new high stat samples 
     if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.100275621;
-    else if(nJets==2) return 0.031239069;
-    else if(nJets==3) return 0.019961638;
-    else if(nJets>=4) return 0.018970657;
+    else if(nJets==1) return 0.100267473;
+    else if(nJets==2) return 0.031238278;
+    else if(nJets==3) return 0.019961315;
+    else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
   else return 1 ;
@@ -236,18 +206,10 @@ float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   
-//   if(nJets==0)      return 0.115028141 ;
-//   else if(nJets==1) return 0.027710126 ;
-//   else if(nJets==2) return 0.0098376 ;
-//   else if(nJets==3) return 0.005509647 ;
-//   else if(nJets>=4) return 0.004266394 ;
-//   else return 1 ;
-
-//NewJEC
-  if(nJets==0)      return 0.1150281410;
-  else if(nJets==1) return 0.0223306920;
-  else if(nJets==2) return 0.0090625410;
-  else if(nJets==3) return 0.005273798;
+  if(nJets==0)      return 0.115028141;
+  else if(nJets==1) return 0.022330692;
+  else if(nJets==2) return 0.009068275;
+  else if(nJets==3) return 0.005270592;
   else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }

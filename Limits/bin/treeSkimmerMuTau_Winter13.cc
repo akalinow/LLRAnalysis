@@ -265,38 +265,9 @@ double deltaR(LV v1, LV v2) {
 float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
-  //   if(nJets==0)      return 1 ;
-  //   else if(nJets==1) return 0.368748897 ;
-  //   else if(nJets==2) return 0.114009944 ;
-  //   else if(nJets==3) return 0.077158785 ;
-  //   else if(nJets>=4) return 0.038490064 ;
-  //   else return 1 ;
-
-  //   if(nJets==0)      return 0.723706428 ;
-  //   else if(nJets==1) return 0.210195224 ;
-  //   else if(nJets==2) return 0.060963485 ;
-  //   else if(nJets==3) return 0.091456958 ;
-  //   else if(nJets>=4) return 0.034384641 ;
-  //   else return 1 ;
-
-  // //JetIDFix,ByPair
-  //   if(nJets==0)      return 0.492871535 ;
-  //   else if(nJets==1) return 0.181745835 ;
-  //   else if(nJets==2) return 0.056192256 ;
-  //   else if(nJets==3) return 0.038029369 ;
-  //   else if(nJets>=4) return 0.018970657 ;
-  //   else return 1 ;
-
-  // //NewEleIDFix
-  //   if(nJets==0)      return 0.492871535 ;
-  //   else if(nJets==1) return 0.181745835 ;
-  //   else if(nJets==2) return 0.105768875 ;
-  //   else if(nJets==3) return 0.039434502 ;
-  //   else if(nJets>=4) return 0.027053425 ;
-  //   else return 1 ;
   
-  //NewJEC
-  if(set==0) { // usual set of samples
+  //Winter13
+  if(set==0) { // usual set of samples OLD
     if(nJets==0)      return 0.492871535;
     else if(nJets==1) return 0.184565169;
     else if(nJets==2) return 0.056192256;
@@ -306,10 +277,10 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
   }
   else if(set==1) { // adding new high stat samples
     if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.100275621;
-    else if(nJets==2) return 0.031239069;
-    else if(nJets==3) return 0.019961638;
-    else if(nJets>=4) return 0.018970657;
+    else if(nJets==1) return 0.100267473;
+    else if(nJets==2) return 0.031238278;
+    else if(nJets==3) return 0.019961315;
+    else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
   else return 1 ;
@@ -319,20 +290,11 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
 float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
-  /* //wrong one
-    if(nJets==0)      return 0.115028141 ;
-    else if(nJets==1) return 0.027710126 ;
-    else if(nJets==2) return 0.0098376 ;
-    else if(nJets==3) return 0.005509647 ;
-    else if(nJets>=4) return 0.004266394 ;
-    else return 1 ;
-  */
-  
-  //NewJEC
+
   if(nJets==0)      return 0.115028141;
   else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009062541;
-  else if(nJets==3) return 0.005257807;
+  else if(nJets==2) return 0.009068275;
+  else if(nJets==3) return 0.005270592;
   else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
@@ -827,7 +789,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmNoTau_, L1etmNoTauPhi_, L1etmPhiCorr_, L1etmCorrUp_, L1etmPhiCorrUp_, L1etmCorrDown_, L1etmPhiCorrDown_,
     passL1etmCut_, passL1etmCutABC_, passL1etmCutUp_, passL1etmCutABCUp_, passL1etmCutDown_, passL1etmCutABCDown_; // ND
   float etmCut=20;
-  float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoTau_, caloMEtNoTauPhi_, caloMEtUncorrNoTau_, caloMEtUncorrNoTauPhi_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
+  float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_,//  caloMEtNoTau_, caloMEtNoTauPhi_,
+    // caloMEtUncorrNoTau_, caloMEtUncorrNoTauPhi_,
+    caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
 
   //tau related variables
@@ -1135,10 +1099,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("passL1etmCutABCDown", &passL1etmCutABCDown_,"passL1etmCutABCDown/F");//ND
 
   // CALO MET //
-  outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
-  outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
-  outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
-  outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
+//   outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
+//   outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
+//   outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
+//   outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHF",          &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFPhi",       &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFUncorr",    &caloMEtNoHFUncorr_,   "caloMEtNoHFUncorr/F");//MB
@@ -1329,8 +1293,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   cout<< "crossSection " << crossSection << " pb ==> scaleFactor " << scaleFactor << endl;
 
   // jets
-  currentTree->SetBranchStatus("l1JetsP4"  ,1);
-  currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
+//   currentTree->SetBranchStatus("l1JetsP4"  ,1);
+//   currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
   currentTree->SetBranchStatus("jetsP4"                ,0);
   currentTree->SetBranchStatus("jetsIDP4"              ,1);
   currentTree->SetBranchStatus("jetsIDUpP4"            ,1);
@@ -1546,11 +1510,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   std::vector< float >* jetQuarkGluonGen =  new std::vector< float >();
   currentTree->SetBranchAddress("jetQuarkGluonGen", &jetQuarkGluonGen);
 
-  std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
-  currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
+//   std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
+//   currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
 
-  std::vector< LV >* l1JetsP4    = new std::vector< LV >();
-  currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
+//   std::vector< LV >* l1JetsP4    = new std::vector< LV >();
+//   currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
 
   std::vector< LV >* diTauLegsP4    = new std::vector< LV >();
   currentTree->SetBranchAddress("diTauLegsP4",     &diTauLegsP4);
@@ -1861,7 +1825,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   MAPDITAU_run mapDiTau;
 
   // P4s for tau removal
-  LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
+//   LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
 
   ///////////////////////
   // LOOP OVER ENTRIES //
@@ -2408,48 +2372,49 @@ void fillTrees_MuTauStream(TChain* currentTree,
       caloMEtNoHFUp_ = caloMEtNoHFUpPhi_ = caloMEtNoHFDown_ = caloMEtNoHFDownPhi_ = -99;
     }
 
-    ////////////////////////////////////////////////
-    // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
+//     ////////////////////////////////////////////////
+//     // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
 
-    // use rawEtL1Jet(et,eta)
+//     // use rawEtL1Jet(et,eta)
 
-    // Initialization
-    caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
-    caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
+//     // Initialization
+//     caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
+//     caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
 
-    if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
-    else                        L1etmNoTauP4 = (*l1ETMP4)[1];
+//     if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
+//     else                        L1etmNoTauP4 = (*l1ETMP4)[1];
 
-    if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
+//     if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
 
-      // L1Jets matching
-      if(l1JetsP4->size()>0) {
-	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
-	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
-	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
-	}
-      }
+//       // L1Jets matching
+//       if(l1JetsP4->size()>0) {
+// 	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
+// 	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
+// 	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
+// 	}
+//       }
 
-      // CaloJets matching
-      if(caloJetsMatchedP4->size()>0) {
-	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
-	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
-	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
-	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
-	  }
-	}
-      }
-    }
+//       // CaloJets matching
+//       if(caloJetsMatchedP4->size()>0) {
+// 	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
+// 	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
+// 	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
+// 	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
+// 	  }
+// 	}
+//       }
+//     }
 
-    caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
-    caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
-    L1etmNoTau_         = L1etmNoTauP4.Et() ;
+//     caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
+//     caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
+//     L1etmNoTau_         = L1etmNoTauP4.Et() ;
 
-    caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
-    caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
-    L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
+//     caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
+//     caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
+//     L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
 
-    ////////////////////////////////////////////////    
+//     ////////////////////////////////////////////////  
+    
 
     MEtCov00   = (*metSgnMatrix)[0]; 
     MEtCov01   = (*metSgnMatrix)[1]; 
