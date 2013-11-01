@@ -933,7 +933,8 @@ options = {
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
-    'skimEff'        : 0.535690 * 423373./1014187,
+    #'skimEff'        : 0.535690 * 423373./1014187,
+    'skimEff'        : 0.535690 * 459248./1007187,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -954,7 +955,8 @@ options = {
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_ElecTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
-    'skimEff'        : 0.618550 * 609046./1248321,
+    #'skimEff'        : 0.618550 * 609046./1248321,
+    'skimEff'        : 1.0 * 670103./2017979,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -975,7 +977,8 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
-    'skimEff'        : 0.533349 * 673294./1025952,
+    #'skimEff'        : 0.533349 * 673294./1025952,
+    'skimEff'        : 1.0 * 762432./1929727,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -985,7 +988,8 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_ElecTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
-    'skimEff'        : 0.577947 *  1028639./2225997,
+    #'skimEff'        : 0.577947 *  1028639./2225997,
+    'skimEff'        : 1.0 * 1396571./4793893,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1

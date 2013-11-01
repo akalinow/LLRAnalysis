@@ -199,7 +199,7 @@ options = {
     },
     ##Embedded
     'Run2012A-22Jan2013-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012A_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012A_ReReco22Jan_HTT_09Oct13_Trees_v2/',
     'outputFileName' : OutDir+'nTupleRun2012A-22Jan2013-Embedded_MuTau.root',
     'sample'         : 'Run2012A-22Jan2013-Embedded',
     'xSection'       : 0,
@@ -207,7 +207,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p1/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_v2_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p1-Embedded_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -215,7 +215,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p2/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_v2_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p2-Embedded_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -223,7 +223,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p3/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_v2_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p3-Embedded_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -231,7 +231,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p4/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_v2_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p4-Embedded_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -239,7 +239,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/Embed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p5/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_09Oct13_Trees_v2_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p5-Embedded_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -774,7 +774,8 @@ options = {
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_MuTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
-    'skimEff'        : 0.535690 * 0.410962,
+    #'skimEff'        : 0.535690 * 0.410962,
+    'skimEff'        : 0.535690 * 459248./1007187,
     'iJson'          : -1
     },
     'WZJetsTo2L2Q' : {
@@ -791,7 +792,8 @@ options = {
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_MuTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
-    'skimEff'        : 1.0 * 0.618550 * 0.458578,
+    #'skimEff'        : 1.0 * 0.618550 * 0.458578,
+    'skimEff'        : 1.0 * 670103./2017979,
     'iJson'          : -1
     },
     'ZZJetsTo2L2Nu' : {
@@ -808,7 +810,8 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_MuTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
-    'skimEff'        : 0.533349 * 0.648352,
+    #'skimEff'        : 0.533349 * 0.648352,
+    'skimEff'        : 1.0 * 762432./1929727,
     'iJson'          : -1
     },
     'ZZJetsTo4L' : {
@@ -816,7 +819,8 @@ options = {
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_MuTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
-    'skimEff'        : 0.577947 * 0.457893,
+    #'skimEff'        : 0.577947 * 0.457893,
+    'skimEff'        : 1.0 * 1396571./4793893,
     'iJson'          : -1
     },
 ##     ##Higgs MC
