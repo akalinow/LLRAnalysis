@@ -91,29 +91,29 @@ anaEmb = ['nominal', 'TauUp','TauDown']
 #anaEmb = ['nominal','TauUp','TauDown','MuUp','MuDown']
 
 samplesEmb = [
-##     #'Run2012A-22Jan2013-Embedded',
-##     #'Run2012B-22Jan2013-p1-Embedded',
-##     #'Run2012B-22Jan2013-p2-Embedded',
-##     #'Run2012B-22Jan2013-p3-Embedded',
-##     #'Run2012B-22Jan2013-p4-Embedded',
-##     #'Run2012B-22Jan2013-p5-Embedded',
-##     #'Run2012C-22Jan2013-p0-Embedded',
-##     #'Run2012C-22Jan2013-p1-Embedded',
-##     #'Run2012C-22Jan2013-p2-Embedded',
-##     #'Run2012C-22Jan2013-p3-Embedded',
-##     #'Run2012C-22Jan2013-p4-Embedded',
-##     #'Run2012C-22Jan2013-p5-Embedded',
-##     #'Run2012C-22Jan2013-p6-Embedded',
-##     #'Run2012C-22Jan2013-p7-Embedded',    
-##     #'Run2012D-22Jan2013-p1-Embedded',
-##     #'Run2012D-22Jan2013-p2-Embedded',
-##     #'Run2012D-22Jan2013-p3-Embedded',
-##     #'Run2012D-22Jan2013-p4-Embedded',
-##     #'Run2012D-22Jan2013-p5-Embedded',
-##     #'Run2012D-22Jan2013-p6-Embedded',
-##     #'Run2012D-22Jan2013-p7-Embedded',
-##     #'Run2012D-22Jan2013-p8-Embedded',
-##     #'Run2012D-22Jan2013-p9-Embedded'
+##     'Run2012A-22Jan2013-Embedded',
+##     'Run2012B-22Jan2013-p1-Embedded',
+##     'Run2012B-22Jan2013-p2-Embedded',
+##     'Run2012B-22Jan2013-p3-Embedded',
+##     'Run2012B-22Jan2013-p4-Embedded',
+##     'Run2012B-22Jan2013-p5-Embedded',
+##     'Run2012C-22Jan2013-p0-Embedded',
+##     'Run2012C-22Jan2013-p1-Embedded',
+##     'Run2012C-22Jan2013-p2-Embedded',
+##     'Run2012C-22Jan2013-p3-Embedded',
+##     'Run2012C-22Jan2013-p4-Embedded',
+##     'Run2012C-22Jan2013-p5-Embedded',
+##     'Run2012C-22Jan2013-p6-Embedded',
+##     'Run2012C-22Jan2013-p7-Embedded',    
+##     'Run2012D-22Jan2013-p1-Embedded',
+##     'Run2012D-22Jan2013-p2-Embedded',
+##     'Run2012D-22Jan2013-p3-Embedded',
+##     'Run2012D-22Jan2013-p4-Embedded',
+##     'Run2012D-22Jan2013-p5-Embedded',
+##     'Run2012D-22Jan2013-p6-Embedded',
+##     'Run2012D-22Jan2013-p7-Embedded',
+##     'Run2012D-22Jan2013-p8-Embedded',
+##     'Run2012D-22Jan2013-p9-Embedded'
     ]
 
 for iSEmb in range(0,len(samplesEmb)):
@@ -123,7 +123,8 @@ for iSEmb in range(0,len(samplesEmb)):
 
 ##MC
 anaMC          = ['nominal','TauUp','TauDown','JetUp','JetDown']
-ListFinalState = ['TauTau','JetToTau','MuToTau','ZTTL']
+ListFinalState = ['TauTau','JetToTau','MuToTau','ZTTL','ZTTJ']
+#ListFinalState = ['ZTTJ']
 
 for iAnMC in range(0,len(anaMC)):
 
@@ -153,12 +154,12 @@ for iAnMC in range(0,len(anaMC)):
     #treeSkim( anaMC[iAnMC] , "TTJets_Had"     , False)
     #treeSkim( anaMC[iAnMC] , "T-tW"          , False)
     #treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
-##     treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
-##     treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
+    #treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
+    #treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
     #treeSkim( anaMC[iAnMC] , "WZJetsTo2L2Q"  , False)
-##     treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"  , False)
+    #treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"  , False)
     #treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Nu"  , False)
-##     treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
+    #treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
 
 ##     ## SM Higgs MC
 ##     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
@@ -209,47 +210,47 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "VH155"         , False)
 ##     treeSkim( anaMC[iAnMC] , "VH160"         , False)
 
-##     #### MSSM Higgs MC
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH80"         , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH90"         , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH100"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH110"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH120"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH130"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH140"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH160"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH180"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH200"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH250"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH300"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH350"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH400"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH450"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH500"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH600"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH700"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH800"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH900"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYGGH1000"       , False)
+    #### MSSM Higgs MC
+    treeSkim( anaMC[iAnMC] , "SUSYGGH80"         , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH90"         , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH100"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH110"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH120"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH130"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH140"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH160"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH180"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH200"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH250"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH300"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH350"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH400"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH450"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH500"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH600"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH700"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH800"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH900"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYGGH1000"       , False)
 
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH80"         , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH90"         , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH100"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH110"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH120"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH130"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH140"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH160"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH180"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH200"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH250"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH300"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH350"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH400"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH450"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH500"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH600"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH700"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH800"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH900"        , False)
-##     treeSkim( anaMC[iAnMC] , "SUSYBBH1000"       , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH80"         , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH90"         , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH100"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH110"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH120"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH130"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH140"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH160"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH180"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH200"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH250"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH300"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH350"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH400"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH450"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH500"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH600"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH700"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH800"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH900"        , False)
+    treeSkim( anaMC[iAnMC] , "SUSYBBH1000"       , False)

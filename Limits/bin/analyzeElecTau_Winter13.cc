@@ -106,8 +106,7 @@ void chooseSelection(TString version_,
   else if(version_.Contains("AntiMu2Medium"))   antimu = "tightestAntiMu2WP>1";
   else if(version_.Contains("AntiMu2Tight"))    antimu = "tightestAntiMu2WP>2";
   else if(version_.Contains("AntiMu3Loose"))    antimu = "tightestAntiMu3WP>0";
-  else if(version_.Contains("AntiMu3Medium"))   antimu = "tightestAntiMu3WP>1";
-  else if(version_.Contains("AntiMu3Tight"))    antimu = "tightestAntiMu3WP>2";
+  else if(version_.Contains("AntiMu3Tight"))    antimu = "tightestAntiMu3WP>1";
   else if(version_.Contains("AntiMuMVALoose"))  antimu = "tightestAntiMuMVAWP>0";
   else if(version_.Contains("AntiMuMVAMedium")) antimu = "tightestAntiMuMVAWP>1";
   else if(version_.Contains("AntiMuMVATight"))  antimu = "tightestAntiMuMVAWP>2";
@@ -488,7 +487,7 @@ void drawHistogram(TCut sbinPair,
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
-      tree->Draw(variable+">>"+TString(h->GetName()),cut*sampleWeight*weightDY*weightW*weight*genMass*sbinCat);
+      tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*genMass*sbinCat);
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -1299,6 +1298,8 @@ void plotElecTau( Int_t mH_           = 120,
   backgroundWJets   ->Add(pathToFile+"nTupleWJets2Jets*_ElecTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets3Jets*_ElecTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets4Jets*_ElecTau_"+fileAnalysis+".root");
+
+//   backgroundWJets   ->Add(pathToFile+"nTupleWJets4JetsV19_MuTau_"+fileAnalysis+".root");
 //   backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets*_ElecTau_"+fileAnalysis+".root");
   backgroundW3Jets = backgroundWJets;
 

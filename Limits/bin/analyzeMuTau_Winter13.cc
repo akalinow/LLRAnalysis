@@ -129,8 +129,7 @@ void chooseSelection(TString version_,
   else if(version_.Contains("AntiMu2Medium"))   antimu = "tightestAntiMu2WP>1";
   else if(version_.Contains("AntiMu2Tight"))    antimu = "tightestAntiMu2WP>2";
   else if(version_.Contains("AntiMu3Loose"))    antimu = "tightestAntiMu3WP>0";
-  else if(version_.Contains("AntiMu3Medium"))   antimu = "tightestAntiMu3WP>1";
-  else if(version_.Contains("AntiMu3Tight"))    antimu = "tightestAntiMu3WP>2";
+  else if(version_.Contains("AntiMu3Tight"))    antimu = "tightestAntiMu3WP>1";
   else if(version_.Contains("AntiMuMVALoose"))  antimu = "tightestAntiMuMVAWP>0";
   else if(version_.Contains("AntiMuMVAMedium")) antimu = "tightestAntiMuMVAWP>1";
   else if(version_.Contains("AntiMuMVATight"))  antimu = "tightestAntiMuMVAWP>2";
@@ -925,8 +924,8 @@ void plotMuTau( Int_t mH_           = 120,
 		Float_t maxY_       = 1.2,
 		TString RUN         = "ABCD",
 		TString version_    = "AntiMu1_TauIso1",
-		Float_t antiWsgn    = 20,
-		Float_t antiWsdb    = 70,
+// 		Float_t antiWsgn    = 20,
+// 		Float_t antiWsdb    = 70,
 		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
@@ -1033,19 +1032,20 @@ void plotMuTau( Int_t mH_           = 120,
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
 
-  string antiWcut = "MtLeg1MVA";
+//   string antiWcut = "MtLeg1MVA";
   bool useMt      = true;
 
-  //string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
-  //float antiWsgn  = useMt ? 20. :  20. ;
-  //float antiWsdb  = useMt ? 70. :  40. ; 
+  string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
+//   float antiWsgn  = useMt ? 20. :  20. ;
+  float antiWsgn  = useMt ? 30. :  20. ; // mTcut at 30
+  float antiWsdb  = useMt ? 70. :  40. ; 
 
-  //bool use2Dcut   = false;
-  //if( use2Dcut ){
-  //antiWcut = "!(MtLeg1MVA<40 && (pZetaMVA-1.5*pZetaVisMVA)>-20)";
-  //antiWsgn = 0.5;
-  //antiWsdb = 0.5;
-  //}
+  bool use2Dcut   = false;
+  if( use2Dcut ){
+  antiWcut = "!(MtLeg1MVA<40 && (pZetaMVA-1.5*pZetaVisMVA)>-20)";
+  antiWsgn = 0.5;
+  antiWsdb = 0.5;
+  }
 
   //////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////
@@ -1245,11 +1245,11 @@ void plotMuTau( Int_t mH_           = 120,
   //
   if(!version_.Contains("Soft")) {
     if(RUN.Contains("ABC")) {
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012A*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012B*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
-      dataEmbedded->Add(pathToFile+"/nTupleRun2012C*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012A*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012B*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
+      dataEmbedded->Add(pathToFile+"/nTupleRun2012C*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
     }
-    if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedPF_MuTau_"+fileAnalysisEmbedded+".root");
+    if(RUN.Contains("D")) dataEmbedded->Add(pathToFile+"/nTupleRun2012D*Embedded_MuTau_"+fileAnalysisEmbedded+".root");
   }
   else {
     dataEmbedded->Add(pathToFile+"/nTupleRun2012D*EmbeddedLowPt_MuTau_"+fileAnalysisEmbedded+".root");
@@ -1281,13 +1281,18 @@ void plotMuTau( Int_t mH_           = 120,
   TChain *backgroundWJets      = new TChain(treeMC);
   TChain *backgroundW3Jets     = new TChain(treeMC);
   //
-  backgroundDY      ->Add(pathToFileDY+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
-  
+//   backgroundDY      ->Add(pathToFileDY+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTL_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTJ_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsEToTau_MuTau_"+fileAnalysis+".root");
+  backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
+
   if(!version_.Contains("NoDYExcl")) {
-    backgroundDY      ->Add(pathToFileDY+"nTupleDYJets1Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathToFileDY+"nTupleDYJets2Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathToFileDY+"nTupleDYJets3Jets_MuTau_"+fileAnalysis+".root");
-    backgroundDY      ->Add(pathToFileDY+"nTupleDYJets4Jets_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets1Jets*_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets2Jets*_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets3Jets*_MuTau_"+fileAnalysis+".root");
+    backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets4Jets*_MuTau_"+fileAnalysis+".root");
   }
   //
   backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_*_MuTau_"+fileAnalysis+".root");
@@ -1310,7 +1315,7 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundWJets   ->Add(pathToFile+"nTupleWJets1JetsV19_MuTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets2JetsV19_MuTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets3JetsV19_MuTau_"+fileAnalysis+".root");
-  backgroundWJets   ->Add(pathToFile+"nTupleWJets4JetsV19_MuTau_"+fileAnalysis+".root");
+//   backgroundWJets   ->Add(pathToFile+"nTupleWJets4JetsV19_MuTau_"+fileAnalysis+".root");
 
   //backgroundW3Jets  ->Add(pathToFile+"nTupleWJets3Jets_MuTau_"+fileAnalysis+".root");
   backgroundW3Jets = backgroundWJets;
@@ -1374,11 +1379,11 @@ void plotMuTau( Int_t mH_           = 120,
       backgroundDYJtoTau  ->Add(pathToFileDY+"/nTupleDYJets*JetToTau_MuTau_"+fileAnalysis+".root");
     }
     else {
-      backgroundDYTauTau  ->Add(pathToFileDY+"/nTupleDYJets_TauTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYTauTauLL->Add(pathToFileDY+"/nTupleDYJets_ZTTL_MuTau_"    +fileAnalysis+".root");
-      backgroundDYTauTauJJ->Add(pathToFileDY+"/nTupleDYJets_ZTTJ_MuTau_"    +fileAnalysis+".root");
-      backgroundDYMutoTau ->Add(pathToFileDY+"/nTupleDYJets_MuToTau_MuTau_"+fileAnalysis+".root");
-      backgroundDYJtoTau  ->Add(pathToFileDY+"/nTupleDYJets_JetToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTau  ->Add(pathToFileDY+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYTauTauLL->Add(pathToFileDY+"/nTupleDYJetsZTTL_MuTau_"    +fileAnalysis+".root");
+      backgroundDYTauTauJJ->Add(pathToFileDY+"/nTupleDYJetsZTTJ_MuTau_"    +fileAnalysis+".root");
+      backgroundDYMutoTau ->Add(pathToFileDY+"/nTupleDYJetsMuToTau_MuTau_"+fileAnalysis+".root");
+      backgroundDYJtoTau  ->Add(pathToFileDY+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
     }
   }
 
@@ -1650,6 +1655,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut sbinPZetaRelMtiso      = lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && liso  && lveto && diTauCharge            && hltevent   ;
   TCut sbinPZetaRelSSaIsoMtiso= lpt && lID && tpt && mtiso && tdecaymode && antimu && antiele && laiso && lveto && SS                     && hltevent   ;
 
+  cout << sbin << endl;
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
   cout << endl;
@@ -3474,7 +3480,8 @@ int main(int argc, const char* argv[])
   string category, analysis, variable, xtitle, unity, outputDir, RUN, version;
 
   if(argc==1) plotMuTauAll();
-  else if(argc==20) { 
+//   else if(argc==20) { 
+  else if(argc>16) { 
 
     mH         =  (int)atof(argv[1]); 
     category   =  argv[2]; 
@@ -3492,15 +3499,15 @@ int main(int argc, const char* argv[])
     RUN        =  argv[14] ;
     version    =  argv[15];
     useEmb     =  (int)atof(argv[16]);
-    antiWsgn   =  atof(argv[17]);
-    antiWsdb   =  atof(argv[18]);
-    analysis   =  argv[19]; 
-
+    analysis   =  argc>17 ? argv[17] : "";
+//     antiWsgn   =  atof(argv[17]);
+//     antiWsdb   =  atof(argv[18]);
     cout << endl << "RUN : " << RUN << " | VERSION : " << version << " | ANALYSIS : " << analysis << endl << endl;
 
-    plotMuTau(mH,useEmb,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN, version,antiWsgn,antiWsdb);
+//     plotMuTau(mH,useEmb,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN, version,antiWsgn,antiWsdb);
+    plotMuTau(mH,useEmb,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY, RUN, version);
   }
-  else { cout << "Please put 20 arguments" << endl; return 1;}
+  else { cout << "Please put at least 16 arguments" << endl; return 1;}
 
   cout << "DONE" << endl;
   return 0;
