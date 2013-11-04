@@ -134,7 +134,7 @@ void chooseSelection(TString version_,
 
   //TauID
   if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0";
-  else if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingNewDM>0";
+  else if(version_.Contains("TauNewDM")) tdecaymode = "decayModeFindingNewDM>0";
 
   // TauIso
   // TauIso DB3Hits cut-based //
@@ -148,7 +148,7 @@ void chooseSelection(TString version_,
     ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3newDMw0LT")) {
+  else if(version_.Contains("HPSMVA3newDMwoLT")) {
     tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
     ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
@@ -158,7 +158,7 @@ void chooseSelection(TString version_,
     ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3oldDMw0LT")) {
+  else if(version_.Contains("HPSMVA3oldDMwoLT")) {
     tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
     ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
