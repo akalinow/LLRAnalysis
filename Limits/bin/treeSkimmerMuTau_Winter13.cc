@@ -828,7 +828,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau;
-  float weightDecayMode_;
+  float weightDecayMode_, weightTauFakeWJet_, weightTauFakeWJetUp_, weightTauFakeWJetDown_;
 
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
@@ -1252,6 +1252,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //
   outTreePtOrd->Branch("SFTau",        &SFTau,"SFTau/F");
   outTreePtOrd->Branch("weightDecayMode",  &weightDecayMode_, "weightDecayMode/F");
+  outTreePtOrd->Branch("weightTauFakeWJet", &weightTauFakeWJet_, "weightTauFakeWJet/F");
+  outTreePtOrd->Branch("weightTauFakeWJetUp", &weightTauFakeWJetUp_, "weightTauFakeWJetUp/F");
+  outTreePtOrd->Branch("weightTauFakeWJetDown", &weightTauFakeWJetDown_, "weightTauFakeWJetDown/F");
 
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
@@ -2556,6 +2559,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     weightHepNup   = 1;
     weightHepNupHighStatW =1;
     weightHepNupDY = 1;
+    weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
 
     // Reweight W+Jets
     //cout << "SAMPLE : " << sample_ << endl;
@@ -2576,6 +2580,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
       sampleWeight = 1;
       sampleWeightW= scaleFactor; 
       //cout << " => weightHepNup=" << weightHepNup << " ; weightHepNupHighStatW=" << weightHepNupHighStatW << endl;
+      //Add a weight for tauPt reweighting , coefficiencts are from Andrew
+      float ptTau_ = ptL2;
+      if(ptTau_ > 200.)ptTau_ = 200.;
+      weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
+      weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
 
     // Reweight DY+Jets
