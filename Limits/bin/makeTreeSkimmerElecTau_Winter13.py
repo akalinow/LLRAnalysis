@@ -1804,7 +1804,7 @@ options = {
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
     #'skimEff'        : 0.487159715972 * 297096./487111,
-    'skimEff'        : 1.0 * 312406./312406,
+    'skimEff'        : 1.0 * 312406./999900,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1

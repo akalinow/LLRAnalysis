@@ -271,9 +271,25 @@ void produce(
       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
+      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+      hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+
+      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+      hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+
       TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
       hSgn2->Write(Form("bbH%d%s"   ,mH_,suffix.c_str()));
+
+      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+      hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+
+      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+      hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
 //       TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
 //       hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
@@ -756,10 +772,30 @@ void produce(
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
+	TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+	hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
+	TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+	hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+      }
       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
         TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
+	TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+	hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
+	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
 //       if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
 //         TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
@@ -1643,19 +1679,19 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
         produce(mH[j],variables[i], "JetDown" , "vbfTight", outputDir);
       }
       else {//SUSY
-// 	produce(mH[j],variables[i], "nominal" , "inclusive", outputDir,true);
-// 	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir,true);
-// 	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir,true);
-// 	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir,true);
-// 	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "nominal" , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "inclusive", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "inclusive", outputDir,true);
 
-// 	produce(mH[j],variables[i], "nominal" , "bTag", outputDir,true);
+	produce(mH[j],variables[i], "nominal" , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "TauUp"   , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "TauDown" , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "JetUp"   , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "bTag", outputDir,true);
 
-// 	produce(mH[j],variables[i], "nominal" , "nobTag", outputDir,true);
+	produce(mH[j],variables[i], "nominal" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauDown" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetUp"   , "nobTag", outputDir,true);
@@ -1675,14 +1711,14 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Tight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VTight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   //##AntiMu
-//   produceOne("Results_ABCD_AntiMu2Loose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMuMVALoose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu2Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMuMVALoose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   //##TauID
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSMVA3oldDMwLT_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSMVA3oldDMwoLT_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSMVA3newDMwLT_TauNewDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSMVA3newDMwoLT_TauNewDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLT_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwoLT_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3newDMwLT_TauNewDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3newDMwoLT_TauNewDM_OldEleID_Datacards",true);
 }
 
 
