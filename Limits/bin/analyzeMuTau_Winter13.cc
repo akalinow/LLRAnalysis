@@ -93,11 +93,25 @@ void chooseSelection(TString version_,
 		     )
 {
 
-  if(version_.Contains("tauptbin")) tpt="ptL2>45 && ptL2<50";
-  else{
-    if(selection_.find("novbfLow")!=string::npos)tpt="ptL2>20";
-    else                            tpt="ptL2>30";      
-  }
+  if(version_.Contains("tauptbin")) 
+    tpt="ptL2>45 && ptL2<50";
+  else if(selection_.find("_taupt20_")!=string::npos)
+    tpt="ptL2>20";
+  else if(selection_.find("_taupt30_")!=string::npos)
+    tpt="ptL2>30";
+  else if(selection_.find("_taupt3045_")!=string::npos)
+    tpt="ptL2>30 && ptL2<45";
+  else if(selection_.find("_taupt45_")!=string::npos)
+    tpt="ptL2>45";
+  else if(selection_.find("_taupt4560_")!=string::npos)
+    tpt="ptL2>45 && ptL2<60";
+  else if(selection_.find("_taupt60_")!=string::npos)
+    tpt="ptL2>60";
+  else if(selection_.find("novbfLow")!=string::npos)
+    tpt="ptL2>20";
+  else                            
+    tpt="ptL2>30";      
+  
   // Lepton isolation //
   liso = "combRelIsoLeg1DBetav2<0.10";
   laiso = "combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50";
@@ -155,26 +169,41 @@ void chooseSelection(TString version_,
     ltiso  = "hpsDB3H<10.0" ;
     mtiso  = "hpsDB3H<5.0" ;
   }
-  else if(version_.Contains("HPSMVA3newDMwLT")) {
-    tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
+//   else if(version_.Contains("HPSMVA3newDMwLT")) {
+//     tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
+//   }
+//   else if(version_.Contains("HPSMVA3newDMwoLT")) {
+//     tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
+//   }
+  else if(version_.Contains("HPSMVA3oldDMwLTLoose")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3newDMwoLT")) {
-    tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
+  else if(version_.Contains("HPSMVA3oldDMwLTMedium")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3oldDMwLT")) {
+  else if(version_.Contains("HPSMVA3oldDMwLTTight")) {
     tiso   = "tightestHPSMVA3oldDMwLTWP>2" ;//Tight 3
     ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3oldDMwoLT")) {
-    tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
+  else if(version_.Contains("HPSMVA3oldDMwLTVTight")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>3" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
+//   else if(version_.Contains("HPSMVA3oldDMwoLT")) {
+//     tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
+//   }
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
