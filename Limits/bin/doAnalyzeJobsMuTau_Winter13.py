@@ -68,12 +68,14 @@ versionList=[
 ##     'AntiMu3Tight_AntiEle5Loose_HPSMVA3newDMwoLT_TauNewDM_OldEleID'
 
     ##TauPT bins
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt20_OldEleID',## pt>20
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt30_OldEleID',## pt>30
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt3045_OldEleID',## pt>30 pt<45
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID',## pt>45
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID',## pt>45 pt<60
-    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt60_OldEleID',## pt>60
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt20_OldEleID',## pt>20
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt30_OldEleID',## pt>30
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt3045_OldEleID',## pt>30 pt<45
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID',## pt>45
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID',## pt>45 pt<60
+##     'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt60_OldEleID',## pt>60
+    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt6090_OldEleID',## pt>60 pt<90
+    'AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt90_OldEleID',## pt>90
              ]
 
 data = 'ABCD'

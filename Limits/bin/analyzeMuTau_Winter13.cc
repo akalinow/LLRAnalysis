@@ -92,21 +92,31 @@ void chooseSelection(TString version_,
 		     TCut& tpt
 		     )
 {
-
+  cout<<"VERSION in chooseSelection :"<< version_<<endl;
   if(version_.Contains("tauptbin")) 
     tpt="ptL2>45 && ptL2<50";
-  else if(selection_.find("_taupt20_")!=string::npos)
+  else if(version_.Contains("taupt20"))
     tpt="ptL2>20";
-  else if(selection_.find("_taupt30_")!=string::npos)
-    tpt="ptL2>30";
-  else if(selection_.find("_taupt3045_")!=string::npos)
-    tpt="ptL2>30 && ptL2<45";
-  else if(selection_.find("_taupt45_")!=string::npos)
-    tpt="ptL2>45";
-  else if(selection_.find("_taupt4560_")!=string::npos)
-    tpt="ptL2>45 && ptL2<60";
-  else if(selection_.find("_taupt60_")!=string::npos)
-    tpt="ptL2>60";
+  else if(version_.Contains("taupt30")){
+    if(version_.Contains("taupt3045"))
+      tpt="ptL2>30 && ptL2<45";
+    else
+      tpt="ptL2>30";
+  }
+  else if(version_.Contains("taupt45")){
+    if(version_.Contains("taupt4560"))
+      tpt="ptL2>45 && ptL2<60";
+    else
+      tpt="ptL2>45";
+  }
+  else if(version_.Contains("taupt60")){
+    if(version_.Contains("taupt6090"))
+      tpt="ptL2>60 && ptL2<90";
+    else
+      tpt="ptL2>60";
+  }
+  else if(version_.Contains("taupt90"))
+    tpt="ptL2>90";
   else if(selection_.find("novbfLow")!=string::npos)
     tpt="ptL2>20";
   else                            
