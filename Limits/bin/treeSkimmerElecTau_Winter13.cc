@@ -837,8 +837,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupHighStatW,weightHepNupDY;
-  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
+  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY,
+    highPtWeightUp,highPtWeightDown;
+ float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1174,6 +1176,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupHighStatW",       &weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
+  outTreePtOrd->Branch("highPtWeightUp",     &highPtWeightUp,"highPtWeightUp/F");//IN
+  outTreePtOrd->Branch("highPtWeightDown",   &highPtWeightDown,"highPtWeightDown/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
@@ -2598,6 +2602,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
+    }
+
+    highPtWeightUp =1;
+    highPtWeightDown =1;
+    if( sample_.find("SUSY")!=string::npos){
+      highPtWeightUp =1 + 0.20*(*genDiTauLegsP4)[1].Pt();
+      highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;

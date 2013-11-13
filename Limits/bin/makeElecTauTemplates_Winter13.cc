@@ -99,7 +99,7 @@ void produce(
 	     string bin_       = "inclusive",
 	     TString outputDir = "ABC",
 	     bool DOSUSY = false,
-	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/ElecTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/MuTau/"
 	     )
 {
   cout << "Now doing mass mH=" << mH_ << ", for variable " << variable_ 
@@ -107,15 +107,26 @@ void produce(
   TFile* fin = 0;
   string analysisFile = analysis_;
 
-  fin = new TFile(Form(location+"/%s/histograms/eTau_mH%d_%s_%s_%s.root", outputDir.Data(), 125, bin_.c_str() , analysisFile.c_str(), variable_.c_str()), "READ");
+//   fin = new TFile(Form(location+"/%s/histograms/eTau_mH%d_%s_%s_%s.root", outputDir.Data(), 125, bin_.c_str() , analysisFile.c_str(), variable_.c_str()), "READ");
+
+//   ///////////////////////////////////////////////
+//   TFile* fin_jUp     = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_JetUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+//   TFile* fin_jDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_JetDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+//   TFile* fin_tUp     = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+//   TFile* fin_tDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+//   TFile* fin_nominal = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_nominal_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+//   ///////////////////////////////////////////////
+
+  fin = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_%s_%s.root", outputDir.Data(), 125, bin_.c_str() , analysisFile.c_str(), variable_.c_str()), "READ");
 
   ///////////////////////////////////////////////
-  TFile* fin_jUp     = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_JetUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_jDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_JetDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_tUp     = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_tDown   = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_TauDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
-  TFile* fin_nominal = new TFile(Form(location+"%s/histograms/eTau_mH%d_%s_nominal_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_jUp     = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_JetUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_jDown   = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_JetDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_tUp     = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_TauUp_%s.root",   outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_tDown   = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_TauDown_%s.root", outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
+  TFile* fin_nominal = new TFile(Form(location+"/%s/histograms/muTau_mH%d_%s_nominal_%s.root",        outputDir.Data(), 125, bin_.c_str() , variable_.c_str()), "READ");
   ///////////////////////////////////////////////
+
 
   float rescaleGGFH = RESCALETO1PB ? higgsXsection(mH_,"GGFH") : 1.0;
   float rescaleVBFH = RESCALETO1PB ? higgsXsection(mH_,"VBFH") : 1.0;
@@ -1568,7 +1579,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  variables.push_back("diTauVisMass");
+//   variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
 
   if(!DOSUSY){
@@ -1704,9 +1715,10 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){ 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   //##AntiEMVA5
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+// //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Tight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VTight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
@@ -1715,10 +1727,20 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMuMVALoose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   //##TauID
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTLoose_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTMedium_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTVTight_TauOldDM_OldEleID_Datacards",true);
+
+
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLT_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwoLT_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3newDMwLT_TauNewDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3newDMwoLT_TauNewDM_OldEleID_Datacards",true);
+
+  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID_Datacards",true); 
+  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID_Datacards",true); 
+
 }
 
 

@@ -143,26 +143,41 @@ void chooseSelection(TString version_,
     ltiso  = "hpsDB3H<10.0" ;
     mtiso  = "hpsDB3H<5.0" ;
   }
-  else if(version_.Contains("HPSMVA3newDMwLT")) {
-    tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
+//   else if(version_.Contains("HPSMVA3newDMwLT")) {
+//     tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3newDMwLTWP>1" ;//Medium 2
+//   }
+//   else if(version_.Contains("HPSMVA3newDMwoLT")) {
+//     tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
+//   }
+  else if(version_.Contains("HPSMVA3oldDMwLTLoose")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3newDMwoLT")) {
-    tiso   = "tightestHPSMVA3newDMwoLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3newDMwoLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3newDMwoLTWP>1" ;//Medium 2
+  else if(version_.Contains("HPSMVA3oldDMwLTMedium")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3oldDMwLT")) {
+  else if(version_.Contains("HPSMVA3oldDMwLTTight")) {
     tiso   = "tightestHPSMVA3oldDMwLTWP>2" ;//Tight 3
     ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
-  else if(version_.Contains("HPSMVA3oldDMwoLT")) {
-    tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
-    mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
+  else if(version_.Contains("HPSMVA3oldDMwLTVTight")) {
+    tiso   = "tightestHPSMVA3oldDMwLTWP>3" ;//Tight 3
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+    mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
+//   else if(version_.Contains("HPSMVA3oldDMwoLT")) {
+//     tiso   = "tightestHPSMVA3oldDMwoLTWP>2" ;//Tight 3
+//     ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
+//     mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
+//   }
 
   // SVFit selection cut //
   if(version_.Contains("SVFit200"))      svfit = "diTauNSVfitMass<200";
@@ -2167,7 +2182,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	
 	  //Get W Up/Down histograms as well
-	  if(selection_.find("bTag")!=string::npos && version_.Contains("MSSM")){
+	  if(selection_.find("bTag")!=string::npos && MSSM){
 
 	    TH1F* hExtrapWUp = new TH1F("hExtrapUp","",nBins , bins.GetArray());
 
@@ -2203,22 +2218,27 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    hW_TFUp->Reset();
 	    hW_TFUp->Add(h1, 1.0);
+	    cout<<"hW_TFUp->Integral()"<<hW_TFUp->Integral()<<endl;
 
 	    if(selection_.find("nobTag")!=string::npos){
 	      hCleanerfb->Reset(); float NormWJets_fbUp = 0.;
 	      hW_TFUp_fb->Reset();
 	      drawHistogram(sbinPresel,sbinCat, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJets_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
 	      hW_TFUp_fb->Add(hCleanerfb, h1->Integral()/hCleanerfb->Integral());
+	      cout<<"hW_TFUp_fb->Integral()"<<hW_TFUp_fb->Integral()<<endl;
 	    }
 	    else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	      float NormWJetsBTag = 0.; hWLooseBTag_TFUp->Reset();
 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	      hWLooseBTag_TFUp->Add(hCleaner,  h1->Integral()/hCleaner->Integral());
+	      cout<<"hWLooseBTag_TFUp->Integral()"<<hWLooseBTag_TFUp->Integral()<<endl;
 
 	      //fine binning for MSSM
 	      hW_TFUp_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fbUp = 0.;
 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJetsBTag_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
 	      hW_TFUp_fb->Add(hCleanerfb,  h1->Integral()/hCleanerfb->Integral());
+	    cout<<"hW_TFUp_fb->Integral()"<<hW_TFUp_fb->Integral()<<endl;
+
 	    }
 
 	    TH1F* hExtrapWDown = new TH1F("hExtrapDown","",nBins , bins.GetArray());
@@ -2253,22 +2273,26 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    hW_TFDown->Reset();
 	    hW_TFDown->Add(h1, 1.0);
+	    cout<<"hW_TFDown->Integral()"<<hW_TFDown->Integral()<<endl;
 
 	    if(selection_.find("nobTag")!=string::npos){
 	      hCleanerfb->Reset(); float NormWJets_fbDown = 0.;
 	      hW_TFDown_fb->Reset();
 	      drawHistogram(sbinPresel,sbinCat, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJets_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
 	      hW_TFDown_fb->Add(hCleanerfb, h1->Integral()/hCleanerfb->Integral());
+	      cout<<"hW_TFDown_fb->Integral()"<<hW_TFDown_fb->Integral()<<endl;
 	    }
 	    else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 	      float NormWJetsBTag = 0.; hWLooseBTag_TFDown->Reset();
 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
 	      hWLooseBTag_TFDown->Add(hCleaner,  h1->Integral()/hCleaner->Integral());
+	      cout<<"hWLooseBTag_TFDown->Integral()"<<hWLooseBTag_TFDown->Integral()<<endl;
 
 	      //fine binning for MSSM
 	      hW_TFDown_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fbDown = 0.;
 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJetsBTag_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
 	      hW_TFDown_fb->Add(hCleanerfb,  h1->Integral()/hCleanerfb->Integral());
+	      cout<<"hW_TFDown_fb->Integral()"<<hW_TFDown_fb->Integral()<<endl;
 	    }
 
 	  }//Get W Up/Down histograms as well
