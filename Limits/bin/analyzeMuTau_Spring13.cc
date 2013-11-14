@@ -903,7 +903,8 @@ void plotMuTau( Int_t mH_           = 120,
 		Float_t antiWsdb    = 70,
 		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_4_p2_topup/src/Bianchi/Limits/bin/results/"
 		//TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_4_p2_Trees/src/LLRAnalysis/Limits/bin/results/"
-		TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_GIT/src/LLRAnalysis/Limits/bin/results/"
+		//TString location    = "/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_5_3_10_GIT/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_10_GITanalysis/src/LLRAnalysis/Limits/bin/results/"
 		//TString location    = "/home/llr/cms/veelken/ArunAnalysis/CMSSW_5_3_10_git/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
@@ -3086,7 +3087,8 @@ void plotMuTau( Int_t mH_           = 120,
     if(TMath::Abs(pull) > maxPull)
       maxPull = TMath::Abs(pull);
   }
-  hRatio->SetAxisRange(-1.2*maxPull,1.2*maxPull,"Y");
+//   hRatio->SetAxisRange(-1.2*maxPull,1.2*maxPull,"Y");
+  hRatio->SetAxisRange(-0.5,0.5,"Y");
   hRatio->Draw("P");
 
   TF1* line = new TF1("line","0",hRatio->GetXaxis()->GetXmin(),hStack->GetXaxis()->GetXmax());

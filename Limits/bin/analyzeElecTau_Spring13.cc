@@ -32,6 +32,7 @@
 
 #include "HiggsAnalysis/CombinedLimit/interface/TH1Keys.h"
 
+#define MSSM             true
 #define VERBOSE          true
 #define DEBUG            false
 #define LOOP             true
@@ -330,6 +331,12 @@ void drawHistogram(TCut sbinPair,
 	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
 	else                                 weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*ZeeWeight*weightDecayMode)";
       } //NoSoft     
+
+      if(MSSM){
+	if(type.Contains("WJetUp")) weightW  *= "weightTauFakeWJetUp";
+        else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
+        else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
+      }
       //weights for GGFH pT re-weight
       if(type.Contains("GGFHUp"))
         weight *= "HqTWeightUp";
@@ -508,6 +515,15 @@ TArrayF createBins(int nBins_ = 80 ,
   if(version_.Contains("MSSM"))
     filename = Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str());
 
+  if(version_.Contains("SVFit200"))
+    filename = Form(location+"/bins_eTau_%s_%s_MSSM_SVFit200.txt",variable_.Data(), selection_.c_str());
+  else if(version_.Contains("200SVFit400"))
+    filename = Form(location+"/bins_eTau_%s_%s_MSSM_200SVFit400.txt",variable_.Data(), selection_.c_str());
+  else if(version_.Contains("400SVFit600"))
+    filename = Form(location+"/bins_eTau_%s_%s_MSSM_400SVFit600.txt",variable_.Data(), selection_.c_str());
+  else if(version_.Contains("SVFit600"))
+    filename = Form(location+"/bins_eTau_%s_%s_MSSM_SVFit600.txt",variable_.Data(), selection_.c_str());
+
   cout<<"bins file : "<<filename<<endl;
 
   is.open(filename); 
@@ -532,10 +548,21 @@ TArrayF createBins(int nBins_ = 80 ,
   cout << "Making histograms with " << nBins << " bins:" << endl;
 
   is.close();
-  if(version_.Contains("MSSM"))
-    is.open(Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str())); 
+  if(version_.Contains("MSSM")){
+    if(version_.Contains("SVFit200"))
+      is.open(Form(location+"/bins_eTau_%s_%s_MSSM_SVFit200.txt",variable_.Data(), selection_.c_str()));
+    else if(version_.Contains("200SVFit400"))
+      is.open(Form(location+"/bins_eTau_%s_%s_MSSM_200SVFit400.txt",variable_.Data(), selection_.c_str()));
+    else if(version_.Contains("400SVFit600"))
+      is.open(Form(location+"/bins_eTau_%s_%s_MSSM_400SVFit600.txt",variable_.Data(), selection_.c_str()));
+    else if(version_.Contains("SVFit600"))
+      is.open(Form(location+"/bins_eTau_%s_%s_MSSM_SVFit600.txt",variable_.Data(), selection_.c_str()));
+    else
+      is.open(Form(location+"/bins_eTau_%s_%s_MSSM.txt",variable_.Data(), selection_.c_str()));
+  }
   else
     is.open(Form(location+"/bins_eTau_%s_%s.txt",variable_.Data(), selection_.c_str()));
+
 
   nBinsFromFile = 0;
 
@@ -1106,9 +1133,18 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
 
+  //W Up/Down
+  TH1F* hW_TFUp        = new TH1F( "hW_TFUp"      ,"W+jets"            , nBins , bins.GetArray());         hW_TFUp->SetFillColor(kRed+2);
+  TH1F* hW_TFDown        = new TH1F( "hW_TFDown"      ,"W+jets"            , nBins , bins.GetArray());    hW_TFDown->SetFillColor(kRed+2);
+  TH1F* hWLooseBTag_TFUp      = new TH1F( "hWLooseBTag_TFUp" ,  "W+jets (Loose b-Tag)", nBins , bins.GetArray());
+  TH1F* hWLooseBTag_TFDown      = new TH1F( "hWLooseBTag_TFDown" ,  "W+jets (Loose b-Tag)", nBins , bins.GetArray());
+
   //histograms with fine binning for MSSM
   TH1F* hDataEmb_fb  = new TH1F( "hDataEmb_fb","Embedded"          , 400, 0., 2000.); hDataEmb_fb->SetFillColor(kOrange-4);
   TH1F* hW_fb        = new TH1F( "hW_fb"      ,"W+jets"            , 400, 0., 2000.); hW_fb->SetFillColor(kRed+2);
+  TH1F* hW_TFUp_fb     = new TH1F( "hW_TFUp_fb"      ,"W+jets"            , 400, 0., 2000.); hW_TFUp_fb->SetFillColor(kRed+2 );
+  TH1F* hW_TFDown_fb     = new TH1F( "hW_TFDown_fb"      ,"W+jets"            , 400, 0., 2000.); hW_TFDown_fb->SetFillColor(kRed+2 );
+  
   TH1F* hZtt_fb      = new TH1F( "hZtt_fb"    ,"Ztautau"           , 400, 0., 2000.); hZtt_fb->SetFillColor(kOrange-4);
   TH1F* hZmm_fb      = new TH1F( "hZmm_fb"    ,"Z+jets, mu->tau"   , 400, 0., 2000.); hZmm_fb->SetFillColor(kBlue-2);
   TH1F* hZmj_fb      = new TH1F( "hZmj_fb"    ,"Z+jets, jet to tau", 400, 0., 2000.); hZmj_fb->SetFillColor(kBlue-2);
@@ -1737,7 +1773,7 @@ void plotElecTau( Int_t mH_           = 120,
   cout << sbin << endl;
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
-
+  
   cout << endl;
   cout << "#############################################################" << endl;
   cout << ">>>>>>>>>>> BEGIN Compute inclusive informations <<<<<<<<<<<<" << endl;
@@ -1875,6 +1911,8 @@ void plotElecTau( Int_t mH_           = 120,
     cout        << endl        << ">>>> Dealing with sample ## " ;
     currentName = treeNames[iCh];
     cout        << currentName << " ##" << endl;
+
+//     if(!currentName.Contains("Data"))continue;// for quick tests
 
     it = mapAllTrees.find(currentName);
     if(it!=mapAllTrees.end()) currentTree = it->second;
@@ -2179,7 +2217,115 @@ void plotElecTau( Int_t mH_           = 120,
 	    else hEWK->Add(hWMinusSS,1.0);
 
 	  }
-	}
+	
+// 	  //Get W Up/Down histograms as well
+// 	  if(selection_.find("bTag")!=string::npos && version_.Contains("MSSM")){
+
+// 	    TH1F* hExtrapWUp = new TH1F("hExtrapUp","",nBins , bins.GetArray());
+
+// 	    cout << "************** BEGIN W+jets (Up) normalization using high-Mt sideband *******************" << endl;
+
+// 	    float OSWinSignalRegionDATAWJetsUp = 0.; float OSWinSignalRegionMCWJetsUp = 0.;
+// 	    float OSWinSidebandRegionDATAWJetsUp = 0.; float OSWinSidebandRegionMCWJetsUp = 0.;
+// 	    float scaleFactorTTOSWJetsUp = 0.; float extrapFactorWOSWJetsUp = 0.;
+	    
+// 	    evaluateWextrapolation(mapAllTrees, version_, "MC_WJetUp",RUN, "OS", false, selection_,
+// 				   extrapFactorWOSWJetsUp,
+// 				   OSWinSignalRegionDATAWJetsUp,   OSWinSignalRegionMCWJetsUp,
+// 				   OSWinSidebandRegionDATAWJetsUp, OSWinSidebandRegionMCWJetsUp,
+// 				   scaleFactorTTOSWJetsUp,
+// 				   hExtrapWUp, variable,
+// 				   Lumi*hltEff_/1000., TTxsectionRatio, lumiCorrFactor,
+// 				   ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+// 				   ElectoTauCorrectionFactor, JtoTauCorrectionFactor,
+// 				   antiWsdb, antiWsgn, useMt,
+// 				   sbinCatForWextrapolation,
+// 				   sbinPZetaRel, sbinChargeRelPZetaRelInclusive,
+// 				   pZ, apZ, sbinPZetaRelInclusive,
+// 				   sbinPZetaRelaIsoInclusive, sbinPZetaRelaIso, vbfLoose, boost, zeroJet,
+// 				   sbinCat, sbinPresel, sbinaIsoPresel);
+// 	    delete hExtrapWUp;
+
+// 	    cout << "************** END W+jets normalization using high-Mt sideband *******************" << endl;
+	    
+// 	    float NormWJetsUp = 0.;
+// 	    drawHistogram(sbinPresel,sbinCat, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJetsUp, Error, Lumi*hltEff_/1000., h1, sbin, 1);
+// 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);
+// 	    else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
+
+// 	    hW_TFUp->Reset();
+// 	    hW_TFUp->Add(h1, 1.0);
+
+// 	    if(selection_.find("nobTag")!=string::npos){
+// 	      hCleanerfb->Reset(); float NormWJets_fbUp = 0.;
+// 	      hW_TFUp_fb->Reset();
+// 	      drawHistogram(sbinPresel,sbinCat, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJets_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
+// 	      hW_TFUp_fb->Add(hCleanerfb, h1->Integral()/hCleanerfb->Integral());
+// 	    }
+// 	    else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
+// 	      float NormWJetsBTag = 0.; hWLooseBTag_TFUp->Reset();
+// 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
+// 	      hWLooseBTag_TFUp->Add(hCleaner,  h1->Integral()/hCleaner->Integral());
+
+// 	      //fine binning for MSSM
+// 	      hW_TFUp_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fbUp = 0.;
+// 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetUp",version_, RUN, currentTree, variable, NormWJetsBTag_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
+// 	      hW_TFUp_fb->Add(hCleanerfb,  h1->Integral()/hCleanerfb->Integral());
+// 	    }
+
+// 	    TH1F* hExtrapWDown = new TH1F("hExtrapDown","",nBins , bins.GetArray());
+// 	    cout << "************** BEGIN W+jets (Down) normalization using high-Mt sideband *******************" << endl;
+
+// 	    float OSWinSignalRegionDATAWJetsDown = 0.; float OSWinSignalRegionMCWJetsDown = 0.;
+// 	    float OSWinSidebandRegionDATAWJetsDown = 0.; float OSWinSidebandRegionMCWJetsDown = 0.;
+// 	    float scaleFactorTTOSWJetsDown = 0.; float extrapFactorWOSWJetsDown = 0.;
+
+// 	    evaluateWextrapolation(mapAllTrees, version_, "MC_WJetDown",RUN, "OS", false, selection_,
+// 				   extrapFactorWOSWJetsDown,
+// 				   OSWinSignalRegionDATAWJetsDown,   OSWinSignalRegionMCWJetsDown,
+// 				   OSWinSidebandRegionDATAWJetsDown, OSWinSidebandRegionMCWJetsDown,
+// 				   scaleFactorTTOSWJetsDown,
+// 				   hExtrapWDown, variable,
+// 				   Lumi*hltEff_/1000., TTxsectionRatio, lumiCorrFactor,
+// 				   ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+// 				   ElectoTauCorrectionFactor, JtoTauCorrectionFactor,
+// 				   antiWsdb, antiWsgn, useMt,
+// 				   sbinCatForWextrapolation,
+// 				   sbinPZetaRel, sbinChargeRelPZetaRelInclusive,
+// 				   pZ, apZ, sbinPZetaRelInclusive,
+// 				   sbinPZetaRelaIsoInclusive, sbinPZetaRelaIso, vbfLoose, boost, zeroJet,
+// 				   sbinCat, sbinPresel, sbinaIsoPresel);
+// 	    delete hExtrapWDown;
+// 	    cout << "************** END W+jets normalization using high-Mt sideband *******************" << endl;
+
+// 	    float NormWJetsDown = 0.;
+// 	    drawHistogram(sbinPresel,sbinCat, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJetsDown, Error, Lumi*hltEff_/1000., h1, sbin, 1);
+// 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);
+// 	    else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
+
+// 	    hW_TFDown->Reset();
+// 	    hW_TFDown->Add(h1, 1.0);
+
+// 	    if(selection_.find("nobTag")!=string::npos){
+// 	      hCleanerfb->Reset(); float NormWJets_fbDown = 0.;
+// 	      hW_TFDown_fb->Reset();
+// 	      drawHistogram(sbinPresel,sbinCat, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJets_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
+// 	      hW_TFDown_fb->Add(hCleanerfb, h1->Integral()/hCleanerfb->Integral());
+// 	    }
+// 	    else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
+// 	      float NormWJetsBTag = 0.; hWLooseBTag_TFDown->Reset();
+// 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
+// 	      hWLooseBTag_TFDown->Add(hCleaner,  h1->Integral()/hCleaner->Integral());
+
+// 	      //fine binning for MSSM
+// 	      hW_TFDown_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fbDown = 0.;
+// 	      drawHistogram(sbinPresel,bTagLoose, "MC_WJetDown",version_, RUN, currentTree, variable, NormWJetsBTag_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
+// 	      hW_TFDown_fb->Add(hCleanerfb,  h1->Integral()/hCleanerfb->Integral());
+// 	    }
+
+// 	  }//Get W Up/Down histograms as well
+	}	
+
 	else if(currentName.Contains("DYElectoTau")){
 	  if(selection_.find("vbfTight")!=string::npos){
 	    float NormDYElectoTau = 0.;
@@ -3175,6 +3321,11 @@ void plotElecTau( Int_t mH_           = 120,
   hZmm_fb->Write(); hZmj_fb->Write(); hTTb_fb->Write();
   hQCD_fb->Write(); hVV_fb->Write();
   
+  //hW up/Down
+  hW_TFUp->Write(); hW_TFDown->Write();
+  hWLooseBTag_TFUp->Write(); hWLooseBTag_TFDown->Write();
+  hW_TFUp_fb->Write(); hW_TFDown_fb->Write();
+  
   for(int iP=0 ; iP<nProd ; iP++)
     for(int iM=0 ; iM<nMasses ; iM++)
       if(hSignal[iP][iM]) hSignal[iP][iM]->Write();
@@ -3220,6 +3371,9 @@ void plotElecTau( Int_t mH_           = 120,
   
   delete hDataEmb_fb; delete hZtt_fb; delete hW_fb; delete hZmm_fb; delete hZmj_fb; delete hTTb_fb;
   delete hQCD_fb; delete hVV_fb;
+  
+  delete hW_TFUp; delete hW_TFDown; delete hWLooseBTag_TFUp; delete hWLooseBTag_TFDown;
+  delete hW_TFUp_fb; delete hW_TFDown_fb;
   
   //for(unsigned int i = 0; i < SUSYhistos.size() ; i++) delete mapSUSYhistos.find( SUSYhistos[i] )->second ;
   
