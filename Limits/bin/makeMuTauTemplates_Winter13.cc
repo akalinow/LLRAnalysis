@@ -305,17 +305,17 @@ void produce(
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 
-      TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-      hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-      hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+//       TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
+//       hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+//       hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
 
-      TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-      hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+//       TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
+//       hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+//       hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
       
-      TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-      hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-      hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
+//       TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
+//       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+//       hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -888,21 +888,21 @@ void produce(
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       }
-      if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-	TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-	hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-      }
-      if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-	TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-	hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      }
-      if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-	TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-	hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-	hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
-      }
+//       if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+// 	TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
+// 	hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+// 	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+//       }
+//       if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+// 	TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
+// 	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+// 	hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+//       }
+//       if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
+// 	TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
+// 	hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+// 	hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
+//       }
     }
 
 
@@ -1789,7 +1789,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  variables.push_back("diTauVisMass");
+//   variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
 
   if(!DOSUSY){
@@ -1926,20 +1926,37 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 void produceAll(){ 
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true); 
   //##AntiEMVA5
-//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Tight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5VTight_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-  //##AntiMu
-//   produceOne("Results_ABCD_AntiMu2Tight_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMuMVATight_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
-//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Tight_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5VTight_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   ////##AntiMu
+//   produceOne("Results_ABCD_AntiMu2Tight_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   produceOne("Results_ABCD_AntiMuMVATight_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Control",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Control",true);
 //   //##TauID
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwLTLoose_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwLTMedium_TauOldDM_OldEleID_Datacards",true);
+  // produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
+  // produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwLTVTight_TauOldDM_OldEleID_Datacards",true);
+
+
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwLT_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3oldDMwoLT_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3newDMwLT_TauNewDM_OldEleID_Datacards",true);
-  produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3newDMwoLT_TauNewDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEle5Loose_HPSMVA3newDMwoLT_TauNewDM_OldEleID_Datacards",true);
+
+//////TauPt bins
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt20_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt30_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt3045_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt60_OldEleID_Datacards",true);
+  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt6090_OldEleID_Datacards",true);   
+  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt90_OldEleID_Datacards",true); 
 }
 
 

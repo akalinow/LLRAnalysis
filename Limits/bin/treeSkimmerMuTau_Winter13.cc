@@ -805,7 +805,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // event-related variables
   float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
-    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,
+    highPtWeightUp,highPtWeightDown;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1177,6 +1178,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("weightHepNup",         &weightHepNup,         "weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupHighStatW",&weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
+  outTreePtOrd->Branch("highPtWeightUp",     &highPtWeightUp,"highPtWeightUp/F");//IN
+  outTreePtOrd->Branch("highPtWeightDown",   &highPtWeightDown,"highPtWeightDown/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
@@ -2598,6 +2601,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       sampleWeightDY = scaleFactor; 
     }
     ///////////////
+
+    highPtWeightUp =1;
+    highPtWeightDown =1;
+    if( sample_.find("SUSY")!=string::npos){
+      highPtWeightUp =1 + 0.20*(*genDiTauLegsP4)[1].Pt();
+      highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
+    }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
