@@ -3303,7 +3303,8 @@ void plotMuTau( Int_t mH_           = 120,
     if(TMath::Abs(pull) > maxPull)
       maxPull = TMath::Abs(pull);
   }
-  hRatio->SetAxisRange(-1.2*maxPull,1.2*maxPull,"Y");
+//   hRatio->SetAxisRange(-1.2*maxPull,1.2*maxPull,"Y");
+  hRatio->SetAxisRange(-0.5,0.5,"Y");
   hRatio->Draw("P");
 
   TF1* line = new TF1("line","0",hRatio->GetXaxis()->GetXmin(),hStack->GetXaxis()->GetXmax());
