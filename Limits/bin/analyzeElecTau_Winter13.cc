@@ -86,6 +86,7 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 void chooseSelection(TString version_,
+		     string selection_, 
 		     TCut& tiso,
 		     TCut& tdecaymode, 
 		     TCut& ltiso, 
@@ -94,10 +95,40 @@ void chooseSelection(TString version_,
 		     TCut& antiele, 
 		     TCut& lID, 
 		     TCut& lveto, 
-		     TCut& svfit
+		     TCut& svfit,
+		     TCut& tpt
 		     )
 {
-
+  cout<<"VERSION in chooseSelection :"<< version_<<endl;
+  if(version_.Contains("tauptbin")) 
+    tpt="ptL2>45 && ptL2<50";
+  else if(version_.Contains("taupt20"))
+    tpt="ptL2>20";
+  else if(version_.Contains("taupt30")){
+    if(version_.Contains("taupt3045"))
+      tpt="ptL2>30 && ptL2<45";
+    else
+      tpt="ptL2>30";
+  }
+  else if(version_.Contains("taupt45")){
+    if(version_.Contains("taupt4560"))
+      tpt="ptL2>45 && ptL2<60";
+    else
+      tpt="ptL2>45";
+  }
+  else if(version_.Contains("taupt60")){
+    if(version_.Contains("taupt6090"))
+      tpt="ptL2>60 && ptL2<90";
+    else
+      tpt="ptL2>60";
+  }
+  else if(version_.Contains("taupt90"))
+    tpt="ptL2>90";
+  else if(selection_.find("novbfLow")!=string::npos)
+    tpt="ptL2>20";
+  else                            
+    tpt="ptL2>30";      
+  
   // Anti-Mu discriminator //
   if(version_.Contains("AntiMu1Loose"))         antimu = "tightestAntiMuWP>0";
   else if(version_.Contains("AntiMu1Medium"))   antimu = "tightestAntiMuWP>1";
@@ -1462,15 +1493,18 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lliso("combRelIsoLeg1DBetav2<0.30");
 
   ////// TAU PT+ID+ISO //////
-  TCut tpt("ptL2>30 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
-  if(selection_.find("novbfLow")!=string::npos)
-    tpt= "ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)";
-  /*
-  if(selection_.find("High")!=string::npos)
-    tpt = tpt&&TCut("ptL2>40");
-  else if(selection_.find("Low")!=string::npos)
-    tpt = tpt&&TCut("ptL2<40");
-  */
+  TCut tpt("ptL2>30");
+  TCut antimu("tightestAntiMuWP>0");
+  TCut antiele("tightestAntiEMVA5WP > 0");
+  TCut tiso("hpsDB3H<1.5");
+  TCut tdecaymode("decayModeFindingOldDM>0");
+  TCut ltiso("hpsDB3H<10.0");
+  TCut mtiso("hpsDB3H<5.0");
+  TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
+  TCut svfit("diTauNSVfitMass>-999"); 
+
+  chooseSelection(version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele, lID, lveto,svfit,tpt);
+
   if(selection_.find("1Prong0Pi0")!=string::npos)
     tpt = tpt&&TCut("decayMode==0");
   if(selection_.find("1Prong1Pi0")!=string::npos)
@@ -1482,63 +1516,10 @@ void plotElecTau( Int_t mH_           = 120,
   if(selection_.find("EC")!=string::npos)
     tpt = tpt&&TCut("TMath::Abs(etaL2)>1.5");
 
-  //AntiEcategory selection
-  if(selection_.find("AntiECat0")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==0");
-  if(selection_.find("AntiECat1")!=string::npos &&
-     selection_.find("AntiECat10")==string::npos &&
-     selection_.find("AntiECat11")==string::npos &&
-     selection_.find("AntiECat12")==string::npos &&
-     selection_.find("AntiECat13")==string::npos &&
-     selection_.find("AntiECat14")==string::npos &&
-     selection_.find("AntiECat15")==string::npos &&
-     selection_.find("AntiECat16")==string::npos &&
-     selection_.find("AntiECat17")==string::npos
-     )
-    tpt = tpt&&TCut("AntiEMVA3category==1");
-  if(selection_.find("AntiECat2")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==2");
-  if(selection_.find("AntiECat3")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==3");
-  if(selection_.find("AntiECat4")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==4");
-  if(selection_.find("AntiECat5")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==5");
-  if(selection_.find("AntiECat6")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==6");
-  if(selection_.find("AntiECat7")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==7");
-  if(selection_.find("AntiECat8")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==8");
-  if(selection_.find("AntiECat9")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==9");
-  if(selection_.find("AntiECat10")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==10");
-  if(selection_.find("AntiECat11")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==11");
-  if(selection_.find("AntiECat12")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==12");
-  if(selection_.find("AntiECat13")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==13");
-  if(selection_.find("AntiECat14")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==14");
-  if(selection_.find("AntiECat15")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==15");
-  if(selection_.find("AntiECat16")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==16");
-  if(selection_.find("AntiECat17")!=string::npos)
-    tpt = tpt&&TCut("AntiEMVA3category==17");
+  tpt= tpt&&TCut("TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
+  if(selection_.find("novbfLow")!=string::npos)
+    tpt= "ptL2>20 && TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)";
 
-  TCut antimu("tightestAntiMuWP>0");
-  TCut antiele("tightestAntiEMVA5WP > 0");
-  TCut tiso("hpsDB3H<1.5");
-  TCut tdecaymode("decayModeFindingOldDM>0");
-  TCut ltiso("hpsDB3H<10.0");
-  TCut mtiso("hpsDB3H<5.0");
-  TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
-  TCut svfit("diTauNSVfitMass>-999"); 
-
-  chooseSelection(version_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele, lID, lveto,svfit);
 
    ////// EVENT WISE //////
   TCut SS("diTauCharge!=0");
