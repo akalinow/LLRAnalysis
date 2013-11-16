@@ -538,8 +538,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("flightLengthY",&flightLengthY_,"flightLengthY/F");
   tree_->Branch("flightLengthZ",&flightLengthZ_,"flightLengthZ/F");
   tree_->Branch("pvX",&pvX_,"pvX/F");
-  tree_->Branch("pvY",&pvX_,"pvY/F");
-  tree_->Branch("pvZ",&pvX_,"pvZ/F");
+  tree_->Branch("pvY",&pvY_,"pvY/F");
+  tree_->Branch("pvZ",&pvZ_,"pvZ/F");
   tree_->Branch("pvCov00",&pvCov00_,"pvCov00/F");
   tree_->Branch("pvCov01",&pvCov01_,"pvCov01/F");
   tree_->Branch("pvCov02",&pvCov02_,"pvCov02/F");
@@ -547,8 +547,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("pvCov12",&pvCov12_,"pvCov12/F");
   tree_->Branch("pvCov22",&pvCov22_,"pvCov22/F");
   tree_->Branch("svX",&svX_,"svX/F");
-  tree_->Branch("svY",&svX_,"svY/F");
-  tree_->Branch("svZ",&svX_,"svZ/F");
+  tree_->Branch("svY",&svY_,"svY/F");
+  tree_->Branch("svZ",&svZ_,"svZ/F");
   tree_->Branch("svCov00",&svCov00_,"svCov00/F");
   tree_->Branch("svCov01",&svCov01_,"svCov01/F");
   tree_->Branch("svCov02",&svCov02_,"svCov02/F");
