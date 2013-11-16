@@ -182,38 +182,8 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
   
-//   if(nJets==0)      return 1 ;
-//   else if(nJets==1) return 0.368748897 ;
-//   else if(nJets==2) return 0.114009944 ;
-//   else if(nJets==3) return 0.077158785 ;
-//   else if(nJets>=4) return 0.038490064 ;
-//   else return 1 ;
-
-//   if(nJets==0)      return 0.723706428 ;
-//   else if(nJets==1) return 0.210195224 ;
-//   else if(nJets==2) return 0.060963485 ;
-//   else if(nJets==3) return 0.091456958 ;
-//   else if(nJets>=4) return 0.034384641 ;
-//   else return 1 ;
-
-// //JetIDFix,ByPair
-//   if(nJets==0)      return 0.492871535 ;
-//   else if(nJets==1) return 0.181745835 ;
-//   else if(nJets==2) return 0.056192256 ;
-//   else if(nJets==3) return 0.038029369 ;
-//   else if(nJets>=4) return 0.018970657 ;
-//   else return 1 ;
-
-// //NewEleIDFix
-//   if(nJets==0)      return 0.492871535 ;
-//   else if(nJets==1) return 0.181745835 ;
-//   else if(nJets==2) return 0.105768875 ;
-//   else if(nJets==3) return 0.039434502 ;
-//   else if(nJets>=4) return 0.027053425 ;
-//   else return 1 ;
-
-//NewJEC
-  if(set==0) { // usual set of samples
+  //Winter13
+  if(set==0) { // usual set of samples OLD
     if(nJets==0)      return 0.492871535;
     else if(nJets==1) return 0.184565169;
     else if(nJets==2) return 0.056192256;
@@ -221,12 +191,12 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
     else if(nJets>=4) return 0.018970657;
     else return 1 ;
   }
-  else if(set==1) { // adding new high stat samples
+  else if(set==1) { // adding new high stat samples 
     if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.100275621;
-    else if(nJets==2) return 0.031239069;
-    else if(nJets==3) return 0.019961638;
-    else if(nJets>=4) return 0.018970657;
+    else if(nJets==1) return 0.100267473;
+    else if(nJets==2) return 0.031238278;
+    else if(nJets==3) return 0.019961315;
+    else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
   else return 1 ;
@@ -236,18 +206,10 @@ float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
   
-//   if(nJets==0)      return 0.115028141 ;
-//   else if(nJets==1) return 0.027710126 ;
-//   else if(nJets==2) return 0.0098376 ;
-//   else if(nJets==3) return 0.005509647 ;
-//   else if(nJets>=4) return 0.004266394 ;
-//   else return 1 ;
-
-//NewJEC
-  if(nJets==0)      return 0.1150281410;
-  else if(nJets==1) return 0.0223306920;
-  else if(nJets==2) return 0.0090625410;
-  else if(nJets==3) return 0.005273798;
+  if(nJets==0)      return 0.115028141;
+  else if(nJets==1) return 0.022330692;
+  else if(nJets==2) return 0.009068275;
+  else if(nJets==3) return 0.005270592;
   else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
@@ -788,11 +750,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
-  float ptAll[50],etaAll[50],phiAll[50];
+  float ptAll[50],etaAll[50],phiAll[50],energyAll[50];
   //float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
-  float ptAllB[50],etaAllB[50],phiAllB[50],csvAllB[50],csvAll[50];
+  float ptAllB[50],etaAllB[50],phiAllB[50],energyAllB[50],csvAllB[50],csvAll[50];
 //   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
@@ -875,8 +837,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,weightHepNup,weightHepNupHighStatW,weightHepNupDY;
-  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
+  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY,
+    highPtWeightUp,highPtWeightDown;
+ float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -985,10 +949,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("ptAll",  &ptAll,  "ptAll[nJets30]/F");
   outTreePtOrd->Branch("etaAll", &etaAll, "etaAll[nJets30]/F");
   outTreePtOrd->Branch("phiAll", &phiAll, "phiAll[nJets30]/F");
+  outTreePtOrd->Branch("energyAll",&energyAll,"energyAll[nJets30]/F");
   outTreePtOrd->Branch("csvAll", &csvAll, "csvAll[nJets30]/F");
   outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("energyAllB",&energyAllB,"energyAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
 
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
@@ -1210,6 +1176,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("weightHepNup",       &weightHepNup,"weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupHighStatW",       &weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
+  outTreePtOrd->Branch("highPtWeightUp",     &highPtWeightUp,"highPtWeightUp/F");//IN
+  outTreePtOrd->Branch("highPtWeightDown",   &highPtWeightDown,"highPtWeightDown/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
@@ -2017,7 +1985,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] = csvAll[i] = -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = energyAllB[i] = csvAllB[i] = csvAll[i] = -99;
     }
 
     // define the relevant jet collection
@@ -2045,6 +2013,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	ptAll[nJets30]  = (*jets)[indexes[v]].Pt();
 	etaAll[nJets30] = (*jets)[indexes[v]].Eta();
 	phiAll[nJets30] = (*jets)[indexes[v]].Phi();
+	energyAll[nJets30] = (*jets)[indexes[v]].E();
 	csvAll[nJets30] = (*jetsBtagCSV)[indexes[v]];
 	nJets30++;
       }
@@ -2063,6 +2032,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	  ptAllB[nJets20BTagged]  = (*jets)[indexes[v]].Pt();
 	  etaAllB[nJets20BTagged] = (*jets)[indexes[v]].Eta();
 	  phiAllB[nJets20BTagged] = (*jets)[indexes[v]].Phi();	  
+	  energyAllB[nJets20BTagged] = (*jets)[indexes[v]].E();	  
 	  csvAllB[nJets20BTagged] = (*jetsBtagCSV)[indexes[v]];
 
 	  nJets20BTagged++;
@@ -2632,6 +2602,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
+    }
+
+    highPtWeightUp =1;
+    highPtWeightDown =1;
+    if( sample_.find("SUSY")!=string::npos){
+      highPtWeightUp =1 + 0.20*(*genDiTauLegsP4)[1].Pt();
+      highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;

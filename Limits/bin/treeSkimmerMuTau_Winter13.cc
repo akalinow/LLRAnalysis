@@ -265,38 +265,9 @@ double deltaR(LV v1, LV v2) {
 float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
-  //   if(nJets==0)      return 1 ;
-  //   else if(nJets==1) return 0.368748897 ;
-  //   else if(nJets==2) return 0.114009944 ;
-  //   else if(nJets==3) return 0.077158785 ;
-  //   else if(nJets>=4) return 0.038490064 ;
-  //   else return 1 ;
-
-  //   if(nJets==0)      return 0.723706428 ;
-  //   else if(nJets==1) return 0.210195224 ;
-  //   else if(nJets==2) return 0.060963485 ;
-  //   else if(nJets==3) return 0.091456958 ;
-  //   else if(nJets>=4) return 0.034384641 ;
-  //   else return 1 ;
-
-  // //JetIDFix,ByPair
-  //   if(nJets==0)      return 0.492871535 ;
-  //   else if(nJets==1) return 0.181745835 ;
-  //   else if(nJets==2) return 0.056192256 ;
-  //   else if(nJets==3) return 0.038029369 ;
-  //   else if(nJets>=4) return 0.018970657 ;
-  //   else return 1 ;
-
-  // //NewEleIDFix
-  //   if(nJets==0)      return 0.492871535 ;
-  //   else if(nJets==1) return 0.181745835 ;
-  //   else if(nJets==2) return 0.105768875 ;
-  //   else if(nJets==3) return 0.039434502 ;
-  //   else if(nJets>=4) return 0.027053425 ;
-  //   else return 1 ;
   
-  //NewJEC
-  if(set==0) { // usual set of samples
+  //Winter13
+  if(set==0) { // usual set of samples OLD
     if(nJets==0)      return 0.492871535;
     else if(nJets==1) return 0.184565169;
     else if(nJets==2) return 0.056192256;
@@ -306,10 +277,10 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
   }
   else if(set==1) { // adding new high stat samples
     if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.100275621;
-    else if(nJets==2) return 0.031239069;
-    else if(nJets==3) return 0.019961638;
-    else if(nJets>=4) return 0.018970657;
+    else if(nJets==1) return 0.100267473;
+    else if(nJets==2) return 0.031238278;
+    else if(nJets==3) return 0.019961315;
+    else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
   else return 1 ;
@@ -319,20 +290,11 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
 float reweightHEPNUPDYJets(int hepNUP) {
 
   int nJets = hepNUP-5;
-  /* //wrong one
-    if(nJets==0)      return 0.115028141 ;
-    else if(nJets==1) return 0.027710126 ;
-    else if(nJets==2) return 0.0098376 ;
-    else if(nJets==3) return 0.005509647 ;
-    else if(nJets>=4) return 0.004266394 ;
-    else return 1 ;
-  */
-  
-  //NewJEC
+
   if(nJets==0)      return 0.115028141;
   else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009062541;
-  else if(nJets==3) return 0.005257807;
+  else if(nJets==2) return 0.009068275;
+  else if(nJets==3) return 0.005270592;
   else if(nJets>=4) return 0.004113813;
   else return 1 ;
 }
@@ -763,11 +725,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // kinematical variables of first 2 jets  
   float pt1,pt2,eta1,eta2,Deta,Mjj,Dphi,phi1,phi2;
-  float ptAll[50],etaAll[50],phiAll[50],csvAll[50];
+  float ptAll[50],etaAll[50],phiAll[50],energyAll[50],csvAll[50];
   //float pt1_v2,pt2_v2,eta1_v2,eta2_v2,Deta_v2,Mjj_v2,Dphi_v2,phi1_v2,phi2_v2;
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
-  float ptAllB[50],etaAllB[50],phiAllB[50],csvAllB[50];
+  float ptAllB[50],etaAllB[50],phiAllB[50],energyAllB[50],csvAllB[50];
   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
@@ -827,7 +789,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmNoTau_, L1etmNoTauPhi_, L1etmPhiCorr_, L1etmCorrUp_, L1etmPhiCorrUp_, L1etmCorrDown_, L1etmPhiCorrDown_,
     passL1etmCut_, passL1etmCutABC_, passL1etmCutUp_, passL1etmCutABCUp_, passL1etmCutDown_, passL1etmCutABCDown_; // ND
   float etmCut=20;
-  float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_, caloMEtNoTau_, caloMEtNoTauPhi_, caloMEtUncorrNoTau_, caloMEtUncorrNoTauPhi_, caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
+  float caloMEtNoHFUncorr_, caloMEtNoHFUncorrPhi_, caloMEtNoHF_,//  caloMEtNoTau_, caloMEtNoTauPhi_,
+    // caloMEtUncorrNoTau_, caloMEtUncorrNoTauPhi_,
+    caloMEtNoHFPhi_, caloMEtNoHFUp_, caloMEtNoHFUpPhi_, caloMEtNoHFDown_, caloMEtNoHFDownPhi_; // ND
   float sumEt_, caloNoHFsumEt_, caloNoHFsumEtCorr_; // ND
 
   //tau related variables
@@ -841,7 +805,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // event-related variables
   float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
-    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh;
+    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,
+    highPtWeightUp,highPtWeightDown;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -864,7 +829,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau;
-  float weightDecayMode_;
+  float weightDecayMode_, weightTauFakeWJet_, weightTauFakeWJetUp_, weightTauFakeWJetDown_;
 
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
@@ -984,10 +949,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("ptAll",  &ptAll,  "ptAll[nJets30]/F");
   outTreePtOrd->Branch("etaAll", &etaAll, "etaAll[nJets30]/F");
   outTreePtOrd->Branch("phiAll", &phiAll, "phiAll[nJets30]/F");
+  outTreePtOrd->Branch("energyAll", &energyAll, "energyAll[nJets30]/F");
   outTreePtOrd->Branch("csvAll", &csvAll, "csvAll[nJets30]/F");
   outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("energyAllB", &energyAllB, "energyAllB[nJets30]/F");
   outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
 
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
@@ -1133,10 +1100,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("passL1etmCutABCDown", &passL1etmCutABCDown_,"passL1etmCutABCDown/F");//ND
 
   // CALO MET //
-  outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
-  outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
-  outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
-  outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
+//   outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
+//   outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
+//   outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
+//   outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHF",          &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFPhi",       &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFUncorr",    &caloMEtNoHFUncorr_,   "caloMEtNoHFUncorr/F");//MB
@@ -1211,6 +1178,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("weightHepNup",         &weightHepNup,         "weightHepNup/F");
   outTreePtOrd->Branch("weightHepNupHighStatW",&weightHepNupHighStatW,"weightHepNupHighStatW/F");
   outTreePtOrd->Branch("weightHepNupDY",     &weightHepNupDY,"weightHepNupDY/F");//IN
+  outTreePtOrd->Branch("highPtWeightUp",     &highPtWeightUp,"highPtWeightUp/F");//IN
+  outTreePtOrd->Branch("highPtWeightDown",   &highPtWeightDown,"highPtWeightDown/F");//IN
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
@@ -1286,6 +1255,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //
   outTreePtOrd->Branch("SFTau",        &SFTau,"SFTau/F");
   outTreePtOrd->Branch("weightDecayMode",  &weightDecayMode_, "weightDecayMode/F");
+  outTreePtOrd->Branch("weightTauFakeWJet", &weightTauFakeWJet_, "weightTauFakeWJet/F");
+  outTreePtOrd->Branch("weightTauFakeWJetUp", &weightTauFakeWJetUp_, "weightTauFakeWJetUp/F");
+  outTreePtOrd->Branch("weightTauFakeWJetDown", &weightTauFakeWJetDown_, "weightTauFakeWJetDown/F");
 
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
@@ -1327,8 +1299,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   cout<< "crossSection " << crossSection << " pb ==> scaleFactor " << scaleFactor << endl;
 
   // jets
-  currentTree->SetBranchStatus("l1JetsP4"  ,1);
-  currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
+//   currentTree->SetBranchStatus("l1JetsP4"  ,1);
+//   currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
   currentTree->SetBranchStatus("jetsP4"                ,0);
   currentTree->SetBranchStatus("jetsIDP4"              ,1);
   currentTree->SetBranchStatus("jetsIDUpP4"            ,1);
@@ -1544,11 +1516,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   std::vector< float >* jetQuarkGluonGen =  new std::vector< float >();
   currentTree->SetBranchAddress("jetQuarkGluonGen", &jetQuarkGluonGen);
 
-  std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
-  currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
+//   std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
+//   currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
 
-  std::vector< LV >* l1JetsP4    = new std::vector< LV >();
-  currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
+//   std::vector< LV >* l1JetsP4    = new std::vector< LV >();
+//   currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
 
   std::vector< LV >* diTauLegsP4    = new std::vector< LV >();
   currentTree->SetBranchAddress("diTauLegsP4",     &diTauLegsP4);
@@ -1859,7 +1831,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   MAPDITAU_run mapDiTau;
 
   // P4s for tau removal
-  LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
+//   LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
 
   ///////////////////////
   // LOOP OVER ENTRIES //
@@ -1956,7 +1928,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = csvAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = csvAllB[i] -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = csvAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i]= energyAllB[i] = csvAllB[i] -99;
     }
 
     // define the relevant jet collection 
@@ -1987,6 +1959,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	ptAll[nJets30]  = (*jets)[indexes[v]].Pt();
 	etaAll[nJets30] = (*jets)[indexes[v]].Eta();
 	phiAll[nJets30] = (*jets)[indexes[v]].Phi();
+	energyAll[nJets30] = (*jets)[indexes[v]].E();
 	csvAll[nJets30] = (*jetsBtagCSV)[indexes[v]];
 	nJets30++;
       }
@@ -2007,6 +1980,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	  ptAllB[nJets20BTagged]  = (*jets)[indexes[v]].Pt();
 	  etaAllB[nJets20BTagged] = (*jets)[indexes[v]].Eta();
 	  phiAllB[nJets20BTagged] = (*jets)[indexes[v]].Phi();	  
+	  energyAllB[nJets20BTagged] = (*jets)[indexes[v]].E();	  
 	  csvAllB[nJets20BTagged] = (*jetsBtagCSV)[indexes[v]];
 
 	  nJets20BTagged++;
@@ -2404,48 +2378,49 @@ void fillTrees_MuTauStream(TChain* currentTree,
       caloMEtNoHFUp_ = caloMEtNoHFUpPhi_ = caloMEtNoHFDown_ = caloMEtNoHFDownPhi_ = -99;
     }
 
-    ////////////////////////////////////////////////
-    // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
+//     ////////////////////////////////////////////////
+//     // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
 
-    // use rawEtL1Jet(et,eta)
+//     // use rawEtL1Jet(et,eta)
 
-    // Initialization
-    caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
-    caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
+//     // Initialization
+//     caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
+//     caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
 
-    if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
-    else                        L1etmNoTauP4 = (*l1ETMP4)[1];
+//     if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
+//     else                        L1etmNoTauP4 = (*l1ETMP4)[1];
 
-    if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
+//     if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
 
-      // L1Jets matching
-      if(l1JetsP4->size()>0) {
-	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
-	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
-	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
-	}
-      }
+//       // L1Jets matching
+//       if(l1JetsP4->size()>0) {
+// 	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
+// 	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
+// 	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
+// 	}
+//       }
 
-      // CaloJets matching
-      if(caloJetsMatchedP4->size()>0) {
-	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
-	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
-	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
-	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
-	  }
-	}
-      }
-    }
+//       // CaloJets matching
+//       if(caloJetsMatchedP4->size()>0) {
+// 	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
+// 	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
+// 	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
+// 	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
+// 	  }
+// 	}
+//       }
+//     }
 
-    caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
-    caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
-    L1etmNoTau_         = L1etmNoTauP4.Et() ;
+//     caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
+//     caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
+//     L1etmNoTau_         = L1etmNoTauP4.Et() ;
 
-    caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
-    caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
-    L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
+//     caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
+//     caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
+//     L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
 
-    ////////////////////////////////////////////////    
+//     ////////////////////////////////////////////////  
+    
 
     MEtCov00   = (*metSgnMatrix)[0]; 
     MEtCov01   = (*metSgnMatrix)[1]; 
@@ -2587,6 +2562,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     weightHepNup   = 1;
     weightHepNupHighStatW =1;
     weightHepNupDY = 1;
+    weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
 
     // Reweight W+Jets
     //cout << "SAMPLE : " << sample_ << endl;
@@ -2607,6 +2583,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
       sampleWeight = 1;
       sampleWeightW= scaleFactor; 
       //cout << " => weightHepNup=" << weightHepNup << " ; weightHepNupHighStatW=" << weightHepNupHighStatW << endl;
+      //Add a weight for tauPt reweighting , coefficiencts are from Andrew
+      float ptTau_ = ptL2;
+      if(ptTau_ > 200.)ptTau_ = 200.;
+      weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
+      weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
 
     // Reweight DY+Jets
@@ -2619,6 +2601,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       sampleWeightDY = scaleFactor; 
     }
     ///////////////
+
+    highPtWeightUp =1;
+    highPtWeightDown =1;
+    if( sample_.find("SUSY")!=string::npos){
+      highPtWeightUp =1 + 0.20*(*genDiTauLegsP4)[1].Pt();
+      highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
+    }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
