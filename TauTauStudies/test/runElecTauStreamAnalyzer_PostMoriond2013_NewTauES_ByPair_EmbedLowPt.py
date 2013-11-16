@@ -16,14 +16,13 @@ runOnMC     = False
 runOnEmbed  = True
 embedType   = "RhEmbedEleTauLowPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
-applyTauESCorr= True
+applyTauESCorr= False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 useAntiZee   = True
 useLepTauPAT = True
-useMarkov   = True
-runMoriond = True
+useMarkov   = False
 
 #if runOnEmbed and runOnMC:
 #    print "Running on Embedded, runOnMC should be switched off"
@@ -55,14 +54,15 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-    #'file:patTuples_LepTauStream.root'
+    #'file:patTuples_LepTauStream_VBFH125.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
@@ -74,7 +74,7 @@ process.source = cms.Source(
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/patTuples_LepTauStream_VBFH125_PAT_v2.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/file_DYJets_patTuples_LepTauStream_9_1_lQm.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/pat/Data/file_Data_2012D_PRV1_HTT_06Mar2013_PAT_v1_p2_patTuples_LepTauStream_78_1_2KS.root'
-    'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
+    #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/bluj/TauPlusX/Data_2012D_PRV1_HTT_06Mar13_PAT_v2_p1/633d9a9cc3632fa03920e1c68550a01b/patTuples_LepTauStream_9_2_XRa.root'
    )
     )
 
@@ -422,10 +422,9 @@ simpleCutsWP80 = "(userFloat('nHits')==0 && userInt('antiConv')>0.5 "+ \
 process.tauPtEtaIDAgMuLAgElec = cms.EDFilter( #apply AntiLep cuts
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuLAgElec"),
-    cut = cms.string("tauID('againstMuonLoose2')>0.5 "+
-##                      " && tauID('againstElectronTightMVA3')>0.5 "
-                     " && tauID('againstElectronLooseMVA3')>0.5 "
-                     ),
+    cut = cms.string( " ( tauID('againstMuonLoose3')>0.5 || tauID('againstMuonLooseMVA')>0.5)"+### IN NewTauID
+                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
+                      ),
     filter = cms.bool(False)
     )
 process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
@@ -439,24 +438,18 @@ if useLepTauPAT:
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>20 && abs(eta)<2.3"+
-                     " && tauID('byLooseIsolationMVA2')>-0.5"+
-                     #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5)"
-                     #" && tauID('againstElectronMVA')>0.5"
-##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
-                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
+                     " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
+                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),
     filter = cms.bool(False)
     )
 process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>19 && abs(eta)<2.3"+
-                     " && tauID('byLooseIsolationMVA2')>-0.5"+
-                     #" && (tauID('againstElectronTight')>0.5 || tauID('againstElectronMVA')>0.5 )"
-                     #" && tauID('againstElectronMVA')>0.5"
-##                      " && tauID('againstElectronTightMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
-                     " && tauID('againstElectronLooseMVA3')>0.5 && tauID('againstMuonLoose2')>0.5"
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
+                     " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
+                     " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),
     filter = cms.bool(False)
     )
@@ -466,19 +459,7 @@ if useLepTauPAT:
 if applyTauESCorr:
     process.tauPtEtaIDAgMuAgElecIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
     process.tauPtEtaIDAgMuAgElecIsoPtRel.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
-if runMoriond:
-    process.tauPtEtaIDAgMuLAgElec.cut = cms.string("tauID('againstMuonLoose2')>0.5 || tauID('againstMuonLoose')>0.5")
-    process.tauPtEtaIDAgMuAgElecIso.cut = cms.string("pt>20 && abs(eta)<2.3"+
-                                                     " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-##                                                      " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
-                                                     " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
-                                                    )
-    process.tauPtEtaIDAgMuAgElecIsoPtRel.cut = cms.string("pt>19 && abs(eta)<2.3"+
-                                                          " && (tauID('byLooseIsolationMVA2')>-0.5 || tauID('byLooseIsolationMVA')>-0.5)"+
-##                                                           " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronTightMVA3')>0.5)"
-                                                          " && (tauID('againstElectronMVA')>0.5 || tauID('againstElectronLooseMVA3')>0.5)"
-                                                          )
-    
+
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
     "CandViewCountFilter",
     src = cms.InputTag("tauPtEtaIDAgMuAgElecIso"),
@@ -626,7 +607,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose            = cms.untracked.bool( False ),
     doElecIsoMVA       = cms.untracked.bool( False ),
-    doIsoMVAOrdering = cms.untracked.bool(False)
+    doIsoOrdering = cms.untracked.bool(False)
     )
 
 if not useAntiZee:
