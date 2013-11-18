@@ -20,7 +20,7 @@ applyTauESCorr= True
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
-useMarkov   = True
+useMarkov   = False
 
 #if runOnEmbed and runOnMC:
 #    print "Running on Embedded, runOnMC should be switched off"
@@ -54,7 +54,8 @@ process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:patTuples_LepTauStream_VBFH125.root'
+        #'file:patTuples_LepTauStream_VBFH125.root'
+        'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
         #'file:patTuples_LepTauStream.root'
         #'file:VBFH125.root'
         #'file:data2012D.root'        
@@ -397,7 +398,7 @@ process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>20 && abs(eta)<2.3"+
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
                      " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),
@@ -406,7 +407,7 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
 process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>19 && abs(eta)<2.3"+
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
                      " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),

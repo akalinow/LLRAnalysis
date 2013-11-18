@@ -446,6 +446,44 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("visibleTauMass",&visibleTauMass_,"visibleTauMass/F");
   tree_->Branch("visibleGenTauMass",&visibleGenTauMass_,"visibleGenTauMass/F");
 
+  ///NewTauID input variables
+  tree_->Branch("chargedIsoPtSum",&chargedIsoPtSum_,"chargedIsoPtSum/F");
+  tree_->Branch("neutralIsoPtSum",&neutralIsoPtSum_,"neutralIsoPtSum/F");
+  tree_->Branch("puCorrPtSum",&puCorrPtSum_,"puCorrPtSum/F");
+  tree_->Branch("patDecayMode",&patDecayMode_,"patDecayMode/I");
+  tree_->Branch("dxyTau",&dxyTau_,"dxyTau/F");
+  tree_->Branch("dxyErrTau",&dxyErrTau_,"dxyErrTau/F");
+  tree_->Branch("dxySigTau",&dxySigTau_,"dxySigTau/F");
+  tree_->Branch("hasSecVtx",&hasSecVtx_,"hasSecVtx/I");
+  tree_->Branch("flightLength2",&flightLength2_,"flightLength2/F");
+  tree_->Branch("flightLengthSig",&flightLengthSig_,"flightLengthSig/F");
+
+  ///NewTauID useful variables
+  tree_->Branch("dxyPCAX",&dxyPCAX_,"dxyPCAX/F");
+  tree_->Branch("dxyPCAY",&dxyPCAY_,"dxyPCAY/F");
+  tree_->Branch("dxyPCAZ",&dxyPCAZ_,"dxyPCAZ/F");
+  tree_->Branch("flightLengthX",&flightLengthX_,"flightLengthX/F");
+  tree_->Branch("flightLengthY",&flightLengthY_,"flightLengthY/F");
+  tree_->Branch("flightLengthZ",&flightLengthZ_,"flightLengthZ/F");
+  tree_->Branch("pvX",&pvX_,"pvX/F");
+  tree_->Branch("pvY",&pvY_,"pvY/F");
+  tree_->Branch("pvZ",&pvZ_,"pvZ/F");
+  tree_->Branch("pvCov00",&pvCov00_,"pvCov00/F");
+  tree_->Branch("pvCov01",&pvCov01_,"pvCov01/F");
+  tree_->Branch("pvCov02",&pvCov02_,"pvCov02/F");
+  tree_->Branch("pvCov11",&pvCov11_,"pvCov11/F");
+  tree_->Branch("pvCov12",&pvCov12_,"pvCov12/F");
+  tree_->Branch("pvCov22",&pvCov22_,"pvCov22/F");
+  tree_->Branch("svX",&svX_,"svX/F");
+  tree_->Branch("svY",&svY_,"svY/F");
+  tree_->Branch("svZ",&svZ_,"svZ/F");
+  tree_->Branch("svCov00",&svCov00_,"svCov00/F");
+  tree_->Branch("svCov01",&svCov01_,"svCov01/F");
+  tree_->Branch("svCov02",&svCov02_,"svCov02/F");
+  tree_->Branch("svCov11",&svCov11_,"svCov11/F");
+  tree_->Branch("svCov12",&svCov12_,"svCov12/F");
+  tree_->Branch("svCov22",&svCov22_,"svCov22/F");
+
   tree_->Branch("leadPFChargedHadrTrackPt",&leadPFChargedHadrTrackPt_,"leadPFChargedHadrTrackPt/F");
   tree_->Branch("leadPFChargedHadrTrackP", &leadPFChargedHadrTrackP_,"leadPFChargedHadrTrackP/F");
   tree_->Branch("leadPFChargedHadrPt",&leadPFChargedHadrPt_,"leadPFChargedHadrPt/F");
@@ -1809,6 +1847,43 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     if( leg2->tauID("againstElectronVTightMVA5")>0.5) tightestAntiEMVA5WP_  = 5;
     AntiEMVA5raw_ = leg2->tauID("againstElectronMVA5raw");
     AntiEMVA5category_ = leg2->tauID("againstElectronMVA5category");
+
+    /////NewTauID input variables
+    chargedIsoPtSum_ = leg2->tauID("chargedIsoPtSum");
+    neutralIsoPtSum_ = leg2->tauID("neutralIsoPtSum");
+    puCorrPtSum_     = leg2->tauID("puCorrPtSum");
+    patDecayMode_    = leg2->decayMode();
+    dxyTau_          = leg2->dxy(); 
+    dxyErrTau_       = leg2->dxy_error(); 
+    dxySigTau_       = leg2->dxy_Sig();
+    hasSecVtx_       = leg2->hasSecondaryVertex();
+    flightLength2_   = leg2->flightLength().Mag2();
+    flightLengthSig_ = leg2->flightLengthSig();
+    ///NewTauID useful variables
+    dxyPCAX_         = leg2->dxy_PCA().X();
+    dxyPCAY_         = leg2->dxy_PCA().Y();
+    dxyPCAZ_         = leg2->dxy_PCA().Z();
+    flightLengthX_   = leg2->flightLength().X();
+    flightLengthY_   = leg2->flightLength().Y();
+    flightLengthZ_   = leg2->flightLength().Z();
+    pvX_             = leg2->primaryVertexPos().X();
+    pvY_             = leg2->primaryVertexPos().Y();
+    pvZ_             = leg2->primaryVertexPos().Z();
+    pvCov00_         = leg2->primaryVertexCov()(0,0);
+    pvCov01_         = leg2->primaryVertexCov()(0,1);
+    pvCov02_         = leg2->primaryVertexCov()(0,2);
+    pvCov11_         = leg2->primaryVertexCov()(1,1);
+    pvCov12_         = leg2->primaryVertexCov()(1,2);
+    pvCov22_         = leg2->primaryVertexCov()(2,2);
+    svX_             = leg2->secondaryVertexPos().X();
+    svY_             = leg2->secondaryVertexPos().Y();
+    svZ_             = leg2->secondaryVertexPos().Z();
+    svCov00_         = leg2->secondaryVertexCov()(0,0);
+    svCov01_         = leg2->secondaryVertexCov()(0,1);
+    svCov02_         = leg2->secondaryVertexCov()(0,2);
+    svCov11_         = leg2->secondaryVertexCov()(1,1);
+    svCov12_         = leg2->secondaryVertexCov()(1,2);
+    svCov22_         = leg2->secondaryVertexCov()(2,2);
 
     pfJetPt_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->pt() : -99;
     pfJetEtaMom2_ = (leg2->pfJetRef()).isNonnull() ? leg2->pfJetRef()->etaetaMoment() : -99;

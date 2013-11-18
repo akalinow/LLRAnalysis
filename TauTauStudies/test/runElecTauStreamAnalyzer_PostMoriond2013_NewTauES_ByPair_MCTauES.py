@@ -21,7 +21,7 @@ doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
 useAntiZee   = True
-useLepTauPAT = Tre
+useLepTauPAT = True
 useMarkov   = False
 
 #if runOnEmbed and runOnMC:
@@ -54,14 +54,15 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-    'file:patTuples_LepTauStream_VBFH125.root'
+    #'file:patTuples_LepTauStream_VBFH125.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
@@ -437,7 +438,7 @@ if useLepTauPAT:
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>20 && abs(eta)<2.3"+
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
                      " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),
@@ -446,7 +447,7 @@ process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
 process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
     "PATTauSelector",
     src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    cut = cms.string("pt>19 && abs(eta)<2.3"+
+    cut = cms.string("pt>17 && abs(eta)<2.3"+
                      " && ( tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 || tauID('byLooseIsolationMVA3newDMwLT') > 0.5 || tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 )"+## IN NewTauID
                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),

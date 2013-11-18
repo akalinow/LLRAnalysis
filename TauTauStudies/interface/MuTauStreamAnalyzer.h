@@ -232,6 +232,43 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   int tightestHPSMVA3oldDMwoLTWP_;
   float hpsMVA3oldDMwoLT_;
 
+  /////NewTauID input variables
+  float chargedIsoPtSum_;
+  float neutralIsoPtSum_;
+  float puCorrPtSum_; 
+  int patDecayMode_;
+  float dxyTau_;   
+  float dxyErrTau_;    
+  float dxySigTau_;     
+  int hasSecVtx_;    
+  float flightLength2_;  
+  float flightLengthSig_;
+  ///NewTauID useful variables
+  float dxyPCAX_;        
+  float dxyPCAY_;        
+  float dxyPCAZ_;        
+  float flightLengthX_;
+  float flightLengthY_; 
+  float flightLengthZ_;  
+  float pvX_;   
+  float pvY_;   
+  float pvZ_;   
+  float pvCov00_;    
+  float pvCov01_;     
+  float pvCov02_;      
+  float pvCov11_;       
+  float pvCov12_;        
+  float pvCov22_;
+  float svX_;          
+  float svY_;
+  float svZ_;
+  float svCov00_; 
+  float svCov01_;  
+  float svCov02_;   
+  float svCov11_;    
+  float svCov12_;     
+  float svCov22_;      
+
   int isTauLegMatched_;
   int isTauLegMatchedToLep_;
   int isMuLegMatched_;
