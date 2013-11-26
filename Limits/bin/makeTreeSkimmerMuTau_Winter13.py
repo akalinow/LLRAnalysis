@@ -833,24 +833,24 @@ options = {
     },
     'WGstarToLNu2E' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2E-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_Trees_MuTau_v1/',
-    'outputFileName' : OutDir+'nTupleWGstarToLNu2E"_MuTau.root',
-    'sample'         : 'WGstarToLNu2E"',
+    'outputFileName' : OutDir+'nTupleWGstarToLNu2E_MuTau.root',
+    'sample'         : 'WGstarToLNu2E',
     'xSection'       : 5.873,
     'skimEff'        : 1.0 * 10134./314653 ,
     'iJson'          : -1
     },
     'WGstarToLNu2Mu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Mu-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_Trees_MuTau_v1/',
-    'outputFileName' : OutDir+'nTupleWGstarToLNu2Mu"_MuTau.root',
-    'sample'         : 'WGstarToLNu2Mu"',
+    'outputFileName' : OutDir+'nTupleWGstarToLNu2Mu_MuTau.root',
+    'sample'         : 'WGstarToLNu2Mu',
     'xSection'       : 1.914,
     'skimEff'        : 1.0 * 9233./299973,
     'iJson'          : -1
     },
     'WGstarToLNu2Tau' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Tau-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_Trees_MuTau_v2/',
-    'outputFileName' : OutDir+'nTupleWGstarToLNu2Tau"_MuTau.root',
-    'sample'         : 'WGstarToLNu2Tau"',
+    'outputFileName' : OutDir+'nTupleWGstarToLNu2Tau_MuTau.root',
+    'sample'         : 'WGstarToLNu2Tau',
     'xSection'       : 0.336,
     'skimEff'        : 1.0 * 1287./49997,
     'iJson'          : -1
