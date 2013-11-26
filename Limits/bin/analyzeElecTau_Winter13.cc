@@ -42,6 +42,7 @@
 #define DOSPLIT          false
 #define OldCat           false
 #define useZDataMC       false
+#define includeWG        true
 
 typedef map<TString, TChain* >  mapchain;
 
@@ -85,7 +86,8 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_,
+void chooseSelection(TString variable_,
+		     TString version_,
 		     string selection_, 
 		     TCut& tiso,
 		     TCut& tdecaymode, 
@@ -209,6 +211,12 @@ void chooseSelection(TString version_,
 //     ltiso   = "tightestHPSMVA3oldDMwoLTWP>0" ;//Loose 1
 //     mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
 //   }
+
+  if(variable_.Contains("hpsMVA3oldDMwLT")) {
+    tiso   = "etaL1<999" ;//Tight 3
+    ltiso   = "etaL1<999" ;//Loose 1
+    mtiso   = "etaL1<999" ;//Medium 2
+  }
 
   // SVFit selection cut //
   if(version_.Contains("SVFit200"))      svfit = "diTauNSVfitMass<200";
@@ -1266,7 +1274,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauID/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/";
   TString pathToFileDY = pathToFile; 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
@@ -1353,6 +1361,12 @@ void plotElecTau( Int_t mH_           = 120,
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_ElecTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_ElecTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_ElecTau_"+fileAnalysis+".root");
+  if(includeWG){
+    backgroundOthers  ->Add(pathToFile+"nTupleWGToLNuG_ElecTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2E_ElecTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2Mu_ElecTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2Tau_ElecTau_"+fileAnalysis+".root");
+  }
   //
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_ElecTau_"+fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_ElecTau_"+fileAnalysis+".root");
@@ -1503,7 +1517,13 @@ void plotElecTau( Int_t mH_           = 120,
   TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
   TCut svfit("diTauNSVfitMass>-999"); 
 
-  chooseSelection(version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele, lID, lveto,svfit,tpt);
+  chooseSelection(variable_,version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele, lID, lveto,svfit,tpt);
+
+  if(variable_.Contains("hpsMVA3oldDMwLT")) {
+    tiso   = "etaL1<999" ;//Tight 3
+    ltiso   = "etaL1<999" ;//Loose 1
+    mtiso   = "etaL1<999" ;//Medium 2
+  }
 
   if(selection_.find("1Prong0Pi0")!=string::npos)
     tpt = tpt&&TCut("decayMode==0");

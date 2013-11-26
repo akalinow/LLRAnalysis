@@ -42,6 +42,7 @@
 #define DOSPLIT          false
 #define useZDataMC       false
 #define StudyQCD         false
+#define includeWG        true
 
 typedef map<TString, TChain* >  mapchain;
 
@@ -78,7 +79,8 @@ void makeHistoFromDensity(TH1* hDensity, TH1* hHistogram){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-void chooseSelection(TString version_,
+void chooseSelection(TString variable_,
+		     TString version_,
 		     string selection_, 
 		     TCut& tiso, 
 		     TCut& tdecaymode, 
@@ -215,6 +217,11 @@ void chooseSelection(TString version_,
 //     mtiso   = "tightestHPSMVA3oldDMwoLTWP>1" ;//Medium 2
 //   }
 
+  if(variable_.Contains("hpsMVA3oldDMwLT")) {
+    tiso   = "etaL1<999" ;//Tight 3
+    ltiso   = "etaL1<999" ;//Loose 1
+    mtiso   = "etaL1<999" ;//Medium 2
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1269,7 +1276,8 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauID/MuTau/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/";
+//   TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/";
   TString pathToFileDY    = pathToFile;
   TString pathToFileHWW   = pathToFile; 
 
@@ -1360,6 +1368,12 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
+  if(includeWG){
+    backgroundOthers  ->Add(pathToFile+"nTupleWGToLNuG_MuTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2E_MuTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2Mu_MuTau_"+fileAnalysis+".root");
+    backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2Tau_MuTau_"+fileAnalysis+".root");
+  }
   //
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p1_MuTau_"     +fileAnalysis+".root");
   backgroundWJets   ->Add(pathToFile+"nTupleWJets-p2_MuTau_"     +fileAnalysis+".root");
@@ -1520,9 +1534,15 @@ void plotMuTau( Int_t mH_           = 120,
   TCut mtiso("hpsDB3H<5.0");
 
   // Choose selection wrt version_
-  chooseSelection(version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele,liso,laiso,lliso,tpt);
+  chooseSelection(variable_,version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele,liso,laiso,lliso,tpt);
   cout<<"ltiso : "<<ltiso<<endl;
   if(selection_.find("vbfRelaxMt")!=string::npos) antiWsgn+=10;
+
+  if(variable_.Contains("hpsMVA3oldDMwLT")) {
+    tiso   = "etaL1<999" ;//Tight 3
+    ltiso   = "etaL1<999" ;//Loose 1
+    mtiso   = "etaL1<999" ;//Medium 2
+  }
 
   ////// EVENT WISE //////
   TCut lveto="muFlag!=1 && vetoEventOld==0";
@@ -3319,9 +3339,9 @@ void plotMuTau( Int_t mH_           = 120,
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
   c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
 
-  pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
-  pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
-  pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+//   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+//   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+//   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
 
   TH1F *hDataBlind, *hRatioBlind;
 
