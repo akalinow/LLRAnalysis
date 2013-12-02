@@ -92,29 +92,29 @@ anaEmb = ['nominal','TauUp','TauDown']
 #anaEmb = ['TauUp','TauDown','ElecUp','ElecDown']
 
 samplesEmb = [
-##     'Run2012A-22Jan2013-Embedded',
-##     'Run2012B-22Jan2013-p1-Embedded',
-##     'Run2012B-22Jan2013-p2-Embedded',
-##     'Run2012B-22Jan2013-p3-Embedded',
-##     'Run2012B-22Jan2013-p4-Embedded',
-##     'Run2012B-22Jan2013-p5-Embedded',
-##     'Run2012C-22Jan2013-p0-Embedded',
-##     'Run2012C-22Jan2013-p1-Embedded',
-##     'Run2012C-22Jan2013-p2-Embedded',
-##     'Run2012C-22Jan2013-p3-Embedded',
-##     'Run2012C-22Jan2013-p4-Embedded',
-##     'Run2012C-22Jan2013-p5-Embedded',
-##     'Run2012C-22Jan2013-p6-Embedded',
-##     'Run2012C-22Jan2013-p7-Embedded',    
-##     'Run2012D-22Jan2013-p1-Embedded',
-##     'Run2012D-22Jan2013-p2-Embedded',
-##     'Run2012D-22Jan2013-p3-Embedded',
-##     'Run2012D-22Jan2013-p4-Embedded',
-##     'Run2012D-22Jan2013-p5-Embedded',
-##     'Run2012D-22Jan2013-p6-Embedded',
-##     'Run2012D-22Jan2013-p7-Embedded',
-##     'Run2012D-22Jan2013-p8-Embedded',
-##     'Run2012D-22Jan2013-p9-Embedded'
+    'Run2012A-22Jan2013-Embedded',
+    'Run2012B-22Jan2013-p1-Embedded',
+    'Run2012B-22Jan2013-p2-Embedded',
+    'Run2012B-22Jan2013-p3-Embedded',
+    'Run2012B-22Jan2013-p4-Embedded',
+    'Run2012B-22Jan2013-p5-Embedded',
+    'Run2012C-22Jan2013-p0-Embedded',
+    'Run2012C-22Jan2013-p1-Embedded',
+    'Run2012C-22Jan2013-p2-Embedded',
+    'Run2012C-22Jan2013-p3-Embedded',
+    'Run2012C-22Jan2013-p4-Embedded',
+    'Run2012C-22Jan2013-p5-Embedded',
+    'Run2012C-22Jan2013-p6-Embedded',
+    'Run2012C-22Jan2013-p7-Embedded',    
+    'Run2012D-22Jan2013-p1-Embedded',
+    'Run2012D-22Jan2013-p2-Embedded',
+    'Run2012D-22Jan2013-p3-Embedded',
+    'Run2012D-22Jan2013-p4-Embedded',
+    'Run2012D-22Jan2013-p5-Embedded',
+    'Run2012D-22Jan2013-p6-Embedded',
+    'Run2012D-22Jan2013-p7-Embedded',
+    'Run2012D-22Jan2013-p8-Embedded',
+    'Run2012D-22Jan2013-p9-Embedded'
     ]
 
 for iSEmb in range(0,len(samplesEmb)):
@@ -127,7 +127,7 @@ anaMC = ['nominal','TauUp','TauDown','JetUp','JetDown']
 #####anaMC = ['TauUp','nominal','JetDown']
 ListFinalState = ['TauTau','JetToTau','EToTau','ZTTL','ZTTJ']
 
-for iAnMC in range(0,len(anaMC)):
+## for iAnMC in range(0,len(anaMC)):
 ##     ##BkgMC
         ## DY
 ##    for finalState in ListFinalState:
@@ -161,10 +161,10 @@ for iAnMC in range(0,len(anaMC)):
 ##    treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"        , False)
 ##    treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Nu"       , False)
 ##    treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"          , False)
-   treeSkim( anaMC[iAnMC] , "WGToLNuG"          , False)
-   treeSkim( anaMC[iAnMC] , "WGstarToLNu2E"     , False)
-   treeSkim( anaMC[iAnMC] , "WGstarToLNu2Mu"    , False)
-   treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
+##    treeSkim( anaMC[iAnMC] , "WGToLNuG"          , False)
+##    treeSkim( anaMC[iAnMC] , "WGstarToLNu2E"     , False)
+##    treeSkim( anaMC[iAnMC] , "WGstarToLNu2Mu"    , False)
+##    treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
        
     
 #######HiggsMC
