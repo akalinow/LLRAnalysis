@@ -1524,6 +1524,14 @@ void plotElecTau( Int_t mH_           = 120,
     ltiso   = "etaL1<999" ;//Loose 1
     mtiso   = "etaL1<999" ;//Medium 2
   }
+  if(variable_.Contains("svX")||
+     variable_.Contains("svY")||
+     variable_.Contains("svZ")||
+     variable_.Contains("svCov")||
+     variable_.Contains("flightLength")
+     ) {
+    tpt = tpt&&TCut("hasSecVtx>0.5");
+  }
 
   if(selection_.find("1Prong0Pi0")!=string::npos)
     tpt = tpt&&TCut("decayMode==0");
@@ -1732,6 +1740,8 @@ void plotElecTau( Int_t mH_           = 120,
   TCut sbinCatIncl = "etaL1<999";
 
   cout << sbin << endl;
+  cout << "sbinCat :" << endl;
+  cout << sbinCat << endl;
   /////////////////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////
 
@@ -2125,7 +2135,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  hWSS->Add(h1, 1.0);
 
 	  float NormWJets = 0.;
-	  drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
+	  drawHistogram(sbinPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
 	  if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);
 	  else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
 	  //hW->Add(h1, 1.0);
@@ -2134,24 +2144,28 @@ void plotElecTau( Int_t mH_           = 120,
 	  //fine binning for MSSM
           if(selection_.find("nobTag")!=string::npos){
 	    NormWJets = 0.;
-	    drawHistogram(sbinPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
+	    //drawHistogram(sbinPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbin, 1);
+	    drawHistogram(sbinLtisoPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);
 	    else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
 
             hCleanerfb->Reset(); float NormWJets_fb = 0.;
             hW_fb->Reset();
-	    drawHistogram(sbinPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
+	    //drawHistogram(sbinPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbin, 1);
+	    drawHistogram(sbinLtisoPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
             hW_fb->Add(hCleanerfb, h1->Integral()/hCleanerfb->Integral());
           }
 	  if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
             float NormWJetsBTag = 0.;
-	    drawHistogram(sbinPresel,bTagLoose,"MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    //drawHistogram(sbinPresel,bTagLoose,"MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinInclusive, 1);
+	    drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
 	    hWLooseBTag->Add(hCleaner,  h1->Integral()/hCleaner->Integral());
             hEWK->Add(hWLooseBTag,1.0);
 
 	    //fine binning for MSSM
             hW_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fb = 0.;
-	    drawHistogram(sbinPresel,bTagLoose, "MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
+	    //drawHistogram(sbinPresel,bTagLoose, "MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinInclusive, 1);
+	    drawHistogram(sbinLtisoPresel,bTagLoose, "MC_WJet",version_, RUN, currentTree, variable, NormWJetsBTag_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
             hW_fb->Add(hCleanerfb,  h1->Integral()/hCleanerfb->Integral());
 	  }
 	  else if(selection_.find("boostMedium")!=string::npos){
@@ -2654,12 +2668,14 @@ void plotElecTau( Int_t mH_           = 120,
 	    hCleaner->Reset();
 	  }
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
-	    drawHistogram(sbinaIsoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1); 
+	    //drawHistogram(sbinaIsoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1); 
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1); 
 	    cout<<"hCleaner->Integral() : "<<hCleaner->Integral()<<endl;
 	    hDataAntiIsoLooseTauIso->Add(hCleaner); 
 	    //fine binning histogram for MSSM
 	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.;
-	    drawHistogram(sbinaIsoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIso ,1);
+	    //drawHistogram(sbinaIsoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
 	    hQCD_fb->Add(hCleanerfb);
 
 	    //Background substraction
@@ -2711,7 +2727,8 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else{
 	    // 	    drawHistogram(sbinaIsoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoMtiso ,1);
-	    drawHistogram(sbinaIsoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
+	    //drawHistogram(sbinaIsoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 	  }
