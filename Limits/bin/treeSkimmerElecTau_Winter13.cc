@@ -3195,13 +3195,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //MSSM NewTauID
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  0.80 : 
-	  0.80;
+	  1.16 : 
+	  0.87;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  0.81 : 
-	  0.68;
+	  1.83 : 
+	  0.33;
 // 	diTauNSVfitMass_ *= 1.015;
 // 	diTauVisMass *= 1.015;
       }

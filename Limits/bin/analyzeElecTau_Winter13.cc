@@ -176,6 +176,12 @@ void chooseSelection(TString variable_,
     ltiso  = "hpsDB3H<10.0" ;
     mtiso  = "hpsDB3H<5.0" ;
   }
+  if(version_.Contains("HPSDB3H") && version_.Contains("RelaxIso")) {
+    tiso   = "hpsDB3H<10.0" ;
+    ltiso  = "hpsDB3H<10.0" ;
+    mtiso  = "hpsDB3H<10.0" ;
+  }
+
 //   else if(version_.Contains("HPSMVA3newDMwLT")) {
 //     tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
 //     ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
@@ -414,14 +420,18 @@ void drawHistogram(TCut sbinPair,
 	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightEleABC*SFTau*SFEle_ABC*ZeeWeightHCP*weightDecayMode)";
 	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightEleD*SFTau*SFEle_D*ZeeWeight*weightDecayMode)";
 	// 	else                                 weight = "(sampleWeight*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNupDY*weightHepNup*ZeeWeight*weightDecayMode)";
-	else                                 weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*ZeeWeight*weightDecayMode)";
+	else if(version_.Contains("ZeeSel"))
+	  weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightDecayMode)";
+	else 
+	  weight = "(puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*ZeeWeight*weightDecayMode)";
       } //NoSoft     
 
-      if(MSSM){
+      if(MSSM && !version_.Contains("NoWCorr")){
 	if(type.Contains("WJetUp")) weightW  *= "weightTauFakeWJetUp";
         else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
       }
+      cout<<"weightW : "<<weightW<<endl;
 
       //weights for GGFH pT re-weight
       if(type.Contains("GGFHUp"))
@@ -1275,7 +1285,7 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/";
-  TString pathToFileDY = pathToFile; 
+  TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/DYZeeCorr/"; 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
   if(Tanalysis_=="") fileAnalysis = "nominal";
@@ -1540,9 +1550,9 @@ void plotElecTau( Int_t mH_           = 120,
   if(selection_.find("3Prongs")!=string::npos)
     tpt = tpt&&TCut("decayMode==2");
   if(selection_.find("BL")!=string::npos)
-    tpt = tpt&&TCut("TMath::Abs(etaL2)<1.5");
+    tpt = tpt&&TCut("TMath::Abs(etaL2)<1.479");
   if(selection_.find("EC")!=string::npos)
-    tpt = tpt&&TCut("TMath::Abs(etaL2)>1.5");
+    tpt = tpt&&TCut("TMath::Abs(etaL2)>1.479");
 
   tpt= tpt&&TCut("TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
   if(selection_.find("novbfLow")!=string::npos)
@@ -1560,6 +1570,7 @@ void plotElecTau( Int_t mH_           = 120,
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
   TCut MtCut       = removeMtCut     ? "(etaL1<999)" : pZ;
+  if(selection_.find("HighMt")!=string::npos) MtCut="MtLeg1MVA>70";
   TCut diTauCharge = invertDiTauSign ? SS : OS; 
 
   // HLT matching //

@@ -181,6 +181,11 @@ void chooseSelection(TString variable_,
     ltiso  = "hpsDB3H<10.0" ;
     mtiso  = "hpsDB3H<5.0" ;
   }
+  if(version_.Contains("HPSDB3H") && version_.Contains("RelaxIso")) {
+    tiso   = "hpsDB3H<10.0" ;
+    ltiso  = "hpsDB3H<10.0" ;
+    mtiso  = "hpsDB3H<10.0" ;
+  }
 //   else if(version_.Contains("HPSMVA3newDMwLT")) {
 //     tiso   = "tightestHPSMVA3newDMwLTWP>2" ;//Tight 3
 //     ltiso   = "tightestHPSMVA3newDMwLTWP>0" ;//Loose 1
@@ -374,7 +379,7 @@ void drawHistogram(TCut sbinPair,
       if(version_.Contains("NoWHighStat")) weightW  = "weightHepNup";
       else                                 weightW  = "weightHepNupHighStatW";
       
-      if(MSSM){
+      if(MSSM && !version_.Contains("NoWCorr")){
 	if(type.Contains("WJetUp")) weightW  *= "weightTauFakeWJetUp";
         else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
@@ -1583,6 +1588,7 @@ void plotMuTau( Int_t mH_           = 120,
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
   TCut MtCut       = removeMtCut     ? "(etaL1<999)" : pZ;
+  if(selection_.find("HighMt")!=string::npos) MtCut="MtLeg1MVA>70";
   TCut diTauCharge = invertDiTauSign ? SS : OS; 
 
   // HLT matching //
@@ -3348,10 +3354,14 @@ void plotMuTau( Int_t mH_           = 120,
   
   //return;
 
-  c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
-  c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
-  c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
-
+  if(logy_){
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+  }
+  else{
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+  }
 //   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
 //   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
 //   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
