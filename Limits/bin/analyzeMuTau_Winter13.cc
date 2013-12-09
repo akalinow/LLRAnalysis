@@ -3340,7 +3340,7 @@ void plotMuTau( Int_t mH_           = 120,
   hRatio->Reset();
   hRatio->SetXTitle("");
   hRatio->SetYTitle("#frac{(DATA-MC)}{MC}");
-  if(version_.Contains("JetTauFR")) hRatio->SetYTitle("#frac{DATA}{MC}");
+  if(selection_.find("HighMt")!=string::npos) hRatio->SetYTitle("#frac{DATA}{MC}");
 
   hRatio->SetMarkerStyle(kFullCircle);
   hRatio->SetMarkerSize(0.8);
@@ -3352,7 +3352,7 @@ void plotMuTau( Int_t mH_           = 120,
   float maxPull = 0.;
   for(int k = 0 ; k < hRatio->GetNbinsX(); k++){
     float pull = hData->GetBinContent(k) - hSiml->GetBinContent(k);
-    if(version_.Contains("JetTauFR")) pull = hData->GetBinContent(k);
+    if(selection_.find("HighMt")!=string::npos) pull = hData->GetBinContent(k);
     if(hSiml->GetBinContent(k)>0)
       pull /= hSiml->GetBinContent(k);
     hRatio->SetBinContent(k, pull);
