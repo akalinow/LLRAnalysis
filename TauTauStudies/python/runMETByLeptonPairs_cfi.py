@@ -136,7 +136,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 )
                 setattr(process, moduleNameLeg1, moduleLeg1)
                 runMETByPairsSequence += moduleLeg1
-                srcLeg1 = moduleNameMu
+                srcLeg1 = moduleNameLeg1
             elif isElecTau:   
                 moduleNameLeg1 = "%sLeg1comb%i%i%s" % (electronColl, idxLeg1, idxLeg2, postfix)
                 moduleLeg1 = cms.EDProducer("SinglePatElectronPicker",
@@ -146,7 +146,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 )
                 setattr(process, moduleNameLeg1, moduleLeg1)
                 runMETByPairsSequence += moduleLeg1
-                srcLeg1 = moduleNameEle
+                srcLeg1 = moduleNameLeg1
             elif isTauTau:
                 if idxLeg2 <= idxLeg1:
                     continue
