@@ -379,11 +379,13 @@ void drawHistogram(TCut sbinPair,
       if(version_.Contains("NoWHighStat")) weightW  = "weightHepNup";
       else                                 weightW  = "weightHepNupHighStatW";
       
-      if(MSSM && !version_.Contains("NoWCorr")){
+      if(MSSM && !(version_.Contains("NoWCorr"))){
 	if(type.Contains("WJetUp")) weightW  *= "weightTauFakeWJetUp";
         else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
       }
+      cout<<"weightW : "<<weightW<<endl;
+
 
       if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
       else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
@@ -1590,7 +1592,11 @@ void plotMuTau( Int_t mH_           = 120,
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
   TCut MtCut       = removeMtCut     ? "(etaL1<999)" : pZ;
-  if(selection_.find("HighMt")!=string::npos) MtCut="MtLeg1MVA>70";
+  if(selection_.find("HighMt")!=string::npos) {
+    MtCut="MtLeg1MVA>70";
+    pZ= "MtLeg1MVA>70";
+    apZ= "MtLeg1MVA>70";
+  }
   TCut diTauCharge = invertDiTauSign ? SS : OS; 
 
   // HLT matching //
@@ -2903,6 +2909,13 @@ void plotMuTau( Int_t mH_           = 120,
 	    drawHistogram(sbinaIsoLtisoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
+	    //Finebins QCD
+	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.; 
+	    //drawHistogram(sbinaIsoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    hQCD_fb->Add(hCleanerfb);
+	    hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
+
 	  }
 	  //hDataAntiIsoLooseTauIsoQCD->Sumw2();
 	  //hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
