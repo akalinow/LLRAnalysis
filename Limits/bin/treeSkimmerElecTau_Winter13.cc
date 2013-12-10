@@ -808,6 +808,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float AntiEMVA5raw_,AntiMuMVAraw_;
   int tightestHPSDBWP_,tightestHPSDB3HWP_,tightestHPSMVA3newDMwLTWP_,tightestHPSMVA3newDMwoLTWP_,tightestHPSMVA3oldDMwLTWP_,tightestHPSMVA3oldDMwoLTWP_;
   float hpsDB3H_,hpsMVA3newDMwLT_,hpsMVA3newDMwoLT_,hpsMVA3oldDMwLT_,hpsMVA3oldDMwoLT_;
+  ///NewTauID input variables
+  int patDecayMode_,hasSecVtx_;
+  float chargedIsoPtSum_,neutralIsoPtSum_,puCorrPtSum_,dxyTau_,dxyErrTau_,dxySigTau_,flightLength2_,flightLengthSig_;
+  ///NewTauID useful variables
+  float dxyPCAX_,dxyPCAY_,dxyPCAZ_,flightLengthX_,flightLengthY_,flightLengthZ_,
+    pvX_,pvY_,pvZ_,pvCov00_,pvCov01_,pvCov02_,pvCov11_,pvCov12_,pvCov22_,
+    svX_,svY_,svZ_,svCov00_,svCov01_,svCov02_,svCov11_,svCov12_,svCov22_;
 
   float pfJetPt_;
   float L1etm_, L1etmPhi_, L1etmCorr_, L1etmWeight_, passL1etmCut_; // ND
@@ -1151,6 +1158,42 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("tightestHPSMVA3oldDMwoLTWP",&tightestHPSMVA3oldDMwoLTWP_,"tightestHPSMVA3oldDMwoLTWP/I");
   outTreePtOrd->Branch("hpsMVA3oldDMwoLT",&hpsMVA3oldDMwoLT_,"hpsMVA3oldDMwoLT/F");
   outTreePtOrd->Branch("decayMode",          &decayMode_,"decayMode/I");
+  ///NewTauID input variables
+  outTreePtOrd->Branch("chargedIsoPtSum",&chargedIsoPtSum_,"chargedIsoPtSum/F");
+  outTreePtOrd->Branch("neutralIsoPtSum",&neutralIsoPtSum_,"neutralIsoPtSum/F");
+  outTreePtOrd->Branch("puCorrPtSum",&puCorrPtSum_,"puCorrPtSum/F");
+  outTreePtOrd->Branch("patDecayMode",&patDecayMode_,"patDecayMode/I");
+  outTreePtOrd->Branch("dxyTau",&dxyTau_,"dxyTau/F");
+  outTreePtOrd->Branch("dxyErrTau",&dxyErrTau_,"dxyErrTau/F");
+  outTreePtOrd->Branch("dxySigTau",&dxySigTau_,"dxySigTau/F");
+  outTreePtOrd->Branch("hasSecVtx",&hasSecVtx_,"hasSecVtx/I");
+  outTreePtOrd->Branch("flightLength2",&flightLength2_,"flightLength2/F");
+  outTreePtOrd->Branch("flightLengthSig",&flightLengthSig_,"flightLengthSig/F");
+  ///NewTauID useful variables
+  outTreePtOrd->Branch("dxyPCAX",&dxyPCAX_,"dxyPCAX/F");
+  outTreePtOrd->Branch("dxyPCAY",&dxyPCAY_,"dxyPCAY/F");
+  outTreePtOrd->Branch("dxyPCAZ",&dxyPCAZ_,"dxyPCAZ/F");
+  outTreePtOrd->Branch("flightLengthX",&flightLengthX_,"flightLengthX/F");
+  outTreePtOrd->Branch("flightLengthY",&flightLengthY_,"flightLengthY/F");
+  outTreePtOrd->Branch("flightLengthZ",&flightLengthZ_,"flightLengthZ/F");
+  outTreePtOrd->Branch("pvX",&pvX_,"pvX/F");
+  outTreePtOrd->Branch("pvY",&pvY_,"pvY/F");
+  outTreePtOrd->Branch("pvZ",&pvZ_,"pvZ/F");
+  outTreePtOrd->Branch("pvCov00",&pvCov00_,"pvCov00/F");
+  outTreePtOrd->Branch("pvCov01",&pvCov01_,"pvCov01/F");
+  outTreePtOrd->Branch("pvCov02",&pvCov02_,"pvCov02/F");
+  outTreePtOrd->Branch("pvCov11",&pvCov11_,"pvCov11/F");
+  outTreePtOrd->Branch("pvCov12",&pvCov12_,"pvCov12/F");
+  outTreePtOrd->Branch("pvCov22",&pvCov22_,"pvCov22/F");
+  outTreePtOrd->Branch("svX",&svX_,"svX/F");
+  outTreePtOrd->Branch("svY",&svY_,"svY/F");
+  outTreePtOrd->Branch("svZ",&svZ_,"svZ/F");
+  outTreePtOrd->Branch("svCov00",&svCov00_,"svCov00/F");
+  outTreePtOrd->Branch("svCov01",&svCov01_,"svCov01/F");
+  outTreePtOrd->Branch("svCov02",&svCov02_,"svCov02/F");
+  outTreePtOrd->Branch("svCov11",&svCov11_,"svCov11/F");
+  outTreePtOrd->Branch("svCov12",&svCov12_,"svCov12/F");
+  outTreePtOrd->Branch("svCov22",&svCov22_,"svCov22/F");
 
   outTreePtOrd->Branch("numPV",              &numPV_,"numPV/F");
   outTreePtOrd->Branch("sampleWeight",       &sampleWeight,"sampleWeight/F"); 
@@ -1401,6 +1444,42 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("hpsMVA3oldDMwLT"           ,1);
   currentTree->SetBranchStatus("tightestHPSMVA3oldDMwoLTWP",1);
   currentTree->SetBranchStatus("hpsMVA3oldDMwoLT"          ,1);
+  ///NewTauID input variables
+  currentTree->SetBranchStatus("chargedIsoPtSum"           ,1);
+  currentTree->SetBranchStatus("neutralIsoPtSum"           ,1);
+  currentTree->SetBranchStatus("puCorrPtSum"               ,1);
+  currentTree->SetBranchStatus("patDecayMode"              ,1);
+  currentTree->SetBranchStatus("dxyTau"                    ,1);
+  currentTree->SetBranchStatus("dxyErrTau"                 ,1);
+  currentTree->SetBranchStatus("dxySigTau"                 ,1);
+  currentTree->SetBranchStatus("hasSecVtx"                 ,1);
+  currentTree->SetBranchStatus("flightLength2"             ,1);
+  currentTree->SetBranchStatus("flightLengthSig"           ,1);
+  ///NewTauID useful variables
+  currentTree->SetBranchStatus("dxyPCAX"                   ,1);
+  currentTree->SetBranchStatus("dxyPCAY"                   ,1);
+  currentTree->SetBranchStatus("dxyPCAZ"                   ,1);
+  currentTree->SetBranchStatus("flightLengthX"             ,1);
+  currentTree->SetBranchStatus("flightLengthY"             ,1);
+  currentTree->SetBranchStatus("flightLengthZ"             ,1);
+  currentTree->SetBranchStatus("pvX"                       ,1);
+  currentTree->SetBranchStatus("pvY"                       ,1);
+  currentTree->SetBranchStatus("pvZ"                       ,1);
+  currentTree->SetBranchStatus("pvCov00"                   ,1);
+  currentTree->SetBranchStatus("pvCov01"                   ,1);
+  currentTree->SetBranchStatus("pvCov02"                   ,1);
+  currentTree->SetBranchStatus("pvCov11"                   ,1);
+  currentTree->SetBranchStatus("pvCov12"                   ,1);
+  currentTree->SetBranchStatus("pvCov22"                   ,1);
+  currentTree->SetBranchStatus("svX"                       ,1);
+  currentTree->SetBranchStatus("svY"                       ,1);
+  currentTree->SetBranchStatus("svZ"                       ,1);
+  currentTree->SetBranchStatus("svCov00"                   ,1);
+  currentTree->SetBranchStatus("svCov01"                   ,1);
+  currentTree->SetBranchStatus("svCov02"                   ,1);
+  currentTree->SetBranchStatus("svCov11"                   ,1);
+  currentTree->SetBranchStatus("svCov12"                   ,1);
+  currentTree->SetBranchStatus("svCov22"                   ,1);
 
   currentTree->SetBranchStatus("visibleTauMass"        ,1);
   currentTree->SetBranchStatus("visibleGenTauMass"     ,1); //ND
@@ -1632,6 +1711,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float AntiEMVA5raw,AntiMuMVAraw;
   int tightestHPSDBWP,tightestHPSDB3HWP,tightestHPSMVA3newDMwLTWP,tightestHPSMVA3newDMwoLTWP,tightestHPSMVA3oldDMwLTWP,tightestHPSMVA3oldDMwoLTWP;
   float hpsDB3H,hpsMVA3newDMwLT,hpsMVA3newDMwoLT,hpsMVA3oldDMwLT,hpsMVA3oldDMwoLT;
+  ///NewTauID input variables
+  int patDecayMode,hasSecVtx;
+  float chargedIsoPtSum,neutralIsoPtSum,puCorrPtSum,dxyTau,dxyErrTau,dxySigTau,flightLength2,flightLengthSig;
+  ///NewTauID useful variables
+  float dxyPCAX,dxyPCAY,dxyPCAZ,flightLengthX,flightLengthY,flightLengthZ,
+    pvX,pvY,pvZ,pvCov00,pvCov01,pvCov02,pvCov11,pvCov12,pvCov22,
+    svX,svY,svZ,svCov00,svCov01,svCov02,svCov11,svCov12,svCov22;
 
   int tightestCutBasedWP, tightestMVAWP;
   int tightestMVAPOGNonTrigWP;
@@ -1716,7 +1802,43 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("hpsMVA3oldDMwLT"           ,&hpsMVA3oldDMwLT);
   currentTree->SetBranchAddress("tightestHPSMVA3oldDMwoLTWP",&tightestHPSMVA3oldDMwoLTWP);
   currentTree->SetBranchAddress("hpsMVA3oldDMwoLT"          ,&hpsMVA3oldDMwoLT);
-  
+  ///NewTauID input variables
+  currentTree->SetBranchAddress("chargedIsoPtSum",&chargedIsoPtSum);
+  currentTree->SetBranchAddress("neutralIsoPtSum",&neutralIsoPtSum);
+  currentTree->SetBranchAddress("puCorrPtSum"    ,&puCorrPtSum);
+  currentTree->SetBranchAddress("patDecayMode"   ,&patDecayMode);
+  currentTree->SetBranchAddress("dxyTau"         ,&dxyTau);
+  currentTree->SetBranchAddress("dxyErrTau"      ,&dxyErrTau);
+  currentTree->SetBranchAddress("dxySigTau"      ,&dxySigTau);
+  currentTree->SetBranchAddress("hasSecVtx"      ,&hasSecVtx);
+  currentTree->SetBranchAddress("flightLength2"  ,&flightLength2);
+  currentTree->SetBranchAddress("flightLengthSig",&flightLengthSig);
+  ///NewTauID useful variables
+  currentTree->SetBranchAddress("dxyPCAX"        ,&dxyPCAX);
+  currentTree->SetBranchAddress("dxyPCAY"        ,&dxyPCAY);
+  currentTree->SetBranchAddress("dxyPCAZ"        ,&dxyPCAZ);
+  currentTree->SetBranchAddress("flightLengthX"  ,&flightLengthX);
+  currentTree->SetBranchAddress("flightLengthY"  ,&flightLengthY);
+  currentTree->SetBranchAddress("flightLengthZ"  ,&flightLengthZ);
+  currentTree->SetBranchAddress("pvX"            ,&pvX);
+  currentTree->SetBranchAddress("pvY"            ,&pvY);
+  currentTree->SetBranchAddress("pvZ"            ,&pvZ);
+  currentTree->SetBranchAddress("pvCov00"        ,&pvCov00);
+  currentTree->SetBranchAddress("pvCov01"        ,&pvCov01);
+  currentTree->SetBranchAddress("pvCov02"        ,&pvCov02);
+  currentTree->SetBranchAddress("pvCov11"        ,&pvCov11);
+  currentTree->SetBranchAddress("pvCov12"        ,&pvCov12);
+  currentTree->SetBranchAddress("pvCov22"        ,&pvCov22);
+  currentTree->SetBranchAddress("svX"            ,&svX);
+  currentTree->SetBranchAddress("svY"            ,&svY);
+  currentTree->SetBranchAddress("svZ"            ,&svZ);
+  currentTree->SetBranchAddress("svCov00"        ,&svCov00);
+  currentTree->SetBranchAddress("svCov01"        ,&svCov01);
+  currentTree->SetBranchAddress("svCov02"        ,&svCov02);
+  currentTree->SetBranchAddress("svCov11"        ,&svCov11);
+  currentTree->SetBranchAddress("svCov12"        ,&svCov12);
+  currentTree->SetBranchAddress("svCov22"        ,&svCov22);
+
   currentTree->SetBranchAddress("diTauCharge",          &diTauCharge);
   currentTree->SetBranchAddress("chargeL1",             &chargeL1);
 
@@ -2522,6 +2644,43 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     tightestHPSMVA3oldDMwoLTWP_ = tightestHPSMVA3oldDMwoLTWP;
     hpsMVA3oldDMwoLT_           = hpsMVA3oldDMwoLT;
     
+    ///NewTauID input variables
+    chargedIsoPtSum_      = chargedIsoPtSum;
+    neutralIsoPtSum_      = neutralIsoPtSum;
+    puCorrPtSum_          = puCorrPtSum;
+    patDecayMode_         = patDecayMode;
+    dxyTau_               = dxyTau;
+    dxyErrTau_            = dxyErrTau;
+    dxySigTau_            = dxySigTau;
+    hasSecVtx_            = hasSecVtx;
+    flightLength2_        = flightLength2;
+    flightLengthSig_      = flightLengthSig;
+    ///NewTauID useful variables
+    dxyPCAX_              = dxyPCAX;
+    dxyPCAY_              = dxyPCAY;
+    dxyPCAZ_              = dxyPCAZ;
+    flightLengthX_        = flightLengthX;
+    flightLengthY_        = flightLengthY;
+    flightLengthZ_        = flightLengthZ;
+    pvX_                  = pvX;
+    pvY_                  = pvY;
+    pvZ_                  = pvZ;
+    pvCov00_              = pvCov00;
+    pvCov01_              = pvCov01;
+    pvCov02_              = pvCov02;
+    pvCov11_              = pvCov11;
+    pvCov12_              = pvCov12;
+    pvCov22_              = pvCov22;
+    svX_                  = svX;
+    svY_                  = svY;
+    svZ_                  = svZ;
+    svCov00_              = svCov00;
+    svCov01_              = svCov01;
+    svCov02_              = svCov02;
+    svCov11_              = svCov11;
+    svCov12_              = svCov12;
+    svCov22_              = svCov22;
+
     pfJetPt_            = pfJetPt;
 
     decayMode_          = decayMode;
@@ -3020,15 +3179,29 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //     }
 //     cout<<"HELPo"<<endl;
 
+//Paper
+//       if(decayMode==0 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.37 : 
+// 	  1.11;
+//       }
+//       else if (decayMode==1 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  2.18 : 
+// 	  0.47;
+// // 	diTauNSVfitMass_ *= 1.015;
+// // 	diTauVisMass *= 1.015;
+
+//MSSM NewTauID
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.37 : 
-	  1.11;
+	  1.16 : 
+	  0.87;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  2.18 : 
-	  0.47;
+	  1.83 : 
+	  0.33;
 // 	diTauNSVfitMass_ *= 1.015;
 // 	diTauVisMass *= 1.015;
       }

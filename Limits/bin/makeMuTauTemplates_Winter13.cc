@@ -489,7 +489,9 @@ void produce(
         maxBin = 40.;
       TH1F *hQCD;
       if(bin_.find("nobTag")!=string::npos){
-	hQCD = ((TH1F*)fin->Get("hQCD"));
+// 	hQCD = ((TH1F*)fin->Get("hQCD"));
+// 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
 	  if(hQCD->GetBinCenter(b)<=maxBin){
@@ -1092,7 +1094,9 @@ void produce(
           maxBin = 40.;
 	TH1F *hQCD;
 	if(bin_.find("nobTag")!=string::npos){
-	  hQCD = ((TH1F*)fin->Get("hQCD"));
+// 	  hQCD = ((TH1F*)fin->Get("hQCD"));
+// 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
+	  hQCD = ((TH1F*)fin->Get("hDataAntiIsoLooseTauIsoQCD"));
 	  hQCD->SetName(Form("QCD%s"    ,suffix.c_str()));
 	  for(Int_t b=1;b<=hQCD->GetNbinsX();b++){
 	    if(hQCD->GetBinCenter(b)<=maxBin){
@@ -1791,6 +1795,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 //   variables.push_back("diTauVisMass");
   variables.push_back("diTauNSVfitMass");
+//   variables.push_back("ptL2");
 
   if(!DOSUSY){
     mH.push_back(90);
@@ -1955,8 +1960,39 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID_Datacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID_Datacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt60_OldEleID_Datacards",true);
-  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt6090_OldEleID_Datacards",true);   
-  produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt90_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt6090_OldEleID_Datacards",true);   
+//   produceOne("Results_ABCD_AntiMu3Tight_AntiEleLoose_HPSDB3H_TauOldDM_taupt90_OldEleID_Datacards",true); 
+
+//////TauPt bins study
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt20_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt30_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt3045_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt4560_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt60_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt20_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_Datacards",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_Datacards",true);
+
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt20_OldEleID_DatacardsRelax",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_DatacardsRelax",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_DatacardsRelax",true); 
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_OldEleID_DatacardsRelax",true); 
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_DatacardsRelax",true); 
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_DatacardsRelax",true);
+
+
+  ////SM check
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_DatacardsSM");
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsSM");
+  
+///TauPt datacards
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_Datacards",true); 
+
+
 }
 
 

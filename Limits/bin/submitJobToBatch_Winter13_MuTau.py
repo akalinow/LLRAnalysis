@@ -60,29 +60,29 @@ os.system('python makeTreeSkimmerMuTau_Winter13.py')
 ###########################################
 ###########################################
 ##Data
-## #treeSkim("nominal","Run2012A-22Jan2013-Data",False)
-## #treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
-## #treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
-## #treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
-## #treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
-## #treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p4-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p6-Data",False)
-## #treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p3-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p8-Data",False)
-## #treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
+## treeSkim("nominal","Run2012A-22Jan2013-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012B-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p0-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p6-Data",False)
+## treeSkim("nominal","Run2012C-22Jan2013-p7-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p1-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p2-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p3-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p4-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p5-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p6-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p7-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p8-Data",False)
+## treeSkim("nominal","Run2012D-22Jan2013-p9-Data",False)
 
 
 ###Embedded samples
@@ -102,7 +102,7 @@ samplesEmb = [
 ##     'Run2012C-22Jan2013-p2-Embedded',
 ##     'Run2012C-22Jan2013-p3-Embedded',
 ##     'Run2012C-22Jan2013-p4-Embedded',
-##     'Run2012C-22Jan2013-p5-Embedded',
+    'Run2012C-22Jan2013-p5-Embedded',
 ##     'Run2012C-22Jan2013-p6-Embedded',
 ##     'Run2012C-22Jan2013-p7-Embedded',    
 ##     'Run2012D-22Jan2013-p1-Embedded',
@@ -126,7 +126,7 @@ anaMC          = ['nominal','TauUp','TauDown','JetUp','JetDown']
 ListFinalState = ['TauTau','JetToTau','MuToTau','ZTTL','ZTTJ']
 #ListFinalState = ['ZTTJ']
 
-for iAnMC in range(0,len(anaMC)):
+## for iAnMC in range(0,len(anaMC)):
 
     ##### BackgroundsMC
     ## DY
@@ -137,7 +137,7 @@ for iAnMC in range(0,len(anaMC)):
 ##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
 
-    ####W
+##     ##W
 ##     treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets2JetsV19"    , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets3JetsV19"    , False)
@@ -148,19 +148,23 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "WJets-p1"      , False)
 ##     treeSkim( anaMC[iAnMC] , "WJets-p2"      , False)
 
-    #treeSkim( anaMC[iAnMC] , "TTJets"        , False)
-    #treeSkim( anaMC[iAnMC] , "TTJets_SemiLept", False)
-    #treeSkim( anaMC[iAnMC] , "TTJets_FullLept", False)
-    #treeSkim( anaMC[iAnMC] , "TTJets_Had"     , False)
-    #treeSkim( anaMC[iAnMC] , "T-tW"          , False)
-    #treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
-    #treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
-    #treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
-    #treeSkim( anaMC[iAnMC] , "WZJetsTo2L2Q"  , False)
-    #treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"  , False)
-    #treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Nu"  , False)
-    #treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
-
+##     treeSkim( anaMC[iAnMC] , "TTJets"        , False)
+##     treeSkim( anaMC[iAnMC] , "TTJets_SemiLept", False)
+##     treeSkim( anaMC[iAnMC] , "TTJets_FullLept", False)
+##     treeSkim( anaMC[iAnMC] , "TTJets_Had"     , False)
+##     treeSkim( anaMC[iAnMC] , "T-tW"          , False)
+##     treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
+##     treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
+##     treeSkim( anaMC[iAnMC] , "WZJetsTo3LNu"  , False)
+##     treeSkim( anaMC[iAnMC] , "WZJetsTo2L2Q"  , False)
+##     treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Q"  , False)
+##     treeSkim( anaMC[iAnMC] , "ZZJetsTo2L2Nu"  , False)
+##     treeSkim( anaMC[iAnMC] , "ZZJetsTo4L"    , False)
+##     treeSkim( anaMC[iAnMC] , "WGToLNuG"          , False)
+##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2E"     , False)
+##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2Mu"    , False)
+##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
+       
 ##     ## SM Higgs MC
 ##     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
 ##     treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
@@ -244,7 +248,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH180"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH200"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH250"        , False)
-    treeSkim( anaMC[iAnMC] , "SUSYBBH300"        , False)
+##     treeSkim( anaMC[iAnMC] , "SUSYBBH300"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH350"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH400"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH450"        , False)

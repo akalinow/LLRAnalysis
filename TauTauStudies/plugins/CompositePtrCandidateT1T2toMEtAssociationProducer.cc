@@ -72,11 +72,21 @@ void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Even
       throw cms::Exception("CompositePtrCandidateT1T2toMEtAssociationProducer")
 	<< "Failed to find unique MET object for input collection = " << input->srcMET_.label() << " !!\n";
     const pat::MET& inputMET = inputMETs->front();
+    //std::cout << "inputMET: Px = " << inputMET.px() << ", Py = " << inputMET.py() << std::endl;
+    //inputMET.getSignificanceMatrix().Print();
 
     for ( typename CompositePtrCandidateCollection::const_iterator inputDiTau = inputDiTaus->begin();
 	  inputDiTau != inputDiTaus->end(); ++inputDiTau ) {
+      //std::cout << "inputDiTau #" << idxDiTau << ":" << std::endl;
+      //std::cout << " leg1: Px = " << inputDiTau->leg1()->px() << ", Py = " << inputDiTau->leg1()->py() << std::endl;
+      //std::cout << " leg2: Px = " << inputDiTau->leg2()->px() << ", Py = " << inputDiTau->leg2()->py() << std::endl;
+      //std::cout << " met: Px = " << inputDiTau->met()->px() << ", Py = " << inputDiTau->met()->py() << std::endl;
+      //std::cout << " metCov:" << std::endl;
+      //inputDiTau->met()->getSignificanceMatrix().Print();
       outputDiTaus->push_back(*inputDiTau);
       outputMETs->push_back(inputMET);
+      //std::cout << "outputMET: Px = " << outputMETs->back().px() << ", Py = " << outputMETs->back().py() << std::endl;
+      //outputMETs->back().getSignificanceMatrix().Print();
       pat::METRef outputMEtRef(outputMEtRefProd, idxDiTau);
       //std::cout << "pat::METRef = " << outputMEtRef.id() << ":" << outputMEtRef.key() << std::endl;
       int idxMET = outputMEtRef.index();
@@ -96,11 +106,14 @@ void CompositePtrCandidateT1T2toMEtAssociationProducer<T1,T2>::produce(edm::Even
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
 
 typedef CompositePtrCandidateT1T2toMEtAssociationProducer<pat::Electron, pat::Tau> PATElecTauPairToMEtAssociationProducer;
 typedef CompositePtrCandidateT1T2toMEtAssociationProducer<pat::Muon, pat::Tau> PATMuTauPairToMEtAssociationProducer;
+typedef CompositePtrCandidateT1T2toMEtAssociationProducer<pat::Tau, pat::Tau> PATDiTauPairToMEtAssociationProducer;
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
 DEFINE_FWK_MODULE(PATElecTauPairToMEtAssociationProducer);
 DEFINE_FWK_MODULE(PATMuTauPairToMEtAssociationProducer);
+DEFINE_FWK_MODULE(PATDiTauPairToMEtAssociationProducer);
