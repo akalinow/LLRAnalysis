@@ -1131,21 +1131,26 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");//0
     XtriggerPaths.push_back("HLT_Mu8_v*");//1
     XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//2
-
+    XtriggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v*");
     // for Summer12-53X
     //HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v1
 
     triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");//0
     triggerPaths.push_back("HLT_Mu8_v16");//1
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//3
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");//4
 
     HLTfiltersMu.push_back("hltL1sMu14erORMu16er");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//1
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//2
     HLTfiltersMu.push_back("hltL3fL1sMu3L3Filtered8");//3
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//4
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15"); //5
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //6
+
     //L1mu//5
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//6
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//7
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //8
     //trgTau//7
     
   }
@@ -1195,6 +1200,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_Mu17_Mu8_v20");//30
     triggerPaths.push_back("HLT_Mu17_Mu8_v21");//31
     triggerPaths.push_back("HLT_Mu17_Mu8_v22");//32
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");// 33
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v5");//34
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v4");//35
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v3");//36
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v3");//37
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v1");//38
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v4");//39
 
     HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");//1
@@ -1210,15 +1222,22 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//11
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10");//mu+ETM20 (v3-v4)//12
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//mu+ETM20 (v5-v7)//13
-    //L1mu//14 
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//15
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//16
-    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//17
-    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//18
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//19
-    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//20
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//14, Missing filter from IsoMu17+LooseTau20 path
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15");//15, muon filter for isoMu18+MediumIsoTau25 path  
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //16, muon filter for isoMu18+MediumIsoTau25 path
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //17, muon filter for isoMu18+MediumIsoTau25 path
+
+    //L1mu//18 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//19
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//20
+    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//21
+    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//22
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//23
+    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//24
     HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//21
-    //trgTau//22
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //25, tau filter for isoMu18+MediumIsoTau25 path 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //26, tau filter for isoMu18+MediumIsoTau25 path
+    //trgTau//27
 
   }
 
@@ -1522,7 +1541,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	    }
 	  }
 	}
-	if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) ){
+	if(HLTfiltersTau[i].find("IsoMu18PFTau25") != string::npos){
+	  if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) && aObj->triggerObject().p4().pt() > 35){ 
+	    matched = true; 
+	  }
+	}
+	else if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) ){
 	  matched = true;
 	}
       }
