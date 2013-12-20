@@ -1147,11 +1147,14 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//4
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15"); //5
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //6
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //7 //the last muon filter
 
     //L1mu//5
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//7
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //8
-    //trgTau//7
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //9 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //10 //IsoL2Tau
+    //trgTau//
     
   }
   else{
@@ -1226,7 +1229,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15");//15, muon filter for isoMu18+MediumIsoTau25 path  
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //16, muon filter for isoMu18+MediumIsoTau25 path
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //17, muon filter for isoMu18+MediumIsoTau25 path
-
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //18 //the last muon filter
+    
     //L1mu//18 
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//19
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//20
@@ -1237,7 +1241,9 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//21
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //25, tau filter for isoMu18+MediumIsoTau25 path 
     HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //26, tau filter for isoMu18+MediumIsoTau25 path
-    //trgTau//27
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //27 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //28 //IsoL2Tau
+    //trgTau//29
 
   }
 
@@ -1541,7 +1547,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	    }
 	  }
 	}
-	if(HLTfiltersTau[i].find("IsoMu18PFTau25") != string::npos){
+	if(HLTfiltersTau[i].find("IsoMu18PFTau25") != string::npos || HLTfiltersTau[i].find("hltL2Tau") != string::npos){
 	  if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) && aObj->triggerObject().p4().pt() > 35){ 
 	    matched = true; 
 	  }
