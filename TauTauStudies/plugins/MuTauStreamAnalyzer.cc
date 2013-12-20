@@ -970,6 +970,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrHandle;
   const reco::CaloMETCollection* caloMEtNoHFCorr = 0;
 
+  //diTau trig eff. stuff
+  edm::Handle<l1extra::L1JetParticleCollection> l1jetsHandle;
+  const l1extra::L1JetParticleCollection* l1jets = 0;
+  edm::Handle<l1extra::L1JetParticleCollection> l1tausHandle;
+  const l1extra::L1JetParticleCollection* l1taus = 0;
+
   if(!isRhEmb_)
     iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
   else
@@ -1068,6 +1074,19 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 //       trgTauId_->push_back(id);
 //     }
 //   }
+
+  iEvent.getByLabel(edm::InputTag("l1extraParticles","Central"), l1jetsHandle);
+  if( !l1jetsHandle.isValid() )
+    edm::LogError("DataNotAvailable")
+      << "No L1CentralJets collection available \n";
+  else
+    l1jets = l1jetsHandle.product();
+  iEvent.getByLabel(edm::InputTag("l1extraParticles","Tau"), l1tausHandle);
+  if( !l1jetsHandle.isValid() )
+    edm::LogError("DataNotAvailable")
+      << "No L1TauJets collection available \n";
+  else
+    l1taus = l1tausHandle.product(); 
 
   /// Quark/gluon id stuff
   edm::Handle<edm::ValueMap<float> >  QGTagsHandleMLP;
@@ -1614,6 +1633,36 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	}
       }
     }
+    
+    //check matching to l1tau 44 or l1jet 64
+    if(l1taus){//check matching with l1tau Pt>44 |eta|<2.127
+      bool matched = false;
+      for(unsigned int i=0; i<l1taus->size(); ++i){
+	if( (*l1taus)[i].pt()<44 || fabs((*l1taus)[i].eta() )>2.172 ) continue;
+	if( Geom::deltaR( (*l1taus)[i].p4(), leg2->p4() )<0.5 ){
+	  matched = true;
+	  break;
+	}
+      }
+      if(!matched){ 
+	if(l1jets){//check matching with l1jet Pt>64 |eta|<2.172
+	  for(unsigned int i=0; i<l1jets->size(); ++i){
+	    if( (*l1jets)[i].pt()<64 || fabs((*l1jets)[i].eta() )>2.127 ) continue;
+	    if( Geom::deltaR( (*l1jets)[i].p4(), leg2->p4() )<0.5 ){
+	      matched = true;
+	      break;
+	    }
+	  } 
+	}
+      }
+      tauXTriggers_->push_back( int(matched) );
+      if(verbose_){
+	if(matched) cout << "Tau matched within dR=0.5 with trigger L1Tau pt>44, |eta|<2.1 or L1Jet pt>64, |eta|<2.1" << endl;
+	else cout << "!!! Tau is not matched to L1Tau/Jet within dR=0.5 !!!" << endl;
+      }
+    }
+    else
+      tauXTriggers_->push_back(0);
     
     diTauLegsP4_->push_back(leg1->p4());
     diTauLegsP4_->push_back(leg2->p4());
