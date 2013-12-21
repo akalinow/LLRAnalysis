@@ -1156,8 +1156,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
     triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");//0
     triggerPaths.push_back("HLT_Mu8_v16");//1
-    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//3
-    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");//4
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//2
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");//3
 
     HLTfiltersMu.push_back("hltL1sMu14erORMu16er");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//1
@@ -1168,12 +1168,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //6
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //7 //the last muon filter
 
-    //L1mu//5
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//7
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //8
-    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //9 //L2Tau
-    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //10 //IsoL2Tau
-    //trgTau//
+    //L1mu//8
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//9
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //10
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //11 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //12 //IsoL2Tau
+    //trgTau//13, not stored/used 
+    //l1tau 44 or l1jet 64//13
     
   }
   else{
@@ -1250,20 +1251,20 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //17, muon filter for isoMu18+MediumIsoTau25 path
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //18 //the last muon filter
     
-    //L1mu//18 
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//19
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//20
-    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//21
-    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//22
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//23
-    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//24
-    HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//21
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //25, tau filter for isoMu18+MediumIsoTau25 path 
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //26, tau filter for isoMu18+MediumIsoTau25 path
-    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //27 //L2Tau
-    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //28 //IsoL2Tau
-    //trgTau//29
-
+    //L1mu//19 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//20
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//21
+    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//22
+    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//23
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//24
+    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//25
+    HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//26
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //27, tau filter for isoMu18+MediumIsoTau25 path 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //28, tau filter for isoMu18+MediumIsoTau25 path
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //29 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //30 //IsoL2Tau
+    //trgTau//31, not stored/used
+    //l1tau 44 or l1jet 64//31
   }
 
   for(unsigned int i=0;i<triggerPaths.size();i++){
