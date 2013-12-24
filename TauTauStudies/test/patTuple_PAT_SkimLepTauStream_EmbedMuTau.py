@@ -387,6 +387,9 @@ process.tauGenJetMatch.resolveAmbiguities = cms.bool(False)
 process.tauGenJetMatch.maxDeltaR          = 0.15
 process.tauGenJetMatch.maxDPtRel          = 999
 
+if "PfEmbed" in embedType:
+    process.hpsPFTauPrimaryVertexProducer.TrackCollectionTag = cms.InputTag("tmfTracks")
+    
 ##################################################################
 
 from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFMuonIso, setupPFElectronIso
@@ -1161,21 +1164,21 @@ if not runOnEmbed:
 if runOnMC and runOnEmbed:
     process.skimMuTau1.remove(process.HLTFilterMuTau)
     process.skimElecTau1.remove(process.HLTFilterEleTau)
-if runOnEmbed:
-    process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
-    process.commonOfflineSequence += process.makeTauMatchedCaloJets
-    if "RhEmbed" in embedType:
-        process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
-        if not runOnMC:
-            process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
-        else:
-            process.commonOfflineSequence += process.embeddingKineReweightSequenceGENembedding
-        if "MuTau" in embedType:
-            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
-            process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
-        else:
-            process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
-            process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
+## if runOnEmbed:
+##     process.load("LLRAnalysis.Utilities.genTauMatchedCaloJet_cff")
+##     process.commonOfflineSequence += process.makeTauMatchedCaloJets
+##     if "RhEmbed" in embedType:
+##         process.load("TauAnalysis.MCEmbeddingTools.embeddingKineReweight_cff")
+##         if not runOnMC:
+##             process.commonOfflineSequence += process.embeddingKineReweightSequenceRECembedding
+##         else:
+##             process.commonOfflineSequence += process.embeddingKineReweightSequenceGENembedding
+##         if "MuTau" in embedType:
+##             process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_mutau.root')
+##             process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_mutau.root")
+##         else:
+##             process.embeddingKineReweightRECembedding.inputFileName = cms.FileInPath('TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_recEmbedding_etau.root')
+##             process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
 
 #process.p = cms.Path(process.printEventContent+process.skim)
 process.pMuTau1 = cms.Path(process.skimMuTau1)

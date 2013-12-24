@@ -431,7 +431,7 @@ void drawHistogram(TCut sbinPair,
         else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
       }
-      cout<<"weightW : "<<weightW<<endl;
+      if(MSSM && version_.Contains("NoWCorr"))cout<<"weightW : "<<weightW<<endl;
 
       //weights for GGFH pT re-weight
       if(type.Contains("GGFHUp"))
@@ -1287,8 +1287,8 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
 
   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/";
-  //TString pathToFileDY = pathToFile;
-  TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/DYZeeCorr/"; 
+  TString pathToFileDY = pathToFile;
+  //TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/DYZeeCorr/"; 
   TString Tanalysis_(analysis_);
   TString fileAnalysis = Tanalysis_;
   if(Tanalysis_=="") fileAnalysis = "nominal";
@@ -1373,7 +1373,7 @@ void plotElecTau( Int_t mH_           = 120,
   backgroundOthers  ->Add(pathToFile+"nTupleWZJetsTo3LNu_ElecTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_ElecTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_ElecTau_"+fileAnalysis+".root");
-  backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_ElecTau_"+fileAnalysis+".root");
+//   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_ElecTau_"+fileAnalysis+".root");
   if(includeWG){
     backgroundOthers  ->Add(pathToFile+"nTupleWGToLNuG_ElecTau_"+fileAnalysis+".root");
     backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2E_ElecTau_"+fileAnalysis+".root");
@@ -1402,7 +1402,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProd ; iP++) {
     for(int iM=0 ; iM<nMasses ; iM++) {
       signal[iP][iM] = new TChain(treeMC);
-      signal[iP][iM]->Add(pathToFileDY+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_ElecTau_"+fileAnalysis+".root");
+      signal[iP][iM]->Add(pathToFile+"/nTuple"+nameProd[iP]+nameMasses[iM]+"_ElecTau_"+fileAnalysis+".root");
 //       cout<<"Signal entries :"<<signal[iP][iM]->GetEntries()<<endl;
 //       cout<<"Signal iP :"<<iP<<endl;
 //       cout<<"Signal iM :"<<iM<<endl;
@@ -1413,7 +1413,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdWW ; iP++) {
     for(int iM=0 ; iM<nMassesWW ; iM++) {
       signalWW[iP][iM] = new TChain(treeMC);
-      signalWW[iP][iM]->Add(pathToFileDY+"/nTuple"+nameProdWW[iP]+nameMassesWW[iM]+"_ElecTau_"+fileAnalysis+".root");
+      signalWW[iP][iM]->Add(pathToFile+"/nTuple"+nameProdWW[iP]+nameMassesWW[iM]+"_ElecTau_"+fileAnalysis+".root");
       if(!signalWW[iP][iM])cout << "###  NTUPLE Signal " << nameProdWW[iP]+nameMassesWW[iM] << " NOT FOUND ###" << endl;
     }
   }
@@ -1421,7 +1421,7 @@ void plotElecTau( Int_t mH_           = 120,
   for(int iP=0 ; iP<nProdS ; iP++) {
     for(int iM=0 ; iM<nMassesS ; iM++) {
       signalSusy[iP][iM] = new TChain(treeMC);
-      signalSusy[iP][iM]->Add(pathToFileDY+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_ElecTau_"+fileAnalysis+".root");
+      signalSusy[iP][iM]->Add(pathToFile+"/nTupleSUSY"+nameProdS[iP]+nameMassesS[iM]+"_ElecTau_"+fileAnalysis+".root");
     }
   }
 
@@ -1546,15 +1546,15 @@ void plotElecTau( Int_t mH_           = 120,
     tpt = tpt&&TCut("hasSecVtx>0.5");
   }
 
-  if(selection_.find("1Prong0Pi0")!=string::npos)
+  if(selection_.find("1Prong0Pi0")!=string::npos || version_.Contains("1Prong0Pi0"))
     tpt = tpt&&TCut("decayMode==0");
-  if(selection_.find("1Prong1Pi0")!=string::npos)
+  if(selection_.find("1Prong1Pi0")!=string::npos || version_.Contains("1Prong1Pi0"))
     tpt = tpt&&TCut("decayMode==1");
-  if(selection_.find("3Prongs")!=string::npos)
+  if(selection_.find("3Prongs")!=string::npos || version_.Contains("3Prongs"))
     tpt = tpt&&TCut("decayMode==2");
-  if(selection_.find("BL")!=string::npos)
+  if(selection_.find("BL")!=string::npos || version_.Contains("BL"))
     tpt = tpt&&TCut("TMath::Abs(etaL2)<1.479");
-  if(selection_.find("EC")!=string::npos)
+  if(selection_.find("EC")!=string::npos || version_.Contains("EC"))
     tpt = tpt&&TCut("TMath::Abs(etaL2)>1.479");
 
   tpt= tpt&&TCut("TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5)");
@@ -1573,7 +1573,11 @@ void plotElecTau( Int_t mH_           = 120,
   bool removeMtCut     = bool(selection_.find("NoMt")!=string::npos);
   bool invertDiTauSign = bool(selection_.find("SS")!=string::npos);
   TCut MtCut       = removeMtCut     ? "(etaL1<999)" : pZ;
-  if(selection_.find("HighMt")!=string::npos) MtCut="MtLeg1MVA>70";
+  if(selection_.find("HighMt")!=string::npos) {
+    MtCut="MtLeg1MVA>70";
+    pZ= "MtLeg1MVA>70";
+    apZ= "MtLeg1MVA>70";
+  }
   TCut diTauCharge = invertDiTauSign ? SS : OS; 
 
   // HLT matching //
@@ -2745,6 +2749,12 @@ void plotElecTau( Int_t mH_           = 120,
 	    drawHistogram(sbinaIsoLtisoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
 	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
+	    //Finebins QCD
+	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.; 
+	    //drawHistogram(sbinaIsoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    hQCD_fb->Add(hCleanerfb);
+	    hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 	  }
 
 	  //hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
@@ -3159,6 +3169,7 @@ void plotElecTau( Int_t mH_           = 120,
   hRatio->Reset();
   hRatio->SetXTitle("");
   hRatio->SetYTitle("#frac{(DATA-MC)}{MC}");
+  if(selection_.find("HighMt")!=string::npos) hRatio->SetYTitle("#frac{DATA}{MC}");
 
   hRatio->SetMarkerStyle(kFullCircle);
   hRatio->SetMarkerSize(0.8);
@@ -3170,6 +3181,7 @@ void plotElecTau( Int_t mH_           = 120,
   float maxPull = 0.;
   for(int k = 1 ; k <= hRatio->GetNbinsX(); k++){
     float pull = hData->GetBinContent(k) - hSiml->GetBinContent(k);
+    if(selection_.find("HighMt")!=string::npos) pull = hData->GetBinContent(k);
     if(hSiml->GetBinContent(k)>0)
       pull /= hSiml->GetBinContent(k);
     hRatio->SetBinContent(k, pull);

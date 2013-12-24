@@ -970,6 +970,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   edm::Handle<reco::CaloMETCollection> caloMEtNoHFCorrHandle;
   const reco::CaloMETCollection* caloMEtNoHFCorr = 0;
 
+  //diTau trig eff. stuff
+  edm::Handle<l1extra::L1JetParticleCollection> l1jetsHandle;
+  const l1extra::L1JetParticleCollection* l1jets = 0;
+  edm::Handle<l1extra::L1JetParticleCollection> l1tausHandle;
+  const l1extra::L1JetParticleCollection* l1taus = 0;
+
   if(!isRhEmb_)
     iEvent.getByLabel("metNoHF", caloMEtNoHFHandle);
   else
@@ -1069,6 +1075,19 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 //     }
 //   }
 
+  iEvent.getByLabel(edm::InputTag("l1extraParticles","Central"), l1jetsHandle);
+  if( !l1jetsHandle.isValid() )
+    edm::LogError("DataNotAvailable")
+      << "No L1CentralJets collection available \n";
+  else
+    l1jets = l1jetsHandle.product();
+  iEvent.getByLabel(edm::InputTag("l1extraParticles","Tau"), l1tausHandle);
+  if( !l1jetsHandle.isValid() )
+    edm::LogError("DataNotAvailable")
+      << "No L1TauJets collection available \n";
+  else
+    l1taus = l1tausHandle.product(); 
+
   /// Quark/gluon id stuff
   edm::Handle<edm::ValueMap<float> >  QGTagsHandleMLP;
   edm::Handle<edm::ValueMap<float> >  QGTagsHandleLikelihood;
@@ -1131,22 +1150,31 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     XtriggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*");//0
     XtriggerPaths.push_back("HLT_Mu8_v*");//1
     XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//2
-
+    XtriggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v*");
     // for Summer12-53X
     //HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v1
 
     triggerPaths.push_back("HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2");//0
     triggerPaths.push_back("HLT_Mu8_v16");//1
-    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//3
+    triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//2
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");//3
 
     HLTfiltersMu.push_back("hltL1sMu14erORMu16er");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//1
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//2
     HLTfiltersMu.push_back("hltL3fL1sMu3L3Filtered8");//3
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//4
-    //L1mu//5
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//6
-    //trgTau//7
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15"); //5
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //6
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //7 //the last muon filter
+
+    //L1mu//8
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//9
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //10
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //11 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //12 //IsoL2Tau
+    //trgTau//13, not stored/used 
+    //l1tau 44 or l1jet 64//13
     
   }
   else{
@@ -1195,6 +1223,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_Mu17_Mu8_v20");//30
     triggerPaths.push_back("HLT_Mu17_Mu8_v21");//31
     triggerPaths.push_back("HLT_Mu17_Mu8_v22");//32
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");// 33
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v5");//34
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v4");//35
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v3");//36
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v3");//37
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v1");//38
+    triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v4");//39
 
     HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");//1
@@ -1210,16 +1245,26 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersMu.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//11
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10");//mu+ETM20 (v3-v4)//12
     HLTfiltersMu.push_back("hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15");//mu+ETM20 (v5-v7)//13
-    //L1mu//14 
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//15
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//16
-    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//17
-    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//18
-    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//19
-    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//20
-    HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//21
-    //trgTau//22
-
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//14, Missing filter from IsoMu17+LooseTau20 path
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15");//15, muon filter for isoMu18+MediumIsoTau25 path  
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //16, muon filter for isoMu18+MediumIsoTau25 path
+    HLTfiltersMu.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //17, muon filter for isoMu18+MediumIsoTau25 path
+    HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10"); //18 //the last muon filter
+    
+    //L1mu//19 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18LooseIsoPFTau20");//20
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//21
+    HLTfiltersTau.push_back("hltOverlapFilterMu18LooseIsoPFTau20");//22
+    HLTfiltersTau.push_back("hltOverlapFilterMu17LooseIsoPFTau20");//23
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu8LooseIsoPFTau20");//24
+    HLTfiltersTau.push_back("hltOverlapFilterSingleIsoMu8LooseIsoPFTau20");//25
+    HLTfiltersTau.push_back("hltOverlapFilterMu8LooseIsoPFTau20");//26
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4"); //27, tau filter for isoMu18+MediumIsoTau25 path 
+    HLTfiltersTau.push_back("hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4"); //28, tau filter for isoMu18+MediumIsoTau25 path
+    HLTfiltersTau.push_back("hltL2Tau25eta2p1"); //29 //L2Tau
+    HLTfiltersTau.push_back("hltL2TauIsoFilter"); //30 //IsoL2Tau
+    //trgTau//31, not stored/used
+    //l1tau 44 or l1jet 64//31
   }
 
   for(unsigned int i=0;i<triggerPaths.size();i++){
@@ -1522,7 +1567,12 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	    }
 	  }
 	}
-	if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) ){
+	if(HLTfiltersTau[i].find("IsoMu18PFTau25") != string::npos || HLTfiltersTau[i].find("hltL2Tau") != string::npos){
+	  if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) && aObj->triggerObject().p4().pt() > 35){ 
+	    matched = true; 
+	  }
+	}
+	else if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTau[i]) && aObj->hasTriggerObjectType(trigger::TriggerTau) ){
 	  matched = true;
 	}
       }
@@ -1584,6 +1634,36 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	}
       }
     }
+    
+    //check matching to l1tau 44 or l1jet 64
+    if(l1taus){//check matching with l1tau Pt>44 |eta|<2.127
+      bool matched = false;
+      for(unsigned int i=0; i<l1taus->size(); ++i){
+	if( (*l1taus)[i].pt()<44 || fabs((*l1taus)[i].eta() )>2.172 ) continue;
+	if( Geom::deltaR( (*l1taus)[i].p4(), leg2->p4() )<0.5 ){
+	  matched = true;
+	  break;
+	}
+      }
+      if(!matched){ 
+	if(l1jets){//check matching with l1jet Pt>64 |eta|<2.172
+	  for(unsigned int i=0; i<l1jets->size(); ++i){
+	    if( (*l1jets)[i].pt()<64 || fabs((*l1jets)[i].eta() )>2.127 ) continue;
+	    if( Geom::deltaR( (*l1jets)[i].p4(), leg2->p4() )<0.5 ){
+	      matched = true;
+	      break;
+	    }
+	  } 
+	}
+      }
+      tauXTriggers_->push_back( int(matched) );
+      if(verbose_){
+	if(matched) cout << "Tau matched within dR=0.5 with trigger L1Tau pt>44, |eta|<2.1 or L1Jet pt>64, |eta|<2.1" << endl;
+	else cout << "!!! Tau is not matched to L1Tau/Jet within dR=0.5 !!!" << endl;
+      }
+    }
+    else
+      tauXTriggers_->push_back(0);
     
     diTauLegsP4_->push_back(leg1->p4());
     diTauLegsP4_->push_back(leg2->p4());

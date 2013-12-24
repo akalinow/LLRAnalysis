@@ -1,7 +1,7 @@
 ###############################################################################
 ## Pat-tuple for l+tau analysis
 ## 
-## Last modificaion: 12/02/2013 Michal
+## Last modificaion: 10/10/2013 Ivo
 ## TODO: synch tests
 ##
 ##
@@ -30,7 +30,7 @@ else:
 
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True))
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 

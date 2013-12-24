@@ -238,7 +238,6 @@ if runOnEmbed:
 #process.ak5JetTracksAssociatorAtVertex*process.btagging
 
 ################### vertex sequence ####################
-
 process.selectedPrimaryVertices = cms.EDFilter(
     "VertexSelector",
     src = cms.InputTag('offlinePrimaryVertices'),
@@ -387,6 +386,9 @@ process.tauGenJetMatch.resolveAmbiguities = cms.bool(False)
 process.tauGenJetMatch.maxDeltaR          = 0.15
 process.tauGenJetMatch.maxDPtRel          = 999
 
+if "PfEmbed" in embedType:
+    process.hpsPFTauPrimaryVertexProducer.TrackCollectionTag = cms.InputTag("tmfTracks")
+    
 ##################################################################
 
 from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFMuonIso, setupPFElectronIso
