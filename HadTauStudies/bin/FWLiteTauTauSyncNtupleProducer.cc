@@ -41,11 +41,13 @@ struct branchEntryBaseType
   {
     std::cout << " copying branch " << inputBranchName << " (type = " << inputBranchType << ") --> " << outputBranchName << " (type = " << outputBranchType << ")" << std::endl;
     if      ( inputBranchType == "F" ) inputBranchType_ = kF;
+    else if ( inputBranchType == "D" ) inputBranchType_ = kD;
     else if ( inputBranchType == "I" ) inputBranchType_ = kI;
     else if ( inputBranchType == "l" ) inputBranchType_ = kUL;
     else throw cms::Exception("produceTauTauSyncNtuple") 
       << "Invalid branch type = '" << inputBranchType << "' for branch = '" << inputBranchName << "' !!\n";
     if      ( outputBranchType == "F" ) outputBranchType_ = kF;
+    else if ( outputBranchType == "D" ) outputBranchType_ = kD;
     else if ( outputBranchType == "I" ) outputBranchType_ = kI;
     else if ( outputBranchType == "l" ) outputBranchType_ = kUL;
     else throw cms::Exception("produceTauTauSyncNtuple") 
@@ -58,7 +60,7 @@ struct branchEntryBaseType
   virtual void copyBranch() = 0;
   std::string inputBranchName_;
   std::string inputBranchType_string_;
-  enum { kF, kI, kUL };
+  enum { kF, kD, kI, kUL };
   int inputBranchType_;
   std::string outputBranchName_;
   std::string outputBranchType_string_;
@@ -84,6 +86,8 @@ struct branchEntryType : branchEntryBaseType
   {
     if ( inputBranchType_ == kF && outputBranchType_ == kI ) {
       outputValue_ = TMath::Nint((Float_t)inputValue_);
+    } else if ( inputBranchType_ == kD && outputBranchType_ == kI ) {
+      outputValue_ = TMath::Nint((Double_t)inputValue_);
     } else {
       outputValue_ = inputValue_;
     }
@@ -91,10 +95,12 @@ struct branchEntryType : branchEntryBaseType
   T1 inputValue_;
   T2 outputValue_;
 };
-typedef branchEntryType<Float_t, Double_t> branchEntryTypeFD;
-typedef branchEntryType<Float_t,    Int_t> branchEntryTypeFI;
-typedef branchEntryType<Int_t,      Int_t> branchEntryTypeII;
-typedef branchEntryType<ULong_t,  ULong_t> branchEntryTypeULUL;
+typedef branchEntryType<Float_t,     Float_t> branchEntryTypeFF;
+typedef branchEntryType<Float_t,    Double_t> branchEntryTypeFD;
+typedef branchEntryType<Double_t,   Double_t> branchEntryTypeDD;
+typedef branchEntryType<Float_t,       Int_t> branchEntryTypeFI;
+typedef branchEntryType<Int_t,         Int_t> branchEntryTypeII;
+typedef branchEntryType<ULong64_t, ULong64_t> branchEntryTypeULUL;
 
 template <typename T>
 struct branchEntryFormulaType : branchEntryBaseType
@@ -191,6 +197,7 @@ int main(int argc, char* argv[])
     if ( idx1 != std::string::npos ) {
       size_t idx2 = inputBranchName_and_Type.find_last_of("->");
       if ( idx2 > idx1 && idx2 != std::string::npos ) {
+	inputBranchName = std::string(inputBranchName_and_Type, 0, idx1);
 	inputBranchType = std::string(inputBranchName_and_Type, idx1 + 1, (idx2 - 2) - idx1);
 	outputBranchType = std::string(inputBranchName_and_Type, idx2 + 1);
       } else {
@@ -217,6 +224,9 @@ int main(int argc, char* argv[])
 
   std::string outputFileName = cfgProduceTauTauSyncNtuple.getParameter<std::string>("outputFileName");
   std::cout << " outputFileName = " << outputFileName << std::endl;
+
+  int verbosity = ( cfgProduceTauTauSyncNtuple.exists("verbosity") ) ?
+    cfgProduceTauTauSyncNtuple.getParameter<int>("verbosity") : 0;
 
   TChain* inputTree = new TChain(inputTreeName.data());
   for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
@@ -320,8 +330,9 @@ int main(int argc, char* argv[])
   TFile* outputFile = new TFile(outputFileName.data(), "RECREATE");
   TTree* outputTree = new TTree(outputTreeName.data(), outputTreeName.data());
 
-  Double_t mcweight, effweight, decaymodeweight, embedweight, weight;
+  Double_t mcweight, puweight, effweight, decaymodeweight, embedweight, weight;
   outputTree->Branch("mcweight", &mcweight, "mcweight/D");
+  outputTree->Branch("puweight", &puweight, "puweight/D");
   outputTree->Branch("effweight", &effweight, "effweight/D");
   outputTree->Branch("decaymodeweight", &decaymodeweight, "decaymodeweight/D");
   outputTree->Branch("embedweight", &embedweight, "embedweight/D");
@@ -379,13 +390,17 @@ int main(int argc, char* argv[])
 
     // check if event passes sync-Ntuple selection
     reco::Candidate::LorentzVector leg1P4(leg1Px, leg1Py, leg1Pz, leg1En);
-    std::cout << "leg1: Pt = " << leg1P4.pt() << ", eta = " << leg1P4.eta() << ", phi = " << leg1P4.phi() << std::endl
-	      << " decayModeFinding = " << leg1decayModeFinding << ", byIsolationMedium = " << leg1byIsolationMedium << ", againstElectronLoose = " << leg1againstElectronLoose << std::endl
-	      << " TrigMatched = " << leg1TrigMatched << std::endl;
+    if ( verbosity >= 2 ) {    
+      std::cout << "leg1: Pt = " << leg1P4.pt() << ", eta = " << leg1P4.eta() << ", phi = " << leg1P4.phi() << std::endl
+		<< " decayModeFinding = " << leg1decayModeFinding << ", byIsolationMedium = " << leg1byIsolationMedium << ", againstElectronLoose = " << leg1againstElectronLoose << std::endl
+		<< " TrigMatched = " << leg1TrigMatched << std::endl;
+    }
     reco::Candidate::LorentzVector leg2P4(leg2Px, leg2Py, leg2Pz, leg2En);
-    std::cout << "leg2: Pt = " << leg2P4.pt() << ", eta = " << leg2P4.eta() << ", phi = " << leg2P4.phi() << std::endl
-	      << " decayModeFinding = " << leg2decayModeFinding << ", byIsolationMedium = " << leg2byIsolationMedium << ", againstElectronLoose = " << leg2againstElectronLoose << std::endl
-	      << " TrigMatched = " << leg2TrigMatched << std::endl;
+    if ( verbosity >= 2 ) {  
+      std::cout << "leg2: Pt = " << leg2P4.pt() << ", eta = " << leg2P4.eta() << ", phi = " << leg2P4.phi() << std::endl
+		<< " decayModeFinding = " << leg2decayModeFinding << ", byIsolationMedium = " << leg2byIsolationMedium << ", againstElectronLoose = " << leg2againstElectronLoose << std::endl
+		<< " TrigMatched = " << leg2TrigMatched << std::endl;
+    }
 
     bool isSelected = false;
     if ( leg1P4.pt() > 45. && TMath::Abs(leg1P4.eta()) < 2.1 &&
@@ -409,6 +424,8 @@ int main(int argc, char* argv[])
     if ( isHiggsMC ) {
       mcweight *= higgsPtWeightNom;
     }
+
+    puweight = vertexWeight;
 
     decaymodeweight = 1.0;
     if ( leg1GenPt > 1. && leg1DecayMode == 0 ) decaymodeweight *= 0.88; // CV: data/MC difference for taus to be reconstructed in 1-prong 0pi0 decay mode, determined by Phil

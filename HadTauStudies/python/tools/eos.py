@@ -9,7 +9,7 @@ import time
 executable_eos = '/afs/cern.ch/project/eos/installation/0.3.1-22/bin/eos.select'
 
 def runCommand(commandLine):
-    #sys.stdout.write("%s\n" % commandLine)
+    sys.stdout.write("%s\n" % commandLine)
     args = shlex.split(commandLine)
     retVal = subprocess.Popen(args, stdout = subprocess.PIPE)
     return retVal
@@ -90,5 +90,6 @@ def cp(inputFileNames, outputFilePath):
     Copy the inFiles into the outDir
     """
     for inputFileName in inputFileNames:
-        runCommand('% cp %s %s' % (executable_eos, inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
+        ##runCommand('%s cp %s %s' % (executable_eos, inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
+        runCommand('cmsStage %s %s' % (inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
     return 1

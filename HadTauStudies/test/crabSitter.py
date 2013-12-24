@@ -90,8 +90,14 @@ def checkOutputFiles(outputFileInfos, outputFileNames, jobId_string, jobIds_forc
 
     for outputFileName in outputFileNames:
         #print "checking outputFileName = %s"% outputFileName
+
+	# CV: do not check ROOT files containing histograms (deleted from EOS in order not to exceed file multiplicity limit)
+        if outputFileName.find("skimHadTauStream") != -1:
+	    #print " file contains histograms only --> skipping."
+	    continue
         
         outputFileName_regex = outputFileName.replace('.', '_(?P<jobId>\d+)_(?P<try>\d+)_(?P<hash>[a-zA-Z0-9]+).')
+        outputFileName_regex = outputFileName_regex.replace(' ', '')
         outputFileName_matcher = re.compile(outputFileName_regex)
 
         outputFileInfos_matched = []

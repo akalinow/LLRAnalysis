@@ -54,7 +54,7 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
 
   void addBranchF(const std::string&);
   void addBranchI(const std::string&);
-  void addBranchL(const std::string&);
+  void addBranchUL(const std::string&);
 
   void addBranch_diTau(const std::string&);
   void addBranch_Tau(const std::string&);
@@ -79,7 +79,7 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
 
   void setValueF(const std::string&, double);
   void setValueI(const std::string&, int);
-  void setValueL(const std::string&, long);
+  void setValueUL(const std::string&, unsigned long);
 
   void setValue_diTau(const std::string&, const PATDiTauPair&);
   void setValue_Tau(const std::string&, const pat::Tau&);
@@ -193,12 +193,12 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
     branchEntryType()
       : valueF_(0.),
         valueI_(0),
-	valueL_(0)
+	valueUL_(0)
     {}
     ~branchEntryType() {}
     Float_t valueF_;
     Int_t valueI_;
-    Long_t valueL_;
+    ULong_t valueUL_;
   };
   typedef std::map<std::string, branchEntryType> branchMap; // key = branch name
   branchMap branches_;

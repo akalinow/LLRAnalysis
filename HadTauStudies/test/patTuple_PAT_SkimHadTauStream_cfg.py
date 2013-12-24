@@ -45,7 +45,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        '/store/user/veelken/CMSSW_5_3_x/skims/simZprime2500toTauTau_RECO_2_2_0t6.root'
+        ##'/store/user/veelken/CMSSW_5_3_x/skims/simZprime2500toTauTau_RECO_2_2_0t6.root'
+        'file:/data1/veelken/CMSSW_5_3_x/skims/selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo_AOD.root'
     ),
     dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
     inputCommands=cms.untracked.vstring(
@@ -913,6 +914,7 @@ process.out.outputCommands.extend(cms.vstring(
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("skimHadTauStream.root")
+    ##fileName = cms.string("/data1/veelken/CMSSW_5_3_x/PATTuples/skimHadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root")
 )
 
 process.out.SelectEvents = cms.untracked.PSet(
@@ -920,6 +922,7 @@ process.out.SelectEvents = cms.untracked.PSet(
 )
 
 process.out.fileName = cms.untracked.string('patTuple_HadTauStream.root')
+##process.out.fileName = cms.untracked.string('/data1/veelken/CMSSW_5_3_x/PATTuples/patTuple_HadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root')
 
 process.outpath = cms.EndPath(process.out)
 
