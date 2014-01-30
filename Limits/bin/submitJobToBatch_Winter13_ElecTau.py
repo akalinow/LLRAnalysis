@@ -31,7 +31,6 @@ def treeSkim( ana, sample, runInSeries=False):
          os.system(runInSeries)
 
     else:
-        print "Creating the shell file for the batch..."
         #nameJob = 'job_'+sample+'_'+ana+'_'+stream
         if 'Data' in sample:
             nameJob = 'job_'+sample+'_'+stream
@@ -39,6 +38,7 @@ def treeSkim( ana, sample, runInSeries=False):
             nameJob = 'job_'+sample+'_'+stream+'_'+ana
         fileJob = 'batch/'+nameJob+'.sh'
         fileLog = 'batch/log/'+nameJob+'.txt'
+        print "Creating the shell file : "+nameJob
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
@@ -130,12 +130,12 @@ ListFinalState = ['TauTau','JetToTau','EToTau','ZTTL','ZTTJ']
 for iAnMC in range(0,len(anaMC)):
 ##     ##BkgMC
         ## DY
-   for finalState in ListFinalState:
-       treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
-       treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState , False)
-       treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState , False)
-       treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState , False)
-       treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
+##    for finalState in ListFinalState:
+##        treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
+##        treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState , False)
+##        treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState , False)
+##        treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState , False)
+##        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
        
 ##     ## W
 ##    treeSkim( anaMC[iAnMC] , "WJets-p1"            , False)
@@ -152,7 +152,9 @@ for iAnMC in range(0,len(anaMC)):
 ##    treeSkim( anaMC[iAnMC] , "TTJets_SemiLept"     , False)
 ## ##    treeSkim( anaMC[iAnMC] , "TTJets_FullLept"     , False)
 ##    treeSkim( anaMC[iAnMC] , "TTJets_Had"          , False)
-   
+
+      treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
+
 ##    treeSkim( anaMC[iAnMC] , "T-tW"                , False)
 ##    treeSkim( anaMC[iAnMC] , "Tbar-tW"             , False)
 ##    treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu"       , False)
@@ -167,7 +169,7 @@ for iAnMC in range(0,len(anaMC)):
 ##    treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
        
     
-#######HiggsMC
+## #####HiggsMC
 ##    treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
 ##    treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
 ##    treeSkim( anaMC[iAnMC] , "GGFH100"       , False)
