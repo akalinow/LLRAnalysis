@@ -491,6 +491,19 @@ Bool_t isbtagged(Bool_t isBQuark, Double_t btagCSV, Bool_t isdata, UInt_t btagef
   return btagged;
 }  
 
+float getTauFakeCorrection(double pt)
+{
+  float correction = 0;
+  float p0 = 0.718127;
+  float p1 = -0.143612;
+  float p2 = -0.0431415;
+  float p3 = -0.0981383;
+  float X = (pt-163.7)/100;//(x-meanPt)/100
+  correction = p0+p1*X+p2*X*X+p3*X*X*X;
+
+  return correction;
+}
+
 int getJetIDMVALoose(double pt, double eta, double rawMVA)
 {
   float eta_bin[] = {0,2.5,2.75,3.0,5.0};
@@ -2710,7 +2723,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Add a weight for tauPt reweighting , coefficiencts are from Andrew
       float ptTau_ = ptL2;
       if(ptTau_ > 200.)ptTau_ = 200.;
-      weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+//       weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      weightTauFakeWJet_ = getTauFakeCorrection(ptTau_);
       weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
       weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
@@ -2978,7 +2992,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxQCDSoft     = 1.0;
       HLTxIsoMu8Tau20 = 1.0;
 
-      if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
+      if( !sample.Contains("Emb") || sample.Contains("TTJets-Embedded")  ) { // Check trigger matching only for MC
 	
 	// L1 ETM
 	L1etmCorr_     = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
@@ -3089,7 +3103,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
       weightDecayMode_ = 1.0;
-      if( sample.Contains("Emb") ){
+      if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
 	if(decayMode == 0) weightDecayMode_ = 0.88;
       }
       else{
