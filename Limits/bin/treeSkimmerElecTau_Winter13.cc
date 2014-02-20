@@ -473,6 +473,18 @@ float pileupWeight2( int intimepileup_ ){
 }
 
 
+float getTauFakeCorrection(double pt)
+{
+  float correction = 0;
+  float p0 = 0.718127;
+  float p1 = -0.143612;
+  float p2 = -0.0431415;
+  float p3 = -0.0981383;
+  float X = (pt-163.7)/100;//(x-meanPt)/100
+  correction = p0+p1*X+p2*X*X+p3*X*X*X;
+
+  return correction;
+}
 
 int getJetIDMVALoose(double pt, double eta, double rawMVA)
 {
@@ -853,8 +865,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   int nPUVertices_;
 
   // object-related weights and triggers
-  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8, HLTxMu17Mu8;
-  float HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoEle13Tau20, HLTmatchEle8;
+  int HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoEle13Tau20, HLTxEle8, HLTxMu17Mu8;
+  int HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoEle13Tau20, HLTmatchEle8;
 
   float HLTEleA, HLTEleB, HLTEleC, HLTEleD, HLTEleMCold, HLTEleABCD, HLTEleMCnew, HLTEleABC, HLTElec, HLTEleSoft, HLTEleSoftMC, HLTEleShift, HLTEleShiftMC;
   float HLTweightElec, HLTweightEleA, HLTweightEleB, HLTweightEleC, HLTweightEleD, HLTweightEleABCD, HLTweightEleABC, HLTweightEleSoft, HLTweightEleShift;
@@ -1230,20 +1242,20 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
 
   // Trigger matching
-  outTreePtOrd->Branch("HLTx",         &HLTx,"HLTx/F");
-  outTreePtOrd->Branch("HLTmatch",     &HLTmatch,"HLTmatch/F");
-  outTreePtOrd->Branch("HLTxQCD",      &HLTxQCD,"HLTxQCD/F"); 
-  outTreePtOrd->Branch("HLTmatchQCD",  &HLTmatchQCD,"HLTmatchQCD/F");
+  outTreePtOrd->Branch("HLTx",         &HLTx,"HLTx/I");
+  outTreePtOrd->Branch("HLTmatch",     &HLTmatch,"HLTmatch/I");
+  outTreePtOrd->Branch("HLTxQCD",      &HLTxQCD,"HLTxQCD/I"); 
+  outTreePtOrd->Branch("HLTmatchQCD",  &HLTmatchQCD,"HLTmatchQCD/I");
 
-  outTreePtOrd->Branch("HLTxSoft",     &HLTxSoft,"HLTxSoft/F"); // ND
-  outTreePtOrd->Branch("HLTmatchSoft", &HLTmatchSoft,"HLTmatchSoft/F");// ND
-  outTreePtOrd->Branch("HLTxQCDSoft",  &HLTxQCDSoft,"HLTxQCDSoft/F"); // ND
-  outTreePtOrd->Branch("HLTmatchQCDSoft",&HLTmatchQCDSoft,"HLTmatchQCDSoft/F");// ND
+  outTreePtOrd->Branch("HLTxSoft",     &HLTxSoft,"HLTxSoft/I"); // ND
+  outTreePtOrd->Branch("HLTmatchSoft", &HLTmatchSoft,"HLTmatchSoft/I");// ND
+  outTreePtOrd->Branch("HLTxQCDSoft",  &HLTxQCDSoft,"HLTxQCDSoft/I"); // ND
+  outTreePtOrd->Branch("HLTmatchQCDSoft",&HLTmatchQCDSoft,"HLTmatchQCDSoft/I");// ND
 
-  outTreePtOrd->Branch("HLTxIsoEle13Tau20",&HLTxIsoEle13Tau20,"HLTxIsoEle13Tau20/F");// ND
-  outTreePtOrd->Branch("HLTmatchIsoEle13Tau20",&HLTmatchIsoEle13Tau20,"HLTmatchIsoEle13Tau20/F");// ND
+  outTreePtOrd->Branch("HLTxIsoEle13Tau20",&HLTxIsoEle13Tau20,"HLTxIsoEle13Tau20/I");// ND
+  outTreePtOrd->Branch("HLTmatchIsoEle13Tau20",&HLTmatchIsoEle13Tau20,"HLTmatchIsoEle13Tau20/I");// ND
 
-  outTreePtOrd->Branch("HLTxMu17Mu8", &HLTxMu17Mu8, "HLTxMu17Mu8/F");
+  outTreePtOrd->Branch("HLTxMu17Mu8", &HLTxMu17Mu8, "HLTxMu17Mu8/I");
 
   // Electron
   outTreePtOrd->Branch("HLTweightElec", &HLTweightElec,"HLTweightElec/F");
@@ -2023,6 +2035,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     if(n%1000==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
 //     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
     
+//     if(run!=206243 || lumi!=548 || event!=820864187 )continue;
+
     // APPLY JSON SELECTION //
     isGoodRun=true;
     
@@ -2740,7 +2754,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       //Add a weight for tauPt reweighting , coefficiencts are from Andrew
       float ptTau_ = ptL2;
       if(ptTau_> 200.)ptTau_ =200.;
-      weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+//       weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      weightTauFakeWJet_ = getTauFakeCorrection(ptTau_);
       weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
       weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
@@ -2801,44 +2816,51 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
       // HLT Paths matching
 
-      HLTxEle8 = 1.0;
-      HLTxMu17Mu8 = 1.0; // required only in embedded
+      HLTxEle8 = 1;
+      HLTxMu17Mu8 = 1; // required only in embedded
 
       isMatched = false;
       for(int i=0 ; i<9 ; i++)
 	isMatched = isMatched || (*triggerBits)[i]; // HLT_Ele20_CaloIdVT_CaloIsoRhoT_TrkIdT_TrkIsoT_LooseIsoPFTau20_v4-6 , HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2-7
-      HLTx = isMatched ? 1.0 : 0.0 ;
+      HLTx = isMatched ? 1 : 0 ;
       
       isMatched = false;
       for(int i=9 ; i<18 ; i++)
 	isMatched = isMatched || (*triggerBits)[i]; // HLT_Ele20_CaloIdVT_TrkIdT_LooseIsoPFTau20_v4-6 , HLT_Ele22_eta2p1_WP90NoIso_LooseIsoPFTau20_v2-7
-      HLTxQCD = isMatched ? 1.0 : 0.0 ;
+      HLTxQCD = isMatched ? 1 : 0 ;
       
-      HLTxSoft    = float((*triggerBits)[18]); // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v1
-      HLTxQCDSoft = float((*triggerBits)[19]); // HLT_Ele13_eta2p1_WP90NoIso_LooseIsoPFTau20_L1ETM36_v1
+      HLTxSoft    = int((*triggerBits)[18]); // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v1
+      HLTxQCDSoft = int((*triggerBits)[19]); // HLT_Ele13_eta2p1_WP90NoIso_LooseIsoPFTau20_L1ETM36_v1
       
-      HLTxIsoEle13Tau20 = float((*triggerBits)[20]); // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v1
+      HLTxIsoEle13Tau20 = int((*triggerBits)[20]); // HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v1
       // no path (ele+L1etm) :-(
       
+      HLTmatch =0;
       // HLT filters matching
-
       isMatched = (((*tauXTriggers)[0] && (*tauXTriggers)[15])  || // hltOverlapFilterIsoEle20LooseIsoPFTau20 (Elec && Tau)
 		   ((*tauXTriggers)[1] && (*tauXTriggers)[16]));   // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (Elec && Tau)
-      HLTmatch = isMatched ? 1.0 : 0.0 ;
+      HLTmatch = isMatched ? 1 : 0 ;
       
+//       cout<<"(*tauXTriggers)[0]"<<(*tauXTriggers)[0]<<endl;
+//       cout<<"(*tauXTriggers)[1]"<<(*tauXTriggers)[1]<<endl;
+//       cout<<"(*tauXTriggers)[15]"<<(*tauXTriggers)[15]<<endl;
+//       cout<<"(*tauXTriggers)[16]"<<(*tauXTriggers)[16]<<endl;
+//       cout<<"isMatched"<<isMatched<<endl;
+//       cout<<"HLTmatch"<<HLTmatch<<endl;
+
       isMatched = (((*tauXTriggers)[2] && (*tauXTriggers)[17])  || // hltOverlapFilterEle20LooseIsoPFTau20 (e && t)
 		   ((*tauXTriggers)[3] && (*tauXTriggers)[18]));   // hltOverlapFilterEle20WP90LooseIsoPFTau20 (e && t)
-      HLTmatchQCD = isMatched ? 1.0 : 0.0 ;
+      HLTmatchQCD = isMatched ? 1 : 0 ;
       
       isMatched = (((*tauXTriggers)[8] && (*tauXTriggers)[19])); // hltOverlapFilterIsoEle13WP90LooseIsoPFTau20 (Elec && Tau)
       //isMatched &= (L1etm_>36); // MB is this x-check needed?
-      HLTmatchSoft = isMatched ? 1.0 : 0.0 ;
+      HLTmatchSoft = isMatched ? 1 : 0 ;
       
       isMatched = (((*tauXTriggers)[9] && (*tauXTriggers)[20])); // hltOverlapFilterEle13WP90LooseIsoPFTau20 (Elec && Tau)
       //isMatched &= (L1etm_>36); // MB is this x-check needed?
-      HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;
+      HLTmatchQCDSoft = isMatched ? 1 : 0 ;
 
-      HLTmatchIsoEle13Tau20 = float((*tauXTriggers)[8] && (*tauXTriggers)[19]); // hltOverlapFilterIsoEle13WP90LooseIsoPFTau20
+      HLTmatchIsoEle13Tau20 = int((*tauXTriggers)[8] && (*tauXTriggers)[19]); // hltOverlapFilterIsoEle13WP90LooseIsoPFTau20
 
       SFTau         = 1.0;
       SFEtoTau      = 1.0;
@@ -2891,14 +2913,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
       L1etmWeight_= 1;            
 
-      HLTxQCD     = 1.0;
-      HLTxSoft    = 1.0;
-      HLTxQCDSoft = 1.0;
+      HLTxQCD     = 1;
+      HLTxSoft    = 1;
+      HLTxQCDSoft = 1;
 
-      HLTmatchQCD         = 1.0;
-      HLTmatchIsoEle13Tau20 = 1.0;
+      HLTmatchQCD         = 1;
+      HLTmatchIsoEle13Tau20 = 1;
       
-      if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
+      if( !sample.Contains("Emb") || sample.Contains("TTJets-Embedded") ) { // Check trigger matching only for MC
 
 	// L1 ETM
 	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
@@ -2919,16 +2941,16 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	}
 
 	// HLT Paths matching
-	HLTx     = float((*triggerBits)[0]); // HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2
-	HLTxEle8 = float((*triggerBits)[1]); // HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v14
+	HLTx     = int((*triggerBits)[0]); // HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v2
+	HLTxEle8 = int((*triggerBits)[1]); // HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v14
 	// NO SoftEle+ETM trigger :-(
 
 	// HLT filters matching	
-	HLTmatch    = float((*tauXTriggers)[1] && (*tauXTriggers)[4]); // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (e && t)
+	HLTmatch    = int((*tauXTriggers)[1] && (*tauXTriggers)[4]); // hltOverlapFilterIsoEle20WP90LooseIsoPFTau20 (e && t)
 	// NO SoftEle+ETM trigger :-(
-	HLTmatchEle8 = float((*tauXTriggers)[3]);
+	HLTmatchEle8 = int((*tauXTriggers)[3]);
 
-	HLTxMu17Mu8     = 1.0; // required only in embedded
+	HLTxMu17Mu8     = 1; // required only in embedded
 
 	// emulate matching to SoftEle+L1ETM+Tau
 	isMatched = ( (*tauXTriggers)[2] && // HLT_Ele8 (hltEle8TightIdLooseIsoTrackIsoFilter)
@@ -2936,13 +2958,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 		      (*tauXTriggers)[5] ); // trgTau
 
 
-	HLTmatchIsoEle13Tau20 = float(isMatched);
-	HLTmatchSoft          = float(isMatched && L1etmCorr_>etmCut);
-	HLTmatchQCDSoft       = float(isMatched && L1etmCorr_>etmCut);
-	passL1etmCut_         = float(L1etmCorr_>etmCut);
+	HLTmatchIsoEle13Tau20 = int(isMatched);
+	HLTmatchSoft          = int(isMatched && L1etmCorr_>etmCut);
+	HLTmatchQCDSoft       = int(isMatched && L1etmCorr_>etmCut);
+	passL1etmCut_         = int(L1etmCorr_>etmCut);
       }
       else { // embedded
-	HLTx = HLTxEle8 = HLTmatch = HLTmatchEle8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoEle13Tau20 = 1.0;
+	HLTx = HLTxEle8 = HLTmatch = HLTmatchEle8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoEle13Tau20 = 1;
 	L1etmCorr_ = L1etm_ ;
 	if(isPeriodLow)       etmCut=30;
 	else if(isPeriodHigh) etmCut=36;
@@ -2953,7 +2975,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	isMatched = false;
 	for(int i=21 ; i<28 ; i++)
 	  isMatched = isMatched || (*triggerBits)[i]; // 
-	HLTxMu17Mu8 = isMatched ? 1.0 : 0.0 ;	
+	HLTxMu17Mu8 = isMatched ? 1 : 0 ;	
       }
       
       // Weights for both MC and embedded
@@ -2977,7 +2999,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
       weightDecayMode_ = 1.0; 
-      if( sample.Contains("Emb") ){ 
+      if( sample.Contains("Emb") && !sample.Contains("TTJets-Embedded") ){ 
         if(decayMode == 0) weightDecayMode_ = 0.88; 
       } 
       else{ 
@@ -3195,13 +3217,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //MSSM NewTauID
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.16 : 
-	  0.87;
+	  1.40 : 
+	  0.72;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.83 : 
-	  0.33;
+	  1.86 : 
+	  0.85;
 // 	diTauNSVfitMass_ *= 1.015;
 // 	diTauVisMass *= 1.015;
       }
