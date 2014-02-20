@@ -455,6 +455,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("dxyErrTau",&dxyErrTau_,"dxyErrTau/F");
   tree_->Branch("dxySigTau",&dxySigTau_,"dxySigTau/F");
   tree_->Branch("hasSecVtx",&hasSecVtx_,"hasSecVtx/I");
+  tree_->Branch("flightLength",&flightLength_,"flightLength/F");
+  tree_->Branch("flightLengthError",&flightLengthError_,"flightLengthError/F");
   tree_->Branch("flightLength2",&flightLength2_,"flightLength2/F");
   tree_->Branch("flightLengthSig",&flightLengthSig_,"flightLengthSig/F");
 
@@ -1937,6 +1939,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     dxyErrTau_       = leg2->dxy_error(); 
     dxySigTau_       = leg2->dxy_Sig();
     hasSecVtx_       = leg2->hasSecondaryVertex();
+    flightLength_    = TMath::Sqrt(leg2->flightLength().Mag2());
+    flightLengthError_= leg2->flightLengthSig()/TMath::Sqrt(leg2->flightLength().Mag2());
     flightLength2_   = leg2->flightLength().Mag2();
     flightLengthSig_ = leg2->flightLengthSig();
     ///NewTauID useful variables
