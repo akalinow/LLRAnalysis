@@ -6,6 +6,7 @@ import LLRAnalysis.HadTauStudies.tools.eos as eos
 from LLRAnalysis.HadTauStudies.tools.jobtools import make_bsub_script
 from LLRAnalysis.HadTauStudies.tools.harvestingLXBatch import make_harvest_scripts
 
+import json
 import os
 import random
 import re
@@ -15,28 +16,38 @@ import sys
 import time
 
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
-jobId = '2013Dec19f'
-#jobId = '2013Dec20'
-##jobId = '2013Dec13'
+jobId = '2014Jan10'
 
-version = "v1_0"
-##version = "v0_7"
+version = "v1_5"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 ##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
-maxEventsPerJob = 5000
+maxEventsPerJob = 10000
 
 ##lxbatch_queue = '1nw'
 lxbatch_queue = '1nd'
 ##lxbatch_queue = '8nh'
 
 samplesToAnalyze = [
-    #'data_Run2012A_22Jan2013_v1',
-    #'data_Run2012B_22Jan2013_v1',
-    #'data_Run2012C_22Jan2013_v1',
-    #'data_Run2012D_22Jan2013_v1'
+    # CV: leave empty in order to produce Ntuples for all samples
+    ##"HiggsSUSYBB300v2"
 ]
+
+numEventsFileName = 'submitTauTauNtupleProduction.json'
+
+numEvents_dict = {}
+if os.path.exists(numEventsFileName):
+    if os.path.isfile(numEventsFileName):
+        print("Loading #Events from File %s" % numEventsFileName)
+        numEventsFile = open(numEventsFileName, "r")
+        numEvents_dict = json.load(numEventsFile)
+        #print(numEvents_dict)
+        numEventsFile.close()
+    else:
+        raise ValueError("File %s exists, but is a directory !!" % numEventsFileName)
+else:
+    print("File %s does not yet exist...creating it." % numEventsFileName)
 
 if len(samplesToAnalyze) == 0:
     samplesToAnalyze = recoSampleDefinitionsAHtoTauTau_8TeV['SAMPLES_TO_ANALYZE']
@@ -100,16 +111,21 @@ def runCommand(commandLine):
 
 def getNumEventsInFile(inputFilePath, inputFileName):
     numEventsInFile = None
-    edmFileUtil_output = runCommand('edmFileUtil %s' % os.path.join(inputFilePath, inputFileName))
-    edmFileUtil_regex = r"[a-zA-Z0-9_/:.]*\s*\([0-9]+\s*runs,\s*[0-9]+\s*lumis,\s*(?P<events>[0-9]+)\s*events,\s*[0-9]+\s*bytes\)\s*"
-    edmFileUtil_matcher = re.compile(edmFileUtil_regex)
-    for line in edmFileUtil_output:
-        edmFileUtil_match = edmFileUtil_matcher.match(line)
-        if edmFileUtil_match:
-            numEventsInFile = int(edmFileUtil_match.group('events'))
-    if numEventsInFile is None:
-        raise ValueError("Failed to read number of events contained in file = %s !!" % inputFileName)
-    print " numEventsInFile = %i" % numEventsInFile
+    key = os.path.join(inputFilePath, inputFileName)
+    if numEvents_dict.has_key(key):
+        numEventsInFile = numEvents_dict[key]
+    else:
+        edmFileUtil_output = runCommand('edmFileUtil %s' % os.path.join(inputFilePath, inputFileName))
+        edmFileUtil_regex = r"[a-zA-Z0-9_/:.]*\s*\([0-9]+\s*runs,\s*[0-9]+\s*lumis,\s*(?P<events>[0-9]+)\s*events,\s*[0-9]+\s*bytes\)\s*"
+        edmFileUtil_matcher = re.compile(edmFileUtil_regex)
+        for line in edmFileUtil_output:
+            edmFileUtil_match = edmFileUtil_matcher.match(line)
+            if edmFileUtil_match:
+                numEventsInFile = int(edmFileUtil_match.group('events'))
+        if numEventsInFile is None:
+            raise ValueError("Failed to read number of events contained in file = %s !!" % inputFileName)
+        print " numEventsInFile = %i" % numEventsInFile
+        numEvents_dict[key] = numEventsInFile       
     return numEventsInFile
 
 def divideInputFiles_in_chunks(inputFilePath, inputFileNames):
@@ -123,8 +139,8 @@ def divideInputFiles_in_chunks(inputFilePath, inputFileNames):
         numEventsInFile = getNumEventsInFile(inputFilePath, inputFileName)
         if (numEvents_in_currentChunk + numEventsInFile) > maxEventsPerJob:
             inputFileNames_in_chunks.append(inputFileNames_in_currentChunk)
-            inputFileNames_in_currentChunk = []
-            numEvents_in_currentChunk = 0
+            inputFileNames_in_currentChunk = [ inputFileName ]
+            numEvents_in_currentChunk = numEventsInFile
         else:
             inputFileNames_in_currentChunk.append(inputFileName)
             numEvents_in_currentChunk = numEvents_in_currentChunk + numEventsInFile
@@ -237,10 +253,12 @@ for sampleToAnalyze in samplesToAnalyze:
     #print " inputFileNames = %s" % inputFileNames
     
     inputFileNames_matched = [ os.path.basename(input_file) for input_file in input_mapper(inputFileNames, sampleToAnalyze) ]
-    #print "inputFileNames_matched = %s" % inputFileNames_matched
+    print "inputFileNames_matched = %s" % inputFileNames_matched
     print "--> found %i inputFiles" % len(inputFileNames_matched)
 
     inputFileNames_matched_in_chunks = divideInputFiles_in_chunks(inputFilePath_sample, inputFileNames_matched)
+    print "inputFileNames_matched_in_chunks:"
+    print inputFileNames_matched_in_chunks
 
     for nom_or_sysShift in [ "nom", "up", "down" ]:
 
@@ -287,6 +305,10 @@ for sampleToAnalyze in samplesToAnalyze:
  
             bsubJobName = "TauTauNtuple%s_%s_%i" % (sampleToAnalyze, nom_or_sysShift, chunkId)
             bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId] = bsubJobName
+
+    numEventsFile = open(numEventsFileName, "w")
+    json.dump(numEvents_dict, numEventsFile)
+    numEventsFile.close()
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -380,7 +402,7 @@ for sampleToAnalyze in samplesToAnalyze:
                 if not outputFileName in existingOutputFiles:
                     outputFilesExist = False
             if skipExistingPATtuples and outputFilesExist:
-                print "Output files for sample = %s, nom_or_sysShift = %, chunkId = %i exist --> skipping !!" % (sampleToAnalyze, nom_or_sysShift, chunkId)
+                print "Output files for sample = %s, nom_or_sysShift = %s, chunkId = %i exist --> skipping !!" % (sampleToAnalyze, nom_or_sysShift, chunkId)
             else:
                 jobsTauTauNtupleProduction.append(bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId])
 #--------------------------------------------------------------------------------    
@@ -441,5 +463,9 @@ for sampleToAnalyze in samplesToAnalyze:
 makeFile.write("\techo 'Finished deleting old files.'\n")
 makeFile.write("\n")
 makeFile.close()
+
+numEventsFile = open(numEventsFileName, "w")
+json.dump(numEvents_dict, numEventsFile)
+numEventsFile.close()
 
 print("Finished building Makefile. Now execute 'make -f %s'." % makeFileName)

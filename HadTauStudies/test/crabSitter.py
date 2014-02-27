@@ -4,9 +4,11 @@ import LLRAnalysis.HadTauStudies.tools.castor as castor
 import LLRAnalysis.HadTauStudies.tools.dpm as dpm
 import LLRAnalysis.HadTauStudies.tools.eos as eos
 
+from contextlib import contextmanager
 import json
 import os
 import re
+import signal
 import sys
 import subprocess
 import shlex
@@ -81,6 +83,29 @@ def runCommand_via_shell(commandLine, tmpShellScriptFileName = 'crabSitter_tmp.c
     tmpOutputFile.close()
     subprocess.call('rm %s' % tmpOutputFileName, shell = True)
     return retVal
+
+def runCommand_via_shell_with_timeout(commandLine, tmpShellScriptFileName = 'crabSitter_tmp.csh', tmpOutputFileName = 'crabSitter_tmp.out', timeout = 30):
+
+    print "<runCommand_via_shell_with_timeout (timeout = %1.0fs)>:" % timeout 
+    
+    class TimeoutException(Exception): pass
+
+    @contextmanager
+    def time_limit(seconds):
+        def signal_handler(signum, frame):
+            raise TimeoutException, "Timed out!"
+        signal.signal(signal.SIGALRM, signal_handler)
+        signal.alarm(seconds)
+        try:
+            yield
+        finally:
+            signal.alarm(0)
+
+    try:
+        with time_limit(timeout):
+            return runCommand_via_shell(commandLine, tmpShellScriptFileName = tmpShellScriptFileName, tmpOutputFileName = tmpOutputFileName)
+    except TimeoutException, msg:
+        print "Timed out!"
 
 def checkOutputFiles(outputFileInfos, outputFileNames, jobId_string, jobIds_force_resubmit):
 
@@ -223,7 +248,10 @@ for crabJob in crabJobs:
         
         jobIds_force_resubmit = []
         
-        crabStatus_lines = runCommand_via_shell('%s -status -c %s' % (executable_crab, os.path.join(crabFilePath, crabJob)))
+        crabStatus_lines = runCommand_via_shell_with_timeout('%s -status -c %s' % (executable_crab, os.path.join(crabFilePath, crabJob)), timeout = 300) # limit time for 'crab -status' call to max. 5 minutes
+        if not crabStatus_lines:
+            print "Failed to run 'crab -status' command for sample = %s --> skipping" % sample
+            continue
 
         # read path and name of output file from crab config file
         crabConfigFileName = os.path.join(crabFilePath, crabJob, 'share/crab.cfg')
