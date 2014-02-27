@@ -7,6 +7,7 @@ import string
 import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/MuTau/'
+WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauID/MuTau/'
 OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/temp/'
 
 options = {
@@ -126,7 +127,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p1/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -134,7 +135,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p2/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -142,7 +143,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p3/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -150,7 +151,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p4/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -158,7 +159,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p5/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -166,7 +167,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p6-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p6/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-Data',
     'xSection'       : 0,
@@ -174,7 +175,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p7-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p7/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-Data',
     'xSection'       : 0,
@@ -182,7 +183,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p8-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p8/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-Data',
     'xSection'       : 0,
@@ -190,7 +191,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p9-Data' : {
-    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p9/',
+    'inputFilePath'  : WorkdirLoc+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v1_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-Data',
     'xSection'       : 0,
@@ -637,6 +638,14 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    'TTJets-Embedded' : {
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_09Oct13_Trees_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_MuTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.1975,
+    'skimEff'        : 1.0 * 724837./12011428,##12011428 ##792835
+    'iJson'          : -1
+    },
     'TTJets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
@@ -649,9 +658,11 @@ options = {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_MuTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 249.5,
+    'xSection'       : 109.281,
+    #'xSection'       : 249.5,
     #'skimEff'        : 0.438 * 0.561995,
-    'skimEff'        : 0.438 * 13732045./23474208,
+    #'skimEff'        : 0.438 * 13732045./23474208,
+    'skimEff'        : 1.0* 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -660,9 +671,11 @@ options = {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_09Oct2013_Trees_MuTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_MuTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 249.5,
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
-    'skimEff'        : 0.105 * 8187961./11921428,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -671,9 +684,11 @@ options = {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_09Oct2013_Trees_MuTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_MuTau.root',
     'sample'         : 'TTJets_Had',
-    'xSection'       : 249.5,
+    'xSection'       : 114.0215,
+    #'xSection'       : 249.5,
     #'skimEff'        : 0.457 * 0.120926,
-    'skimEff'        : 0.457 * 3847510./31023821,
+    #'skimEff'        : 0.457 * 3847510./31023821,
+    'skimEff'        : 1.0 * 3847510./31023821,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -857,7 +872,7 @@ options = {
     },
     ##Higgs MC
     'GGFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH90_MuTau.root',
     'sample'         : 'GGFH90',
     'xSection'       : 36.80 ,
@@ -867,7 +882,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH95_MuTau.root',
     'sample'         : 'GGFH95',
     'xSection'       : 33.19 ,
@@ -877,7 +892,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH100_MuTau.root',
     'sample'         : 'GGFH100',
     'xSection'       : 30.12 ,
@@ -887,7 +902,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH105_MuTau.root',
     'sample'         : 'GGFH105',
     'xSection'       : 27.39 ,
@@ -897,7 +912,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH110_MuTau.root',
     'sample'         : 'GGFH110',
     'xSection'       : 25.04 ,
@@ -907,7 +922,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH115_MuTau.root',
     'sample'         : 'GGFH115',
     'xSection'       : 22.96 ,
@@ -917,7 +932,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH120_MuTau.root',
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
@@ -927,7 +942,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH125_MuTau.root',
     'sample'         : 'GGFH125',
     'xSection'       : 19.52,
@@ -937,7 +952,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH130_MuTau.root',
     'sample'         : 'GGFH130',
     'xSection'       : 18.07 ,
@@ -947,7 +962,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH135_MuTau.root',
     'sample'         : 'GGFH135',
     'xSection'       : 16.79,
@@ -957,7 +972,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH140_MuTau.root',
     'sample'         : 'GGFH140',
     'xSection'       : 15.63,
@@ -967,7 +982,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH145_MuTau.root',
     'sample'         : 'GGFH145',
     'xSection'       : 14.59,
@@ -977,7 +992,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH150_MuTau.root',
     'sample'         : 'GGFH150',
     'xSection'       : 13.65,
@@ -987,7 +1002,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH155_MuTau.root',
     'sample'         : 'GGFH155',
     'xSection'       : 12.79,
@@ -997,7 +1012,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH160_MuTau.root',
     'sample'         : 'GGFH160',
     'xSection'       : 11.95,
@@ -1007,7 +1022,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v2',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH90_MuTau.root',
     'sample'         : 'VBFH90',
     'xSection'       : 2.191 ,
@@ -1017,7 +1032,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v2',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v2',
     'outputFileName' : OutDir+'nTupleVBFH95_MuTau.root',
     'sample'         : 'VBFH95',
     'xSection'       : 2.084 ,
@@ -1027,7 +1042,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH100_MuTau.root',
     'sample'         : 'VBFH100',
     'xSection'       : 1.988,
@@ -1037,7 +1052,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH105_MuTau.root',
     'sample'         : 'VBFH105',
     'xSection'       : 1.897,
@@ -1047,7 +1062,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH110_MuTau.root',
     'sample'         : 'VBFH110',
     'xSection'       : 1.809,
@@ -1057,7 +1072,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH115_MuTau.root',
     'sample'         : 'VBFH115',
     'xSection'       : 1.729,
@@ -1067,7 +1082,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH120_MuTau.root',
     'sample'         : 'VBFH120',
     'xSection'       : 1.649,
@@ -1077,7 +1092,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v4/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v4/',
     'outputFileName' : OutDir+'nTupleVBFH125_MuTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -1087,7 +1102,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH130_MuTau.root',
     'sample'         : 'VBFH130',
     'xSection'       : 1.511,
@@ -1097,7 +1112,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH135_MuTau.root',
     'sample'         : 'VBFH135',
     'xSection'       : 1.448,
@@ -1107,7 +1122,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH140_MuTau.root',
     'sample'         : 'VBFH140',
     'xSection'       : 1.389,
@@ -1117,7 +1132,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH145_MuTau.root',
     'sample'         : 'VBFH145',
     'xSection'       : 1.333,
@@ -1127,7 +1142,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH150_MuTau.root',
     'sample'         : 'VBFH150',
     'xSection'       : 1.280 ,
@@ -1137,7 +1152,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH155_MuTau.root',
     'sample'         : 'VBFH155',
     'xSection'       : 1.231 ,
@@ -1147,7 +1162,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH160_MuTau.root',
     'sample'         : 'VBFH160',
     'xSection'       : 1.185 ,
@@ -1157,7 +1172,7 @@ options = {
     'nDiv'           : 1
     },
     'VH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH90_MuTau.root',
     'sample'         : 'VH90',
     'xSection'       : (1.972 + 1.057 + 0.3233) ,
@@ -1167,7 +1182,7 @@ options = {
     'nDiv'           : 1
     },
     'VH95' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH95_MuTau.root',
     'sample'         : 'VH95',
     'xSection'       : (1.676 + 0.9060 + 0.2812) ,
@@ -1177,7 +1192,7 @@ options = {
     'nDiv'           : 1
     },
     'VH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH100_MuTau.root',
     'sample'         : 'VH100',
     'xSection'       : (1.432 + 0.7807 + 0.2454) ,
@@ -1187,7 +1202,7 @@ options = {
     'nDiv'           : 1
     },
     'VH105' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH105_MuTau.root',
     'sample'         : 'VH105',
     'xSection'       : (1.229 + 0.6750 + 0.2149) ,
@@ -1197,7 +1212,7 @@ options = {
     'nDiv'           : 1
     },
     'VH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH110_MuTau.root',
     'sample'         : 'VH110',
     'xSection'       : (1.060+0.5869+0.1887) ,
@@ -1207,7 +1222,7 @@ options = {
     'nDiv'           : 1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH115_MuTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),
@@ -1217,7 +1232,7 @@ options = {
     'nDiv'           : 1
     },
     'VH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH120_MuTau.root',
     'sample'         : 'VH120',
     'xSection'       : (0.7966+0.4483+0.1470),
@@ -1227,7 +1242,7 @@ options = {
     'nDiv'           : 1
     },
     'VH125' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH125_MuTau.root',
     'sample'         : 'VH125',
     'xSection'       : (0.6966+0.3943+0.1302),
@@ -1237,7 +1252,7 @@ options = {
     'nDiv'           : 1
     },
     'VH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH130_MuTau.root',
     'sample'         : 'VH130',
     'xSection'       : (0.6095+0.3473+0.1157),
@@ -1247,7 +1262,7 @@ options = {
     'nDiv'           : 1
     },
     'VH135' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH135_MuTau.root',
     'sample'         : 'VH135',
     'xSection'       : (0.5351+0.3074+0.1031),
@@ -1257,7 +1272,7 @@ options = {
     'nDiv'           : 1
     },
     'VH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH140_MuTau.root',
     'sample'         : 'VH140',
     'xSection'       : (0.4713+0.2728+0.09207),
@@ -1267,7 +1282,7 @@ options = {
     'nDiv'           : 1
     },
     'VH145' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH145_MuTau.root',
     'sample'         : 'VH145',
     'xSection'       : (0.4164+0.2424+0.08246),
@@ -1277,7 +1292,7 @@ options = {
     'nDiv'           : 1
     },
     'VH150' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH150_MuTau.root',
     'sample'         : 'VH150',
     'xSection'       : (0.3681 + 0.2159 + 0.07403),
@@ -1287,7 +1302,7 @@ options = {
     'nDiv'           : 1
     },
     'VH155' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH155_MuTau.root',
     'sample'         : 'VH155',
     'xSection'       : (0.3252 + 0.1923 + 0.06664),
@@ -1297,7 +1312,7 @@ options = {
     'nDiv'           : 1
     },
     'VH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_09Oct2013_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleVH160_MuTau.root',
     'sample'         : 'VH160',
     'xSection'       : (0.2817 + 0.1687 + 0.06013),

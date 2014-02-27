@@ -27,7 +27,6 @@ def treeSkim( ana, sample, runInSeries=False):
          os.system(runInSeries)
 
     else:
-        print "Creating the shell file for the batch..."
         #nameJob = 'job_'+sample+'_'+ana+'_'+stream
         if 'Data' in sample:
             nameJob = 'job_'+sample+'_'+stream
@@ -35,6 +34,8 @@ def treeSkim( ana, sample, runInSeries=False):
             nameJob = 'job_'+sample+'_'+stream+'_'+ana
         fileJob = 'batch/'+nameJob+'.sh'
         fileLog = 'batch/log/'+nameJob+'.txt'
+        print "Creating the shell file : "+nameJob
+
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
@@ -59,7 +60,7 @@ os.system('python makeTreeSkimmerMuTau_Winter13.py')
     
 ###########################################
 ###########################################
-##Data
+## ##Data
 ## treeSkim("nominal","Run2012A-22Jan2013-Data",False)
 ## treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
 ## treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
@@ -102,7 +103,7 @@ samplesEmb = [
 ##     'Run2012C-22Jan2013-p2-Embedded',
 ##     'Run2012C-22Jan2013-p3-Embedded',
 ##     'Run2012C-22Jan2013-p4-Embedded',
-    'Run2012C-22Jan2013-p5-Embedded',
+##     'Run2012C-22Jan2013-p5-Embedded',
 ##     'Run2012C-22Jan2013-p6-Embedded',
 ##     'Run2012C-22Jan2013-p7-Embedded',    
 ##     'Run2012D-22Jan2013-p1-Embedded',
@@ -126,10 +127,10 @@ anaMC          = ['nominal','TauUp','TauDown','JetUp','JetDown']
 ListFinalState = ['TauTau','JetToTau','MuToTau','ZTTL','ZTTJ']
 #ListFinalState = ['ZTTJ']
 
-## for iAnMC in range(0,len(anaMC)):
+for iAnMC in range(0,len(anaMC)):
 
-    ##### BackgroundsMC
-    ## DY
+##     ### BackgroundsMC
+##     ####DY
 ##     for finalState in ListFinalState:
 ##         treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState , False)
@@ -164,7 +165,9 @@ ListFinalState = ['TauTau','JetToTau','MuToTau','ZTTL','ZTTJ']
 ##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2E"     , False)
 ##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2Mu"    , False)
 ##     treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
-       
+
+    treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
+
 ##     ## SM Higgs MC
 ##     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
 ##     treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
