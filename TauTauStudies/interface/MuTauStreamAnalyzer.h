@@ -241,6 +241,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float dxyErrTau_;    
   float dxySigTau_;     
   int hasSecVtx_;    
+  float flightLengthError_;  
+  float flightLength_;  
   float flightLength2_;  
   float flightLengthSig_;
   ///NewTauID useful variables
