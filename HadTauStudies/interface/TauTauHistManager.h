@@ -7,8 +7,6 @@
  *
  * \author Christian Veelken, LLR
  *
- * \version $Revision: 1.2 $
- *
  */
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -135,6 +133,8 @@ class TauTauHistManager
   TH1* histogramMEtL_;
 
   TH1* histogramNumVertices_;
+
+  TH1* histogramEventCounter_;
 
   std::vector<TH1*> histograms_;
 };

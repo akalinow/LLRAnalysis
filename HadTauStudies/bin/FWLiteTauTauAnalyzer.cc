@@ -33,7 +33,7 @@
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
 
-enum { kData, kSignal, kZTT, kZLL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
+enum { kData, kSignal, kSM_Higgs, kZTT, kZLL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
 
 enum { kOS, kSS };
 
@@ -87,7 +87,8 @@ int main(int argc, char* argv[])
   std::string process_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("process");
   int process = -1;
   if      ( process_string == "Data"         ) process = kData;
-  else if ( process_string.find("ggH") != std::string::npos || process_string.find("bbH") != std::string::npos ) process = kSignal;
+  else if ( process_string.find("HiggsSUSYGluGlu") != std::string::npos || process_string.find("HiggsSUSYBB") != std::string::npos ) process = kSignal;
+  else if ( process_string.find("HiggsGGH") != std::string::npos || process_string.find("HiggsVBF") != std::string::npos ) process = kSM_Higgs;
   else if ( process_string == "ZTT"          ) process = kZTT;
   else if ( process_string == "ZLL"          ) process = kZLL;
   else if ( process_string == "ZJ"           ) process = kZJ;

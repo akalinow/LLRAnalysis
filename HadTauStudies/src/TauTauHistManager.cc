@@ -28,8 +28,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     250., 300., 400., 500., 700., 1000.
   };
 
-  histogramTau1PtS_       = book1D(dir, "tau1PtS",        "#tau_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramTau1PtL_       = book1D(dir, "tau1PtL",        "#tau_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
+  histogramTau1PtS_       = book1D(dir, "tau1PtS",       "#tau_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramTau1PtL_       = book1D(dir, "tau1PtL",       "#tau_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
   histogramTau1Eta_       = book1D(dir, "tau1Eta",       "#tau_{1} #eta", 60, -3.0, +3.0);
   histogramTau1Phi_       = book1D(dir, "tau1Phi",       "#tau_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
   histogramTau1DecayMode_ = book1D(dir, "tau1DecayMode", "#tau_{1} Decay Mode", 15, -0.5, 14.5);
@@ -84,6 +84,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramMEtL_          = book1D(dir, "metL",          "E_{T}^{miss} / GeV", numPtBinsL, ptBinningL);
 
   histogramNumVertices_   = book1D(dir, "numVertices",   "N_{vtx}", 50, -0.5, 49.5);
+
+  histogramEventCounter_  = book1D(dir, "EventCounter",  "", 1, -0.5, +0.5);
 }
 
 void TauTauHistManager::fillHistograms(
@@ -148,6 +150,8 @@ void TauTauHistManager::fillHistograms(
   histogramMEtL_->Fill(met, evtWeight);
 
   histogramNumVertices_->Fill(numVertices, evtWeight);
+
+  histogramEventCounter_->Fill(0., evtWeight);
 }
 
 TH1* TauTauHistManager::book1D(TFileDirectory& dir,
@@ -205,14 +209,15 @@ TDirectory* TauTauHistManager::createHistogramSubdirectory(TFileDirectory& dir)
 {
   std::string fullSubdirName = std::string(category_);
   if ( bin_ != "" ) fullSubdirName.append("/").append(bin_);
+  fullSubdirName.append("/").append(process_);
   TDirectory* subdir = createSubdirectory_recursively(dir, fullSubdirName);
   return subdir;
 }
  
 std::string TauTauHistManager::getHistogramName(const std::string& distribution) const
 {
-  std::string retVal = std::string(process_).append("_");
-  if ( central_or_shift_ != "central" ) retVal.append("_").append(central_or_shift_);
+  std::string retVal = std::string(process_);
+  if ( !(central_or_shift_ == "" || central_or_shift_ == "central") ) retVal.append("_").append(central_or_shift_);
   retVal.append("_").append(distribution);
   return retVal;
 }
