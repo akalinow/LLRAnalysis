@@ -384,13 +384,17 @@ for discriminator in discriminators.keys():
     hadd_stage1_outputFileNames[discriminator] = {}
     
     for btagDiscriminator in [ "LooseBtag", "TightBtag" ]:
+
+        hadd_stage1_inputFileNames[discriminator][btagDiscriminator]  = []
+        hadd_stage1_outputFileNames[discriminator][btagDiscriminator] = []
+        
         for sample in FWLiteTauTauAnalyzer_outputFileNames.keys():
             for central_or_shift in FWLiteTauTauAnalyzer_outputFileNames[sample].keys():        
                 for region in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift].keys():
                     if region.find(btagDiscriminator) != -1:
                         for tauPtBin in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region].keys():
-                            hadd_inputFileNames[discriminator][btagDiscriminator].append(FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin][discriminator])
-        hadd_stage1_outputFileName[discriminator][btagDiscriminator] = os.path.join(outputFilePath, "hadd_%s_%s.root" % (discriminator, btagDiscriminator))
+                            hadd_stage1_inputFileNames[discriminator][btagDiscriminator].append(FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin][discriminator])
+        hadd_stage1_outputFileNames[discriminator][btagDiscriminator] = os.path.join(outputFilePath, "hadd_%s_%s.root" % (discriminator, btagDiscriminator))
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -418,13 +422,13 @@ for discriminator in discriminators.keys():
         cfgFile_original.close()
         cfg_modified  = cfg_original
         cfg_modified += "\n"
-        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage1_outputFileName[discriminator][btagDiscriminator]
+        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage1_outputFileNames[discriminator][btagDiscriminator]
         cfg_modified += "\n"
         cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
         cfg_modified += "\n"
-        looseRegion = cms.string("SSantiiso" % btagDiscriminator)
+        looseRegion = cms.string("SSantiiso%s" % btagDiscriminator)
         cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
-        tightRegion = cms.string("SSiso" % btagDiscriminator)
+        tightRegion = cms.string("SSiso%s" % btagDiscriminator)
         cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
         cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_cfg.py" % (discriminator, btagDiscriminator)))
         cfgFile_modified = open(cfgFileName_modified, "w")
@@ -433,7 +437,7 @@ for discriminator in discriminators.keys():
         determineJetToTauFakeRate_configFileNames[discriminator][btagDiscriminator] = cfgFileName_modified
 
         logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
-        determineJetToTauFakeRate_configFileNames[discriminator][btagDiscriminator] = logFileName
+        determineJetToTauFakeRate_logFileNames[discriminator][btagDiscriminator] = logFileName
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -447,7 +451,7 @@ for sample in FWLiteTauTauAnalyzer_outputFileNames.keys():
         for region in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift].keys():
             for tauPtBin in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region].keys():
                 for discriminator in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin].keys():
-                    hadd_inputFileNames.append(FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin][discriminator])
+                    hadd_stage2_inputFileNames.append(FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin][discriminator])
 hadd_stage2_outputFileName = os.path.join(outputFilePath, "FWLiteTauTauAnalyzer_all.root")
 #--------------------------------------------------------------------------------
 
@@ -494,8 +498,8 @@ for sample in FWLiteTauTauAnalyzer_outputFileNames.keys():
                 for discriminator in FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin].keys():
                     outputFileNames.append(FWLiteTauTauAnalyzer_outputFileNames[sample][central_or_shift][region][tauPtBin][discriminator])
 for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
-    for btagDiscriminator determineJetToTauFakeRate_outputFileNames[discriminator].keys():
-        outputFileNames.append(hadd_stage1_outputFileName[discriminator][btagDiscriminator])
+    for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
+        outputFileNames.append(hadd_stage1_outputFileNames[discriminator][btagDiscriminator])
         outputFileNames.append(determineJetToTauFakeRate_outputFileNames[discriminator][btagDiscriminator])
 outputFileNames.append(hadd_stage2_outputFileName)
 outputFileNames.append(prepareTauTauDatacards_outputFileName)
@@ -515,23 +519,23 @@ for sample in FWLiteTauTauAnalyzer_outputFileNames.keys():
                        FWLiteTauTauAnalyzer_logFileNames[sample][central_or_shift][region][tauPtBin][discriminator]))
 makeFile.write("\n")
 for discriminator in hadd_stage1_outputFileNames.keys():
-    for btagDiscriminator hadd_stage1_outputFileNames[discriminator].keys():
+    for btagDiscriminator in hadd_stage1_outputFileNames[discriminator].keys():
         makeFile.write("%s: %s\n" %
-          (hadd_stage1_outputFileName[discriminator][btagDiscriminator],
+          (hadd_stage1_outputFileNames[discriminator][btagDiscriminator],
            make_MakeFile_vstring(hadd_stage1_inputFileNames[discriminator][btagDiscriminator])))
         makeFile.write("\t%s%s %s\n" %
           (nice, executable_rm,
-           hadd_stage1_outputFileName[discriminator][btagDiscriminator]))
+           hadd_stage1_outputFileNames[discriminator][btagDiscriminator]))
         makeFile.write("\t%s%s %s %s\n" %
           (nice, executable_hadd,
-           hadd_stage1_outputFileName[discriminator][btagDiscriminator], make_MakeFile_vstring(hadd_stage1_inputFileNames[discriminator][btagDiscriminator])))
+           hadd_stage1_outputFileNames[discriminator][btagDiscriminator], make_MakeFile_vstring(hadd_stage1_inputFileNames[discriminator][btagDiscriminator])))
 makeFile.write("\n")
 for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
-    for btagDiscriminator determineJetToTauFakeRate_outputFileNames[discriminator].keys():
+    for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         makeFile.write("%s: %s\n" %                       
           (determineJetToTauFakeRate_outputFileNames[discriminator][btagDiscriminator],
-           hadd_stage1_outputFileName[discriminator][btagDiscriminator]))
-        makeFile.write("\t%s%s &> %s\n" %
+           hadd_stage1_outputFileNames[discriminator][btagDiscriminator]))
+        makeFile.write("\t%s%s %s &> %s\n" %
           (nice, executable_determineJetToTauFakeRate,
            determineJetToTauFakeRate_configFileNames[discriminator][btagDiscriminator],
            determineJetToTauFakeRate_logFileNames[discriminator][btagDiscriminator]))
