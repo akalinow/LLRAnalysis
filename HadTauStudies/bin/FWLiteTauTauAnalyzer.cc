@@ -86,9 +86,9 @@ int main(int argc, char* argv[])
 
   std::string process_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("process");
   int process = -1;
-  if      ( process_string == "Data"         ) process = kData;
-  else if ( process_string.find("HiggsSUSYGluGlu") != std::string::npos || process_string.find("HiggsSUSYBB") != std::string::npos ) process = kSignal;
-  else if ( process_string.find("HiggsGGH") != std::string::npos || process_string.find("HiggsVBF") != std::string::npos ) process = kSM_Higgs;
+  if      ( process_string == "data_obs"     ) process = kData;
+  else if ( (process_string.find("ggH") != std::string::npos && process_string.find("ggH_SM125") == std::string::npos) || process_string.find("bbH") != std::string::npos ) process = kSignal;
+  else if ( process_string.find("ggH_SM125") != std::string::npos || process_string.find("qqH_SM125") != std::string::npos ) process = kSM_Higgs;
   else if ( process_string == "ZTT"          ) process = kZTT;
   else if ( process_string == "ZLL"          ) process = kZLL;
   else if ( process_string == "ZJ"           ) process = kZJ;
@@ -427,6 +427,8 @@ int main(int argc, char* argv[])
       bjet2Pt, bjet2Eta, bjet2Phi, 
       met, numVertices, 
       evtWeight);
+
+    ++selectedEntries;
   }
 
   delete tau1Selection;
