@@ -304,7 +304,7 @@ process.tauPtEtaIDIso = cms.EDFilter("PATTauSelector",
     cut = cms.string(
         "pt > 40 & abs(eta) < 2.3" +
         " & tauID('decayModeFindingOldDMs') > 0.5" +                                  
-        " & (tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 | tauID('byLooseIsolationMVA3oldDMwLT') > 0.5)"
+        " & (tauID('byLooseCombinedIsolationDeltaBetaCorr3Hits') > 0.5 | tauID('byCombinedIsolationDeltaBetaCorrRaw3Hits') < 4.0 | tauID('byLooseIsolationMVA3oldDMwLT') > 0.5 | tauID('byVLooseIsolationMVA3oldDMwLT') > 0.5)"
     ),
     filter = cms.bool(False)
 )
@@ -400,25 +400,25 @@ process.filterSequence = cms.Sequence(
 
 #######################################################################
 
-from LLRAnalysis.HadTauStudies.vertexMultiplicityReweight_cfi import vertexMultiplicityReweight
-process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686 = vertexMultiplicityReweight.clone(
-    ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_Mu17_Mu8.root"),
-    ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/Data_Pileup_2012_ReRecoPixel-600bins.root"),
-    inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_DoubleMediumIsoPFTau35_TrkSTAR_eta2p1-600bins.root"),
-    type = cms.string("gen3d"),
-    mcPeriod = cms.string("Summer12_S10")
-)
-process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686 = vertexMultiplicityReweight.clone(
-    ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonDist_runs190456to208686_Mu17_Mu8.root"),
-    ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/Data_Pileup_2012_ReRecoPixel-60bins.root"),
-    inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_DoubleMediumIsoPFTau35_TrkSTAR_eta2p1-60bins.root"),
-    type = cms.string("gen"),
-    mcPeriod = cms.string("Summer12_S10")
-)
-process.vertexMultiplicityReweightSequence = cms.Sequence(
-    process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686 *
-    process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686
-)    
+process.vertexMultiplicityReweightSequence = cms.Sequence()
+if runOnMC:
+    from LLRAnalysis.HadTauStudies.vertexMultiplicityReweight_cfi import vertexMultiplicityReweight
+    process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686 = vertexMultiplicityReweight.clone(
+        ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_Mu17_Mu8.root"),
+        ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/Data_Pileup_2012_ReRecoPixel-600bins.root"),
+        inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_DoubleMediumIsoPFTau35_TrkSTAR_eta2p1-600bins.root"),
+        type = cms.string("gen3d"),
+        mcPeriod = cms.string("Summer12_S10")
+    )
+    process.vertexMultiplicityReweightSequence += process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686
+    process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686 = vertexMultiplicityReweight.clone(
+        ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonDist_runs190456to208686_Mu17_Mu8.root"),
+        ##inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/Data_Pileup_2012_ReRecoPixel-60bins.root"),
+        inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/expPUpoissonMean_runs190456to208686_DoubleMediumIsoPFTau35_TrkSTAR_eta2p1-60bins.root"),
+        type = cms.string("gen"),
+        mcPeriod = cms.string("Summer12_S10")
+    )
+    process.vertexMultiplicityReweightSequence += process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686
 
 #######################################################################
 
@@ -496,12 +496,14 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
         MediumDB3HIso = cms.string("byMediumCombinedIsolationDeltaBetaCorr3Hits"),
         TightDB3HIso = cms.string("byTightCombinedIsolationDeltaBetaCorr3Hits"),
         RawDB3HIso = cms.string("byCombinedIsolationDeltaBetaCorrRaw3Hits"),
+        VLooseMVAwoLT = cms.string("byVLooseIsolationMVA3oldDMwoLT"),                                          
         LooseMVAwoLT = cms.string("byLooseIsolationMVA3oldDMwoLT"),
         MediumMVAwoLT = cms.string("byMediumIsolationMVA3oldDMwoLT"),
         TightMVAwoLT = cms.string("byTightIsolationMVA3oldDMwoLT"),
         VTightMVAwoLT = cms.string("byVTightIsolationMVA3oldDMwoLT"),
         VVTightMVAwoLT = cms.string("byVVTightIsolationMVA3oldDMwoLT"),
         RawMVAwoLT = cms.string("byIsolationMVA3oldDMwoLTraw"),
+        VLooseMVAwLT = cms.string("byVLooseIsolationMVA3oldDMwLT"),                                          
         LooseMVAwLT = cms.string("byLooseIsolationMVA3oldDMwLT"),
         MediumMVAwLT = cms.string("byMediumIsolationMVA3oldDMwLT"),
         TightMVAwLT = cms.string("byTightIsolationMVA3oldDMwLT"),
@@ -513,7 +515,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
         againstElectronLooseMVA3 = cms.string("againstElectronLooseMVA5"),
         againstElectronMediumMVA3 = cms.string("againstElectronMediumMVA5"),
         againstElectronTightMVA3 = cms.string("againstElectronTightMVA5"),
-        againstElectronVTightMVA3 = cms.string("againstElectronVTightMVA5"),                                                                                            
+        againstElectronVTightMVA3 = cms.string("againstElectronVTightMVA5"),                                                  
         againstElectronMVA3raw = cms.string("againstElectronMVA5raw"),
         againstElectronMVA3category = cms.string("againstElectronMVA5category"),                                                 
         againstMuonLoose2 = cms.string("againstMuonLoose3"), # CV: keep branchname used for old discriminator 
@@ -546,13 +548,12 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     maxJetAbsEta = cms.double(4.7),
     minBJetPt = cms.double(20.),
     maxBJetAbsEta = cms.double(2.4),
-    wpBJetDiscriminator = cms.double(0.679), # CSV tagger Medium working-point                                         
+    ##wpBJetDiscriminator = cms.double(0.679), # CSV tagger Medium working-point (cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP)
+    wpBJetDiscriminator = cms.double(0.244), # CSV tagger Loose working-point (cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP)
     srcRawPFMEt = cms.InputTag('patMETsPFlow'),
     srcVertices = cms.InputTag('selectedPrimaryVertices'),
     srcRho = cms.InputTag('kt6PFJets', 'rho'),                       
-    evtWeights =  cms.PSet(
-        vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
-    ),
+    evtWeights =  cms.PSet(),
     isMC = cms.bool(runOnMC),
     srcGenPileUpSummary = cms.InputTag('addPileupInfo'),
     srcLHE = cms.InputTag('source'),
@@ -581,6 +582,7 @@ if runOnMC :
     process.tauTauNtupleProducer.hltJetFilters_diTauJet = cms.vstring(
         "hltTripleL2Jets30eta3"
     )
+    process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
 else :    
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
         "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v2",
@@ -610,7 +612,6 @@ else :
     )
     
 if runOnEmbed :
-    process.tauTauNtupleProducer.isEmbedded = cms.bool(True),                                          
     if embedType == "PfEmbed" :
         process.tauTauNtupleProducer.srcEmbeddingWeight = cms.InputTag('generator', 'minVisPtFilter', 'EmbeddedRECO')
     elif embedType == "RhEmbed" :

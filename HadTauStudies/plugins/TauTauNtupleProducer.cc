@@ -160,13 +160,16 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
   if ( isMC_ ) {
     srcGenPileUpSummary_ = cfg.getParameter<edm::InputTag>("srcGenPileUpSummary");
     srcLHE_ = cfg.getParameter<edm::InputTag>("srcLHE");
-    srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
-  } 
-
+  }
+  
   isEmbedded_ = cfg.getParameter<bool>("isEmbedded");
   if ( isEmbedded_ ) {
     srcEmbeddingWeight_ = cfg.getParameter<edm::InputTag>("srcEmbeddingWeight");
   }
+
+  if ( isMC_ || isEmbedded_ ) {
+    srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
+  } 
 
   edm::ParameterSet cfgPFJetIdAlgo;
   cfgPFJetIdAlgo.addParameter<std::string>("version", "FIRSTDATA");
@@ -284,6 +287,9 @@ void TauTauNtupleProducer::beginJob()
   addBranchF("higgsPtWeightNom");
   addBranchF("higgsPtWeightUp");
   addBranchF("higgsPtWeightDown");
+  addBranchF("topPtWeightNom");
+  addBranchF("topPtWeightUp");
+  addBranchF("topPtWeightDown");
   addBranchF("leg1triggerEffMC_diTau");
   addBranchF("leg1triggerEffData_diTau");
   addBranchF("leg2triggerEffMC_diTau");
@@ -329,9 +335,12 @@ void TauTauNtupleProducer::beginJob()
   addBranchI("hasZ");
   addBranchI("hasW");
   addBranchF("NUP");
-  addBranchI("isRealTau");
-  addBranchI("isMuon");
+  addBranchI("is1RealTau");
+  addBranchI("is2RealTaus");
   addBranchI("isFake");
+  addBranchI("isElectron");
+  addBranchI("isMuon");
+  addBranchI("isJet");
   addBranchI("isPhoton");
 }
 
@@ -593,6 +602,22 @@ namespace
     if ( idxBin > lut->GetNbinsX() ) idxBin = lut->GetNbinsX();
     return lut->GetBinContent(idxBin);
   }
+
+  //-----------------------------------------------------------------------------
+  // CV: recipe for top quark Pt reweighting taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  double compTopPtWeight(double topPt)
+  {
+    const double a = 0.156;
+    const double b = -0.00137;
+    return TMath::Exp(a + b*topPt);
+  }
+
+  double compTopPtWeight(double top1Pt, double top2Pt)
+  {
+    double topPtWeight2 = compTopPtWeight(top1Pt)*compTopPtWeight(top2Pt);
+    return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
+  }
+  //-----------------------------------------------------------------------------
 
   bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
   {
@@ -989,24 +1014,19 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     bool hasW = findGenParticle(*genParticles, 24,  0, 0, wP4);
     setValueI("hasW", hasW && wP4.mass() > 50.);
 
-    //reco::Candidate::LorentzVector tauPlusP4;
-    //bool hasTauPlus = findGenParticle(*genParticles, -15, 0, 0, tauPlusP4);
-    //reco::Candidate::LorentzVector tauMinusP4;
-    //bool hasTauMinus = findGenParticle(*genParticles, +15, 0, 0, tauMinusP4);
-    //
-    //reco::Candidate::LorentzVector muonPlusP4;
-    //bool hasMuonPlus = findGenParticle(*genParticles, -13, 0, 0, muonPlusP4);
-    //reco::Candidate::LorentzVector muonMinusP4;
-    //bool hasMuonMinus = findGenParticle(*genParticles, +13, 0, 0, muonMinusP4);
-
-    bool isRealTau = leg1->genJet() || leg2->genJet();
-    bool isMuon    = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 13) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 13);
-    //bool isMuon    = (hasMuonPlus || hasMuonMinus);
-    bool isFake    = !isRealTau;
-    bool isPhoton  = genZ_or_Gammastar && (genZ_or_Gammastar->pdgId() == 22 || genZ_or_Gammastar->mass() < 75. || genZ_or_Gammastar->mass() > 105.);
-    setValueI("isRealTau", isRealTau);
-    setValueI("isMuon", isMuon);
+    bool is1RealTau  = leg1->genJet() || leg2->genJet();
+    bool is2RealTaus = leg1->genJet() && leg2->genJet();
+    bool isFake      = !is2RealTaus;
+    bool isElectron  = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 11) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 11);
+    bool isMuon      = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 13) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 13);
+    bool isJet       = !(is2RealTaus || isElectron || isMuon);
+    bool isPhoton    = genZ_or_Gammastar && (genZ_or_Gammastar->pdgId() == 22 || genZ_or_Gammastar->mass() < 75. || genZ_or_Gammastar->mass() > 105.);
+    setValueI("is1RealTau", is1RealTau);
+    setValueI("is2RealTaus", is2RealTaus);
     setValueI("isFake", isFake);
+    setValueI("isElectron", isElectron);
+    setValueI("isMuon", isMuon);
+    setValueI("isJet", isJet);
     setValueI("isPhoton", isPhoton);
   }
 
@@ -1051,6 +1071,27 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   setValueF("higgsPtWeightNom", higgsPtWeightNom);
   setValueF("higgsPtWeightUp", higgsPtWeightUp);
   setValueF("higgsPtWeightDown", higgsPtWeightDown);
+
+  double topPtWeightNom  = 1.;
+  double topPtWeightUp   = 1.;
+  double topPtWeightDown = 1.;
+  if ( isMC_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+
+    reco::Candidate::LorentzVector topPlusP4;
+    bool topPlusFound = findGenParticle(*genParticles, +6, 0, 0, topPlusP4);
+    reco::Candidate::LorentzVector topMinusP4;
+    bool topMinusFound = findGenParticle(*genParticles, -6, 0, 0, topMinusP4);
+    if ( topPlusFound && topMinusFound ) {
+      topPtWeightNom = compTopPtWeight(topPlusP4.pt(), topMinusP4.pt());
+      topPtWeightUp = topPtWeightNom*topPtWeightNom; // CV: assign 100% systematic uncertainty to top quark Pt reweighting,
+      topPtWeightDown = 1.0;                         //     following https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+    }
+  }
+  setValueF("topPtWeightNom", topPtWeightNom);
+  setValueF("topPtWeightUp", topPtWeightUp);
+  setValueF("topPtWeightDown", topPtWeightDown);
 
   double genFilter = 1.0; // CV: weight associated to visible Pt cuts applied on gen. tau decay products in Embedded sample production
   if ( isEmbedded_ ) {
@@ -1309,7 +1350,10 @@ void TauTauNtupleProducer::addBranch_bJet(const std::string& name)
 {
   addBranch_EnPxPyPz(name);
   addBranch_PtEtaPhiMass(name);
+  addBranch_EnPxPyPz(name + "raw");
+  addBranch_PtEtaPhiMass(name + "raw");
   addBranchF(name + "Charge");
+  addBranchF(name + "Btag");
 }
 
 void TauTauNtupleProducer::addBranch_Electron(const std::string& name)
@@ -1496,7 +1540,11 @@ void TauTauNtupleProducer::setValue_bJet(const std::string& name, const pat::Jet
 {
   setValue_EnPxPyPz(name, jet.p4());
   setValue_PtEtaPhiMass(name, jet.p4());
+  reco::Candidate::LorentzVector jetP4_raw = ( jet.jecSetsAvailable() ) ? jet.correctedP4("Uncorrected") : jet.p4();
+  setValue_EnPxPyPz(name + "raw", jetP4_raw);
+  setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
+  setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
 }
 
 void TauTauNtupleProducer::setValue_Electron(const std::string& name, const pat::Electron& electron)

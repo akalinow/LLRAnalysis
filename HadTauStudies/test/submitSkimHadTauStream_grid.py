@@ -10,21 +10,16 @@ import subprocess
 import time
 
 configFile = 'patTuple_PAT_SkimHadTauStream_cfg.py'
-jobId = '2013Dec20'
+jobId = '2014Jan10'
 
 ##outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 
 samplesToAnalyze = [
-    #'data_Run2012A_22Jan2013_v1',
-    #'data_Run2012B_22Jan2013_v1',
-    #'data_Run2012C_22Jan2013_v1',
-    ##'data_Run2012D_22Jan2013_v1'
-    ##"HiggsSUSYGluGlu130",
-    "HiggsSUSYBB1000",
-    ##"data_Run2012D_22Jan2013_v1",
-    ##"pfEmbed_Run2012D_22Jan2013_v1",
-    ##"WJets"
+    # CV: leave empty in order to submit jobs for all samples
+    ##"WJetsExt"
+    ##'DY2JetsExt'
+    'HiggsSUSYBB300v2'
 ]
 
 #--------------------------------------------------------------------------------

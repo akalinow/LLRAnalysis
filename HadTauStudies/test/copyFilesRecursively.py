@@ -28,7 +28,7 @@ if not (len(sys.argv) == 3):
 sourceFilePath = sys.argv[1]
 targetFilePath = sys.argv[2]
 
-maxNumConcurrentJobs = 10
+maxNumConcurrentJobs = 100
 
 def runCommand(commandLine):
     print(commandLine)
@@ -65,6 +65,42 @@ def createFilePath_recursively(filePath):
         if len(currentFilePath) <= 1:
             continue
         createFilePath(currentFilePath)
+
+def readFileInfos(filePath):
+    ##print "<readFiles>:"
+    fileInfos = None
+    if filePath.find("/store") != -1:
+        fileInfos = eos.lsl(filePath)
+    else:
+        fileNames = [ os.path.join(filePath, fileName) for fileName in os.listdir(filePath) ]        
+        fileInfos = []
+        for fileName in fileNames:
+            ##print "fileName = %s" % fileName
+            fileStat = os.lstat(fileName)
+            permissions = ""
+            bit = 9
+            while bit >= 0:
+                if fileStat.st_mode & (1 << bit):
+                    if bit in [ 9 ]:
+                        permissions += "d"
+                    elif bit in [ 8, 5, 2 ]:
+                        permissions += "r"
+                    elif bit in [ 7, 4, 1 ]:
+                        permissions += "w"
+                    elif bit in [ 6, 3, 0 ]:
+                        permissions += "x"    
+                else:
+                    permissions += "-"
+                bit = bit - 1
+            fileInfo = {
+                'file'        : os.path.basename(fileName),
+                'path'        : fileName,
+                'size'        : fileStat.st_size,
+                'time'        : time.localtime(fileStat.st_mtime),
+                'permissions' : permissions
+            }
+            fileInfos.append(fileInfo)
+    return fileInfos
 
 def copyFile(sourceFileName, targetFilePath):
 
@@ -109,6 +145,7 @@ def copyFile(sourceFileName, targetFilePath):
             time.sleep(waitFor)        
         
     if sourceFileName.find("/store") != -1 and targetFilePath.find("/store") == -1: # copy from eos to local disk
+        print 'eos.cp([ %s ], %s)' % (sourceFileName, targetFilePath)
         eos.cp([ sourceFileName ], targetFilePath)
     elif sourceFileName.find("/store") == -1 and targetFilePath.find("/store") != -1: # copy from local disk to eos
         eos.cp([ sourceFileName ], targetFilePath)
@@ -119,7 +156,7 @@ def copyFile(sourceFileName, targetFilePath):
 
 def processFilePath(sourceFilePath, targetFilePath):
     
-    ##print "<processFilePath>: sourceFilePath = '%s', targetFilePath = '%s'" % (sourceFilePath, targetFilePath)
+    print "<processFilePath>: sourceFilePath = '%s', targetFilePath = '%s'" % (sourceFilePath, targetFilePath)
 
     if not sourceFilePath[len(sourceFilePath) - 1] == "/":
         sourceFilePath = sourceFilePath + "/"
@@ -128,17 +165,31 @@ def processFilePath(sourceFilePath, targetFilePath):
 
     # create targetFilePath in case it does not yet exist
     createFilePath_recursively(targetFilePath)
+
+    targetFileInfos = readFileInfos(targetFilePath)
+    ##print "targetFileInfos:"
+    ##print targetFileInfos
     
-    source_file_infos = eos.lsl(sourceFilePath)
-    for source_file_info in source_file_infos:
-        print source_file_info
-        file_size = source_file_info['size']
-        if file_size <= 1000: # directory
-            source_file_infos_bak = source_file_infos
-            processFilePath(source_file_info['path'], os.path.join(targetFilePath, source_file_info['file']))
-            source_file_infos = source_file_infos_bak
+    sourceFileInfos = readFileInfos(sourceFilePath)
+    ##print "sourceFileInfos:"
+    ##print sourceFileInfos
+    
+    for sourceFileInfo in sourceFileInfos:
+        print sourceFileInfo
+        if sourceFileInfo['permissions'][0] in [ "d", "l" ]: # directory
+            sourceFileInfos_bak = sourceFileInfos
+            processFilePath(sourceFileInfo['path'], os.path.join(targetFilePath, sourceFileInfo['file']))
+            sourceFileInfos = sourceFileInfos_bak
         else: # actual file
             print "sourceFilePath = '%s'" % sourceFilePath
-            copyFile(source_file_info['path'], targetFilePath)
+            targetFileName = os.path.join(targetFilePath, sourceFileInfo['file'])            
+            existsAndIsUpToDate = False
+            for targetFileInfo in targetFileInfos:
+                if targetFileInfo['path'] == targetFileName and time.mktime(targetFileInfo['time']) > time.mktime(sourceFileInfo['time']):
+                    existsAndIsUpToDate = True
+            if existsAndIsUpToDate:
+                print "sourceFile = '%s' exists and is up-to-date --> skipping !!" % sourceFileInfo['file']
+                continue
+            copyFile(sourceFileInfo['path'], targetFilePath)
 
 processFilePath(sourceFilePath, targetFilePath)
