@@ -18,7 +18,7 @@ import time
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
 jobId = '2014Jan10'
 
-version = "v1_5"
+version = "v1_6"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 ##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
@@ -32,6 +32,7 @@ lxbatch_queue = '1nd'
 samplesToAnalyze = [
     # CV: leave empty in order to produce Ntuples for all samples
     ##"HiggsSUSYBB300v2"
+    ##"HiggsVH125"
 ]
 
 numEventsFileName = 'submitTauTauNtupleProduction.json'

@@ -221,6 +221,10 @@ void TauTauNtupleProducer::beginJob()
   addBranch_Tau("l1");
   addBranch_TauLT_base("l1");
   addBranch_TauLT_extended("l1");
+  addBranchI("l1isGenHadTau");
+  addBranchI("l1isGenMuon");
+  addBranchI("l1isGenElectron");  
+  addBranchI("l1isGenJet");
   addBranchF("l1LooseMu");
   addBranchF("l1LooseEle");
   addBranch_EnPxPyPz("l1L1");
@@ -232,6 +236,10 @@ void TauTauNtupleProducer::beginJob()
   addBranch_Tau("l2");
   addBranch_TauLT_base("l2");
   addBranch_TauLT_extended("l2");
+  addBranchI("l2isGenHadTau");
+  addBranchI("l2isGenMuon");
+  addBranchI("l2isGenElectron");  
+  addBranchI("l2isGenJet");
   addBranchF("l2LooseMu");
   addBranchF("l2LooseEle");
   addBranch_EnPxPyPz("l2L1");
@@ -328,7 +336,7 @@ void TauTauNtupleProducer::beginJob()
   addBranchI("nPUbxM1");
   addBranchI("isZtt");
   addBranchI("isZttj");
-  addBranchI("isZttll");
+  addBranchI("isZttl");
   addBranchI("isZj");
   addBranchI("isZee");
   addBranchI("isZmm");
@@ -634,8 +642,43 @@ namespace
     return false;
   }
 
-  void matchGenParticle(const reco::Candidate::LorentzVector& p4, const reco::GenParticle* genLeptonPlus, const reco::GenParticle* genLeptonMinus,
-			bool& isElectron, bool& isMuon, bool& isTau, bool& isJet)
+  void matchGenParticle(const reco::Candidate::LorentzVector& p4, const std::vector<reco::GenParticle>& genParticles,
+			bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
+  {
+    bool matchesGenHadTau   = false;
+    bool matchesGenMuon     = false;
+    bool matchesGenElectron = false;
+    for ( std::vector<reco::GenParticle>::const_iterator genParticle = genParticles.begin();
+	  genParticle != genParticles.end(); ++genParticle ) {
+      int pdgId = TMath::Abs(genParticle->pdgId());
+      if ( !(pdgId == 11 || pdgId == 13 || pdgId == 15) ) continue;
+      reco::Candidate::LorentzVector visMomentum = getVisMomentum(&(*genParticle));     
+      if ( !(visMomentum.pt() > (0.5*p4.pt())) ) continue;
+      if ( deltaR(p4, visMomentum) < 0.3 ) {
+	if ( pdgId == 15 ) {
+	  std::string genTauDecayMode = getGenTauDecayMode(&(*genParticle));
+	  if ( genTauDecayMode == "electron" ) {
+	    matchesGenElectron = true;
+	  } else if ( genTauDecayMode == "muons" ) {
+	    matchesGenMuon = true;
+	  } else {
+	    matchesGenHadTau = true;
+	  }
+	} else if ( pdgId == 13 ) {
+	  matchesGenMuon = true;
+	} else if ( pdgId == 11 ) {
+	  matchesGenElectron = true;
+	} 
+      }
+    }
+    if      ( matchesGenHadTau   ) isGenHadTau   = true;
+    else if ( matchesGenMuon     ) isGenMuon     = true;
+    else if ( matchesGenElectron ) isGenElectron = true;
+    else                           isGenJet      = true;
+  }
+
+  void matchGenParticleFromZdecay(const reco::Candidate::LorentzVector& p4, const reco::GenParticle* genLeptonPlus, const reco::GenParticle* genLeptonMinus,
+				  bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
   {
     std::vector<int> pdgIds_ranked;
     pdgIds_ranked.push_back(15);
@@ -651,26 +694,26 @@ namespace
 	  std::string genTauDecayModeMinus = ( matchesGenLeptonMinus ) ? getGenTauDecayMode(genLeptonMinus) : "undefined";
 	  if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "electron") || 
 	       (matchesGenLeptonMinus && genTauDecayModeMinus == "electron") ) {
-	    isElectron = true;
+	    isGenElectron = true;
 	  } 
 	  if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "muon") || 
 	       (matchesGenLeptonMinus && genTauDecayModeMinus == "muon") ) {
-	    isMuon = true;
+	    isGenMuon = true;
 	  } 
 	  if ( (matchesGenLeptonPlus  && !(genTauDecayModePlus  == "electron" || genTauDecayModePlus  == "muon")) || 
 	       (matchesGenLeptonMinus && !(genTauDecayModeMinus == "electron" || genTauDecayModeMinus == "muon")) ) {
-	    isTau = true;
+	    isGenHadTau = true;
 	  } 
 	} else if ( (*pdgId) == 13 ) {
-	  isMuon = true;
+	  isGenMuon = true;
 	} else if ( (*pdgId) == 11 ) {
-	  isElectron = true;
+	  isGenElectron = true;
 	} else assert(0);
 	return;
       }
     }
     // CV: reconstructed tau neither matches generator level electron, muon nor tau
-    isJet = true;
+    isGenJet = true;
   }
 }
 
@@ -746,7 +789,20 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
   setValue_Tau("l1", *leg1);
   setValue_TauLT_base("l1", *leg1);
-  setValue_TauLT_extended("l1", *leg1);
+  setValue_TauLT_extended("l1", *leg1);    
+  bool leg1isGenHadTau   = false;
+  bool leg1isGenMuon     = false;
+  bool leg1isGenElectron = false;
+  bool leg1isGenJet      = false;    
+  if ( isMC_ || isEmbedded_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+    matchGenParticle(leg1->p4(), *genParticles, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+  }
+  setValueI("l1isGenHadTau", leg1isGenHadTau);
+  setValueI("l1isGenElectron", leg1isGenElectron);
+  setValueI("l1isGenMuon", leg1isGenMuon);
+  setValueI("l1isGenJet", leg1isGenJet);
   double dRl1toLooseMuon = minDeltaR(leg1->p4(), *looseMuons);
   double l1LooseMu = ( dRl1toLooseMuon < 0.5 ) ? 0. : 1.;
   double dRl1toLooseElectron = minDeltaR(leg1->p4(), *looseElectrons);
@@ -765,6 +821,19 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   setValue_Tau("l2", *leg2);
   setValue_TauLT_base("l2", *leg2);
   setValue_TauLT_extended("l2", *leg2);
+  bool leg2isGenHadTau   = false;
+  bool leg2isGenMuon     = false;
+  bool leg2isGenElectron = false;
+  bool leg2isGenJet      = false;    
+  if ( isMC_ || isEmbedded_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+    matchGenParticle(leg2->p4(), *genParticles, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
+  }
+  setValueI("l2isGenHadTau", leg2isGenHadTau);
+  setValueI("l2isGenMuon", leg2isGenMuon);
+  setValueI("l2isGenElectron", leg2isGenElectron);
+  setValueI("l2isGenJet", leg2isGenJet);
   double dRl2toLooseMuon = minDeltaR(leg2->p4(), *looseMuons);
   double l2LooseMu = ( dRl2toLooseMuon < 0.5 ) ? 0. : 1.;
   double dRl2toLooseElectron = minDeltaR(leg2->p4(), *looseElectrons);
@@ -949,7 +1018,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
     bool isZtt   = false;
     bool isZttj  = false;
-    bool isZttll = false;
+    bool isZttl  = false;
     bool isZj    = false;
     bool isZee   = false;
     bool isZmm   = false;
@@ -975,26 +1044,26 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() > +0.5 && !genLeptonPlus  ) genLeptonPlus  = (*daughter);
 	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() < -0.5 && !genLeptonMinus ) genLeptonMinus = (*daughter);
       }      
-      bool leg1isElectron = false;
-      bool leg1isMuon     = false;
-      bool leg1isTau      = false;
-      bool leg1isJet      = false;    
-      matchGenParticle(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isElectron, leg1isMuon, leg1isTau, leg1isJet);
-      bool leg2isElectron = false;
-      bool leg2isMuon     = false;
-      bool leg2isTau      = false;
-      bool leg2isJet      = false;    
-      matchGenParticle(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isElectron, leg2isMuon, leg2isTau, leg2isJet);
+      bool leg1isGenHadTau   = false;
+      bool leg1isGenMuon     = false;
+      bool leg1isGenElectron = false;
+      bool leg1isGenJet      = false;    
+      matchGenParticleFromZdecay(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+      bool leg2isGenHadTau   = false;
+      bool leg2isGenMuon     = false;
+      bool leg2isGenElectron = false;
+      bool leg2isGenJet      = false;    
+      matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
       if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 15 && 
 	   genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 15 ) {
-	if      ( leg1isTau && leg2isTau ) isZtt = true;
-	else if ( (leg1isElectron || leg1isMuon) && (leg2isElectron || leg2isMuon) ) isZttll = true;
+	if      ( leg1isGenHadTau && leg2isGenHadTau ) isZtt = true;
+	else if ( leg1isGenElectron || leg1isGenMuon || leg2isGenElectron || leg2isGenMuon ) isZttl = true;
 	else isZttj = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isElectron &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isElectron ) {
+      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isGenElectron &&
+		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isGenElectron ) {
 	isZee = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isMuon &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isMuon ) {
+      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isGenMuon &&
+		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isGenMuon ) {
 	isZmm = true;
       } else {
 	isZj = true;
@@ -1002,7 +1071,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     }
     setValueI("isZtt", isZtt);
     setValueI("isZttj", isZttj);
-    setValueI("isZttll", isZttll);
+    setValueI("isZttl", isZttl);
     setValueI("isZj", isZj);
     setValueI("isZee", isZee);
     setValueI("isZmm", isZmm);

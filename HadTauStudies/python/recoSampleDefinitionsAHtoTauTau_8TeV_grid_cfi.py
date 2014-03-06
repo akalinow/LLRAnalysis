@@ -44,7 +44,7 @@ _millibarns = 1.0e+9
 _picobarns =  1.0
 _femtobarns = 1.0e-3
 
-TARGET_LUMI = 19.7/_femtobarns # CV: estimated luminosity of 2012 run A+B+C+D data
+TARGET_LUMI = 18.3/_femtobarns # CV: estimated luminosity of 2012 run A+B+C+D data
 
 RECO_SAMPLES = {
     'data_Run2012A_22Jan2013_v1' : {
@@ -364,6 +364,16 @@ for massPoint in smHiggsMassPoints:
         'type'             : 'smMC'
     }
     SAMPLES_TO_ANALYZE.append(vbfSampleName)
+vhSampleName = "HiggsVH125"
+RECO_SAMPLES[vhSampleName] = {
+    'datasetpath'      : '/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+    'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+    'events_processed' : 200124,
+    'events_per_job'   : 20000,
+    'x_sec'            : (0.69669 + 0.3943 + 0.1302)*0.0632*_picobarns, # taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#53X_MC_Samples
+    'type'             : 'smMC'
+}
+SAMPLES_TO_ANALYZE.append(vhSampleName)
 
 # CV: add MSSM Higgs signal Monte Carlo samples
 mssmHiggsMassPoints = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]

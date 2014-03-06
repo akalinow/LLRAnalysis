@@ -6,6 +6,7 @@
 #include <TArrayF.h>
 #include <TString.h>
 
+#include <iostream>
 #include <assert.h>
 
 TArrayF getBinning(const TH1* histogram)
@@ -53,6 +54,8 @@ namespace
 
 TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>& histogramsToAdd)
 {
+  //std::cout << "<addHistograms>:" << std::endl;
+  //std::cout << " newHistogramName = " << newHistogramName << std::endl;
   if ( histogramsToAdd.size() == 0 )
     throw cms::Exception("addHistograms") 
       << "No histograms given to add !!\n";
@@ -82,6 +85,8 @@ TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>&
 
 TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogramMinuend, const TH1* histogramSubtrahend)
 {
+  //std::cout << "<subtractHistograms>:" << std::endl;
+  //std::cout << " newHistogramName = " << newHistogramName << std::endl;
   checkCompatibleBinning(histogramMinuend, histogramSubtrahend);
   TArrayF histogramBinning = getBinning(histogramMinuend);
   int numBins = histogramBinning.GetSize() - 1;

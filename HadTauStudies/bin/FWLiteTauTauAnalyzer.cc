@@ -24,6 +24,8 @@
 #include <TTreeFormula.h>
 #include <TBenchmark.h>
 #include <TMath.h>
+#include <TF1.h>
+#include <TFormula.h>
 
 #include <iostream>
 #include <string>
@@ -33,7 +35,7 @@
 typedef std::vector<std::string> vstring;
 typedef std::vector<double> vdouble;
 
-enum { kData, kSignal, kSM_Higgs, kZTT, kZLL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
+enum { kData, kSignal, kSM_Higgs, kZTTmc, kZL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
 
 enum { kOS, kSS };
 
@@ -89,8 +91,8 @@ int main(int argc, char* argv[])
   if      ( process_string == "data_obs"     ) process = kData;
   else if ( (process_string.find("ggH") != std::string::npos && process_string.find("ggH_SM125") == std::string::npos) || process_string.find("bbH") != std::string::npos ) process = kSignal;
   else if ( process_string.find("ggH_SM125") != std::string::npos || process_string.find("qqH_SM125") != std::string::npos ) process = kSM_Higgs;
-  else if ( process_string == "ZTT"          ) process = kZTT;
-  else if ( process_string == "ZLL"          ) process = kZLL;
+  else if ( process_string == "ZTTmc"        ) process = kZTTmc;
+  else if ( process_string == "ZL"          ) process = kZL;
   else if ( process_string == "ZJ"           ) process = kZJ;
   else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
   else if ( process_string == "W"            ) process = kW;
@@ -110,7 +112,7 @@ int main(int argc, char* argv[])
     cfgFWLiteTauTauAnalyzer.getParameter<double>("lumiScale") : 1.;
 
   vdouble stitchingWeights;
-  if ( process == kZTT || process == kZLL || process == kZJ || process == kW ) {
+  if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
     stitchingWeights = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("stitchingWeights");
     if ( stitchingWeights.size() != 5 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
       << "Configuration parameter 'stitchingWeights' expected to be of size = 5 !!\n";      
@@ -140,6 +142,33 @@ int main(int argc, char* argv[])
     << "Invalid Configuration parameter 'region' = " << region << " !!\n";
 
   bool applyTightBtag = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyTightBtag");
+
+  TF1* jetToTauFakeRateLooseToTightWeight_tau1 = 0;
+  TF1* jetToTauFakeRateLooseToTightWeight_tau2 = 0;
+  bool applyJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyJetToTauFakeRateLooseToTightWeight");
+  if ( applyJetToTauFakeRateLooseToTightWeight ) {
+    edm::ParameterSet cfgJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("jetToTauFakeRateLooseToTightWeight");
+    std::string inputFileName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("inputFileName");
+    TFile* inputFile = new TFile(inputFileName.data());
+    std::string fitFunctionName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionName_tau1");
+    TF1* fitFunction_tau1 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionName_tau1.data()));
+    if ( !fitFunction_tau1 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
+      << "Failed to load fitFunction = " << fitFunctionName_tau1 << " from file = " << inputFileName << " !!\n";
+    jetToTauFakeRateLooseToTightWeight_tau1 = (TF1*)fitFunction_tau1->Clone();
+    std::string fitFunctionName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionName_tau2");
+    TF1* fitFunction_tau2 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionName_tau2.data()));
+    if ( !fitFunction_tau2 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
+      << "Failed to load fitFunction = " << fitFunctionName_tau2 << " from file = " << inputFileName << " !!\n";
+    jetToTauFakeRateLooseToTightWeight_tau2 = (TF1*)fitFunction_tau2->Clone();
+    delete inputFile;
+  }
+
+  TFormula* jetToTauFakeRateCorrection = 0;
+  bool applyJetToTauFakeRateCorrection = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyJetToTauFakeRateCorrection");
+  if ( applyJetToTauFakeRateCorrection ) {
+    std::string jetToTauFakeRateCorrection_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("jetToTauFakeRateCorrection");
+    jetToTauFakeRateCorrection = new TFormula("jetToTauFakeRateCorrection", jetToTauFakeRateCorrection_string.data());
+  }
 
   vstring addWeights_string = cfgFWLiteTauTauAnalyzer.getParameter<vstring>("addWeights");
 
@@ -258,6 +287,9 @@ int main(int argc, char* argv[])
   Float_t jet2BtagDiscr;
   inputTree->SetBranchAddress("jet2Btag", &jet2BtagDiscr);
 
+  Int_t nJets;
+  inputTree->SetBranchAddress("nJets", &nJets);
+
   Float_t bjet1Pt, bjet1Eta, bjet1Phi;
   inputTree->SetBranchAddress("bjet1Pt", &bjet1Pt);
   inputTree->SetBranchAddress("bjet1Eta", &bjet1Eta);
@@ -278,19 +310,34 @@ int main(int argc, char* argv[])
   Int_t numVertices;
   inputTree->SetBranchAddress("nVert", &numVertices);
 
-  Int_t isZtt, isZttj, isZttll, isZj, isZee, isZmm;
+  Int_t isZtt, isZttj, isZttl, isZj, isZee, isZmm;
   inputTree->SetBranchAddress("isZtt", &isZtt);
   inputTree->SetBranchAddress("isZttj", &isZttj);
-  inputTree->SetBranchAddress("isZttll", &isZttll);
+  inputTree->SetBranchAddress("isZttl", &isZttl);
   inputTree->SetBranchAddress("isZj", &isZj);
   inputTree->SetBranchAddress("isZee", &isZee);
   inputTree->SetBranchAddress("isZmm", &isZmm);
+  Int_t l1isGenHadTau, l1isGenMuon, l1isGenElectron, l1isGenJet;
+  inputTree->SetBranchAddress("l1isGenHadTau", &l1isGenHadTau);
+  inputTree->SetBranchAddress("l1isGenMuon", &l1isGenMuon);
+  inputTree->SetBranchAddress("l1isGenElectron", &l1isGenElectron);
+  inputTree->SetBranchAddress("l1isGenJet", &l1isGenJet);
+  Int_t l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet;
+  inputTree->SetBranchAddress("l2isGenHadTau", &l2isGenHadTau);
+  inputTree->SetBranchAddress("l2isGenMuon", &l2isGenMuon);
+  inputTree->SetBranchAddress("l2isGenElectron", &l2isGenElectron);
+  inputTree->SetBranchAddress("l2isGenJet", &l2isGenJet);
+  Int_t isElectron, isMuon;
+  inputTree->SetBranchAddress("isElectron", &isElectron);
+  inputTree->SetBranchAddress("isMuon", &isMuon);
   Int_t is2RealTaus;
   inputTree->SetBranchAddress("is2RealTaus", &is2RealTaus);
   
   Float_t NUP;
   inputTree->SetBranchAddress("NUP", &NUP);
 
+  Float_t triggerEffData_diTau;
+  inputTree->SetBranchAddress("triggerEffData_diTau", &triggerEffData_diTau);
   Float_t triggerWeight_diTau;
   inputTree->SetBranchAddress("triggerWeight_diTau", &triggerWeight_diTau);
   Float_t pileupWeight = 1.0;
@@ -308,18 +355,20 @@ int main(int argc, char* argv[])
   int currentTreeNumber = inputTree->GetTreeNumber();
   
   int numEntries = inputTree->GetEntries();
+  int analyzedEntries = 0;
   int selectedEntries = 0;
   for ( int iEntry = 0; iEntry < numEntries && (maxEvents == -1 || selectedEntries < maxEvents); ++iEntry ) {
     if ( iEntry > 0 && (iEntry % reportEvery) == 0 ) {
       std::cout << "processing Entry " << iEntry << " (" << selectedEntries << " Entries selected)" << std::endl;
     }
+    ++analyzedEntries;
     
     inputTree->GetEntry(iEntry);
 
     // CV: general phase-space cuts (driven by trigger requirements)
     if ( !(TMath::Abs(tau1Eta) < 2.1 && tau1Pt > 45. && 
 	   TMath::Abs(tau2Eta) < 2.1 && tau2Pt > 45.) ) continue;
-    // CV: binning of events in tau Pt binning 
+    // CV: binning of events in tau Pt
     if ( !((tau1PtMin == -1. || tau1Pt > tau1PtMin) && (tau1PtMax == -1. || tau1Pt < tau1PtMax) &&
 	   (tau2PtMin == -1. || tau2Pt > tau2PtMin) && (tau2PtMax == -1. || tau2Pt < tau2PtMax)) ) continue;
 
@@ -342,12 +391,12 @@ int main(int argc, char* argv[])
       if ( !tau2IsTriggerMatched ) continue;
     }
  
-    if ( diTauChargeSel == kOS && diTauCharge > +0.5 ) continue;
-    if ( diTauChargeSel == kSS && diTauCharge < -0.5 ) continue;
+    if ( diTauChargeSel == kOS && TMath::Abs(diTauCharge) > 0.5 ) continue;
+    if ( diTauChargeSel == kSS && TMath::Abs(diTauCharge) < 0.5 ) continue;
 
     int nbJets = 0;
-    if ( bjet1BtagDiscr > 0.679 || !applyTightBtag ) ++nbJets;
-    if ( bjet2BtagDiscr > 0.679 || !applyTightBtag ) ++nbJets;
+    if ( bjet1BtagDiscr > 0.679 || (bjet1BtagDiscr > 0.244 && !applyTightBtag) ) ++nbJets;
+    if ( bjet2BtagDiscr > 0.679 || (bjet2BtagDiscr > 0.244 && !applyTightBtag) ) ++nbJets;
 
     int nElectrons = 0;
     if ( electron1Pt > 10. && TMath::Abs(electron1Eta) < 2.5 ) ++nElectrons;
@@ -361,22 +410,26 @@ int main(int argc, char* argv[])
     // CV: process dependent selection criteria
     if ( process == kSignal && !(diTauGenMass > 0.7*massPoint && diTauGenMass < 1.3*massPoint) ) continue;
 
-    if ( (process == kZTT || process == kZTT_Embedded) && !isZtt ) continue;
-    if ( process == kZLL && !(isZttll || isZee || isZmm) ) continue;
-    if ( process == kZJ && !(isZttj || isZj) ) continue;
+    if ( (process == kZTTmc || process == kZTT_Embedded) && !isZtt ) continue;    
+    bool isZL = isElectron || isMuon;
+    if ( process == kZL && !isZL ) continue;
+    bool isZJ = !(is2RealTaus || isZL);
+    if ( process == kZJ && !isZJ ) continue;
 
     if ( process == kTT_Embedded && !is2RealTaus ) continue;
     //---------------------------------------------------------------------------
     
     Float_t evtWeight = 1.0;
-    if ( isMC || isEmbedded ) {
+    if ( isMC || isEmbedded ) {      
       if ( isEmbedded ) {
-	evtWeight *= triggerWeight_diTau;
+	evtWeight *= triggerEffData_diTau;
 	evtWeight *= embeddingWeight;
+      } else if ( isMC ) {
+	evtWeight *= triggerWeight_diTau;
       }
       if ( tau1GenPt > 1.0 && TMath::Nint(tau1DecayMode) == 0 ) evtWeight *= 0.88;
       if ( tau2GenPt > 1.0 && TMath::Nint(tau2DecayMode) == 0 ) evtWeight *= 0.88;
-      if ( process == kZTT || process == kZLL || process == kZJ || process == kW ) {
+      if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
 	Float_t stitchingWeight = 1.0;
 	int idxNUP = TMath::Nint(NUP) - 5;
 	if ( idxNUP >= 0 && idxNUP < (int)stitchingWeights.size() ) {
@@ -387,12 +440,37 @@ int main(int argc, char* argv[])
       if ( isMC ) {
 	evtWeight *= lumiScale;
 	evtWeight *= pileupWeight;
+	if ( applyJetToTauFakeRateCorrection ) {
+	  if ( l1isGenJet ) evtWeight *= jetToTauFakeRateCorrection->Eval(tau1Pt);
+	  if ( l2isGenJet ) evtWeight *= jetToTauFakeRateCorrection->Eval(tau2Pt);
+	}
+      }
+      if ( applyJetToTauFakeRateLooseToTightWeight ) {
+	evtWeight *= jetToTauFakeRateLooseToTightWeight_tau1->Eval(tau1Pt);
+	evtWeight *= jetToTauFakeRateLooseToTightWeight_tau2->Eval(tau2Pt);
       }
       for ( std::vector<weightEntryType*>::iterator addWeight = addWeights.begin();
 	    addWeight != addWeights.end(); ++addWeight ) {
 	evtWeight *= (*addWeight)->value_;
       }
     }
+
+    //---------------------------------------------------------------------------
+    // CV: process dependent  additional scale-factors
+    double processSF_inclusive = 1.0;
+    double processSF_nobtag    = 1.0;
+    double processSF_btag      = 1.0;
+    if ( process == kTT || process == kTT_Embedded ) {
+      processSF_inclusive = 0.96; // CV: TTbar scale-factor obtained from emu sideband, provided by Valentina
+      processSF_nobtag    = 0.96;
+      processSF_btag      = 0.96;
+    } 
+    if ( process == kW ) {
+      processSF_inclusive = 0.73; // CV: W+jets scale-factor provided by Aram
+      processSF_nobtag    = 0.73;
+      processSF_btag      = 1.50;
+    }
+    //---------------------------------------------------------------------------
 
     histManager_inclusive.fillHistograms(
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
@@ -404,7 +482,7 @@ int main(int argc, char* argv[])
       bjet1Pt, bjet1Eta, bjet1Phi, 
       bjet2Pt, bjet2Eta, bjet2Phi, 
       met, numVertices, 
-      evtWeight);
+      evtWeight*processSF_inclusive);
     if ( nbJets == 0 ) histManager_nobtag.fillHistograms(
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
       tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2rawMVA, tau2IsoPtSum,
@@ -415,8 +493,8 @@ int main(int argc, char* argv[])
       bjet1Pt, bjet1Eta, bjet1Phi, 
       bjet2Pt, bjet2Eta, bjet2Phi, 
       met, numVertices, 
-      evtWeight);
-    else if ( nbJets == 1 ) histManager_btag.fillHistograms(
+      evtWeight*processSF_nobtag);
+    else if ( nbJets == 1 && nJets <= 1 ) histManager_btag.fillHistograms(
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
       tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2rawMVA, tau2IsoPtSum,
       dPhi, dEta, dR, 
@@ -426,10 +504,12 @@ int main(int argc, char* argv[])
       bjet1Pt, bjet1Eta, bjet1Phi, 
       bjet2Pt, bjet2Eta, bjet2Phi, 
       met, numVertices, 
-      evtWeight);
+      evtWeight*processSF_btag);
 
     ++selectedEntries;
   }
+
+  std::cout << "num. Entries = " << numEntries << ": analyzed = " << analyzedEntries << ", selected = " << selectedEntries << std::endl;
 
   delete tau1Selection;
   delete tau2Selection;

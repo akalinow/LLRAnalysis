@@ -25,6 +25,8 @@
 #include "TPRegexp.h"
 #include "TDirectory.h"
 #include "TList.h"
+#include "TKey.h"
+#include "TObject.h"
 
 #include <iostream>
 #include <string>
@@ -37,6 +39,12 @@ namespace
 {
   TDirectory* getDirectory(TFile* inputFile, const std::string& region, const std::string& category, const std::string& tauPtBin, bool enableException)
   {
+    //std::cout << "<getDirectory>:" << std::endl;
+    //std::cout << " inputFile = " << inputFile->GetName() << std::endl;
+    //std::cout << " region = " << region << std::endl;
+    //std::cout << " category = " << category << std::endl;
+    //std::cout << " tauPtBin = " << tauPtBin << std::endl;
+    //std::cout << " enableException = " << enableException << std::endl;
     std::string dirName = Form("tauTau_%s_%s/%s", region.data(), category.data(), tauPtBin.data());
     TDirectory* dir = dynamic_cast<TDirectory*>(inputFile->Get(dirName.data()));
     if ( enableException && !dir )
@@ -74,7 +82,14 @@ namespace
   void copyHistogram(TDirectory* dir_input, const std::string& process, const std::string& histogramName_input, 
 		     const std::string& histogramName_output, const std::string& central_or_shift, bool enableException)
   {
-    std::string histogramName_input_full = histogramName_input;
+    //std::cout << "<copyHistogram>:" << std::endl;
+    //std::cout << " dir_input = " << dir_input->GetName() << std::endl;
+    //std::cout << " process = " << process << std::endl;
+    //std::cout << " histogramName_input = " << histogramName_input << std::endl;
+    //std::cout << " histogramName_output = " << histogramName_output << std::endl;
+    //std::cout << " central_or_shift = " << central_or_shift << std::endl;
+    //std::cout << " enableException = " << enableException << std::endl;
+    std::string histogramName_input_full = process;
     if ( !(central_or_shift == "" || central_or_shift == "central") ) histogramName_input_full.append("_").append(central_or_shift);
     histogramName_input_full.append("_").append(histogramName_input);
     TH1* histogram_input = dynamic_cast<TH1*>(dir_input->Get(histogramName_input_full.data()));
@@ -92,6 +107,12 @@ namespace
   
   TH1* getHistogram(TDirectory* dir, const std::string& process, const std::string& histogramName, const std::string& central_or_shift, bool enableException)
   {
+    //std::cout << "<getHistogram>:" << std::endl;
+    //std::cout << " dir = " << dir->GetName() << std::endl;
+    //std::cout << " process = " << process << std::endl;
+    //std::cout << " histogramName = " << histogramName << std::endl;
+    //std::cout << " central_or_shift = " << central_or_shift << std::endl;
+    //std::cout << " enableException = " << enableException << std::endl;
     std::string histogramName_full = Form("%s/%s", process.data(), process.data());
     if ( !(central_or_shift == "" || central_or_shift == "central") ) histogramName_full.append("_").append(central_or_shift);
     histogramName_full.append("_").append(histogramName);
@@ -138,8 +159,9 @@ int main(int argc, char* argv[])
 
   std::string processData = cfgPrepareTauTauDatacards.getParameter<std::string>("processData");
   std::string processZTT = cfgPrepareTauTauDatacards.getParameter<std::string>("processZTT");
-  std::string processZTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("");
-  std::string processTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("");
+  std::string processZTTmc = cfgPrepareTauTauDatacards.getParameter<std::string>("processZTTmc");
+  std::string processZTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("processZTT_Embedded");
+  std::string processTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("processTT_Embedded");
     
   std::string processQCD = cfgPrepareTauTauDatacards.getParameter<std::string>("processQCD");
   vstring processesToSubtract = cfgPrepareTauTauDatacards.getParameter<vstring>("processesToSubtract");
@@ -178,10 +200,11 @@ int main(int argc, char* argv[])
       assert(dir);
 
       // copy histograms that do not require modifications
-      TList* list = dir->GetList();
+      TList* list = dir->GetListOfKeys();
       TIter next(list);
-      TObject* subdir_object = 0;
-      while ( (subdir_object = dynamic_cast<TObject*>(next())) ) {
+      TKey* key = 0;
+      while ( (key = dynamic_cast<TKey*>(next())) ) {
+        TObject* subdir_object = key->ReadObj();
 	TDirectory* subdir = dynamic_cast<TDirectory*>(subdir_object);
 	if ( !subdir ) continue;
 	bool isToCopy = false;
@@ -202,21 +225,21 @@ int main(int argc, char* argv[])
 	  }
 	}
       }
-      
+
       // compute shape templates for Z -> tautau
       TDirectory* dir_inclusive = getDirectory(inputFile, signalRegion, category_inclusive, *tauPtBin, true);
       assert(dir_inclusive);
       for ( std::map<std::string, std::string>::const_iterator histogramToCopy = histogramMapping.begin();
 	    histogramToCopy != histogramMapping.end(); ++histogramToCopy ) {
-	TH1* histogramZTT_inclusive = getHistogram(dir_inclusive, processZTT, "EventCounter", "central", true);
-	assert(histogramZTT_inclusive);
+	TH1* histogramZTTmc_inclusive = getHistogram(dir_inclusive, processZTTmc, "EventCounter", "central", true);
+	assert(histogramZTTmc_inclusive);
 	TH1* histogramZTT_Embedded_inclusive = getHistogram(dir_inclusive, processZTT_Embedded, "EventCounter", "central", true);
 	assert(histogramZTT_Embedded_inclusive);
 	TH1* histogramTT_Embedded_inclusive = getHistogram(dir_inclusive, processTT_Embedded, "EventCounter", "central", true);
 	assert(histogramTT_Embedded_inclusive);
 
-	double sfZTTfromEmbedded = (histogramZTT_inclusive->Integral() - histogramTT_Embedded_inclusive->Integral())/histogramZTT_inclusive->Integral();
-	
+	double sfZTTfromEmbedded = histogramZTTmc_inclusive->Integral()/(histogramZTT_Embedded_inclusive->Integral() - histogramTT_Embedded_inclusive->Integral());
+
 	for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 	      central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
 	  TH1* histogramZTT_Embedded = getHistogram(dir, processZTT_Embedded, histogramToCopy->first, *central_or_shift, false);
@@ -242,7 +265,7 @@ int main(int argc, char* argv[])
 	    histogramToCopy != histogramMapping.end(); ++histogramToCopy ) {
 	for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 	      central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
-	  TH1* histogramData = getHistogram(dir, processData, histogramToCopy->first, *central_or_shift, true);
+	  TH1* histogramData = getHistogram(dir, processData, histogramToCopy->first, "central", true);
 	  assert(histogramData);
 
 	  std::vector<TH1*> histogramsToSubtract;

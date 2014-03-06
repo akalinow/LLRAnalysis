@@ -19,7 +19,8 @@ samplesToAnalyze = [
     # CV: leave empty in order to submit jobs for all samples
     ##"WJetsExt"
     ##'DY2JetsExt'
-    'HiggsSUSYBB300v2'
+    ##'HiggsSUSYBB300v2'
+    'HiggsVH125'
 ]
 
 #--------------------------------------------------------------------------------
