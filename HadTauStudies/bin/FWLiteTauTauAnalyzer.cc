@@ -61,6 +61,11 @@ edm::ParameterSet makeHistManagerConfig(const std::string& process, const std::s
   return cfg;
 }
 
+bool contains(const std::string& fullstring, const std::string& substring)
+{
+  return (fullstring.find(substring) != std::string::npos);
+}
+
 int main(int argc, char* argv[]) 
 {
 //--- parse command-line arguments
@@ -89,10 +94,10 @@ int main(int argc, char* argv[])
   std::string process_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("process");
   int process = -1;
   if      ( process_string == "data_obs"     ) process = kData;
-  else if ( (process_string.find("ggH") != std::string::npos && process_string.find("ggH_SM125") == std::string::npos) || process_string.find("bbH") != std::string::npos ) process = kSignal;
-  else if ( process_string.find("ggH_SM125") != std::string::npos || process_string.find("qqH_SM125") != std::string::npos ) process = kSM_Higgs;
+  else if ( (contains(process_string, "ggH") || contains(process_string, "bbH")) && !contains(process_string, "_SM125") ) process = kSignal;
+  else if ( contains(process_string, "ggH_SM125") || contains(process_string, "qqH_SM125") || contains(process_string, "VH_SM125") ) process = kSM_Higgs;
   else if ( process_string == "ZTTmc"        ) process = kZTTmc;
-  else if ( process_string == "ZL"          ) process = kZL;
+  else if ( process_string == "ZL"           ) process = kZL;
   else if ( process_string == "ZJ"           ) process = kZJ;
   else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
   else if ( process_string == "W"            ) process = kW;
@@ -143,23 +148,33 @@ int main(int argc, char* argv[])
 
   bool applyTightBtag = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyTightBtag");
 
-  TF1* jetToTauFakeRateLooseToTightWeight_tau1 = 0;
-  TF1* jetToTauFakeRateLooseToTightWeight_tau2 = 0;
+  TF1* jetToTauFakeRateLooseToTightWeight     = 0;
+  TF1* jetToTauFakeRateLooseToTightShape_tau1 = 0;
+  double jetToTauFakeRateLooseToTightShapePow_tau1 = 0;
+  TF1* jetToTauFakeRateLooseToTightShape_tau2 = 0;
+  double jetToTauFakeRateLooseToTightShapePow_tau2 = 0;
   bool applyJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyJetToTauFakeRateLooseToTightWeight");
   if ( applyJetToTauFakeRateLooseToTightWeight ) {
     edm::ParameterSet cfgJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("jetToTauFakeRateLooseToTightWeight");
     std::string inputFileName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("inputFileName");
     TFile* inputFile = new TFile(inputFileName.data());
-    std::string fitFunctionName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionName_tau1");
-    TF1* fitFunction_tau1 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionName_tau1.data()));
-    if ( !fitFunction_tau1 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
-      << "Failed to load fitFunction = " << fitFunctionName_tau1 << " from file = " << inputFileName << " !!\n";
-    jetToTauFakeRateLooseToTightWeight_tau1 = (TF1*)fitFunction_tau1->Clone();
-    std::string fitFunctionName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionName_tau2");
-    TF1* fitFunction_tau2 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionName_tau2.data()));
-    if ( !fitFunction_tau2 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
-      << "Failed to load fitFunction = " << fitFunctionName_tau2 << " from file = " << inputFileName << " !!\n";
-    jetToTauFakeRateLooseToTightWeight_tau2 = (TF1*)fitFunction_tau2->Clone();
+    std::string fitFunctionNormName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
+    TF1* fitFunctionNorm = dynamic_cast<TF1*>(inputFile->Get(fitFunctionNormName.data()));
+    if ( !fitFunctionNorm ) throw cms::Exception("FWLiteTauTauAnalyzer") 
+      << "Failed to load fitFunction = " << fitFunctionNormName << " from file = " << inputFileName << " !!\n";
+    jetToTauFakeRateLooseToTightWeight = (TF1*)fitFunctionNorm->Clone();
+    std::string fitFunctionShapeName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1");
+    TF1* fitFunctionShape_tau1 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionShapeName_tau1.data()));
+    if ( !fitFunctionShape_tau1 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
+      << "Failed to load fitFunction = " << fitFunctionShapeName_tau1 << " from file = " << inputFileName << " !!\n";
+    jetToTauFakeRateLooseToTightShape_tau1 = (TF1*)fitFunctionShape_tau1->Clone();
+    jetToTauFakeRateLooseToTightShapePow_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau1");
+    std::string fitFunctionShapeName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2");
+    TF1* fitFunctionShape_tau2 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionShapeName_tau2.data()));
+    if ( !fitFunctionShape_tau2 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
+      << "Failed to load fitFunction = " << fitFunctionShapeName_tau2 << " from file = " << inputFileName << " !!\n";
+    jetToTauFakeRateLooseToTightShape_tau2 = (TF1*)fitFunctionShape_tau2->Clone();
+    jetToTauFakeRateLooseToTightShapePow_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau2");
     delete inputFile;
   }
 
@@ -313,20 +328,20 @@ int main(int argc, char* argv[])
   Int_t isZtt, isZttj, isZttl, isZj, isZee, isZmm;
   inputTree->SetBranchAddress("isZtt", &isZtt);
   inputTree->SetBranchAddress("isZttj", &isZttj);
-  inputTree->SetBranchAddress("isZttl", &isZttl);
+  //inputTree->SetBranchAddress("isZttl", &isZttl);
   inputTree->SetBranchAddress("isZj", &isZj);
   inputTree->SetBranchAddress("isZee", &isZee);
   inputTree->SetBranchAddress("isZmm", &isZmm);
   Int_t l1isGenHadTau, l1isGenMuon, l1isGenElectron, l1isGenJet;
-  inputTree->SetBranchAddress("l1isGenHadTau", &l1isGenHadTau);
-  inputTree->SetBranchAddress("l1isGenMuon", &l1isGenMuon);
-  inputTree->SetBranchAddress("l1isGenElectron", &l1isGenElectron);
-  inputTree->SetBranchAddress("l1isGenJet", &l1isGenJet);
+  //inputTree->SetBranchAddress("l1isGenHadTau", &l1isGenHadTau);
+  //inputTree->SetBranchAddress("l1isGenMuon", &l1isGenMuon);
+  //inputTree->SetBranchAddress("l1isGenElectron", &l1isGenElectron);
+  //inputTree->SetBranchAddress("l1isGenJet", &l1isGenJet);
   Int_t l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet;
-  inputTree->SetBranchAddress("l2isGenHadTau", &l2isGenHadTau);
-  inputTree->SetBranchAddress("l2isGenMuon", &l2isGenMuon);
-  inputTree->SetBranchAddress("l2isGenElectron", &l2isGenElectron);
-  inputTree->SetBranchAddress("l2isGenJet", &l2isGenJet);
+  //inputTree->SetBranchAddress("l2isGenHadTau", &l2isGenHadTau);
+  //inputTree->SetBranchAddress("l2isGenMuon", &l2isGenMuon);
+  //inputTree->SetBranchAddress("l2isGenElectron", &l2isGenElectron);
+  //inputTree->SetBranchAddress("l2isGenJet", &l2isGenJet);
   Int_t isElectron, isMuon;
   inputTree->SetBranchAddress("isElectron", &isElectron);
   inputTree->SetBranchAddress("isMuon", &isMuon);
@@ -441,18 +456,19 @@ int main(int argc, char* argv[])
 	evtWeight *= lumiScale;
 	evtWeight *= pileupWeight;
 	if ( applyJetToTauFakeRateCorrection ) {
-	  if ( l1isGenJet ) evtWeight *= jetToTauFakeRateCorrection->Eval(tau1Pt);
-	  if ( l2isGenJet ) evtWeight *= jetToTauFakeRateCorrection->Eval(tau2Pt);
+	  /* if ( l1isGenJet ) */ evtWeight *= jetToTauFakeRateCorrection->Eval(tau1Pt);
+	  /* if ( l2isGenJet ) */ evtWeight *= jetToTauFakeRateCorrection->Eval(tau2Pt);
 	}
-      }
-      if ( applyJetToTauFakeRateLooseToTightWeight ) {
-	evtWeight *= jetToTauFakeRateLooseToTightWeight_tau1->Eval(tau1Pt);
-	evtWeight *= jetToTauFakeRateLooseToTightWeight_tau2->Eval(tau2Pt);
       }
       for ( std::vector<weightEntryType*>::iterator addWeight = addWeights.begin();
 	    addWeight != addWeights.end(); ++addWeight ) {
 	evtWeight *= (*addWeight)->value_;
       }
+    }
+    if ( applyJetToTauFakeRateLooseToTightWeight ) {
+      evtWeight *= jetToTauFakeRateLooseToTightWeight->Eval(1.);
+      evtWeight *= TMath::Power(jetToTauFakeRateLooseToTightShape_tau1->Eval(tau1Pt), jetToTauFakeRateLooseToTightShapePow_tau1);
+      evtWeight *= TMath::Power(jetToTauFakeRateLooseToTightShape_tau2->Eval(tau2Pt), jetToTauFakeRateLooseToTightShapePow_tau2);
     }
 
     //---------------------------------------------------------------------------

@@ -131,7 +131,10 @@ double compIntegral(TH1* histogram, bool includeUnderflowBin, bool includeOverfl
 
 void makeBinContentsPositive(TH1* histogram)
 {
-  int integral_original = compIntegral(histogram, true, true);
+  std::cout << "<makeBinContentsPositive>:" << std::endl;
+  std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
+  double integral_original = compIntegral(histogram, true, true);
+  std::cout << " integral_original = " << integral_original << std::endl;
   int numBins = histogram->GetNbinsX();
   for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
     double binContent_original = histogram->GetBinContent(iBin);
@@ -140,10 +143,18 @@ void makeBinContentsPositive(TH1* histogram)
       double binContent_modified = 0.;
       double binError2_modified = binError2_original + square(binContent_original - binContent_modified);
       assert(binError2_modified >= 0.);
+      std::cout << "bin #" << iBin << ": binContent = " << binContent_original << " +/- " << TMath::Sqrt(binError2_original) 
+		<< " --> setting it to binContent = " << binContent_modified << " +/- " << TMath::Sqrt(binError2_modified) << std::endl;
       histogram->SetBinContent(iBin, binContent_modified);
       histogram->SetBinError(iBin, TMath::Sqrt(binError2_modified));
     }
   }
-  int integral_modified = compIntegral(histogram, true, true);
-  if ( integral_modified != 0. ) histogram->Scale(integral_original/integral_modified);
+  double integral_modified = compIntegral(histogram, true, true);
+  std::cout << " integral_modified = " << integral_modified << std::endl;
+  if ( integral_modified != 0. ) {
+    double sf = integral_original/integral_modified;
+    std::cout << "--> scaling histogram by factor = " << sf << std::endl;
+    histogram->Scale(sf);
+  }
+  std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
 }

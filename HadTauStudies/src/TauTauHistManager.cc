@@ -44,12 +44,27 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramTau2IsoDiscrS_ = book1D(dir, "tau2IsoDiscrS", "#tau_{2} MVA output", 105, -0.005, 1.045);
   histogramTau2IsoDiscrL_ = book1D(dir, "tau2IsoDiscrL", "#tau_{2} Isolation", 101, -0.05, 10.05);
 
-  const int numMassBins = 31;
-  float massBinning[numMassBins + 1] = { 
+  const int numMassBins_inclusive_and_nobtag = 31;
+  float massBinning_inclusive_and_nobtag[numMassBins_inclusive_and_nobtag + 1] = { 
     0., 10., 20., 30., 40., 50., 60., 70., 80., 90., 100., 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 
     225., 250., 275., 300., 325., 350., 400., 500., 700., 1000., 1500.
   };
-
+  const int numMassBins_btag = 18;
+  float massBinning_btag[numMassBins_btag + 1] = { 
+    0., 20., 40., 60., 80., 100., 120., 140., 160., 180., 200.,
+    250., 300., 350., 400., 500., 700., 1000., 1500.
+  };
+  int numMassBins = -1;
+  float* massBinning = 0;
+  if ( category_.find("_inclusive") != std::string::npos || category_.find("_nobtag") != std::string::npos ) {
+    numMassBins = numMassBins_inclusive_and_nobtag;
+    massBinning = massBinning_inclusive_and_nobtag;
+  } else if ( category_.find("_btag") != std::string::npos ) {
+    numMassBins = numMassBins_btag;
+    massBinning = massBinning_btag;
+  } else throw cms::Exception("TauTauHistManager") 
+      << "Invalid Configuration parameter 'category' = " << category_ << " !!\n";
+  
   histogramVisMassS_      = book1D(dir, "visMassS",      "M_{vis} / GeV", numMassBins, massBinning);
   histogramVisMassL_      = book1D(dir, "visMassL",      "M_{vis} / GeV", 400, 0., 2000.);
   histogramSVfitMassS_    = book1D(dir, "svFitMassS",    "M_{#tau#tau} / GeV", numMassBins, massBinning);
