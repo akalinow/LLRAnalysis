@@ -41,14 +41,19 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
         inputFileName = cms.string(""),
         fitFunctionNormName = cms.string("jetToTauFakeRate/inclusive/fitFunctionNorm_SSisoLooseBtag_div_SSantiisoLooseBtag"),
         fitFunctionShapeName_tau1 = cms.string("jetToTauFakeRate/inclusive/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSantiisoLooseBtag"),
-        fitFunctionShapePower_tau1 = cms.double(0.5),
-        fitFunctionShapeName_tau2 = cms.string("jetToTauFakeRate/inclusive/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSantiisoLooseBtag"),
-        fitFunctionShapePower_tau2 = cms.double(0.5)
+        ##fitFunctionShapePower_tau1 = cms.double(0.5),
+        ##fitFunctionShapeName_tau2 = cms.string("jetToTauFakeRate/inclusive/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSantiisoLooseBtag"),
+        ##fitFunctionShapePower_tau2 = cms.double(0.5)
+        fitFunctionShapePower_tau1 = cms.double(1.0),
+        fitFunctionShapeName_tau2 = cms.string(""),
+        fitFunctionShapePower_tau2 = cms.double(0.)
     ),
     applyJetToTauFakeRateCorrection = cms.bool(False), # CV: data/MC correction for for jet -> tau fake-rate
     jetToTauFakeRateCorrection = cms.string("1.0"),
 
     lumiScale = cms.double(1.),
     stitchingWeights = cms.vdouble(),
-    addWeights = cms.vstring()
+    addWeights = cms.vstring(),
+
+    selEventsFileName = cms.string("")
 )

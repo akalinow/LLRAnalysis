@@ -164,7 +164,8 @@ int main(int argc, char* argv[])
   std::string processZTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("processZTT_Embedded");
   std::string processTT_Embedded = cfgPrepareTauTauDatacards.getParameter<std::string>("processTT_Embedded");
 
-  std::string qcdRegion = cfgPrepareTauTauDatacards.getParameter<std::string>("qcdRegion");
+  std::string qcdRegion_norm = cfgPrepareTauTauDatacards.getParameter<std::string>("qcdRegion_norm");
+  std::string qcdRegion_shape = cfgPrepareTauTauDatacards.getParameter<std::string>("qcdRegion_shape");
   std::string processQCD = cfgPrepareTauTauDatacards.getParameter<std::string>("processQCD");
   vstring processesToSubtract = cfgPrepareTauTauDatacards.getParameter<vstring>("processesToSubtract");
 
@@ -281,25 +282,41 @@ int main(int argc, char* argv[])
 
       // compute shape templates for QCD
       std::cout << "computing shape templates for QCD" << std::endl;
-      TDirectory* dir_qcdRegion = getDirectory(inputFile, qcdRegion, *category, *tauPtBin, true);
-      assert(dir_qcdRegion);
+      TDirectory* dir_qcdRegion_norm = getDirectory(inputFile, qcdRegion_norm, *category, *tauPtBin, true);
+      assert(dir_qcdRegion_norm);
+      TDirectory* dir_qcdRegion_shape = getDirectory(inputFile, qcdRegion_shape, *category, *tauPtBin, true);
+      assert(dir_qcdRegion_shape);
       for ( std::map<std::string, std::string>::const_iterator histogramToCopy = histogramMapping.begin();
 	    histogramToCopy != histogramMapping.end(); ++histogramToCopy ) {
 	for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 	      central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
 	  std::cout << " histogramToCopy = " << histogramToCopy->first << ", central_or_shift = " << (*central_or_shift) << std::endl;
 
-	  TH1* histogramData = getHistogram(dir_qcdRegion, processData, histogramToCopy->first, "central", true);
-	  assert(histogramData);
-	  std::cout << "integral(Data) = " << histogramData->Integral() << std::endl;
+	  TH1* histogramData_norm = getHistogram(dir_qcdRegion_norm, processData, histogramToCopy->first, "central", true);
+	  assert(histogramData_norm);
+	  std::cout << "integral(Data_norm) = " << histogramData_norm->Integral() << std::endl;
 
-	  std::vector<TH1*> histogramsToSubtract;
+	  std::vector<TH1*> histogramsToSubtract_norm;
 	  for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
 		processToSubtract != processesToSubtract.end(); ++processToSubtract ) {
-	    TH1* histogramToSubtract = getHistogram(dir_qcdRegion, *processToSubtract, histogramToCopy->first, *central_or_shift, false);
+	    TH1* histogramToSubtract = getHistogram(dir_qcdRegion_norm, *processToSubtract, histogramToCopy->first, *central_or_shift, false);
 	    if ( histogramToSubtract ) {
 	      std::cout << "integral(" << (*processToSubtract) << ") = " << histogramToSubtract->Integral() << std::endl;
-	      histogramsToSubtract.push_back(histogramToSubtract);
+	      histogramsToSubtract_norm.push_back(histogramToSubtract);
+	    }
+	  }
+
+	  TH1* histogramData_shape = getHistogram(dir_qcdRegion_shape, processData, histogramToCopy->first, "central", true);
+	  assert(histogramData_shape);
+	  std::cout << "integral(Data_shape) = " << histogramData_shape->Integral() << std::endl;
+
+	  std::vector<TH1*> histogramsToSubtract_shape;
+	  for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
+		processToSubtract != processesToSubtract.end(); ++processToSubtract ) {
+	    TH1* histogramToSubtract = getHistogram(dir_qcdRegion_shape, *processToSubtract, histogramToCopy->first, *central_or_shift, false);
+	    if ( histogramToSubtract ) {
+	      std::cout << "integral(" << (*processToSubtract) << ") = " << histogramToSubtract->Integral() << std::endl;
+	      histogramsToSubtract_shape.push_back(histogramToSubtract);
 	    }
 	  }
 
@@ -310,9 +327,14 @@ int main(int argc, char* argv[])
 	  std::string histogramNameQCD = processQCD;
 	  if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) histogramNameQCD.append("_").append(*central_or_shift);
 	  if ( histogramToCopy->second != "" ) histogramNameQCD.append("_").append(histogramToCopy->second);
-	  TH1* histogramQCD = subtractHistograms(histogramNameQCD, histogramData, histogramsToSubtract);
-	  std::cout << "integral(QCD) = " << histogramQCD->Integral() << std::endl;
-	  makeBinContentsPositive(histogramQCD);	  
+	  TH1* histogramQCD_norm = subtractHistograms(Form("%s_norm", histogramNameQCD.data()), histogramData_norm, histogramsToSubtract_norm);
+	  std::cout << "integral(QCD_norm) = " << histogramQCD_norm->Integral() << std::endl;
+	  TH1* histogramQCD_shape = subtractHistograms(histogramNameQCD.data(), histogramData_shape, histogramsToSubtract_shape);
+	  std::cout << "integral(QCD_shape) = " << histogramQCD_shape->Integral() << std::endl;
+	  double sfQCD_shape = ( histogramQCD_shape->Integral() > 0. ) ? 
+	    (histogramQCD_norm->Integral()/histogramQCD_shape->Integral()) : 1.;
+	  histogramQCD_shape->Scale(sfQCD_shape);
+	  makeBinContentsPositive(histogramQCD_shape);	  
 	}
       }
     }

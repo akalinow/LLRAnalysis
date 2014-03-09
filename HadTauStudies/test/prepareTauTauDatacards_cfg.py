@@ -23,7 +23,7 @@ process.prepareTauTauDatacards = cms.PSet(
 
     processesToCopy = cms.vstring(
         "data_obs",
-        "ZLL",
+        "ZL",
         "ZJ",
         "W",
         "ggH_SM[0-9]+",
@@ -40,11 +40,12 @@ process.prepareTauTauDatacards = cms.PSet(
     processZTT_Embedded = cms.string("ZTT_Embedded"),
     processTT_Embedded = cms.string("TT_Embedded"),
 
-    qcdRegion = cms.string("OSantiisoFRwTightBtag"),
+    qcdRegion_norm = cms.string("OSantiisoFRwTightBtag"),
+    qcdRegion_shape = cms.string("OSantiisoFRwLooseBtag"),
     processQCD = cms.string("QCD"),
     processesToSubtract = cms.vstring(
         "ZTTmc",
-        "ZLL",
+        "ZL",
         "ZJ",
         "W",
         "TT",

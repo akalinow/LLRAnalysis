@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jan10'
 
-version = "v1_5"
+version = "v1_6"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_7/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -138,26 +138,53 @@ def makeJetToTauFakeRateCorrection(par0, par1, par2, par3, x0 = 163.7):
 
 discriminators = {
     'HPScombIso3HitsMedium' : {
-        'tau1Selection'              : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'              : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_relaxed'      : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
-        'tau2Selection_relaxed'      : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2) # taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
+        'tau1Selection'                   : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'                   : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_relaxed_inclusive' : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
+        'tau1Selection_relaxed_nobtag'    : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
+        'tau1Selection_relaxed_btag'      : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",        
+        'tau2Selection_relaxed_inclusive' : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_nobtag'    : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_btag'      : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        # jetToTauFakeRateCorrection taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
+        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
     },
-##    'MVAwLToldDMsTight' : {
-##        'tau1Selection'              : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-##        'tau2Selection'              : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##        'tau1Selection_relaxed'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-##        'tau2Selection_relaxed'      : "l2VLooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2) # taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
-##    },
-##    'MVAwLToldDMsVTight' : {
-##        'tau1Selection'              : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-##        'tau2Selection'              : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##        'tau1Selection_relaxed'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-##        'tau2Selection_relaxed'      : "l2VLooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2) # CV: parameters obtained for MVAwLToldDMsTight        
-##    }
+   'MVAwLToldDMsTight' : {
+        'tau1Selection'                   : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'                   : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        ##'tau1Selection_relaxed_inclusive' : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        ##'tau1Selection_relaxed_nobtag'    : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        ##'tau1Selection_relaxed_btag'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_inclusive' : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_nobtag'    : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_btag'      : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_inclusive' : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_nobtag'    : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_btag'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
+        'tau2Selection_relaxed_inclusive' : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_nobtag'    : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_btag'      : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
+        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+   },
+   'MVAwLToldDMsVTight' : {
+        'tau1Selection'                   : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'                   : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        ##'tau1Selection_relaxed_inclusive' : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        ##'tau1Selection_relaxed_nobtag'    : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        ##'tau1Selection_relaxed_btag'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_inclusive' : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_nobtag'    : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        ##'tau2Selection_relaxed_btag'      : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_inclusive' : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_nobtag'    : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+        'tau1Selection_relaxed_btag'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+        'tau2Selection_relaxed_inclusive' : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_nobtag'    : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau2Selection_relaxed_btag'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight   
+        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+   }
 }
 
 central_or_shifts = {
@@ -190,12 +217,12 @@ central_or_shifts = {
         'addWeights_extension'    : [ "topPtWeightDown" ]
     },
     'CMS_htt_WShape_tautau_8TeVUp' : {
-        'inputFilePath_extension'    : "nom",
-        'addWeights_extension'       : []
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
     },
     'CMS_htt_WShape_tautau_8TeVDown' : {
-        'inputFilePath_extension'    : "nom",
-        'addWeights_extension'       : []
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
     }
 }
 
@@ -207,10 +234,10 @@ regions.extend(qcdRegions)
 
 tauPtBins = [
     (45.,-1.), # CV: run for comparison with unbinned analysis HIG-13-021
-##    (45.,60.), # CV: used in no-B-tag and B-tag category
-##    (60.,80.), # CV: used in no-B-tag category
-##    (80.,-1.), # CV: used in no-B-tag category
-##    (60.,-1.)  # CV: used in B-tag category
+    (45.,60.), # CV: used in no-B-tag and B-tag category
+    (60.,80.), # CV: used in no-B-tag category
+    (80.,-1.), # CV: used in no-B-tag category
+    (60.,-1.)  # CV: used in B-tag category
 ]
 
 execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])
@@ -342,28 +369,32 @@ for sample in samples.keys():
     print "processing sample = %s" % sample
     for process in samples[sample]['processes']:
         for region in regions:
+            if region in qcdRegions and (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
+                continue
             central_or_shifts_region = copy.deepcopy(central_or_shifts)
-            if region.find("antiisoFRw") != -1:
+            if region.find("antiisoFRw") != -1 and sample.find("HiggsSUSYGluGlu") == -1 and sample.find("HiggsSUSYBB") == -1:
                 central_or_shifts_region.update({
                     'CMS_htt_QCDfrNorm_tautau_8TeVUp' : {
-                        'inputFilePath_extension'   : "nom",
-                        'addWeights_extension'      : [],
-                        'fitFunctionNormName'       : "jetToTauFakeRate/inclusive/fitFunctionNormUp_SSisoLooseBtag_div_SSantiisoLooseBtag"
+                        'inputFilePath_extension'    : "nom",
+                        'addWeights_extension'       : [],
+                        'fitFunctionNormName'        : "jetToTauFakeRate/inclusive/fitFunctionNormUp_SSisoLooseBtag_div_SSantiisoLooseBtag"
                     },
                     'CMS_htt_QCDfrNorm_tautau_8TeVDown' : {
-                        'inputFilePath_extension'   : "nom",
-                        'addWeights_extension'      : [] ,
-                        'fitFunctionNormName'       : "jetToTauFakeRate/inclusive/fitFunctionNormDown_SSisoLooseBtag_div_SSantiisoLooseBtag"
+                        'inputFilePath_extension'    : "nom",
+                        'addWeights_extension'       : [] ,
+                        'fitFunctionNormName'        : "jetToTauFakeRate/inclusive/fitFunctionNormDown_SSisoLooseBtag_div_SSantiisoLooseBtag"
                     },
                     'CMS_htt_QCDfrShape_tautau_8TeVUp' : {
-                        'inputFilePath_extension'   : "nom",
-                        'addWeights_extension'      : [],
-                        'fitFunctionShapePower_tau1' : 1.0,
-                        'fitFunctionShapePower_tau2' : 1.0
+                        'inputFilePath_extension'    : "nom",
+                        'addWeights_extension'       : [],
+                        ##'fitFunctionShapePower_tau1' : 1.0,
+                        ##'fitFunctionShapePower_tau2' : 1.0
+                        'fitFunctionShapePower_tau1' : 2.0,
+                        'fitFunctionShapePower_tau2' : 0.
                     },
                     'CMS_htt_QCDfrShape_tautau_8TeVDown' : {
-                        'inputFilePath_extension'   : "nom",
-                        'addWeights_extension'      : [],
+                        'inputFilePath_extension'    : "nom",
+                        'addWeights_extension'       : [],
                         'fitFunctionShapePower_tau1' : 0.,
                         'fitFunctionShapePower_tau2' : 0.
                     }})
@@ -382,7 +413,7 @@ for sample in samples.keys():
                     inputFileNames.extend(inputFileNames_sample)
                 if len(inputFileNames) == 0:
                     raise ValueError("Failed to find input files for sample = '%s' !!" % sample)
-                if central_or_shift == "":
+                if central_or_shift == "" or central_or_shift == "central":
                     print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
 
                 for tauPtBin in tauPtBins:
@@ -440,17 +471,29 @@ for sample in samples.keys():
                         tau1Selection = None
                         tau2Selection = None
                         if region.find("OSiso") != -1 or region.find("SSiso") != -1:
-                            tau1Selection = discriminators[discriminator]['tau1Selection']
-                            tau2Selection = discriminators[discriminator]['tau2Selection']
+                            tau1Selection_inclusive = discriminators[discriminator]['tau1Selection']
+                            tau1Selection_nobtag    = discriminators[discriminator]['tau1Selection']
+                            tau1Selection_btag      = discriminators[discriminator]['tau1Selection']
+                            tau2Selection_inclusive = discriminators[discriminator]['tau2Selection']
+                            tau2Selection_nobtag    = discriminators[discriminator]['tau2Selection']
+                            tau2Selection_btag      = discriminators[discriminator]['tau2Selection']
                         elif region.find("OSantiiso") != -1 or region.find("SSantiiso") != -1:
-                            tau1Selection = discriminators[discriminator]['tau1Selection_relaxed']
-                            tau2Selection = discriminators[discriminator]['tau2Selection_relaxed']
+                            tau1Selection_inclusive = discriminators[discriminator]['tau1Selection_relaxed_inclusive']
+                            tau1Selection_nobtag    = discriminators[discriminator]['tau1Selection_relaxed_nobtag']
+                            tau1Selection_btag      = discriminators[discriminator]['tau1Selection_relaxed_btag']
+                            tau2Selection_inclusive = discriminators[discriminator]['tau2Selection_relaxed_inclusive']
+                            tau2Selection_nobtag    = discriminators[discriminator]['tau2Selection_relaxed_nobtag']
+                            tau2Selection_btag      = discriminators[discriminator]['tau2Selection_relaxed_btag']
                         else:
                             raise ValueError("No tau selection defined for region = '%s' !!" % region)
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection = cms.string('%s')\n" % tau1Selection
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_inclusive = cms.string('%s')\n" % tau1Selection_inclusive
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_nobtag = cms.string('%s')\n" % tau1Selection_nobtag
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_btag = cms.string('%s')\n" % tau1Selection_btag
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMin = cms.double(45.)\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMax = cms.double(-1.)\n"
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection = cms.string('%s')\n" % tau2Selection
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_inclusive = cms.string('%s')\n" % tau2Selection_inclusive
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_nobtag = cms.string('%s')\n" % tau2Selection_nobtag
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_btag = cms.string('%s')\n" % tau2Selection_btag
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMin = cms.double(%1.0f)\n" % tauPtMin
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMax = cms.double(%1.0f)\n" % tauPtMax
                         if region.find("LooseBtag") != -1:
@@ -488,6 +531,9 @@ for sample in samples.keys():
                             addWeights.extend(samples[sample]['addWeights'])
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
+                        if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
+                            selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.selEventsFileName = cms.string('%s')\n" % selEventsFileName
                         cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
                                                                               (discriminator, sample, process, region, tauPtBin_label, central_or_shift)))
                         cfgFileName_modified = cfgFileName_modified.replace("__", "_")
@@ -524,6 +570,8 @@ for discriminator in discriminators.keys():
 		    if region in FWLiteTauTauAnalyzer_outputFileNames[sample][process][central_or_shift].keys():
                         for tauPtBin in FWLiteTauTauAnalyzer_outputFileNames[sample][process][central_or_shift][region].keys():
                             hadd_stage1_inputFileNames[discriminator][sample][process][region].append(FWLiteTauTauAnalyzer_outputFileNames[sample][process][central_or_shift][region][tauPtBin][discriminator])
+                if len(hadd_stage1_inputFileNames[discriminator][sample][process][region]) == 0:
+                    continue
 
                 outputFilePath_subdir = os.path.join(outputFilePath, discriminator, sample, process, region)
                 createFilePath_recursively(outputFilePath_subdir)
@@ -562,7 +610,10 @@ for discriminator in discriminators.keys():
                     
                 for region in regions:
                     if isRegionOfType(region, regionType):
-                        hadd_stage2_inputFileNames[discriminator][process][regionType].append(hadd_stage1_outputFileNames[discriminator][sample][process][region])
+                        if region in hadd_stage1_outputFileNames[discriminator][sample][process]:
+                            hadd_stage2_inputFileNames[discriminator][process][regionType].append(hadd_stage1_outputFileNames[discriminator][sample][process][region])
+                if len(hadd_stage2_inputFileNames[discriminator][process][regionType]) == 0:
+                    continue
 
                 outputFilePath_subdir = os.path.join(outputFilePath, discriminator)
                 createFilePath_recursively(outputFilePath_subdir)
@@ -589,8 +640,11 @@ for discriminator in discriminators.keys():
         hadd_stage3_inputFileNames[discriminator][regionType] = []
         for sample in samples.keys():
             for process in samples[sample]['processes']:
-                if not hadd_stage2_outputFileNames[discriminator][process][regionType] in hadd_stage3_inputFileNames[discriminator][regionType]:
+                if regionType in hadd_stage2_outputFileNames[discriminator][process].keys() and \
+                  not hadd_stage2_outputFileNames[discriminator][process][regionType] in hadd_stage3_inputFileNames[discriminator][regionType]:
                     hadd_stage3_inputFileNames[discriminator][regionType].append(hadd_stage2_outputFileNames[discriminator][process][regionType])
+        if len(hadd_stage3_inputFileNames[discriminator][regionType]) == 0:
+            continue
 
         outputFilePath_subdir = os.path.join(outputFilePath, discriminator)
         createFilePath_recursively(outputFilePath_subdir)

@@ -698,7 +698,7 @@ int main(int argc, char* argv[])
       ++idxPar;
     }    
     
-    std::string controlPlotFileName = TString(outputFile.file().data()).ReplaceAll(".root", "_controlPlot.png").Data();    
+    std::string controlPlotFileName = TString(outputFile.file().data()).ReplaceAll(".root", Form("%s_controlPlot.png", histogramToFit->data())).Data();    
     makeControlPlot(graphJetToTauFakeRate, avJetToTauFakeRate, avJetToTauFakeRateUp, avJetToTauFakeRateDown, 
 		    fitFunctionShape, fitFunctions_sysShifts, xMin, xMax, *histogramToFit, 1.e-1, 1.e+1, controlPlotFileName);
   }
