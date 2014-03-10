@@ -34,13 +34,23 @@ class TauESCorrector : public edm::EDProducer{
       pat::Tau aTau( (*taus)[i] );
 
       double shift = 1;
+//       //Summer13
+//       if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
+// 	shift = (1.015 +  0.001  * TMath::Min(TMath::Max(aTau.pt()-45.,0.),10.)); //1prong +pi0
+// 	shift *= 1.012; //New correction for Summer2013
+//       }
+//       else if((aTau.signalPFChargedHadrCands()).size()==3)
+// 	shift = (1.012 + 0.001 * TMath::Min(TMath::Max(aTau.pt()-32.,0.),18.)); //3 prongs
+      //Olivier TES
       if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
-	shift = (1.015 +  0.001  * TMath::Min(TMath::Max(aTau.pt()-45.,0.),10.)); //1prong +pi0
-	shift *= 1.012; //New correction for Summer2013
+	shift = 1.01; //New correction for Winter2013
+      }
+      else if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()==0){
+	shift = 1.01; //New correction for Winter2013
       }
       else if((aTau.signalPFChargedHadrCands()).size()==3)
-	shift = (1.012 + 0.001 * TMath::Min(TMath::Max(aTau.pt()-32.,0.),18.)); //3 prongs
-      
+	shift = 1.01; //New correction for Winter2013
+           
       //double scale = sqrt( aTau.energy()*shift*aTau.energy()*shift - aTau.mass()*aTau.mass() )/aTau.p();
       //math::XYZTLorentzVectorD p4S( aTau.px()*scale , aTau.py()*scale, aTau.pz()*scale, aTau.energy()*shift );
       math::XYZTLorentzVectorD p4S( aTau.px()*shift , aTau.py()*shift, aTau.pz()*shift, aTau.energy()*shift );
