@@ -73,6 +73,23 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   edm::InputTag genTausTag_;
   const  TransientTrackBuilder *transientTrackBuilder_;
 
+  std::string lastInputFileHiggsPtWeight_;
+  TFile* inputFileHiggsPtWeight_;
+  TH1* lutHiggsPtWeightNom_;
+  TH1* lutHiggsPtWeightUp_;
+  TH1* lutHiggsPtWeightDown_;
+
+  struct InputTagEntryType
+  {
+    InputTagEntryType(const std::string& branchName, const edm::InputTag& src)
+      : branchName_(branchName),
+	src_(src)
+    {}
+    ~InputTagEntryType() {}
+    std::string branchName_;
+    edm::InputTag src_;
+  };
+  std::vector<InputTagEntryType> evtWeightsToStore_;
 
   bool isMC_, isRhEmb_;
   bool verbose_;
@@ -294,6 +311,10 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float nPUVerticesM1_;
   float nPUVerticesP1_;
   float nPUtruth_;
+
+  float higgsPtWeightNom_ ;
+  float higgsPtWeightUp_ ;
+  float higgsPtWeightDown_ ;
 
   float mcPUweight_;
 
