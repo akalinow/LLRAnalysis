@@ -441,7 +441,8 @@ process.tauPtEtaIDAgMuLAgElec = cms.EDFilter( #apply AntiLep cuts
     )
 process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     "TauESCorrector",
-    tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec")
+    tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
+    genTaus = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     #verbose         = cms.bool(True)
     )
 if useLepTauPAT:

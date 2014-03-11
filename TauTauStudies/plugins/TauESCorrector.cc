@@ -6,6 +6,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
+#include "DataFormats/GeometryVector/interface/VectorUtil.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TMath.h"
 
@@ -16,6 +17,7 @@ class TauESCorrector : public edm::EDProducer{
 
   explicit TauESCorrector(const edm::ParameterSet& iConfig){
     tauTag_    = iConfig.getParameter<edm::InputTag>("tauTag");
+    genTausTag_        = iConfig.getParameter<edm::InputTag>("genTaus"); //generated taus
     verbose_   = iConfig.existsAs<bool>("verbose") ? iConfig.getParameter<bool>("verbose") : false;
 
     produces<pat::TauCollection>("");
@@ -28,12 +30,16 @@ class TauESCorrector : public edm::EDProducer{
     iEvent.getByLabel(tauTag_,tausHandle);
     const pat::TauCollection* taus = tausHandle.product();
 
+    edm::Handle<reco::GenJetCollection> tauGenJetsHandle;
+    iEvent.getByLabel(genTausTag_,tauGenJetsHandle);
+    const reco::GenJetCollection* tauGenJets = tauGenJetsHandle.product();
+
     std::auto_ptr< pat::TauCollection > RescaledTausColl( new pat::TauCollection() ) ;
 
     for(unsigned int i = 0; i < taus->size(); i++){
       pat::Tau aTau( (*taus)[i] );
 
-      double shift = 1;
+      double shift = 1.;
 //       //Summer13
 //       if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
 // 	shift = (1.015 +  0.001  * TMath::Min(TMath::Max(aTau.pt()-45.,0.),10.)); //1prong +pi0
@@ -42,14 +48,24 @@ class TauESCorrector : public edm::EDProducer{
 //       else if((aTau.signalPFChargedHadrCands()).size()==3)
 // 	shift = (1.012 + 0.001 * TMath::Min(TMath::Max(aTau.pt()-32.,0.),18.)); //3 prongs
       //Olivier TES
-      if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
-	shift = 1.01; //New correction for Winter2013
-      }
-      else if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()==0){
-	shift = 1.01; //New correction for Winter2013
-      }
-      else if((aTau.signalPFChargedHadrCands()).size()==3)
-	shift = 1.01; //New correction for Winter2013
+      
+      bool tauHadMatched = false;
+      for(unsigned int k = 0; k < tauGenJets->size(); k++)
+	{
+	  if( Geom::deltaR( (*tauGenJets)[k].p4(),aTau.p4() ) < 0.5 && (*tauGenJets)[k].p4().pt() > 8.0) tauHadMatched = true; //update to new prescription
+	}
+
+      if(tauHadMatched)
+	{
+	  if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
+	    shift = 1.01; //New correction for Winter2013
+	  }
+	  else if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()==0){
+	    shift = 1.01; //New correction for Winter2013
+	  }
+	  else if((aTau.signalPFChargedHadrCands()).size()==3)
+	    shift = 1.01; //New correction for Winter2013
+	}
            
       //double scale = sqrt( aTau.energy()*shift*aTau.energy()*shift - aTau.mass()*aTau.mass() )/aTau.p();
       //math::XYZTLorentzVectorD p4S( aTau.px()*scale , aTau.py()*scale, aTau.pz()*scale, aTau.energy()*shift );
@@ -72,6 +88,7 @@ class TauESCorrector : public edm::EDProducer{
 
 private: 
   edm::InputTag tauTag_;
+  edm::InputTag genTausTag_;
   bool verbose_;
 };
 
