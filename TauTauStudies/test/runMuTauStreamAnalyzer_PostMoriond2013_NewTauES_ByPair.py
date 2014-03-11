@@ -404,7 +404,6 @@ process.tauPtEtaIDAgMuAgElec = cms.EDFilter( #apply AntiMuTight2
 process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
     "TauESCorrector",
     tauTag  = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-    genTaus = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     #verbose         = cms.bool(True)
     )
 
