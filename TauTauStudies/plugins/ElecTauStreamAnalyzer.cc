@@ -772,13 +772,13 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   VtxX_ = vertexes->size()!=0 ? (*vertexes)[0].position().x() : -99;
   VtxY_ = vertexes->size()!=0 ? (*vertexes)[0].position().y() : -99;
 
-  const pat::METCollection* met = 0;
-  edm::Handle<pat::METCollection> metHandle;
-  iEvent.getByLabel( metTag_ ,metHandle);
-  if( !metHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No MET label available \n";
-  if(metHandle.isValid() )met = metHandle.product();
+//   const pat::METCollection* met = 0;
+//   edm::Handle<pat::METCollection> metHandle;
+//   iEvent.getByLabel( metTag_ ,metHandle);
+//   if( !metHandle.isValid() )  
+//     edm::LogError("DataNotAvailable")
+//       << "No MET label available \n";
+//   if(metHandle.isValid() )met = metHandle.product();
 
   const pat::METCollection* rawMet = 0;
   edm::Handle<pat::METCollection> rawMetHandle;
@@ -788,20 +788,20 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       << "No raw MET label available \n";
   if(rawMetHandle.isValid() )rawMet = rawMetHandle.product();
 
-  const pat::METCollection* mvaMet = 0;
-  edm::Handle<pat::METCollection> mvaMetHandle;
-  iEvent.getByLabel( mvaMetTag_, mvaMetHandle);
-  if( !mvaMetHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No mva MET label available \n";
-  if(mvaMetHandle.isValid() )mvaMet = mvaMetHandle.product();
+//   const pat::METCollection* mvaMet = 0;
+//   edm::Handle<pat::METCollection> mvaMetHandle;
+//   iEvent.getByLabel( mvaMetTag_, mvaMetHandle);
+//   if( !mvaMetHandle.isValid() )  
+//     edm::LogError("DataNotAvailable")
+//       << "No mva MET label available \n";
+//   if(mvaMetHandle.isValid() )mvaMet = mvaMetHandle.product();
 
-  edm::Handle<PFMEtSignCovMatrix>metCovHandle;
-  iEvent.getByLabel( metCovTag_, metCovHandle);
-  if( !metCovHandle.isValid() )
-    edm::LogError("DataNotAvailable")
-      << "No met Cov label available \n";
-  //const PFMEtSignCovMatrix* metCov = metCovHandle.product();
+//   edm::Handle<PFMEtSignCovMatrix>metCovHandle;
+//   iEvent.getByLabel( metCovTag_, metCovHandle);
+//   if( !metCovHandle.isValid() )
+//     edm::LogError("DataNotAvailable")
+//       << "No met Cov label available \n";
+//   //const PFMEtSignCovMatrix* metCov = metCovHandle.product();
 
   edm::Handle<pat::TriggerEvent> triggerHandle;
   iEvent.getByLabel(triggerResultsTag_, triggerHandle);
@@ -1555,8 +1555,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     
     METP4_->push_back((*rawMet)[0].p4()); 
     METP4_->push_back(theDiTau->met()->p4());
-    if(met)METP4_->push_back((*met)[0].p4());
-    if(mvaMet)METP4_->push_back((*mvaMet)[0].p4()); 
+//     if(met)METP4_->push_back((*met)[0].p4());
+//     if(mvaMet)METP4_->push_back((*mvaMet)[0].p4()); 
     sumEt_  = theDiTau->met()->sumEt();
 
     isElecLegMatched_  = 0;
