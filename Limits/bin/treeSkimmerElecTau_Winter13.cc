@@ -856,10 +856,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float sihih_, dEta_, dPhi_, HoE_;
 
   // event-related variables
-  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZeeWeight,ZeeWeightHCP,
+  float numPV_ , sampleWeight,sampleWeightW,sampleWeightDY, puWeight, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,SUSYHqTWeight_,SUSYHqTWeightUp_,SUSYHqTWeightDown_,ZeeWeight,ZeeWeightHCP,
     weightHepNup,weightHepNupHighStatW,weightHepNupDY,
     highPtWeightUp,highPtWeightDown;
- float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
+  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
@@ -1236,6 +1236,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
+  outTreePtOrd->Branch("SUSYHqTWeight",          &SUSYHqTWeight_,"SUSYHqTWeight/F");
+  outTreePtOrd->Branch("SUSYHqTWeightUp",          &SUSYHqTWeightUp_,"SUSYHqTWeightUp/F");
+  outTreePtOrd->Branch("SUSYHqTWeightDown",          &SUSYHqTWeightDown_,"SUSYHqTWeightDown/F");
   outTreePtOrd->Branch("ZeeWeight",          &ZeeWeight,"ZeeWeight/F");
   outTreePtOrd->Branch("ZeeWeightHCP",          &ZeeWeightHCP,"ZeeWeightHCP/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
@@ -1601,6 +1604,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
   currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
   currentTree->SetBranchStatus("index"                 ,1);
+  currentTree->SetBranchStatus("higgsPtWeightNom"      ,1);
+  currentTree->SetBranchStatus("higgsPtWeightUp"       ,1);
+  currentTree->SetBranchStatus("higgsPtWeightDown"     ,1);
 
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
@@ -1740,6 +1746,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float numPV;
   float mcPUweight,embeddingWeight;
   std::vector< double >* embeddingWeights = new std::vector< double >();//IN
+  float higgsPtWeightNom,higgsPtWeightUp,higgsPtWeightDown;
   int numOfLooseIsoDiTaus;
   int isTauLegMatched,isTauLegMatchedToLep,isElecLegMatched,elecFlag,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1,nPUVerticesP1;
@@ -1895,6 +1902,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("mcPUweight",           &mcPUweight);
   currentTree->SetBranchAddress("embeddingWeight",      &embeddingWeight);
   currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
+  currentTree->SetBranchAddress("higgsPtWeightNom",     &higgsPtWeightNom);//IN
+  currentTree->SetBranchAddress("higgsPtWeightUp",      &higgsPtWeightUp);//IN
+  currentTree->SetBranchAddress("higgsPtWeightDown",    &higgsPtWeightDown);//IN
   currentTree->SetBranchAddress("event",                &event);
   currentTree->SetBranchAddress("run",                  &run);
   currentTree->SetBranchAddress("lumi",                 &lumi);
@@ -2788,6 +2798,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+ 
+    SUSYHqTWeight_ = higgsPtWeightNom;
+    SUSYHqTWeightUp_ = higgsPtWeightUp;
+    SUSYHqTWeightDown_ = higgsPtWeightDown;
  
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 
