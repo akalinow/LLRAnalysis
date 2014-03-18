@@ -3,23 +3,11 @@
 #include "FWCore/Utilities/interface/Exception.h"
 
 #include <TMath.h>
-#include <TArrayF.h>
+#include <TArrayD.h>
 #include <TString.h>
 
 #include <iostream>
 #include <assert.h>
-
-TArrayF getBinning(const TH1* histogram)
-{
-  TAxis* xAxis = histogram->GetXaxis();
-  int numBins = xAxis->GetNbins();
-  TArrayF binning(numBins + 1);
-  for ( int iBin = 1; iBin <= numBins; ++iBin ) {
-    binning[iBin - 1] = xAxis->GetBinLowEdge(iBin);
-    binning[iBin] = xAxis->GetBinUpEdge(iBin);
-  }
-  return binning;
-}
 
 void checkCompatibleBinning(const TH1* histogram1, const TH1* histogram2)
 {
@@ -73,9 +61,13 @@ TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>&
     //std::cout << "histogramToAdd" << (*histogramToAdd)->GetName() << std::endl;
     checkCompatibleBinning(*histogramToAdd, histogramRef);
   }
-  TArrayF histogramRefBinning = getBinning(histogramRef);
-  int numBins = histogramRefBinning.GetSize() - 1;
-  TH1* newHistogram = new TH1D(newHistogramName.data(), newHistogramName.data(), numBins, histogramRefBinning.GetArray());
+  TH1* newHistogram = (TH1*)histogramRef->Clone(newHistogramName.data());
+  newHistogram->Reset();
+  if ( !newHistogram->GetSumw2N() ) newHistogram->Sumw2();
+  int numBins = newHistogram->GetNbinsX();
+  //TArrayD histogramRefBinning = getBinning(histogramRef);
+  //int numBins = histogramRefBinning.GetSize() - 1;
+  //TH1* newHistogram = new TH1D(newHistogramName.data(), newHistogramName.data(), numBins, histogramRefBinning.GetArray());
   for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
     double sumBinContent = 0.;
     double sumBinError2 = 0.;
@@ -96,9 +88,13 @@ TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogra
   //std::cout << "<subtractHistograms>:" << std::endl;
   //std::cout << " newHistogramName = " << newHistogramName << std::endl;
   checkCompatibleBinning(histogramMinuend, histogramSubtrahend);
-  TArrayF histogramBinning = getBinning(histogramMinuend);
-  int numBins = histogramBinning.GetSize() - 1;
-  TH1* newHistogram = new TH1D(newHistogramName.data(), newHistogramName.data(), numBins, histogramBinning.GetArray());
+  TH1* newHistogram = (TH1*)histogramMinuend->Clone(newHistogramName.data());
+  newHistogram->Reset();
+  if ( !newHistogram->GetSumw2N() ) newHistogram->Sumw2();
+  int numBins = newHistogram->GetNbinsX();
+  //TArrayD histogramBinning = getBinning(histogramMinuend);
+  //int numBins = histogramBinning.GetSize() - 1;
+  //TH1* newHistogram = new TH1D(newHistogramName.data(), newHistogramName.data(), numBins, histogramBinning.GetArray());
   for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
     double newBinContent = histogramMinuend->GetBinContent(iBin) - histogramSubtrahend->GetBinContent(iBin);
     double newBinError2 = square(histogramMinuend->GetBinError(iBin)) + square(histogramSubtrahend->GetBinError(iBin));

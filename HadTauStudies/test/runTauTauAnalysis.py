@@ -608,18 +608,6 @@ for sample in samples.keys():
                         if 'addWeights' in samples[sample].keys():
                             addWeights.extend(samples[sample]['addWeights'])                            
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
-
-
-'CMS_eff_t_mssmHigh_tautau_8TeVUp' : {
-        'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : []
-    },
-    'CMS_eff_t_mssmHigh_tautau_8TeVDown' : {
-        'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : []
-    },
-
-                        
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
                         if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
                             selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")

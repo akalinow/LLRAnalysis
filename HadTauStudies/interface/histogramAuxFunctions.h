@@ -10,7 +10,6 @@
 #include <vector>
 #include <string>
 
-TArrayF getBinning(const TH1*);
 void checkCompatibleBinning(const TH1*, const TH1*);
 
 TH1* addHistograms(const std::string&, const TH1*, const TH1*);
