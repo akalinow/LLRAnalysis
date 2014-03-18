@@ -2271,6 +2271,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       
       /////////////////////////////////////////////////////////////////////////
       //// use JES uncertainties
+      if(fabs(newJet->eta())>5.5) continue ;
       edm::ESHandle<JetCorrectorParametersCollection> jetCorrParameters;
       // get the jet corrector parameters collection from the global tag
       iSetup.get<JetCorrectionsRecord>().get("AK5PF", jetCorrParameters);
