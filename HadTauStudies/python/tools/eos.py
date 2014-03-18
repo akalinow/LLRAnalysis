@@ -6,7 +6,9 @@ import subprocess
 import sys
 import time
 
-executable_eos = '/afs/cern.ch/project/eos/installation/0.3.1-22/bin/eos.select'
+
+#executable_eos = '/afs/cern.ch/project/eos/installation/0.3.1-22/bin/eos.select'
+executable_eos = '/afs/cern.ch/project/eos/installation/0.3.15/bin/eos.select'
 
 def runCommand(commandLine):
     sys.stdout.write("%s\n" % commandLine)

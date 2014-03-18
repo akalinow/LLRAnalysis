@@ -23,6 +23,7 @@ process.prepareTauTauDatacards = cms.PSet(
 
     processesToCopy = cms.vstring(
         "data_obs",
+        "ZTT",
         "ZL",
         "ZJ",
         "W",
@@ -30,30 +31,12 @@ process.prepareTauTauDatacards = cms.PSet(
         "qqH_SM[0-9]+",
         "TT",
         "VV",
+        "QCD",
         "ggH[0-9]+",
         "bbH[0-9]+"
     ),
 
-    processData = cms.string("data_obs"),
-    processZTT = cms.string("ZTT"),
-    processZTTmc = cms.string("ZTTmc"),
-    processZTT_Embedded = cms.string("ZTT_Embedded"),
-    processTT_Embedded = cms.string("TT_Embedded"),
-
-    qcdRegion_norm = cms.string("OSantiisoFRwTightBtag"),
-    qcdRegion_shape = cms.string("OSantiisoFRwLooseBtag"),
-    processQCD = cms.string("QCD"),
-    processesToSubtract = cms.vstring(
-        "ZTTmc",
-        "ZL",
-        "ZJ",
-        "W",
-        "TT",
-        "VV"
-    ),
-
-    categoriesToCopy = cms.vstring("inclusive", "nobtag", "btag"),
-    category_inclusive = cms.string("inclusive"),
+    categories = cms.vstring("inclusive", "nobtag", "btag"),
 
     tauPtBins = cms.vstring(
         "tau1PtGt45tau2PtGt45",
@@ -69,7 +52,15 @@ process.prepareTauTauDatacards = cms.PSet(
     sysShifts = cms.vstring(
         "CMS_scale_t_tautau_8TeVUp",
         "CMS_scale_t_tautau_8TeVDown",
+        "CMS_higgsPtReweight_8TeVUp",
+        "CMS_higgsPtReweight_8TeVDown",
         "CMS_ttbarPtReweight_8TeVUp",
-        "CMS_ttbarPtReweight_8TeVDown"
+        "CMS_ttbarPtReweight_8TeVDown",        
+        "CMS_htt_WShape_tautau_8TeVUp",
+        "CMS_htt_WShape_tautau_8TeVDown",
+        "CMS_htt_QCDfrNorm_tautau_8TeVUp",
+        "CMS_htt_QCDfrNorm_tautau_8TeVDown",
+        "CMS_htt_QCDfrShape_tautau_8TeVUp",
+        "CMS_htt_QCDfrShape_tautau_8TeVDown"
     )
 )

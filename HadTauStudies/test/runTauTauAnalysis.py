@@ -13,7 +13,7 @@ version = "v1_6"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_9/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -25,7 +25,8 @@ lumiScale_DY = 2.12
 stitchingWeights_DY = [ 1.0, 0.412/lumiScale_DY, 0.167/lumiScale_DY, 0.097/lumiScale_DY, 0.0759/lumiScale_DY ]
 
 lumiScale_W = 8.83
-stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ]
+##stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ]
+stitchingWeights_W = [ 1.0, 3.25/lumiScale_W, 1.06/lumiScale_W, 0.681/lumiScale_W, 0.340/lumiScale_W ]
 
 def getLumiScale(sample, x_sec = -1.):
     if x_sec < 0.:
@@ -33,6 +34,33 @@ def getLumiScale(sample, x_sec = -1.):
     return intLumiData*x_sec/recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['events_processed']
 
 samples = {
+    #----------------------------------------------------------------------------
+    # CV: for checking event yield in individual data-taking periods
+##    'Data2012runA' : {
+##        'processes' : [ "data2012runA" ],
+##        'inputFiles' : [
+##            "data_Run2012A_22Jan2013_v1"
+##        ]
+##    },
+##    'Data2012runB' : {
+##        'processes' : [ "data2012runB" ],
+##        'inputFiles' : [
+##            "data_Run2012B_22Jan2013_v1"
+##        ]
+##    },
+##    'Data2012runC' : {
+##        'processes' : [ "data2012runC" ],
+##        'inputFiles' : [
+##            "data_Run2012C_22Jan2013_v1"
+##        ]
+##    },
+##    'Data2012runD' : {
+##        'processes' : [ "data2012runD" ],
+##        'inputFiles' : [
+##            "data_Run2012D_22Jan2013_v1"
+##        ]
+##    },
+    #----------------------------------------------------------------------------
     'Data' : {
         'processes' : [ "data_obs" ],
         'inputFiles' : [
@@ -61,8 +89,11 @@ samples = {
             "WJets",
             "WJetsExt",
             "W1Jets",
+            #"W1JetsExt",
             "W2Jets",
+            #"W2JetsExt",
             "W3Jets",
+            #"W3JetsExt",
             "W4Jets"
         ],
         'lumiScale' : lumiScale_W,
@@ -138,54 +169,44 @@ def makeJetToTauFakeRateCorrection(par0, par1, par2, par3, x0 = 163.7):
 
 discriminators = {
     'HPScombIso3HitsMedium' : {
-        'tau1Selection'                   : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'                   : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_relaxed_inclusive' : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
-        'tau1Selection_relaxed_nobtag'    : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
-        'tau1Selection_relaxed_btag'      : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",        
-        'tau2Selection_relaxed_inclusive' : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_nobtag'    : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_btag'      : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection'              : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'              : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_relaxed'      : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
+        'tau2Selection_relaxed'      : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_vrelaxed'     : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
+        'tau2Selection_vrelaxed'     : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1FRwEtaBins'             : [ -1., 1.479, 9.9 ],
+        'tau2FRwEtaBins'             : [ -1., 1.479, 9.9 ],
         # jetToTauFakeRateCorrection taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
-        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
+        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
     },
-   'MVAwLToldDMsTight' : {
-        'tau1Selection'                   : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'                   : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        ##'tau1Selection_relaxed_inclusive' : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        ##'tau1Selection_relaxed_nobtag'    : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        ##'tau1Selection_relaxed_btag'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_inclusive' : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_nobtag'    : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_btag'      : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5 && l2TightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_inclusive' : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_nobtag'    : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_btag'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
-        'tau2Selection_relaxed_inclusive' : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_nobtag'    : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_btag'      : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+    'MVAwLToldDMsTight' : {
+        'tau1Selection'              : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'              : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",        
+        'tau2Selection_relaxed'      : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
+        'tau2Selection_vrelaxed'     : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+        'tau2FRwEtaBins'             : [ -1., 9.9 ],
         # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
-        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
-   },
-   'MVAwLToldDMsVTight' : {
-        'tau1Selection'                   : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'                   : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        ##'tau1Selection_relaxed_inclusive' : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        ##'tau1Selection_relaxed_nobtag'    : "l1MediumMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        ##'tau1Selection_relaxed_btag'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_inclusive' : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_nobtag'    : "l2MediumMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        ##'tau2Selection_relaxed_btag'      : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5 && l2VTightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_inclusive' : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_nobtag'    : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
-        'tau1Selection_relaxed_btag'      : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
-        'tau2Selection_relaxed_inclusive' : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_nobtag'    : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau2Selection_relaxed_btag'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+    },
+    'MVAwLToldDMsVTight' : {
+        'tau1Selection'              : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+        'tau2Selection'              : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+        'tau2Selection_relaxed'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",        
+        'tau2Selection_vrelaxed'     : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+        'tau2FRwEtaBins'             : [ -1., 9.9 ],
         # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight   
-        'jetToTauFakeRateCorrection'      : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
-   }
+        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+    }
 }
+
+bJet1FRwEtaBins = [ -1., 1.0, 2.0, 9.9 ]
 
 central_or_shifts = {
     '' : {
@@ -198,6 +219,14 @@ central_or_shifts = {
     },
     'CMS_scale_t_tautau_8TeVDown' : {
         'inputFilePath_extension' : "down",
+        'addWeights_extension'    : []
+    },
+    'CMS_eff_t_mssmHigh_tautau_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_eff_t_mssmHigh_tautau_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
     'CMS_higgsPtReweight_8TeVUp' : {
@@ -226,8 +255,16 @@ central_or_shifts = {
     }
 }
 
-signalRegions = [ "OSisoLooseBtag", "OSantiisoFRwLooseBtag", "SSantiisoFRwLooseBtag", "OSisoTightBtag", "OSantiisoFRwTightBtag", "SSantiisoFRwTightBtag" ]
-qcdRegions = [ "OSantiisoLooseBtag", "SSisoLooseBtag", "SSantiisoLooseBtag", "OSantiisoTightBtag", "SSisoTightBtag", "SSantiisoTightBtag" ]
+signalRegions = [
+    "OSisoLooseBtag", "OSrelaxedLooseBtag", "OSvrelaxedLooseBtag", "OSrelaxedFRwLooseBtag", "OSvrelaxedFRwLooseBtag", "OSrelaxedFRwLooseBtagFRw", "OSvrelaxedFRwLooseBtagFRw",
+    "OSisoTightBtag", "OSrelaxedTightBtag", "OSvrelaxedTightBtag", "OSrelaxedFRwTightBtag", "OSvrelaxedFRwTightBtag",
+    "SSrelaxedFRwLooseBtag", "SSvrelaxedFRwLooseBtag", "SSrelaxedFRwLooseBtagFRw", "SSvrelaxedFRwLooseBtagFRw",    
+    "SSrelaxedFRwTightBtag", "SSvrelaxedFRwTightBtag"
+]
+qcdRegions = [
+    "SSisoLooseBtag", "SSrelaxedLooseBtag", "SSvrelaxedLooseBtag", 
+    "SSisoTightBtag", "SSrelaxedTightBtag", "SSvrelaxedTightBtag"
+]
 regions = []
 regions.extend(signalRegions)
 regions.extend(qcdRegions)
@@ -244,15 +281,24 @@ execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])
 
 executable_FWLiteTauTauAnalyzer      = execDir + 'FWLiteTauTauAnalyzer'
 executable_determineJetToTauFakeRate = execDir + 'determineJetToTauFakeRate'
+executable_addBackgroundZTT          = execDir + 'addBackgroundZTT'
+executable_addBackgroundQCD          = execDir + 'addBackgroundQCD'
 executable_prepareTauTauDatacards    = execDir + 'prepareTauTauDatacards'
+executable_makeTauTauPlots           = execDir + 'makeTauTauPlots'
 executable_hadd                      = 'hadd'
 executable_rm                        = 'rm -f'
 
 nice = 'nice '
 
-configFile_FWLiteTauTauAnalyzer      = 'FWLiteTauTauAnalyzer_cfg.py'
-configFile_determineJetToTauFakeRate = 'determineJetToTauFakeRate_cfg.py'
-configFile_prepareTauTauDatacards    = 'prepareTauTauDatacards_cfg.py'
+configFile_FWLiteTauTauAnalyzer             = 'FWLiteTauTauAnalyzer_cfg.py'
+configFile_determineJetToTauFakeRate        = 'determineJetToTauFakeRate_cfg.py'
+configFile_determineBJetLooseToTightWeight  = 'determineBJetLooseToTightWeight_cfg.py'
+configFile_addBackgroundZTT                 = 'addBackgroundZTT_cfg.py'
+configFile_addBackgroundQCDfromSSantiiso    = 'addBackgroundQCDfromSSantiiso_cfg.py' # for datacards (QCD shape templates taken from SS anti-isolated region, weighted by jet -> tau fake-rate)
+configFile_addBackgroundQCDfromSSiso        = 'addBackgroundQCDfromSSiso_cfg.py'     # for control plots of tau ID observables (QCD shape templates taken from SS isolated region)
+configFile_prepareTauTauDatacards           = 'prepareTauTauDatacards_cfg.py'
+configFile_makeTauTauPlots_QCDfromSSiso     = 'makeTauTauPlots_QCDfromSSiso_cfg.py'
+configFile_makeTauTauPlots_QCDfromSSantiiso = 'makeTauTauPlots_QCDfromSSantiiso_cfg.py'
 
 # create outputFilePath in case it does not yet exist
 def createFilePath_recursively(filePath):
@@ -328,9 +374,7 @@ def initDict(dictionary, keys):
             dictionary_at_keylevel[key] = {}
         dictionary_at_keylevel = dictionary_at_keylevel[key]
 
-def getTauPtLabel(tauPtBin):
-    tauPtMin = tauPtBin[0]
-    tauPtMax = tauPtBin[1]
+def getTauPtLabel(tauPtMin, tauPtMax):
     tauPtBin_label = "tau1PtGt45"
     if tauPtMin > 0. and tauPtMax > 0.:
         tauPtBin_label += "tau2Pt%1.0fto%1.0f" % (tauPtMin, tauPtMax)
@@ -340,20 +384,32 @@ def getTauPtLabel(tauPtBin):
         tauPtBin_label += "tau2PtLt%1.0f" % tauPtMax
     return tauPtBin_label
 
+def getParticleEtaLabel(particleType, particle1EtaMin, particle1EtaMax, particle2EtaMin, particle2EtaMax):
+    particleEtaBin_label = ""
+    if particle1EtaMin > 0. and particle1EtaMax < 5.:
+        particleEtaBin_label += "%s1Eta%1.1fto%1.1f" % (particleType, particle1EtaMin, particle1EtaMax)
+    elif particle1EtaMin > 0.:
+        particleEtaBin_label += "%s1EtaGt%1.1f" % (particleType, particle1EtaMin)
+    elif particle1EtaMax < 5.:
+        particleEtaBin_label += "%s1EtaLt%1.1f" % (particleType, particle1EtaMax)
+    if particle2EtaMin > 0. and particle2EtaMax < 5.:
+        particleEtaBin_label += "%s2Eta%1.1fto%1.1f" % (particleType, particle2EtaMin, particle2EtaMax)
+    elif particle2EtaMin > 0.:
+        particleEtaBin_label += "%s2EtaGt%1.1f" % (particleType, particle2EtaMin)
+    elif particle2EtaMax < 5.:
+        particleEtaBin_label += "%s2EtaLt%1.1f" % (particleType, particle2EtaMax)
+    particleEtaBin_label = particleEtaBin_label.replace(".", "")
+    return particleEtaBin_label
+
 #--------------------------------------------------------------------------------
 # CV: declare outputFileNames of determineJetToTauFakeRate macro in advance,
 #     so that files can be used as input when  running FWLiteTauTauAnalyzer macro
-determineJetToTauFakeRate_outputFileNames = {} # key = (tau ID) discriminator, "inclusive"/"nobtag"/"btag", btagDiscriminator
-for discriminator in discriminators.keys():
-    for category in [ "inclusive", "nobtag", "btag" ] :
-        for btagDiscriminator in [ "LooseBtag", "TightBtag" ]:
-            outputFileName = os.path.join(outputFilePath, discriminator, "determineJetToTauFakeRate_%s_%s_%s.root" % (discriminator, category, btagDiscriminator))
-            initDict(determineJetToTauFakeRate_outputFileNames, [ discriminator, category, btagDiscriminator ])
-            determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator] = outputFileName
 
-hadd_determineJetToTauFakeRate_outputFileNames = {} # key = discriminator
-for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
-    hadd_determineJetToTauFakeRate_outputFileNames[discriminator] = os.path.join(outputFilePath, "determineJetToTauFakeRate_%s.root" % discriminator)
+hadd_determineBJetLooseToTightWeight_outputFileNames = {} # key = discriminator
+hadd_determineJetToTauFakeRate_outputFileNames       = {} # key = discriminator
+for discriminator in discriminators.keys():
+    hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator] = os.path.join(outputFilePath, discriminator, "determineBJetLooseToTightWeight_%s.root" % discriminator)
+    hadd_determineJetToTauFakeRate_outputFileNames[discriminator] = os.path.join(outputFilePath, discriminator, "determineJetToTauFakeRate_%s.root" % discriminator)
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -372,23 +428,29 @@ for sample in samples.keys():
             if region in qcdRegions and (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
                 continue
             central_or_shifts_region = copy.deepcopy(central_or_shifts)
-            if region.find("antiisoFRw") != -1 and sample.find("HiggsSUSYGluGlu") == -1 and sample.find("HiggsSUSYBB") == -1:
+            if (region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1) and not (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
+                tauFR_fitFunctionNormName_Up   = None
+                tauFR_fitFunctionNormName_Down = None
+                if region.find("vrelaxedFRw") != -1 :
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                else:
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSisoLooseBtag_div_SSrelaxedLooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSisoLooseBtag_div_SSrelaxedLooseBtag"
                 central_or_shifts_region.update({
                     'CMS_htt_QCDfrNorm_tautau_8TeVUp' : {
                         'inputFilePath_extension'    : "nom",
                         'addWeights_extension'       : [],
-                        'fitFunctionNormName'        : "jetToTauFakeRate/inclusive/fitFunctionNormUp_SSisoLooseBtag_div_SSantiisoLooseBtag"
+                        'fitFunctionNormName'        : tauFR_fitFunctionNormName_Up
                     },
                     'CMS_htt_QCDfrNorm_tautau_8TeVDown' : {
                         'inputFilePath_extension'    : "nom",
                         'addWeights_extension'       : [] ,
-                        'fitFunctionNormName'        : "jetToTauFakeRate/inclusive/fitFunctionNormDown_SSisoLooseBtag_div_SSantiisoLooseBtag"
+                        'fitFunctionNormName'        : tauFR_fitFunctionNormName_Down
                     },
                     'CMS_htt_QCDfrShape_tautau_8TeVUp' : {
                         'inputFilePath_extension'    : "nom",
                         'addWeights_extension'       : [],
-                        ##'fitFunctionShapePower_tau1' : 1.0,
-                        ##'fitFunctionShapePower_tau2' : 1.0
                         'fitFunctionShapePower_tau1' : 2.0,
                         'fitFunctionShapePower_tau2' : 0.
                     },
@@ -397,7 +459,7 @@ for sample in samples.keys():
                         'addWeights_extension'       : [],
                         'fitFunctionShapePower_tau1' : 0.,
                         'fitFunctionShapePower_tau2' : 0.
-                    }})
+                    }})                           
             for central_or_shift in central_or_shifts_region.keys():
 
                 if central_or_shift in [ 'CMS_higgsPtReweight_8TeVUp', 'CMS_higgsPtReweight_8TeVDown' ] and sample.find("HiggsSUSYGluGlu") == -1:
@@ -420,7 +482,7 @@ for sample in samples.keys():
 
                     tauPtMin = tauPtBin[0]
                     tauPtMax = tauPtBin[1]
-                    tauPtBin_label = getTauPtLabel(tauPtBin)
+                    tauPtBin_label = getTauPtLabel(tauPtMin, tauPtMax)
 
                     for discriminator in discriminators.keys():
 
@@ -433,9 +495,13 @@ for sample in samples.keys():
                         initDict(FWLiteTauTauAnalyzer_inputFileNames, [ sample, process, central_or_shift, region, tauPtBin_label, discriminator ])
                         FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator] = inputFileNames
 			FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator] = []
-                        # CV: declare dependency on output of determineJetToTauFakeRate macro 
-                        if region.find("antiisoFRw") != -1:
-                            FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator].append(hadd_determineJetToTauFakeRate_outputFileNames[discriminator])
+                        # CV: declare dependency on output of determineJetToTauFakeRate macro
+                        if region.find("LooseBtagFRw") != -1:
+                            FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator].append(
+                              hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator])
+                        if region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1:
+                            FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator].append(
+                              hadd_determineJetToTauFakeRate_outputFileNames[discriminator])
 
                         outputFilePath_subdir = os.path.join(outputFilePath, discriminator, sample, process, region)
                         createFilePath_recursively(outputFilePath_subdir)
@@ -458,6 +524,10 @@ for sample in samples.keys():
                         cfg_modified += "\n"
                         cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
                         cfg_modified += "\n"
+                        if central_or_shifts_region[central_or_shift]['inputFilePath_extension'] == "up":
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.treeName = cms.string('tauTauNtupleProducerTauUp/H2TauTauTreeProducerTauTau')\n"
+                        elif central_or_shifts_region[central_or_shift]['inputFilePath_extension'] == "down":
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.treeName = cms.string('tauTauNtupleProducerTauDown/H2TauTauTreeProducerTauTau')\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.process = cms.string('%s')\n" % process
                         if sample in recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'].keys() and recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == 'bsmMC':
                             massPoint_match = massPoint_matcher.match(sample)
@@ -471,54 +541,62 @@ for sample in samples.keys():
                         tau1Selection = None
                         tau2Selection = None
                         if region.find("OSiso") != -1 or region.find("SSiso") != -1:
-                            tau1Selection_inclusive = discriminators[discriminator]['tau1Selection']
-                            tau1Selection_nobtag    = discriminators[discriminator]['tau1Selection']
-                            tau1Selection_btag      = discriminators[discriminator]['tau1Selection']
-                            tau2Selection_inclusive = discriminators[discriminator]['tau2Selection']
-                            tau2Selection_nobtag    = discriminators[discriminator]['tau2Selection']
-                            tau2Selection_btag      = discriminators[discriminator]['tau2Selection']
-                        elif region.find("OSantiiso") != -1 or region.find("SSantiiso") != -1:
-                            tau1Selection_inclusive = discriminators[discriminator]['tau1Selection_relaxed_inclusive']
-                            tau1Selection_nobtag    = discriminators[discriminator]['tau1Selection_relaxed_nobtag']
-                            tau1Selection_btag      = discriminators[discriminator]['tau1Selection_relaxed_btag']
-                            tau2Selection_inclusive = discriminators[discriminator]['tau2Selection_relaxed_inclusive']
-                            tau2Selection_nobtag    = discriminators[discriminator]['tau2Selection_relaxed_nobtag']
-                            tau2Selection_btag      = discriminators[discriminator]['tau2Selection_relaxed_btag']
+                            tau1Selection = discriminators[discriminator]['tau1Selection']
+                            tau2Selection = discriminators[discriminator]['tau2Selection']
+                        elif region.find("OSrelaxed") != -1 or region.find("SSrelaxed") != -1:
+                            tau1Selection = discriminators[discriminator]['tau1Selection_relaxed']
+                            tau2Selection = discriminators[discriminator]['tau2Selection_relaxed']    
+                        elif region.find("OSvrelaxed") != -1 or region.find("SSvrelaxed") != -1:
+                            tau1Selection = discriminators[discriminator]['tau1Selection_vrelaxed']
+                            tau2Selection = discriminators[discriminator]['tau2Selection_vrelaxed']                        
                         else:
                             raise ValueError("No tau selection defined for region = '%s' !!" % region)
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_inclusive = cms.string('%s')\n" % tau1Selection_inclusive
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_nobtag = cms.string('%s')\n" % tau1Selection_nobtag
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection_btag = cms.string('%s')\n" % tau1Selection_btag
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection = cms.string('%s')\n" % tau1Selection
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMin = cms.double(45.)\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMax = cms.double(-1.)\n"
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_inclusive = cms.string('%s')\n" % tau2Selection_inclusive
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_nobtag = cms.string('%s')\n" % tau2Selection_nobtag
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection_btag = cms.string('%s')\n" % tau2Selection_btag
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection = cms.string('%s')\n" % tau2Selection
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMin = cms.double(%1.0f)\n" % tauPtMin
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMax = cms.double(%1.0f)\n" % tauPtMax
                         if region.find("LooseBtag") != -1:
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyTightBtag = cms.bool(False)\n"
                         else: 
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyTightBtag = cms.bool(True)\n"
-                        if region.find("antiisoFRw") != -1:
-                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.inputFileName = cms.string('%s')\n" % hadd_determineJetToTauFakeRate_outputFileNames[discriminator]
-                            cfg_modified += "process.FWLiteTauTauAnalyzer.applyJetToTauFakeRateLooseToTightWeight = cms.bool(True)\n"
+                        if region.find("LooseBtagFRw") != -1:                            
+                            inputFileName = hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator]
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.bJetLooseToTightWeight.inputFileName = cms.string('%s')\n" % inputFileName
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.applyBJetLooseToTightWeight = cms.bool(True)\n"
+                        if region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1:
                             inputFileName = hadd_determineJetToTauFakeRate_outputFileNames[discriminator]
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.inputFileName = cms.string('%s')\n" % inputFileName
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.applyJetToTauFakeRateLooseToTightWeight = cms.bool(True)\n"
+                            fitFunctionNormName = None
+                            fitFunctionShapeName_tau1 = None
+                            fitFunctionShapeName_tau2 = None
+                            if region.find("vrelaxedFRw") != -1:
+                                fitFunctionNormName       = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                            else:
+                                fitFunctionNormName       = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSisoLooseBtag_div_SSrelaxedLooseBtag"
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"
                             if 'fitFunctionNormName' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionNormName = central_or_shifts_region[central_or_shift]['fitFunctionNormName']
-                                cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionNormName = cms.string('%s')\n" % fitFunctionNormName
                             if 'fitFunctionShapeName_tau1' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapeName_tau1 = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau1']
-                                cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1 = cms.string('%s')\n" % fitFunctionShapeName_tau1
+                            if 'fitFunctionShapeName_tau2' in central_or_shifts_region[central_or_shift].keys():
+                                fitFunctionShapeName_tau2 = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau2']
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionNormName = cms.string('%s')\n" % fitFunctionNormName
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1 = cms.string('%s')\n" % fitFunctionShapeName_tau1
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2 = cms.string('%s')\n" % fitFunctionShapeName_tau2
                             if 'fitFunctionShapePower_tau1' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapePower_tau1 = central_or_shifts_region[central_or_shift]['fitFunctionShapePower_tau1']
                                 cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau1 = cms.double(%f)\n" % fitFunctionShapePower_tau1
-                            if 'fitFunctionShapeName_tau2' in central_or_shifts_region[central_or_shift].keys():
-                                fitFunctionShapeName_tau2 = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau2']
-                                cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2 = cms.string('%s')\n" % fitFunctionShapeName_tau2
                             if 'fitFunctionShapePower_tau2' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapePower_tau2 = central_or_shifts_region[central_or_shift]['fitFunctionShapePower_tau2']
                                 cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau2 = cms.double(%f)\n" % fitFunctionShapePower_tau2
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau1EtaBins = cms.vdouble(%s)\n" % getStringRep_vdouble(discriminators[discriminator]['tau1FRwEtaBins'])
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.tau2EtaBins = cms.vdouble(%s)\n" % getStringRep_vdouble(discriminators[discriminator]['tau2FRwEtaBins'])
                         if 'applyJetToTauFakeRateCorrection' in samples[sample].keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyJetToTauFakeRateCorrection = cms.bool(%s)\n" % getStringRep_bool(samples[sample]['applyJetToTauFakeRateCorrection'])
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateCorrection = cms.string('%s')\n" % jetToTauFakeRateCorrection                            
@@ -528,8 +606,20 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.stitchingWeights = cms.vdouble(%s)\n" % getStringRep_vdouble(samples[sample]['stitchingWeights'])
                         addWeights = []
                         if 'addWeights' in samples[sample].keys():
-                            addWeights.extend(samples[sample]['addWeights'])
+                            addWeights.extend(samples[sample]['addWeights'])                            
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
+
+
+'CMS_eff_t_mssmHigh_tautau_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_eff_t_mssmHigh_tautau_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+
+                        
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
                         if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
                             selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")
@@ -659,14 +749,23 @@ for discriminator in discriminators.keys():
 #
 # build config files for running determineJetToTauFakeRate macro
 #
-print "Info: building config files for determineJetToTauFakeRate macro"
-determineJetToTauFakeRate_configFileNames = {} # key = (tau ID) discriminator, "inclusive"/"nobtag"/"btag", btagDiscriminator
-determineJetToTauFakeRate_logFileNames    = {} # key = (tau ID) discriminator, "inclusive"/"nobtag"/"btag", btagDiscriminator
+print "Info: building config files for determineBJetLooseToTightWeight macro"
+determineBJetLooseToTightWeight_outputFileNames = {} # key = (tau ID) discriminator, looseRegion
+determineBJetLooseToTightWeight_configFileNames = {} # key = (tau ID) discriminator, looseRegion
+determineBJetLooseToTightWeight_logFileNames    = {} # key = (tau ID) discriminator, looseRegion
 for discriminator in discriminators.keys():
-    for category in [ "inclusive", "nobtag", "btag" ] :
-        for btagDiscriminator in [ "LooseBtag", "TightBtag" ]:
+    for looseRegion in [ "SSrelaxedLooseBtag", "SSvrelaxedLooseBtag" ]:
+        for idxBJet1EtaBin in range(len(bJet1FRwEtaBins) - 1):
+            bJet1EtaMin = bJet1FRwEtaBins[idxBJet1EtaBin]
+            bJet1EtaMax = bJet1FRwEtaBins[idxBJet1EtaBin + 1]
+            bJet1EtaBin_label = getParticleEtaLabel("bJet", bJet1EtaMin, bJet1EtaMax, -1., 9.9)
+
+            outputFileName = os.path.join(outputFilePath, discriminator, "determineBJetLooseToTightWeight_%s_%s_%s.root" % \
+              (discriminator, looseRegion, bJet1EtaBin_label))                        
+            initDict(determineBJetLooseToTightWeight_outputFileNames, [ discriminator, looseRegion, bJet1EtaBin_label ])
+            determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion][bJet1EtaBin_label] = outputFileName
             
-            cfgFileName_original = configFile_determineJetToTauFakeRate
+            cfgFileName_original = configFile_determineBJetLooseToTightWeight
             cfgFile_original = open(cfgFileName_original, "r")
             cfg_original = cfgFile_original.read()
             cfgFile_original.close()
@@ -674,30 +773,98 @@ for discriminator in discriminators.keys():
             cfg_modified += "\n"
             cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage3_outputFileNames[discriminator]["qcdRegion"]
             cfg_modified += "\n"
-            cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator]
+            cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
             cfg_modified += "\n"
-            looseRegion = "SSantiiso%s" % btagDiscriminator
             cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
-            tightRegion = "SSiso%s" % btagDiscriminator
+            tightRegion = looseRegion.replace("LooseBtag", "TightBtag")
             cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
-            cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s')\n" % category
-            cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_cfg.py" % (discriminator, category, btagDiscriminator)))
+            cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('btag')\n" 
+            cfg_modified += "process.determineJetToTauFakeRate.particle1EtaBin = cms.string('%s')\n" % bJet1EtaBin_label
+            cfg_modified += "process.determineJetToTauFakeRate.particle2EtaBin = cms.string('')\n"
+            if bJet1EtaMax > 5.0:
+                cfg_modified += "process.determineJetToTauFakeRate.fitFunction = cms.string('[0] + [1]*x')\n"
+                cfg_modified += "process.determineJetToTauFakeRate.initialParameters.p0 = cms.double(1.)\n"
+                cfg_modified += "process.determineJetToTauFakeRate.initialParameters.p1 = cms.double(0.1)\n"
+            cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_cfg.py" % \
+              (discriminator, looseRegion, bJet1EtaBin_label)))
             cfgFile_modified = open(cfgFileName_modified, "w")
             cfgFile_modified.write(cfg_modified)
             cfgFile_modified.close()
-            initDict(determineJetToTauFakeRate_configFileNames, [ discriminator, category, btagDiscriminator ])
-            determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator] = cfgFileName_modified
-
+            initDict(determineBJetLooseToTightWeight_configFileNames, [ discriminator, looseRegion, bJet1EtaBin_label ])
+            determineBJetLooseToTightWeight_configFileNames[discriminator][looseRegion][bJet1EtaBin_label] = cfgFileName_modified
+                    
             logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
-            initDict(determineJetToTauFakeRate_logFileNames, [ discriminator, category, btagDiscriminator ])
-            determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator] = logFileName
+            initDict(determineBJetLooseToTightWeight_logFileNames, [ discriminator, looseRegion, bJet1EtaBin_label ])
+            determineBJetLooseToTightWeight_logFileNames[discriminator][looseRegion][bJet1EtaBin_label] = logFileName           
+
+print "Info: building config files for determineJetToTauFakeRate macro"
+determineJetToTauFakeRate_outputFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
+determineJetToTauFakeRate_configFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
+determineJetToTauFakeRate_logFileNames    = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
+for discriminator in discriminators.keys():
+    for category in [ "inclusive", "nobtag", "btag" ] :
+        for btagDiscriminator in [ "LooseBtag", "TightBtag" ]:
+            for looseRegion in [ "SSrelaxed%s" % btagDiscriminator, "SSvrelaxed%s" % btagDiscriminator ]:
+                for idxTau1EtaBin in range(len(discriminators[discriminator]['tau1FRwEtaBins']) - 1):
+                    tau1EtaMin = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin]
+                    tau1EtaMax = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin + 1]
+                    tau1EtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, -1., 9.9)
+                    for idxTau2EtaBin in range(len(discriminators[discriminator]['tau2FRwEtaBins']) - 1):
+                        tau2EtaMin = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin]
+                        tau2EtaMax = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin + 1]
+                        tau2EtaBin_label = getParticleEtaLabel("tau", -1., 9.9, tau2EtaMin, tau2EtaMax)
+                        
+                        tauEtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax)
+
+                        outputFileName = os.path.join(outputFilePath, discriminator, "determineJetToTauFakeRate_%s_%s_%s_%s_%s.root" % \
+                          (discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label))                        
+                        initDict(determineJetToTauFakeRate_outputFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
+                        determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = outputFileName
+            
+                        cfgFileName_original = configFile_determineJetToTauFakeRate
+                        cfgFile_original = open(cfgFileName_original, "r")
+                        cfg_original = cfgFile_original.read()
+                        cfgFile_original.close()
+                        cfg_modified  = cfg_original
+                        cfg_modified += "\n"
+                        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage3_outputFileNames[discriminator]["qcdRegion"]
+                        cfg_modified += "\n"
+                        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
+                        cfg_modified += "\n"
+                        cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
+                        tightRegion = "SSiso%s" % btagDiscriminator
+                        cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
+                        cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s')\n" % category
+                        cfg_modified += "process.determineJetToTauFakeRate.particle1EtaBin = cms.string('%s')\n" % tau1EtaBin_label
+                        cfg_modified += "process.determineJetToTauFakeRate.particle2EtaBin = cms.string('%s')\n" % tau2EtaBin_label
+                        cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_cfg.py" % \
+                          (discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label)))
+                        cfgFile_modified = open(cfgFileName_modified, "w")
+                        cfgFile_modified.write(cfg_modified)
+                        cfgFile_modified.close()
+                        initDict(determineJetToTauFakeRate_configFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
+                        determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = cfgFileName_modified
+                    
+                        logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+                        initDict(determineJetToTauFakeRate_logFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
+                        determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = logFileName
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
 #
-# build shell script for running 'hadd' in order to "harvest" jet -> tau fake-rate histograms
-# produced by determineJetToTauFakeRate macro
+# build shell script for running 'hadd' in order to "harvest" output of determineJetToTauFakeRate macro
 #
+hadd_determineBJetLooseToTightWeight_inputFileNames  = {} # key = discriminator
+hadd_determineBJetLooseToTightWeight_logFileNames    = {} # key = discriminator
+for discriminator in determineBJetLooseToTightWeight_outputFileNames.keys():
+
+    hadd_determineBJetLooseToTightWeight_inputFileNames[discriminator] = []
+    for looseRegion in determineBJetLooseToTightWeight_outputFileNames[discriminator].keys():
+        for bJet1EtaBin in determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion].keys():
+            hadd_determineBJetLooseToTightWeight_inputFileNames[discriminator].append(determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion][bJet1EtaBin])
+
+    hadd_determineBJetLooseToTightWeight_logFileNames[discriminator] = hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator].replace(".root", ".log")
+
 hadd_determineJetToTauFakeRate_inputFileNames  = {} # key = discriminator
 hadd_determineJetToTauFakeRate_logFileNames    = {} # key = discriminator
 for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
@@ -705,7 +872,9 @@ for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
     hadd_determineJetToTauFakeRate_inputFileNames[discriminator] = []
     for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
-            hadd_determineJetToTauFakeRate_inputFileNames[discriminator].append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator])
+            for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
+                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    hadd_determineJetToTauFakeRate_inputFileNames[discriminator].append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin])
 
     hadd_determineJetToTauFakeRate_logFileNames[discriminator] = hadd_determineJetToTauFakeRate_outputFileNames[discriminator].replace(".root", ".log")
 #--------------------------------------------------------------------------------
@@ -733,12 +902,112 @@ for discriminator in discriminators.keys():
 
 #--------------------------------------------------------------------------------
 #
+# build config files for running addBackgroundZTT and addBackgroundQCD macros
+#
+print "Info: building config files for addBackgroundZTT macro"
+addBackgroundZTT_configFileNames = {} # key = discriminator
+addBackgroundZTT_outputFileNames = {} # key = discriminator
+addBackgroundZTT_logFileNames    = {} # key = discriminator
+for discriminator in discriminators.keys():
+    
+    outputFileName = "addBackgroundZTT_%s.root" % discriminator
+    addBackgroundZTT_outputFileNames[discriminator] = os.path.join(outputFilePath, discriminator, outputFileName)
+
+    cfgFileName_original = configFile_addBackgroundZTT
+    cfgFile_original = open(cfgFileName_original, "r")
+    cfg_original = cfgFile_original.read()
+    cfgFile_original.close()
+    cfg_modified  = cfg_original
+    cfg_modified += "\n"
+    cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage4_outputFileNames[discriminator]
+    cfg_modified += "\n"
+    cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundZTT_outputFileNames[discriminator]
+    cfg_modified += "\n"
+    cfg_modified += "process.addBackgroundZTT.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
+    cfg_modified += "\n"
+    cfgFileName_modified = os.path.join(outputFilePath, configFile_addBackgroundZTT.replace("_cfg.py", "_%s_cfg.py" % discriminator))
+    cfgFile_modified = open(cfgFileName_modified, "w")
+    cfgFile_modified.write(cfg_modified)
+    cfgFile_modified.close()
+    addBackgroundZTT_configFileNames[discriminator] = cfgFileName_modified
+
+    logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+    addBackgroundZTT_logFileNames[discriminator] = logFileName
+
+print "Info: building config files for addBackgroundQCD macro"
+addBackgroundQCD_configFileNames = {} # key = discriminator, "QCDfromSSiso"/"QCDfromSSantiiso"
+addBackgroundQCD_outputFileNames = {} # key = discriminator, "QCDfromSSiso"/"QCDfromSSantiiso"
+addBackgroundQCD_logFileNames    = {} # key = discriminator, "QCDfromSSiso"/"QCDfromSSantiiso"
+for discriminator in discriminators.keys():
+
+    for qcdOption in [ "QCDfromSSiso", "QCDfromSSantiiso" ]:
+        
+        cfgFileName_original = None
+        if qcdOption == "QCDfromSSiso":
+            cfgFileName_original = configFile_addBackgroundQCDfromSSiso
+        elif qcdOption == "QCDfromSSantiiso":
+            cfgFileName_original = configFile_addBackgroundQCDfromSSantiiso
+        else:
+            raise ValueError("Invalid qcdOption = '%s' !!" % qcdOption)
+    
+        outputFileName = "addBackgroundQCD_%s_%s.root" % (discriminator, qcdOption)
+        initDict(addBackgroundQCD_outputFileNames, [ discriminator, qcdOption ])
+        addBackgroundQCD_outputFileNames[discriminator][qcdOption] = os.path.join(outputFilePath, discriminator, outputFileName)
+
+        cfgFile_original = open(cfgFileName_original, "r")
+        cfg_original = cfgFile_original.read()
+        cfgFile_original.close()
+        cfg_modified  = cfg_original
+        cfg_modified += "\n"
+        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage4_outputFileNames[discriminator]
+        cfg_modified += "\n"
+        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator]
+        cfg_modified += "\n"
+        cfg_modified += "process.addBackgroundQCD.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
+        cfg_modified += "\n"
+        cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_cfg.py" % discriminator))
+        cfgFile_modified = open(cfgFileName_modified, "w")
+        cfgFile_modified.write(cfg_modified)
+        cfgFile_modified.close()
+        initDict(addBackgroundQCD_configFileNames, [ discriminator, qcdOption ])
+        addBackgroundQCD_configFileNames[discriminator][qcdOption] = cfgFileName_modified
+
+        logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+        initDict(addBackgroundQCD_logFileNames, [ discriminator, qcdOption ])
+        addBackgroundQCD_logFileNames[discriminator][qcdOption] = logFileName
+#--------------------------------------------------------------------------------    
+
+#--------------------------------------------------------------------------------
+#
+# build shell script for running 'hadd' in order to add histograms for ZTT and QCD
+#
+hadd_stage5_inputFileNames  = {} # key = discriminator
+hadd_stage5_outputFileNames = {} # key = discriminator
+hadd_stage5_logFileNames    = {} # key = discriminator
+for discriminator in discriminators.keys():
+
+    hadd_stage5_inputFileNames[discriminator] = [
+        hadd_stage4_outputFileNames[discriminator],
+        addBackgroundZTT_outputFileNames[discriminator]
+    ]
+    for qcdOption in addBackgroundQCD_outputFileNames[discriminator].keys():
+        hadd_stage5_inputFileNames[discriminator].append(addBackgroundQCD_outputFileNames[discriminator][qcdOption])
+
+    outputFilePath_subdir = os.path.join(outputFilePath, discriminator)
+    createFilePath_recursively(outputFilePath_subdir)    
+    hadd_stage5_outputFileNames[discriminator] = os.path.join(outputFilePath_subdir, "hadd_stage5_%s.root" % discriminator)
+
+    hadd_stage5_logFileNames[discriminator] = hadd_stage5_outputFileNames[discriminator].replace(".root", ".log")
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+#
 # build config files for running prepareTauTauDatacards macro
 #
 print "Info: building config files for prepareTauTauDatacards macro"
-prepareTauTauDatacards_configFileNames = {}
-prepareTauTauDatacards_outputFileNames = {}
-prepareTauTauDatacards_logFileNames    = {}
+prepareTauTauDatacards_configFileNames = {} # key = discriminator
+prepareTauTauDatacards_outputFileNames = {} # key = discriminator
+prepareTauTauDatacards_logFileNames    = {} # key = discriminator
 for discriminator in discriminators.keys():
 
     outputFileName = "htt_tt.inputs-mssm-8TeV-0_%s.root" % discriminator
@@ -750,11 +1019,11 @@ for discriminator in discriminators.keys():
     cfgFile_original.close()
     cfg_modified  = cfg_original
     cfg_modified += "\n"
-    cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage4_outputFileNames[discriminator]
+    cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage5_outputFileNames[discriminator]
     cfg_modified += "\n"
     cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % prepareTauTauDatacards_outputFileNames[discriminator]
     cfg_modified += "\n"    
-    cfg_modified += "process.prepareTauTauDatacards.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin) for tauPtBin in tauPtBins])
+    cfg_modified += "process.prepareTauTauDatacards.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
     cfg_modified += "\n"
     cfgFileName_modified = os.path.join(outputFilePath, configFile_prepareTauTauDatacards.replace("_cfg.py", "_%s_cfg.py" % discriminator))
     cfgFile_modified = open(cfgFileName_modified, "w")
@@ -764,6 +1033,53 @@ for discriminator in discriminators.keys():
 
     logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
     prepareTauTauDatacards_logFileNames[discriminator] = logFileName
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+#
+# build config files for running makeTauTauPlots macro
+#
+print "Info: building config files for makeTauTauPlots macro"
+makeTauTauPlots_configFileNames = {} # key = discriminator, "QCDfromSSiso"/"QCDfromSSantiiso"
+makeTauTauPlots_outputFileNames = {} # key = discriminator
+makeTauTauPlots_logFileNames    = {} # key = discriminator, "QCDfromSSiso"/"QCDfromSSantiiso"
+for discriminator in discriminators.keys():
+
+    outputFilePath_plots = os.path.join(outputFilePath, "plots", "prefit", discriminator)
+    createFilePath_recursively(outputFilePath_plots)
+    outputFileName = "makeTauTauPlots_prefit_%s.png" % discriminator
+    makeTauTauPlots_outputFileNames[discriminator] = os.path.join(outputFilePath_plots, outputFileName)
+
+    for qcdOption in [ "QCDfromSSiso", "QCDfromSSantiiso" ]:
+        
+        cfgFileName_original = None
+        if qcdOption == "QCDfromSSiso":
+            cfgFileName_original = configFile_makeTauTauPlots_QCDfromSSiso
+        elif qcdOption == "QCDfromSSantiiso":
+            cfgFileName_original = configFile_makeTauTauPlots_QCDfromSSantiiso
+        else:
+            raise ValueError("Invalid qcdOption = '%s' !!" % qcdOption)
+        cfgFile_original = open(cfgFileName_original, "r")
+        cfg_original = cfgFile_original.read()
+        cfgFile_original.close()
+        cfg_modified  = cfg_original
+        cfg_modified += "\n"
+        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage5_outputFileNames[discriminator]
+        cfg_modified += "\n"    
+        cfg_modified += "process.makeTauTauPlots.tauPtBinsToPlot = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
+        cfg_modified += "\n"
+        cfg_modified += "process.makeTauTauPlots.outputFileName = cms.string('%s')\n" % makeTauTauPlots_outputFileNames[discriminator]
+        cfg_modified += "\n"
+        cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_cfg.py" % discriminator))
+        cfgFile_modified = open(cfgFileName_modified, "w")
+        cfgFile_modified.write(cfg_modified)
+        cfgFile_modified.close()
+        initDict(makeTauTauPlots_configFileNames, [ discriminator, qcdOption ])
+        makeTauTauPlots_configFileNames[discriminator][qcdOption] = cfgFileName_modified
+
+        logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+        initDict(makeTauTauPlots_logFileNames, [ discriminator, qcdOption ])
+        makeTauTauPlots_logFileNames[discriminator][qcdOption] = logFileName
 #--------------------------------------------------------------------------------
 
 def make_MakeFile_vstring(list_of_strings):
@@ -798,16 +1114,33 @@ for discriminator in hadd_stage2_outputFileNames.keys():
 for discriminator in hadd_stage3_outputFileNames.keys():
     for regionType in hadd_stage3_outputFileNames[discriminator].keys():
         outputFileNames.append(hadd_stage3_outputFileNames[discriminator][regionType])
+for discriminator in determineBJetLooseToTightWeight_outputFileNames.keys():
+    for looseRegion in determineBJetLooseToTightWeight_outputFileNames[discriminator].keys():
+        for bJet1EtaBin in determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion].keys():
+            outputFileNames.append(determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion][bJet1EtaBin])
 for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
     for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
-            outputFileNames.append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator])
+            for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
+                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    outputFileNames.append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin])
+for discriminator in hadd_determineBJetLooseToTightWeight_outputFileNames.keys():
+    outputFileNames.append(hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator])                    
 for discriminator in hadd_determineJetToTauFakeRate_outputFileNames.keys():
     outputFileNames.append(hadd_determineJetToTauFakeRate_outputFileNames[discriminator])
 for discriminator in hadd_stage4_outputFileNames.keys():
     outputFileNames.append(hadd_stage4_outputFileNames[discriminator])
+for discriminator in addBackgroundZTT_outputFileNames.keys():
+    outputFileNames.append(addBackgroundZTT_outputFileNames[discriminator])
+for discriminator in addBackgroundQCD_outputFileNames.keys():
+    for qcdOption in addBackgroundQCD_outputFileNames[discriminator].keys():
+        outputFileNames.append(addBackgroundQCD_outputFileNames[discriminator][qcdOption])
+for discriminator in hadd_stage5_outputFileNames.keys():
+    outputFileNames.append(hadd_stage5_outputFileNames[discriminator])    
 for discriminator in prepareTauTauDatacards_outputFileNames.keys():
-    outputFileNames.append(prepareTauTauDatacards_outputFileNames[discriminator])    
+    outputFileNames.append(prepareTauTauDatacards_outputFileNames[discriminator])
+for discriminator in makeTauTauPlots_outputFileNames.keys():
+    outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator]) 
 makeFile.write("all: %s\n" % make_MakeFile_vstring(outputFileNames))
 makeFile.write("\techo 'Finished running MSSM Higgs -> tau tau -> tau_h tau_h analysis.'\n")
 makeFile.write("\n")
@@ -870,17 +1203,41 @@ for discriminator in hadd_stage3_outputFileNames.keys():
            make_MakeFile_vstring(hadd_stage3_inputFileNames[discriminator][regionType]),
            hadd_stage3_logFileNames[discriminator][regionType]))
 makeFile.write("\n")
-for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
-    for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
-        for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
+for discriminator in determineBJetLooseToTightWeight_outputFileNames.keys():
+    for looseRegion in determineBJetLooseToTightWeight_outputFileNames[discriminator].keys():
+        for bJet1EtaBin in determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion].keys():
             makeFile.write("%s: %s\n" %                       
-              (determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator],
+              (determineBJetLooseToTightWeight_outputFileNames[discriminator][looseRegion][bJet1EtaBin],
                hadd_stage3_outputFileNames[discriminator]["qcdRegion"]))
             makeFile.write("\t%s%s %s &> %s\n" %
               (nice, executable_determineJetToTauFakeRate,
-               determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator],
-               determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator]))
+               determineBJetLooseToTightWeight_configFileNames[discriminator][looseRegion][bJet1EtaBin],
+               determineBJetLooseToTightWeight_logFileNames[discriminator][looseRegion][bJet1EtaBin]))
+for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
+    for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
+        for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
+            for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
+                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    makeFile.write("%s: %s\n" %                       
+                      (determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin],
+                       hadd_stage3_outputFileNames[discriminator]["qcdRegion"]))
+                    makeFile.write("\t%s%s %s &> %s\n" %
+                      (nice, executable_determineJetToTauFakeRate,
+                       determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin],
+                       determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin]))
 makeFile.write("\n")
+for discriminator in hadd_determineBJetLooseToTightWeight_outputFileNames.keys():
+    makeFile.write("%s: %s\n" %
+      (hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator],
+       make_MakeFile_vstring(hadd_determineBJetLooseToTightWeight_inputFileNames[discriminator])))
+    makeFile.write("\t%s%s %s\n" %
+      (nice, executable_rm,
+       hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator]))
+    makeFile.write("\t%s%s %s %s &> %s\n" %
+      (nice, executable_hadd,
+       hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator],
+       make_MakeFile_vstring(hadd_determineBJetLooseToTightWeight_inputFileNames[discriminator]),
+       hadd_determineBJetLooseToTightWeight_logFileNames[discriminator]))
 for discriminator in hadd_determineJetToTauFakeRate_outputFileNames.keys():
     makeFile.write("%s: %s\n" %
       (hadd_determineJetToTauFakeRate_outputFileNames[discriminator],
@@ -906,14 +1263,56 @@ for discriminator in hadd_stage4_outputFileNames.keys():
        hadd_stage4_outputFileNames[discriminator],
        make_MakeFile_vstring(hadd_stage4_inputFileNames[discriminator]),
        hadd_stage4_logFileNames[discriminator]))
+makeFile.write("\n")    
+for discriminator in addBackgroundZTT_outputFileNames.keys():
+    makeFile.write("%s: %s\n" %
+      (addBackgroundZTT_outputFileNames[discriminator],
+       hadd_stage4_outputFileNames[discriminator]))
+    makeFile.write("\t%s%s %s &> %s\n" %
+      (nice, executable_addBackgroundZTT,
+       addBackgroundZTT_configFileNames[discriminator],
+       addBackgroundZTT_logFileNames[discriminator]))
+for discriminator in addBackgroundQCD_outputFileNames.keys():
+    for qcdOption in addBackgroundQCD_outputFileNames[discriminator].keys():
+        makeFile.write("%s: %s\n" %
+          (addBackgroundQCD_outputFileNames[discriminator][qcdOption],
+           hadd_stage4_outputFileNames[discriminator]))
+        makeFile.write("\t%s%s %s &> %s\n" %
+          (nice, executable_addBackgroundQCD,
+           addBackgroundQCD_configFileNames[discriminator][qcdOption],
+           addBackgroundQCD_logFileNames[discriminator][qcdOption]))
+makeFile.write("\n")
+for discriminator in hadd_stage5_outputFileNames.keys():
+    makeFile.write("%s: %s\n" %
+      (hadd_stage5_outputFileNames[discriminator],
+       make_MakeFile_vstring(hadd_stage5_inputFileNames[discriminator])))
+    makeFile.write("\t%s%s %s\n" %
+      (nice, executable_rm,
+       hadd_stage5_outputFileNames[discriminator]))
+    makeFile.write("\t%s%s %s %s &> %s\n" %
+      (nice, executable_hadd,
+       hadd_stage5_outputFileNames[discriminator],
+       make_MakeFile_vstring(hadd_stage5_inputFileNames[discriminator]),
+       hadd_stage5_logFileNames[discriminator]))
+makeFile.write("\n")
 for discriminator in prepareTauTauDatacards_outputFileNames.keys():
     makeFile.write("%s: %s\n" %
       (prepareTauTauDatacards_outputFileNames[discriminator],
-       hadd_stage4_outputFileNames[discriminator]))
+       hadd_stage5_outputFileNames[discriminator]))
     makeFile.write("\t%s%s %s &> %s\n" %
       (nice, executable_prepareTauTauDatacards,
        prepareTauTauDatacards_configFileNames[discriminator],
        prepareTauTauDatacards_logFileNames[discriminator]))
+makeFile.write("\n")    
+for discriminator in makeTauTauPlots_outputFileNames.keys():
+    makeFile.write("%s: %s\n" %
+      (makeTauTauPlots_outputFileNames[discriminator],
+       hadd_stage5_outputFileNames[discriminator]))
+    for qcdOption in makeTauTauPlots_configFileNames[discriminator].keys():       
+        makeFile.write("\t%s%s %s &> %s\n" %
+          (nice, executable_makeTauTauPlots,
+           makeTauTauPlots_configFileNames[discriminator][qcdOption],
+           makeTauTauPlots_logFileNames[discriminator][qcdOption]))    
 makeFile.write("\n")
 makeFile.write(".PHONY: clean\n")
 makeFile.write("clean:\n")

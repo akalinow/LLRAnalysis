@@ -19,6 +19,8 @@ process.fwliteOutput = cms.PSet(
 
 process.determineJetToTauFakeRate = cms.PSet(
 
+    type = cms.string("jetToTauFakeRate"), 
+
     looseRegion = cms.string("SSantiisoLooseBtag"),
     tightRegion = cms.string("SSisoLooseBtag"),
 

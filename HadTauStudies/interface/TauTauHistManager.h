@@ -21,28 +21,6 @@
 #include <string>
 #include <vector>
 
-namespace
-{
-  std::string getPt_string(double ptMin, double ptMax)
-  {
-    std::string retVal = "";
-    if      ( ptMin > 0. && ptMax > 0. ) retVal = Form("pt%1.0fto%1.0f", ptMin, ptMax);
-    else if ( ptMin > 0.               ) retVal = Form("ptGt%1.0f", ptMin);
-    else if (               ptMax > 0. ) retVal = Form("ptLt%1.0f", ptMax);
-    return retVal;
-  }
-
-  std::string getAbsEta_string(double absEtaMin, double absEtaMax)
-  {
-    TString retVal = "";
-    if      ( absEtaMin > 0. && absEtaMax < +5. ) retVal = Form("absEta%1.0fto%1.1f", absEtaMin, absEtaMax);
-    else if ( absEtaMin > 0.                    ) retVal = Form("absEtaGt%1.1f", absEtaMin);
-    else if (                   absEtaMax < +5. ) retVal = Form("absEtaLt%1.1f", absEtaMax);
-    retVal.ReplaceAll(".", "_");
-    return retVal.Data();
-  }
-}
-
 class TauTauHistManager
 {
  public:
@@ -59,10 +37,10 @@ class TauTauHistManager
 		      double, double, double, 
 		      double, double, 
 		      double, double, double, double, 
-		      double, double, double, double,
+		      double, double, double, double, int,
 		      double, double, double, 
-		      double, double, double, 
-		      double, int, 
+		      double, double, double, int,
+		      double, int, double,
 		      double);
   
  protected:
@@ -80,11 +58,40 @@ class TauTauHistManager
   /// used to uniquely identify histograms
   std::string process_; 
   std::string category_;
-  std::string bin_;
+  std::string tauPtBin_;
+  typedef std::vector<double> vdouble;
+  vdouble tau1EtaBins_;
+  int numTau1EtaBins_;
+  vdouble tau2EtaBins_;
+  int numTau2EtaBins_;
+  vdouble bJet1EtaBins_;
+  int numBJet1EtaBins_;
+  vdouble bJet2EtaBins_;
+  int numBJet2EtaBins_;
   std::string central_or_shift_;
  
+  struct histogramIn1dParticleEtaBinsEntryType
+  {
+    histogramIn1dParticleEtaBinsEntryType(double particleEtaMin, double particleEtaMax, TH1* histogram)
+      : particleEtaMin_(particleEtaMin),
+	particleEtaMax_(particleEtaMax),
+	histogram_(histogram)
+    {}
+    ~histogramIn1dParticleEtaBinsEntryType() {}
+    void Fill(double absParticleEta, double x, double weight)
+    {
+      if ( (particleEtaMin_ < 0. || absParticleEta > particleEtaMin_) && (particleEtaMax_ > 5. || absParticleEta < particleEtaMax_) ) {
+	histogram_->Fill(x, weight);
+      }
+    }
+    double particleEtaMin_;
+    double particleEtaMax_;
+    TH1* histogram_;
+  };
+
   TH1* histogramTau1PtS_;
   TH1* histogramTau1PtL_;
+  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramTau1Pt_inTauEtaBins_;
   TH1* histogramTau1Eta_;
   TH1* histogramTau1Phi_;
   TH1* histogramTau1DecayMode_;
@@ -93,6 +100,7 @@ class TauTauHistManager
 
   TH1* histogramTau2PtS_;
   TH1* histogramTau2PtL_;
+  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramTau2Pt_inTauEtaBins_;
   TH1* histogramTau2Eta_;
   TH1* histogramTau2Phi_;
   TH1* histogramTau2DecayMode_;
@@ -119,22 +127,56 @@ class TauTauHistManager
   TH1* histogramJet2Phi_;
   TH1* histogramJet2BtagDiscr_;
 
+  TH1* histogramNumJets_;
+
   TH1* histogramBJet1PtS_;
   TH1* histogramBJet1PtL_;
+  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet1Pt_inBJetEtaBins_;
   TH1* histogramBJet1Eta_;
   TH1* histogramBJet1Phi_;
 
   TH1* histogramBJet2PtS_;
   TH1* histogramBJet2PtL_;
+  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet2Pt_inBJetEtaBins_;
   TH1* histogramBJet2Eta_;
   TH1* histogramBJet2Phi_;
+
+  TH1* histogramNumBJets_;
 
   TH1* histogramMEtS_;
   TH1* histogramMEtL_;
 
   TH1* histogramNumVertices_;
 
+  TH1* histogramNUP_;
+
+  struct histogramIn2dParticleEtaBinsEntryType
+  {
+    histogramIn2dParticleEtaBinsEntryType(double particle1EtaMin, double particle1EtaMax, double particle2EtaMin, double particle2EtaMax, TH1* histogram)
+      : particle1EtaMin_(particle1EtaMin),
+	particle1EtaMax_(particle1EtaMax),
+	particle2EtaMin_(particle2EtaMin),
+	particle2EtaMax_(particle2EtaMax),
+	histogram_(histogram)
+    {}
+    ~histogramIn2dParticleEtaBinsEntryType() {}
+    void Fill(double absParticle1Eta, double absParticle2Eta, double x, double weight)
+    {
+      if ( (particle1EtaMin_ < 0. || absParticle1Eta > particle1EtaMin_) && (particle1EtaMax_ > 5. || absParticle1Eta < particle1EtaMax_) &&
+	   (particle2EtaMin_ < 0. || absParticle2Eta > particle2EtaMin_) && (particle2EtaMax_ > 5. || absParticle2Eta < particle2EtaMax_) ) {
+	histogram_->Fill(x, weight);
+      }
+    }
+    double particle1EtaMin_;
+    double particle1EtaMax_;
+    double particle2EtaMin_;
+    double particle2EtaMax_;
+    TH1* histogram_;
+  };
+
   TH1* histogramEventCounter_;
+  std::vector<histogramIn2dParticleEtaBinsEntryType*> histogramEventCounter_inTauEtaBins_;
+  std::vector<histogramIn2dParticleEtaBinsEntryType*> histogramEventCounter_inBJetEtaBins_;
 
   std::vector<TH1*> histograms_;
 };

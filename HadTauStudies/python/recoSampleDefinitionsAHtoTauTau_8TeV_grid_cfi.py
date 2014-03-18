@@ -24,8 +24,11 @@ SAMPLES_TO_ANALYZE = [
     'WJets',
     'WJetsExt',
     'W1Jets',
+    'W1JetsExt',
     'W2Jets',
+    'W2JetsExt',
     'W3Jets',
+    'W3JetsExt',
     'W4Jets',
     'TTJetsHadronic',
     'TTJetsSemiLept',
@@ -209,6 +212,14 @@ RECO_SAMPLES = {
         'x_sec'            : 6381.2*_picobarns,
         'type'             : 'smMC'
     },
+    'W1JetsExt' : {
+        'datasetpath'      : "/W1JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 29784800,
+        'events_per_job'   : 40000,
+        'x_sec'            : 6381.2*_picobarns,
+        'type'             : 'smMC'
+    },
     'W2Jets' : {
         'datasetpath'      : "/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
@@ -217,10 +228,26 @@ RECO_SAMPLES = {
         'x_sec'            : 2039.8*_picobarns,
         'type'             : 'smMC'
     },
+    'W2JetsExt' : {
+        'datasetpath'      : "/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 30693853,
+        'events_per_job'   : 40000,
+        'x_sec'            : 2039.8*_picobarns,
+        'type'             : 'smMC'
+    },
     'W3Jets' : {
         'datasetpath'      : "/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 15539503,
+        'events_per_job'   : 30000,
+        'x_sec'            : 612.5*_picobarns,
+        'type'             : 'smMC'
+    },
+    'W3JetsExt' : {
+        'datasetpath'      : "/W3JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 15241144,
         'events_per_job'   : 30000,
         'x_sec'            : 612.5*_picobarns,
         'type'             : 'smMC'

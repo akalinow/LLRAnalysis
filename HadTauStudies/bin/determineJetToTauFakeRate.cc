@@ -43,54 +43,6 @@ typedef std::vector<std::string> vstring;
 
 namespace
 {
-  TDirectory* getDirectory(TFile* inputFile, const std::string& region, const std::string& category, const std::string& tauPtBin, bool enableException)
-  {
-    std::string dirName = Form("tauTau_%s_%s/%s", region.data(), category.data(), tauPtBin.data());
-    TDirectory* dir = dynamic_cast<TDirectory*>(inputFile->Get(dirName.data()));
-    if ( enableException && !dir )
-      throw cms::Exception("getDirectory") 
-	<< "Failed to find directory for category = " << category << ", tauPtBin = " << tauPtBin << " !!\n";
-    return dir;
-  }
-
-  TH1* getHistogram(TDirectory* dir, const std::string& process, const std::string& histogramName, const std::string& central_or_shift, bool enableException)
-  {
-    std::string histogramName_full = Form("%s/%s", process.data(), process.data());
-    if ( !(central_or_shift == "" || central_or_shift == "central") ) histogramName_full.append("_").append(central_or_shift);
-    histogramName_full.append("_").append(histogramName);
-    TH1* histogram = dynamic_cast<TH1*>(dir->Get(histogramName_full.data()));
-    if ( enableException && !histogram ) 
-      throw cms::Exception("getHistogram") 
-	<< "Failed to find histogram = " << histogramName_full << " in directory = " << dir->GetName() << " !!\n";    
-    return histogram;
-  }
-  
-  TDirectory* createSubdirectory(TDirectory* dir, const std::string& subdirName)
-  {
-    dir->cd();
-    if ( !dir->Get(subdirName.data()) ) {
-      dir->mkdir(subdirName.data());
-    }
-    TDirectory* subdir = dynamic_cast<TDirectory*>(dir->Get(subdirName.data()));
-    assert(subdir);
-    return subdir;
-  }
-  
-  TDirectory* createSubdirectory_recursively(TFileDirectory& dir, const std::string& fullSubdirName)
-  {
-    TString fullSubdirName_tstring = fullSubdirName.data();
-    TObjArray* subdirNames = fullSubdirName_tstring.Tokenize("/");
-    int numSubdirectories = subdirNames->GetEntries();
-    TDirectory* parent = dir.getBareDirectory();
-    for ( int iSubdirectory = 0; iSubdirectory < numSubdirectories; ++iSubdirectory ) {
-      const TObjString* subdirName = dynamic_cast<TObjString*>(subdirNames->At(iSubdirectory));
-      assert(subdirName);
-      TDirectory* subdir = createSubdirectory(parent, subdirName->GetString().Data());
-      parent = subdir;
-    }
-    return parent;
-  }
-
   //-------------------------------------------------------------------------------
   void getBinomialBounds(Int_t n, Int_t r, Double_t& rMin, Double_t& rMax)
   {
@@ -270,6 +222,9 @@ struct EigenVector_and_Value
 
 std::vector<EigenVector_and_Value> compEigenVectors_and_Values(const TMatrixD& cov)
 {
+  std::cout << "<compEigenVectors_and_Values>:" << std::endl;
+  std::cout << " cov:" << std::endl;
+  cov.Print();
   if ( cov.GetNcols() != cov.GetNrows() ) 
     throw cms::Exception("compEigenVectors_and_Values") 
       << "Matrix given as function argument is not symmetric !!\n";
@@ -286,14 +241,15 @@ std::vector<EigenVector_and_Value> compEigenVectors_and_Values(const TMatrixD& c
     }
     double eigenValue = eigenValues(iEigenVector);
     TVectorD vec1 = cov*eigenVector;
-    //std::cout << "vec1:" << std::endl;
-    //vec1.Print();
+    std::cout << "vec1:" << std::endl;
+    vec1.Print();
     TVectorD vec2 = eigenValue*eigenVector;
-    //std::cout << "vec2:" << std::endl;
-    //vec2.Print();
+    std::cout << "vec2:" << std::endl;
+    vec2.Print();
     // CV: check that EigenVector is indeed an EigenVector,
     //     i.e. that we interpreted the ordering of columns and rows of the eigenVectors matrix correctly
     for ( int iComponent = 0; iComponent < dimension; ++iComponent ) {   
+      //std::cout << "component #" << iComponent << ": vec1 = " << vec1(iComponent) << ", vec2 = " << vec2(iComponent) << std::endl;
       assert((vec1(iComponent) - vec2(iComponent)) < 1.e-3*(TMath::Abs(vec1(iComponent)) + TMath::Abs(vec2(iComponent))));
     }
     eigenVectors_and_Values.push_back(EigenVector_and_Value(eigenVector, eigenValue));
@@ -367,7 +323,7 @@ void makeControlPlot(TGraphAsymmErrors* graph,
 
   dummyHistogram_top->Draw();
 
-  TLegend* legend = new TLegend(0.69, 0.93 - 0.06*(1 + fitFunctionsShape_sysShifts.size()/2), 0.94, 0.93, "", "brNDC"); 
+  TLegend* legend = new TLegend(0.69, 0.935 - 0.055*(1 + fitFunctionsShape_sysShifts.size()/2), 0.94, 0.935, "", "brNDC"); 
   legend->SetBorderSize(0);
   legend->SetFillColor(0);
 
@@ -513,6 +469,7 @@ void makeControlPlot(TGraphAsymmErrors* graph,
   if ( idx != std::string::npos ) canvas->Print(std::string(outputFileName_plot).append(std::string(outputFileName, idx)).data());
   canvas->Print(std::string(outputFileName_plot).append(".png").data());
   canvas->Print(std::string(outputFileName_plot).append(".pdf").data());
+  canvas->Print(std::string(outputFileName_plot).append(".root").data());
   
   delete legend;
   delete dummyHistogram_top;
@@ -532,10 +489,19 @@ std::pair<TH1*, TH1*> getHistogramsNumerator_and_Denominator(TDirectory* inputDi
 							     const std::string& processData, const std::vector<std::string>& processesToSubtract, 
 							     const std::string& histogramName)
 {
+  std::cout << "<getHistogramsNumerator_and_Denominator>:" << std::endl;
+  std::cout << " inputDir_loose = " << inputDir_loose << ": name = " << inputDir_loose->GetName() << std::endl;
+  std::cout << " looseRegion = " << looseRegion << std::endl;
+  std::cout << " inputDir_tight = " << inputDir_tight << ": name = " << inputDir_tight->GetName() << std::endl;
+  std::cout << " tightRegion = " << tightRegion << std::endl;
+  std::cout << " histogramName = " << histogramName << std::endl;
+
   TH1* histogramData_loose = getHistogram(inputDir_loose, processData, histogramName, "central", true);
   assert(histogramData_loose);
+  std::cout << " histogramData_loose = " << histogramData_loose << ": name = " << histogramData_loose << ", integral = " << histogramData_loose->Integral() << std::endl;
   TH1* histogramData_tight = getHistogram(inputDir_tight, processData, histogramName, "central", true);
   assert(histogramData_tight);
+  std::cout << " histogramData_tight = " << histogramData_tight << ": name = " << histogramData_tight << ", integral = " << histogramData_tight->Integral() << std::endl;
   checkCompatibleBinning(histogramData_loose, histogramData_tight);
 
   std::vector<TH1*> histogramsToSubtract_loose;
@@ -579,6 +545,8 @@ int main(int argc, char* argv[])
 
   edm::ParameterSet cfgDetermineJetToTauFakeRate = cfg.getParameter<edm::ParameterSet>("determineJetToTauFakeRate");
   
+  std::string type = cfgDetermineJetToTauFakeRate.getParameter<std::string>("type");
+
   std::string looseRegion = cfgDetermineJetToTauFakeRate.getParameter<std::string>("looseRegion");
   std::string tightRegion = cfgDetermineJetToTauFakeRate.getParameter<std::string>("tightRegion");
 
@@ -590,9 +558,23 @@ int main(int argc, char* argv[])
 
   std::string tauPtBin = cfgDetermineJetToTauFakeRate.getParameter<std::string>("tauPtBin");
 
+  std::string particle1EtaBin = cfgDetermineJetToTauFakeRate.getParameter<std::string>("particle1EtaBin");
+  std::string particle2EtaBin = cfgDetermineJetToTauFakeRate.getParameter<std::string>("particle2EtaBin");
+
   vstring histogramsToFit = cfgDetermineJetToTauFakeRate.getParameter<vstring>("histogramsToFit");
 
   std::string fitFunction_formula = cfgDetermineJetToTauFakeRate.getParameter<std::string>("fitFunction");
+  std::cout << "fitFunction_formula = " << fitFunction_formula << std::endl;
+  std::map<std::string, double> initialParameters; // key = fitParameterName
+  if ( cfgDetermineJetToTauFakeRate.exists("initialParameters") ) {
+    edm::ParameterSet cfgInitialParameters = cfgDetermineJetToTauFakeRate.getParameter<edm::ParameterSet>("initialParameters");
+    vstring fitParameterNames = cfgInitialParameters.getParameterNamesForType<double>();
+    for ( vstring::const_iterator fitParameterName = fitParameterNames.begin();
+	  fitParameterName != fitParameterNames.end(); ++fitParameterName ) {
+      double initialParameter_value = cfgInitialParameters.getParameter<double>(*fitParameterName);
+      initialParameters[*fitParameterName] = initialParameter_value;
+    }
+  }
   double xMin = cfgDetermineJetToTauFakeRate.getParameter<double>("xMin");
   double xMax = cfgDetermineJetToTauFakeRate.getParameter<double>("xMax");
 
@@ -607,16 +589,18 @@ int main(int argc, char* argv[])
 
   TDirectory* inputDir_loose = getDirectory(inputFile, looseRegion, category, tauPtBin, true);
   assert(inputDir_loose);
+  std::cout << "inputDir_loose = " << inputDir_loose << ": name = " << inputDir_loose->GetName() << std::endl;
   TDirectory* inputDir_tight = getDirectory(inputFile, tightRegion, category, tauPtBin, true);
   assert(inputDir_tight);
+  std::cout << "inputDir_tight = " << inputDir_tight << ": name = " << inputDir_tight->GetName() << std::endl;
 
-  TDirectory* outputDir = createSubdirectory_recursively(fs, Form("jetToTauFakeRate/%s", category.data()));
+  TDirectory* outputDir = createSubdirectory_recursively(fs, Form("%s/%s/%s%s", type.data(), category.data(), particle1EtaBin.data(), particle2EtaBin.data()));
   outputDir->cd();
 
   std::pair<TH1*, TH1*> histogramJetToTauFakeRate_numerator_and_denominator = getHistogramsNumerator_and_Denominator(
     inputDir_loose, looseRegion, inputDir_tight, tightRegion, 
     processData, processesToSubtract, 
-    "EventCounter");
+    Form("EventCounter_%s%s", particle1EtaBin.data(), particle2EtaBin.data()));
   double r = histogramJetToTauFakeRate_numerator_and_denominator.first->Integral();
   double n = histogramJetToTauFakeRate_numerator_and_denominator.second->Integral();
   double avJetToTauFakeRate = r/n;
@@ -624,6 +608,8 @@ int main(int argc, char* argv[])
   getBinomialBounds(TMath::Nint(n), TMath::Nint(r), avJetToTauFakeRateDown, avJetToTauFakeRateUp);
   avJetToTauFakeRateUp /= n;
   avJetToTauFakeRateDown /= n;
+  std::cout << "n = " << n << ", r = " << r << " --> avJetToTauFakeRate = " << avJetToTauFakeRate 
+	    << " + " << (avJetToTauFakeRateUp - avJetToTauFakeRate) << " - " << (avJetToTauFakeRate - avJetToTauFakeRateDown) << std::endl;
   std::string fitFunctionNormName = Form("fitFunctionNorm_%s_div_%s", tightRegion.data(), looseRegion.data());
   TF1* fitFunctionNorm = new TF1(fitFunctionNormName.data(), Form("%f", avJetToTauFakeRate), xMin, xMax);
   fitFunctionNorm->Write();
@@ -638,16 +624,19 @@ int main(int argc, char* argv[])
 	histogramToFit != histogramsToFit.end(); ++histogramToFit ) {
     std::cout << "fitting " << (*histogramToFit) << ":" << std::endl;
 
+    std::string particleEtaBin = "";
+    if ( histogramToFit->find("tau1") != std::string::npos || histogramToFit->find("bJet1") != std::string::npos ) particleEtaBin.append(particle1EtaBin);
+    if ( histogramToFit->find("tau2") != std::string::npos || histogramToFit->find("bJet2") != std::string::npos ) particleEtaBin.append(particle2EtaBin);
     std::pair<TH1*, TH1*> histogramJetToTauFakeRate_numerator_and_denominator = getHistogramsNumerator_and_Denominator(
       inputDir_loose, looseRegion, inputDir_tight, tightRegion, 
       processData, processesToSubtract, 
-      *histogramToFit);
+      Form("%s_%s", histogramToFit->data(), particleEtaBin.data()));
     TH1* histogramJetToTauFakeRate_numerator = histogramJetToTauFakeRate_numerator_and_denominator.first;
     //histogramJetToTauFakeRate_numerator->Scale(1./histogramJetToTauFakeRate_numerator->Integral());
     TH1* histogramJetToTauFakeRate_denominator = histogramJetToTauFakeRate_numerator_and_denominator.second;
     //histogramJetToTauFakeRate_denominator->Scale(1./histogramJetToTauFakeRate_denominator->Integral());
     
-    std::string graphNameJetToTauFakeRate = Form("jetToTauFakeRate_%s_%s_div_%s", histogramToFit->data(), tightRegion.data(), looseRegion.data());
+    std::string graphNameJetToTauFakeRate = Form("%s_%s_%s_div_%s", type.data(), histogramToFit->data(), tightRegion.data(), looseRegion.data());
     TGraphAsymmErrors* graphJetToTauFakeRate = getEfficiency(histogramJetToTauFakeRate_numerator, histogramJetToTauFakeRate_denominator);
     int numPoints = graphJetToTauFakeRate->GetN();
     for ( int iPoint = 0; iPoint < numPoints; ++iPoint ) {
@@ -667,38 +656,54 @@ int main(int argc, char* argv[])
     double x0 = histogramJetToTauFakeRate_denominator->GetMean();
     std::string fitFunction_formula_wrt_x0 = TString(fitFunction_formula.data()).ReplaceAll("x", Form("(x - %f)", x0)).Data();
     TF1* fitFunctionShape = new TF1(fitFunctionShapeName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
+    int numFitParameter = fitFunctionShape->GetNpar();
+    for ( int iFitParameter = 0; iFitParameter < numFitParameter; ++iFitParameter ) {
+      std::string fitParameterName = Form("p%i", iFitParameter);
+      if ( initialParameters.find(fitParameterName) != initialParameters.end() ) {
+	double initialParameter_value = initialParameters[fitParameterName];
+	std::cout << "initializing fitParameter #" << iFitParameter << " = " << initialParameter_value << std::endl;
+	fitFunctionShape->SetParameter(iFitParameter, initialParameter_value);
+      }
+    }
     TFitResultPtr fitResult = graphJetToTauFakeRate->Fit(fitFunctionShape, "ERNS");
-    fitFunctionShape->Write();
-    TMatrixD cov = fitResult->GetCovarianceMatrix();
-    std::vector<EigenVector_and_Value> eigenVectors_and_Values = compEigenVectors_and_Values(cov);
-    size_t dimension = fitFunctionShape->GetNpar();
-    assert(eigenVectors_and_Values.size() == dimension);
     std::vector<fitFunction_and_legendEntry> fitFunctions_sysShifts;
-    int idxPar = 1;
-    for ( std::vector<EigenVector_and_Value>::const_iterator eigenVector_and_Value = eigenVectors_and_Values.begin();
-	  eigenVector_and_Value != eigenVectors_and_Values.end(); ++eigenVector_and_Value ) {
-      assert(eigenVector_and_Value->eigenVector_.GetNrows() == (int)dimension);
-      std::cout << "EigenVector #" << idxPar << ":" << std::endl;
-      eigenVector_and_Value->eigenVector_.Print();
-      std::cout << "EigenValue #" << idxPar << " = " << eigenVector_and_Value->eigenValue_ << std::endl;
-      std::string fitFunctionShapeParUpName = Form("fitFunctionShapePar%iUp_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
-      TF1* fitFunctionShapeParUp = new TF1(fitFunctionShapeParUpName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
-      for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
-	fitFunctionShapeParUp->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) + eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
-      }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParUp, Form("EigenVec #%i", idxPar)));
-      fitFunctionShapeParUp->Write();
-      std::string fitFunctionShapeParDownName = Form("fitFunctionShapePar%iDown_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
-      TF1* fitFunctionShapeParDown = new TF1(fitFunctionShapeParDownName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
-      for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
-	fitFunctionShapeParDown->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) - eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
-      }
-      fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParDown, Form("EigenVec #%i", idxPar)));
-      fitFunctionShapeParDown->Write();
-      ++idxPar;
-    }    
+    if ( fitResult->IsValid() ) {
+      fitFunctionShape->Write();
+      TMatrixD cov = fitResult->GetCovarianceMatrix();
+      std::vector<EigenVector_and_Value> eigenVectors_and_Values = compEigenVectors_and_Values(cov);
+      size_t dimension = fitFunctionShape->GetNpar();
+      assert(eigenVectors_and_Values.size() == dimension);
+      int idxPar = 1;
+      for ( std::vector<EigenVector_and_Value>::const_iterator eigenVector_and_Value = eigenVectors_and_Values.begin();
+	    eigenVector_and_Value != eigenVectors_and_Values.end(); ++eigenVector_and_Value ) {
+	assert(eigenVector_and_Value->eigenVector_.GetNrows() == (int)dimension);
+	std::cout << "EigenVector #" << idxPar << ":" << std::endl;
+	eigenVector_and_Value->eigenVector_.Print();
+	std::cout << "EigenValue #" << idxPar << " = " << eigenVector_and_Value->eigenValue_ << std::endl;
+	std::string fitFunctionShapeParUpName = Form("fitFunctionShapePar%iUp_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
+	TF1* fitFunctionShapeParUp = new TF1(fitFunctionShapeParUpName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
+	for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
+	  fitFunctionShapeParUp->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) + eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
+	}
+	fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParUp, Form("EigenVec #%i", idxPar)));
+	fitFunctionShapeParUp->Write();
+	std::string fitFunctionShapeParDownName = Form("fitFunctionShapePar%iDown_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
+	TF1* fitFunctionShapeParDown = new TF1(fitFunctionShapeParDownName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
+	for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
+	  fitFunctionShapeParDown->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) - eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
+	}
+	fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParDown, Form("EigenVec #%i", idxPar)));
+	fitFunctionShapeParDown->Write();
+	++idxPar;
+      }    
+    } else {
+      std::cerr << "Warning: Fit failed to converge --> setting fitFunction to constant value !!" << std::endl;
+      delete fitFunctionShape;
+      fitFunctionShape = new TF1(fitFunctionShapeName.data(), "1.0", xMin, xMax);
+      fitFunctionShape->Write();
+    }
     
-    std::string controlPlotFileName = TString(outputFile.file().data()).ReplaceAll(".root", Form("%s_controlPlot.png", histogramToFit->data())).Data();    
+    std::string controlPlotFileName = TString(outputFile.file().data()).ReplaceAll(".root", Form("_%s_controlPlot.png", histogramToFit->data())).Data();    
     makeControlPlot(graphJetToTauFakeRate, avJetToTauFakeRate, avJetToTauFakeRateUp, avJetToTauFakeRateDown, 
 		    fitFunctionShape, fitFunctions_sysShifts, xMin, xMax, *histogramToFit, 1.e-1, 1.e+1, controlPlotFileName);
   }
