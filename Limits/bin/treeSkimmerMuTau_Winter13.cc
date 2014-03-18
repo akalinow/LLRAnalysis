@@ -824,7 +824,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,SUSYHqTWeight_,SUSYHqTWeightUp_,SUSYHqTWeightDown_,
     weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,
     highPtWeightUp,highPtWeightDown;
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
@@ -1239,6 +1239,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
+  outTreePtOrd->Branch("SUSYHqTWeight",          &SUSYHqTWeight_,"SUSYHqTWeight/F");
+  outTreePtOrd->Branch("SUSYHqTWeightUp",          &SUSYHqTWeightUp_,"SUSYHqTWeightUp/F");
+  outTreePtOrd->Branch("SUSYHqTWeightDown",          &SUSYHqTWeightDown_,"SUSYHqTWeightDown/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
 
@@ -1570,6 +1573,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(RERECO) currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
 
   currentTree->SetBranchStatus("index"                 ,1);
+  currentTree->SetBranchStatus("higgsPtWeightNom"      ,1);
+  currentTree->SetBranchStatus("higgsPtWeightUp"       ,1);
+  currentTree->SetBranchStatus("higgsPtWeightDown"     ,1);
 
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
@@ -1723,6 +1729,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float emFraction, hasGsf, leadPFChargedHadrHcalEnergy, leadPFChargedHadrEcalEnergy;
   int signalPFChargedHadrCands, signalPFGammaCands;
   float mcPUweight,embeddingWeight;
+  float higgsPtWeightNom,higgsPtWeightUp,higgsPtWeightDown;
   int isTauLegMatched,isTauLegMatchedToLep,muFlag,isPFMuon,isTightMuon,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1, nPUVerticesP1;
   float rhoFastJet,rhoNeutralFastJet;
@@ -1844,6 +1851,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("numPV",                &numPV);
   currentTree->SetBranchAddress("mcPUweight",           &mcPUweight);
   currentTree->SetBranchAddress("embeddingWeight",      &embeddingWeight);
+  currentTree->SetBranchAddress("higgsPtWeightNom",     &higgsPtWeightNom);//IN
+  currentTree->SetBranchAddress("higgsPtWeightUp",      &higgsPtWeightUp);//IN
+  currentTree->SetBranchAddress("higgsPtWeightDown",    &higgsPtWeightDown);//IN
   currentTree->SetBranchAddress("event",                &event);
   currentTree->SetBranchAddress("run",                  &run);
   currentTree->SetBranchAddress("lumi",                 &lumi);
@@ -2751,6 +2761,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
+    SUSYHqTWeight_ = higgsPtWeightNom;
+    SUSYHqTWeightUp_ = higgsPtWeightUp;
+    SUSYHqTWeightDown_ = higgsPtWeightDown;
     
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 
