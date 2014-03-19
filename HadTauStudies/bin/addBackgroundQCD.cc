@@ -61,6 +61,37 @@ namespace
     std::string subdirName_output = Form("tauTau_%s_%s/%s/%s", region.data(), category.data(), tauPtBin.data(), process.data());
     return subdirName_output;
   }
+
+  struct addBinByBinUncertaintyEntryType
+  {
+    addBinByBinUncertaintyEntryType(const edm::ParameterSet& cfg)
+      : add_(0.),
+	min_(0.)
+    {
+      if ( cfg.exists("add") ) add_ = cfg.getParameter<double>("add");
+      if ( cfg.exists("min") ) min_ = cfg.getParameter<double>("min");
+      std::string range_string = cfg.getParameter<std::string>("range");
+      TPRegexp regexpParser_range("([0-9.e+/-]+):([0-9.e+/-]+)");
+      TObjArray* subStrings = regexpParser_range.MatchS(range_string.data());
+      if ( subStrings->GetEntries() == 3 ) {
+	//std::cout << "substrings(1) = " << ((TObjString*)subStrings->At(1))->GetString() << std::endl;
+	range_begin_ = ((TObjString*)subStrings->At(1))->GetString().Atof();
+	//std::cout << "substrings(2) = " << ((TObjString*)subStrings->At(2))->GetString() << std::endl;
+	range_end_ = ((TObjString*)subStrings->At(2))->GetString().Atof();
+      } else throw cms::Exception("addBinByBinUncertaintyEntryType") 
+	  << "Failed to parse string = '" << range_string << "' !!\n";   
+    }
+    ~addBinByBinUncertaintyEntryType() {}
+    double add_;
+    double min_;
+    double range_begin_;
+    double range_end_;
+  };
+
+  double square(double x)
+  {
+    return (x*x);
+  }
 }
 
 int main(int argc, char* argv[]) 
@@ -105,6 +136,16 @@ int main(int argc, char* argv[])
   vstring central_or_shifts = cfgAddBackgroundQCD.getParameter<vstring>("sysShifts");
   central_or_shifts.push_back(""); // CV: add central value
 
+  std::vector<addBinByBinUncertaintyEntryType*> addBinByBinUncertainties;
+  if ( cfgAddBackgroundQCD.exists("addBinByBinUncertainties") ) {
+    edm::VParameterSet cfgAddBinByBinUncertainties;
+    for ( edm::VParameterSet::const_iterator cfgAddBinByBinUncertainty = cfgAddBinByBinUncertainties.begin();
+	  cfgAddBinByBinUncertainty != cfgAddBinByBinUncertainties.end(); ++cfgAddBinByBinUncertainty ) {
+      addBinByBinUncertaintyEntryType* addBinByBinUncertainty = new addBinByBinUncertaintyEntryType(*cfgAddBinByBinUncertainty);
+      addBinByBinUncertainties.push_back(addBinByBinUncertainty);
+    }
+  }
+  
   fwlite::InputSource inputFiles(cfg); 
   if ( !(inputFiles.files().size() == 1) )
     throw cms::Exception("addBackgroundQCD") 
@@ -209,6 +250,28 @@ int main(int argc, char* argv[])
 	    double sfQCD_shape = ( histogramQCD_shape->Integral() > 0. ) ? (histogramQCD_norm->Integral()/histogramQCD_shape->Integral()) : 1.;
 	    histogramQCD_shape->Scale(sfQCD_shape);
 	    makeBinContentsPositive(histogramQCD_shape);	  
+
+	    // CV: add 10% extra bin-by-bin uncertainty for mass range 100-150 GeV,
+	    //     where QCD shape template is subject to "turn-on" effects which are difficult to model;
+	    //     cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#TAU_TAU_channel
+	    int numBins = histogramQCD_shape->GetNbinsX();
+	    for ( int iBin = 1; iBin <= numBins; ++iBin ) {
+	      double binCenter = histogramQCD_shape->GetBinCenter(iBin);
+	      double binContent = histogramQCD_shape->GetBinContent(iBin);
+	      double binError = histogramQCD_shape->GetBinError(iBin);
+	      double binErr2_add = square(binError);
+	      double binError_min = binError;
+	      for ( std::vector<addBinByBinUncertaintyEntryType*>::const_iterator addBinByBinUncertainty = addBinByBinUncertainties.begin();
+		    addBinByBinUncertainty != addBinByBinUncertainties.end(); ++addBinByBinUncertainty ) {
+		if ( binCenter > (*addBinByBinUncertainty)->range_begin_ && binCenter < (*addBinByBinUncertainty)->range_end_ ) {
+		  if ( (*addBinByBinUncertainty)->add_ > 0. ) binErr2_add += square((*addBinByBinUncertainty)->add_*binContent);
+		  if ( binError_min < ((*addBinByBinUncertainty)->min_*binContent) ) binError_min = (*addBinByBinUncertainty)->min_*binContent;
+		}
+	      }
+	      assert(binErr2_add >= 0.);
+	      double binError_modified = TMath::Max(TMath::Sqrt(binErr2_add), binError_min);
+	      histogramQCD_shape->SetBinError(iBin, binError_modified);
+	    }
 	  }
 	}
       }
@@ -216,6 +279,11 @@ int main(int argc, char* argv[])
   }
   
   delete inputFile;
+
+  for ( std::vector<addBinByBinUncertaintyEntryType*>::iterator it = addBinByBinUncertainties.begin();
+	it != addBinByBinUncertainties.end(); ++it ) {
+    delete (*it);
+  }
 
   clock.Show("addBackgroundQCD");
 
