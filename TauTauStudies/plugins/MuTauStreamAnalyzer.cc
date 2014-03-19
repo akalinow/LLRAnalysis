@@ -178,14 +178,14 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
   doIsoOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoOrdering", false);
 
-  edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
-  typedef std::vector<std::string> vstring;
-  vstring evtWeightNames = evtWeights.getParameterNamesForType<edm::InputTag>();
-  for ( vstring::const_iterator name = evtWeightNames.begin();
-	name != evtWeightNames.end(); ++name ) {    
-    edm::InputTag src = evtWeights.getParameter<edm::InputTag>(*name);
-    evtWeightsToStore_.push_back(InputTagEntryType(*name, src));
-  }
+//   edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
+//   typedef std::vector<std::string> vstring;
+//   vstring evtWeightNames = evtWeights.getParameterNamesForType<edm::InputTag>();
+//   for ( vstring::const_iterator name = evtWeightNames.begin();
+// 	name != evtWeightNames.end(); ++name ) {    
+//     edm::InputTag src = evtWeights.getParameter<edm::InputTag>(*name);
+//     evtWeightsToStore_.push_back(InputTagEntryType(*name, src));
+//   }
 
 }
 
@@ -586,7 +586,7 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
   tree_->Branch("nPUtruth",  &nPUtruth_,  "nPUtruth/F");
 
-  //Higgs pT reweighting
+  //Higgs pT reweighting SM
   tree_->Branch("higgsPtWeightNom",&higgsPtWeightNom_,"higgsPtWeightNom/F");
   tree_->Branch("higgsPtWeightUp",&higgsPtWeightUp_,"higgsPtWeightUp/F");
   tree_->Branch("higgsPtWeightDown",&higgsPtWeightDown_,"higgsPtWeightDown/F");
@@ -2554,6 +2554,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	  higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
 	  higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
 	}
+// 	std::cout<<"HqtWeight file :" <<inputFileName<<std::endl;
       }
     }
 
@@ -2561,6 +2562,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     higgsPtWeightUp_ = higgsPtWeightUp ;
     higgsPtWeightDown_ = higgsPtWeightDown ;
 
+//     std::cout<<"HqtWeight :" <<higgsPtWeightNom_<<std::endl;
     //////////////////////
     // Embedding weights
 
