@@ -90,7 +90,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
     std::string branchName_;
     edm::InputTag src_;
   };
-  std::vector<InputTagEntryType> evtWeightsToStore_;
+/*   std::vector<InputTagEntryType> evtWeightsToStore_; */
 
   bool isMC_, isRhEmb_;
   bool verbose_;

@@ -20,7 +20,10 @@ samplesToAnalyze = [
     ##"WJetsExt"
     ##'DY2JetsExt'
     ##'HiggsSUSYBB300v2'
-    'HiggsVH125'
+    ##'HiggsVH125'
+    'W1JetsExt',
+    'W2JetsExt',
+    'W3JetsExt'
 ]
 
 #--------------------------------------------------------------------------------

@@ -295,8 +295,8 @@ if reRunPatJets:
 ###################################################################################
 
 process.tauPtEtaIDScaled = cms.EDProducer("TauESCorrector",
-    tauTag = cms.InputTag("tauPtEtaID")
-    #verbose = cms.bool(True)
+    tauTag = cms.InputTag("tauPtEtaID"),
+    ##verbose = cms.bool(True)                
 )
 
 process.tauPtEtaIDIso = cms.EDFilter("PATTauSelector",
