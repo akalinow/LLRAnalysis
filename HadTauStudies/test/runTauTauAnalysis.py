@@ -156,7 +156,7 @@ for massPoint in mssmHiggsMassPoints:
     }
     bbSampleName = "HiggsSUSYBB%1.0f" % massPoint
     if bbSampleName == "HiggsSUSYBB300":
-        bbSampleName == "HiggsSUSYBB300v2"
+        bbSampleName = "HiggsSUSYBB300v2"
     samples[bbSampleName] = {
         'processes' : [ "bbH%1.0f" % massPoint ],
         'inputFiles' : [ bbSampleName ],
@@ -192,18 +192,18 @@ discriminators = {
         # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
     },
-    'MVAwLToldDMsVTight' : {
-        'tau1Selection'              : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'              : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
-        'tau2Selection_relaxed'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",        
-        'tau2Selection_vrelaxed'     : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
-        'tau2FRwEtaBins'             : [ -1., 9.9 ],
-        # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight   
-        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
-    }
+##     'MVAwLToldDMsVTight' : {
+##         'tau1Selection'              : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+##         'tau2Selection'              : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##         'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+##         'tau2Selection_relaxed'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##         'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",        
+##         'tau2Selection_vrelaxed'     : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##         'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+##         'tau2FRwEtaBins'             : [ -1., 9.9 ],
+##         # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight   
+##         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+##     }
 }
 
 bJet1FRwEtaBins = [ -1., 1.0, 2.0, 9.9 ]
@@ -271,10 +271,10 @@ regions.extend(qcdRegions)
 
 tauPtBins = [
     (45.,-1.), # CV: run for comparison with unbinned analysis HIG-13-021
-    (45.,60.), # CV: used in no-B-tag and B-tag category
-    (60.,80.), # CV: used in no-B-tag category
-    (80.,-1.), # CV: used in no-B-tag category
-    (60.,-1.)  # CV: used in B-tag category
+##     (45.,60.), # CV: used in no-B-tag and B-tag category
+##     (60.,80.), # CV: used in no-B-tag category
+##     (80.,-1.), # CV: used in no-B-tag category
+##     (60.,-1.)  # CV: used in B-tag category
 ]
 
 execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])

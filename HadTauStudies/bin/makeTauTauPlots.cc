@@ -116,9 +116,9 @@ namespace
 	      keepBlinded_it != keepBlinded_string.end(); ++keepBlinded_it ) {
 	  TObjArray* subStrings = regexpParser_range.MatchS(keepBlinded_it->data());
 	  if ( subStrings->GetEntries() == 3 ) {
-	    std::cout << "substrings(1) = " << ((TObjString*)subStrings->At(1))->GetString() << std::endl;
+	    //std::cout << "substrings(1) = " << ((TObjString*)subStrings->At(1))->GetString() << std::endl;
 	    double range_begin = ((TObjString*)subStrings->At(1))->GetString().Atof();
-	    std::cout << "substrings(2) = " << ((TObjString*)subStrings->At(2))->GetString() << std::endl;
+	    //std::cout << "substrings(2) = " << ((TObjString*)subStrings->At(2))->GetString() << std::endl;
 	    double range_end = ((TObjString*)subStrings->At(2))->GetString().Atof();
 	    keepBlinded_.push_back(pdouble(range_begin, range_end));
 	  }

@@ -14,7 +14,7 @@ process.fwliteInput = cms.PSet(
 )
 
 process.fwliteOutput = cms.PSet(
-    fileName = cms.string('addBackgroundQCD.root')
+    fileName = cms.string('addBackgroundQCDfromSSantiiso.root')
 )
 
 process.addBackgroundQCD = cms.PSet(
@@ -100,5 +100,16 @@ process.addBackgroundQCD = cms.PSet(
         "CMS_htt_QCDfrNorm_tautau_8TeVDown",
         "CMS_htt_QCDfrShape_tautau_8TeVUp",
         "CMS_htt_QCDfrShape_tautau_8TeVDown"
+    ),
+
+    # CV: add 10% extra bin-by-bin uncertainty for mass range 100-150 GeV,
+    #     where QCD shape template is subject to "turn-on" effects which are difficult to model;
+    #     cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#TAU_TAU_channel
+    addBinByBinUncertainties = cms.VSet(
+        cms.PSet(
+            #add = cms.double(0.10),
+            min = cms.double(0.10),
+            range = cms.vstring("100:150")
+        )
     )
 )
