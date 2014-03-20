@@ -143,7 +143,7 @@ process.makeTauTauPlots = cms.PSet(
                 nobtag = cms.string("1.0 +/- 0.25"),
                 btag = cms.string("1.0 +/- 0.25")
             ),
-            QCD = cms.PSet(
+            QCDalt = cms.PSet(
                 inclusive = cms.string("1.0 +/- 0.35"),
                 nobtag = cms.string("1.0 +/- 0.35"),
                 btag = cms.string("1.0 +/- 0.35")
