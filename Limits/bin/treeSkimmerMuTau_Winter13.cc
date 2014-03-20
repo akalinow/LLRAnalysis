@@ -2973,7 +2973,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
-    if(sample_.find("SUSY")!=string::npos)
+    if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
       {
 	mssmHiggsPtReweightGluGlu_mhmax = h_mhmax!=0 ? h_mhmax->GetBinContent( h_mhmax->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 	mssmHiggsPtReweightGluGlu_mhmax_HqTUp = h_mhmax_HqTUp!=0 ? h_mhmax_HqTUp->GetBinContent( h_mhmax_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
