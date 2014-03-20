@@ -1647,9 +1647,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(RERECO) currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
 
   currentTree->SetBranchStatus("index"                 ,1);
-  currentTree->SetBranchStatus("higgsPtWeightNom"      ,1);
-  currentTree->SetBranchStatus("higgsPtWeightUp"       ,1);
-  currentTree->SetBranchStatus("higgsPtWeightDown"     ,1);
 
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
@@ -1803,7 +1800,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float emFraction, hasGsf, leadPFChargedHadrHcalEnergy, leadPFChargedHadrEcalEnergy;
   int signalPFChargedHadrCands, signalPFGammaCands;
   float mcPUweight,embeddingWeight;
-  float higgsPtWeightNom,higgsPtWeightUp,higgsPtWeightDown;
   int isTauLegMatched,isTauLegMatchedToLep,muFlag,isPFMuon,isTightMuon,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1, nPUVerticesP1;
   float rhoFastJet,rhoNeutralFastJet;
@@ -1925,9 +1921,6 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("numPV",                &numPV);
   currentTree->SetBranchAddress("mcPUweight",           &mcPUweight);
   currentTree->SetBranchAddress("embeddingWeight",      &embeddingWeight);
-  currentTree->SetBranchAddress("higgsPtWeightNom",     &higgsPtWeightNom);//IN
-  currentTree->SetBranchAddress("higgsPtWeightUp",      &higgsPtWeightUp);//IN
-  currentTree->SetBranchAddress("higgsPtWeightDown",    &higgsPtWeightDown);//IN
   currentTree->SetBranchAddress("event",                &event);
   currentTree->SetBranchAddress("run",                  &run);
   currentTree->SetBranchAddress("lumi",                 &lumi);
@@ -3564,6 +3557,41 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // Fill entry
     outTreePtOrd->Fill();
   }
+
+  if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
+    {
+      delete h_mhmax ;
+      delete h_mhmax_HqTUp ;
+      delete h_mhmax_HqTDown ;
+      delete h_mhmax_HIGLUUp ;
+      delete h_mhmax_HIGLUDown ;
+      delete h_mhmax_tanBetaUp ;
+      delete h_mhmax_tanBetaDown ;
+
+      delete h_mhmodplus ;
+      delete h_mhmodplus_HqTUp ;
+      delete h_mhmodplus_HqTDown ;
+      delete h_mhmodplus_HIGLUUp ;
+      delete h_mhmodplus_HIGLUDown ;
+      delete h_mhmodplus_tanBetaUp ;
+      delete h_mhmodplus_tanBetaDown ;
+
+      delete h_mhmodminus ;
+      delete h_mhmodminus_HqTUp ;
+      delete h_mhmodminus_HqTDown ;
+      delete h_mhmodminus_HIGLUUp ;
+      delete h_mhmodminus_HIGLUDown ;
+      delete h_mhmodminus_tanBetaUp ;
+      delete h_mhmodminus_tanBetaDown ;
+
+      delete h_lowmH ;
+      delete h_lowmH_HqTUp ;
+      delete h_lowmH_HqTDown ;
+      delete h_lowmH_HIGLUUp ;
+      delete h_lowmH_HIGLUDown ;
+      delete h_lowmH_tanBetaUp ;
+      delete h_lowmH_tanBetaDown ;
+    }
   
   delete jets; /*delete jets_v2;*/ delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;

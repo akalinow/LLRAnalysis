@@ -1067,8 +1067,8 @@ void plotElecTau( Int_t mH_           = 120,
   if(DEBUG) cout << "build masses string" << endl;
   for(int iM=0 ; iM<nMassesS ; iM++) nameMassesS[iM]=TString(Form("%d",hMassesS[iM]));
   
-  ofstream out(Form(location+"/%s/yields/yieldsElecTau_mH%d_%s_%s.txt",
-		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str() ),ios_base::out); 
+  ofstream out(Form(location+"/%s/yields/yieldsElecTau_mH%d_%s_%s_%s.txt",
+		    outputDir.Data(),mH_,selection_.c_str(), analysis_.c_str(), variable_.Data() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
 
@@ -1176,7 +1176,7 @@ void plotElecTau( Int_t mH_           = 120,
   gStyle->SetTitleStyle(0);
   gStyle->SetTitleOffset(1.3,"y");
 
-  TLegend* leg = new TLegend(0.63,0.48,0.85,0.85,NULL,"brNDC");
+  TLegend* leg = new TLegend(0.53,0.48,0.85,0.88,NULL,"brNDC");
   leg->SetFillStyle(0);
   leg->SetBorderSize(0);
   leg->SetFillColor(10);
@@ -1303,7 +1303,8 @@ void plotElecTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/";
+//   TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/";
+  TString pathToFile = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/EleTau/";
   TString pathToFileDY = pathToFile;
   //TString pathToFileDY = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/EleTau/DYZeeCorr/"; 
   TString Tanalysis_(analysis_);
@@ -3233,8 +3234,8 @@ void plotElecTau( Int_t mH_           = 120,
     hData->SetAxisRange(0.0, TMath::Max( hData->GetMaximum() + hSgn->GetMaximum(), hSiml->GetMaximum() + hSgn->GetMaximum() )*maxY_ ,"Y");
   else
     hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum() + hSgn->GetMaximum(), hSiml->GetMaximum() + hSgn->GetMaximum() )*maxY_ ,"Y");
-  if(selection_.find("nobTag")!=string::npos && variable_.Contains("diTauNSVfitMass")) hData->SetAxisRange(0.1, 6000 ,"Y");
-  if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos && variable_.Contains("diTauNSVfitMass"))hData->SetAxisRange(0.1, 80 ,"Y");
+//   if(selection_.find("nobTag")!=string::npos && variable_.Contains("diTauNSVfitMass")) hData->SetAxisRange(0.1, 6000 ,"Y");
+//   if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos && variable_.Contains("diTauNSVfitMass"))hData->SetAxisRange(0.1, 80 ,"Y");
    aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
   if(logy_ && !MSSM)
@@ -3329,10 +3330,12 @@ void plotElecTau( Int_t mH_           = 120,
   if(logy_){
     c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
     c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_log.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
   }
   else{
     c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
     c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
   }
 
   /*
@@ -3548,10 +3551,12 @@ void plotElecTau( Int_t mH_           = 120,
     if(logy_){
       c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
       c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind_log.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
     }
     else{
       c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
       c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_eTau_mH%d_%s_%s_%s_blind.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.c_str(),variable_.Data()));
     }
   }
 

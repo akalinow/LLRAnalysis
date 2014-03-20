@@ -1678,9 +1678,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
   currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
   currentTree->SetBranchStatus("index"                 ,1);
-  currentTree->SetBranchStatus("higgsPtWeightNom"      ,1);
-  currentTree->SetBranchStatus("higgsPtWeightUp"       ,1);
-  currentTree->SetBranchStatus("higgsPtWeightDown"     ,1);
 
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
@@ -1820,7 +1817,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float numPV;
   float mcPUweight,embeddingWeight;
   std::vector< double >* embeddingWeights = new std::vector< double >();//IN
-  float higgsPtWeightNom,higgsPtWeightUp,higgsPtWeightDown;
   int numOfLooseIsoDiTaus;
   int isTauLegMatched,isTauLegMatchedToLep,isElecLegMatched,elecFlag,genDecay, vetoEvent;
   float nPUVertices, nPUVerticesM1,nPUVerticesP1;
@@ -1976,9 +1972,6 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   currentTree->SetBranchAddress("mcPUweight",           &mcPUweight);
   currentTree->SetBranchAddress("embeddingWeight",      &embeddingWeight);
   currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
-  currentTree->SetBranchAddress("higgsPtWeightNom",     &higgsPtWeightNom);//IN
-  currentTree->SetBranchAddress("higgsPtWeightUp",      &higgsPtWeightUp);//IN
-  currentTree->SetBranchAddress("higgsPtWeightDown",    &higgsPtWeightDown);//IN
   currentTree->SetBranchAddress("event",                &event);
   currentTree->SetBranchAddress("run",                  &run);
   currentTree->SetBranchAddress("lumi",                 &lumi);
@@ -2247,10 +2240,13 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   MAPDITAU_run mapDiTau;
 
   for(int n = n1 ; n < n2 ; n++) {
+
+
 //   for (int n = 0; n <nEntries  ; n++) {
 //   for (int n = 0; n <80000  ; n++) {
 
     currentTree->GetEntry(n);
+
 //     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
     if(n%1000==0) cout << (n-n1) <<"/"<<(n2-n1)<< endl;
 //     if(n%1==0) cout << n <<"/"<<nEntries<< endl;
@@ -3005,9 +3001,12 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
 
-    HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-    HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-    HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    if(SampleT.Contains("GGH") && !SampleT.Contains("SUSY"))
+      {
+	HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+      }
 
     if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
       {
@@ -3536,7 +3535,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     
     // Arrived in a new event 	 
     if( !(run==lastRun && lumi==lastLumi && event==lastEvent) ){ 	 
-      
+
       // change reference 	 
       lastEvent = event; 	 
       lastLumi  = lumi; 	 
@@ -3566,41 +3565,44 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       } 	 
     } 	 
     
-    
     outTreePtOrd->Fill();
+
   }
   
-  delete h_mhmax ;
-  delete h_mhmax_HqTUp ;
-  delete h_mhmax_HqTDown ;
-  delete h_mhmax_HIGLUUp ;
-  delete h_mhmax_HIGLUDown ;
-  delete h_mhmax_tanBetaUp ;
-  delete h_mhmax_tanBetaDown ;
+  if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
+    {
+      delete h_mhmax ;
+      delete h_mhmax_HqTUp ;
+      delete h_mhmax_HqTDown ;
+      delete h_mhmax_HIGLUUp ;
+      delete h_mhmax_HIGLUDown ;
+      delete h_mhmax_tanBetaUp ;
+      delete h_mhmax_tanBetaDown ;
 
-  delete h_mhmodplus ;
-  delete h_mhmodplus_HqTUp ;
-  delete h_mhmodplus_HqTDown ;
-  delete h_mhmodplus_HIGLUUp ;
-  delete h_mhmodplus_HIGLUDown ;
-  delete h_mhmodplus_tanBetaUp ;
-  delete h_mhmodplus_tanBetaDown ;
+      delete h_mhmodplus ;
+      delete h_mhmodplus_HqTUp ;
+      delete h_mhmodplus_HqTDown ;
+      delete h_mhmodplus_HIGLUUp ;
+      delete h_mhmodplus_HIGLUDown ;
+      delete h_mhmodplus_tanBetaUp ;
+      delete h_mhmodplus_tanBetaDown ;
 
-  delete h_mhmodminus ;
-  delete h_mhmodminus_HqTUp ;
-  delete h_mhmodminus_HqTDown ;
-  delete h_mhmodminus_HIGLUUp ;
-  delete h_mhmodminus_HIGLUDown ;
-  delete h_mhmodminus_tanBetaUp ;
-  delete h_mhmodminus_tanBetaDown ;
+      delete h_mhmodminus ;
+      delete h_mhmodminus_HqTUp ;
+      delete h_mhmodminus_HqTDown ;
+      delete h_mhmodminus_HIGLUUp ;
+      delete h_mhmodminus_HIGLUDown ;
+      delete h_mhmodminus_tanBetaUp ;
+      delete h_mhmodminus_tanBetaDown ;
 
-  delete h_lowmH ;
-  delete h_lowmH_HqTUp ;
-  delete h_lowmH_HqTDown ;
-  delete h_lowmH_HIGLUUp ;
-  delete h_lowmH_HIGLUDown ;
-  delete h_lowmH_tanBetaUp ;
-  delete h_lowmH_tanBetaDown ;
+      delete h_lowmH ;
+      delete h_lowmH_HqTUp ;
+      delete h_lowmH_HqTDown ;
+      delete h_lowmH_HIGLUUp ;
+      delete h_lowmH_HIGLUDown ;
+      delete h_lowmH_tanBetaUp ;
+      delete h_lowmH_tanBetaDown ;
+    }
 
   delete jets; /*delete jets_v2*/; delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;
