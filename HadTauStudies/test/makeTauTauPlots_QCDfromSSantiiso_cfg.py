@@ -234,7 +234,7 @@ process.makeTauTauPlots = cms.PSet(
                 inclusive = cms.string("1.0 +/- 0.35"),
                 nobtag = cms.string("1.0 +/- 0.35"),
                 btag = cms.string("1.0 +/- 0.35")
-            )
+            )            
         ),
         shape = cms.PSet(
             CMS_scale_t_tautau_8TeV = cms.string("0.00 +/- 1.00"),

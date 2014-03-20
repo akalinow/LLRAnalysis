@@ -13,7 +13,7 @@ version = "v1_6"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_9/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_10/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -256,9 +256,9 @@ central_or_shifts = {
 }
 
 signalRegions = [
-    "OSisoLooseBtag", "OSrelaxedLooseBtag", "OSvrelaxedLooseBtag", "OSrelaxedFRwLooseBtag", "OSvrelaxedFRwLooseBtag", "OSrelaxedFRwLooseBtagFRw", "OSvrelaxedFRwLooseBtagFRw",
+    "OSisoLooseBtag", "OSisoLooseBtagFRw", "OSrelaxedLooseBtag", "OSvrelaxedLooseBtag", "OSrelaxedFRwLooseBtag", "OSvrelaxedFRwLooseBtag", "OSrelaxedFRwLooseBtagFRw", "OSvrelaxedFRwLooseBtagFRw",
     "OSisoTightBtag", "OSrelaxedTightBtag", "OSvrelaxedTightBtag", "OSrelaxedFRwTightBtag", "OSvrelaxedFRwTightBtag",
-    "SSrelaxedFRwLooseBtag", "SSvrelaxedFRwLooseBtag", "SSrelaxedFRwLooseBtagFRw", "SSvrelaxedFRwLooseBtagFRw",    
+    "SSisoLooseBtagFRw", "SSrelaxedFRwLooseBtag", "SSvrelaxedFRwLooseBtag", "SSrelaxedFRwLooseBtagFRw", "SSvrelaxedFRwLooseBtagFRw",    
     "SSrelaxedFRwTightBtag", "SSvrelaxedFRwTightBtag"
 ]
 qcdRegions = [
@@ -949,7 +949,7 @@ for discriminator in discriminators.keys():
         cfg_modified += "\n"
         cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage4_outputFileNames[discriminator]
         cfg_modified += "\n"
-        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator]
+        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator][qcdOption]
         cfg_modified += "\n"
         cfg_modified += "process.addBackgroundQCD.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
         cfg_modified += "\n"
