@@ -1021,9 +1021,13 @@ void plotMuTau( Int_t mH_           = 120,
 		TString version_    = "AntiMu1_TauIso1",
 // 		Float_t antiWsgn    = 20,
 // 		Float_t antiWsdb    = 70,
-		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = "";
+// 		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
+
+  location = gSystem->pwd();
+  location += "/results/";
 
   cout << endl;
   cout << "@@@@@@@@@@@@@@@@@@ Category  = " << selection_     <<  endl;
