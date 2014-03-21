@@ -1031,7 +1031,7 @@ void plotElecTau( Int_t mH_           = 120,
 		  Float_t maxY_       = 1.2,
 		  TString RUN         = "ABCD",
 		  TString version_    = "Moriond",
-		  TString location    = "";
+		  TString location    = ""
 // 		  TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		  ) 
 {   
