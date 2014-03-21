@@ -819,8 +819,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int nPUVertices_;
  
   // Event trigger matching
-  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8;
-  float HLTmatchMu, HLTmatchTau, HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoMu8Tau20, HLTmatchIsoMu15ETM20, HLTmatchMu8;
+  float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8, HLTxDiTau;
+  float HLTmatchMu, HLTmatchTau, HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoMu8Tau20, HLTmatchIsoMu15ETM20, HLTmatchMu8, HLTmatchDiTau, HLTmatchDiTauMu, HLTmatchDiTauTau, HLTmatchDiTauL1, HLTmatchDiTauL2;
 
   // Muon weights
   float HLTMu, HLTMuA, HLTMuB, HLTMuC, HLTMuD, HLTMuABC, HLTMuABCD, HLTMuMCold, HLTMuMCnew, HLTMuSoft, HLTMuSoftMC, HLTMuShift, HLTMuShiftMC, HLTMuABCShift, HLTMuShiftMCold;
@@ -1235,6 +1235,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HLTmatch",     &HLTmatch,"HLTmatch/F");
   outTreePtOrd->Branch("HLTxQCD",      &HLTxQCD, "HLTxQCD/F"); 
   outTreePtOrd->Branch("HLTmatchQCD",  &HLTmatchQCD,"HLTmatchQCD/F"); 
+  outTreePtOrd->Branch("HLTxDiTau",    &HLTxDiTau, "HLTxDiTau/F");
+  outTreePtOrd->Branch("HLTmatchDiTauMu",   &HLTmatchDiTauMu,"HLTmatchDiTauMu/F"); 
+  outTreePtOrd->Branch("HLTmatchDiTauTau",  &HLTmatchDiTauTau,"HLTmatchDiTauTau/F"); 
+  outTreePtOrd->Branch("HLTmatchDiTau",     &HLTmatchDiTau,"HLTmatchDiTau/F");
+  outTreePtOrd->Branch("HLTmatchDiTauL1",   &HLTmatchDiTauL1,"HLTmatchDiTauL1/F");
+  outTreePtOrd->Branch("HLTmatchDiTauL2",   &HLTmatchDiTauL2,"HLTmatchDiTauL2/F");
 
   outTreePtOrd->Branch("HLTxSoft",         &HLTxSoft,       "HLTxSoft/F");
   outTreePtOrd->Branch("HLTmatchSoft",     &HLTmatchSoft,   "HLTmatchSoft/F");
@@ -2893,30 +2899,44 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	isMatched = isMatched || (*triggerBits)[i];
       HLTxIsoMu15ETM20 = isMatched ? 1.0 : 0.0 ;  // HLT_IsoMu15_eta2p1_L1ETM20_v3-7
       
+      isMatched = false; 
+      for(int i=33 ; i<40 ; i++) 
+        isMatched = isMatched || (*triggerBits)[i]; // HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v*, HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v*
+      HLTxDiTau = isMatched ? 1.0 : 0.0 ;
+
       // HLT filters matching
 
-      isMatched = (((*tauXTriggers)[2]  && (*tauXTriggers)[15]) || // hltOverlapFilterIsoMu18LooseIsoPFTau20 (mu && tau)
-		   ((*tauXTriggers)[3]  && (*tauXTriggers)[16]));  // hltOverlapFilterIsoMu17LooseIsoPFTau20 (mu && tau)
+      isMatched = (((*tauXTriggers)[2]  && (*tauXTriggers)[20]) || // hltOverlapFilterIsoMu18LooseIsoPFTau20 (mu && tau)
+		   ((*tauXTriggers)[3]  && (*tauXTriggers)[21]));  // hltOverlapFilterIsoMu17LooseIsoPFTau20 (mu && tau)
       HLTmatch = isMatched ? 1.0 : 0.0 ;
       
-      HLTmatchMu  = ((*tauXTriggers)[2] || (*tauXTriggers)[3]);
-      HLTmatchTau = ((*tauXTriggers)[15] || (*tauXTriggers)[16]);
+      //HLTmatchMu  = ((*tauXTriggers)[2] || (*tauXTriggers)[3]);
+      HLTmatchMu  = ((*tauXTriggers)[14] || (*tauXTriggers)[18]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+      HLTmatchTau = ((*tauXTriggers)[20] || (*tauXTriggers)[21]);
 
-      isMatched = (((*tauXTriggers)[4]  && (*tauXTriggers)[17]) || // hltOverlapFilterMu18LooseIsoPFTau20
-		   ((*tauXTriggers)[5]  && (*tauXTriggers)[18]));  // hltOverlapFilterMu17LooseIsoPFTau20
+      isMatched = (((*tauXTriggers)[4]  && (*tauXTriggers)[22]) || // hltOverlapFilterMu18LooseIsoPFTau20
+		   ((*tauXTriggers)[5]  && (*tauXTriggers)[23]));  // hltOverlapFilterMu17LooseIsoPFTau20
       HLTmatchQCD = isMatched ? 1.0 : 0.0 ;       
       
-      isMatched = (((*tauXTriggers)[7]  && (*tauXTriggers)[19]));  // hltOverlapFilterIsoMu8LooseIsoPFTau20
+      isMatched = (((*tauXTriggers)[7]  && (*tauXTriggers)[24]));  // hltOverlapFilterIsoMu8LooseIsoPFTau20
       //isMatched &= (L1etm_>26); // MB is this x-check needed?
       HLTmatchSoft = isMatched ? 1.0 : 0.0 ;
       
-      isMatched = (((*tauXTriggers)[11]  && (*tauXTriggers)[21]));  // hltOverlapFilterMu8LooseIsoPFTau20
+      isMatched = (((*tauXTriggers)[11]  && (*tauXTriggers)[26]));  // hltOverlapFilterMu8LooseIsoPFTau20
       //isMatched &= (L1etm_>26); // MB is this x-check needed?
       HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;      
 
-      HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9] && (*tauXTriggers)[20]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
+      HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9] && (*tauXTriggers)[25]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
       HLTmatchIsoMu15ETM20 = float( (*tauXTriggers)[12] || // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10
 				    (*tauXTriggers)[13] ); // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
+
+      //HLT matching for DiTau trigger measurement 
+      HLTmatchDiTau       = float( ((*tauXTriggers)[16] && (*tauXTriggers)[27]) || // hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4 
+				   ((*tauXTriggers)[17] && (*tauXTriggers)[28])); //hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4
+      HLTmatchDiTauMu     = float((*tauXTriggers)[15] || (*tauXTriggers)[18]); //hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10 
+      HLTmatchDiTauTau    = float((*tauXTriggers)[27] || (*tauXTriggers)[28]); //hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4 or hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4  
+      HLTmatchDiTauL2     = float((*tauXTriggers)[29] && (*tauXTriggers)[30]); //hltL2Tau25eta2p1 and hltL2TauIsoFilter 
+      HLTmatchDiTauL1     = float((*tauXTriggers)[31]); //l1extra cenJet or TauJet
 
       SFTau  = 1.0;
 
@@ -3008,11 +3028,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	HLTx             = float((*triggerBits)[0]); // HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2
 	HLTxMu8          = float((*triggerBits)[1]); // HLT_Mu8_v16 //MB
 	HLTxIsoMu15ETM20 = float((*triggerBits)[2]); // HLT_IsoMu15_eta2p1_L1ETM20_v5
+	HLTxDiTau        = float((*triggerBits)[3]); // HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7
 
 	// HLT filters matching
-	HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[6]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
-	HLTmatchMu           = float((*tauXTriggers)[2]);
-	HLTmatchTau          = float((*tauXTriggers)[6]);
+	
+	HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[9]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
+	//HLTmatchMu           = float((*tauXTriggers)[2]);
+	HLTmatchMu           = float((*tauXTriggers)[1] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 || hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+	HLTmatchTau          = float((*tauXTriggers)[9]);
 	HLTmatchIsoMu15ETM20 = float((*tauXTriggers)[4] && (L1etmCorr_>20));     // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
 	HLTmatchMu8          = float((*tauXTriggers)[3]); // hltL3fL1sMu3L3Filtered8
 
@@ -3020,13 +3043,22 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
 	// emulate matching to SoftMu+L1ETM+Tau
 	isMatched = ( (*tauXTriggers)[3] &&  // HLT_Mu8 (hltL3fL1sMu3L3Filtered8)
-		      (*tauXTriggers)[5] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
-		      (*tauXTriggers)[7] );  // offline trgTau
+		      (*tauXTriggers)[8] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
+		      (*tauXTriggers)[13] );  // offline trgTau
 
 	HLTmatchIsoMu8Tau20 = float(isMatched);
 	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	//HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
 	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
+
+
+	//HLT matching for DiTau trigger measurement
+	HLTmatchDiTau       = float((*tauXTriggers)[6] && (*tauXTriggers)[10]) ; // hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
+        HLTmatchDiTauMu     = float((*tauXTriggers)[5] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+        HLTmatchDiTauTau    = float((*tauXTriggers)[10]); //hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
+	HLTmatchDiTauL2     = float((*tauXTriggers)[11] && (*tauXTriggers)[12]); //hltL2Tau25eta2p1 and hltL2TauIsoFilter
+	HLTmatchDiTauL1     = float((*tauXTriggers)[13]); //l1extra cenJet or TauJet
+
 
 	passL1etmCut_       = float(L1etmCorr_>etmCut);
 	passL1etmCutABC_    = float(L1etmCorr_>20);
@@ -3039,7 +3071,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
       }
       else { // embedded
-	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatchMu = HLTmatchTau = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = 1.0;
+	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatchMu = HLTmatchTau = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = HLTmatchDiTau = HLTmatchDiTauL1 = HLTmatchDiTauL2 = HLTmatchDiTauMu = HLTmatchDiTauTau = 1.0;
 
 	L1etmCorrDown_    = L1etmCorrUp_    = L1etmCorr_    = L1etm_ ;
 	L1etmPhiCorrDown_ = L1etmPhiCorrUp_ = L1etmPhiCorr_ = L1etmPhi_ ;
