@@ -93,14 +93,20 @@ void chooseSelection(TString variable_,
 		     TCut& laiso,
 		     TCut& lliso,
 		     TCut& selection,
-		     TCut& tpt
+		     TCut& tpt,
+		     TCut& lpt
 		     )
 {
   cout<<"VERSION in chooseSelection :"<< version_<<endl;
+
   if(version_.Contains("tauptbin")) 
     tpt="ptL2>45 && ptL2<50";
-  else if(version_.Contains("taupt20"))
-    tpt="ptL2>20";
+  else if(version_.Contains("taupt20")){
+    if(version_.Contains("taupt2030"))
+      tpt="ptL2>20 && ptL2<30";
+    else
+      tpt="ptL2>20";
+  }
   else if(version_.Contains("taupt30")){
     if(version_.Contains("taupt3045"))
       tpt="ptL2>30 && ptL2<45";
@@ -126,6 +132,11 @@ void chooseSelection(TString variable_,
   else                            
     tpt="ptL2>30";      
   
+  if(version_.Contains("mupt30"))
+//     lpt="ptL1>30 && abs(etaL1)<2.1 && abs(etaL2)<2.1";      
+    lpt="ptL1>30 ";      
+
+
   if(version_.Contains("2bTagged")) 
     selection =" nJets20BTagged>1";
 
@@ -1010,9 +1021,13 @@ void plotMuTau( Int_t mH_           = 120,
 		TString version_    = "AntiMu1_TauIso1",
 // 		Float_t antiWsgn    = 20,
 // 		Float_t antiWsdb    = 70,
-		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
+		TString location    = ""
+// 		TString location    = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/"
 		) 
 {   
+
+  location = gSystem->pwd();
+  location += "/results/";
 
   cout << endl;
   cout << "@@@@@@@@@@@@@@@@@@ Category  = " << selection_     <<  endl;
@@ -1050,8 +1065,8 @@ void plotMuTau( Int_t mH_           = 120,
   for(int iM=0 ; iM<nMassesS ; iM++) nameMassesS[iM]=TString(Form("%d",hMassesS[iM]));
 
   if(DEBUG) cout << "prepare yields file" << endl;
-  ofstream out(Form(location+"/%s/yields/yieldsMuTau_mH%d_%s_%s.txt",
-		    outputDir.Data(),mH_,selection_.c_str(), analysis_.Data() ),ios_base::out); 
+  ofstream out(Form(location+"/%s/yields/yieldsMuTau_mH%d_%s_%s_%s.txt",
+		    outputDir.Data(),mH_,selection_.c_str(), analysis_.Data(),variable_.Data() ),ios_base::out); 
   out.precision(5);
   int nBins = nBins_;
 
@@ -1167,7 +1182,7 @@ void plotMuTau( Int_t mH_           = 120,
   gStyle->SetTitleStyle(0);
   gStyle->SetTitleOffset(1.3,"y");
 
-  TLegend* leg = new TLegend(0.63,0.48,0.85,0.88,NULL,"brNDC");
+  TLegend* leg = new TLegend(0.53,0.48,0.85,0.88,NULL,"brNDC");
   leg->SetFillStyle(0);
   leg->SetBorderSize(0);
   leg->SetFillColor(10);
@@ -1573,7 +1588,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut selection("diTauNSVfitMass>-999"); 
 
   // Choose selection wrt version_
-  chooseSelection(variable_,version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele,liso,laiso,lliso,selection,tpt);
+  chooseSelection(variable_,version_, selection_, tiso, tdecaymode, ltiso, mtiso, antimu, antiele,liso,laiso,lliso,selection,tpt,lpt);
   cout<<"ltiso : "<<ltiso<<endl;
   if(selection_.find("vbfRelaxMt")!=string::npos) antiWsgn+=10;
 
@@ -1629,7 +1644,16 @@ void plotMuTau( Int_t mH_           = 120,
     MtCut="MtLeg1MVA>50";
     pZ= "MtLeg1MVA>50";
     apZ= "MtLeg1MVA>50";
+    if(version_.Contains("WJetsNorm")){
+      MtCut="MtLeg1MVA>70";
+      pZ= "MtLeg1MVA>70";
+      apZ= "MtLeg1MVA>60 && MtLeg1MVA<120 ";
+    }
   }
+  cout<<"MtCut "<<MtCut<<endl;
+  cout<<"pZ "<<pZ<<endl;
+  cout<<"apZ "<<apZ<<endl;
+
   TCut diTauCharge = invertDiTauSign ? SS : OS; 
   string sign = invertDiTauSign ? "SS" : "OS";
   // HLT matching //
@@ -3418,8 +3442,8 @@ void plotMuTau( Int_t mH_           = 120,
     hData->SetAxisRange(0.0, TMath::Max( hData->GetMaximum(), hSiml->GetMaximum() )*maxY_ ,"Y");
   else
     hData->SetAxisRange(0.1, TMath::Max( hData->GetMaximum(), hSiml->GetMaximum() )*maxY_ ,"Y");
-  if(selection_.find("nobTag")!=string::npos && variable_.Contains("diTauNSVfitMass")) hData->SetAxisRange(0.1, 12000 ,"Y");
-  if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos && variable_.Contains("diTauNSVfitMass"))hData->SetAxisRange(0.1, 140 ,"Y");
+//   if(selection_.find("nobTag")!=string::npos && variable_.Contains("diTauNSVfitMass")) hData->SetAxisRange(0.1, 12000 ,"Y");
+//   if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos && variable_.Contains("diTauNSVfitMass"))hData->SetAxisRange(0.1, 140 ,"Y");
   aStack->Draw("HISTSAME");
   hData->Draw("PSAME");
   if(logy_ && !MSSM)
@@ -3513,10 +3537,12 @@ void plotMuTau( Int_t mH_           = 120,
   if(logy_){
     c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
     c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_log.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
   }
   else{
     c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
     c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+    c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
   }
 //   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
 //   pad1->SaveAs(Form(location+"/%s/plots/pad_muTau_mH%d_%s_%s_%s.eps",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
@@ -3737,10 +3763,12 @@ void plotMuTau( Int_t mH_           = 120,
     if(logy_){
       c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind_log.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
       c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind_log.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind_log.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
     }
     else{
       c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind.png",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
       c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind.pdf",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
+      c1->SaveAs(Form(location+"/%s/plots/plot_muTau_mH%d_%s_%s_%s_blind.root",outputDir.Data(), mH_,selection_.c_str(),analysis_.Data(),variable_.Data()));
     }
   }
 

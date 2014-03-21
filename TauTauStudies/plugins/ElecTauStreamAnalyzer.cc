@@ -203,14 +203,14 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig)
     //fElectronIsoMVA_->SetPrintMVADebug(kTRUE);
 //  }
   
-  edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
-  typedef std::vector<std::string> vstring;
-  vstring evtWeightNames = evtWeights.getParameterNamesForType<edm::InputTag>();
-  for ( vstring::const_iterator name = evtWeightNames.begin();
-	name != evtWeightNames.end(); ++name ) {    
-    edm::InputTag src = evtWeights.getParameter<edm::InputTag>(*name);
-    evtWeightsToStore_.push_back(InputTagEntryType(*name, src));
-  }
+//   edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
+//   typedef std::vector<std::string> vstring;
+//   vstring evtWeightNames = evtWeights.getParameterNamesForType<edm::InputTag>();
+//   for ( vstring::const_iterator name = evtWeightNames.begin();
+// 	name != evtWeightNames.end(); ++name ) {    
+//     edm::InputTag src = evtWeights.getParameter<edm::InputTag>(*name);
+//     evtWeightsToStore_.push_back(InputTagEntryType(*name, src));
+//   }
 
 }
 
