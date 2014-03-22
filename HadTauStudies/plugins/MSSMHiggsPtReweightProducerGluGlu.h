@@ -41,6 +41,8 @@ class MSSMHiggsPtReweightProducerGluGlu : public edm::EDProducer
   void produce(edm::Event&, const edm::EventSetup&);
 
  private:
+  std::string moduleLabel_;
+
   edm::InputTag srcGenParticles_;
   
   TFile* inputFile_;
@@ -55,6 +57,8 @@ class MSSMHiggsPtReweightProducerGluGlu : public edm::EDProducer
   
   int maxWarnings_;
   int numWarnings_;
+
+  int verbosity_;
 };
 
 #endif
