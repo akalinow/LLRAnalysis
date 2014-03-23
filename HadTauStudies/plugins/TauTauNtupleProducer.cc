@@ -659,7 +659,7 @@ namespace
 	  std::string genTauDecayMode = getGenTauDecayMode(&(*genParticle));
 	  if ( genTauDecayMode == "electron" ) {
 	    matchesGenElectron = true;
-	  } else if ( genTauDecayMode == "muons" ) {
+	  } else if ( genTauDecayMode == "muon" ) {
 	    matchesGenMuon = true;
 	  } else {
 	    matchesGenHadTau = true;

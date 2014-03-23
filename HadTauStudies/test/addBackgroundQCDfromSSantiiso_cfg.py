@@ -105,7 +105,7 @@ process.addBackgroundQCD = cms.PSet(
     # CV: add 10% extra bin-by-bin uncertainty for mass range 100-150 GeV,
     #     where QCD shape template is subject to "turn-on" effects which are difficult to model;
     #     cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#TAU_TAU_channel
-    addBinByBinUncertainties = cms.VSet(
+    addBinByBinUncertainties = cms.VPSet(
         cms.PSet(
             #add = cms.double(0.10),
             min = cms.double(0.10),

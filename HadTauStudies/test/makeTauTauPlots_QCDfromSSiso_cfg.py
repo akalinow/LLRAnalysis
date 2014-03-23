@@ -33,7 +33,7 @@ process.makeTauTauPlots = cms.PSet(
     processTT   = cms.string("TT"),
     processW    = cms.string("W"),
     processVV   = cms.string("VV"),
-    processQCD  = cms.string("QCD2"),
+    processQCD  = cms.string("QCDalt"),
     
     signal1 = cms.PSet(
         process_ggH = cms.string("ggH160"),
@@ -110,6 +110,54 @@ process.makeTauTauPlots = cms.PSet(
             yAxisTitle = cms.string("dN/dI_{#tau_{2}} [1/GeV]")
         )
     ),
+
+    nuisanceParameters = cms.PSet(
+        normalization = cms.PSet(
+            ZTT = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.20"),
+                nobtag = cms.string("1.0 +/- 0.20"),
+                btag = cms.string("1.0 +/- 0.20")
+            ),
+            ZL = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.20"),
+                nobtag = cms.string("1.0 +/- 0.20"),
+                btag = cms.string("1.0 +/- 0.20")
+            ),
+            ZJ = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.20"),
+                nobtag = cms.string("1.0 +/- 0.20"),
+                btag = cms.string("1.0 +/- 0.20")
+            ),
+            TT = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.12"),
+                nobtag = cms.string("1.0 +/- 0.12"),
+                btag = cms.string("1.0 +/- 0.12")
+            ),
+            W = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.30"),
+                nobtag = cms.string("1.0 +/- 0.30"),
+                btag = cms.string("1.0 +/- 0.30")
+            ),
+            VV = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.25"),
+                nobtag = cms.string("1.0 +/- 0.25"),
+                btag = cms.string("1.0 +/- 0.25")
+            ),
+            QCDalt = cms.PSet(
+                inclusive = cms.string("1.0 +/- 0.35"),
+                nobtag = cms.string("1.0 +/- 0.35"),
+                btag = cms.string("1.0 +/- 0.35")
+            )
+        ),
+        shape = cms.PSet(
+            CMS_scale_t_tautau_8TeV = cms.string("0.00 +/- 1.00"),
+            CMS_ttbarPtReweight_8TeV = cms.string("0.00 +/- 1.00"),
+            CMS_htt_WShape_tautau_8TeV = cms.string("0.00 +/- 1.00"),
+            CMS_htt_QCDfrNorm_tautau_8TeV = cms.string("0.00 +/- 1.00"),
+            CMS_htt_QCDfrShape_tautau_8TeV = cms.string("0.00 +/- 1.00")
+        )
+    ),
+    showBgrUncertainty = cms.bool(True),
 
     labelOnTop = cms.string("CMS Preliminary, H#rightarrow #tau#tau, %1.1f fb^{-1} at 8 TeV"),    
     intLumiData = cms.double(18.3), # in units of fb^-1

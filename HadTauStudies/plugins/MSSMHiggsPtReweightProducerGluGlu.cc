@@ -10,7 +10,8 @@
 #include <TString.h>
 
 MSSMHiggsPtReweightProducerGluGlu::MSSMHiggsPtReweightProducerGluGlu(const edm::ParameterSet& cfg)
-  : inputFile_(0)
+  : moduleLabel_(cfg.getParameter<std::string>("@module_label")),
+    inputFile_(0)
 {
   srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
 
@@ -64,6 +65,9 @@ MSSMHiggsPtReweightProducerGluGlu::MSSMHiggsPtReweightProducerGluGlu(const edm::
   maxWarnings_ = ( cfg.exists("maxWarnings") ) ?
     cfg.getParameter<int>("maxWarnings") : 1;
   numWarnings_ = 0;
+
+  verbosity_ = ( cfg.exists("verbosity") ) ?
+    cfg.getParameter<int>("verbosity") : 0;
 }
 
 MSSMHiggsPtReweightProducerGluGlu::~MSSMHiggsPtReweightProducerGluGlu() 
@@ -91,12 +95,21 @@ namespace
 
 void MSSMHiggsPtReweightProducerGluGlu::produce(edm::Event& evt, const edm::EventSetup& es)
 {
+  if ( verbosity_ ) {
+    std::cout << "<MSSMHiggsPtReweightProducerGluGlu::produce (moduleLabel = " << moduleLabel_ << ")>:" << std::endl;
+  }
+
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByLabel(srcGenParticles_, genParticles);
 
   reco::Candidate::LorentzVector higgsP4;
   bool isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
-  
+  if ( verbosity_ ) {
+    std::cout << "HiggsPt = ";
+    if ( isHiggs ) std::cout << higgsP4.pt();
+    else std::cout << "N/A";
+  }
+
   for ( vdouble::const_iterator mA_value = mA_values_.begin();
 	mA_value != mA_values_.end(); ++mA_value ) {
     for ( vdouble::const_iterator mu_value = mu_values_.begin();
@@ -105,14 +118,15 @@ void MSSMHiggsPtReweightProducerGluGlu::produce(edm::Event& evt, const edm::Even
 	    higgsType != higgsTypes_.end(); ++higgsType ) {
 	for ( vstring::const_iterator central_or_shift = central_or_shifts_.begin();
 	      central_or_shift != central_or_shifts_.end(); ++central_or_shift ) {
-	  std::auto_ptr<double> weightPtr(new double(1.0));
+	  TH1* lut = luts_[*mA_value][*mu_value][*higgsType][*central_or_shift];
+	  assert(lut);
+	  double weight = 1.;
 	  if ( isHiggs ) {
-	    TH1* lut = luts_[*mA_value][*mu_value][*higgsType][*central_or_shift];
-	    assert(lut);
 	    int idxBin = lut->FindBin(higgsP4.pt());
+	    //std::cout << "HiggsPt = " << higgsP4.pt() << ": idxBin = " << idxBin << " (Nbins = " << lut->GetNbinsX() << ")" << std::endl;
 	    if ( idxBin < 1                ) idxBin = 1;
 	    if ( idxBin > lut->GetNbinsX() ) idxBin = lut->GetNbinsX();
-	    (*weightPtr) = lut->GetBinContent(idxBin);
+	    weight = lut->GetBinContent(idxBin);
 	  } else {
 	    if ( numWarnings_ < maxWarnings_ ) {
 	      edm::LogWarning ("MSSMHiggsPtReweightProducerGluGlu") 
@@ -120,7 +134,13 @@ void MSSMHiggsPtReweightProducerGluGlu::produce(edm::Event& evt, const edm::Even
 	      ++numWarnings_;	
 	    }
 	  }
-	  evt.put<double>(weightPtr, instanceLabels_[*mA_value][*mu_value][*higgsType][*central_or_shift]);
+	  const std::string& instanceLabel = instanceLabels_[*mA_value][*mu_value][*higgsType][*central_or_shift];
+	  if ( verbosity_ ) {
+	    std::cout << "instanceLabel = " << instanceLabel << ": lut = " << lut->GetName() << " (" << lut << ") --> weight = " << weight << std::endl;
+	    std::cout << " (mA = " << (*mA_value) << ", mu = " << (*mu_value) << ", higgsType = " << (*higgsType) << ", central_or_shift = " << (*central_or_shift) << ")" << std::endl;
+	  }
+	  std::auto_ptr<double> weightPtr(new double(weight)); 
+	  evt.put<double>(weightPtr, instanceLabel);
 	}
       }
     }
