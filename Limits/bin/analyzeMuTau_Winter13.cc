@@ -132,11 +132,9 @@ void chooseSelection(TString variable_,
   else                            
     tpt="ptL2>30";      
   
-  if(version_.Contains("mupt30"))
+  if(version_.Contains("mupt30")) lpt="ptL1>30 ";
 //     lpt="ptL1>30 && abs(etaL1)<2.1 && abs(etaL2)<2.1";      
-    lpt="ptL1>30 ";      
-
-
+          
   if(version_.Contains("2bTagged")) 
     selection =" nJets20BTagged>1";
 
@@ -339,6 +337,16 @@ void drawHistogram(TCut sbinPair,
 		   TCut cut,
 		   int verbose = 0){
 
+
+//   cout<<"sbinPair = "<<sbinPair<<endl;
+//   cout<<"sbinCat = "<<sbinCat<<endl;
+//   cout<<"type = "<<type<<endl;
+//   cout<<"version_ = "<<version_<<endl;
+//   cout<<"analysis_ = "<<analysis_<<endl;
+//   cout<<"RUN = "<<RUN<<endl;
+//   cout << "cut = ";
+//   cut.Print();
+
  //  if(DEBUG) 
 //     cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
 
@@ -402,7 +410,7 @@ void drawHistogram(TCut sbinPair,
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
       }
       cout<<"weightW : "<<weightW<<endl;
-
+      
 
       if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
       else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
@@ -412,6 +420,19 @@ void drawHistogram(TCut sbinPair,
 	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightDecayMode)";
 	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode)";
       }      
+
+      // DecayModeNoCorr
+      if(version_.Contains("DecayModeNoCorr"))
+	{
+	  if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC)";
+	  else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
+	  else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
+	  else if(!version_.Contains("Soft")) {
+	    if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC)";
+	    else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
+	    else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
+	  }      
+	}
 
       //to be used when weight is available
       if(type.Contains("GGFHUp")) 
@@ -425,6 +446,7 @@ void drawHistogram(TCut sbinPair,
     else if(type.Contains("Embed")) {
       genMass     = "genDiTauMass>50 && HLTxMu17Mu8>0.5"; // HLTxMu17Mu8
       weightEmb   = "embeddingWeight";
+
       if(version_.Contains("Soft")) {
 	weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight";
 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*weightDecayMode)";
@@ -436,6 +458,21 @@ void drawHistogram(TCut sbinPair,
 	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*weightDecayMode)";
 	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*weightDecayMode)";
       }
+
+      if(version_.Contains("DecayModeNoCorr"))
+	{
+	  if(version_.Contains("Soft")) {
+	    weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight";
+	    if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC)";
+	    else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D)";
+	    else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D)";
+	  }
+	  else if(!version_.Contains("Soft")) {
+	    if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC)";
+	    else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D)";
+	    else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID)";
+	  }
+	}
     }
 
 //     cout<<"weight : "<<weight<<endl;
@@ -476,7 +513,7 @@ void drawHistogram(TCut sbinPair,
       tree->SetBranchStatus("*",  0);   
       tree->SetBranchStatus("run",    1); tree->SetBranchAddress("run",    &run   );
       tree->SetBranchStatus("event",  1); tree->SetBranchAddress("event",  &event );
-      tree->SetBranchStatus("etaL2",  1); tree->SetBranchAddress("etaL2",  &etaL2 );
+//       tree->SetBranchStatus("etaL2",  1); tree->SetBranchAddress("etaL2",  &etaL2 );
       tree->SetBranchStatus("embeddingWeight",  1); tree->SetBranchAddress("embeddingWeight",  &embeddingWeight );
       tree->SetBranchStatus("nJets30",  1); tree->SetBranchAddress("nJets30",  &nJets30 );
       tree->SetBranchStatus("pt1",  1); tree->SetBranchAddress("pt1",  &pt1 );
@@ -534,6 +571,8 @@ void drawHistogram(TCut sbinPair,
       // Usual Draw
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
+      //TCut test = cut*weight*sampleWeight*weightDY*weightW*genMass*sbinCat ;
+      //cout << "Final cut with weight = " << TString(test) << endl;
 
       //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch);
       tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*weightEmb*sbinCat*genMass*passL1ETMCut*hltMatch);
@@ -554,6 +593,7 @@ void drawHistogram(TCut sbinPair,
     normalization      = h->Integral();
     normalizationError = TMath::Sqrt(h->GetEntries()) * (normalization/h->GetEntries());
 
+    //cout << h->GetEntries() << " entries => integral=" << normalization << endl;
     if(DEBUG) cout << h->GetEntries() << " entries => integral=" << normalization << endl;
     if(verbose==0) h->Reset();
 
@@ -660,8 +700,23 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
     drawHistogram(sbinPairIso,sbinCatForWextrapolation,"MC", version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, sbinRelChargePZetaRel&&apZ);
   }
   else{
+    cout<<"-> doing OSWinSignalRegionMC"<<endl;
     drawHistogram(sbinPairIso,sbinCatForWextrapolation,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRelInclusive&&pZ);
-    drawHistogram(sbinPairIso,sbinCatForWextrapolation,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, sbinPZetaRelInclusive&&apZ);
+
+    cout<<"-> doing OSWinSidebandRegionMC"<<endl;
+
+//     cout<<"sbinPair = "<<sbinPairIso<<endl;
+//     cout<<"sbinCat = "<<sbinCatForWextrapolation<<endl;
+//     cout<<"type = "<<WJetType<<endl;
+//     cout<<"version_ = "<<version_<<endl;
+//     cout<<"analysis_ = "<<analysis_<<endl;
+//     cout<<"RUN = "<<RUN<<endl;
+//     TCut test_cut = sbinPZetaRelInclusive&&apZ ;
+//     cout << "cut = ";
+//     test_cut.Print();
+    TCut cut_local = sbinPZetaRelInclusive&&apZ ;
+
+    drawHistogram(sbinPairIso,sbinCatForWextrapolation,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSidebandRegionMC, ErrorW2, scaleFactor, hWMt, cut_local);
   }
   //scaleFactorOS      = OSWinSignalRegionMC>0 ? OSWinSidebandRegionMC/OSWinSignalRegionMC : 1.0 ;
   scaleFactorOS      = OSWinSidebandRegionMC>0 ? OSWinSignalRegionMC/OSWinSidebandRegionMC : 1.0 ;
@@ -1605,6 +1660,19 @@ void plotMuTau( Int_t mH_           = 120,
      ) {
     tpt = tpt&&TCut("hasSecVtx>0.5");
   }
+
+  
+  //Barrel/EndCap
+  if(version_.Contains("Barrel"))
+    {
+//       tpt = tpt&&TCut("TMath::Abs(etaL2)<=5");
+      tpt = tpt&&TCut("TMath::Abs(etaL2)<=1.479");
+    }
+  else if(version_.Contains("EndCap"))
+    {
+//       tpt = tpt&&TCut("TMath::Abs(etaL2)>0");
+      tpt = tpt&&TCut("TMath::Abs(etaL2)>1.479");
+    }
 
   ////// EVENT WISE //////
   TCut lveto="muFlag!=1 && vetoEventOld==0";

@@ -12,7 +12,9 @@ sys.path.append('./')
 
 def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY,RUN,stream="ElecTau",version="Moriond",useEmb=1):
     
-    release="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/"
+    #release=os.getcwd()
+    
+    release="/home/llr/cms/davignon//TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src"
 
     os.system('cp -r results/model/ results/'+stream+'/'+outputDir)
     os.system('mkdir batch/analyze/'+stream+'/'+outputDir)
@@ -105,10 +107,10 @@ versionList=[
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTLoose_TauOldDM_OldEleID_JetTauFR',
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3HRelaxIso_TauOldDM_OldEleID_JetTauFR',
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_JetTauFR',
-    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_NoWCorr_JetTauFR',
+##good    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_NoWCorr_JetTauFR',
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTLoose_TauOldDM_OldEleID_NoWCorr_JetTauFR',
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3HRelaxIso_TauOldDM_OldEleID_NoWCorr_JetTauFR',
-    'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_NoWCorr_JetTauFR',
+##good    'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_NoWCorr_JetTauFR',
 
 ##         TTBar contamination
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt3045_OldEleID_TTbarEmb',## pt>30 pt<45
@@ -126,8 +128,8 @@ versionList=[
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_OldEleID_TTbarEmb_2bTagged',## pt>45
 
 ## ## ##     ##WJets SF measurement for thth
-##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_mupt30_OldEleID_WJetsNorm',
-##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_mupt30_OldEleID_WJetsNorm',
+##    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_mupt30_OldEleID_WJetsNorm',
+##    'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_taupt45_mupt30_OldEleID_WJetsNorm',
     
 ## TauES
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
@@ -137,7 +139,22 @@ versionList=[
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTLoose_TauOldDM_taupt3045_OldEleID',## pt>30 pt<45
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTLoose_TauOldDM_taupt4560_OldEleID',## pt>45 pt<60
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTLoose_TauOldDM_taupt60_OldEleID',## pt>60
-    
+
+    ##Decay modes check (scale factors for 1Prong 0Pi0?)
+    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DecayModeNoCorr',
+##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTVTight_TauOldDM_OldEleID_DecayModeNoCorr',
+##     'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_DecayModeNoCorr',
+
+           ##barrel
+    #'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Barrel_DecayModeNoCorr',
+    #'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTVTight_TauOldDM_OldEleID_Barrel_DecayModeNoCorr',
+    #'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_Barrel_DecayModeNoCorr',
+
+           ##endcap
+    #'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_EndCap_DecayModeNoCorr',
+    #'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTVTight_TauOldDM_OldEleID_EndCap_DecayModeNoCorr',
+    #'AntiMuMVAMedium_AntiEleLoose_HPSDB3H_TauOldDM_OldEleID_EndCap_DecayModeNoCorr',
+
     ]
 
 data = 'ABCD'
@@ -149,7 +166,9 @@ data = 'ABCD'
 #iteration = 'MvaOutput'
 #iteration = 'ControlTTbarEmb'
 #iteration = 'TauESControl'
-iteration = 'JetTauFR'
+#iteration = 'JetTauFR'
+#iteration = 'DecayModesCheck'
+iteration = 'DecayModesCheck2'
 
 useEmb=1
 
@@ -396,7 +415,7 @@ for version in versionList:
 ## ## ###### TauPt for jet->Tau FR
 ##     analyze(125,"inclusiveSSHighMt"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"inclusiveSSNoMt"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
-    analyze(125,"inclusiveHighMt"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##good     analyze(125,"inclusiveHighMt"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"inclusiveNoMt"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ## ##     analyze(125,"bTagSSHighMt"              ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ## ##     analyze(125,"nobTagSSHighMt"            ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,30,0   ,300,5.0,1.0,0,1.2,data,stream,version,useEmb);
@@ -415,12 +434,12 @@ for version in versionList:
 ## ##     analyze(125,"nobTagSSHighMt"            ,"nominal" ,"MtLeg1MVA" ,"'M_{T}(#mu#nu)'","GeV" ,outputDir,40,0   ,160,5.0,1.0,0,1.2,data,stream,version,useEmb);
 
 ## ## ###### Wjets SF measurement
-##     analyze(125,"inclusiveHighMt"         ,"nominal" ,"MtLeg1MVA" ,"'M_{T}(#mu#nu)'","GeV" ,outputDir,40,0   ,160,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##    analyze(125,"inclusiveHighMt"         ,"nominal" ,"MtLeg1MVA" ,"'M_{T}(#mu#nu)'","GeV" ,outputDir,40,0   ,160,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"bTagHighMt"              ,"nominal" ,"MtLeg1MVA" ,"'M_{T}(#mu#nu)'","GeV" ,outputDir,40,0   ,160,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"nobTagHighMt"            ,"nominal" ,"MtLeg1MVA" ,"'M_{T}(#mu#nu)'","GeV" ,outputDir,40,0   ,160,5.0,1.0,0,1.2,data,stream,version,useEmb);
-##     analyze(125,"inclusiveHighMt"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-##     analyze(125,"bTagHighMt"                  ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-##     analyze(125,"nobTagHighMt"                ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##    analyze(125,"inclusiveHighMt"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##    analyze(125,"bTagHighMt"                  ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##    analyze(125,"nobTagHighMt"                ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"inclusiveHighMt"             ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"bTagHighMt"                  ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 ##     analyze(125,"nobTagHighMt"                ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,70,0,350 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
@@ -1004,6 +1023,8 @@ for version in versionList:
 ##     analyze(125,"boostHigh"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"boostHigh"    ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"             ,outputDir,-1,0   ,100,5.0,1.0,1,10   ,data,stream,version,useEmb);
 
+## Control decay modes
+    analyze(125,"inclusive"      ,""   ,"decayMode",     "'#tau_{h} decay mode'","units"   ,outputDir,5,0,5, 5.0,1.0,0,1.4,data, stream, version, useEmb);
 
 ## ##     ##  Control DY MC
 ##     analyze(125,"inclusive"      ,""   ,"MEt","'Uncorr MET'","GeV"                         ,outputDirDYMC,20,0,100,5.0,1.0,0,1.2,data, stream, version, 0);
