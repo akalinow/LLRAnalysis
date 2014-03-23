@@ -2127,6 +2127,24 @@ void fillTrees_MuTauStream(TChain* currentTree,
       h_mhmodminus_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HIGLUDown.Data());
       h_mhmodminus_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaUp.Data());
       h_mhmodminus_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaDown.Data());
+
+      //lowmH -> 2500
+      TString HistoName_lowmH = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_central", 110, 110);
+      TString HistoName_lowmH_HqTUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HqTscaleUp", 110, 110);
+      TString HistoName_lowmH_HqTDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HqTscaleDown", 110, 110);
+      TString HistoName_lowmH_HIGLUUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HIGLUscaleUp", 110, 110);
+      TString HistoName_lowmH_HIGLUDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HIGLUscaleDown", 110, 110);
+      TString HistoName_lowmH_tanBetaUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_tanBetaHigh", 110, 110);
+      TString HistoName_lowmH_tanBetaDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_tanBetaLow", 110, 110);
+
+      h_lowmH = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH.Data());
+      h_lowmH_HqTUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HqTUp.Data());
+      h_lowmH_HqTDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HqTDown.Data());
+      h_lowmH_HIGLUUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HIGLUUp.Data());
+      h_lowmH_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HIGLUDown.Data());
+      h_lowmH_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_tanBetaUp.Data());
+      h_lowmH_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_tanBetaDown.Data());      
+
     }
   else
     {
@@ -2997,6 +3015,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown = h_mhmodminus_HIGLUDown!=0 ? h_mhmodminus_HIGLUDown->GetBinContent( h_mhmodminus_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp = h_mhmodminus_tanBetaUp!=0 ? h_mhmodminus_tanBetaUp->GetBinContent( h_mhmodminus_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown = h_mhmodminus_tanBetaDown!=0 ? h_mhmodminus_tanBetaDown->GetBinContent( h_mhmodminus_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+
+	mssmHiggsPtReweightGluGlu_lowmH = h_lowmH!=0 ? h_lowmH->GetBinContent( h_lowmH->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HqTUp = h_lowmH_HqTUp!=0 ? h_lowmH_HqTUp->GetBinContent( h_lowmH_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HqTDown = h_lowmH_HqTDown!=0 ? h_lowmH_HqTDown->GetBinContent( h_lowmH_HqTDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp = h_lowmH_HIGLUUp!=0 ? h_lowmH_HIGLUUp->GetBinContent( h_lowmH_HIGLUUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown = h_lowmH_HIGLUDown!=0 ? h_lowmH_HIGLUDown->GetBinContent( h_lowmH_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp = h_lowmH_tanBetaUp!=0 ? h_lowmH_tanBetaUp->GetBinContent( h_lowmH_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown = h_lowmH_tanBetaDown!=0 ? h_lowmH_tanBetaDown->GetBinContent( h_lowmH_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
       }
     
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
