@@ -3497,17 +3497,29 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // // 	diTauVisMass *= 1.015;
 
 //MSSM NewTauID
+//       if(decayMode==0 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.40 : 
+// 	  0.72;
+//       }
+//       else if (decayMode==1 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.86 : 
+// 	  0.85;
+//       }
+// 	diTauNSVfitMass_ *= 1.015;
+// 	diTauVisMass *= 1.015;
+
+//New TES by Olivier
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.40 : 
+	  1.37 : 
 	  0.72;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.86 : 
-	  0.85;
-// 	diTauNSVfitMass_ *= 1.015;
-// 	diTauVisMass *= 1.015;
+	  1.84 : 
+	  0.83;
       }
     }
 //     cout<<"HELPo"<<endl;
