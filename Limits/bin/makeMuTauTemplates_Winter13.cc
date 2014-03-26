@@ -281,27 +281,27 @@ void produce(
       }
     }
     else{
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
 
-      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_mutau_8TeVUp",mH_));
       hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_mutau_8TeVUp",mH_));
 
-      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
       hSgn2->Write(Form("bbH%d%s" ,mH_,suffix.c_str()));
 
-      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVUp",mH_));
       hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVUp",mH_));
 
-      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 

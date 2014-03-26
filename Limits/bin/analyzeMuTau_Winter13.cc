@@ -593,7 +593,7 @@ void drawHistogram(TCut sbinPair,
       tree->SetEntryList(0);
       skim->Reset();
       if(DEBUG) cout << "-- reset skim : " << skim->GetN() << "entries" << endl;
-    }    
+    }// if LOOP    
     else {
       TCut pairIndex="pairIndex<1";
       //tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*sbinCat*genMass*passL1ETMCut*hltMatch*pairIndex);
@@ -3178,26 +3178,11 @@ void plotMuTau( Int_t mH_           = 120,
 		for(int iP=0 ; iP<nProdS ; iP++)
 		  {
 		    for(int iM=0 ; iM<nMassesS ; iM++)
-		      {
-			float crossSection = 1.0;
-
-// 			if(nameMassesS[iM]=="130"){
-// 			  cout<<"Modifying xsec : m=130 tanBeta=5"<<endl;
-// 			  crossSection = 1.76395701575004349;
-// 			}
-// 			else if(nameMassesS[iM]=="300"){
-// 			  cout<<"Modifying xsec : m=300 tanBeta=12"<<endl;
-// 			  crossSection = 0.188078490754561067;
-// 			}
-// 			else if(nameMassesS[iM]=="600"){
-// 			  cout<<"Modifying xsec : m=600 tanBeta=35"<<endl;
-// 			  crossSection = 0.0519465144122727707;
-// 			}
-			//if(currentName.Contains(nameProdS[iP]+nameMassesS[iM]))
+		      {			
 			TString ProcessName("SUSY"+nameProdS[iP]+nameMassesS[iM]);
 			if(currentName==ProcessName)
 			  {
-			    hSusy[iP][iM]->Add(h1,1.0*crossSection);
+			    hSusy[iP][iM]->Add(h1,1.0);
 // 			    cout<<"Integral central SUSY = "<<hSusy[iP][iM]->Integral()<<endl;
 			  }
 		      }
@@ -3513,17 +3498,24 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F* hSgnSUSY1 ;
   TH1F* hSgnSUSY2 ;
   if(MSSM) {
+    float crossSection = 1.0;
+    cout<<"Modifying xsec : m=130 tanBeta=5"<<endl;
+    crossSection = 1.76395701575004349;
     hSgnSUSY = (TH1F*)hSusy[0][5]->Clone("hSgnSUSY");
     hSgnSUSY->Add(hSusy[1][5]);
-    hSgnSUSY->Scale(magnifySgn_);
+    hSgnSUSY->Scale(magnifySgn_*crossSection);
     hSgnSUSY->SetLineColor(kBlue);
+    cout<<"Modifying xsec : m=300 tanBeta=12"<<endl;
+    crossSection = 0.188078490754561067;
     hSgnSUSY1 = (TH1F*)hSusy[0][11]->Clone("hSgnSUSY1");
     hSgnSUSY1->Add(hSusy[1][11]);
-    hSgnSUSY1->Scale(magnifySgn_);
+    hSgnSUSY1->Scale(magnifySgn_*crossSection);
     hSgnSUSY1->SetLineColor(kRed);
+    cout<<"Modifying xsec : m=600 tanBeta=35"<<endl;
+    crossSection = 0.0519465144122727707;
     hSgnSUSY2 = (TH1F*)hSusy[0][16]->Clone("hSgnSUSY2");
     hSgnSUSY2->Add(hSusy[1][16]);
-    hSgnSUSY2->Scale(magnifySgn_);
+    hSgnSUSY2->Scale(magnifySgn_*crossSection);
     hSgnSUSY2->SetLineColor(kGreen+2);
   }
   if(!logy_ && !MSSM)

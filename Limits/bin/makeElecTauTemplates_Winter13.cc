@@ -278,27 +278,27 @@ void produce(
       }
     }
     else{//SUSY
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
       hSgn2->Write(Form("bbH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
@@ -1583,8 +1583,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-//   variables.push_back("diTauVisMass");
-  variables.push_back("diTauNSVfitMass");
+  variables.push_back("diTauVisMass");
+//   variables.push_back("diTauNSVfitMass");
 //   variables.push_back("ptL2");
 
   if(!DOSUSY){
@@ -1758,8 +1758,8 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_Datacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_Datacards",true); 
 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt20_OldEleID_DatacardsRelax",true); 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_DatacardsRelax",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt20_OldEleID_DatacardsRelax",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_DatacardsRelax",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_DatacardsRelax",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt45_OldEleID_DatacardsRelax",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_DatacardsRelax",true); 
@@ -1772,6 +1772,55 @@ void produceAll(){
 ///TauPt datacards
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt30_OldEleID_Datacards",true); 
 
+///ZeeSF
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+///////TauptBins
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt3045_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt3045_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt4560_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt4560_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt60_OldEleID_ZeeSel_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt60_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt60_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt60_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_taupt60_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
 }
 
 

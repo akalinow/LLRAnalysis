@@ -437,14 +437,28 @@ void drawHistogram(TCut sbinPair,
       }
       cout<<"weightW : "<<weightW<<endl;
 
-      //weights for GGFH pT re-weight
-      if(type.Contains("GGFHUp"))
-        weight *= "HqTWeightUp";
-      else if(type.Contains("GGFHDown"))
-        weight *= "HqTWeightDown";
+      //to be used when weight is available
+      if(!type.Contains("SUSY"))
+	{
+	  if(type.Contains("GGFHUp")) 
+	    weight *= "HqTWeightUp"; 
+	  else if(type.Contains("GGFHDown"))  
+	    weight *= "HqTWeightDown";
+	  else
+	    weight *= "HqTWeight";
+	}
       else
-        weight *= "HqTWeight";
+	{
+	  if(type.Contains("GGHUp")) 
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTUp"; 
+	  else if(type.Contains("GGHDown"))  
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTDown";
+	  else
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax";
+	}
+
     }//MC
+
     else if(type.Contains("DY")){
       if(version_.Contains("ZeeSel"))
 // 	weight = "(sampleWeightDY*puWeight*HLTweightTau*HLTweightElec*SFTau*SFElec*weightHepNup*weightDecayMode)";
@@ -500,7 +514,7 @@ void drawHistogram(TCut sbinPair,
 //       }
 //     }
 
-//     cout<<"weight : "<<weight<<endl;
+    if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
 
     // Loop over entries to choose the event's pair instead of using pairIndex
     if(LOOP) {
@@ -565,6 +579,8 @@ void drawHistogram(TCut sbinPair,
       if(DEBUG) cout << "-- setEntryList again" << endl;
       tree->SetEntryList(skim); // modified skim (choice of the best pair done in the loop)
       tree->Draw(variable+">>"+TString(h->GetName()),cut*weight*sampleWeight*weightDY*weightW*genMass*sbinCat);
+      //TCut test = cut*weight*sampleWeight*weightDY*weightW*genMass*sbinCat ;
+      //cout << "Final cut with weight = " << TString(test) << endl;
 
       // Reset entry list
       tree->SetEntryList(0);
@@ -1265,6 +1281,15 @@ void plotElecTau( Int_t mH_           = 120,
     hGGFHDown[iM]->SetLineWidth(2);
   }
   
+  //GGH Higgs pT weights up/down
+  TH1F* hSUSYGGHUp[nMassesS]; TH1F* hSUSYGGHDown[nMassesS];
+  for(int iM=0 ; iM<nMassesS ; iM++) {
+    hSUSYGGHUp[iM] = new TH1F("hSUSYGGH"+nameMassesS[iM]+"Up", "SUSYGGH"+nameMassesS[iM]+"Up", nBins , bins.GetArray()); 
+    hSUSYGGHUp[iM]->SetLineWidth(2);
+    hSUSYGGHDown[iM] = new TH1F("hSUSYGGH"+nameMassesS[iM]+"Down", "SUSYGGH"+nameMassesS[iM]+"Down", nBins , bins.GetArray());  
+    hSUSYGGHDown[iM]->SetLineWidth(2); 
+  }
+
   TH1F* hSignalWW[nProdWW][nMassesWW];
   for(int iP=0 ; iP<nProdWW ; iP++) {
     for(int iM=0 ; iM<nMassesWW ; iM++) {
@@ -1278,7 +1303,7 @@ void plotElecTau( Int_t mH_           = 120,
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
-        hSusy[iP][iM] = new TH1F("h"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
+        hSusy[iP][iM] = new TH1F("hSUSY"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
         hSusy[iP][iM]->SetLineWidth(2);
       }
     }
@@ -2835,7 +2860,8 @@ void plotElecTau( Int_t mH_           = 120,
 		currentName.Contains("SUSY")){
 
 	  float NormSign = 0.;
-	  drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, sbin, 1);
+	  if(currentName.Contains("GGFH")) drawHistogram(sbinPresel,sbinCat, "MCGGFH",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, sbin, 1);
+	  else drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, sbin, 1);
 
 	  if(currentName.Contains("VBFH"+TmH_)){
 	    hSgn1->Add(h1,1.0);
@@ -2888,32 +2914,51 @@ void plotElecTau( Int_t mH_           = 120,
 	      float NormSign = 0.; 
 	      drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
 
-	      float crossSection = 1.0;
 	      for(int iP=0 ; iP<nProdS ; iP++)
-		for(int iM=0 ; iM<nMassesS ; iM++){
-		  if(nameMassesS[iM]=="130"){
-		    cout<<"Modifying xsec : m=130 tanBeta=5"<<endl;
-		    crossSection = 1.76395701575004349;
-		  }
-		  else if(nameMassesS[iM]=="300"){
-		    cout<<"Modifying xsec : m=300 tanBeta=12"<<endl;
-		    crossSection = 0.188078490754561067;
-		  }
-		  else if(nameMassesS[iM]=="600"){
-		    cout<<"Modifying xsec : m=600 tanBeta=35"<<endl;
-		    crossSection = 0.0519465144122727707;
-		  }
-		  //if(currentName.Contains(nameProdS[iP]+nameMassesS[iM]))
-		  TString ProcessName("SUSY"+nameProdS[iP]+nameMassesS[iM]);
-		  if(currentName==ProcessName)
-		    hSusy[iP][iM]->Add(h1,1.0*crossSection);
+		{
+		  for(int iM=0 ; iM<nMassesS ; iM++)
+		    {	      
+		      TString ProcessName("SUSY"+nameProdS[iP]+nameMassesS[iM]);
+		      if(currentName==ProcessName)
+			{
+			  hSusy[iP][iM]->Add(h1,1.0);
+			}
+		    }
 		}
+	      
+	      for(int iM=0 ; iM<nMassesS ; iM++)
+		{
+		  // 		    cout<<"currentName = "<<currentName<<endl;
+		  if(currentName.Contains("SUSYGGH"+nameMassesS[iM]))
+		    {
+		      h1->Reset(); float NormSignUp = 0.;
+		      drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHUp", version_, RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+		      // 			cout<<"Histogram GGHUp for m = "<<nameMassesS[iM]<<endl;
+		      hSUSYGGHUp[iM]->Add(h1,1.0);
+
+		      h1->Reset(); float NormSignDown = 0.;
+		      drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHDown", version_, RUN,currentTree, variable, NormSignDown, Error,   Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+		      hSUSYGGHDown[iM]->Add(h1,1.0);
+		      
+		      // 			hCleaner->Reset(); float NormSignUp = 0.;
+		      // 			drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHUp", version_, analysis_,RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., hCleaner, (sbin&&HWidth), 1);
+		      // 			cout<<"Histogram GGHUp for m = "<<nameMassesS[iM]<<endl;
+		      // 			hSUSYGGHUp[iM]->Add(hCleaner,1.0);
+		      
+		      // 			hCleaner->Reset(); float NormSignDown = 0.;
+		      // 			drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHDown", version_, analysis_,RUN,currentTree, variable, NormSignDown, Error,   Lumi*hltEff_/1000., hCleaner, (sbin&&HWidth), 1);
+		      // 			hSUSYGGHDown[iM]->Add(hCleaner,1.0);
+		      // 			hCleaner->Reset();
+		    }//End SUSY GGH
+		}//End Masses
+	      
 	      // 	    TH1F* histoSusy =  (mapSUSYhistos.find( (it->first) ))->second;
 	      // 	    histoSusy->Add(h1,1.0);
 	      // 	    histoSusy->SetLineWidth(2);
-	    }
-	  }//SUSY
-	}
+	      
+	    }//END SUSY
+	  }//END MSSM
+	}//End MC Signal
       }
       else{
 	if(!currentName.Contains("TTbarEmbedded")){
@@ -3178,17 +3223,24 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hSgnSUSY1 ;
   TH1F* hSgnSUSY2 ;
   if(MSSM) {
+    float crossSection = 1.0;
+    cout<<"Modifying xsec : m=130 tanBeta=5"<<endl;
+    crossSection = 1.76395701575004349;
     hSgnSUSY = (TH1F*)hSusy[0][5]->Clone("hSgnSUSY");
     hSgnSUSY->Add(hSusy[1][5]);
-    hSgnSUSY->Scale(magnifySgn_);
+    hSgnSUSY->Scale(magnifySgn_*crossSection);
     hSgnSUSY->SetLineColor(kBlue);
+    cout<<"Modifying xsec : m=300 tanBeta=12"<<endl;
+    crossSection = 0.188078490754561067;
     hSgnSUSY1 = (TH1F*)hSusy[0][11]->Clone("hSgnSUSY1");
     hSgnSUSY1->Add(hSusy[1][11]);
-    hSgnSUSY1->Scale(magnifySgn_);
+    hSgnSUSY1->Scale(magnifySgn_*crossSection);
     hSgnSUSY1->SetLineColor(kRed);
+    cout<<"Modifying xsec : m=600 tanBeta=35"<<endl;
+    crossSection = 0.0519465144122727707;
     hSgnSUSY2 = (TH1F*)hSusy[0][16]->Clone("hSgnSUSY2");
     hSgnSUSY2->Add(hSusy[1][16]);
-    hSgnSUSY2->Scale(magnifySgn_);
+    hSgnSUSY2->Scale(magnifySgn_*crossSection);
     hSgnSUSY2->SetLineColor(kGreen+2);
   }
   if(!logy_ && !MSSM)
@@ -3633,6 +3685,11 @@ void plotElecTau( Int_t mH_           = 120,
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
         if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
+
+    for(int iM=0 ; iM<nMassesS ; iM++){
+      hSUSYGGHUp[iM]->Write();
+      hSUSYGGHDown[iM]->Write();
+    }
   }
 
   if(variable_.Contains("Mass")) hDataBlind->Write();
@@ -3645,6 +3702,9 @@ void plotElecTau( Int_t mH_           = 120,
       if(hSignal[iP][iM]) delete hSignal[iP][iM];
   for(int iM=0 ; iM<nMasses ; iM++){
     delete hGGFHUp[iM]; delete hGGFHDown[iM];
+  }
+  for(int iM=0 ; iM<nMassesS ; iM++){
+    delete hSUSYGGHUp[iM]; delete hSUSYGGHDown[iM];
   }
   for(int iP=0 ; iP<nProdWW ; iP++)
     for(int iM=0 ; iM<nMassesWW ; iM++)
