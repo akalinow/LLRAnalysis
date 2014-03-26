@@ -8,7 +8,8 @@ import subprocess
 
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
 WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
-WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/MuTau/'
+WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
+#WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/MuTau/'
 OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/MuTau/temp/'
 
 options = {
@@ -16,7 +17,7 @@ options = {
     
     ##DATA
     'Run2012A-22Jan2013-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012A_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012A_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleRun2012A-22Jan2013-Data_MuTau.root',
     'sample'         : 'Run2012A-22Jan2013-Data',
     'xSection'       : 0,
@@ -24,7 +25,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p1-Data_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -32,7 +33,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p2-Data_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -40,7 +41,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p3-Data_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -48,7 +49,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p4-Data_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -56,7 +57,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012B-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p5-Data_MuTau.root',
     'sample'         : 'Run2012B-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -64,7 +65,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p0-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p0/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p0/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p0-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p0-Data',
     'xSection'       : 0,
@@ -72,7 +73,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p1-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -80,7 +81,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p2-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -88,7 +89,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p3-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -96,7 +97,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v4_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p4-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -104,7 +105,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p5-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -112,7 +113,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p6-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p6/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p6-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p6-Data',
     'xSection'       : 0,
@@ -120,7 +121,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012C-22Jan2013-p7-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p7/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p7-Data_MuTau.root',
     'sample'         : 'Run2012C-22Jan2013-p7-Data',
     'xSection'       : 0,
@@ -128,7 +129,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -136,7 +137,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -144,7 +145,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -152,7 +153,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -160,7 +161,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -168,7 +169,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p6-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p6/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-Data',
     'xSection'       : 0,
@@ -176,7 +177,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p7-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p7/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-Data',
     'xSection'       : 0,
@@ -184,7 +185,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p8-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p8/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-Data',
     'xSection'       : 0,
@@ -192,7 +193,7 @@ options = {
     'iJson'          : 7
     },
     'Run2012D-22Jan2013-p9-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_09Oct13_Trees_MuTau_v2_p9/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-Data_MuTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-Data',
     'xSection'       : 0,

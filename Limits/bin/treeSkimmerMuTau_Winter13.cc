@@ -493,13 +493,23 @@ Bool_t isbtagged(Bool_t isBQuark, Double_t btagCSV, Bool_t isdata, UInt_t btagef
 
 float getTauFakeCorrection(double pt)
 {
+  //new corrections (Mar14, new T-ES correction)
   float correction = 0;
-  float p0 = 0.718127;
-  float p1 = -0.143612;
-  float p2 = -0.0431415;
-  float p3 = -0.0981383;
-  float X = (pt-163.7)/100;//(x-meanPt)/100
+  float p0 =  0.787452;
+  float p1 = -0.146412;
+  float p2 = -0.0276803;
+  float p3 = -0.0824184;
+  float X = (pt-149.832)/100;//(x-meanPt)/100
   correction = p0+p1*X+p2*X*X+p3*X*X*X;
+
+  //old corrections prior to Mar14 (old T-ES correction)
+//   float correction = 0;
+//   float p0 = 0.718127;
+//   float p1 = -0.143612;
+//   float p2 = -0.0431415;
+//   float p3 = -0.0981383;
+//   float X = (pt-163.7)/100;//(x-meanPt)/100
+//   correction = p0+p1*X+p2*X*X+p3*X*X*X;
 
   return correction;
 }
@@ -630,8 +640,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Summer13_v6.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
+  cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
+  //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Muon trigger
   const int nEtaMuT=6;    // ]-inf,-1.2[ [-1.2,-0.8[ [-0.8,0[ [0,0.8[ [0.8,1.2[ [1.2,+inf[

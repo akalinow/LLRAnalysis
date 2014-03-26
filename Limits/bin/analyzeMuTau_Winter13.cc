@@ -1381,7 +1381,8 @@ void plotMuTau( Int_t mH_           = 120,
   ///////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////////////////
 
-  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/";
+  TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/MuTau/";
+//   TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/";
 //   TString pathToFile    = "/data_CMS/cms/htautau/PostMoriond/NTUPLES_NewTauIDVariables/MuTau/";
   TString pathToFileDY    = pathToFile;
   TString pathToFileHWW   = pathToFile; 
@@ -3573,9 +3574,14 @@ void plotMuTau( Int_t mH_           = 120,
   TH1F * hRatio = (TH1F*)hData->Clone("hRatio");
   hRatio->Sumw2();
   if(selection_.find("HighMt")==string::npos) hRatio->Add(hSiml,-1);
-  hRatio->Divide(hSiml);
+
+  if(!version_.Contains("DecayMode")) hRatio->Divide(hSiml);//Decay mode scaling
+  else hRatio->Divide(hDataEmb);
+
   hRatio->SetXTitle("");
-  hRatio->SetYTitle("#frac{DATA-MC}{MC}");
+  if(!version_.Contains("DecayMode")) hRatio->SetYTitle("#frac{DATA-MC}{MC}");
+  else hRatio->SetYTitle("#frac{DATA-MC}{Z#rightarrow#tau#tau (Emb)}");
+
   if(selection_.find("HighMt")!=string::npos) hRatio->SetYTitle("#frac{DATA}{MC}");
   hRatio->SetMarkerStyle(kFullCircle);
   hRatio->SetMarkerSize(0.8);
