@@ -2070,26 +2070,26 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(SampleT.Contains("GGH") && SampleT.Contains("SUSY"))
     {
       if(SampleT.Contains("80")) MSSMmH = 80;
-      else if(SampleT.Contains("90")) MSSMmH = 90;
-      else if(SampleT.Contains("100")) MSSMmH = 100;
-      else if(SampleT.Contains("110")) MSSMmH = 110;
-      else if(SampleT.Contains("120")) MSSMmH = 120;
-      else if(SampleT.Contains("130")) MSSMmH = 130;
-      else if(SampleT.Contains("140")) MSSMmH = 140;
-      else if(SampleT.Contains("160")) MSSMmH = 160;
-      else if(SampleT.Contains("180")) MSSMmH = 180;
-      else if(SampleT.Contains("200")) MSSMmH = 200;
-      else if(SampleT.Contains("250")) MSSMmH = 250;
-      else if(SampleT.Contains("300")) MSSMmH = 300;
-      else if(SampleT.Contains("350")) MSSMmH = 350;
-      else if(SampleT.Contains("400")) MSSMmH = 400;
-      else if(SampleT.Contains("450")) MSSMmH = 450;
-      else if(SampleT.Contains("500")) MSSMmH = 500;
-      else if(SampleT.Contains("600")) MSSMmH = 600;
-      else if(SampleT.Contains("700")) MSSMmH = 700;
-      else if(SampleT.Contains("800")) MSSMmH = 800;
-      else if(SampleT.Contains("900")) MSSMmH = 900;    
-      else if(SampleT.Contains("1000")) MSSMmH = 1000;    
+      if(SampleT.Contains("90")) MSSMmH = 90;
+      if(SampleT.Contains("100")) MSSMmH = 100;
+      if(SampleT.Contains("110")) MSSMmH = 110;
+      if(SampleT.Contains("120")) MSSMmH = 120;
+      if(SampleT.Contains("130")) MSSMmH = 130;
+      if(SampleT.Contains("140")) MSSMmH = 140;
+      if(SampleT.Contains("160")) MSSMmH = 160;
+      if(SampleT.Contains("180")) MSSMmH = 180;
+      if(SampleT.Contains("200")) MSSMmH = 200;
+      if(SampleT.Contains("250")) MSSMmH = 250;
+      if(SampleT.Contains("300")) MSSMmH = 300;
+      if(SampleT.Contains("350")) MSSMmH = 350;
+      if(SampleT.Contains("400")) MSSMmH = 400;
+      if(SampleT.Contains("450")) MSSMmH = 450;
+      if(SampleT.Contains("500")) MSSMmH = 500;
+      if(SampleT.Contains("600")) MSSMmH = 600;
+      if(SampleT.Contains("700")) MSSMmH = 700;
+      if(SampleT.Contains("800")) MSSMmH = 800;
+      if(SampleT.Contains("900")) MSSMmH = 900;    
+      if(SampleT.Contains("1000")) MSSMmH = 1000;    
 
       TString HistoName_mhmax = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
       TString HistoName_mhmax_HqTUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleUp", MSSMmH, MSSMmH);
@@ -3413,13 +3413,50 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
       weightDecayMode_ = 1.0;
-      if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
-	if(decayMode == 0) weightDecayMode_ = 0.88;
-      }
-      else{
-	if(isTauLegMatched>0 && decayMode == 0)
-	  weightDecayMode_ = 0.88; 
-      }
+
+      //Old Decay Mode correction (prior to Mar14)
+//       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
+// 	if(decayMode == 0) weightDecayMode_ = 0.88;
+//       }
+//       else{
+// 	if(isTauLegMatched>0 && decayMode == 0)
+// 	  weightDecayMode_ = 0.88; 
+//       }
+
+      //Weight to correct for mis-modeling of the decay mode distribution between MC and data
+      if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
+	{
+	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
+	    {
+	      if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
+	      if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
+	      if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
+	    }
+	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
+	    {
+	      if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
+	      if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
+	      if(decayMode == 4) weightDecayMode_ = 1.06;//3-prong
+	    }
+	}
+      else
+	{
+	  if(isTauLegMatched>0)//check for MC that the Tau Leg is matched to a true tau
+	    {
+	      if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
+		{
+		  if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
+		  if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
+		  if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
+		}
+	      else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
+		{
+		  if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
+		  if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
+		  if(decayMode == 4) weightDecayMode_ = 1.06;//3-prong
+		}
+	    }
+	}
       
       // Muon
       // trigger
