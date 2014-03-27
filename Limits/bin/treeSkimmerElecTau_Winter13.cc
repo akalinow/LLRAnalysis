@@ -3029,12 +3029,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
 
-    if(SampleT.Contains("GGH") && !SampleT.Contains("SUSY"))
-      {
-	HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-	HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-	HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-      }
+
+    HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
     if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
       {

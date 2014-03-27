@@ -444,7 +444,7 @@ void drawHistogram(TCut sbinPair,
 	    weight *= "HqTWeightUp"; 
 	  else if(type.Contains("GGFHDown"))  
 	    weight *= "HqTWeightDown";
-	  else
+	  else if(type.Contains("GGFH"))
 	    weight *= "HqTWeight";
 	}
       else
@@ -453,7 +453,7 @@ void drawHistogram(TCut sbinPair,
 	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp"; 
 	  else if(type.Contains("GGHDown"))  
 	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown";
-	  else
+	  else if(type.Contains("GGH"))
 	    weight *= "mssmHiggsPtReweightGluGlu_mhmax";
 	}
 
