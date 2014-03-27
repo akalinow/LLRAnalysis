@@ -450,9 +450,9 @@ void drawHistogram(TCut sbinPair,
       else
 	{
 	  if(type.Contains("GGHUp")) 
-	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTUp"; 
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp"; 
 	  else if(type.Contains("GGHDown"))  
-	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTDown";
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown";
 	  else
 	    weight *= "mssmHiggsPtReweightGluGlu_mhmax";
 	}
@@ -2933,7 +2933,6 @@ void plotElecTau( Int_t mH_           = 120,
 		    {
 		      h1->Reset(); float NormSignUp = 0.;
 		      drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHUp", version_, RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
-		      // 			cout<<"Histogram GGHUp for m = "<<nameMassesS[iM]<<endl;
 		      hSUSYGGHUp[iM]->Add(h1,1.0);
 
 		      h1->Reset(); float NormSignDown = 0.;
