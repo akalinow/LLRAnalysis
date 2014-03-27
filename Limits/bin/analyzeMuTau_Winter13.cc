@@ -447,9 +447,9 @@ void drawHistogram(TCut sbinPair,
       else
 	{
 	  if(type.Contains("GGHUp")) 
-	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTUp"; 
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp"; 
 	  else if(type.Contains("GGHDown"))  
-	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_HqTDown";
+	    weight *= "mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp";
 	  else
 	    weight *= "mssmHiggsPtReweightGluGlu_mhmax";
 	}
@@ -3186,8 +3186,6 @@ void plotMuTau( Int_t mH_           = 120,
 			if(currentName==ProcessName)
 			  {
 			    hSusy[iP][iM]->Add(h1,1.0);
-			    cout<<"Norm central = "<<h1->Integral()<<endl;
-// 			    cout<<"Integral central SUSY = "<<hSusy[iP][iM]->Integral()<<endl;
 			  }
 		      }
 		  }
