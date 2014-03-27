@@ -409,7 +409,7 @@ void drawHistogram(TCut sbinPair,
         else if(type.Contains("WJetDown")) weightW  *= "weightTauFakeWJetDown";
         else if(type.Contains("WJet")) weightW  *= "weightTauFakeWJet";
       }
-      cout<<"weightW : "<<weightW<<endl;
+//       cout<<"weightW : "<<weightW<<endl;
       
 
       if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
@@ -488,7 +488,8 @@ void drawHistogram(TCut sbinPair,
     }
 
     if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
-
+    //cout<<"weight : "<<weight<<endl;
+    
     // Loop over entries to choose the event's pair instead of using pairIndex
     if(LOOP) {
 
@@ -1369,12 +1370,16 @@ void plotMuTau( Int_t mH_           = 120,
   }  
 
   TH1F* hSusy[nProdS][nMassesS];
+  TH1F* hSusyNoWeight[nProdS][nMassesS];
 
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
 	hSusy[iP][iM] = new TH1F("hSUSY"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
 	hSusy[iP][iM]->SetLineWidth(2);
+
+	hSusyNoWeight[iP][iM] = new TH1F("hSUSYNoWeight"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
+	hSusyNoWeight[iP][iM]->SetLineWidth(2);
       }
     }
   }
@@ -1475,20 +1480,24 @@ void plotMuTau( Int_t mH_           = 120,
   
 //   backgroundDY      ->Add(pathToFileDY+"nTupleDYJets_MuTau_"+fileAnalysis+".root");
 
+  
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTL_MuTau_"+fileAnalysis+".root");
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTJ_MuTau_"+fileAnalysis+".root");
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsEToTau_MuTau_"+fileAnalysis+".root");
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
-
+  
   if(!version_.Contains("NoDYExcl")) {
+    
     backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets1Jets*_MuTau_"+fileAnalysis+".root");
     backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets2Jets*_MuTau_"+fileAnalysis+".root");
     backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets3Jets*_MuTau_"+fileAnalysis+".root");
     backgroundDY      ->Add(pathToFileDY+"/nTupleDYJets4Jets*_MuTau_"+fileAnalysis+".root");
+    
   }
   //
-  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_*_MuTau_"+fileAnalysis+".root");//OD
+  
+  backgroundTTbar   ->Add(pathToFile+"nTupleTTJets_*_MuTau_"+fileAnalysis+".root");
   backgroundTTbarEmb->Add(pathToFile+"nTupleTTJets-Embedded_MuTau_"+fileAnalysis+".root");
   //
   backgroundOthers  ->Add(pathToFile+"nTupleT-tW_MuTau_"+fileAnalysis+".root");
@@ -1499,6 +1508,7 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Nu_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo2L2Q_MuTau_"+fileAnalysis+".root");
   backgroundOthers  ->Add(pathToFile+"nTupleZZJetsTo4L_MuTau_"+fileAnalysis+".root");
+  
   if(includeWG){
     backgroundOthers  ->Add(pathToFile+"nTupleWGToLNuG_MuTau_"+fileAnalysis+".root");
     backgroundOthers  ->Add(pathToFile+"nTupleWGstarToLNu2E_MuTau_"+fileAnalysis+".root");
@@ -2050,7 +2060,7 @@ void plotMuTau( Int_t mH_           = 120,
   float scaleFactorTTOSWJets  = 1.;
 
   mapchain::iterator it;
-  TString currentName, h1Name;
+  TString currentName, h1Name, h2Name ;
   //TH1F *h1, *hCleaner;
   TChain* currentTree;
 
@@ -2078,7 +2088,10 @@ void plotMuTau( Int_t mH_           = 120,
     if(!MSSM && currentName.Contains("SUSY")) continue;
 
     h1Name         = "h1_"+currentName;
+    h2Name         = "h2_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
+    TH1F* h2       = new TH1F( h2Name ,"" , nBins , bins.GetArray());
+
     TH1F* hCleaner = new TH1F("hCleaner","",nBins , bins.GetArray());
     TH1F* hCleanerfb = new TH1F("hCleanerfb","",400, 0., 2000.); //fine binning hostogram for MSSM
     if ( !h1->GetSumw2N() )       h1->Sumw2(); 
@@ -3169,13 +3182,14 @@ void plotMuTau( Int_t mH_           = 120,
 		if(sampleName.Contains("SUSYGGH"))sampleName.ReplaceAll("SUSYGGH", "");
 		else if(sampleName.Contains("SUSYBBH"))sampleName.ReplaceAll("SUSYBBH", "");
 		float mA = atof(sampleName.Data());
-		//cout<<" SUSY mass "<<currentName<<" "<<mA<<endl; 
 		TCut HWidth(Form("genVMass > 0.7*%f && genVMass < 1.3*%f", mA, mA));  
-		//cout<<" width cut "<<HWidth<<endl; 
 
 		float NormSign = 0.; 
 		drawHistogram(sbinPresel,sbinCat,"MCSUSY", version_,analysis_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
-		//drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+
+		h2->Reset();
+		NormSign = 0.; 
+		drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h2, (sbin&&HWidth), 1);
 
 		for(int iP=0 ; iP<nProdS ; iP++)
 		  {
@@ -3185,6 +3199,7 @@ void plotMuTau( Int_t mH_           = 120,
 			if(currentName==ProcessName)
 			  {
 			    hSusy[iP][iM]->Add(h1,1.0);
+			    hSusyNoWeight[iP][iM]->Add(h2,1.0);
 			  }
 		      }
 		  }
@@ -3967,7 +3982,10 @@ void plotMuTau( Int_t mH_           = 120,
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
-	if(hSusy[iP][iM]) hSusy[iP][iM]->Write(); 
+	{
+	  if(hSusy[iP][iM]) hSusy[iP][iM]->Write(); 
+	  if(hSusyNoWeight[iP][iM]) hSusyNoWeight[iP][iM]->Write(); 
+	}
 
     for(int iM=0 ; iM<nMassesS ; iM++){
       hSUSYGGHUp[iM]->Write();
@@ -4015,7 +4033,10 @@ void plotMuTau( Int_t mH_           = 120,
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
-	if(hSusy[iP][iM]) delete hSusy[iP][iM];
+	{
+	  if(hSusy[iP][iM]) delete hSusy[iP][iM];
+	  if(hSusyNoWeight[iP][iM]) delete hSusyNoWeight[iP][iM];
+	}
   }
   delete aStack;  delete hEWK; delete hSiml; delete hDataEmb;  delete hRatio; delete line;
   delete fout;
