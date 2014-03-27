@@ -2928,8 +2928,8 @@ void plotElecTau( Int_t mH_           = 120,
 	      
 	      for(int iM=0 ; iM<nMassesS ; iM++)
 		{
-		  // 		    cout<<"currentName = "<<currentName<<endl;
-		  if(currentName.Contains("SUSYGGH"+nameMassesS[iM]))
+		  TString ProcessName("SUSYGGH"+nameMassesS[iM]);
+		  if(currentName==ProcessName)
 		    {
 		      h1->Reset(); float NormSignUp = 0.;
 		      drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHUp", version_, RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
@@ -2938,17 +2938,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 		      h1->Reset(); float NormSignDown = 0.;
 		      drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHDown", version_, RUN,currentTree, variable, NormSignDown, Error,   Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
-		      hSUSYGGHDown[iM]->Add(h1,1.0);
-		      
-		      // 			hCleaner->Reset(); float NormSignUp = 0.;
-		      // 			drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHUp", version_, analysis_,RUN,currentTree, variable, NormSignUp, Error,   Lumi*hltEff_/1000., hCleaner, (sbin&&HWidth), 1);
-		      // 			cout<<"Histogram GGHUp for m = "<<nameMassesS[iM]<<endl;
-		      // 			hSUSYGGHUp[iM]->Add(hCleaner,1.0);
-		      
-		      // 			hCleaner->Reset(); float NormSignDown = 0.;
-		      // 			drawHistogram(sbinPresel,sbinCat,"MCSUSYGGHDown", version_, analysis_,RUN,currentTree, variable, NormSignDown, Error,   Lumi*hltEff_/1000., hCleaner, (sbin&&HWidth), 1);
-		      // 			hSUSYGGHDown[iM]->Add(hCleaner,1.0);
-		      // 			hCleaner->Reset();
+		      hSUSYGGHDown[iM]->Add(h1,1.0);		    
 		    }//End SUSY GGH
 		}//End Masses
 	      
