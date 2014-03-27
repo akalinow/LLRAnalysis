@@ -1299,12 +1299,16 @@ void plotElecTau( Int_t mH_           = 120,
   }
 
   TH1F* hSusy[nProdS][nMassesS];
+  TH1F* hSusyNoWeight[nProdS][nMassesS];
 
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++) {
       for(int iM=0 ; iM<nMassesS ; iM++) {
         hSusy[iP][iM] = new TH1F("hSUSY"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
         hSusy[iP][iM]->SetLineWidth(2);
+
+	hSusyNoWeight[iP][iM] = new TH1F("hSUSYNoWeight"+nameProdS[iP]+nameMassesS[iM], nameProdS[iP]+nameMassesS[iM], nBins , bins.GetArray());
+	hSusyNoWeight[iP][iM]->SetLineWidth(2);
       }
     }
   }
@@ -1941,7 +1945,7 @@ void plotElecTau( Int_t mH_           = 120,
  
   
   mapchain::iterator it;
-  TString currentName, h1Name;
+  TString currentName, h1Name, h2Name ;
   //TH1F *h1, *hCleaner;
   TChain* currentTree;
 
@@ -1966,7 +1970,9 @@ void plotElecTau( Int_t mH_           = 120,
     if(!MSSM && currentName.Contains("SUSY")) continue;
     
     h1Name         = "h1_"+currentName;
+    h2Name         = "h2_"+currentName;
     TH1F* h1       = new TH1F( h1Name ,"" , nBins , bins.GetArray());
+    TH1F* h2       = new TH1F( h2Name ,"" , nBins , bins.GetArray());
     TH1F* hCleaner = new TH1F("hCleaner","",nBins , bins.GetArray());
     TH1F* hCleanerfb = new TH1F("hCleanerfb","",400, 0., 2000.); //fine binning hostogram for MSSM
     if ( !h1->GetSumw2N() )       h1->Sumw2(); 
@@ -2912,7 +2918,11 @@ void plotElecTau( Int_t mH_           = 120,
 	      //cout<<" width cut "<<HWidth<<endl;
 	      
 	      float NormSign = 0.; 
-	      drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+	      drawHistogram(sbinPresel,sbinCat, "MCSUSY",version_, RUN, currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h1, (sbin&&HWidth), 1);
+
+	      h2->Reset();
+	      NormSign = 0.; 
+	      drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN,currentTree, variable, NormSign, Error,    Lumi*hltEff_/1000., h2, (sbin&&HWidth), 1);
 
 	      for(int iP=0 ; iP<nProdS ; iP++)
 		{
@@ -2922,6 +2932,7 @@ void plotElecTau( Int_t mH_           = 120,
 		      if(currentName==ProcessName)
 			{
 			  hSusy[iP][iM]->Add(h1,1.0);
+			  hSusyNoWeight[iP][iM]->Add(h2,1.0);
 			}
 		    }
 		}
@@ -3673,8 +3684,10 @@ void plotElecTau( Int_t mH_           = 120,
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
-        if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
-
+	{
+	  if(hSusy[iP][iM]) hSusy[iP][iM]->Write();
+	  if(hSusyNoWeight[iP][iM]) hSusyNoWeight[iP][iM]->Write(); 
+	}
     for(int iM=0 ; iM<nMassesS ; iM++){
       hSUSYGGHUp[iM]->Write();
       hSUSYGGHDown[iM]->Write();
@@ -3701,7 +3714,10 @@ void plotElecTau( Int_t mH_           = 120,
   if(MSSM) {
     for(int iP=0 ; iP<nProdS ; iP++)
       for(int iM=0 ; iM<nMassesS ; iM++)
-        if(hSusy[iP][iM]) delete hSusy[iP][iM];
+	{
+	  if(hSusy[iP][iM]) delete hSusy[iP][iM];
+	  if(hSusyNoWeight[iP][iM]) delete hSusyNoWeight[iP][iM];
+	}
   }
 
   delete hQCD; delete hSS; delete hSSLooseVBF; delete hZmm; delete hZmj; delete hZfakes; delete hTTb; delete hTTbEmb; delete hZtt; delete hZmm_Up; delete hZmm_Down;
