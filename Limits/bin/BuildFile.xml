@@ -23,6 +23,11 @@
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
 
+<bin   file="analyzeElecTau_Spring14.cc"  name="analyzeElecTau_Spring14">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
+
 <bin   file="treeSkimmerMuTau_Spring13.cc" name="treeSkimmerMuTau_Spring13">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
