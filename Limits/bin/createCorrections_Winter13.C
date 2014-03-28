@@ -487,13 +487,14 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 //   fitEffTau[0][5][1] = new ratioEfficiencyTest(18.552006,    0.632002,    0.426891,    133.934952,    0.866543);
   
   //New Corrections For MVA Tau ID Mar 14 - Medium Anti E
+  //http://anayak.web.cern.ch/anayak/HToTauTau/TriggerTest/FitResults/SyncSelection/NewTauID_NewTES/FitResults.txt
   //etau channel
   // ABCD      antiEMed
-  fitEffTau[0][4][0] = new ratioEfficiencyTest(1.83508e+01, 1.94454e+00, 3.87275e+00, 1.06881e+00, 1.24298e+00);//data barrel//OK (new fit)
-  fitEffTau[0][4][1] = new ratioEfficiencyTest(1.79180e+01, 1.34882e+00, 1.15112e+00, 1.12060e+01, 8.91967e-01);//data endcap//OK
+  fitEffTau[0][4][0] = new ratioEfficiencyTest(1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00);//data barrel
+  fitEffTau[0][4][1] = new ratioEfficiencyTest(1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01);//data endcap
   // MC ABCD   antiEMed
-  fitEffTau[0][5][0] = new ratioEfficiencyTest(1.79957e+01, -1.54784e+00, 3.25596e+00, 1.11202e+00, 1.07779e+00);//MC barrel//OK (new fit)
-  fitEffTau[0][5][1] = new ratioEfficiencyTest(1.82050e+01, 1.06276e+00, 1.15562e+00, 1.13419e+01, 8.98667e-01);//MC endcap//OK
+  fitEffTau[0][5][0] = new ratioEfficiencyTest(1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01);//MC barrel
+  fitEffTau[0][5][1] = new ratioEfficiencyTest(1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01);//MC endcap
 
   // ABCD      antiETight
   fitEffTau[0][6][0] = new ratioEfficiencyTest(18.895025,    1.695306,    1.922852,    34.020744,   0.903446);
@@ -553,11 +554,11 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
   //New Corrections For MVA Tau ID Mar 14 - Medium Anti E
   //mutau channel
   // ABCD
-  fitEffTau[1][4][0] = new ratioEfficiencyTest(1.83508e+01, 1.94454e+00, 3.87275e+00, 1.06881e+00, 1.24298e+00);//data barrel//OK (new fit)
-  fitEffTau[1][4][1] = new ratioEfficiencyTest(1.79180e+01, 1.34882e+00, 1.15112e+00, 1.12060e+01, 8.91967e-01);//data endcap//OK
+  fitEffTau[1][4][0] = new ratioEfficiencyTest(1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00);//data barrel
+  fitEffTau[1][4][1] = new ratioEfficiencyTest(1.80812e+01, 1.39482e+00, 1.14305e+00, 1.08989e+01, 8.97087e-01);//data endcap
   // MC ABCD   antiEMed
-  fitEffTau[1][5][0] = new ratioEfficiencyTest(1.79957e+01, -1.54784e+00, 3.25596e+00, 1.11202e+00, 1.07779e+00);//MC barrel//OK (new fit)
-  fitEffTau[1][5][1] = new ratioEfficiencyTest(1.82050e+01, 1.06276e+00, 1.15562e+00, 1.13419e+01, 8.98667e-01);//MC endcap//OK
+  fitEffTau[1][5][0] = new ratioEfficiencyTest(1.83709e+01, 1.37806e-01, 1.64478e-01, 1.44798e+00, 9.92673e-01);//MC barrel
+  fitEffTau[1][5][1] = new ratioEfficiencyTest(1.83074e+01, 1.43406e+00, 1.40743e+00, 1.41501e+02, 9.19457e-01);//MC endcap
 
   //Old Corrections Prior To Mar 14
 //   //28Jun2013 by Jose
