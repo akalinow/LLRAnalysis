@@ -1716,11 +1716,28 @@ void plotElecTau( Int_t mH_           = 120,
 	{
 	  if(selection_.find("bTagHigh")!=string::npos && !selection_.find("HighMt")!=string::npos)
 	    {
+	      bTagLoose = bTagLoose&&TCut("ptL2>45.") ;
 	      bTag = bTag&&TCut("ptL2>45.");
 	    }
 	  else if(selection_.find("bTagLow")!=string::npos)
 	    {
+	      bTagLoose = bTagLoose&&TCut("ptL2>30.&&ptL2<=45.") ;
 	      bTag = bTag&&TCut("ptL2>30.&&ptL2<=45.");
+	    }	  
+	}
+      else if(selection_.find("inclusive")!=string::npos)
+	{
+	  if(selection_.find("High")!=string::npos && !selection_.find("HighMt")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>60.");
+	    }
+	  else if(selection_.find("Medium")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>45.&&ptL2<=60.");
+	    }
+	  else if(selection_.find("Low")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>30.&&ptL2<=45.");
 	    }	  
 	}
     }

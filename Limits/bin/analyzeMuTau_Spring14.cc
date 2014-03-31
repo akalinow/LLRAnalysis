@@ -1813,14 +1813,16 @@ void plotMuTau( Int_t mH_           = 120,
 	      nobTag = nobTag&&TCut("ptL2>30.&&ptL2<=45.");
 	    }
 	}
-      else if(selection_.find("bTag")!=string::npos)
+      else if(selection_.find("bTag")!=string::npos && !selection_.find("nobTag")!=string::npos)
 	{
 	  if(selection_.find("bTagHigh")!=string::npos && !selection_.find("HighMt")!=string::npos)
 	    {
+	      bTagLoose = bTagLoose&&TCut("ptL2>45.") ;
 	      bTag = bTag&&TCut("ptL2>45.");
 	    }
 	  else if(selection_.find("bTagLow")!=string::npos)
 	    {
+	      bTagLoose = bTagLoose&&TCut("ptL2>30.&&ptL2<=45.") ;
 	      bTag = bTag&&TCut("ptL2>30.&&ptL2<=45.");
 	    }	  
 	}
