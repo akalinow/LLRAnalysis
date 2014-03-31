@@ -1921,7 +1921,8 @@ void plotElecTau( Int_t mH_           = 120,
 	      OStoSSRatioQCD,
  	      antiWsdb, antiWsgn, useMt,
 	      sbinSSInclusive,
-	      sbinPZetaRelInclusive,//changed here OD+IN
+	      sbinChargeRelPZetaRelInclusive,//changed here OD+IN
+// 	      sbinPZetaRelInclusive,//changed here OD+IN
  	      sbinPZetaRelSSInclusive, pZ, apZ, sbinPZetaRelSSInclusive, 
 //  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, 
@@ -1994,7 +1995,7 @@ void plotElecTau( Int_t mH_           = 120,
       TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
       float dummyfloat = 0.;      
 
-      TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+      TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//sbinPZetaRelInclusive;//changed here OD+IN
       if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
 	sbinCatForWextrapolation = vbfLoose;
 
@@ -2121,7 +2122,7 @@ void plotElecTau( Int_t mH_           = 120,
 	 
 	  cout << "************** BEGIN W+3jets normalization using high-Mt sideband *******************" << endl;
 
-	  TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+	  TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//sbinPZetaRelInclusive;//changed here OD+IN
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 	    sbinCatForWextrapolation = vbfLoose;
 	    if(selection_.find("vbfTight")!=string::npos)
@@ -2180,7 +2181,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  
 	  cout << "************** BEGIN W+jets normalization using high-Mt sideband *******************" << endl;
 
-	  TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+	  TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//changed here OD+IN
 	  //Commented OD/IN -- now inclusive SF
 // 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
 // 	    sbinCatForWextrapolation = vbfLoose; 

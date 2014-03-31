@@ -339,14 +339,16 @@ void drawHistogram(TCut sbinPair,
 		   int verbose = 0){
 
 
-//   cout<<"sbinPair = "<<sbinPair<<endl;
+  /*
+  cout<<"sbinPair = "<<sbinPair<<endl;
   cout<<"sbinCat = "<<sbinCat<<endl;
-//   cout<<"type = "<<type<<endl;
-//   cout<<"version_ = "<<version_<<endl;
-//   cout<<"analysis_ = "<<analysis_<<endl;
-//   cout<<"RUN = "<<RUN<<endl;
-//   cout << "cut = ";
-//   cut.Print();
+  cout<<"type = "<<type<<endl;
+  cout<<"version_ = "<<version_<<endl;
+  cout<<"analysis_ = "<<analysis_<<endl;
+  cout<<"RUN = "<<RUN<<endl;
+  cout << "cut = ";
+  cut.Print();
+  */
 
  //  if(DEBUG) 
 //     cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
@@ -488,8 +490,8 @@ void drawHistogram(TCut sbinPair,
 	}
     }
 
-    if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
-    //cout<<"weight : "<<weight<<endl;
+//     if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
+    cout<<"weight : "<<weight<<endl;
     
     // Loop over entries to choose the event's pair instead of using pairIndex
     if(LOOP) {
@@ -715,7 +717,8 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   }
   else{
     cout<<"-> doing OSWinSignalRegionMC"<<endl;//Opposite sign W in signal region Monte Carlo W+jets
-    drawHistogram(sbinPairIso,sbinCat,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRelInclusive&&pZ);//evaluate W(SR)|MC -- new implementation of background estimation
+    TCut cut_local0 = sbinPZetaRelInclusive&&pZ ;
+    drawHistogram(sbinPairIso,sbinCat,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, cut_local0);//evaluate W(SR)|MC -- new implementation of background estimation
     //     drawHistogram(sbinPairIso,sbinCatForWextrapolation,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRelInclusive&&pZ);//evaluate W(SR)|MC
     
     //Opposite sign W in sideband region Monte Carlo W+jets 
@@ -727,11 +730,11 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_, TString anal
   scaleFactorOS      = OSWinSidebandRegionMC>0 ? OSWinSignalRegionMC/OSWinSidebandRegionMC : 1.0 ;//extrapolation factor
   float scaleFactorOSError = scaleFactorOS*(ErrorW1/OSWinSignalRegionMC + ErrorW2/OSWinSidebandRegionMC);//error on the extrapolation factor
   if(useMt)
-    cout << "Extrap. factor for W " << sign << " : P(Mt>"     << antiWsdb << ")/P(Mt<"   << antiWsgn << ") ==> " <<OSWinSidebandRegionMC<<"/"<<OSWinSignalRegionMC<<" = "<< scaleFactorOS << " +/- " << scaleFactorOSError << endl;
+    cout << "Extrap. factor for W " << sign << " : P(Mt>"     << antiWsdb << ")/P(Mt<"   << antiWsgn  << ") ==> " <<OSWinSignalRegionMC<<"/"<<OSWinSidebandRegionMC <<" = "<< scaleFactorOS << " +/- " << scaleFactorOSError << endl;
   else
     cout << "Extrap. factor for W " << sign << " : P(pZeta<- "<< antiWsdb << ")/P(pZeta>"<< antiWsgn << ") ==> " << scaleFactorOS << " +/- " << scaleFactorOSError << endl;    
 
-  cout << OSWinSignalRegionMC << "/" << OSWinSidebandRegionMC << " = " << scaleFactorOS << " +/- " << scaleFactorOSError << endl;
+//   cout << OSWinSignalRegionMC << "/" << OSWinSidebandRegionMC << " = " << scaleFactorOS << " +/- " << scaleFactorOSError << endl;
 
   //Do the extrapolation factor without relaxing the cuts on the W
   drawHistogram(sbinPairIso,sbinCat,WJetType, version_,analysis_, RUN,mapAllTrees["WJets"],variable, OSWinSignalRegionMC,   ErrorW1, scaleFactor, hWMt, sbinPZetaRel&&pZ);
@@ -1768,6 +1771,7 @@ void plotMuTau( Int_t mH_           = 120,
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
   //TCut bTagLoose("nJets30<2 && nJets20>=1");
   TCut nobTag("nJets20BTagged==0");
+  TCut inclusive("");
 
   TCut novbf("nJets30<1 && nJets20BTagged==0");
   
@@ -1820,11 +1824,26 @@ void plotMuTau( Int_t mH_           = 120,
 	      bTag = bTag&&TCut("ptL2>30.&&ptL2<=45.");
 	    }	  
 	}
+      else if(selection_.find("inclusive")!=string::npos)
+	{
+	  if(selection_.find("High")!=string::npos && !selection_.find("HighMt")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>60.");
+	    }
+	  else if(selection_.find("Medium")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>45.&&ptL2<=60.");
+	    }
+	  else if(selection_.find("Low")!=string::npos)
+	    {
+	      inclusive = inclusive&&TCut("ptL2>30.&&ptL2<=45.");
+	    }	  
+	}
     }
 
   TCut sbinCatIncl("etaL1<999");
   TCut sbinCat("");
-  if(     selection_.find("inclusive")!=string::npos) sbinCat = "etaL1<999";
+  if(     selection_.find("inclusive")!=string::npos) sbinCat = inclusive&&TCut("etaL1<999");
   else if(selection_.find("oneJet")!=string::npos)    sbinCat = oneJet;
   else if(selection_.find("twoJets")!=string::npos)   sbinCat = twoJets;
   else if(selection_.find("vh")!=string::npos)        sbinCat = vh;
@@ -2065,11 +2084,12 @@ void plotMuTau( Int_t mH_           = 120,
 	      OStoSSRatioQCD,
  	      antiWsdb, antiWsgn, useMt,
 	      sbinSSInclusive,
-	      sbinPZetaRelInclusive,//changed here OD+IN
+	      sbinChargeRelPZetaRelInclusive,//sbinPZetaRelInclusive,//changed here OD+IN
  	      sbinPZetaRelSSInclusive, pZ, apZ, sbinPZetaRelSSInclusive, 
  	      //sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoMtisoInclusive, 
  	      sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, sbinPZetaRelSSaIsoInclusive, 
-	      vbf, oneJet, zeroJet, sbinCatIncl, sbinCatIncl, sbinPresel, sbinaIsoPresel, true, true);//new implementation Mar14
+	      vbf, oneJet, zeroJet, sbinCat, sbinCatIncl, sbinPresel, sbinaIsoPresel, true, true);//new implementation Mar14
+// 	      vbf, oneJet, zeroJet, sbinCatIncl, sbinCatIncl, sbinPresel, sbinaIsoPresel, true, true);//new implementation Mar14
 
   delete hExtrap;
 
@@ -2138,7 +2158,8 @@ void plotMuTau( Int_t mH_           = 120,
       TH1F* hExtrapSS = new TH1F("hExtrapSS","",nBins , bins.GetArray());
       float dummy1 = 0.;      
 
-      TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+      TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//changed here OD+IN
+//       TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
       if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos)
 	sbinCatForWextrapolation = vbfLoose;
       
@@ -2289,7 +2310,7 @@ void plotMuTau( Int_t mH_           = 120,
 	 
 	  cout << "************** BEGIN W+3jets normalization using high-Mt sideband *******************" << endl;
 
-	  TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+	  TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//sbinPZetaRelInclusive;//changed here OD+IN
 	  TCut apZCut = apZ;
 	  if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
 	    sbinCatForWextrapolation = vbfLoose;
@@ -2349,7 +2370,8 @@ void plotMuTau( Int_t mH_           = 120,
 	  
 	  cout << "************** BEGIN W+jets normalization using high-Mt sideband *******************" << endl;
 
-	  TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
+	  TCut sbinCatForWextrapolation = sbinChargeRelPZetaRelInclusive;//changed here OD+IN
+// 	  TCut sbinCatForWextrapolation = sbinPZetaRelInclusive;//changed here OD+IN
 // 	  TCut sbinCatForWextrapolation = sbinInclusive;//new implementation of background estimation
 // 	  TCut sbinCatForWextrapolation = sbinCat;
 

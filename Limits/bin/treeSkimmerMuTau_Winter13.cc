@@ -1011,7 +1011,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("ptAllB", &ptAllB, "ptAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("etaAllB",&etaAllB,"etaAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
-  outTreePtOrd->Branch("energyAllB", &energyAllB, "energyAllB[nJets30]/F");
+  outTreePtOrd->Branch("energyAllB", &energyAllB, "energyAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
 
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
@@ -2315,7 +2315,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = csvAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i]= energyAllB[i] = csvAllB[i] -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = csvAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i]= energyAllB[i] = csvAllB[i] = -99.;
     }
 
     // define the relevant jet collection 
