@@ -1667,6 +1667,7 @@ void plotElecTau( Int_t mH_           = 120,
   TCut boostMet40  = boostNoMet && TCut("MEtMVA>40");
   TCut boostMet45  = boostNoMet && TCut("MEtMVA>45");
 
+  TCut inclusive("");
   TCut bTag("nJets30<2 && nJets20BTagged>0");
   TCut bTagLoose("nJets30<2 && nJets20BTaggedLoose>0"); //for W shape in b-Category
 //   TCut nobTag("nJets30<2 && nJets20BTagged==0");
@@ -1743,7 +1744,7 @@ void plotElecTau( Int_t mH_           = 120,
     }
 
   TCut sbinCat("");
-  if(     selection_.find("inclusive")!=string::npos)  sbinCat = "etaL1<999";
+  if(     selection_.find("inclusive")!=string::npos)  sbinCat = inclusive&&TCut("etaL1<999");
   else if(selection_.find("oneJet")!=string::npos)     sbinCat = oneJet;
   else if(selection_.find("twoJets")!=string::npos)    sbinCat = twoJets;
   else if(selection_.find("vh")!=string::npos)         sbinCat = vh;
