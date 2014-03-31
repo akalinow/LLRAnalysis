@@ -92,7 +92,7 @@
   <use   name="rootgraphics"/>
 </bin>
 
-<bin   file="makeMuTauTemplates_Spring13.cc" name="makeMuTauTemplates_Spring13">
+<bin   file="makeMuTauTemplates_Spring14.cc" name="makeMuTauTemplates_Spring14">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>
@@ -104,7 +104,7 @@
   <use   name="rootgraphics"/>
 </bin>
 
-<bin   file="makeElecTauTemplates_Spring13.cc" name="makeElecTauTemplates_Spring13">
+<bin   file="makeElecTauTemplates_Spring14.cc" name="makeElecTauTemplates_Spring14">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>

@@ -278,41 +278,38 @@ void produce(
       }
     }
     else{//SUSY
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
-      hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-      hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
+      hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
+
+      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
-      hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
-      hSgn2->Write(Form("bbH%d%s"   ,mH_,suffix.c_str()));
+      TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+      hSgn1_PtUp->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
+      hSgn1_PtUp->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+      hSgn1_PtDown->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+      hSgn1_PtDown->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+      
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
+      hSgn2->Write(Form("bbH%d%s" ,mH_,suffix.c_str()));
+
+      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
-
-//       TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-//       hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-
-//       TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-//       hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-
-//       TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-//       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -781,50 +778,45 @@ void produce(
     }
     else{//SUSY
       if(dir->FindObjectAny(Form("ggH%d%s"         ,mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
-	TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
 	hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 	hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
-	TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
 	hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_))==0){
+	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+	hSgn1_PtUp->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
+	hSgn1_PtUp->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_))==0){
+	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+	hSgn1_PtDown->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+	hSgn1_PtDown->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+      }
       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
-	TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 	hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
-	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
-//       if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-//         hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-// 	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-//       }
-//       if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-// 	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//         hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//       }
-//       if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-//         hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//         hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//       }
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -1375,10 +1367,10 @@ void produce(
   //        /////////////////////////////////////////////
   //        /////////////////////////////////////////////
   //        
-  //        TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hGGFH%d",mH_)) : (TH1F*)fin->Get(Form("hGG%d",mH_));
+  //        TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hGGFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
   //        //hSgn2->Scale(1./rescaleGGFH);
   //        
-  //        TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hVBFH%d",mH_)) : (TH1F*)fin->Get(Form("hBB%d",mH_));
+  //        TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hVBFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
   //        //hSgn1->Scale(1./rescaleVBFH);
   //        
   //        TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
@@ -1477,18 +1469,18 @@ void produce(
   //
   //        }
   //        else{//SUSY
-  //          VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral())),
-  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral()))
+  //          VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral())),
+  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral()))
   //                              );
-  //          VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral());
-  //          VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral());
+  //          VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral());
+  //          VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral());
   //
-  //          SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral())),
-  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral()))
+  //          SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral())),
+  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral()))
   //                              );
   //
-  //          SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral());
-  //          SMrelDown = (((TH1F*)fin_jDown->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral());
+  //          SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral());
+  //          SMrelDown = (((TH1F*)fin_jDown->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral());
   //        }
   //        float ZTTrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get("hZtt"))->Integral()/((TH1F*)fin->Get("hZtt"))->Integral())),
   //      			    TMath::Abs((((TH1F*)fin_jDown->Get("hZtt"))->Integral()/((TH1F*)fin->Get("hZtt"))->Integral()))
