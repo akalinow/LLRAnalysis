@@ -337,17 +337,19 @@ void produce(
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 
-      //       TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-      //       hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-      //       hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+      //SM signal
+      TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      hSMGGFH125->SetName("ggH_SM125" );
+      hSMGGFH125->Write("ggH_SM125");
 
-      //       TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-      //       hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      //       hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      
-      //       TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-      //       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-      //       hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
+      TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      hSMVBFH125->SetName("qqH_SM125" );
+      hSMVBFH125->Write("qqH_SM125");
+
+      TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      hSMVH125->SetName("VH_SM125" );
+      hSMVH125->Write("VH_SM125");
+
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -1037,21 +1039,22 @@ void produce(
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       }
-      //       if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-      // 	TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-      // 	hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-      // 	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-      //       }
-      //       if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-      // 	TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-      // 	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      // 	hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-      //       }
-      //       if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-      // 	TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-      // 	hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-      // 	hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
-      //       }
+      //SM signal
+      if(dir->FindObjectAny("ggH_SM125")==0 ){
+      	TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      	hSMGGFH125->SetName("ggH_SM125");
+      	hSMGGFH125->Write("ggH_SM125");
+      }
+      if(dir->FindObjectAny("qqH_SM125")==0 ){
+      	TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      	hSMVBFH125->SetName("qqH_SM125");
+      	hSMVBFH125->Write("qqH_SM125");
+      }
+      if(dir->FindObjectAny("VH_SM125")==0 ){
+      	TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      	hSMVH125->SetName("VH_SM125");
+      	hSMVH125->Write("VH_SM125");
+      }
     }
 
 

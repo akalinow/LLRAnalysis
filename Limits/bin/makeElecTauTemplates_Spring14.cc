@@ -333,6 +333,20 @@ void produce(
       TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+
+      //SM signal
+      TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      hSMGGFH125->SetName("ggH_SM125" );
+      hSMGGFH125->Write("ggH_SM125");
+
+      TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      hSMVBFH125->SetName("qqH_SM125" );
+      hSMVBFH125->Write("qqH_SM125");
+
+      TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      hSMVH125->SetName("VH_SM125" );
+      hSMVH125->Write("VH_SM125");
+
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -601,14 +615,44 @@ void produce(
         hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
-        if(suffix == ""){
-          TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-          hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-          hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-          TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-          hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-          hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-        }
+	if(suffix == ""){
+	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+	    }
+	  else if(bin_.find("nobTagMedium")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+	    }
+	  else if(bin_.find("nobTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+	    }
+	}
       }
       else{
         TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
@@ -617,12 +661,34 @@ void produce(
 
 	//Up/Down for TauFake weight
         if(suffix == ""){
-          TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-          hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
-          hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
-          TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-          hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
-          hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+
+	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+	    }
+	  else if(bin_.find("bTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+	    }	  
+	  else
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
+	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
+	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+	    }
         }
       }
 
@@ -633,20 +699,73 @@ void produce(
       //Up/Down for TauFake weight
       if(suffix == ""){
 	if(bin_.find("nobTag")!=string::npos){
-	  TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	  hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	  hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	  TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	  hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
-	  hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+
+	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("nobTagMedium")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("nobTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	    }
 	}
-	else {
-	  TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	  hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	  hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	  TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	  hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
-	  hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	else{
+	  
+	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("bTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	    }
 	}
       }
      
@@ -839,6 +958,22 @@ void produce(
 	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+      }
+      //SM signal
+      if(dir->FindObjectAny("ggH_SM125")==0 ){
+      	TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      	hSMGGFH125->SetName("ggH_SM125");
+      	hSMGGFH125->Write("ggH_SM125");
+      }
+      if(dir->FindObjectAny("qqH_SM125")==0 ){
+      	TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      	hSMVBFH125->SetName("qqH_SM125");
+      	hSMVBFH125->Write("qqH_SM125");
+      }
+      if(dir->FindObjectAny("VH_SM125")==0 ){
+      	TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      	hSMVH125->SetName("VH_SM125");
+      	hSMVH125->Write("VH_SM125");
       }
     }
 
@@ -1133,14 +1268,44 @@ void produce(
           hW->Write(Form("W%s"           ,suffix.c_str()));
 	  
 	  //Up/Down for TauFake weight
-          if(suffix == ""){
-            TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-            hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-            TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-            hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-            hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-          }
+	  if(suffix == ""){
+	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+	      }
+	    else if(bin_.find("nobTagMedium")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+	      }
+	    else if(bin_.find("nobTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+	      }
+	  }
         }
         else{
           TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
@@ -1148,14 +1313,35 @@ void produce(
           hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	  //Up/Down for TauFake weight
-          if(suffix == ""){
-            TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
-            hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
-            TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-            hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
-            hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
-          }
+	  if(suffix == ""){
+	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+	      }
+	    else if(bin_.find("bTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+	      }	  
+	    else
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
+		hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
+		hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+	      }
+	  }
         }
 
 	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
@@ -1163,22 +1349,73 @@ void produce(
         hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
-        if(suffix == ""){
+	if(suffix == ""){
 	  if(bin_.find("nobTag")!=string::npos){
-	    TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	    hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	    hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	    TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	    hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
-	    hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("nobTagMedium")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("nobTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	      }
 	  }
-	  else {
-	    TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	    hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	    hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	    TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	    hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
-	    hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	  else{
+	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("bTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	      }
 	  }
 	}
       }
@@ -1766,6 +2003,11 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){ 
+  TString OutFileName = Form("results/MuTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*.root") ;
+  TString Command = "rm "+OutFileName ;
+  gSystem->Exec(Command.Data());
+
+
   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
