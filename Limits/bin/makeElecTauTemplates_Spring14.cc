@@ -180,12 +180,35 @@ void produce(
   if(bin_.find("vh")!=string::npos) 
     binNameSpace =  "2jet";
 
-  if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos) 
-    binNameSpace =  "btag";
-
+  if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos)
+    {
+      binNameSpace =  "btag";
+      if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	{
+	  binNameSpace = "btaghigh" ;
+	}
+      else if(bin_.find("bTagLow")!=string::npos)
+	{
+	  binNameSpace = "btaglow" ;
+	}
+    }
   else if(bin_.find("nobTag")!=string::npos)
-    binNameSpace =  "nobtag";
-  
+    {
+      binNameSpace =  "nobtag";
+      if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	{
+	  binNameSpace = "nobtaghigh" ;
+	}
+      else if(bin_.find("nobTagMedium")!=string::npos)
+	{
+	  binNameSpace = "nobtagmedium" ;
+	}
+      else if(bin_.find("nobTagLow")!=string::npos)
+	{
+	  binNameSpace = "nobtaglow" ;
+	}
+    }
+
   else if(bin_.find("twoJets")!=string::npos) 
     binNameSpace =  "SMpre2";
 
@@ -1575,8 +1598,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  variables.push_back("diTauVisMass");
-//   variables.push_back("diTauNSVfitMass");
+//   variables.push_back("diTauVisMass");
+  variables.push_back("diTauNSVfitMass");
 //   variables.push_back("ptL2");
 
   if(!DOSUSY){
@@ -1699,11 +1722,42 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 	produce(mH[j],variables[i], "JetUp"   , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "bTag", outputDir,true);
 
+	produce(mH[j],variables[i], "nominal" , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "bTagLow", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "bTagHigh", outputDir,true);
+
 	produce(mH[j],variables[i], "nominal" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauDown" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "nobTag", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagLow", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagMedium", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagHigh", outputDir,true);
+
       }     
     }//mH
   }//variables
@@ -1712,7 +1766,7 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){ 
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
@@ -1774,8 +1828,8 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel_ZeeSFDatacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
 
 ///////TauptBins
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel_ZeeSFDatacards",true); 

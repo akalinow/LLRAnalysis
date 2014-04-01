@@ -775,7 +775,7 @@ void evaluateWextrapolation(mapchain mapAllTrees, TString version_ = "",
   OSAIsoEventsWinSidebandRegionAIsoMC = (OSWinSidebandRegionAIsoMC/Error)*(OSWinSidebandRegionAIsoMC/Error)*scaleFactor; 
 
   //Data sideband
-  drawHistogram(sbinPairIso,sbinCat, "Data", version_, RUN, mapAllTrees["Data"], variable, OSWinSignalRegionDATA ,Error, 1.0 , hWMt, sbinPZetaRel&&apZ);
+  drawHistogram(sbinPairIso,sbinCatForWextrapolation, "Data", version_, RUN, mapAllTrees["Data"], variable, OSWinSignalRegionDATA ,Error, 1.0 , hWMt, sbinPZetaRel&&apZ);
   if(selection_.find("vbfTight")!=string::npos)OSWinSidebandRegionDATA = hWMt->GetEntries();
   cout << "Selected events in " << sign << " data from high Mt sideband " << OSWinSignalRegionDATA << endl;
 
