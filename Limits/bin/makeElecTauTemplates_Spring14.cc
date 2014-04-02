@@ -18,6 +18,7 @@
 #define RESCALETO1PB true
 #define DO2DFIT false
 #define OldCat false
+#define HiggsPtReweighting true
 
 using namespace std;
 
@@ -219,7 +220,11 @@ void produce(
 
   string theory =  !DOSUSY ? "SM" : "MSSM" ;
 
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str()),"UPDATE");
+//   TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str()),"UPDATE");
+  TString WeightNoWeight = "PtWeight" ;
+  if(HiggsPtReweighting) WeightNoWeight = "PtWeight" ;
+  else WeightNoWeight = "NoPtWeight" ;
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
   
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -302,7 +307,9 @@ void produce(
     }
     else{//SUSY
 
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      TH1F* hSgn1 ;
+      if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
       hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
       hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
 
@@ -920,7 +927,9 @@ void produce(
     }
     else{//SUSY
       if(dir->FindObjectAny(Form("ggH%d%s"         ,mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
@@ -2003,12 +2012,15 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){ 
-  TString OutFileName = Form("results/MuTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*.root") ;
+  
+  TString OutFileName ;
+  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*_PtWeight.root") ;
+  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*_NoPtWeight.root") ;
   TString Command = "rm "+OutFileName ;
   gSystem->Exec(Command.Data());
 
-
   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
+
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
