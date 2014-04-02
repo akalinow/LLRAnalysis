@@ -887,7 +887,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau;
   float weightDecayMode_, weightTauFakeWJet_, weightTauFakeWJetUp_, weightTauFakeWJetDown_;
-  
+  float weightJetFakeQCD_;
+
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
   int isTauLegMatchedToLep_;
@@ -1411,6 +1412,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("weightTauFakeWJetUp", &weightTauFakeWJetUp_, "weightTauFakeWJetUp/F");
   outTreePtOrd->Branch("weightTauFakeWJetDown", &weightTauFakeWJetDown_, "weightTauFakeWJetDown/F");
 
+  //jet->tau fake correction for antiiso events in the QCD estimation
+  outTreePtOrd->Branch("weightJetFakeQCD", &weightJetFakeQCD_, "weightJetFakeQCD/F");
+  //
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
   outTreePtOrd->Branch("muFlag",          &muFlag_,"muFlag/I"); 
@@ -2950,6 +2954,26 @@ void fillTrees_MuTauStream(TChain* currentTree,
     weightHepNupHighStatW =1;
     weightHepNupDY = 1;
     weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
+    //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
+    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
+    if(!f_JetFakeCorrection.IsZombie())
+      cout << "Jet Fake correction file avalilable" << endl;   
+    TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get(" jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get(" jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get(" jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    weightJetFakeQCD_=1;
+    if( TMath::Abs(etaL2)<=1.2 )
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
+      }
+    else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
+      }
+    else if( TMath::Abs(etaL2)>1.7)
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
+      }
 
     // Reweight W+Jets
     //cout << "SAMPLE : " << sample_ << endl;
