@@ -640,8 +640,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
+  cout << "Using corrections from llrCorrections_Winter13_v8_MVAIso.root" << endl;
+  //cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
+  //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
   //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Muon trigger
@@ -3542,8 +3544,30 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
       HLTweightTau    = HLTTauMC    != 0 ? HLTTau    / HLTTauMC    : 0;
       HLTweightTauD   = HLTTauMCD   != 0 ? HLTTauD   / HLTTauMCD   : 0;
-      HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
+      HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;     
 
+      // 1 - a*(x - 140) + b*pow((x - 140), 2)
+      //Additional tau trigger correction for high pT taus (Arun, Mar14)
+      TF1 *TriggerWeightBarrel = new TF1("TriggerWeightBarrel"  ,"1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)",0.,5000.);
+      TF1 *TriggerWeightEndcaps = new TF1("TriggerWeightEndcaps","1 - 1.81148e-03*(x - 140) + 5.44335e-07*(x - 140)*(x-140)",0.,5000.);
+
+      //All MC
+      if(!sample.Contains("Data") && !sample.Contains("Emb"))//MC
+	{
+	  if(TMath::Abs(etaL2)<=1.479)//barrel
+	    {
+	      if(ptL2>140. && ptL2<=800.) HLTweightTau *= TriggerWeightBarrel->Eval(ptL2);
+	      else if(ptL2>800.) HLTweightTau *= TriggerWeightBarrel->Eval(800.);
+	    }
+	  else//endcaps
+	    {
+	      if(ptL2>60. && ptL2<=400.) HLTweightTau *= TriggerWeightEndcaps->Eval(ptL2);
+	      else if(ptL2>400.) HLTweightTau *= TriggerWeightEndcaps->Eval(400.);
+	    }
+	}
+      
+ 
+      //Decay Modes Weights
       weightDecayMode_ = 1.0;
 
       //Old Decay Mode correction (prior to Mar14)
@@ -3558,13 +3582,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Weight to correct for mis-modeling of the decay mode distribution between MC and data
       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
 	{
-	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
+	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.479)//Barrel
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
 	      if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
 	    }
-	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
+	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.479)//EndCaps
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
