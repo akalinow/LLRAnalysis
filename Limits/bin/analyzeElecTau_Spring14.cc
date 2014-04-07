@@ -515,6 +515,12 @@ void drawHistogram(TCut sbinPair,
 //       }
 //     }
 
+
+    if(type.Contains("QCDCorr"))
+      {
+	weight *= "weightJetFakeQCD" ;	
+      }
+
     if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
 
     // Loop over entries to choose the event's pair instead of using pairIndex
@@ -2778,12 +2784,12 @@ void plotElecTau( Int_t mH_           = 120,
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 
 	    //Data anti-loose, tau-iso, bTag loose
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1); 
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose, "DataQCDCorr", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1); 
 	    hDataAntiIsoLooseTauIso->Add(hCleaner); 
 	    
 	    //fine binning histogram for MSSM
 	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.;
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose/*sbinCat*/, "Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose/*sbinCat*/, "DataQCDCorr", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
 	    hQCD_fb->Add(hCleanerfb);
 
 	    //OLD IMPLEMENTATION FOR LOW-STAT CATEGORIES
@@ -2805,7 +2811,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else{
 	    //Data anti-loose, tau-iso, bTag loose
-	    drawHistogram(sbinaIsoLtisoPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,sbinCat, "DataQCDCorr", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);
 
 	    //Normalize to evaluate QCD output: the shape is taken from anti-loose, bTag loose
@@ -2813,7 +2819,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    //Finebins QCD
 	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.; 
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"DataQCDCorr", version_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
 	    hQCD_fb->Add(hCleanerfb);
 	    hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 	  }

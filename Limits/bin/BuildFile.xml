@@ -60,6 +60,22 @@
   <use   name="rootgraphics"/>
 </bin>
 
+<bin   file="treeSkimmerMuTau_Spring14.cc" name="treeSkimmerMuTau_Spring14">
+  <use   name="DataFormats/FWLite"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+  <use   name="LLRAnalysis/Utilities"/>
+  <use   name="TauAnalysis/SVFitStandAlone"/>
+  <use   name="TauAnalysis/CandidateTools"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="roofit"/>
+  <use   name="root"/>
+  <use   name="rootgraphics"/>
+</bin>
+
 <bin   file="treeSkimmerElecTau_Spring13.cc" name="treeSkimmerElecTau_Spring13">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
@@ -77,6 +93,22 @@
 </bin>
 
 <bin   file="treeSkimmerElecTau_Winter13.cc" name="treeSkimmerElecTau_Winter13">
+  <use   name="DataFormats/FWLite"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+  <use   name="LLRAnalysis/Utilities"/>
+  <use   name="TauAnalysis/SVFitStandAlone"/>
+  <use   name="TauAnalysis/CandidateTools"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="roofit"/>
+  <use   name="root"/>
+  <use   name="rootgraphics"/>
+</bin>
+
+<bin   file="treeSkimmerElecTau_Spring14.cc" name="treeSkimmerElecTau_Spring14">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>

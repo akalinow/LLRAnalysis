@@ -489,6 +489,12 @@ void drawHistogram(TCut sbinPair,
 	  }
 	}
     }
+    
+    
+    if(type.Contains("QCDCorr"))
+      {
+	weight *= "weightJetFakeQCD" ;	
+      }
 
 //     if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
     cout<<"weight : "<<weight<<endl;
@@ -2210,6 +2216,29 @@ void plotMuTau( Int_t mH_           = 120,
 
       cout << "************** END QCD evaluation using SS events *******************" << endl;
 
+// evaluateQCD(mapchain mapAllTrees, TString version_, TString analysis_,
+// 		 TString WJetType, TString RUN,
+// 		 TH1F* qcdHisto, TH1F* ssHisto, bool evaluateWSS, string sign, bool useFakeRate, bool removeMtCut, string selection_, 
+// 		 float& SSQCDinSignalRegionDATAIncl_, float& SSIsoToSSAIsoRatioQCD, float& scaleFactorTTSSIncl,
+// 		 float& extrapFactorWSSIncl, 
+// 		 float& SSWinSignalRegionDATAIncl, float& SSWinSignalRegionMCIncl,
+// 		 float& SSWinSidebandRegionDATAIncl, float& SSWinSidebandRegionMCIncl,
+// 		 TH1F* hExtrap, TString variable = "",
+// 		 float scaleFactor=0., float TTxsectionRatio=0., float lumiCorrFactor = 0.,
+// 		 float ExtrapolationFactorSidebandZDataMC = 0., float ExtrapolationFactorZDataMC = 0.,
+// 		 float  MutoTauCorrectionFactor=0. , float JtoTauCorrectionFactor=0.,
+// 		 float OStoSSRatioQCD = 0.,
+// 		 float antiWsdb=0., float antiWsgn=0., bool useMt=true,
+// 		 TCut sbin = "",
+// 		 TCut sbinCatForWextrapolation = "",
+// 		 TCut sbinPZetaRel ="", TCut pZ="", TCut apZ="", TCut sbinPZetaRelInclusive="", 
+// 		 TCut sbinPZetaRelaIsoInclusive="", TCut sbinPZetaRelaIso="", TCut sbinPZetaRelaIsoSideband = "", 
+// 		 TCut vbf="", TCut boost="", TCut zeroJet="", TCut sbinCat="", TCut sbinCatForSbin="",
+// 		 TCut sbinPairIso="", TCut sbinPairAiso="",
+// 		 bool subtractTT=true, bool subtractVV=true){
+      //   drawHistogram(sbinPairIso,sbinCatForSbin,"Data", version_,analysis_, RUN, mapAllTrees["Data"], variable,              SSQCDinSignalRegionDATAIncl,        Error, 1.0,         hExtrap, sbin, 1);//Olivier
+
+
       //delete hExtrapSS;
       hExtrapSS->Reset();
 
@@ -3096,12 +3125,12 @@ void plotMuTau( Int_t mH_           = 120,
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){
 
 	    //Data anti-loose, tau-iso, bTag loose
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1); 
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"DataQCDCorr", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1); 
 	    hDataAntiIsoLooseTauIso->Add(hCleaner); 
 
 	    //Same --> fine binning
 	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.; 
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"DataQCDCorr", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
 	    hQCD_fb->Add(hCleanerfb);
 	    
 	    //OLD IMPLEMENTATION FOR LOW-STAT CATEGORIES
@@ -3126,7 +3155,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  }
 	  else{
 	    //Data anti-loose, tau-iso, bTag loose
-	    drawHistogram(sbinaIsoLtisoPresel,sbinCat,"Data", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,sbinCat,"DataQCDCorr", version_,analysis_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoLtiso ,1);
 	    hDataAntiIsoLooseTauIso->Add(hCleaner, SSIsoToSSAIsoRatioQCD);//not used
 
 	    //Normalize to evaluate QCD output: the shape is taken from anti-loose, bTag loose
@@ -3134,7 +3163,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	    //Finebins QCD
 	    hCleanerfb->Reset(); hQCD_fb->Reset(); float NormData_fb = 0.; 
-	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"Data", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
+	    drawHistogram(sbinaIsoLtisoPresel,bTagLoose,"DataQCDCorr", version_,analysis_, RUN, currentTree, variable, NormData_fb,  Error, 1.0 , hCleanerfb, sbinSSaIsoLtiso ,1);
 	    hQCD_fb->Add(hCleanerfb);
 	    hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 
@@ -3475,9 +3504,12 @@ void plotMuTau( Int_t mH_           = 120,
       hSiml->Add(hSS,1.0);
   }
 
+  //VV + W + ZJ
   hSiml->Add(hEWK,1.0);
 
-  // QCD
+  //Zmm
+  hSiml->Add(hZmm,1.0);
+
   if(!USESSBKG){
     if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos){
       aStack->Add(hDataAntiIsoLooseTauIsoQCD);
