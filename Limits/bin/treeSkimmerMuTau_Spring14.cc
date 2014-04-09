@@ -588,7 +588,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
 			   float xsec_ = 0., 
 			   float skimEff_ = 0., 
 			   int iJson_=-1,
-			   bool doLepVeto=true
+			   bool doLepVeto=true,
+			   int iDiv = 0,
+			   int nDiv = 1
 			   )
 {
   TMVA::Tools::Instance();
@@ -1483,7 +1485,20 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int nEntries    = currentTree->GetEntries() ;
   float crossSection = xsec_;
   float scaleFactor = (crossSection != 0) ? Lumi / (  float(nEventsRead)/(crossSection*skimEff_) )  : 1.0;
+
+  int nProc,n1,n2;
+  //cout<<"nDiv = "<<nDiv<<endl;
+  //cout<<"nEntries = "<<nEntries<<endl;
+  nProc = nEntries/ nDiv ;
+  n1 = iDiv * nProc ;
+  if( iDiv < (nDiv-1) )
+    n2 = (iDiv+1) * nProc ;
+  else if( iDiv == nDiv-1 )
+    n2 = nEntries;
   
+  //cout<<"n1 = "<<n1<<endl;
+  //cout<<"n2 = "<<n2<<endl;
+
   TString sample(sample_.c_str());
   cout << "Processing sample " << sample << endl;
   cout<< "nEventsRead = " << nEventsRead << endl;
@@ -2264,11 +2279,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // LOOP OVER ENTRIES //
   ///////////////////////
 
-  for (int n = 0; n < nEntries ; n++) {
+  for(int n = n1 ; n < n2 ; n++) {
+//     cout<<"n/n2 = "<<n<<"/"<<n2<<endl;
+//   for (int n = 0; n < nEntries ; n++) {
 //   for (int n = 0; n < 10000 ; n++) {
 
     currentTree->GetEntry(n);
-    if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
+    if(n%1000==0) cout << n <<"/"<<(n2-n1)<< endl;
+//     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
 
     // APPLY JSON SELECTION //
     isGoodRun=true;
@@ -3987,6 +4005,8 @@ int main(int argc, const char* argv[])
   double xSection = cfgTreeSkimmerMuTauAnalyzer.getParameter<double>("xSection");
   double skimEff = cfgTreeSkimmerMuTauAnalyzer.getParameter<double>("skimEff");
   int iJson = cfgTreeSkimmerMuTauAnalyzer.getParameter<int>("iJson");
+  int iDiv = cfgTreeSkimmerMuTauAnalyzer.getParameter<int>("iDiv");
+  int nDiv = cfgTreeSkimmerMuTauAnalyzer.getParameter<int>("nDiv");
 
   fwlite::InputSource inputFiles(cfg); 
   int maxEvents = inputFiles.maxEvents();
@@ -4037,7 +4057,13 @@ int main(int argc, const char* argv[])
 	inputFileName != inputFiles.files().end() && !maxEvents_processed; ++inputFileName ) {
     currentTree->Add(inputFileName->data());
   }
-  fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson);
+
+  cout<<"iDiv = "<<iDiv<<endl;
+  cout<<"nDiv = "<<nDiv<<endl;
+
+
+  fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,true,iDiv,nDiv);
+//   fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts,iDiv,nDiv);
 
   return 0;
 }

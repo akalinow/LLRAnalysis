@@ -152,6 +152,18 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "TTJets"        , False)
 ##     treeSkim( anaMC[iAnMC] , "TTJets_SemiLept", False)
 ##     treeSkim( anaMC[iAnMC] , "TTJets_FullLept", False)
+    
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p0", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p1", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p2", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p3", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p4", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p5", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p6", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p7", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p8", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p9", False)
+
 ##     treeSkim( anaMC[iAnMC] , "TTJets_Had"     , False)
 ##     treeSkim( anaMC[iAnMC] , "T-tW"          , False)
 ##     treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
@@ -186,7 +198,7 @@ for iAnMC in range(0,len(anaMC)):
     
 ##     treeSkim( anaMC[iAnMC] , "VBFH90"        , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH95"        , False)
-    treeSkim( anaMC[iAnMC] , "VBFH100"       , False)
+##     treeSkim( anaMC[iAnMC] , "VBFH100"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH105"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH110"       , False)
 ##     treeSkim( anaMC[iAnMC] , "VBFH115"       , False)

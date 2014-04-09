@@ -1844,8 +1844,9 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-//   variables.push_back("diTauVisMass");
-  variables.push_back("diTauNSVfitMass");
+//   variables.push_back("genVPt");
+  variables.push_back("diTauVisMass");
+//   variables.push_back("diTauNSVfitMass");
 //   variables.push_back("ptL2");
 
   if(!DOSUSY){

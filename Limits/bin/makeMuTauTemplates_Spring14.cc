@@ -2054,8 +2054,9 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<std::string> analysis;
 
   //   variables.push_back("diTauVisMass");
-  variables.push_back("diTauNSVfitMass");
-  //   variables.push_back("ptL2");
+//   variables.push_back("genVPt");
+//   variables.push_back("diTauNSVfitMass");
+  variables.push_back("ptL2");
 
   if(!DOSUSY){
     mH.push_back(90);
@@ -2275,12 +2276,20 @@ void produceAll(){
   //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_DatacardsRelax",true);
 
   TString OutFileName ;
-  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_PtWeight.root") ;
-  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_NoPtWeight.root") ;
+  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414/datacards/muTau*_PtWeight.root") ;
+  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414/datacards/muTau*_NoPtWeight.root") ;
   TString Command = "rm "+OutFileName ;
   gSystem->Exec(Command.Data());
 
-  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414",true);
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414",true);
+
+//   TString OutFileName ;
+//   if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_PtWeight.root") ;
+//   else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_NoPtWeight.root") ;
+//   TString Command = "rm "+OutFileName ;
+//   gSystem->Exec(Command.Data());
+
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414",true);
 
 
 

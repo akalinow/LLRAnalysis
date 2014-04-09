@@ -551,7 +551,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 //   fitEffTau[1][5][1] = new ratioEfficiencyTest(18.151899,    0.446117,    0.159085,    120.380318,  0.890775);
 
 
-  //New Corrections For MVA Tau ID Mar 14 - Medium Anti E
+  //New Corrections For MVA Tau ID Mar 14
   //mutau channel
   // ABCD
   fitEffTau[1][4][0] = new ratioEfficiencyTest(1.83211e+01, -1.89051e+00, 3.71081e+00, 1.06628e+00, 1.28559e+00);//data barrel
@@ -618,7 +618,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
 void makeFile(){
 
-  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root","RECREATE");
+  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root","RECREATE");
 //   TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root","RECREATE");
 
   //fout->cd();
@@ -740,6 +740,28 @@ void makeFile(){
     }
   }
   //
+
+//   //Additional corrections for TAU in MuTau (Arun, Mar14)
+//   TF1 *TriggerWeightBarrel = new TF1("AddTriggerWeightMuTauBarrel"  ,"1 - 9.01280e-04*(x - 140) + 4.81592e-07*(x - 140)*(x-140)",0.,800.);
+//   TriggerWeightBarrel->SetNpx(25600);
+//   TF1 *TriggerWeightEndcaps = new TF1("AddTriggerWeightMuTauEndcaps","1 - 1.81148e-03*(x - 140) + 5.44335e-07*(x - 140)*(x-140)",0.,800.);
+//   TriggerWeightEndcaps->SetNpx(25600);
+
+//   TriggerWeightBarrel->Write();
+//   TriggerWeightEndcaps->Write();
+
+//   //Apply this additional corrections to MC turn ons for mutau
+//   TString NameTurnOn(turnOnTau[1][0][4]->GetName());//mutau, barrel, ABCD
+//   cout<<turnOnTau[1][0][4]->GetExpFormula()<<endl;
+//   cout<<"NameTurnOn = "<<NameTurnOn<<endl;
+//   TString NameCorrection(TriggerWeightBarrel->GetName());
+//   cout<<TriggerWeightBarrel->GetExpFormula()<<endl;
+//   TString NewFunction = NameTurnOn+"*"+NameCorrection;
+  
+//   TF1* test = new TF1("test",NewFunction.Data(),0.,800.);
+//   test->Write();
+//   test->Print();
+  
 
   fout->Write();
   fout->Close();

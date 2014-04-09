@@ -11,10 +11,11 @@ WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
 WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
 #WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/MuTau/'
 OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/MuTau/temp/'
+#OutDir   = './'
 
 options = {
     ###mu+tau samples
-    
+   
     ##DATA
     'Run2012A-22Jan2013-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012A_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3/',
@@ -22,7 +23,9 @@ options = {
     'sample'         : 'Run2012A-22Jan2013-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p1-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
@@ -30,7 +33,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p1-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p2-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
@@ -38,7 +43,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p2-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p3-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
@@ -46,7 +53,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p3-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p4-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p4/',
@@ -54,7 +63,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p4-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p5-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
@@ -62,7 +73,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p5-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p0-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p0/',
@@ -70,7 +83,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p0-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p1-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
@@ -78,7 +93,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p1-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p2-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
@@ -86,7 +103,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p2-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p3-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
@@ -94,7 +113,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p3-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p4-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v4_p4/',
@@ -102,7 +123,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p4-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p5-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
@@ -110,7 +133,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p5-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p6-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p6/',
@@ -118,7 +143,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p6-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p7-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p7/',
@@ -126,7 +153,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p7-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p1-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p1/',
@@ -134,7 +163,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p1-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p2-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p2/',
@@ -142,7 +173,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p2-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p3-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p3/',
@@ -150,7 +183,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p3-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p4-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p4/',
@@ -158,7 +193,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p4-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p5-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p5/',
@@ -166,7 +203,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p5-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p6-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p6/',
@@ -174,7 +213,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p6-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p7-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p7/',
@@ -182,7 +223,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p7-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p8-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p8/',
@@ -190,7 +233,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p8-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p9-Data' : {
     'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_11Mar14_Trees_MuTau_v3_p9/',
@@ -198,7 +243,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p9-Data',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     ##Embedded
     'Run2012A-22Jan2013-Embedded' : {
@@ -207,7 +254,9 @@ options = {
     'sample'         : 'Run2012A-22Jan2013-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p1-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_11Mar14_Trees_v2_p1/',
@@ -215,7 +264,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p1-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p2-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_11Mar14_Trees_v2_p2/',
@@ -223,7 +274,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p2-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p3-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_11Mar14_Trees_v2_p3/',
@@ -231,7 +284,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p3-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p4-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_11Mar14_Trees_v2_p4/',
@@ -239,7 +294,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p4-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p5-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012B_ReReco22Jan_HTT_11Mar14_Trees_v2_p5/',
@@ -247,7 +304,9 @@ options = {
     'sample'         : 'Run2012B-22Jan2013-p5-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p0-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p0/',
@@ -255,7 +314,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p0-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p1-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p1/',
@@ -263,7 +324,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p1-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p2-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p2/',
@@ -271,7 +334,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p2-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p3-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p3/',
@@ -279,7 +344,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p3-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p4-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p4/',
@@ -287,7 +354,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p4-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p5-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p5/',
@@ -295,7 +364,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p5-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p6-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p6/',
@@ -303,7 +374,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p6-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p7-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012C_ReReco22Jan_HTT_11Mar14_Trees_v2_p7/',
@@ -311,7 +384,9 @@ options = {
     'sample'         : 'Run2012C-22Jan2013-p7-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p1-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p1/',
@@ -319,7 +394,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p1-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p2-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p2/',
@@ -327,7 +404,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p2-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p3-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p3/',
@@ -335,7 +414,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p3-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p4-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p4/',
@@ -343,7 +424,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p4-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p5-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p5/',
@@ -351,7 +434,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p5-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p6-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p6/',
@@ -359,7 +444,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p6-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p7-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p7/',
@@ -367,7 +454,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p7-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p8-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p8/',
@@ -375,7 +464,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p8-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p9-Embedded' : {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_mutau_2012D_ReReco22Jan_HTT_11Mar14_Trees_v2_p9/',
@@ -383,7 +474,9 @@ options = {
     'sample'         : 'Run2012D-22Jan2013-p9-Embedded',
     'xSection'       : 0,
     'skimEff'        : 0,
-    'iJson'          : 7
+    'iJson'          : 7,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     ##Bkg MC
     'DYJetsTauTau' : {
@@ -646,7 +739,9 @@ options = {
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 26.1975,
     'skimEff'        : 1.0 * 724837./12011428,##12011428 ##792835
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1    
     },
     'TTJets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -654,7 +749,9 @@ options = {
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
     'skimEff'        : 1.0 * 0.503752 * 2660824./3487856,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'TTJets_SemiLept' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -682,6 +779,136 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    'TTJets_FullLept_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p0_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p1_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p2_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p3_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p4_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p5_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p6_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p7_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p8_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },    
+    'TTJets_FullLept_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'outputFileName' : OutDir+'nTupleTTJets_FullLept_p9_MuTau.root',
+    'sample'         : 'TTJets_FullLept',
+    'xSection'       : 26.1975,
+    #'xSection'       : 249.5,
+    #'skimEff'        : 0.105 * 0.648373,
+    #'skimEff'        : 0.105 * 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },    
     'TTJets_Had' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_MuTau.root',
@@ -701,7 +928,9 @@ options = {
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
     'skimEff'        : 1.0 * 0.108752 * 533250./2000279,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets-p2' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -709,7 +938,9 @@ options = {
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
     'skimEff'        : 1.0 * 0.108710 * 1674658./6273656,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets1Jets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -717,7 +948,9 @@ options = {
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
     'skimEff'        :  1.0 * 1850955./22581598 ,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets2Jets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -725,7 +958,9 @@ options = {
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
     'skimEff'        : 1.0 * 5867536./34044921,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets3Jets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -733,7 +968,9 @@ options = {
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
     'skimEff'        :  1.0 * 3829211./15219503,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets4Jets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W4Jets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -741,7 +978,9 @@ options = {
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
     'skimEff'        : 1.0 * 4542508./13382803,##
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
         # High stat samples V19
     'WJets1JetsV19' : {
@@ -750,7 +989,9 @@ options = {
     'sample'         : 'WJets1JetsV19',
     'xSection'       : 36257,
     'skimEff'        :  1.0 * 1486190./22581598 ,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets2JetsV19' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -758,7 +999,9 @@ options = {
     'sample'         : 'WJets2JetsV19',
     'xSection'       : 36257,
     'skimEff'        :  1.0 * 1486190./22581598 ,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WJets3JetsV19' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -766,7 +1009,9 @@ options = {
     'sample'         : 'WJets3JetsV19',
     'xSection'       : 36257,
     'skimEff'        :  1.0 * 1486190./22581598 ,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'T-tW' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/T-tW-powheg-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -775,7 +1020,9 @@ options = {
     'xSection'       : 11.1,
     #'skimEff'        : 0.437682 * 160607./490658,
     'skimEff'        : 1.0 * 160607./490658,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'Tbar-tW' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -784,7 +1031,9 @@ options = {
     'xSection'       : 11.1,
     #'skimEff'        : 0.437851 * 0.668091,
     'skimEff'        : 1.0 * 161536./493460,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WWJetsTo2L2Nu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -793,7 +1042,9 @@ options = {
     'xSection'       : 5.824,
     #'skimEff'        : 0.535690 * 0.410962,
     'skimEff'        : 0.535690 * 459248./1007187,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WZJetsTo2L2Q' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -802,7 +1053,9 @@ options = {
     'xSection'       : 2.207,
     #'skimEff'        : 0.471732 * 0.658115,
     'skimEff'        : 1.0 * 1135312./3215990,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WZJetsTo3LNu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -811,7 +1064,9 @@ options = {
     'xSection'       : 1.058,
     #'skimEff'        : 1.0 * 0.618550 * 0.458578,
     'skimEff'        : 1.0 * 670103./2017979,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'ZZJetsTo2L2Nu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -820,7 +1075,9 @@ options = {
     'xSection'       : 2.502,
     #'skimEff'        : 0.468227 * 0.322101,
     'skimEff'        : 1.0 * 170171./954911,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'ZZJetsTo2L2Q' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -829,7 +1086,9 @@ options = {
     'xSection'       : 2.502,
     #'skimEff'        : 0.533349 * 0.648352,
     'skimEff'        : 1.0 * 762432./1929727,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'ZZJetsTo4L' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v2/',
@@ -838,7 +1097,9 @@ options = {
     'xSection'       : 0.181,
     #'skimEff'        : 0.577947 * 0.457893,
     'skimEff'        : 1.0 * 1396571./4793893,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WGToLNuG' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGToLNuG-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -846,7 +1107,9 @@ options = {
     'sample'         : 'WGToLNuG',
     'xSection'       : 461.6,
     'skimEff'        : 1.0 * 248374./4772358,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WGstarToLNu2E' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2E-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -854,7 +1117,9 @@ options = {
     'sample'         : 'WGstarToLNu2E',
     'xSection'       : 5.873,
     'skimEff'        : 1.0 * 10134./314653 ,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WGstarToLNu2Mu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Mu-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -862,7 +1127,9 @@ options = {
     'sample'         : 'WGstarToLNu2Mu',
     'xSection'       : 1.914,
     'skimEff'        : 1.0 * 9233./299973,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     'WGstarToLNu2Tau' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Tau-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
@@ -870,7 +1137,9 @@ options = {
     'sample'         : 'WGstarToLNu2Tau',
     'xSection'       : 0.336,
     'skimEff'        : 1.0 * 1287./49997,
-    'iJson'          : -1
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
     },
     ##Higgs MC
     'GGFH90' : {
@@ -1094,7 +1363,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_11Mar2014_Trees_MuTau_v4/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_11Mar2014_Trees_MuTau_v2/',
     'outputFileName' : OutDir+'nTupleVBFH125_MuTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -1814,7 +2083,9 @@ process.treeSkimmerMuTau = cms.PSet(
     analysis = cms.string('$analysis'),
     xSection = cms.double($xSection),
     skimEff = cms.double($skimEff),
-    iJson = cms.int32($iJson)
+    iJson = cms.int32($iJson),
+    iDiv = cms.int32($iDiv),
+    nDiv = cms.int32($nDiv)
 )
 ''')
 
