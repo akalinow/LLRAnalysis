@@ -16,7 +16,7 @@
 
 #define RESCALETO1PB true
 #define OldCat false
-#define HiggsPtReweighting true
+#define HiggsPtReweighting false
 
 using namespace std;
 
@@ -103,8 +103,8 @@ void produce(
 	     TString outputDir = "MuTau/res_ABCD_Moriond_v1",
 	     bool DOSUSY = false,
 	     int useEmb        = 1,
-	     TString location  = "~/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/results/MuTau/"
-	     // 	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/MuTau/"
+// 	     TString location  = "~/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/results/MuTau/"
+	     TString location  = "/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/results/MuTau/"
 	     ){
 
 
@@ -187,11 +187,15 @@ void produce(
       binNameSpace =  "btag";
       if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	{
-	  binNameSpace = "btaghigh" ;
-	}
+// 	  binNameSpace = "btaghigh" ;
+// 	  binNameSpace = "btag_hightau" ;	
+	  binNameSpace = "btag_high" ;
+}
       else if(bin_.find("bTagLow")!=string::npos)
 	{
-	  binNameSpace = "btaglow" ;
+// 	  binNameSpace = "btaglow" ;
+// 	  binNameSpace = "btag_lowtau" ;
+	  binNameSpace = "btag_low" ;
 	}
     }
   else if(bin_.find("nobTag")!=string::npos)
@@ -199,15 +203,21 @@ void produce(
       binNameSpace =  "nobtag";
       if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	{
-	  binNameSpace = "nobtaghigh" ;
+// 	  binNameSpace = "nobtaghigh" ;
+// 	  binNameSpace = "nobtag_hightau" ;
+	  binNameSpace = "nobtag_high" ;
 	}
       else if(bin_.find("nobTagMedium")!=string::npos)
 	{
-	  binNameSpace = "nobtagmedium" ;
+// 	  binNameSpace = "nobtagmedium" ;
+// 	  binNameSpace = "nobtag_mediumtau" ;
+	  binNameSpace = "nobtag_medium" ;
 	}
       else if(bin_.find("nobTagLow")!=string::npos)
 	{
-	  binNameSpace = "nobtaglow" ;
+// 	  binNameSpace = "nobtaglow" ;
+// 	  binNameSpace = "nobtag_lowtau" ;
+	  binNameSpace = "nobtag_low" ;
 	}
     }
   
@@ -223,7 +233,7 @@ void produce(
   TString WeightNoWeight = "PtWeight" ;
   if(HiggsPtReweighting) WeightNoWeight = "PtWeight" ;
   else WeightNoWeight = "NoPtWeight" ;
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/muTau%s_%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/muTau%s_%s_newNames2_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
 
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -589,139 +599,190 @@ void produce(
 	    hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
 	  }
 	}
-	//checkValidity(hQCD_fbUp);
+	checkValidity(hQCD_fbUp);
 	hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp_fine_binning");
-	//checkValidity(hQCD_fbDown);
+	checkValidity(hQCD_fbDown);
 	hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown_fine_binning");
       }
       
       // ----- W ------
       if(bin_.find("nobTag")!=string::npos){
-	TH1F* hW = ((TH1F*)fin->Get("hW"));
-	hW->SetName(Form("W%s"           ,suffix.c_str()));
-	hW->Write(Form("W%s"           ,suffix.c_str()));
+
+        TH1F* hW = ((TH1F*)fin->Get("hW"));
+        hW->SetName(Form("W%s"           ,suffix.c_str()));
+        hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
 	if(suffix == ""){
+          TString WShape("W_CMS_htt_WShape_mutau");
+          WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
-	    }
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");
+	    }	    
 	  else if(bin_.find("nobTagMedium")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }
 	  else if(bin_.find("nobTagLow")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }
 	  else
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }
 	}
       }
       else{
-	TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
+        TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
         hW->SetName(Form("W%s"           ,suffix.c_str()));
         hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
         if(suffix == ""){
+          TString WShape("W_CMS_htt_WShape_mutau");
+          WShape = WShape+"_"+binNameSpace;
 
 	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }
 	  else if(bin_.find("bTagLow")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }	  
 	  else
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp");
-	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown");
-	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	    }
         }
       }
 
-      TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb")); 
-      hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str())); 
+      TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
+      hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));
       hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
-
+      
       //Up/Down for TauFake weight
       if(suffix == ""){
+	TString WShape("W_CMS_htt_WShape_mutau");
+	WShape = WShape+"_"+binNameSpace;
 	if(bin_.find("nobTag")!=string::npos){
 
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	  else if(bin_.find("nobTagMedium")!=string::npos)
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	  else if(bin_.find("nobTagLow")!=string::npos)
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	  else
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	}
 	else{
@@ -729,29 +790,41 @@ void produce(
 	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	  else if(bin_.find("bTagLow")!=string::npos)
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	  else
 	    {
 	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
-	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
-	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	    }
 	}
       }
@@ -1319,166 +1392,382 @@ void produce(
 	  //checkValidity(hQCD_fbDown);
 	  hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown_fine_binning");
 	}
-
       }
-      if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
-	if(bin_.find("nobTag")!=string::npos){
-	  TH1F* hW = ((TH1F*)fin->Get("hW"));
-	  hW->SetName(Form("W%s"           ,suffix.c_str()));
-	  hW->Write(Form("W%s"           ,suffix.c_str()));
 
+      if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
+        if(bin_.find("nobTag")!=string::npos){
+          TH1F* hW = ((TH1F*)fin->Get("hW"));
+          hW->SetName(Form("W%s"           ,suffix.c_str()));
+          hW->Write(Form("W%s"           ,suffix.c_str()));
+	  
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
+	    TString WShape("W_CMS_htt_WShape_mutau");
+	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	    else if(bin_.find("nobTagMedium")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	    else if(bin_.find("nobTagLow")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	    else
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	  }
-	}
-	else{
-	  TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
-	  hW->SetName(Form("W%s"           ,suffix.c_str()));
-	  hW->Write(Form("W%s"           ,suffix.c_str()));
+        }
+        else{
+          TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
+          hW->SetName(Form("W%s"           ,suffix.c_str()));
+          hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
+	    TString WShape("W_CMS_htt_WShape_mutau");
+	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	    else if(bin_.find("bTagLow")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }	  
 	    else
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp");
-		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown");
-		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
 	      }
 	  }
-	}
+        }
 
-	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));  
-	hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));  
-	hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
+	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
+        hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));
+        hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
 	if(suffix == ""){
+	  TString WShape("W_CMS_htt_WShape_mutau");
+	  WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTag")!=string::npos){
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
 	      }
 	    else if(bin_.find("nobTagMedium")!=string::npos)
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	    else if(bin_.find("nobTagLow")!=string::npos)
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	    else
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	  }
 	  else{
 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	    else if(bin_.find("bTagLow")!=string::npos)
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	    else
 	      {
 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
-		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
-		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
 	      }
 	  }
 	}
       }
+ //      if(dir->FindObjectAny(Form("W%s"       ,suffix.c_str()))==0 ){
+// 	if(bin_.find("nobTag")!=string::npos){
+// 	  TH1F* hW = ((TH1F*)fin->Get("hW"));
+// 	  hW->SetName(Form("W%s"           ,suffix.c_str()));
+// 	  hW->Write(Form("W%s"           ,suffix.c_str()));
+
+// 	  //Up/Down for TauFake weight
+// 	  if(suffix == ""){
+// 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown");
+// 	      }
+// 	    else if(bin_.find("nobTagMedium")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown");
+// 	      }
+// 	    else if(bin_.find("nobTagLow")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown");
+// 	      }
+// 	    else
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown");
+// 	      }
+// 	  }
+// 	}
+// 	else{
+// 	  TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
+// 	  hW->SetName(Form("W%s"           ,suffix.c_str()));
+// 	  hW->Write(Form("W%s"           ,suffix.c_str()));
+
+// 	  //Up/Down for TauFake weight
+// 	  if(suffix == ""){
+// 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown");
+// 	      }
+// 	    else if(bin_.find("bTagLow")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown");
+// 	      }	  
+// 	    else
+// 	      {
+// 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp");
+// 		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown");
+// 	      }
+// 	  }
+// 	}
+
+// 	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));  
+// 	hW_fb->SetName(Form("W%s_fine_binning"           ,suffix.c_str()));  
+// 	hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
+
+// 	//Up/Down for TauFake weight
+// 	if(suffix == ""){
+// 	  if(bin_.find("nobTag")!=string::npos){
+// 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaghigh_8TeVDown_fine_binning");
+// 	      }
+// 	    else if(bin_.find("nobTagMedium")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtagmedium_8TeVDown_fine_binning");
+// 	      }
+// 	    else if(bin_.find("nobTagLow")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtaglow_8TeVDown_fine_binning");
+// 	      }
+// 	    else
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_nobtag_8TeVDown_fine_binning");
+// 	      }
+// 	  }
+// 	  else{
+// 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaghigh_8TeVDown_fine_binning");
+// 	      }
+// 	    else if(bin_.find("bTagLow")!=string::npos)
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btaglow_8TeVDown_fine_binning");
+// 	      }
+// 	    else
+// 	      {
+// 		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVUp_fine_binning");
+// 		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_mutau_btag_8TeVDown_fine_binning");
+// 	      }
+// 	  }
+// 	}
+//       }
 
       if(dir->FindObjectAny(Form("ZJ%s"       ,suffix.c_str()))==0 ){
         TH1F* hZmj = ((TH1F*)fin->Get("hZmj"));
@@ -2055,8 +2344,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
   //   variables.push_back("diTauVisMass");
 //   variables.push_back("genVPt");
-//   variables.push_back("diTauNSVfitMass");
-  variables.push_back("ptL2");
+  variables.push_back("diTauNSVfitMass");
+//   variables.push_back("ptL2");
 
   if(!DOSUSY){
     mH.push_back(90);
@@ -2276,12 +2565,13 @@ void produceAll(){
   //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_DatacardsRelax",true);
 
   TString OutFileName ;
-  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414/datacards/muTau*_PtWeight.root") ;
-  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414/datacards/muTau*_NoPtWeight.root") ;
+  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/muTau*_PtWeight.root") ;
+  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/muTau*_NoPtWeight.root") ;
   TString Command = "rm "+OutFileName ;
-  gSystem->Exec(Command.Data());
+//   gSystem->Exec(Command.Data());
 
-  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414",true);
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
 
 //   TString OutFileName ;
 //   if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_PtWeight.root") ;
@@ -2290,7 +2580,6 @@ void produceAll(){
 //   gSystem->Exec(Command.Data());
 
 //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414",true);
-
 
 
 

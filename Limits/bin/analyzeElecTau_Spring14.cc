@@ -2808,6 +2808,11 @@ void plotElecTau( Int_t mH_           = 120,
 // 	      hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
 // 	      hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
 // 	    }
+
+	    //Normalize to evaluate QCD output: the shape is taken from anti-loose, bTag loose
+	    hDataAntiIsoLooseTauIsoQCD->Add(hDataAntiIsoLooseTauIso, hQCD->Integral()/hDataAntiIsoLooseTauIso->Integral());
+	    hQCD_fb->Scale(hQCD->Integral()/hQCD_fb->Integral());
+
 	  }
 	  else{
 	    //Data anti-loose, tau-iso, bTag loose
