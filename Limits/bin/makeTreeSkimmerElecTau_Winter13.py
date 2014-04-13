@@ -1133,6 +1133,16 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    'GGFHH125' : {
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHHTo2B2Tau_M-125_MC_H_HTT_11Mar2014_Trees_EleTau_v1',
+    'outputFileName' : OutDir+'nTupleGGFHH125_ElecTau.root',
+    'sample'         : 'GGFHH125',
+    'xSection'       : 0.00796,
+    'skimEff'        : 7.3E-02 * 41238./94889,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
     'GGFH130' : {
     'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_11Mar2014_Trees_EleTau_v2',
     'outputFileName' : OutDir+'nTupleGGFH130_ElecTau.root',
@@ -1274,7 +1284,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_11Mar2014_Trees_EleTau_v4/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_11Mar2014_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleVBFH125_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,

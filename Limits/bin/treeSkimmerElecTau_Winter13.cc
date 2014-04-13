@@ -475,13 +475,23 @@ float pileupWeight2( int intimepileup_ ){
 
 float getTauFakeCorrection(double pt)
 {
+  //new corrections (Mar14, new T-ES correction)
   float correction = 0;
-  float p0 = 0.718127;
-  float p1 = -0.143612;
-  float p2 = -0.0431415;
-  float p3 = -0.0981383;
-  float X = (pt-163.7)/100;//(x-meanPt)/100
+  float p0 =  0.787452;
+  float p1 = -0.146412;
+  float p2 = -0.0276803;
+  float p3 = -0.0824184;
+  float X = (pt-149.832)/100;//(x-meanPt)/100
   correction = p0+p1*X+p2*X*X+p3*X*X*X;
+
+  //old corrections prior to Mar14 (old T-ES correction)
+//   float correction = 0;
+//   float p0 = 0.718127;
+//   float p1 = -0.143612;
+//   float p2 = -0.0431415;
+//   float p3 = -0.0981383;
+//   float X = (pt-163.7)/100;//(x-meanPt)/100
+//   correction = p0+p1*X+p2*X*X+p3*X*X*X;
 
   return correction;
 }
@@ -654,9 +664,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Spring13.root" << endl;
-
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
+  cout << "Using corrections from llrCorrections_Winter13_v8_MVAIso.root" << endl;
+//   cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
+//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
+  //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
   // Ele trigger
   const int nEtaEle=2;
@@ -767,10 +779,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float diJetPt, diJetPhi, dPhiHjet, c1, c2;
   float ptB1, etaB1, phiB1;
   float ptAllB[50],etaAllB[50],phiAllB[50],energyAllB[50],csvAllB[50],csvAll[50];
+  float ptAllBLoose[50],etaAllBLoose[50],phiAllBLoose[50],energyAllBLoose[50],csvAllBLoose[50];
 //   float MVAvbf;
   float jet1PUMVA, jet2PUMVA, jetVetoPUMVA;
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
   int nJets30, nJets20;
+  float dRb1b2,dPhib1b2,dEtab1b2,dRb1L1,dRb1L2,dRb2L1,dRb2L2,dRMaxbJetLept,dRMinbJetLept;
+  float dRHbbHtt,dPhiHbbHtt,dEtaHbbHtt, diHiggsVisMass,ptHbb;
+  float dRHbbMETMVA,dPhiHbbMETMVA,dEtaHbbMETMVA,dRHttMETMVA,dPhiHttMETMVA,dEtaHttMETMVA;
 
   // quality cuts of the first 2 jets
   float jetsBtagHE1,jetsBtagHE2,jetsBtagHP1,jetsBtagHP2, jetsBtagCSV1, jetsBtagCSV2;
@@ -801,7 +817,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
-  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1,VisMassL1J1,VisMassL1J2;
+  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dRL1L2,dEtaL1L2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1,VisMassL1J1,VisMassL1J2;
   float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
@@ -908,7 +924,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau, SFEtoTau;
   float weightDecayMode_, weightTauFakeWJet_,weightTauFakeWJetUp_,weightTauFakeWJetDown_;
-  
+  float weightJetFakeQCD_;
+
   int isTauLegMatched_,isElecLegMatched_,elecFlag_,genDecay_, leptFakeTau;
   int isTauLegMatchedToLep_;
   int vetoEventOld_;
@@ -1001,6 +1018,32 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("phiAllB",&phiAllB,"phiAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("energyAllB",&energyAllB,"energyAllB[nJets20BTagged]/F");
   outTreePtOrd->Branch("csvAllB",&csvAllB,"csvAllB[nJets20BTagged]/F");
+  outTreePtOrd->Branch("ptAllBLoose", &ptAllBLoose, "ptAllBLoose[nJets20BTaggedLoose]/F");
+  outTreePtOrd->Branch("etaAllBLoose",&etaAllBLoose,"etaAllBLoose[nJets20BTaggedLoose]/F");
+  outTreePtOrd->Branch("phiAllBLoose",&phiAllBLoose,"phiAllBLoose[nJets20BTaggedLoose]/F");
+  outTreePtOrd->Branch("energyAllBLoose",&energyAllBLoose,"energyAllBLoose[nJets20BTaggedLoose]/F");
+  outTreePtOrd->Branch("csvAllBLoose",&csvAllBLoose,"csvAllBLoose[nJets20BTaggedLoose]/F");
+  //Variables for Luca
+  outTreePtOrd->Branch("dRb1b2",    &dRb1b2,   "dRb1b2/F");
+  outTreePtOrd->Branch("dPhib1b2",  &dPhib1b2, "dPhib1b2/F");
+  outTreePtOrd->Branch("dEtab1b2",  &dEtab1b2, "dEtab1b2/F");
+  outTreePtOrd->Branch("dRb1L1",    &dRb1L1,   "dRb1L1/F");
+  outTreePtOrd->Branch("dRb1L2",    &dRb1L2,   "dRb1L2/F");
+  outTreePtOrd->Branch("dRb2L1",    &dRb2L1,   "dRb2L1/F");
+  outTreePtOrd->Branch("dRb2L2",    &dRb2L2,   "dRb2L2/F");
+  outTreePtOrd->Branch("dRMaxbJetLept",    &dRMaxbJetLept,   "dRMaxbJetLept/F");
+  outTreePtOrd->Branch("dRMinbJetLept",    &dRMinbJetLept,   "dRMinbJetLept/F");
+  outTreePtOrd->Branch("ptHbb",     &ptHbb,    "ptHbb/F");
+  outTreePtOrd->Branch("dRHbbHtt",     &dRHbbHtt,    "dRHbbHtt/F");
+  outTreePtOrd->Branch("dPhiHbbHtt",     &dPhiHbbHtt,    "dPhiHbbHtt/F");
+  outTreePtOrd->Branch("dEtaHbbHtt",     &dEtaHbbHtt,    "dEtaHbbHtt/F");
+  outTreePtOrd->Branch("diHiggsVisMass",     &diHiggsVisMass,    "diHiggsVisMass/F");
+  outTreePtOrd->Branch("dRHbbMETMVA",     &dRHbbMETMVA,    "dRHbbMETMVA/F");
+  outTreePtOrd->Branch("dPhiHbbMETMVA",     &dPhiHbbMETMVA,    "dPhiHbbMETMVA/F");
+  outTreePtOrd->Branch("dEtaHbbMETMVA",     &dEtaHbbMETMVA,    "dEtaHbbMETMVA/F");
+  outTreePtOrd->Branch("dRHttMETMVA",     &dRHttMETMVA,    "dRHttMETMVA/F");
+  outTreePtOrd->Branch("dPhiHttMETMVA",     &dPhiHttMETMVA,    "dPhiHttMETMVA/F");
+  outTreePtOrd->Branch("dEtaHttMETMVA",     &dEtaHttMETMVA,    "dEtaHttMETMVA/F");
 
   outTreePtOrd->Branch("ptVeto",  &ptVeto, "ptVeto/F");
   outTreePtOrd->Branch("phiVeto", &phiVeto,"phiVeto/F");
@@ -1050,6 +1093,8 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("ptL2",    &ptL2,"ptL2/F");
   outTreePtOrd->Branch("phiL1",   &phiL1,"phiL1/F");
   outTreePtOrd->Branch("phiL2",   &phiL2,"phiL2/F");
+  outTreePtOrd->Branch("dRL1L2"  ,&dRL1L2,"dRL1L2/F");
+  outTreePtOrd->Branch("dEtaL1L2",&dEtaL1L2,"dEtaL1L2/F");
   outTreePtOrd->Branch("dPhiL1L2",&dPhiL1L2,"dPhiL1L2/F");
   outTreePtOrd->Branch("dPhiL1J1",&dPhiL1J1,"dPhiL1J1/F");
   outTreePtOrd->Branch("dPhiL1J2",&dPhiL1J2,"dPhiL1J2/F");
@@ -1388,6 +1433,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("weightTauFakeWJet", &weightTauFakeWJet_, "weightTauFakeWJet/F");
   outTreePtOrd->Branch("weightTauFakeWJetUp", &weightTauFakeWJetUp_, "weightTauFakeWJetUp/F");
   outTreePtOrd->Branch("weightTauFakeWJetDown", &weightTauFakeWJetDown_, "weightTauFakeWJetDown/F");
+
+  //jet->tau fake correction for antiiso events in the QCD estimation
+  outTreePtOrd->Branch("weightJetFakeQCD", &weightJetFakeQCD_, "weightJetFakeQCD/F");
   //
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
@@ -2104,26 +2152,26 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   if(SampleT.Contains("GGH") && SampleT.Contains("SUSY"))
     {
       if(SampleT.Contains("80")) MSSMmH = 80;
-      else if(SampleT.Contains("90")) MSSMmH = 90;
-      else if(SampleT.Contains("100")) MSSMmH = 100;
-      else if(SampleT.Contains("110")) MSSMmH = 110;
-      else if(SampleT.Contains("120")) MSSMmH = 120;
-      else if(SampleT.Contains("130")) MSSMmH = 130;
-      else if(SampleT.Contains("140")) MSSMmH = 140;
-      else if(SampleT.Contains("160")) MSSMmH = 160;
-      else if(SampleT.Contains("180")) MSSMmH = 180;
-      else if(SampleT.Contains("200")) MSSMmH = 200;
-      else if(SampleT.Contains("250")) MSSMmH = 250;
-      else if(SampleT.Contains("300")) MSSMmH = 300;
-      else if(SampleT.Contains("350")) MSSMmH = 350;
-      else if(SampleT.Contains("400")) MSSMmH = 400;
-      else if(SampleT.Contains("450")) MSSMmH = 450;
-      else if(SampleT.Contains("500")) MSSMmH = 500;
-      else if(SampleT.Contains("600")) MSSMmH = 600;
-      else if(SampleT.Contains("700")) MSSMmH = 700;
-      else if(SampleT.Contains("800")) MSSMmH = 800;
-      else if(SampleT.Contains("900")) MSSMmH = 900;    
-      else if(SampleT.Contains("1000")) MSSMmH = 1000;    
+      if(SampleT.Contains("90")) MSSMmH = 90;
+      if(SampleT.Contains("100")) MSSMmH = 100;
+      if(SampleT.Contains("110")) MSSMmH = 110;
+      if(SampleT.Contains("120")) MSSMmH = 120;
+      if(SampleT.Contains("130")) MSSMmH = 130;
+      if(SampleT.Contains("140")) MSSMmH = 140;
+      if(SampleT.Contains("160")) MSSMmH = 160;
+      if(SampleT.Contains("180")) MSSMmH = 180;
+      if(SampleT.Contains("200")) MSSMmH = 200;
+      if(SampleT.Contains("250")) MSSMmH = 250;
+      if(SampleT.Contains("300")) MSSMmH = 300;
+      if(SampleT.Contains("350")) MSSMmH = 350;
+      if(SampleT.Contains("400")) MSSMmH = 400;
+      if(SampleT.Contains("450")) MSSMmH = 450;
+      if(SampleT.Contains("500")) MSSMmH = 500;
+      if(SampleT.Contains("600")) MSSMmH = 600;
+      if(SampleT.Contains("700")) MSSMmH = 700;
+      if(SampleT.Contains("800")) MSSMmH = 800;
+      if(SampleT.Contains("900")) MSSMmH = 900;    
+      if(SampleT.Contains("1000")) MSSMmH = 1000;    
 
       TString HistoName_mhmax = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
       TString HistoName_mhmax_HqTUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleUp", MSSMmH, MSSMmH);
@@ -2172,6 +2220,24 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       h_mhmodminus_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HIGLUDown.Data());
       h_mhmodminus_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaUp.Data());
       h_mhmodminus_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaDown.Data());
+
+      //lowmH -> 2500
+      TString HistoName_lowmH = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_central", 110, 110);
+      TString HistoName_lowmH_HqTUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HqTscaleUp", 110, 110);
+      TString HistoName_lowmH_HqTDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HqTscaleDown", 110, 110);
+      TString HistoName_lowmH_HIGLUUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HIGLUscaleUp", 110, 110);
+      TString HistoName_lowmH_HIGLUDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_HIGLUscaleDown", 110, 110);
+      TString HistoName_lowmH_tanBetaUp = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_tanBetaHigh", 110, 110);
+      TString HistoName_lowmH_tanBetaDown = Form("A_mA%d_mu2500/mssmHiggsPtReweight_A_mA%d_mu2500_tanBetaLow", 110, 110);
+
+      h_lowmH = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH.Data());
+      h_lowmH_HqTUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HqTUp.Data());
+      h_lowmH_HqTDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HqTDown.Data());
+      h_lowmH_HIGLUUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HIGLUUp.Data());
+      h_lowmH_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_HIGLUDown.Data());
+      h_lowmH_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_tanBetaUp.Data());
+      h_lowmH_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_lowmH.Get(HistoName_lowmH_tanBetaDown.Data());      
+
     }
   else
     {
@@ -2335,9 +2401,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     caloMEtNoHFUp_=-99;      caloMEtNoHFUpPhi_=-99;// ND
     caloMEtNoHFDown_=-99;      caloMEtNoHFDownPhi_=-99;// ND
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
+    //Variables for Luca
+    dRb1b2 = dPhib1b2 = dEtab1b2 = dRb1L1 = dRb1L1 = dRb2L1 = dRb2L2 = dRMaxbJetLept = dRMinbJetLept = -99;
+    dPhiHbbHtt = dEtaHbbHtt = dRHbbHtt = ptHbb= diHiggsVisMass = -99;
+    dRHbbMETMVA = dPhiHbbMETMVA = dEtaHbbMETMVA = dRHttMETMVA = dPhiHttMETMVA = dEtaHttMETMVA = -99;
 
     for(int i=0 ; i<50 ; i++) {
-      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = energyAllB[i] = csvAllB[i] = csvAll[i] = -99;
+      ptAll[i] = etaAll[i] = phiAll[i] = energyAll[i] = ptAllB[i] = etaAllB[i] = phiAllB[i] = energyAllB[i] = csvAllB[i] = csvAll[i] = -99.;
+      ptAllBLoose[i] = etaAllBLoose[i] = phiAllBLoose[i] = energyAllBLoose[i] = csvAllBLoose[i] = -99.;
     }
 
     // define the relevant jet collection
@@ -2373,8 +2444,14 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 
       // b-tag loose
       if( (*jets)[indexes[v]].Pt() > 20 && TMath::Abs((*jets)[indexes[v]].Eta())<2.4 && (*jetsBtagCSV)[indexes[v]] > 0.244 )
-	nJets20BTaggedLoose++ ;
-
+	{
+	  ptAllBLoose[nJets20BTaggedLoose]  = (*jets)[indexes[v]].Pt();
+	  etaAllBLoose[nJets20BTaggedLoose] = (*jets)[indexes[v]].Eta();
+	  phiAllBLoose[nJets20BTaggedLoose] = (*jets)[indexes[v]].Phi();	  
+	  energyAllBLoose[nJets20BTaggedLoose] = (*jets)[indexes[v]].E();	  
+	  csvAllBLoose[nJets20BTaggedLoose] = (*jetsBtagCSV)[indexes[v]];
+	  nJets20BTaggedLoose++ ;
+	}
       if( (*jets)[indexes[v]].Pt() > 20 && TMath::Abs((*jets)[indexes[v]].Eta())<2.4){ 
 //         int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
 	int jetFlavour = int((*bQuark)[indexes[v]]);
@@ -2405,6 +2482,68 @@ void fillTrees_ElecTauStream( TChain* currentTree,
         if(isMistagDown)nJets20BTaggedLDown++;
       }  
     }
+    TLorentzVector b1_temp,b2_temp;
+    TLorentzVector b1b2_temp;
+    LV b1(1,0,0,1);
+    LV b2(1,0,0,1);
+    LV b1b2(1,0,0,1);
+
+    if(nJets20BTagged>1){
+      b1_temp.SetPtEtaPhiE(ptAllB[0],etaAllB[0],phiAllB[0],energyAllB[0]);
+      b2_temp.SetPtEtaPhiE(ptAllB[1],etaAllB[1],phiAllB[1],energyAllB[1]);
+      dRb1b2 = b1_temp.DeltaR(b2_temp);
+      dPhib1b2 = b1_temp.DeltaPhi(b2_temp);
+      dEtab1b2 = fabs(b1_temp.Eta()-b2_temp.Eta());
+   
+      b1b2_temp =  b1_temp+b2_temp;
+      b1.SetPx(b1_temp.Px());
+      b1.SetPy(b1_temp.Py());
+      b1.SetPz(b1_temp.Pz());
+      b1.SetE(b1_temp.E());
+      b2.SetPx(b2_temp.Px());
+      b2.SetPy(b2_temp.Py());
+      b2.SetPz(b2_temp.Pz());
+      b2.SetE(b2_temp.E());
+      b1b2.SetPx(b1b2_temp.Px());
+      b1b2.SetPy(b1b2_temp.Py());
+      b1b2.SetPz(b1b2_temp.Pz());
+      b1b2.SetE(b1b2_temp.E());
+      
+      ptHbb= b1b2.pt();
+    }
+    if(nJets20BTagged>0){
+      dRb1L1 = deltaR(b1,(*diTauLegsP4)[0]);
+      dRb1L2 = deltaR(b1,(*diTauLegsP4)[1]);
+    }
+    if(nJets20BTagged>1){
+      dRb2L1 = deltaR(b2,(*diTauLegsP4)[0]);
+      dRb2L2 = deltaR(b2,(*diTauLegsP4)[1]);
+      dRMaxbJetLept = std::max(std::max(dRb1L1,dRb1L2),std::max(dRb2L1,dRb2L2));
+      dRMinbJetLept = std::min(std::min(dRb1L1,dRb1L2),std::min(dRb2L1,dRb2L2));
+    }
+
+    LV diHiggs;
+    if(nJets20BTagged>1){
+      diHiggs = b1b2+(*diTauVisP4)[0];
+      dRHbbHtt = deltaR(b1b2,(*diTauVisP4)[0]);
+      dPhiHbbHtt =  abs(b1b2.Phi()-(*diTauVisP4)[0].Phi()) > TMath::Pi() ? 
+	-abs(b1b2.Phi()-(*diTauVisP4)[0].Phi()) + 2*TMath::Pi()  :
+	abs(b1b2.Phi()-(*diTauVisP4)[0].Phi()) ;
+      dEtaHbbHtt =  abs(b1b2.Eta()-(*diTauVisP4)[0].Eta());
+      diHiggsVisMass = diHiggs.M();
+      
+      dRHbbMETMVA = deltaR(b1b2,(*METP4)[1]);
+      dPhiHbbMETMVA =  abs(b1b2.Phi()-(*METP4)[1].Phi()) > TMath::Pi() ? 
+	-abs(b1b2.Phi()-(*METP4)[1].Phi()) + 2*TMath::Pi()  :
+	abs(b1b2.Phi()-(*METP4)[1].Phi()) ;
+      dEtaHbbMETMVA =  abs(b1b2.Eta()-(*METP4)[1].Eta());
+    }
+
+    dRHttMETMVA = deltaR((*diTauVisP4)[0],(*METP4)[1]);
+    dPhiHttMETMVA =  abs((*diTauVisP4)[0].Phi()-(*METP4)[1].Phi()) > TMath::Pi() ? 
+      -abs((*diTauVisP4)[0].Phi()-(*METP4)[1].Phi()) + 2*TMath::Pi()  :
+      abs((*diTauVisP4)[0].Phi()-(*METP4)[1].Phi()) ;
+    dEtaHttMETMVA =  abs((*diTauVisP4)[0].Eta()-(*METP4)[1].Eta());
 
     //1 or 2 jet preselection
     if(lead>=0){
@@ -2560,9 +2699,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //     etaL2    = (*diTauLegsP4)[1].Eta();
     phiL1    = (*diTauLegsP4)[0].Phi();
     phiL2    = (*diTauLegsP4)[1].Phi();
+    dRL1L2 =  deltaR((*diTauLegsP4)[0],(*diTauLegsP4)[1]);
     dPhiL1L2 =  abs((*diTauLegsP4)[0].Phi()-(*diTauLegsP4)[1].Phi()) > TMath::Pi() ? 
       -abs( (*diTauLegsP4)[0].Phi()-(*diTauLegsP4)[1].Phi() ) + 2*TMath::Pi()  :
       abs( (*diTauLegsP4)[0].Phi()-(*diTauLegsP4)[1].Phi() ) ;
+    dEtaL1L2 =  abs((*diTauLegsP4)[0].Eta()-(*diTauLegsP4)[1].Eta());
 
     dxy1_    = dxy1;
     dz1_     = dz1;
@@ -2950,6 +3091,26 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     weightHepNupHighStatW = 1;
     weightHepNupDY=1;
     weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
+    //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
+    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
+    if(f_JetFakeCorrection.IsZombie())
+      cout << "Jet Fake correction file not available" << endl;   
+    TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    weightJetFakeQCD_=1;
+    if( TMath::Abs(etaL2)<=1.2 )
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
+      }
+    else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
+      }
+    else if( TMath::Abs(etaL2)>1.7)
+      {
+	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
+      }
     // Reweight W+Jets
     int localNup=0;
     if( (sample_.find("WJets")!=string::npos && sample_.find("WWJets")==string::npos ) ||
@@ -3001,12 +3162,10 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
 
-    if(SampleT.Contains("GGH") && !SampleT.Contains("SUSY"))
-      {
-	HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-	HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-	HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
-      }
+
+    HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+    HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
     if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
       {
@@ -3033,6 +3192,19 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown = h_mhmodminus_HIGLUDown!=0 ? h_mhmodminus_HIGLUDown->GetBinContent( h_mhmodminus_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp = h_mhmodminus_tanBetaUp!=0 ? h_mhmodminus_tanBetaUp->GetBinContent( h_mhmodminus_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown = h_mhmodminus_tanBetaDown!=0 ? h_mhmodminus_tanBetaDown->GetBinContent( h_mhmodminus_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+
+	mssmHiggsPtReweightGluGlu_lowmH = h_lowmH!=0 ? h_lowmH->GetBinContent( h_lowmH->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HqTUp = h_lowmH_HqTUp!=0 ? h_lowmH_HqTUp->GetBinContent( h_lowmH_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HqTDown = h_lowmH_HqTDown!=0 ? h_lowmH_HqTDown->GetBinContent( h_lowmH_HqTDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp = h_lowmH_HIGLUUp!=0 ? h_lowmH_HIGLUUp->GetBinContent( h_lowmH_HIGLUUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown = h_lowmH_HIGLUDown!=0 ? h_lowmH_HIGLUDown->GetBinContent( h_lowmH_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp = h_lowmH_tanBetaUp!=0 ? h_lowmH_tanBetaUp->GetBinContent( h_lowmH_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown = h_lowmH_tanBetaDown!=0 ? h_lowmH_tanBetaDown->GetBinContent( h_lowmH_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+
+	cout<<"Higgs pt : "<< (*genVP4)[0].Pt() <<endl;
+	cout<<"mssmHiggsPtReweightGluGlu_mhmax : "<< mssmHiggsPtReweightGluGlu_mhmax <<endl;
+	cout<<"mssmHiggsPtReweightGluGlu_mhmax_HqTUp : "<< mssmHiggsPtReweightGluGlu_mhmax_HqTUp <<endl;
+	cout<<"mssmHiggsPtReweightGluGlu_mhmax_HqTDown : "<< mssmHiggsPtReweightGluGlu_mhmax_HqTDown <<endl;
       }
  
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
@@ -3245,13 +3417,50 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
       weightDecayMode_ = 1.0; 
-      if( sample.Contains("Emb") && !sample.Contains("TTJets-Embedded") ){ 
-        if(decayMode == 0) weightDecayMode_ = 0.88; 
-      } 
-      else{ 
-        if(isTauLegMatched>0 && decayMode == 0) 
-          weightDecayMode_ = 0.88;  
-      } 
+
+      //Old Decay Mode correction (prior to Mar14)
+//       if( sample.Contains("Emb") && !sample.Contains("TTJets-Embedded") ){ 
+//         if(decayMode == 0) weightDecayMode_ = 0.88; 
+//       } 
+//       else{ 
+//         if(isTauLegMatched>0 && decayMode == 0) 
+//           weightDecayMode_ = 0.88;  
+//       } 
+  
+      //Weight to correct for mis-modeling of the decay mode distribution between MC and data
+      if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
+	{
+	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
+	    {
+	      if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
+	      if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
+	      if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
+	    }
+	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
+	    {
+	      if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
+	      if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
+	      if(decayMode == 4) weightDecayMode_ = 1.06;//3-prong
+	    }
+	}
+      else
+	{
+	  if(isTauLegMatched>0)//check for MC that the Tau Leg is matched to a true tau
+	    {
+	      if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
+		{
+		  if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
+		  if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
+		  if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
+		}
+	      else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
+		{
+		  if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
+		  if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
+		  if(decayMode == 4) weightDecayMode_ = 1.06;//3-prong
+		}
+	    }
+	}
       
       // Electron
       // trigger
@@ -3461,17 +3670,29 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 // // 	diTauVisMass *= 1.015;
 
 //MSSM NewTauID
+//       if(decayMode==0 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.40 : 
+// 	  0.72;
+//       }
+//       else if (decayMode==1 && leptFakeTau){
+// 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+// 	  1.86 : 
+// 	  0.85;
+//       }
+// 	diTauNSVfitMass_ *= 1.015;
+// 	diTauVisMass *= 1.015;
+
+//New TES by Olivier Mar14
       if(decayMode==0 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.40 : 
+	  1.37 : 
 	  0.72;
       }
       else if (decayMode==1 && leptFakeTau){
 	ZeeWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
-	  1.86 : 
-	  0.85;
-// 	diTauNSVfitMass_ *= 1.015;
-// 	diTauVisMass *= 1.015;
+	  1.84 : 
+	  0.83;
       }
     }
 //     cout<<"HELPo"<<endl;
