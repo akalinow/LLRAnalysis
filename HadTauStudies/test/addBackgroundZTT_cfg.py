@@ -20,10 +20,10 @@ process.fwliteOutput = cms.PSet(
 process.addBackgroundZTT = cms.PSet(
 
     regions = cms.vstring(
-        "OSisoTightBtag",
-        "OSisoLooseBtag",
-        "SSisoTightBtag",
-        "SSisoLooseBtag"
+        "OSiso1_iso2_TightBtag",
+        "OSiso1_iso2_LooseBtag",
+        "SSiso1_iso2_TightBtag",
+        "SSiso1_iso2_LooseBtag"
     ),
 
     processZTT = cms.string("ZTT"),

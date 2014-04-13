@@ -18,6 +18,7 @@
 
 #include "LLRAnalysis/HadTauStudies/interface/TauTauHistManager.h"
 #include "LLRAnalysis/HadTauStudies/interface/histogramAuxFunctions.h"
+#include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
 
 #include <TFile.h>
 #include <TChain.h>
@@ -40,6 +41,8 @@ typedef std::vector<double> vdouble;
 enum { kData, kSignal, kSM_Higgs, kZTTmc, kZL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
 
 enum { kOS, kSS };
+
+enum { kTree, kHPScombIso3HitsMedium, kMVAwLToldDMsTight, kMVAwLToldDMsVTight };
 
 struct weightEntryType
 {
@@ -142,6 +145,33 @@ struct particleIDlooseToTightWeightEntryType
   double shapeCorrPow_particle2_;
 };
 
+int getGenMatch(int isGenHadTau, int isGenMuon, int isGenElectron, int isGenJet)
+{
+  int genMatch = 0;
+  if      ( isGenHadTau   ) genMatch = 1;
+  else if ( isGenMuon     ) genMatch = 2;
+  else if ( isGenElectron ) genMatch = 3;
+  else if ( isGenJet      ) genMatch = 4;
+  return genMatch;
+}
+
+double compTauDecayModeWeight(double tauEta, int tauDecayMode)
+{
+  // CV: reweighting factors to correct data/MC differences observed in distribution of tau decay modes reconstructed by boosted tau ID,
+  //     cf. https://indico.cern.ch/event/308081/session/6/contribution/16/material/slides/0.pdf
+  double weight = 1.0;
+  if ( TMath::Abs(tauEta) < 1.47 ) {
+    if      ( tauDecayMode ==  0 ) weight = 0.87;
+    else if ( tauDecayMode ==  1 ) weight = 1.06;
+    else if ( tauDecayMode == 10 ) weight = 1.02;
+  } else {
+    if      ( tauDecayMode ==  0 ) weight = 0.96;
+    else if ( tauDecayMode ==  1 ) weight = 1.00;
+    else if ( tauDecayMode == 10 ) weight = 1.06;
+  }
+  return weight;
+}
+
 int main(int argc, char* argv[]) 
 {
 //--- parse command-line arguments
@@ -225,6 +255,15 @@ int main(int argc, char* argv[])
   else if ( region.find("SS") != std::string::npos ) diTauChargeSel = kSS;
   else throw cms::Exception("FWLiteTauTauAnalyzer") 
     << "Invalid Configuration parameter 'region' = " << region << " !!\n";
+
+  std::string applyTauTriggerTurnOn_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("applyTauTriggerTurnOn");
+  int applyTauTriggerTurnOn = -1;
+  if      ( applyTauTriggerTurnOn_string == "tree"                  ) applyTauTriggerTurnOn = kTree;
+  else if ( applyTauTriggerTurnOn_string == "HPScombIso3HitsMedium" ) applyTauTriggerTurnOn = kHPScombIso3HitsMedium;
+  else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsTight"     ) applyTauTriggerTurnOn = kMVAwLToldDMsTight;
+  else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsVTight"    ) applyTauTriggerTurnOn = kMVAwLToldDMsVTight;
+  else throw cms::Exception("FWLiteTauTauAnalyzer") 
+    << "Invalid Configuration parameter 'applyTauTriggerTurnOn' = " << applyTauTriggerTurnOn_string << " !!\n";
 
   bool applyTightBtag = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyTightBtag");
 
@@ -488,10 +527,11 @@ int main(int argc, char* argv[])
   Float_t NUP;
   inputTree->SetBranchAddress("NUP", &NUP);
 
-  Float_t triggerEffData_diTau;
-  inputTree->SetBranchAddress("triggerEffData_diTau", &triggerEffData_diTau);
-  Float_t triggerWeight_diTau;
-  inputTree->SetBranchAddress("triggerWeight_diTau", &triggerWeight_diTau);
+  Float_t triggerEffData_diTau, triggerWeight_diTau;
+  if ( applyTauTriggerTurnOn == kTree ) {
+    inputTree->SetBranchAddress("triggerEffData_diTau", &triggerEffData_diTau);
+    inputTree->SetBranchAddress("triggerWeight_diTau", &triggerWeight_diTau);
+  }
   Float_t pileupWeight = 1.0;
   if ( isMC ) inputTree->SetBranchAddress("vertexWeight", &pileupWeight);
   Float_t embeddingWeight = 1.0;
@@ -576,7 +616,32 @@ int main(int argc, char* argv[])
 
     if ( process == kTT_Embedded && !is2RealTaus ) continue;
     //---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
+    // CV: apply tau trigger efficiency turn-on curves measured by Arun for different tau ID discriminators
     
+    typedef double (*triggerTurnOnCurvePtr)(double, double);
+    triggerTurnOnCurvePtr tauTriggerEffData = 0;
+    triggerTurnOnCurvePtr tauTriggerEffMC   = 0;
+    if ( applyTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
+      tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
+      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
+    } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsTight ) {
+      tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaTight;
+      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
+    } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
+      tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaVTight;
+      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight;  
+    } 
+    if ( applyTauTriggerTurnOn != kTree ) {
+      assert(tauTriggerEffData);
+      assert(tauTriggerEffMC);
+      triggerEffData_diTau = (*tauTriggerEffData)(tau1Pt, tau1Eta)*(*tauTriggerEffData)(tau2Pt, tau2Eta);
+      Float_t triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta)*(*tauTriggerEffMC)(tau2Pt, tau2Eta);
+      triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+    }
+    //---------------------------------------------------------------------------
+
     Float_t evtWeight = 1.0;
     if ( isMC || isEmbedded ) {      
       if ( isEmbedded ) {
@@ -585,8 +650,8 @@ int main(int argc, char* argv[])
       } else if ( isMC ) {
 	evtWeight *= triggerWeight_diTau;
       }
-      if ( tau1GenPt > 1.0 && TMath::Nint(tau1DecayMode) == 0 ) evtWeight *= 0.88;
-      if ( tau2GenPt > 1.0 && TMath::Nint(tau2DecayMode) == 0 ) evtWeight *= 0.88;
+      if ( tau1GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
+      if ( tau2GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
       if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
 	Float_t stitchingWeight = 1.0;
 	int idxNUP = TMath::Nint(NUP) - 5;
@@ -666,15 +731,21 @@ int main(int argc, char* argv[])
       processSF_btag      = 0.96;
     } 
     if ( process == kW ) {
-      processSF_inclusive = 0.73; // CV: W+jets scale-factor provided by Aram
-      processSF_nobtag    = 0.73;
-      processSF_btag      = 1.50;
+      //processSF_inclusive = 0.73; // CV: W+jets scale-factor provided by Aram
+      //processSF_nobtag    = 0.73;
+      //processSF_btag      = 1.50;
+      processSF_inclusive = 1.00; // CV: new W+jets scale-factor determined by Olivier (compatible with 1.0 within uncertainties)
+      processSF_nobtag    = 1.00;
+      processSF_btag      = 1.00;
     }
     //---------------------------------------------------------------------------
 
+    int tau1GenMatch = getGenMatch(l1isGenHadTau, l1isGenMuon, l1isGenElectron, l1isGenJet);
+    int tau2GenMatch = getGenMatch(l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet);
+    
     histManager_inclusive.fillHistograms(
-      tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
-      tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2rawMVA, tau2IsoPtSum,
+      tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+      tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
       dPhi, dEta, dR, 
       visMass, svFitMass, 
       jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
@@ -693,8 +764,8 @@ int main(int argc, char* argv[])
 
     if ( nbJets == 0 ) {
       histManager_nobtag.fillHistograms(
-        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
-        tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2rawMVA, tau2IsoPtSum,
+        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+        tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
         dPhi, dEta, dR, 
         visMass, svFitMass, 
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
@@ -708,8 +779,8 @@ int main(int argc, char* argv[])
         selectedEntriesWeighted_nobtag += (evtWeight*processSF_nobtag);
     } else if ( nbJets == 1 && nJets <= 1 ) {
       histManager_btag.fillHistograms(
-        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1rawMVA, tau1IsoPtSum,
-	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2rawMVA, tau2IsoPtSum,
+        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
 	dPhi, dEta, dR, 
 	visMass, svFitMass, 
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 

@@ -17,11 +17,11 @@ process.makeTauTauPlots = cms.PSet(
 
     regions = cms.VPSet(
         cms.PSet(
-            name = cms.string("OSisoTightBtag"),
+            name = cms.string("OSiso1_iso2_TightBtag"),
             label = cms.string("")
         ),        
         cms.PSet(
-            name = cms.string("SSisoTightBtag"),
+            name = cms.string("SSiso1_iso2_TightBtag"),
             label = cms.string("SS")
         ) 
     ),

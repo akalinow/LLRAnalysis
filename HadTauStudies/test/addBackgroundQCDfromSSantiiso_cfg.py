@@ -21,55 +21,55 @@ process.addBackgroundQCD = cms.PSet(
 
     regions = cms.VPSet(
         cms.PSet(
-            name = cms.string("OSisoTightBtag"),
+            name = cms.string("OSiso1_iso2_TightBtag"),
             qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("OSrelaxedFRwTightBtag"),
-                nobtag = cms.string("OSrelaxedFRwTightBtag"),
-                btag = cms.string("OSrelaxedFRwTightBtag")
+                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
             ),        
             qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("OSrelaxedFRwTightBtag"),
-                nobtag = cms.string("OSrelaxedFRwTightBtag"),
-                btag = cms.string("OSvrelaxedFRwLooseBtagFRw")
+                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
             )
         ),
         cms.PSet(
-            name = cms.string("OSisoLooseBtag"),
+            name = cms.string("OSiso1_iso2_LooseBtag"),
             qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("OSrelaxedFRwLooseBtag"),
-                nobtag = cms.string("OSrelaxedFRwLooseBtag"),
-                btag = cms.string("OSrelaxedFRwLooseBtag")
+                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
             ),        
             qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("OSrelaxedFRwLooseBtag"),
-                nobtag = cms.string("OSrelaxedFRwLooseBtag"),
-                btag = cms.string("OSvrelaxedFRwLooseBtag")
+                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
             )
         ),
         cms.PSet(
-            name = cms.string("SSisoTightBtag"),
+            name = cms.string("SSiso1_iso2_TightBtag"),
             qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("SSrelaxedFRwTightBtag"),
-                nobtag = cms.string("SSrelaxedFRwTightBtag"),
-                btag = cms.string("SSrelaxedFRwTightBtag")
+                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
             ),        
             qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("SSrelaxedFRwTightBtag"),
-                nobtag = cms.string("SSrelaxedFRwTightBtag"),
-                btag = cms.string("SSvrelaxedFRwLooseBtagFRw")
+                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
+                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
             )
         ),
         cms.PSet(
-            name = cms.string("SSisoLooseBtag"),
+            name = cms.string("SSiso1_iso2_LooseBtag"),
             qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("SSrelaxedFRwLooseBtag"),
-                nobtag = cms.string("SSrelaxedFRwLooseBtag"),
-                btag = cms.string("SSrelaxedFRwLooseBtag")
+                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
             ),        
             qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("SSrelaxedFRwLooseBtag"),
-                nobtag = cms.string("SSrelaxedFRwLooseBtag"),
-                btag = cms.string("SSvrelaxedFRwLooseBtag")
+                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
+                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
             )
         )
     ),

@@ -70,11 +70,11 @@ namespace
     //     that do not use tauPt bins
     std::string subdirName_output = "";
     if ( tauPtBin == "tau1PtGt45tau2PtGt45" ) subdirName_output = Form("tauTau_%s", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_lowtau", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt60to80" ) subdirName_output = Form("tauTau_%s_mediumtau", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2PtGt80"   ) subdirName_output = Form("tauTau_%s_hightau", category.data());
-    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_lowtau", category.data());
-    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2PtGt60"   ) subdirName_output = Form("tauTau_%s_hightau", category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_low",    category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt60to80" ) subdirName_output = Form("tauTau_%s_medium", category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2PtGt80"   ) subdirName_output = Form("tauTau_%s_high",   category.data());
+    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_low",    category.data());
+    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2PtGt60"   ) subdirName_output = Form("tauTau_%s_high",   category.data());
     else subdirName_output = Form("tauTau_%s_%s", category.data(), tauPtBin.data());
     return subdirName_output;
   }

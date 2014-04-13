@@ -19,7 +19,7 @@ process.fwliteOutput = cms.PSet(
 
 process.prepareTauTauDatacards = cms.PSet(
 
-    signalRegion = cms.string("OSisoTightBtag"),
+    signalRegion = cms.string("OSiso1_iso2_TightBtag"),
 
     processesToCopy = cms.vstring(
         "data_obs",

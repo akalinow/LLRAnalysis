@@ -52,8 +52,9 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramTau1Eta_       = book1D(dir, "tau1Eta",       "#tau_{1} #eta", 60, -3.0, +3.0);
   histogramTau1Phi_       = book1D(dir, "tau1Phi",       "#tau_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
   histogramTau1DecayMode_ = book1D(dir, "tau1DecayMode", "#tau_{1} Decay Mode", 15, -0.5, 14.5);
-  histogramTau1IsoDiscrS_ = book1D(dir, "tau1IsoDiscrS", "#tau_{1} MVA output", 105, -0.005, 1.045);
-  histogramTau1IsoDiscrL_ = book1D(dir, "tau1IsoDiscrL", "#tau_{1} Isolation", 101, -0.05, 10.05);
+  histogramTau1GenMatch_  = book1D(dir, "tau1GenMatch_", "#tau_{1} gen. Match", 5, -0.5, 4.5);
+  histogramTau1IsoPtSum_  = book1D(dir, "tau1IsoDiscrL", "#tau_{1} Isolation", 101, -0.05, 10.05);
+  histogramTau1MVA_       = book1D(dir, "tau1IsoDiscrS", "#tau_{1} MVA output", 105, -0.005, 1.045);
 
   histogramTau2PtS_       = book1D(dir, "tau2PtS",       "#tau_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
   histogramTau2PtL_       = book1D(dir, "tau2PtL",       "#tau_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
@@ -69,8 +70,9 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramTau2Eta_       = book1D(dir, "tau2Eta",       "#tau_{2} #eta", 60, -3.0, +3.0);
   histogramTau2Phi_       = book1D(dir, "tau2Phi",       "#tau_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
   histogramTau2DecayMode_ = book1D(dir, "tau2DecayMode", "#tau_{2} Decay Mode", 15, -0.5, 14.5);
-  histogramTau2IsoDiscrS_ = book1D(dir, "tau2IsoDiscrS", "#tau_{2} MVA output", 105, -0.005, 1.045);
-  histogramTau2IsoDiscrL_ = book1D(dir, "tau2IsoDiscrL", "#tau_{2} Isolation", 101, -0.05, 10.05);
+  histogramTau2GenMatch_  = book1D(dir, "tau2GenMatch_", "#tau_{2} gen. Match", 5, -0.5, 4.5);
+  histogramTau2IsoPtSum_  = book1D(dir, "tau2IsoDiscrL", "#tau_{2} Isolation", 101, -0.05, 10.05);
+  histogramTau2MVA_       = book1D(dir, "tau2IsoDiscrS", "#tau_{2} MVA output", 105, -0.005, 1.045);
 
   const int numMassBins_inclusive_and_nobtag = 31;
   float massBinning_inclusive_and_nobtag[numMassBins_inclusive_and_nobtag + 1] = { 
@@ -178,8 +180,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
 }
 
 void TauTauHistManager::fillHistograms(
-       double tau1Pt, double tau1Eta, double tau1Phi, int tau1DecayMode, double tau1IsoDiscr1, double tau1IsoDiscr2,					    
-       double tau2Pt, double tau2Eta, double tau2Phi, int tau2DecayMode, double tau2IsoDiscr1, double tau2IsoDiscr2,					    
+       double tau1Pt, double tau1Eta, double tau1Phi, int tau1DecayMode, int tau1GenMatch, double tau1IsoPtSum, double tau1MVA,					    
+       double tau2Pt, double tau2Eta, double tau2Phi, int tau2DecayMode, int tau2GenMatch, double tau2IsoPtSum, double tau2MVA,					    
        double dPhi, double dEta, double dR, 
        double visMass, double svFitMass, 
        double jet1Pt, double jet1Eta, double jet1Phi, double jet1BtagDiscr, 
@@ -201,8 +203,9 @@ void TauTauHistManager::fillHistograms(
   histogramTau1Eta_->Fill(tau1Eta, evtWeight);
   histogramTau1Phi_->Fill(tau1Phi, evtWeight);
   histogramTau1DecayMode_->Fill(tau1DecayMode, evtWeight);
-  histogramTau1IsoDiscrS_->Fill(tau1IsoDiscr1, evtWeight);
-  histogramTau1IsoDiscrL_->Fill(tau1IsoDiscr2, evtWeight);
+  histogramTau1GenMatch_->Fill(tau1GenMatch, evtWeight);
+  histogramTau1IsoPtSum_->Fill(tau1IsoPtSum, evtWeight);
+  histogramTau1MVA_->Fill(tau1MVA, evtWeight);
 
   histogramTau2PtS_->Fill(tau2Pt, evtWeight);
   histogramTau2PtL_->Fill(tau2Pt, evtWeight);
@@ -213,8 +216,9 @@ void TauTauHistManager::fillHistograms(
   histogramTau2Eta_->Fill(tau2Eta, evtWeight);
   histogramTau2Phi_->Fill(tau2Phi, evtWeight);
   histogramTau2DecayMode_->Fill(tau2DecayMode, evtWeight);
-  histogramTau2IsoDiscrS_->Fill(tau2IsoDiscr1, evtWeight);
-  histogramTau2IsoDiscrL_->Fill(tau2IsoDiscr2, evtWeight);
+  histogramTau2GenMatch_->Fill(tau2GenMatch, evtWeight);
+  histogramTau2IsoPtSum_->Fill(tau2IsoPtSum, evtWeight);
+  histogramTau2MVA_->Fill(tau2MVA, evtWeight);
 
   histogramVisMassS_->Fill(visMass, evtWeight);
   histogramVisMassL_->Fill(visMass, evtWeight);
