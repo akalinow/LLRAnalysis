@@ -115,19 +115,30 @@ namespace
     return lut->GetBinContent(idxBin);
   }
 
-  bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
-  {
-    for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin();
-	  genParticle != genParticles.end(); ++genParticle ) {
-      int absGenParticlePdgId = TMath::Abs(genParticle->pdgId());
-      if ( (absPdgId1 != 0 && absGenParticlePdgId == absPdgId1) ||
-	   (absPdgId2 != 0 && absGenParticlePdgId == absPdgId2) ||
-	   (absPdgId3 != 0 && absGenParticlePdgId == absPdgId3) ) {
-	p4 = genParticle->p4();
-	return true;
-      }
-    }
-    return false;
+//   bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
+//   {
+//     for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin();
+// 	  genParticle != genParticles.end(); ++genParticle ) {
+//       int absGenParticlePdgId = TMath::Abs(genParticle->pdgId());
+//       if ( (absPdgId1 != 0 && absGenParticlePdgId == absPdgId1) ||
+// 	   (absPdgId2 != 0 && absGenParticlePdgId == absPdgId2) ||
+// 	   (absPdgId3 != 0 && absGenParticlePdgId == absPdgId3) ) {
+// 	p4 = genParticle->p4();
+// 	return true;
+//       }
+//     }
+//     return false;
+//   }
+  bool findGenParticle(const reco::GenParticleCollection& genParticles, int pdgId1, int pdgId2, int pdgId3, reco::Candidate::LorentzVector& p4) 
+  { 
+    for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin(); genParticle != genParticles.end(); ++genParticle ) { 
+      int genParticlePdgId = genParticle->pdgId(); 
+      if ( (pdgId1 != 0 && genParticlePdgId == pdgId1) || (pdgId2 != 0 && genParticlePdgId == pdgId2) || (pdgId3 != 0 && genParticlePdgId == pdgId3) ) { 
+	p4 = genParticle->p4(); 
+	return true; 
+      } 
+    } 
+    return false; 
   }
 
   struct DiTauInfo 
@@ -149,7 +160,25 @@ namespace
       return (t1.sumPt_ > t2.sumPt_);  
     } 
   }; 
+
+  //IN
+  //-----------------------------------------------------------------------------
+  // CV: recipe for top quark Pt reweighting taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  double compTopPtWeight(double topPt)
+  {
+    const double a = 0.156;
+    const double b = -0.00137;
+    return TMath::Exp(a + b*topPt);
+  }
+  
+  double compTopPtWeight(double top1Pt, double top2Pt)
+  {
+    double topPtWeight2 = compTopPtWeight(top1Pt)*compTopPtWeight(top2Pt);
+    return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
+  }
+  //-----------------------------------------------------------------------------
 }
+
 
 MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
   : inputFileHiggsPtWeight_(0),
@@ -238,6 +267,7 @@ void MuTauStreamAnalyzer::beginJob(){
   caloMETNoHFP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genMETP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  gentopP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
   leptonJets_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   extraMuons_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -398,6 +428,7 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
   tree_->Branch("genMETP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genMETP4_);
   tree_->Branch("genVP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genVP4_);
+  tree_->Branch("gentopP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&gentopP4_);
   tree_->Branch("genDecay",&genDecay_,"genDecay/I");
   tree_->Branch("parton",&parton_,"parton/I");
   tree_->Branch("genPartMult",&genPartMult_,"genPartMult/I");
@@ -591,6 +622,11 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("higgsPtWeightUp",&higgsPtWeightUp_,"higgsPtWeightUp/F");
   tree_->Branch("higgsPtWeightDown",&higgsPtWeightDown_,"higgsPtWeightDown/F");
 
+  //Top pT reweighting SM // IN
+  tree_->Branch("topPtWeightNom",&topPtWeightNom_,"topPtWeightNom/F");
+  tree_->Branch("topPtWeightUp",&topPtWeightUp_,"topPtWeightUp/F");
+  tree_->Branch("topPtWeightDown",&topPtWeightDown_,"topPtWeightDown/F");
+
   tree_->Branch("index",&index_,"index/I");
 
   tree_->Branch("genDiTauMass",&genDiTauMass_,"genDiTauMass/F");
@@ -601,7 +637,7 @@ MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete inputFileHiggsPtWeight_;
   delete jetsP4_; delete jetsIDP4_; delete jetsIDUpP4_; delete jetsIDDownP4_; 
   delete METP4_; delete caloMETNoHFP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
-  delete diTauSVfitP4_; delete genVP4_;
+  delete diTauSVfitP4_; delete genVP4_; delete gentopP4_;
   delete diTauLegsP4_; delete jetsBtagHE_; delete jetsBtagHP_; delete jetsBtagCSV_;
   delete bQuark_; delete diTauLegsAltP4_;
   delete tauXTriggers_; delete triggerBits_; delete sigDCA_;
@@ -627,6 +663,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
   //METP4_->clear();
   genVP4_->clear();
+  gentopP4_->clear();
   caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
@@ -2522,47 +2559,74 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	jetQuarkGluonGen_->push_back( (it->second)[3] ); //leadGenPartPt
       }
     }
-    //////////////////////
-    // Higgs pT Reweighting
+//     //////////////////////
+//     // Higgs pT Reweighting///IN done at the treeSkimmer level
 
     double higgsPtWeightNom  = 1.;
     double higgsPtWeightUp   = 1.;
     double higgsPtWeightDown = 1.;
-    bool isHiggs = false;
-    if ( isMC_ ) {
-      //       edm::Handle<reco::GenParticleCollection> genParticles;
-      //       evt.getByLabel(srcGenParticles_, genParticles);
+//     bool isHiggs = false;
+//     if ( isMC_ ) {
+//       //       edm::Handle<reco::GenParticleCollection> genParticles;
+//       //       evt.getByLabel(srcGenParticles_, genParticles);
 
-      reco::Candidate::LorentzVector higgsP4;
-      isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
-      if ( isHiggs ) {
-	double higgsMass = higgsP4.mass();
-	std::string inputFileName;
-	if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
-	else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
-	else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
-	if ( inputFileName != "" ) {
-	  if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
-	    inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
-	    lutHiggsPtWeightNom_  = loadLUT(inputFileHiggsPtWeight_, "Nominal");
-	    lutHiggsPtWeightUp_   = loadLUT(inputFileHiggsPtWeight_, "Up");
-	    lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
-	    lastInputFileHiggsPtWeight_ = inputFileName;
-	  }
-	  double higgsPt = higgsP4.pt();
-	  higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
-	  higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
-	  higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
-	}
-// 	std::cout<<"HqtWeight file :" <<inputFileName<<std::endl;
+//       reco::Candidate::LorentzVector higgsP4;
+//       isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
+//       if ( isHiggs ) {
+// 	double higgsMass = higgsP4.mass();
+// 	std::string inputFileName;
+// 	if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
+// 	else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
+// 	else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
+// 	if ( inputFileName != "" ) {
+// 	  if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
+// 	    inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
+// 	    lutHiggsPtWeightNom_  = loadLUT(inputFileHiggsPtWeight_, "Nominal");
+// 	    lutHiggsPtWeightUp_   = loadLUT(inputFileHiggsPtWeight_, "Up");
+// 	    lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
+// 	    lastInputFileHiggsPtWeight_ = inputFileName;
+// 	  }
+// 	  double higgsPt = higgsP4.pt();
+// 	  higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
+// 	  higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
+// 	  higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
+// 	}
+// // 	std::cout<<"HqtWeight file :" <<inputFileName<<std::endl;
+//       }
+//     }
+
+//     higgsPtWeightNom_ = higgsPtWeightNom ;
+//     higgsPtWeightUp_ = higgsPtWeightUp ;
+//     higgsPtWeightDown_ = higgsPtWeightDown ;
+
+// //     std::cout<<"HqtWeight :" <<higgsPtWeightNom_<<std::endl;
+
+    //////////////////////IN
+    // Top pT Reweighting
+    if ( isMC_ ) {
+      reco::Candidate::LorentzVector topPlusP4; 
+      bool topPlusFound = findGenParticle(*genParticles, +6, 0, 0, topPlusP4); 
+      reco::Candidate::LorentzVector topMinusP4; 
+      bool topMinusFound = findGenParticle(*genParticles, -6, 0, 0, topMinusP4); 
+      
+      topPtWeightNom_ = 1.; 
+      topPtWeightUp_ = 1.; 
+      topPtWeightDown_ = 1.; 
+      if ( topPlusFound && topMinusFound ) {
+	gentopP4_->push_back( topPlusP4 );
+	gentopP4_->push_back( topMinusP4 );
+	topPtWeightNom_ = compTopPtWeight(topPlusP4.pt(), topMinusP4.pt()); 
+	topPtWeightUp_ = topPtWeightNom_*topPtWeightNom_; // CV: assign 100% systematic uncertainty to top quark Pt reweighting, 
+	topPtWeightDown_ = 1.0; // following https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting } 
+      } 
+      if(verbose_){
+	cout<<" topPlusFound: "<<topPlusFound<<endl;
+	cout<<" topMinusFound: "<<topMinusFound<<endl;
+	cout<<" topPtWeightNom: "<<topPtWeightNom_<<endl;
+	cout<<" topPtWeightUp: "<<topPtWeightUp_<<endl;
+	cout<<" topPtWeightDown: "<<topPtWeightDown_<<endl;
       }
     }
-
-    higgsPtWeightNom_ = higgsPtWeightNom ;
-    higgsPtWeightUp_ = higgsPtWeightUp ;
-    higgsPtWeightDown_ = higgsPtWeightDown ;
-
-//     std::cout<<"HqtWeight :" <<higgsPtWeightNom_<<std::endl;
     //////////////////////
     // Embedding weights
 
@@ -2642,7 +2706,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
     tree_->Fill();
     
-  }
+  }// The loop over ditaus
   
 }
 
