@@ -2956,7 +2956,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    // 	  drawHistogram(sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , hCleaner,  sbinEmbeddingLoose  ,1);
 	    // 	  hDataEmb->Add(hCleaner, 1.0);
 	    // 	  NormEmbed = 0.; 
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "EmbedTTJets", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1); 
+	    drawHistogram(sbinEmbeddingPresel,sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1); 
 	    h1->Scale( (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband)/h1->Integral()); 
 	    hDataEmb->Add(h1, 1.0);
 	    //remove TTbar embedded contamination
@@ -2974,13 +2974,13 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else{
 	    float NormEmbed = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "EmbedTTJets", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1);
+	    drawHistogram(sbinEmbeddingPresel,sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1);
 	    h1->Scale( (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband)/h1->Integral());
 	    hDataEmb->Add(h1, 1.0);
 	    //remove TTbar embedded contamination
 	    h1->Reset();
 	    float NormTTjetsEmb = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MC",version_, RUN, backgroundTTbarEmb, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
+	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_, RUN, backgroundTTbarEmb, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
 	    hTTbEmb->Add(h1, 1.0);
 	    cout<<"TTbarEmbedded : "<<hTTbEmb->Integral()<<endl;
 	    hDataEmb->Add(hTTbEmb, -1.0);
@@ -2993,7 +2993,7 @@ void plotElecTau( Int_t mH_           = 120,
 	    //fine binning for MSSM
 	    if(selection_.find("bTag")!=string::npos){
 	      hCleanerfb->Reset(); float NormEmbed_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "EmbedTTJets", version_, RUN, currentTree, variable, NormEmbed_fb,  Error, 1.0 , hCleanerfb,  sbinEmbedding  ,1);
+	      drawHistogram(sbinEmbeddingPresel,sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed_fb,  Error, 1.0 , hCleanerfb,  sbinEmbedding  ,1);
 	      hDataEmb_fb->Add(hCleanerfb, hDataEmb->Integral()/hCleanerfb->Integral());
 	      float NormTTjetsEmb_fb = 0.;
 	      //remove TTbar embedded contamination
