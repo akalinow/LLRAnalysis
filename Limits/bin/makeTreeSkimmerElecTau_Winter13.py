@@ -866,7 +866,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v1/',
+    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_ElecTau.root',
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 26.1975,
@@ -876,7 +876,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_ElecTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -886,7 +886,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_SemiLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_11Mar2014_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_11Mar2014_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
     'xSection'       : 109.281,
@@ -899,7 +899,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_FullLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -912,7 +912,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_Had' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_11Mar2014_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_11Mar2014_Trees_EleTau_v2/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_ElecTau.root',
     'sample'         : 'TTJets_Had',
     'xSection'       : 114.0215,

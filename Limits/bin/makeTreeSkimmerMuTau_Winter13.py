@@ -734,7 +734,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedMCPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v1/',
+    'inputFilePath'  : WorkdirLoc+'EmbedMCPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_MuTau.root',
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 26.1975,
@@ -744,7 +744,7 @@ options = {
     'nDiv'           : 1    
     },
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -754,7 +754,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_SemiLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_SemiLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_MuTau.root',
     'sample'         : 'TTJets_SemiLept',
     'xSection'       : 109.281,
@@ -767,7 +767,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_FullLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -780,7 +780,7 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_FullLept_p0' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p0_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -793,7 +793,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p1' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p1_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -806,7 +806,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p2' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p2_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -819,7 +819,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p3' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p3_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -832,7 +832,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p4' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p4_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -845,7 +845,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p5' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p5_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -858,7 +858,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p6' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p6_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -871,7 +871,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p7' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p7_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -884,7 +884,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p8' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p8_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -897,7 +897,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_FullLept_p9' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_FullLept_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p9_MuTau.root',
     'sample'         : 'TTJets_FullLept',
     'xSection'       : 26.1975,
@@ -910,7 +910,7 @@ options = {
     'nDiv'           : 10
     },    
     'TTJets_Had' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_11Mar2014_Trees_MuTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'BackgroundsTT/TT_Hadronic_ext_MC_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_MuTau.root',
     'sample'         : 'TTJets_Had',
     'xSection'       : 114.0215,
@@ -1208,6 +1208,16 @@ options = {
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
     'skimEff'        : 7.04E-02 * 0.205738 * 646081./1028601,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'GGFHH125' : {
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHHTo2B2Tau_M-125_MC_H_HTT_11Mar2014_Trees_MuTau_v1',
+    'outputFileName' : OutDir+'nTupleGGFHH125_MuTau.root',
+    'sample'         : 'GGFHH125',
+    'xSection'       : 0.00796,
+    'skimEff'        : 7.3E-02 * 41238./94889,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1

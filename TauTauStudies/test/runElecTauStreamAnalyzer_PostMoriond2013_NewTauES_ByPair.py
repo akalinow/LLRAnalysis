@@ -74,7 +74,8 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
     #'file:patTuples_LepTauStream_VBFH125.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
+    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/TTbarJets_NewTauID/patTuples_LepTauStream_TTJets_FullLeptMGDecays_8TeV_93_1_IeY.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'

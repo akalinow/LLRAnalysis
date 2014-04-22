@@ -257,10 +257,12 @@ void smear( float& reco, float gen = float(0.), float dM = float(0.), float dRMS
 double deltaR(LV v1, LV v2) {
 
   double deta = v1.Eta() - v2.Eta();
-  double dphi = v1.Phi() - v2.Phi();
+  //double dphi = v1.Phi() - v2.Phi();
+  double dphi = TVector2::Phi_mpi_pi(v1.Phi() - v2.Phi());
   return TMath::Sqrt( TMath::Power(deta,2) + TMath::Power(dphi,2) );
 
 }
+
 
 float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
@@ -846,6 +848,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   // event-related variables
   float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown;
 
+  //Top pT weights
+  float topPtWeightNom_,topPtWeightUp_,topPtWeightDown_;
+
   //Higgs pT weight MSSM
   //mhmax
   float mssmHiggsPtReweightGluGlu_mhmax ;
@@ -1316,6 +1321,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
 
+  //Top pT weights
+  outTreePtOrd->Branch("topPtWeightNom",          &topPtWeightNom_,"topPtWeightNom/F");
+  outTreePtOrd->Branch("topPtWeightUp",           &topPtWeightUp_,"topPtWeightUp/F");
+  outTreePtOrd->Branch("topPtWeightDown",         &topPtWeightDown_,"topPtWeightDown/F");
+
   //Higgs pT weight MSSM
 
   //mhmax - nominal
@@ -1720,6 +1730,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   currentTree->SetBranchStatus("index"                 ,1);
 
+  //Top pT reweighting SM // IN
+  currentTree->SetBranchStatus("topPtWeightNom"       ,1);
+  currentTree->SetBranchStatus("topPtWeightUp"        ,1);
+  currentTree->SetBranchStatus("topPtWeightDown"      ,1);
+
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
   currentTree->SetBranchStatus("triggerBits"           ,1);
@@ -1889,6 +1904,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int index;
   int tightestAntiMuWP, tightestAntiMu2WP; //ND
   float sumEt, caloNoHFsumEt, caloNoHFsumEtCorr; // ND
+  //Top pT weights
+  float topPtWeightNom,topPtWeightUp,topPtWeightDown;
 
   // additional variables for soft analysis ND
   currentTree->SetBranchAddress("sumEt",            &sumEt);
@@ -2027,6 +2044,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("leadGenPartPdg",       &leadGenPartPdg);
   currentTree->SetBranchAddress("hepNUP",               &hepNUP);
   currentTree->SetBranchAddress("leadGenPartPt",        &leadGenPartPt);
+  //Top pT weights
+  currentTree->SetBranchAddress("topPtWeightNom",       &topPtWeightNom);
+  currentTree->SetBranchAddress("topPtWeightUp",        &topPtWeightUp);
+  currentTree->SetBranchAddress("topPtWeightDown",      &topPtWeightDown);
 
   cout << "SetBranchAddress done" << endl;
 
@@ -3164,6 +3185,17 @@ void fillTrees_MuTauStream(TChain* currentTree,
       highPtWeightUp =1 + 0.20*(*genDiTauLegsP4)[1].Pt();
       highPtWeightDown =1 - 0.20*(*genDiTauLegsP4)[1].Pt();
     }
+
+    //Top pT weights
+    topPtWeightNom_=1;
+    topPtWeightUp_=1;
+    topPtWeightDown_=1;
+    if( sample_.find("TTJets")!=string::npos ) 
+      {
+	topPtWeightNom_=topPtWeightNom;
+	topPtWeightUp_=topPtWeightUp;
+	topPtWeightDown_=topPtWeightDown;
+      }
 
     HqTWeight = histo!=0 ? histo->GetBinContent( histo->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;

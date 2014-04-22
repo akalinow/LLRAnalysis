@@ -234,7 +234,7 @@ void produce(
   TString WeightNoWeight = "PtWeight" ;
   if(HiggsPtReweighting) WeightNoWeight = "PtWeight" ;
   else WeightNoWeight = "NoPtWeight" ;
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_newNames2_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_newNames4_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
   
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -332,12 +332,12 @@ void produce(
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
       TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
-      hSgn1_PtUp->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
-      hSgn1_PtUp->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
+      hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 
       TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
-      hSgn1_PtDown->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
-      hSgn1_PtDown->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+      hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       
       TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
@@ -642,7 +642,7 @@ void produce(
 	//Up/Down for TauFake weight
 	if(suffix == ""){
           TString WShape("W_CMS_htt_WShape_etau");
-          WShape = WShape+"_"+binNameSpace;
+//           WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
@@ -705,7 +705,7 @@ void produce(
 	//Up/Down for TauFake weight
         if(suffix == ""){
           TString WShape("W_CMS_htt_WShape_etau");
-          WShape = WShape+"_"+binNameSpace;
+//           WShape = WShape+"_"+binNameSpace;
 
 	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
@@ -756,7 +756,7 @@ void produce(
       //Up/Down for TauFake weight
       if(suffix == ""){
 	TString WShape("W_CMS_htt_WShape_etau");
-	WShape = WShape+"_"+binNameSpace;
+// 	WShape = WShape+"_"+binNameSpace;
 	if(bin_.find("nobTag")!=string::npos){
 
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
@@ -889,6 +889,13 @@ void produce(
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
       hTTb->Write(Form("TT%s"        ,suffix.c_str()));
+      TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
       hVV->Write(Form("VV%s"         ,suffix.c_str()));
@@ -937,6 +944,12 @@ void produce(
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"     ,suffix.c_str()));
       hTTb->Write(Form("TT%s"       ,suffix.c_str()));
+      TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
       // ----- VV ------
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
@@ -1023,15 +1036,15 @@ void produce(
 	hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
-      if(dir->FindObjectAny(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_))==0){
+      if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
 	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
-	hSgn1_PtUp->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
-	hSgn1_PtUp->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVUp",mH_));
+	hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+	hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
       }
-      if(dir->FindObjectAny(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_))==0){
+      if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
 	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
-	hSgn1_PtDown->SetName(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
-	hSgn1_PtDown->Write(Form("ggH%d_CMS_pt_H_mssmHigh_etau_8TeVDown",mH_));
+	hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+	hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       }
       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
         TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
@@ -1365,7 +1378,7 @@ void produce(
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
 	    TString WShape("W_CMS_htt_WShape_etau");
-	    WShape = WShape+"_"+binNameSpace;
+// 	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
@@ -1428,7 +1441,7 @@ void produce(
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
 	    TString WShape("W_CMS_htt_WShape_etau");
-	    WShape = WShape+"_"+binNameSpace;
+// 	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
@@ -1478,7 +1491,7 @@ void produce(
 	//Up/Down for TauFake weight
 	if(suffix == ""){
 	  TString WShape("W_CMS_htt_WShape_etau");
-	  WShape = WShape+"_"+binNameSpace;
+// 	  WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTag")!=string::npos){
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
@@ -1616,6 +1629,14 @@ void produce(
         hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
         hTTb->Write(Form("TT%s"        ,suffix.c_str()));
 	
+        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+ 
+	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+		
 	TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));
         hTTb_fb->SetName(Form("TT%s_fine_binning"        ,suffix.c_str()));
         hTTb_fb->Write(Form("TT%s_fine_binning"        ,suffix.c_str()));
@@ -1679,6 +1700,13 @@ void produce(
 	TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
 	hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
 	hTTb->Write(Form("TT%s"        ,suffix.c_str()));
+        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+ 	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+
       }
       // ----- VV ------
       if(dir->FindObjectAny(Form("VV%s"       ,suffix.c_str()))==0 ){
@@ -2159,12 +2187,12 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 void produceAll(){ 
   
   TString OutFileName ;
-  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*_PtWeight.root") ;
-  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards/datacards/eTau*_NoPtWeight.root") ;
+  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/eTau*_PtWeight.root") ;
+  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/eTau*_NoPtWeight.root") ;
   TString Command = "rm "+OutFileName ;
 //   gSystem->Exec(Command.Data());
 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
+  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
 
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
