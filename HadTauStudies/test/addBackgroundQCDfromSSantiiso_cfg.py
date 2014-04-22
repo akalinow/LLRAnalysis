@@ -107,6 +107,13 @@ process.addBackgroundQCD = cms.PSet(
     #     cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#TAU_TAU_channel
     addBinByBinUncertainties = cms.VPSet(
         cms.PSet(
+            tauPtBins = cms.vstring("tau1PtGt45tau2PtGt45", "tau1PtGt45tau2Pt45to60"),
+            #add = cms.double(0.10),
+            min = cms.double(0.10),
+            range = cms.vstring("100:150")
+        ),
+        cms.PSet(
+            tauPtBins = cms.vstring("tau1PtGt45tau2Pt60to80", "tau1PtGt45tau2PtGt80", "tau1PtGt45tau2PtGt60"),
             #add = cms.double(0.10),
             min = cms.double(0.10),
             range = cms.vstring("100:150")

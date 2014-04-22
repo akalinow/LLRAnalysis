@@ -31,6 +31,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 #include <assert.h>
 
 typedef std::vector<std::string> vstring;
@@ -68,6 +69,11 @@ namespace
       : add_(0.),
 	min_(0.)
     {
+      vstring tauPtBins_vector = cfg.getParameter<vstring>("tauPtBins");
+      for ( vstring::const_iterator tauPtBin = tauPtBins_vector.begin();
+	    tauPtBin != tauPtBins_vector.end(); ++tauPtBin ) {
+	tauPtBins_.insert(*tauPtBin);
+      }
       if ( cfg.exists("add") ) add_ = cfg.getParameter<double>("add");
       if ( cfg.exists("min") ) min_ = cfg.getParameter<double>("min");
       std::string range_string = cfg.getParameter<std::string>("range");
@@ -82,6 +88,7 @@ namespace
 	  << "Failed to parse string = '" << range_string << "' !!\n";   
     }
     ~addBinByBinUncertaintyEntryType() {}
+    std::set<std::string> tauPtBins_;
     double add_;
     double min_;
     double range_begin_;
@@ -166,7 +173,7 @@ int main(int argc, char* argv[])
 	TDirectory* dir = getDirectory(inputFile, (*region)->name_, *category, *tauPtBin, true);
 	assert(dir);
 	
-	vstring histograms;
+	std::set<std::string> histograms;
 	TDirectory* dirData = dynamic_cast<TDirectory*>(dir->Get(processData.data()));
 	if ( !dirData ) throw cms::Exception("addBackgroundQCD")  
 	  << "Failed to find directory for process = " << processData << " !!\n";
@@ -184,8 +191,11 @@ int main(int argc, char* argv[])
 	      histogramName = histogramName.ReplaceAll(Form("%s_", central_or_shift->data()), "");
 	    }
 	  }
-	  std::cout << "adding histogram = " << histogramName.Data() << std::endl;
-	  histograms.push_back(histogramName.Data());
+	  if ( histogramName.Contains("CMS_") ) continue;
+	  if ( histograms.find(histogramName.Data()) == histograms.end() ) {
+	    std::cout << "adding histogram = " << histogramName.Data() << std::endl;
+	    histograms.insert(histogramName.Data());
+	  }
 	}
 
 	TDirectory* dir_qcdRegion_norm = getDirectory(inputFile, (*region)->qcdRegion_norm_[*category], *category, *tauPtBin, true);
@@ -195,7 +205,7 @@ int main(int argc, char* argv[])
 	assert(dir_qcdRegion_shape);
 	std::cout << "dir_qcdRegion_shape = " << dir_qcdRegion_norm << ": name = " << dir_qcdRegion_shape->GetName() << std::endl;
 	
-	for ( vstring::const_iterator histogram = histograms.begin();
+	for ( std::set<std::string>::const_iterator histogram = histograms.begin();
 	      histogram != histograms.end(); ++histogram ) {
 	  std::cout << "histogram = " << (*histogram) << std::endl;
 	  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
@@ -263,6 +273,7 @@ int main(int argc, char* argv[])
 	      double binError_min = binError;
 	      for ( std::vector<addBinByBinUncertaintyEntryType*>::const_iterator addBinByBinUncertainty = addBinByBinUncertainties.begin();
 		    addBinByBinUncertainty != addBinByBinUncertainties.end(); ++addBinByBinUncertainty ) {
+		if ( (*addBinByBinUncertainty)->tauPtBins_.find(*tauPtBin) == (*addBinByBinUncertainty)->tauPtBins_.end() ) continue;
 		if ( binCenter > (*addBinByBinUncertainty)->range_begin_ && binCenter < (*addBinByBinUncertainty)->range_end_ ) {
 		  if ( (*addBinByBinUncertainty)->add_ > 0. ) binErr2_add += square((*addBinByBinUncertainty)->add_*binContent);
 		  if ( binError_min < ((*addBinByBinUncertainty)->min_*binContent) ) binError_min = (*addBinByBinUncertainty)->min_*binContent;

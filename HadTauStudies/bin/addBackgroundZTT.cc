@@ -32,6 +32,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <set>
 #include <assert.h>
 
 typedef std::vector<std::string> vstring;
@@ -119,7 +120,7 @@ int main(int argc, char* argv[])
 	TDirectory* dir = getDirectory(inputFile, *region, *category, *tauPtBin, true);
 	assert(dir);
 	
-	vstring histograms;
+	std::set<std::string> histograms;
 	TDirectory* dirZTTmc = dynamic_cast<TDirectory*>(dir->Get(processZTTmc.data()));
 	if ( !dirZTTmc ) throw cms::Exception("addBackgroundZTT")  
 	  << "Failed to find directory for process = " << processZTTmc << " !!\n";
@@ -137,11 +138,14 @@ int main(int argc, char* argv[])
 	      histogramName = histogramName.ReplaceAll(Form("%s_", central_or_shift->data()), "");
 	    }
 	  }
-	  std::cout << "adding histogram = " << histogramName.Data() << std::endl;
-	  histograms.push_back(histogramName.Data());
+	  if ( histogramName.Contains("CMS_") ) continue;
+	  if ( histograms.find(histogramName.Data()) == histograms.end() ) {
+	    std::cout << "adding histogram = " << histogramName.Data() << std::endl;
+	    histograms.insert(histogramName.Data());
+	  }
 	}
 	
-	for ( vstring::const_iterator histogram = histograms.begin();
+	for ( std::set<std::string>::const_iterator histogram = histograms.begin();
 	      histogram != histograms.end(); ++histogram ) {
 	  std::cout << "histogram = " << (*histogram) << std::endl;
 	  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();

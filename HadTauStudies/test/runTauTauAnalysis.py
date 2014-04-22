@@ -13,7 +13,7 @@ version = "v1_11"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_3/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -25,8 +25,8 @@ lumiScale_DY = 2.12
 stitchingWeights_DY = [ 1.0, 0.412/lumiScale_DY, 0.167/lumiScale_DY, 0.097/lumiScale_DY, 0.0759/lumiScale_DY ]
 
 lumiScale_W = 8.83
-##stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ]
-stitchingWeights_W = [ 1.0, 3.25/lumiScale_W, 1.06/lumiScale_W, 0.681/lumiScale_W, 0.340/lumiScale_W ]
+stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ] # CV: with "Ext" samples
+##stitchingWeights_W = [ 1.0, 3.25/lumiScale_W, 1.06/lumiScale_W, 0.681/lumiScale_W, 0.340/lumiScale_W ] # CV: without "Ext" samples
 
 def getLumiScale(sample, x_sec = -1.):
     if x_sec < 0.:
@@ -89,11 +89,11 @@ samples = {
             "WJets",
             "WJetsExt",
             "W1Jets",
-            #"W1JetsExt",
+            "W1JetsExt",
             "W2Jets",
-            #"W2JetsExt",
+            "W2JetsExt",
             "W3Jets",
-            #"W3JetsExt",
+            "W3JetsExt",
             "W4Jets"
         ],
         'lumiScale' : lumiScale_W,
@@ -171,12 +171,12 @@ discriminators = {
     'HPScombIso3HitsMedium' : {
         'tau1Selection' : {
             'iso'      : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-            'relaxed'  : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l1MediumDB3HIso > 0.5)",
+            'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l1MediumDB3HIso > 0.5)",
             'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l1MediumDB3HIso > 0.5)"
         },
         'tau2Selection' : {
             'iso'      : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-            'relaxed'  : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)",
+            'relaxed'  : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)",
             'vrelaxed' : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)"
         },
         'tau1FRwEtaBins'             : [ -1., 1.479, 9.9 ],
@@ -245,19 +245,19 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
-    'CMS_higgsPtReweight_8TeVUp' : {
+    'CMS_htt_higgsPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "central -> tanBetaLow" ]
     },
-    'CMS_higgsPtReweight_8TeVDown' : {
+    'CMS_htt_higgsPtReweight_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "central -> tanBetaHigh" ]
     },
-    'CMS_ttbarPtReweight_8TeVUp' : {
+    'CMS_htt_ttbarPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightUp" ]
     },
-    'CMS_ttbarPtReweight_8TeVDown' : {
+    'CMS_htt_ttbarPtReweight_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightDown" ]
     },
@@ -432,6 +432,11 @@ def getParticleEtaLabel(particleType, particle1EtaMin, particle1EtaMax, particle
         particleEtaBin_label += "%s2EtaLt%1.1f" % (particleType, particle2EtaMax)
     particleEtaBin_label = particleEtaBin_label.replace(".", "")
     return particleEtaBin_label
+
+def runCommand(command):
+    print "Executing '%s'" % command
+    print " It is now: %s" % time.strftime("%c")
+    os.system(command)
 
 #--------------------------------------------------------------------------------
 # CV: declare outputFileNames of determineJetToTauFakeRate macro in advance,
@@ -693,14 +698,13 @@ for sample in samples.keys():
                         if 'addWeights' in samples[sample].keys():
                             for addWeight in samples[sample]['addWeights']:
                                 if sample.find("HiggsSUSYGluGlu") != -1 and addWeight.find("mssmHiggsPtReweightGluGlu") != -1:
-                                    if central_or_shift == "CMS_higgsPtReweight_8TeVUp":
+                                    if central_or_shift == "CMS_htt_higgsPtReweight_8TeVUp":
                                         addWeights.append(addWeight.replace("central", "tanBetaLow"))
                                         continue
-                                    elif central_or_shift == "CMS_higgsPtReweight_8TeVDown":
+                                    elif central_or_shift == "CMS_htt_higgsPtReweight_8TeVDown":
                                         addWeights.append(addWeight.replace("central", "tanBetaHigh"))
                                         continue
-                                else:
-                                    addWeights.append(addWeight)
+                                addWeights.append(addWeight)
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
                         if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
@@ -1243,7 +1247,17 @@ for discriminator in hadd_stage5_outputFileNames.keys():
 for discriminator in prepareTauTauDatacards_outputFileNames.keys():
     outputFileNames.append(prepareTauTauDatacards_outputFileNames[discriminator])
 for discriminator in makeTauTauPlots_outputFileNames.keys():
-    outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator]) 
+    outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator])
+# CV: check existing output files and delete corrupted files (of size < 10 kb)
+for outputFileName in outputFileNames:
+    if outputFileName.find("FWLiteTauTauAnalyzer") != -1 and os.path.isfile(outputFileName):
+        outputFileSize = os.stat(outputFileName).st_size
+        if outputFileSize < 10000:
+            print "file = %s has size = %i --> deleting it." % (outputFileName, outputFileSize)
+            command = "%s %s" % (executable_rm, outputFileName)
+            runCommand(command)
+        ##else:
+        ##    print "file = %s has size = %i --> keeping it." % (outputFileName, outputFileSize)
 makeFile.write("all: %s\n" % make_MakeFile_vstring(outputFileNames))
 makeFile.write("\techo 'Finished running MSSM Higgs -> tau tau -> tau_h tau_h analysis.'\n")
 makeFile.write("\n")
