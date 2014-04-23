@@ -766,7 +766,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float jet1PUWP, jet2PUWP, jetVetoPUWP;
   int nJets30, nJets20;
   float dRb1b2,dPhib1b2,dEtab1b2,dRb1L1,dRb1L2,dRb2L1,dRb2L2,dRMaxbJetLept,dRMinbJetLept;
-  float dRHbbHtt,dPhiHbbHtt,dEtaHbbHtt, diHiggsVisMass,ptHbb;
+  float dRHbbHtt,dPhiHbbHtt,dEtaHbbHtt, diHiggsVisMass,ptHbb,visMassHbb;
   float dRHbbMETMVA,dPhiHbbMETMVA,dEtaHbbMETMVA,dRHttMETMVA,dPhiHttMETMVA,dEtaHttMETMVA;
 
   float jet1QGmlp, jet1QGlike, jet1QGrhoIso, jet1QGptD, jet1QGaxis1, jet1QGaxis2, jet1QGmult, jet1QGnChg, jet1QGnNeutral, jet1QGflavor, jet1QGNbConst, jet1QGConstId, jet1QGConstPt ;
@@ -1045,6 +1045,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("dRMaxbJetLept",    &dRMaxbJetLept,   "dRMaxbJetLept/F");
   outTreePtOrd->Branch("dRMinbJetLept",    &dRMinbJetLept,   "dRMinbJetLept/F");
   outTreePtOrd->Branch("ptHbb",     &ptHbb,    "ptHbb/F");
+  outTreePtOrd->Branch("visMassHbb",     &visMassHbb,    "visMassHbb/F");
   outTreePtOrd->Branch("dRHbbHtt",     &dRHbbHtt,    "dRHbbHtt/F");
   outTreePtOrd->Branch("dPhiHbbHtt",     &dPhiHbbHtt,    "dPhiHbbHtt/F");
   outTreePtOrd->Branch("dEtaHbbHtt",     &dEtaHbbHtt,    "dEtaHbbHtt/F");
@@ -1731,10 +1732,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("index"                 ,1);
 
   //Top pT reweighting SM // IN
-  currentTree->SetBranchStatus("topPtWeightNom"       ,1);
-  currentTree->SetBranchStatus("topPtWeightUp"        ,1);
-  currentTree->SetBranchStatus("topPtWeightDown"      ,1);
-
+  if( sample_.find("TTJets")!=string::npos ) 
+    {
+      currentTree->SetBranchStatus("topPtWeightNom"       ,1);
+      currentTree->SetBranchStatus("topPtWeightUp"        ,1);
+      currentTree->SetBranchStatus("topPtWeightDown"      ,1);
+    }
   // triggers
   currentTree->SetBranchStatus("tauXTriggers"          ,1);
   currentTree->SetBranchStatus("triggerBits"           ,1);
@@ -2045,10 +2048,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("hepNUP",               &hepNUP);
   currentTree->SetBranchAddress("leadGenPartPt",        &leadGenPartPt);
   //Top pT weights
-  currentTree->SetBranchAddress("topPtWeightNom",       &topPtWeightNom);
-  currentTree->SetBranchAddress("topPtWeightUp",        &topPtWeightUp);
-  currentTree->SetBranchAddress("topPtWeightDown",      &topPtWeightDown);
-
+  if( sample_.find("TTJets")!=string::npos ) 
+    {
+      currentTree->SetBranchAddress("topPtWeightNom",       &topPtWeightNom);
+      currentTree->SetBranchAddress("topPtWeightUp",        &topPtWeightUp);
+      currentTree->SetBranchAddress("topPtWeightDown",      &topPtWeightDown);
+    }
   cout << "SetBranchAddress done" << endl;
 
   RecoilCorrector* recoilCorr = 0;
@@ -2394,7 +2399,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     sumEt_ = caloNoHFsumEt_ = caloNoHFsumEtCorr_ = -99; // ND
     //Variables for Luca
     dRb1b2 = dPhib1b2 = dEtab1b2 = dRb1L1 = dRb1L1 = dRb2L1 = dRb2L2 = dRMaxbJetLept = dRMinbJetLept = -99;
-    dPhiHbbHtt = dEtaHbbHtt = dRHbbHtt = ptHbb= diHiggsVisMass = -99;
+    dPhiHbbHtt = dEtaHbbHtt = dRHbbHtt = ptHbb = visMassHbb = diHiggsVisMass = -99;
     dRHbbMETMVA = dPhiHbbMETMVA = dEtaHbbMETMVA = dRHttMETMVA = dPhiHttMETMVA = dEtaHttMETMVA = -99;
 
     for(int i=0 ; i<50 ; i++) {
@@ -2508,6 +2513,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       b1b2.SetE(b1b2_temp.E());
 
       ptHbb= b1b2.pt();
+      visMassHbb= b1b2.M();
     }
     if(nJets20BTagged>0){
 
