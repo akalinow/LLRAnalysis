@@ -130,8 +130,8 @@ struct particleIDlooseToTightWeightEntryType
     double weight = norm_->Eval(1.);
     if ( shapeCorr_particle1_ ) weight *= TMath::Power(TMath::Max(0., shapeCorr_particle1_->Eval(particle1Pt)), shapeCorrPow_particle1_);
     if ( shapeCorr_particle2_ ) weight *= TMath::Power(TMath::Max(0., shapeCorr_particle2_->Eval(particle2Pt)), shapeCorrPow_particle2_);
-    if ( weight < 0. ) weight = 0.;
-    if ( weight > 1. ) weight = 1.;
+    if ( weight < 0.    ) weight = 0.;
+    if ( weight > 1.e+1 ) weight = 1.e+1; // CV: ratio anti-iso/iso can indeed be greater than 1.0 in case anti-iso sideband is very "narrow"
     return weight;
   }
   double particle1EtaMin_;
@@ -655,10 +655,19 @@ int main(int argc, char* argv[])
       if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
 	Float_t stitchingWeight = 1.0;
 	int idxNUP = TMath::Nint(NUP) - 5;
+	if ( TMath::Nint(NUP) == 0 ) {	  
+	  std::string inputFileName = inputTree->GetFile()->GetName();
+	  if      ( inputFileName.find("/W1JetsExt/") != std::string::npos ) idxNUP = 1;
+	  else if ( inputFileName.find("/W2JetsExt/") != std::string::npos ) idxNUP = 2;
+	  else if ( inputFileName.find("/W3JetsExt/") != std::string::npos ) idxNUP = 3;
+	  if ( idxNUP >= 0 ) {
+	    std::cerr << "Warning: NUP not filled in Ntuple, setting idxNUP = " << idxNUP << ", using name of input file = " << inputFileName << " !!" << std::endl;
+	  } 
+	}
 	if ( idxNUP >= 0 && idxNUP < (int)stitchingWeights.size() ) {
 	  stitchingWeight *= stitchingWeights[idxNUP];
 	} else {
-	  std::cerr << "Warning: NUP = " << NUP << " outside range !!" << std::endl;
+	  std::cerr << "Warning: NUP = " << NUP << " outside range !!" << std::endl;	  
 	}
 	evtWeight *= stitchingWeight;
       }
@@ -714,6 +723,9 @@ int main(int argc, char* argv[])
 	}
       }
       if ( jetToTauFakeRateLooseToTightWeight_tauEtaBin ) {
+	//std::cout << "tau1: Pt = " << tau1Pt << ", eta = " << tau1Eta << std::endl;
+	//std::cout << "tau2: Pt = " << tau2Pt << ", eta = " << tau2Eta << std::endl;
+	//std::cout << " --> jetToTauFakeRateLooseToTightWeight = " << (*jetToTauFakeRateLooseToTightWeight_tauEtaBin)(tau1Pt, tau2Pt) << std::endl;
 	evtWeight *= (*jetToTauFakeRateLooseToTightWeight_tauEtaBin)(tau1Pt, tau2Pt);
       } else {
 	std::cerr << "Warning: tau1Eta = " << tau1Eta << ", tau2Eta = " << tau2Eta << " outside range !!" << std::endl;

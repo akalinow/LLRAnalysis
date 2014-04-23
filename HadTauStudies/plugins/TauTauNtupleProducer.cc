@@ -557,9 +557,9 @@ namespace
 
   double compTopPtWeight(double top1Pt, double top2Pt)
   {
-    std::cout << "<compTopPtWeight>:" << std::endl;
+    //std::cout << "<compTopPtWeight>:" << std::endl;
     double topPtWeight2 = compTopPtWeight(top1Pt)*compTopPtWeight(top2Pt);
-    std::cout << " top1Pt = " << top1Pt << ", top2Pt = " << top2Pt << ": topPtWeight2 = " << topPtWeight2 << std::endl;
+    //std::cout << " top1Pt = " << top1Pt << ", top2Pt = " << top2Pt << ": topPtWeight2 = " << topPtWeight2 << std::endl;
     return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
   }
   //-----------------------------------------------------------------------------
@@ -952,7 +952,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     evt.getByLabel(srcLHE_, LHE);
     if ( LHE.isValid() ) {
       setValueF("NUP", LHE->hepeup().NUP);
-    }
+    } 
   }
 
   if ( isMC_ || isEmbedded_ ) {
