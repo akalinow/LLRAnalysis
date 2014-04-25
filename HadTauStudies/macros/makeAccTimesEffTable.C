@@ -29,9 +29,9 @@ TH1* getHistogram(TFile* inputFile, const std::string& channel, const std::strin
   return histogram;
 }
 
-double compAccTimesEff_value(const TH1* histogramEventCounter, int eventsProcessed, double intLumiData)
+double compAccTimesEff_value(const TH1* histogramEventCounter, double intLumiData)
 {
-  double accTimesEff = histogramEventCounter->Integral()/intLumiData; // CV: histograms are normalized to cross-section of 1pb, so eventsProcessed is actually *not* needed to compute accTimesEff
+  double accTimesEff = histogramEventCounter->Integral()/intLumiData;
   return accTimesEff;
 }
 
@@ -51,9 +51,9 @@ std::string getStringRep(double accTimesEff)
   return retVal.Data();
 }
 
-std::string compAccTimesEff(const TH1* histogramEventCounter, int eventsProcessed, double intLumiData)
+std::string compAccTimesEff(const TH1* histogramEventCounter, double intLumiData)
 {
-  double accTimesEff = compAccTimesEff_value(histogramEventCounter, eventsProcessed, intLumiData);
+  double accTimesEff = compAccTimesEff_value(histogramEventCounter, intLumiData);
   return getStringRep(accTimesEff);
 }
 
@@ -80,12 +80,12 @@ std::string getStringRep(double accTimesEff_central, double accTimesEff_up, doub
   return retVal.Data();
 }
 
-std::string compAccTimesEff(const TH1* histogramEventCounter_central, const TH1* histogramEventCounter_up, const TH1* histogramEventCounter_down, int eventsProcessed, double intLumiData)
+std::string compAccTimesEff(const TH1* histogramEventCounter_central, const TH1* histogramEventCounter_up, const TH1* histogramEventCounter_down, double intLumiData)
 {
   //std::cout << "<compAccTimesEff>:" << std::endl;
-  double accTimesEff_central = compAccTimesEff_value(histogramEventCounter_central, eventsProcessed, intLumiData);
-  double accTimesEff_up = compAccTimesEff_value(histogramEventCounter_up,      eventsProcessed, intLumiData);
-  double accTimesEff_down = compAccTimesEff_value(histogramEventCounter_down,    eventsProcessed, intLumiData);
+  double accTimesEff_central = compAccTimesEff_value(histogramEventCounter_central, intLumiData);
+  double accTimesEff_up = compAccTimesEff_value(histogramEventCounter_up, intLumiData);
+  double accTimesEff_down = compAccTimesEff_value(histogramEventCounter_down, intLumiData);
   double accTimesEff_max = TMath::Max(accTimesEff_up, accTimesEff_down);
   if ( accTimesEff_max < accTimesEff_central ) accTimesEff_max = accTimesEff_central;
   double accTimesEff_min = TMath::Min(accTimesEff_up, accTimesEff_down);
@@ -122,51 +122,7 @@ void makeAccTimesEffTable()
   tauPtBins["nobtag"].push_back("tau1PtGt45tau2PtGt80");
   tauPtBins["btag"].push_back("tau1PtGt45tau2Pt45to60");
   tauPtBins["btag"].push_back("tau1PtGt45tau2PtGt60");
-  
-  std::map<std::string, int> eventsProcessed; // key = process
-  eventsProcessed["ggPhi_80"]   =  988416;
-  eventsProcessed["ggPhi_90"]   = 1000350;
-  eventsProcessed["ggPhi_100"]  = 1000080;
-  eventsProcessed["ggPhi_110"]  = 1000348;
-  eventsProcessed["ggPhi_120"]  = 1000620;
-  eventsProcessed["ggPhi_130"]  =  995840;
-  eventsProcessed["ggPhi_140"]  =  999680;
-  eventsProcessed["ggPhi_160"]  =  988800;
-  eventsProcessed["ggPhi_180"]  =  997200;
-  eventsProcessed["ggPhi_200"]  =  985855;
-  eventsProcessed["ggPhi_250"]  = 1000441;
-  eventsProcessed["ggPhi_300"]  =  990976;
-  eventsProcessed["ggPhi_350"]  = 1000395;
-  eventsProcessed["ggPhi_400"]  =  995864;
-  eventsProcessed["ggPhi_450"]  =  999440;
-  eventsProcessed["ggPhi_500"]  =  981688;
-  eventsProcessed["ggPhi_600"]  =  980316;
-  eventsProcessed["ggPhi_700"]  =  985800;
-  eventsProcessed["ggPhi_800"]  =  987600;
-  eventsProcessed["ggPhi_900"]  =  975744;
-  eventsProcessed["ggPhi_1000"] = 1000377;
-  eventsProcessed["bbPhi_80"]   =  996592;
-  eventsProcessed["bbPhi_90"]   =  995840;
-  eventsProcessed["bbPhi_100"]  = 1000320;
-  eventsProcessed["bbPhi_110"]  =  999600;
-  eventsProcessed["bbPhi_120"]  =  991913;
-  eventsProcessed["bbPhi_130"]  = 1000008;
-  eventsProcessed["bbPhi_140"]  =  993600;
-  eventsProcessed["bbPhi_160"]  =  975000;
-  eventsProcessed["bbPhi_180"]  =  981022;
-  eventsProcessed["bbPhi_200"]  =  999408;
-  eventsProcessed["bbPhi_250"]  =  988200;
-  eventsProcessed["bbPhi_300"]  =  999900; // CV: number of events contained in sample 'HiggsSUSYBB300v2'
-  eventsProcessed["bbPhi_350"]  =  982080;
-  eventsProcessed["bbPhi_400"]  =  998702;
-  eventsProcessed["bbPhi_450"]  =  973830;
-  eventsProcessed["bbPhi_500"]  =  999976;
-  eventsProcessed["bbPhi_600"]  =  993061;
-  eventsProcessed["bbPhi_700"]  =  996960;
-  eventsProcessed["bbPhi_800"]  = 1000432;
-  eventsProcessed["bbPhi_900"]  =  997674;
-  eventsProcessed["bbPhi_1000"] =  987947;
-  
+    
   typedef std::vector<int> vint;
   vint massPoints;
   massPoints.push_back(90);
@@ -199,47 +155,6 @@ void makeAccTimesEffTable()
 
   for ( vint::const_iterator massPoint = massPoints.begin();
 	massPoint != massPoints.end(); ++massPoint ) {
-/*
-    (*outputFile) << "$" << (*massPoint) << "$~\\GeV & $\\Pg\\Pg \\to \\Phi \\to \\tau\\tau$$^{1}$";
-    for ( vstring::const_iterator category = categories.begin();
-	  category != categories.end(); ++category ) {
-      for ( vstring::const_iterator tauPtBin = tauPtBins[*category].begin();
-	    tauPtBin != tauPtBins[*category].end(); ++tauPtBin ) {
-	(*outputFile) << " & ";
-	TH1* histogramEventCounter = getHistogram(inputFile_unweighted, channel, *category, *tauPtBin, "ggH", *massPoint, kCentral);
-	std::string key_ggH = Form("ggPhi_%i", *massPoint);
-	(*outputFile) << compAccTimesEff(histogramEventCounter, eventsProcessed[key_ggH], intLumiData[channel]);
-      }
-    }
-    (*outputFile) << " \\\\" << std::endl;
-    (*outputFile) << " & $^{2}$";
-    for ( vstring::const_iterator category = categories.begin();
-	  category != categories.end(); ++category ) {
-      for ( vstring::const_iterator tauPtBin = tauPtBins[*category].begin();
-	    tauPtBin != tauPtBins[*category].end(); ++tauPtBin ) {
-	(*outputFile) << " & ";
-	TH1* histogramEventCounter_central = getHistogram(inputFile_weighted, channel, *category, *tauPtBin, "ggH", *massPoint, kCentral);
-	TH1* histogramEventCounter_up      = getHistogram(inputFile_weighted, channel, *category, *tauPtBin, "ggH", *massPoint, kUp);
-	TH1* histogramEventCounter_down    = getHistogram(inputFile_weighted, channel, *category, *tauPtBin, "ggH", *massPoint, kDown);
-	std::string key_ggH = Form("ggPhi_%i", *massPoint);
-	(*outputFile) << compAccTimesEff(histogramEventCounter_central, histogramEventCounter_up, histogramEventCounter_down, eventsProcessed[key_ggH], intLumiData[channel]);
-      }
-    }
-    (*outputFile) << " \\\\" << std::endl;
-    (*outputFile) << " & $\\Pg\\Pg \\to \\Phi b \\to \\tau\\tau b$";
-    for ( vstring::const_iterator category = categories.begin();
-	  category != categories.end(); ++category ) {
-      for ( vstring::const_iterator tauPtBin = tauPtBins[*category].begin();
-	    tauPtBin != tauPtBins[*category].end(); ++tauPtBin ) {
-	(*outputFile) << " & ";
-	TH1* histogramEventCounter = getHistogram(inputFile_unweighted, channel, *category, *tauPtBin, "bbH", *massPoint, kCentral);
-	std::string key_bbH = Form("bbPhi_%i", *massPoint);
-	(*outputFile) << compAccTimesEff(histogramEventCounter, eventsProcessed[key_bbH], intLumiData[channel]);
-      }
-    }
-    (*outputFile) << " \\\\" << std::endl;
-    (*outputFile) << "\\hline" << std::endl;
- */
     (*outputFile) << "$" << (*massPoint) << "$~\\GeV & $\\Pg\\Pg \\to \\Phi \\to \\tau\\tau$";
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
@@ -250,9 +165,9 @@ void makeAccTimesEffTable()
 	TH1* histogramEventCounter_up      = getHistogram(inputFile_weighted, channel, *category, *tauPtBin, "ggH", *massPoint, kUp);
 	TH1* histogramEventCounter_down    = getHistogram(inputFile_weighted, channel, *category, *tauPtBin, "ggH", *massPoint, kDown);
 	std::string key_ggH = Form("ggPhi_%i", *massPoint);
-	(*outputFile) << compAccTimesEff(histogramEventCounter_central, histogramEventCounter_up, histogramEventCounter_down, eventsProcessed[key_ggH], intLumiData[channel]);
+	(*outputFile) << compAccTimesEff(histogramEventCounter_central, histogramEventCounter_up, histogramEventCounter_down, intLumiData[channel]);
 	//TH1* histogramEventCounter = getHistogram(inputFile_unweighted, channel, *category, *tauPtBin, "ggH", *massPoint, kCentral);
-	//(*outputFile) << " (" << compAccTimesEff(histogramEventCounter, eventsProcessed[key_ggH], intLumiData[channel]) << ")";
+	//(*outputFile) << " (" << compAccTimesEff(histogramEventCounter, intLumiData[channel]) << ")";
       }
     }
     (*outputFile) << " \\\\" << std::endl;
@@ -264,7 +179,7 @@ void makeAccTimesEffTable()
 	(*outputFile) << " & ";
 	TH1* histogramEventCounter = getHistogram(inputFile_unweighted, channel, *category, *tauPtBin, "bbH", *massPoint, kCentral);
 	std::string key_bbH = Form("bbPhi_%i", *massPoint);
-	(*outputFile) << compAccTimesEff(histogramEventCounter, eventsProcessed[key_bbH], intLumiData[channel]);
+	(*outputFile) << compAccTimesEff(histogramEventCounter, intLumiData[channel]);
       }
     }
     (*outputFile) << " \\\\" << std::endl;
