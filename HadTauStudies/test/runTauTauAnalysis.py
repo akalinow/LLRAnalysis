@@ -9,7 +9,7 @@ import time
 
 jobId = '2014Jan10'
 
-version = "v1_11"
+version = "v1_12"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
@@ -171,8 +171,8 @@ discriminators = {
     'HPScombIso3HitsMedium' : {
         'tau1Selection' : {
             'iso'      : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-            'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l1MediumDB3HIso > 0.5)",
-            'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l1MediumDB3HIso > 0.5)"
+            'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)",
+            'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)"
         },
         'tau2Selection' : {
             'iso'      : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
@@ -515,9 +515,9 @@ for sample in samples.keys():
 
                 if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
-                if central_or_shift.find('CMS_higgsPtReweight_8TeV') != -1 and sample.find("HiggsSUSYGluGlu") == -1:
+                if central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
-                if central_or_shift.find('CMS_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
+                if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
                     continue
                 if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
@@ -1250,7 +1250,17 @@ for discriminator in makeTauTauPlots_outputFileNames.keys():
     outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator])
 # CV: check existing output files and delete corrupted files (of size < 10 kb)
 for outputFileName in outputFileNames:
-    if outputFileName.find("FWLiteTauTauAnalyzer") != -1 and os.path.isfile(outputFileName):
+    if (outputFileName.find("FWLiteTauTauAnalyzer") != -1 or outputFileName.find("hadd") != -1) and os.path.isfile(outputFileName):
+        ##isSignalRegion_hadd = False
+        ##if outputFileName.find("hadd") != -1:
+        ##    for signalRegion in signalRegions:
+        ##        if outputFileName.find(signalRegion) != -1:
+        ##            isSignalRegion_hadd = True
+        ##if isSignalRegion_hadd:
+        ##    print "file = %s is 'hadd' file for signal region --> deleting it." % outputFileName
+        ##    command = "%s %s" % (executable_rm, outputFileName)
+        ##    runCommand(command)
+        ##    continue
         outputFileSize = os.stat(outputFileName).st_size
         if outputFileSize < 10000:
             print "file = %s has size = %i --> deleting it." % (outputFileName, outputFileSize)
