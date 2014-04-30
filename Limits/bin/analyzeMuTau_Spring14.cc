@@ -1462,7 +1462,7 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTL_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTJ_MuTau_"+fileAnalysis+".root");
-  if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsEToTau_MuTau_"+fileAnalysis+".root");
+  if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsMuToTau_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
   
   if(!version_.Contains("NoDYExcl")) {
@@ -2779,8 +2779,16 @@ void plotMuTau( Int_t mH_           = 120,
 	    float NormDYMutoTau = 0.;
 	    if(useZDataMC)
 	      drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
-	    else 
-	      drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+	    else
+	      {
+		cout<<"Zmm checks = "<<endl;
+		cout<<"sbinPresel = "<<sbinPresel<<endl;
+		cout<<"sbinCat = "<<sbinCat<<endl;
+		cout<<"sbin = "<<sbin<<endl;
+		cout<<"Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000. = "<<Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000.<<endl;
+		drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+		cout<<"Integral = "<<h1->Integral()<<endl;
+	      }
 	    hZmm->Add(h1, 1.0); //hZmm->Sumw2();
 	    hZfakes->Add(h1,1.0); //hZfakes->Sumw2();
 	    //hEWK->Add(h1,1.0);
