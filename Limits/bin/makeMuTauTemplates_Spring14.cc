@@ -334,10 +334,18 @@ void produce(
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 
       TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+//       TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+//       //IN test
+//       hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+//       //
       hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
       hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 
       TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+//       TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+//       //IN test
+//       hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+//       //
       hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       
@@ -353,6 +361,14 @@ void produce(
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 
+      TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+
+      TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      
       //SM signal
       TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
       hSMGGFH125->SetName("ggH_SM125" );
@@ -1111,11 +1127,25 @@ void produce(
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
 	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+// 	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+// 	//IN test
+//         TH1F* hSgn1 ;
+// 	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+// 	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+// 	hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+// 	//
 	hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 	hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
 	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+// 	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+// 	//IN test
+//         TH1F* hSgn1 ;
+// 	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+// 	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+// 	hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+// 	//
 	hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
 	hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       }
@@ -1134,7 +1164,16 @@ void produce(
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_mutau_8TeVDown",mH_));
       }
-      //SM signal
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
+	TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+	hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
+	TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+	hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      }     //SM signal
       if(dir->FindObjectAny("ggH_SM125")==0 ){
       	TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
       	hSMGGFH125->SetName("ggH_SM125");
@@ -2370,9 +2409,9 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  //   variables.push_back("diTauVisMass");
+  variables.push_back("diTauVisMass");
 //   variables.push_back("genVPt");
-  variables.push_back("diTauNSVfitMass");
+//   variables.push_back("diTauNSVfitMass");
 //   variables.push_back("ptL2");
 
   if(!DOSUSY){
@@ -2501,35 +2540,35 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 	produce(mH[j],variables[i], "JetUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "nobTag", outputDir,true);
 
-	produce(mH[j],variables[i], "nominal" , "bTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "TauUp"   , "bTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "TauDown" , "bTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "JetUp"   , "bTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "JetDown" , "bTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "nominal" , "bTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "TauUp"   , "bTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "TauDown" , "bTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "JetUp"   , "bTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "JetDown" , "bTagHigh", outputDir,true);
 
-	produce(mH[j],variables[i], "nominal" , "nobTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "TauUp"   , "nobTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "TauDown" , "nobTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "JetUp"   , "nobTagHigh", outputDir,true);
-	produce(mH[j],variables[i], "JetDown" , "nobTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "nominal" , "nobTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "TauUp"   , "nobTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "TauDown" , "nobTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "JetUp"   , "nobTagHigh", outputDir,true);
+// 	produce(mH[j],variables[i], "JetDown" , "nobTagHigh", outputDir,true);
 
-	produce(mH[j],variables[i], "nominal" , "nobTagMedium", outputDir,true);
-	produce(mH[j],variables[i], "TauUp"   , "nobTagMedium", outputDir,true);
-	produce(mH[j],variables[i], "TauDown" , "nobTagMedium", outputDir,true);
-	produce(mH[j],variables[i], "JetUp"   , "nobTagMedium", outputDir,true);
-	produce(mH[j],variables[i], "JetDown" , "nobTagMedium", outputDir,true);
+// 	produce(mH[j],variables[i], "nominal" , "nobTagMedium", outputDir,true);
+// 	produce(mH[j],variables[i], "TauUp"   , "nobTagMedium", outputDir,true);
+// 	produce(mH[j],variables[i], "TauDown" , "nobTagMedium", outputDir,true);
+// 	produce(mH[j],variables[i], "JetUp"   , "nobTagMedium", outputDir,true);
+// 	produce(mH[j],variables[i], "JetDown" , "nobTagMedium", outputDir,true);
 
-	produce(mH[j],variables[i], "nominal" , "bTagLow", outputDir,true);
-	produce(mH[j],variables[i], "TauUp"   , "bTagLow", outputDir,true);
-	produce(mH[j],variables[i], "TauDown" , "bTagLow", outputDir,true);
-	produce(mH[j],variables[i], "JetUp"   , "bTagLow", outputDir,true);
-	produce(mH[j],variables[i], "JetDown" , "bTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "nominal" , "bTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "TauUp"   , "bTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "TauDown" , "bTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "JetUp"   , "bTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "JetDown" , "bTagLow", outputDir,true);
 
-	produce(mH[j],variables[i], "nominal" , "nobTagLow", outputDir,true);
-	produce(mH[j],variables[i], "TauUp"   , "nobTagLow", outputDir,true);
-	produce(mH[j],variables[i], "TauDown" , "nobTagLow", outputDir,true);
-	produce(mH[j],variables[i], "JetUp"   , "nobTagLow", outputDir,true);
-	produce(mH[j],variables[i], "JetDown" , "nobTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "nominal" , "nobTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "TauUp"   , "nobTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "TauDown" , "nobTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "JetUp"   , "nobTagLow", outputDir,true);
+// 	produce(mH[j],variables[i], "JetDown" , "nobTagLow", outputDir,true);
       }     
     }//mH
   }//variables
@@ -2593,13 +2632,22 @@ void produceAll(){
   //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt60_OldEleID_DatacardsRelax",true);
 
   TString OutFileName ;
-  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/muTau*_PtWeight.root") ;
-  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/muTau*_NoPtWeight.root") ;
+  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardFix/datacards/muTau*_PtWeight.root") ;
+  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardFix/datacards/muTau*_NoPtWeight.root") ;
   TString Command = "rm "+OutFileName ;
 //   gSystem->Exec(Command.Data());
 
 //   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_PlotsHiggspT_020414",true);
-  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
+//  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_Datacards",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardFix",true);
+
+//Zmm SF datacards
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZmmSel_ZmmSFDatacards2",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZmmSel1Prong0Pi0BL_ZmmSFDatacards2",true);
+//   produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZmmSel1Prong0Pi0EC_ZmmSFDatacards2",true);
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZmmSel1Prong1Pi0BL_ZmmSFDatacards2",true);
+  produceOne("Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZmmSel1Prong1Pi0EC_ZmmSFDatacards2",true);
 
 //   TString OutFileName ;
 //   if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_010414/datacards/muTau*_PtWeight.root") ;

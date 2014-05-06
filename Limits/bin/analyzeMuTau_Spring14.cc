@@ -1,3 +1,4 @@
+
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 
 #include <cstdlib>
@@ -437,6 +438,9 @@ void drawHistogram(TCut sbinPair,
 	  }      
 	}
 
+    if(version_.Contains("NoPU")) {
+      weight = "(HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode)";
+    }
       //to be used when weight is available
       if(!type.Contains("SUSY"))
 	{
@@ -1107,7 +1111,11 @@ void plotMuTau( Int_t mH_           = 120,
 
   if(DEBUG) cout << "createBins" << endl;
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
-
+  if(selection_.find("ZmmSel")!=string::npos)
+    bins = createBins(nBins_, xMin_, xMax_, nBins, "inclusive", variable_);
+  cout<<"Bins : "<<endl;
+  for(int i=0 ; i<bins.GetSize() ; i++)cout<<"bin "<<i<<"   "<<bins[i]<<endl;
+  
   // LUMINOSITY //
   float Lumi, LumiABC, LumiD, LumiSoftABC;
   //
@@ -1172,6 +1180,8 @@ void plotMuTau( Int_t mH_           = 120,
   string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
   //   float antiWsgn  = useMt ? 20. :  20. ;
   float antiWsgn  = useMt ? 30. :  20. ; // mTcut at 30
+  if(selection_.find("ZmmSel")!=string::npos) antiWsgn  = useMt ? 40. :  20. ; //mt cut at 40 for ZeeSF
+
   float antiWsdb  = useMt ? 70. :  40. ; 
 
   bool use2Dcut   = false;
@@ -1676,7 +1686,17 @@ void plotMuTau( Int_t mH_           = 120,
     tpt = tpt&&TCut("hasSecVtx>0.5");
   }
 
-  
+  if(selection_.find("1Prong0Pi0")!=string::npos || version_.Contains("1Prong0Pi0"))
+    tpt = tpt&&TCut("decayMode==0");
+  if(selection_.find("1Prong1Pi0")!=string::npos || version_.Contains("1Prong1Pi0"))
+    tpt = tpt&&TCut("decayMode==1");
+  if(selection_.find("3Prongs")!=string::npos || version_.Contains("3Prongs"))
+    tpt = tpt&&TCut("decayMode==2");
+  if(selection_.find("BL")!=string::npos || version_.Contains("BL"))
+    tpt = tpt&&TCut("TMath::Abs(etaL2)<1.479");
+  if(selection_.find("EC")!=string::npos || version_.Contains("EC"))
+    tpt = tpt&&TCut("TMath::Abs(etaL2)>1.479");
+
   //Barrel/EndCap
   if(version_.Contains("Barrel"))
     {
@@ -1788,7 +1808,8 @@ void plotMuTau( Int_t mH_           = 120,
   TCut inclusive("");
 
   TCut novbf("nJets30<1 && nJets20BTagged==0");
-  
+  TCut ZmmSel("MEtMVA<30 && nJets30<2 && ptL2>30");
+
   if(!MSSM)
     {
       if(selection_.find("High")!=string::npos) {
@@ -1864,6 +1885,7 @@ void plotMuTau( Int_t mH_           = 120,
   else if(selection_.find("twoJets")!=string::npos)   sbinCat = twoJets;
   else if(selection_.find("vh")!=string::npos)        sbinCat = vh;
   else if(selection_.find("novbf")!=string::npos)     sbinCat = novbf;
+  else if(selection_.find("ZmmSel")!=string::npos)     sbinCat = ZmmSel;
   else if(selection_.find("boost")!=string::npos)     sbinCat = boost;
   else if(selection_.find("nobTag")!=string::npos)    sbinCat = nobTag;
   else if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos && selection_.find("vbfTight")==string::npos)   sbinCat = vbf;
