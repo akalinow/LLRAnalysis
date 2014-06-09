@@ -6,13 +6,14 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
+#include "DataFormats/GeometryVector/interface/VectorUtil.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "TMath.h"
 
 class TauESCorrector : public edm::EDProducer{
 
 
- public: 
+public: 
 
   explicit TauESCorrector(const edm::ParameterSet& iConfig){
     tauTag_    = iConfig.getParameter<edm::InputTag>("tauTag");
@@ -33,17 +34,30 @@ class TauESCorrector : public edm::EDProducer{
     for(unsigned int i = 0; i < taus->size(); i++){
       pat::Tau aTau( (*taus)[i] );
 
-      double shift = 1;
-      if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
-	shift = (1.015 +  0.001  * TMath::Min(TMath::Max(aTau.pt()-45.,0.),10.)); //1prong +pi0
-	shift *= 1.012; //New correction for Summer2013
+      double shiftP = 1.;
+      double shiftMass = 1.;
+      if ( aTau.genJet() && deltaR(aTau.p4(), aTau.genJet()->p4()) < 0.5 && aTau.genJet()->pt() > 8. ) {
+	//Olivier TES
+	if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()>0){
+	  shiftP = 1.01; //New correction for Winter2013
+	  shiftMass = 1.01;
+	}
+	else if((aTau.signalPFChargedHadrCands()).size()==1 && (aTau.signalPFGammaCands()).size()==0){
+	  shiftP = 1.01; //New correction for Winter2013
+	  shiftMass = 1.;
+	}
+	else if((aTau.signalPFChargedHadrCands()).size()==3) {
+	  shiftP = 1.01; //New correction for Winter2013
+	  shiftMass = 1.01;
+	}
       }
-      else if((aTau.signalPFChargedHadrCands()).size()==3)
-	shift = (1.012 + 0.001 * TMath::Min(TMath::Max(aTau.pt()-32.,0.),18.)); //3 prongs
       
-      //double scale = sqrt( aTau.energy()*shift*aTau.energy()*shift - aTau.mass()*aTau.mass() )/aTau.p();
-      //math::XYZTLorentzVectorD p4S( aTau.px()*scale , aTau.py()*scale, aTau.pz()*scale, aTau.energy()*shift );
-      math::XYZTLorentzVectorD p4S( aTau.px()*shift , aTau.py()*shift, aTau.pz()*shift, aTau.energy()*shift );
+      double pxS = aTau.px()*shiftP;
+      double pyS = aTau.py()*shiftP;
+      double pzS = aTau.pz()*shiftP;
+      double massS = aTau.mass()*shiftMass;
+      double enS = TMath::Sqrt(pxS*pxS + pyS*pyS + pzS*pzS + massS*massS);
+      math::XYZTLorentzVectorD p4S( pxS, pyS, pzS, enS );
 
       pat::Tau sTau( (*taus)[i] ); 
       sTau.setP4( p4S );

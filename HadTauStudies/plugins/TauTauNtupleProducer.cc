@@ -160,13 +160,16 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
   if ( isMC_ ) {
     srcGenPileUpSummary_ = cfg.getParameter<edm::InputTag>("srcGenPileUpSummary");
     srcLHE_ = cfg.getParameter<edm::InputTag>("srcLHE");
-    srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
-  } 
-
+  }
+  
   isEmbedded_ = cfg.getParameter<bool>("isEmbedded");
   if ( isEmbedded_ ) {
     srcEmbeddingWeight_ = cfg.getParameter<edm::InputTag>("srcEmbeddingWeight");
   }
+
+  if ( isMC_ || isEmbedded_ ) {
+    srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
+  } 
 
   edm::ParameterSet cfgPFJetIdAlgo;
   cfgPFJetIdAlgo.addParameter<std::string>("version", "FIRSTDATA");
@@ -188,7 +191,7 @@ std::vector<TauTauNtupleProducer::StringEntryType> TauTauNtupleProducer::readStr
 {
   std::vector<TauTauNtupleProducer::StringEntryType> retVal;
   edm::ParameterSet pset = cfg.getParameter<edm::ParameterSet>(psetName);
-  vstring psetNames = pset.getParameterNamesForType<edm::InputTag>();
+  vstring psetNames = pset.getParameterNamesForType<std::string>();
   for ( vstring::const_iterator name = psetNames.begin();
 	name != psetNames.end(); ++name ) {
     std::string src = pset.getParameter<std::string>(*name);
@@ -201,12 +204,12 @@ void TauTauNtupleProducer::beginJob()
 {
 //--- create TTree
   edm::Service<TFileService> fs;
-  ntuple_ = fs->make<TTree>("tauIdMVATrainingNtuple", "tauIdMVATrainingNtuple");
+  ntuple_ = fs->make<TTree>("H2TauTauTreeProducerTauTau", "H2TauTauTreeProducerTauTau");
 
 //--- add branches 
-  addBranchL("run");
-  addBranchL("event");
-  addBranchL("lumi");
+  addBranchUL("run");
+  addBranchUL("event");
+  addBranchUL("lumi");
 
   // diTau observables
   addBranch_diTau("diTau");
@@ -216,6 +219,12 @@ void TauTauNtupleProducer::beginJob()
 
   // tau observables
   addBranch_Tau("l1");
+  addBranch_TauLT_base("l1");
+  addBranch_TauLT_extended("l1");
+  addBranchI("l1isGenHadTau");
+  addBranchI("l1isGenMuon");
+  addBranchI("l1isGenElectron");  
+  addBranchI("l1isGenJet");
   addBranchF("l1LooseMu");
   addBranchF("l1LooseEle");
   addBranch_EnPxPyPz("l1L1");
@@ -223,8 +232,14 @@ void TauTauNtupleProducer::beginJob()
   addBranchI("l1TrigMatched_diTau");
   addBranchI("l1TrigMatched_diTauJet");
   addBranchF("mt1");
-
+ 
   addBranch_Tau("l2");
+  addBranch_TauLT_base("l2");
+  addBranch_TauLT_extended("l2");
+  addBranchI("l2isGenHadTau");
+  addBranchI("l2isGenMuon");
+  addBranchI("l2isGenElectron");  
+  addBranchI("l2isGenJet");
   addBranchF("l2LooseMu");
   addBranchF("l2LooseEle");
   addBranch_EnPxPyPz("l2L1");
@@ -232,7 +247,7 @@ void TauTauNtupleProducer::beginJob()
   addBranchI("l2TrigMatched_diTau");
   addBranchI("l2TrigMatched_diTauJet");
   addBranchF("mt2");
-
+  
   // jet observables
   addBranch_Jet("jet1");
   addBranchF("jet1PtErr");
@@ -280,13 +295,30 @@ void TauTauNtupleProducer::beginJob()
   addBranchF("higgsPtWeightNom");
   addBranchF("higgsPtWeightUp");
   addBranchF("higgsPtWeightDown");
+  addBranchF("topPtWeightNom");
+  addBranchF("topPtWeightUp");
+  addBranchF("topPtWeightDown");
+  addBranchF("leg1triggerEffMC_diTau");
+  addBranchF("leg1triggerEffData_diTau");
+  addBranchF("leg2triggerEffMC_diTau");
+  addBranchF("leg2triggerEffData_diTau");
   addBranchF("triggerEffMC_diTau");
-  addBranchF("triggerEffMC_diTauJet");
-  addBranchF("triggerEffMC");
   addBranchF("triggerEffData_diTau");
+  addBranchF("leg1triggerEffMC_diTauJet");
+  addBranchF("leg1triggerEffData_diTauJet");
+  addBranchF("leg2triggerEffMC_diTauJet");
+  addBranchF("leg2triggerEffData_diTauJet");
+  addBranchF("jetTriggerEffMC_diTauJet");
+  addBranchF("jetTriggerEffData_diTauJet");
+  addBranchF("triggerEffMC_diTauJet"); 
   addBranchF("triggerEffData_diTauJet");
+  addBranchF("triggerEffMC");
   addBranchF("triggerEffData");
+  addBranchF("leg1triggerWeight_diTau");
+  addBranchF("leg2triggerWeight_diTau");
   addBranchF("triggerWeight_diTau");
+  addBranchF("leg1triggerWeight_diTauJet");
+  addBranchF("leg2triggerWeight_diTauJet");
   addBranchF("triggerWeight_diTauJet");
   addBranchF("triggerWeight");
   addBranchF("weight");
@@ -304,16 +336,19 @@ void TauTauNtupleProducer::beginJob()
   addBranchI("nPUbxM1");
   addBranchI("isZtt");
   addBranchI("isZttj");
-  addBranchI("isZttll");
+  addBranchI("isZttl");
   addBranchI("isZj");
   addBranchI("isZee");
   addBranchI("isZmm");
   addBranchI("hasZ");
   addBranchI("hasW");
   addBranchF("NUP");
-  addBranchI("isRealTau");
-  addBranchI("isMuon");
+  addBranchI("is1RealTau");
+  addBranchI("is2RealTaus");
   addBranchI("isFake");
+  addBranchI("isElectron");
+  addBranchI("isMuon");
+  addBranchI("isJet");
   addBranchI("isPhoton");
 }
 
@@ -576,6 +611,22 @@ namespace
     return lut->GetBinContent(idxBin);
   }
 
+  //-----------------------------------------------------------------------------
+  // CV: recipe for top quark Pt reweighting taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  double compTopPtWeight(double topPt)
+  {
+    const double a = 0.156;
+    const double b = -0.00137;
+    return TMath::Exp(a + b*topPt);
+  }
+
+  double compTopPtWeight(double top1Pt, double top2Pt)
+  {
+    double topPtWeight2 = compTopPtWeight(top1Pt)*compTopPtWeight(top2Pt);
+    return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
+  }
+  //-----------------------------------------------------------------------------
+
   bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
   {
     for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin();
@@ -591,8 +642,43 @@ namespace
     return false;
   }
 
-  void matchGenParticle(const reco::Candidate::LorentzVector& p4, const reco::GenParticle* genLeptonPlus, const reco::GenParticle* genLeptonMinus,
-			bool& isElectron, bool& isMuon, bool& isTau, bool& isJet)
+  void matchGenParticle(const reco::Candidate::LorentzVector& p4, const std::vector<reco::GenParticle>& genParticles,
+			bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
+  {
+    bool matchesGenHadTau   = false;
+    bool matchesGenMuon     = false;
+    bool matchesGenElectron = false;
+    for ( std::vector<reco::GenParticle>::const_iterator genParticle = genParticles.begin();
+	  genParticle != genParticles.end(); ++genParticle ) {
+      int pdgId = TMath::Abs(genParticle->pdgId());
+      if ( !(pdgId == 11 || pdgId == 13 || pdgId == 15) ) continue;
+      reco::Candidate::LorentzVector visMomentum = getVisMomentum(&(*genParticle));     
+      if ( !(visMomentum.pt() > (0.5*p4.pt())) ) continue;
+      if ( deltaR(p4, visMomentum) < 0.3 ) {
+	if ( pdgId == 15 ) {
+	  std::string genTauDecayMode = getGenTauDecayMode(&(*genParticle));
+	  if ( genTauDecayMode == "electron" ) {
+	    matchesGenElectron = true;
+	  } else if ( genTauDecayMode == "muons" ) {
+	    matchesGenMuon = true;
+	  } else {
+	    matchesGenHadTau = true;
+	  }
+	} else if ( pdgId == 13 ) {
+	  matchesGenMuon = true;
+	} else if ( pdgId == 11 ) {
+	  matchesGenElectron = true;
+	} 
+      }
+    }
+    if      ( matchesGenHadTau   ) isGenHadTau   = true;
+    else if ( matchesGenMuon     ) isGenMuon     = true;
+    else if ( matchesGenElectron ) isGenElectron = true;
+    else                           isGenJet      = true;
+  }
+
+  void matchGenParticleFromZdecay(const reco::Candidate::LorentzVector& p4, const reco::GenParticle* genLeptonPlus, const reco::GenParticle* genLeptonMinus,
+				  bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
   {
     std::vector<int> pdgIds_ranked;
     pdgIds_ranked.push_back(15);
@@ -608,26 +694,26 @@ namespace
 	  std::string genTauDecayModeMinus = ( matchesGenLeptonMinus ) ? getGenTauDecayMode(genLeptonMinus) : "undefined";
 	  if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "electron") || 
 	       (matchesGenLeptonMinus && genTauDecayModeMinus == "electron") ) {
-	    isElectron = true;
+	    isGenElectron = true;
 	  } 
 	  if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "muon") || 
 	       (matchesGenLeptonMinus && genTauDecayModeMinus == "muon") ) {
-	    isMuon = true;
+	    isGenMuon = true;
 	  } 
 	  if ( (matchesGenLeptonPlus  && !(genTauDecayModePlus  == "electron" || genTauDecayModePlus  == "muon")) || 
 	       (matchesGenLeptonMinus && !(genTauDecayModeMinus == "electron" || genTauDecayModeMinus == "muon")) ) {
-	    isTau = true;
+	    isGenHadTau = true;
 	  } 
 	} else if ( (*pdgId) == 13 ) {
-	  isMuon = true;
+	  isGenMuon = true;
 	} else if ( (*pdgId) == 11 ) {
-	  isElectron = true;
+	  isGenElectron = true;
 	} else assert(0);
 	return;
       }
     }
     // CV: reconstructed tau neither matches generator level electron, muon nor tau
-    isJet = true;
+    isGenJet = true;
   }
 }
 
@@ -637,9 +723,9 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
   resetBranches();
 
-  setValueL("run" ,evt.run());
-  setValueL("event", evt.eventAuxiliary().event());
-  setValueL("lumi", evt.luminosityBlock());
+  setValueUL("run" ,evt.run());
+  setValueUL("event", evt.eventAuxiliary().event());
+  setValueUL("lumi", evt.luminosityBlock());
   
   edm::Handle<PATDiTauPairCollection> diTaus;
   evt.getByLabel(srcDiTau_, diTaus);
@@ -702,6 +788,21 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   }
 
   setValue_Tau("l1", *leg1);
+  setValue_TauLT_base("l1", *leg1);
+  setValue_TauLT_extended("l1", *leg1);    
+  bool leg1isGenHadTau   = false;
+  bool leg1isGenMuon     = false;
+  bool leg1isGenElectron = false;
+  bool leg1isGenJet      = false;    
+  if ( isMC_ || isEmbedded_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+    matchGenParticle(leg1->p4(), *genParticles, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+  }
+  setValueI("l1isGenHadTau", leg1isGenHadTau);
+  setValueI("l1isGenElectron", leg1isGenElectron);
+  setValueI("l1isGenMuon", leg1isGenMuon);
+  setValueI("l1isGenJet", leg1isGenJet);
   double dRl1toLooseMuon = minDeltaR(leg1->p4(), *looseMuons);
   double l1LooseMu = ( dRl1toLooseMuon < 0.5 ) ? 0. : 1.;
   double dRl1toLooseElectron = minDeltaR(leg1->p4(), *looseElectrons);
@@ -718,6 +819,21 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   setValueF("mt1", mt1);
 
   setValue_Tau("l2", *leg2);
+  setValue_TauLT_base("l2", *leg2);
+  setValue_TauLT_extended("l2", *leg2);
+  bool leg2isGenHadTau   = false;
+  bool leg2isGenMuon     = false;
+  bool leg2isGenElectron = false;
+  bool leg2isGenJet      = false;    
+  if ( isMC_ || isEmbedded_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+    matchGenParticle(leg2->p4(), *genParticles, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
+  }
+  setValueI("l2isGenHadTau", leg2isGenHadTau);
+  setValueI("l2isGenMuon", leg2isGenMuon);
+  setValueI("l2isGenElectron", leg2isGenElectron);
+  setValueI("l2isGenJet", leg2isGenJet);
   double dRl2toLooseMuon = minDeltaR(leg2->p4(), *looseMuons);
   double l2LooseMu = ( dRl2toLooseMuon < 0.5 ) ? 0. : 1.;
   double dRl2toLooseElectron = minDeltaR(leg2->p4(), *looseElectrons);
@@ -751,6 +867,11 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     int puJetIdFlag = (*puJetIdFlags)[jet->originalObjectRef()];
     bool passesPileupJetId = PileupJetIdentifier::passJetId(puJetIdFlag, wpPileupJetId_);
     if ( !passesPileupJetId ) continue;
+
+    // CV: remove jets overlapping with tau decay products
+    double dRleg1Jet = deltaR(leg1->p4(), jet->p4());
+    double dRleg2Jet = deltaR(leg2->p4(), jet->p4());
+    if ( dRleg1Jet < 0.5 || dRleg2Jet < 0.5 ) continue;
 
     double jetPt = jet->pt();
     double jetAbsEta = TMath::Abs(jet->eta());
@@ -897,7 +1018,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
     bool isZtt   = false;
     bool isZttj  = false;
-    bool isZttll = false;
+    bool isZttl  = false;
     bool isZj    = false;
     bool isZee   = false;
     bool isZmm   = false;
@@ -923,26 +1044,26 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() > +0.5 && !genLeptonPlus  ) genLeptonPlus  = (*daughter);
 	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() < -0.5 && !genLeptonMinus ) genLeptonMinus = (*daughter);
       }      
-      bool leg1isElectron = false;
-      bool leg1isMuon     = false;
-      bool leg1isTau      = false;
-      bool leg1isJet      = false;    
-      matchGenParticle(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isElectron, leg1isMuon, leg1isTau, leg1isJet);
-      bool leg2isElectron = false;
-      bool leg2isMuon     = false;
-      bool leg2isTau      = false;
-      bool leg2isJet      = false;    
-      matchGenParticle(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isElectron, leg2isMuon, leg2isTau, leg2isJet);
+      bool leg1isGenHadTau   = false;
+      bool leg1isGenMuon     = false;
+      bool leg1isGenElectron = false;
+      bool leg1isGenJet      = false;    
+      matchGenParticleFromZdecay(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+      bool leg2isGenHadTau   = false;
+      bool leg2isGenMuon     = false;
+      bool leg2isGenElectron = false;
+      bool leg2isGenJet      = false;    
+      matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
       if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 15 && 
 	   genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 15 ) {
-	if      ( leg1isTau && leg2isTau ) isZtt = true;
-	else if ( (leg1isElectron || leg1isMuon) && (leg2isElectron || leg2isMuon) ) isZttll = true;
+	if      ( leg1isGenHadTau && leg2isGenHadTau ) isZtt = true;
+	else if ( leg1isGenElectron || leg1isGenMuon || leg2isGenElectron || leg2isGenMuon ) isZttl = true;
 	else isZttj = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isElectron &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isElectron ) {
+      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isGenElectron &&
+		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isGenElectron ) {
 	isZee = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isMuon &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isMuon ) {
+      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isGenMuon &&
+		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isGenMuon ) {
 	isZmm = true;
       } else {
 	isZj = true;
@@ -950,7 +1071,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     }
     setValueI("isZtt", isZtt);
     setValueI("isZttj", isZttj);
-    setValueI("isZttll", isZttll);
+    setValueI("isZttl", isZttl);
     setValueI("isZj", isZj);
     setValueI("isZee", isZee);
     setValueI("isZmm", isZmm);
@@ -962,24 +1083,19 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     bool hasW = findGenParticle(*genParticles, 24,  0, 0, wP4);
     setValueI("hasW", hasW && wP4.mass() > 50.);
 
-    //reco::Candidate::LorentzVector tauPlusP4;
-    //bool hasTauPlus = findGenParticle(*genParticles, -15, 0, 0, tauPlusP4);
-    //reco::Candidate::LorentzVector tauMinusP4;
-    //bool hasTauMinus = findGenParticle(*genParticles, +15, 0, 0, tauMinusP4);
-    //
-    //reco::Candidate::LorentzVector muonPlusP4;
-    //bool hasMuonPlus = findGenParticle(*genParticles, -13, 0, 0, muonPlusP4);
-    //reco::Candidate::LorentzVector muonMinusP4;
-    //bool hasMuonMinus = findGenParticle(*genParticles, +13, 0, 0, muonMinusP4);
-
-    bool isRealTau = leg1->genJet() || leg2->genJet();
-    bool isMuon    = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 13) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 13);
-    //bool isMuon    = (hasMuonPlus || hasMuonMinus);
-    bool isFake    = !isRealTau;
-    bool isPhoton  = genZ_or_Gammastar && (genZ_or_Gammastar->pdgId() == 22 || genZ_or_Gammastar->mass() < 75. || genZ_or_Gammastar->mass() > 105.);
-    setValueI("isRealTau", isRealTau);
-    setValueI("isMuon", isMuon);
+    bool is1RealTau  = leg1->genJet() || leg2->genJet();
+    bool is2RealTaus = leg1->genJet() && leg2->genJet();
+    bool isFake      = !is2RealTaus;
+    bool isElectron  = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 11) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 11);
+    bool isMuon      = (leg1->genLepton() && TMath::Abs(leg1->genLepton()->pdgId()) == 13) || (leg2->genLepton() && TMath::Abs(leg2->genLepton()->pdgId()) == 13);
+    bool isJet       = !(is2RealTaus || isElectron || isMuon);
+    bool isPhoton    = genZ_or_Gammastar && (genZ_or_Gammastar->pdgId() == 22 || genZ_or_Gammastar->mass() < 75. || genZ_or_Gammastar->mass() > 105.);
+    setValueI("is1RealTau", is1RealTau);
+    setValueI("is2RealTaus", is2RealTaus);
     setValueI("isFake", isFake);
+    setValueI("isElectron", isElectron);
+    setValueI("isMuon", isMuon);
+    setValueI("isJet", isJet);
     setValueI("isPhoton", isPhoton);
   }
 
@@ -1003,25 +1119,48 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     if ( isHiggs ) {
       double higgsMass = higgsP4.mass();
       std::string inputFileName;
-      if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH110_8TeV.root";
+      if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
       else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
       else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
-      if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
-	inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
-	lutHiggsPtWeightNom_  = loadLUT(inputFileHiggsPtWeight_, "Nominal");
-	lutHiggsPtWeightUp_   = loadLUT(inputFileHiggsPtWeight_, "Up");
-	lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
-	lastInputFileHiggsPtWeight_ = inputFileName;
+      if ( inputFileName != "" ) {
+	if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
+	  inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
+	  lutHiggsPtWeightNom_  = loadLUT(inputFileHiggsPtWeight_, "Nominal");
+	  lutHiggsPtWeightUp_   = loadLUT(inputFileHiggsPtWeight_, "Up");
+	  lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
+	  lastInputFileHiggsPtWeight_ = inputFileName;
+	}
+	double higgsPt = higgsP4.pt();
+	higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
+	higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
+	higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
       }
-      double higgsPt = higgsP4.pt();
-      higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
-      higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
-      higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
     }
   }
   setValueF("higgsPtWeightNom", higgsPtWeightNom);
   setValueF("higgsPtWeightUp", higgsPtWeightUp);
   setValueF("higgsPtWeightDown", higgsPtWeightDown);
+
+  double topPtWeightNom  = 1.;
+  double topPtWeightUp   = 1.;
+  double topPtWeightDown = 1.;
+  if ( isMC_ ) {
+    edm::Handle<reco::GenParticleCollection> genParticles;
+    evt.getByLabel(srcGenParticles_, genParticles);
+
+    reco::Candidate::LorentzVector topPlusP4;
+    bool topPlusFound = findGenParticle(*genParticles, +6, 0, 0, topPlusP4);
+    reco::Candidate::LorentzVector topMinusP4;
+    bool topMinusFound = findGenParticle(*genParticles, -6, 0, 0, topMinusP4);
+    if ( topPlusFound && topMinusFound ) {
+      topPtWeightNom = compTopPtWeight(topPlusP4.pt(), topMinusP4.pt());
+      topPtWeightUp = topPtWeightNom*topPtWeightNom; // CV: assign 100% systematic uncertainty to top quark Pt reweighting,
+      topPtWeightDown = 1.0;                         //     following https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+    }
+  }
+  setValueF("topPtWeightNom", topPtWeightNom);
+  setValueF("topPtWeightUp", topPtWeightUp);
+  setValueF("topPtWeightDown", topPtWeightDown);
 
   double genFilter = 1.0; // CV: weight associated to visible Pt cuts applied on gen. tau decay products in Embedded sample production
   if ( isEmbedded_ ) {
@@ -1034,14 +1173,22 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   edm::Handle<pat::TriggerEvent> triggerResults;
   evt.getByLabel(srcTriggerResults_, triggerResults);
 
-  double triggerEffMC_diTau      = eff2012IsoParkedTau19fbMC_Simone(leg1->pt(), leg1->eta())*eff2012IsoParkedTau19fbMC_Simone(leg2->pt(), leg2->eta());
-  double triggerEffData_diTau    = eff2012IsoParkedTau19fb_Simone(leg1->pt(), leg1->eta())*eff2012IsoParkedTau19fb_Simone(leg2->pt(), leg2->eta());
-  double triggerEffMC_diTauJet   = 0.;
-  double triggerEffData_diTauJet = 0.;
-  if ( jet1 ) {
-    triggerEffMC_diTauJet   = eff2012IsoTau19fbMC_Simone(leg1->pt(), leg1->eta())*eff2012IsoTau19fbMC_Simone(leg2->pt(), leg2->eta())*eff2012Jet19fb(jet1->pt(), jet1->eta());
-    triggerEffData_diTauJet = eff2012IsoTau19fb_Simone(leg1->pt(), leg1->eta())*eff2012IsoTau19fb_Simone(leg2->pt(), leg2->eta())*eff2012Jet19fb(jet1->pt(), jet1->eta());
-  }
+  double leg1triggerEffMC_diTau      = eff2012IsoParkedTau19fbMC_Simone(leg1->pt(), leg1->eta());
+  double leg1triggerEffData_diTau    = eff2012IsoParkedTau19fb_Simone(leg1->pt(), leg1->eta());
+  double leg2triggerEffMC_diTau      = eff2012IsoParkedTau19fbMC_Simone(leg2->pt(), leg2->eta());
+  double leg2triggerEffData_diTau    = eff2012IsoParkedTau19fb_Simone(leg2->pt(), leg2->eta());
+  double triggerEffMC_diTau          = leg1triggerEffMC_diTau*leg2triggerEffMC_diTau;
+  double triggerEffData_diTau        = leg1triggerEffData_diTau*leg2triggerEffData_diTau;
+
+  double leg1triggerEffMC_diTauJet   = eff2012IsoTau19fbMC_Simone(leg1->pt(), leg1->eta());
+  double leg1triggerEffData_diTauJet = eff2012IsoTau19fb_Simone(leg1->pt(), leg1->eta());
+  double leg2triggerEffMC_diTauJet   = eff2012IsoTau19fbMC_Simone(leg2->pt(), leg2->eta());
+  double leg2triggerEffData_diTauJet = eff2012IsoTau19fb_Simone(leg2->pt(), leg2->eta());
+  double jetTriggerEffMC_diTauJet    = ( jet1 ) ? eff2012Jet19fb(jet1->pt(), jet1->eta()) : 0.;
+  double jetTriggerEffData_diTauJet  = jetTriggerEffMC_diTauJet; // CV: same jet trigger efficiency turn-on used for data and MC
+  double triggerEffMC_diTauJet       = leg1triggerEffMC_diTauJet*leg2triggerEffMC_diTauJet*jetTriggerEffMC_diTauJet;
+  double triggerEffData_diTauJet     = leg1triggerEffData_diTauJet*leg2triggerEffData_diTauJet*jetTriggerEffData_diTauJet;
+
   bool isTriggered_diTau = false;
   for ( std::vector<StringEntryType>::const_iterator hltPathName = hltPaths_diTau_.begin();
 	hltPathName != hltPaths_diTau_.end(); ++hltPathName ) {
@@ -1060,26 +1207,45 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
       break;
     }
   }
+  setValueF("leg1triggerEffMC_diTau", leg1triggerEffMC_diTau);
+  setValueF("leg1triggerEffData_diTau", leg1triggerEffData_diTau);
+  setValueF("leg2triggerEffMC_diTau", leg2triggerEffMC_diTau);
+  setValueF("leg2triggerEffData_diTau", leg2triggerEffData_diTau);
+  setValueF("triggerEffMC_diTau", triggerEffMC_diTau);
+  setValueF("triggerEffData_diTau", triggerEffData_diTau);
+  setValueF("leg1triggerEffMC_diTauJet", leg1triggerEffMC_diTauJet);
+  setValueF("leg1triggerEffData_diTauJet", leg1triggerEffData_diTauJet);
+  setValueF("leg2triggerEffMC_diTauJet", leg2triggerEffMC_diTauJet);
+  setValueF("leg2triggerEffData_diTauJet", leg2triggerEffData_diTauJet);
+  setValueF("jetTriggerEffMC_diTauJet", jetTriggerEffMC_diTauJet);
+  setValueF("jetTriggerEffData_diTauJet", jetTriggerEffData_diTauJet);
+  setValueF("triggerEffMC_diTauJet", triggerEffMC_diTauJet); 
+  setValueF("triggerEffData_diTauJet", triggerEffData_diTauJet);
   double triggerEffMC   = 0.;
   double triggerEffData = 0.;
   if ( isTriggered_diTau ) {
     triggerEffMC   = triggerEffMC_diTau;
     triggerEffData = triggerEffData_diTau;
   } else if ( isTriggered_diTauJet ) {
-    triggerEffMC   = triggerEffMC_diTau;
-    triggerEffData = triggerEffData_diTau;
+    triggerEffMC   = triggerEffMC_diTauJet;
+    triggerEffData = triggerEffData_diTauJet;
   }
-  setValueF("triggerEffMC_diTau", triggerEffMC_diTau);
-  setValueF("triggerEffMC_diTauJet", triggerEffMC_diTauJet);
   setValueF("triggerEffMC", triggerEffMC);
-  setValueF("triggerEffData_diTau", triggerEffData_diTau);
-  setValueF("triggerEffData_diTauJet", triggerEffData_diTauJet);
   setValueF("triggerEffData", triggerEffData);
-  double triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
-  double triggerWeight_diTauJet = ( triggerEffMC_diTauJet > 0. ) ? (triggerEffData_diTauJet/triggerEffMC_diTauJet) : 1.;
-  double triggerWeight = ( triggerEffMC > 0. ) ? (triggerEffData/triggerEffMC) : 1.;
+  double leg1triggerWeight_diTau = ( leg1triggerEffMC_diTau > 0. ) ? (leg1triggerEffData_diTau/leg1triggerEffMC_diTau) : 1.;
+  double leg2triggerWeight_diTau = ( leg2triggerEffMC_diTau > 0. ) ? (leg2triggerEffData_diTau/leg2triggerEffMC_diTau) : 1.;
+  double triggerWeight_diTau = leg1triggerWeight_diTau*leg2triggerWeight_diTau;
+  double leg1triggerWeight_diTauJet = ( leg1triggerEffMC_diTauJet > 0. ) ? (leg1triggerEffData_diTauJet/leg1triggerEffMC_diTauJet) : 1.;
+  double leg2triggerWeight_diTauJet = ( leg2triggerEffMC_diTauJet > 0. ) ? (leg2triggerEffData_diTauJet/leg2triggerEffMC_diTauJet) : 1.;
+  double jetTriggerWeight_diTauJet  = ( jetTriggerEffMC_diTauJet  > 0. ) ? (jetTriggerEffData_diTauJet/jetTriggerEffMC_diTauJet)   : 1.;
+  double triggerWeight_diTauJet = leg1triggerWeight_diTauJet*leg2triggerWeight_diTauJet*jetTriggerWeight_diTauJet;
+  setValueF("leg1triggerWeight_diTau", leg1triggerWeight_diTau);
+  setValueF("leg2triggerWeight_diTau", leg2triggerWeight_diTau);
   setValueF("triggerWeight_diTau", triggerWeight_diTau);
+  setValueF("leg1triggerWeight_diTauJet", leg1triggerWeight_diTauJet);
+  setValueF("leg2triggerWeight_diTauJet", leg2triggerWeight_diTauJet);
   setValueF("triggerWeight_diTauJet", triggerWeight_diTauJet);
+  double triggerWeight = ( triggerEffMC > 0. ) ? (triggerEffData/triggerEffMC) : 1.;
   setValueF("triggerWeight", triggerWeight);
   
   for ( std::vector<StringEntryType>::const_iterator hltPathEntry = hltPathsToStore_.begin();
@@ -1098,32 +1264,38 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
 void TauTauNtupleProducer::addBranchF(const std::string& name) 
 {
-  assert(branches_.count(name) == 0);
+  if ( branches_.count(name) != 0 )
+    throw cms::Exception("TauTauNtupleProducer") 
+      << " Branch with name = " << name << " already exists !!\n";
   std::string name_and_format = name + "/F";
   ntuple_->Branch(name.c_str(), &branches_[name].valueF_, name_and_format.c_str());
 }
 
 void TauTauNtupleProducer::addBranchI(const std::string& name) 
 {
-  assert(branches_.count(name) == 0);
+  if ( branches_.count(name) != 0 )
+    throw cms::Exception("TauTauNtupleProducer") 
+      << " Branch with name = " << name << " already exists !!\n";
   std::string name_and_format = name + "/I";
   ntuple_->Branch(name.c_str(), &branches_[name].valueI_, name_and_format.c_str());
 }
 
-void TauTauNtupleProducer::addBranchL(const std::string& name) 
+void TauTauNtupleProducer::addBranchUL(const std::string& name) 
 {
-  assert(branches_.count(name) == 0);
+  if ( branches_.count(name) != 0 ) 
+    throw cms::Exception("TauTauNtupleProducer") 
+      << " Branch with name = " << name << " already exists !!\n";
   std::string name_and_format = name + "/l";
-  ntuple_->Branch(name.c_str(), &branches_[name].valueL_, name_and_format.c_str());
+  ntuple_->Branch(name.c_str(), &branches_[name].valueUL_, name_and_format.c_str());
 }
 
 void TauTauNtupleProducer::resetBranches()
 {
   for ( branchMap::iterator branch = branches_.begin();
 	branch != branches_.end(); ++branch ) {
-    branch->second.valueF_ = 0.;
-    branch->second.valueI_ = 0;
-    branch->second.valueL_ = 0;
+    branch->second.valueF_  = 0.;
+    branch->second.valueI_  = 0;
+    branch->second.valueUL_ = 0;
   }
 }
 
@@ -1162,12 +1334,12 @@ void TauTauNtupleProducer::setValueI(const std::string& name, int value)
   }
 }
 
-void TauTauNtupleProducer::setValueL(const std::string& name, long value) 
+void TauTauNtupleProducer::setValueUL(const std::string& name, unsigned long value) 
 {
   if ( verbosity_ ) std::cout << "branch = " << name << ": value = " << value << std::endl;
   branchMap::iterator branch = branches_.find(name);
   if ( branch != branches_.end() ) {
-    branch->second.valueL_ = value;
+    branch->second.valueUL_ = value;
   } else {
     throw cms::Exception("InvalidParameter") 
       << "No branch with name = " << name << " defined !!\n";
@@ -1185,8 +1357,8 @@ void TauTauNtupleProducer::addBranch_diTau(const std::string& name)
   addBranchF(name + "Charge");
   addBranchF("genMass");
   addBranchF("visMass");
-  addBranchF("SVfitMass");
-  addBranchF("SVfitMassErr");
+  addBranchF("svfitMass");
+  addBranchF("svfitMassErr");
   addBranchF("dEtatt");
   addBranchF("dPhitt");
   addBranchF("dRtt");
@@ -1223,8 +1395,8 @@ void TauTauNtupleProducer::addBranch_TauLT_base(const std::string& name)
 
 void TauTauNtupleProducer::addBranch_TauLT_extended(const std::string& name)
 {
-  addBranch_PtEtaPhi("leadPFChargedHadrTrack");
-  addBranchF("leadPFChargedHadrTrackCharge");
+  addBranch_PtEtaPhi(name + "leadPFChargedHadrTrack");
+  addBranchF(name + "leadPFChargedHadrTrackCharge");
   addBranch_XYZ(name + "dxyPCA");
   addBranch_XYZ(name + "flightLength");
   addBranch_XYZ(name + "pv");
@@ -1247,7 +1419,10 @@ void TauTauNtupleProducer::addBranch_bJet(const std::string& name)
 {
   addBranch_EnPxPyPz(name);
   addBranch_PtEtaPhiMass(name);
+  addBranch_EnPxPyPz(name + "raw");
+  addBranch_PtEtaPhiMass(name + "raw");
   addBranchF(name + "Charge");
+  addBranchF(name + "Btag");
 }
 
 void TauTauNtupleProducer::addBranch_Electron(const std::string& name)
@@ -1341,8 +1516,8 @@ void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTa
     svFitAlgorithm.integrateVEGAS();
   } else assert(0);
   if ( svFitAlgorithm.isValidSolution() ) {
-    setValueF("SVfitMass", svFitAlgorithm.getMass());
-    setValueF("SVfitMassErr", svFitAlgorithm.massUncert());
+    setValueF("svfitMass", svFitAlgorithm.getMass());
+    setValueF("svfitMassErr", svFitAlgorithm.massUncert());
     if ( svFitMode_ == kMarkovChain ) {
       math::PtEtaPhiMLorentzVectorD svFitP4(svFitAlgorithm.pt(), svFitAlgorithm.eta(), svFitAlgorithm.phi(), svFitAlgorithm.mass());
       setValue_EnPxPyPz(name, svFitP4);
@@ -1434,7 +1609,11 @@ void TauTauNtupleProducer::setValue_bJet(const std::string& name, const pat::Jet
 {
   setValue_EnPxPyPz(name, jet.p4());
   setValue_PtEtaPhiMass(name, jet.p4());
+  reco::Candidate::LorentzVector jetP4_raw = ( jet.jecSetsAvailable() ) ? jet.correctedP4("Uncorrected") : jet.p4();
+  setValue_EnPxPyPz(name + "raw", jetP4_raw);
+  setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
+  setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
 }
 
 void TauTauNtupleProducer::setValue_Electron(const std::string& name, const pat::Electron& electron)

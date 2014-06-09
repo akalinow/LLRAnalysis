@@ -86,29 +86,77 @@
 using namespace std;
 using namespace reco;
 
-typedef std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more>::iterator CImap;
+namespace
+{
+  typedef std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more>::iterator CImap;
 
-struct DiTauInfo 
-{ 
-  DiTauInfo(){}; 
-  int diTauCharge_; 
-  double sumPt_; 
-  int index_; 
-}; 
-struct SortDiTauPairs 
-{ 
-  bool operator() (const DiTauInfo t1, const DiTauInfo t2) 
+  TFile* openFile(const edm::FileInPath& inputFileName)
+  {
+    if ( !inputFileName.isLocal() ) throw cms::Exception("MuTauStreamAnalyzer") 
+      << " Failed to find File = " << inputFileName << " !!\n";
+    TFile* inputFile = new TFile(inputFileName.fullPath().data());
+    return inputFile;
+  }
+
+  TH1* loadLUT(TFile* inputFile, const std::string& lutName)
+  {
+    TH1* lut = dynamic_cast<TH1*>(inputFile->Get(lutName.data()));
+    if ( !lut ) 
+      throw cms::Exception("TauTauNtupleProducer") 
+	<< " Failed to load LUT = " << lutName.data() << " from file = " << inputFile->GetName() << " !!\n";
+    return lut;
+  }
+
+  double compHiggsPtWeight(const TH1* lut, double higgsPt)
+  {
+    int idxBin = (const_cast<TH1*>(lut))->FindBin(higgsPt);
+    if ( idxBin < 1                ) idxBin = 1;
+    if ( idxBin > lut->GetNbinsX() ) idxBin = lut->GetNbinsX();
+    return lut->GetBinContent(idxBin);
+  }
+
+  bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
+  {
+    for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin();
+	  genParticle != genParticles.end(); ++genParticle ) {
+      int absGenParticlePdgId = TMath::Abs(genParticle->pdgId());
+      if ( (absPdgId1 != 0 && absGenParticlePdgId == absPdgId1) ||
+	   (absPdgId2 != 0 && absGenParticlePdgId == absPdgId2) ||
+	   (absPdgId3 != 0 && absGenParticlePdgId == absPdgId3) ) {
+	p4 = genParticle->p4();
+	return true;
+      }
+    }
+    return false;
+  }
+
+  struct DiTauInfo 
   { 
-    // 1st criterion: OS 
-    if ( t1.diTauCharge_ < t2.diTauCharge_ ) return true; 
-    if ( t1.diTauCharge_ > t2.diTauCharge_ ) return false; 
-    // 2nd criterion: sumPt of diTau pair 
-    return (t1.sumPt_ > t2.sumPt_);  
-  } 
-}; 
+    DiTauInfo(){}; 
+    int diTauCharge_; 
+    double sumPt_; 
+    int index_; 
+  }; 
 
-MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
+  struct SortDiTauPairs 
+  { 
+    bool operator() (const DiTauInfo t1, const DiTauInfo t2) 
+    { 
+      // 1st criterion: OS 
+      if ( t1.diTauCharge_ < t2.diTauCharge_ ) return true; 
+      if ( t1.diTauCharge_ > t2.diTauCharge_ ) return false; 
+      // 2nd criterion: sumPt of diTau pair 
+      return (t1.sumPt_ > t2.sumPt_);  
+    } 
+  }; 
+}
 
+MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
+  : inputFileHiggsPtWeight_(0),
+    lutHiggsPtWeightNom_(0),
+    lutHiggsPtWeightUp_(0),
+    lutHiggsPtWeightDown_(0)
+{
   diTauTag_          = iConfig.getParameter<edm::InputTag>("diTaus");
   jetsTag_           = iConfig.getParameter<edm::InputTag>("jets");
   newJetsTag_        = iConfig.getParameter<edm::InputTag>("newJets");
@@ -129,6 +177,15 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig){
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
   doIsoOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoOrdering", false);
+
+//   edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
+//   typedef std::vector<std::string> vstring;
+//   vstring evtWeightNames = evtWeights.getParameterNamesForType<edm::InputTag>();
+//   for ( vstring::const_iterator name = evtWeightNames.begin();
+// 	name != evtWeightNames.end(); ++name ) {    
+//     edm::InputTag src = evtWeights.getParameter<edm::InputTag>(*name);
+//     evtWeightsToStore_.push_back(InputTagEntryType(*name, src));
+//   }
 
 }
 
@@ -455,6 +512,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("dxyErrTau",&dxyErrTau_,"dxyErrTau/F");
   tree_->Branch("dxySigTau",&dxySigTau_,"dxySigTau/F");
   tree_->Branch("hasSecVtx",&hasSecVtx_,"hasSecVtx/I");
+  tree_->Branch("flightLength",&flightLength_,"flightLength/F");
+  tree_->Branch("flightLengthError",&flightLengthError_,"flightLengthError/F");
   tree_->Branch("flightLength2",&flightLength2_,"flightLength2/F");
   tree_->Branch("flightLengthSig",&flightLengthSig_,"flightLengthSig/F");
 
@@ -527,6 +586,11 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
   tree_->Branch("nPUtruth",  &nPUtruth_,  "nPUtruth/F");
 
+  //Higgs pT reweighting SM
+  tree_->Branch("higgsPtWeightNom",&higgsPtWeightNom_,"higgsPtWeightNom/F");
+  tree_->Branch("higgsPtWeightUp",&higgsPtWeightUp_,"higgsPtWeightUp/F");
+  tree_->Branch("higgsPtWeightDown",&higgsPtWeightDown_,"higgsPtWeightDown/F");
+
   tree_->Branch("index",&index_,"index/I");
 
   tree_->Branch("genDiTauMass",&genDiTauMass_,"genDiTauMass/F");
@@ -534,6 +598,7 @@ void MuTauStreamAnalyzer::beginJob(){
 
 
 MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
+  delete inputFileHiggsPtWeight_;
   delete jetsP4_; delete jetsIDP4_; delete jetsIDUpP4_; delete jetsIDDownP4_; 
   delete METP4_; delete caloMETNoHFP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
   delete diTauSVfitP4_; delete genVP4_;
@@ -652,13 +717,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   VtxX_ = vertexes->size()!=0 ? (*vertexes)[0].position().x() : -99;
   VtxY_ = vertexes->size()!=0 ? (*vertexes)[0].position().y() : -99;
 
-  const pat::METCollection* met = 0;
-  edm::Handle<pat::METCollection> metHandle;
-  iEvent.getByLabel( metTag_, metHandle);
-  if( !metHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No MET label available \n";
-  if(metHandle.isValid())met = metHandle.product();
+//   const pat::METCollection* met = 0;
+//   edm::Handle<pat::METCollection> metHandle;
+//   iEvent.getByLabel( metTag_, metHandle);
+//   if( !metHandle.isValid() )  
+//     edm::LogError("DataNotAvailable")
+//       << "No MET label available \n";
+//   if(metHandle.isValid())met = metHandle.product();
 
   const pat::METCollection* rawMet = 0;
   edm::Handle<pat::METCollection> rawMetHandle;
@@ -668,19 +733,19 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       << "No raw MET label available \n";
   if(rawMetHandle.isValid() )rawMet = rawMetHandle.product();
 
-  const pat::METCollection* mvaMet = 0;
-  edm::Handle<pat::METCollection> mvaMetHandle;
-  iEvent.getByLabel( mvaMetTag_, mvaMetHandle);
-  if( !mvaMetHandle.isValid() )  
-    edm::LogError("DataNotAvailable")
-      << "No mva MET label available \n";
-  if(mvaMetHandle.isValid())mvaMet = mvaMetHandle.product();
+//   const pat::METCollection* mvaMet = 0;
+//   edm::Handle<pat::METCollection> mvaMetHandle;
+//   iEvent.getByLabel( mvaMetTag_, mvaMetHandle);
+//   if( !mvaMetHandle.isValid() )  
+//     edm::LogError("DataNotAvailable")
+//       << "No mva MET label available \n";
+//   if(mvaMetHandle.isValid())mvaMet = mvaMetHandle.product();
 
-  edm::Handle<PFMEtSignCovMatrix> metCovHandle;
-  iEvent.getByLabel( metCovTag_, metCovHandle);
-  if( !metCovHandle.isValid() )
-    edm::LogError("DataNotAvailable")
-      << "No met Cov label available \n";
+//   edm::Handle<PFMEtSignCovMatrix> metCovHandle;
+//   iEvent.getByLabel( metCovTag_, metCovHandle);
+//   if( !metCovHandle.isValid() )
+//     edm::LogError("DataNotAvailable")
+//       << "No met Cov label available \n";
 
   edm::Handle<pat::TriggerEvent> triggerHandle;
   iEvent.getByLabel(triggerResultsTag_, triggerHandle);
@@ -1439,8 +1504,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 
     METP4_->push_back((*rawMet)[0].p4()); 
     METP4_->push_back(theDiTau->met()->p4());
-    if(met)METP4_->push_back((*met)[0].p4());
-    if(mvaMet)METP4_->push_back((*mvaMet)[0].p4()); 
+//     if(met)METP4_->push_back((*met)[0].p4());
+//     if(mvaMet)METP4_->push_back((*mvaMet)[0].p4()); 
     sumEt_  = theDiTau->met()->sumEt();
 
     isMuLegMatched_  = 0;
@@ -1937,6 +2002,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     dxyErrTau_       = leg2->dxy_error(); 
     dxySigTau_       = leg2->dxy_Sig();
     hasSecVtx_       = leg2->hasSecondaryVertex();
+    flightLength_    = TMath::Sqrt(leg2->flightLength().Mag2());
+    flightLengthError_= leg2->flightLengthSig()/TMath::Sqrt(leg2->flightLength().Mag2());
     flightLength2_   = leg2->flightLength().Mag2();
     flightLengthSig_ = leg2->flightLengthSig();
     ///NewTauID useful variables
@@ -2204,6 +2271,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       
       /////////////////////////////////////////////////////////////////////////
       //// use JES uncertainties
+      if(fabs(newJet->eta())>5.5) continue ;
       edm::ESHandle<JetCorrectorParametersCollection> jetCorrParameters;
       // get the jet corrector parameters collection from the global tag
       iSetup.get<JetCorrectionsRecord>().get("AK5PF", jetCorrParameters);
@@ -2455,8 +2523,46 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       }
     }
     //////////////////////
-    
+    // Higgs pT Reweighting
 
+    double higgsPtWeightNom  = 1.;
+    double higgsPtWeightUp   = 1.;
+    double higgsPtWeightDown = 1.;
+    bool isHiggs = false;
+    if ( isMC_ ) {
+      //       edm::Handle<reco::GenParticleCollection> genParticles;
+      //       evt.getByLabel(srcGenParticles_, genParticles);
+
+      reco::Candidate::LorentzVector higgsP4;
+      isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
+      if ( isHiggs ) {
+	double higgsMass = higgsP4.mass();
+	std::string inputFileName;
+	if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
+	else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
+	else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
+	if ( inputFileName != "" ) {
+	  if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
+	    inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
+	    lutHiggsPtWeightNom_  = loadLUT(inputFileHiggsPtWeight_, "Nominal");
+	    lutHiggsPtWeightUp_   = loadLUT(inputFileHiggsPtWeight_, "Up");
+	    lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
+	    lastInputFileHiggsPtWeight_ = inputFileName;
+	  }
+	  double higgsPt = higgsP4.pt();
+	  higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
+	  higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
+	  higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
+	}
+// 	std::cout<<"HqtWeight file :" <<inputFileName<<std::endl;
+      }
+    }
+
+    higgsPtWeightNom_ = higgsPtWeightNom ;
+    higgsPtWeightUp_ = higgsPtWeightUp ;
+    higgsPtWeightDown_ = higgsPtWeightDown ;
+
+//     std::cout<<"HqtWeight :" <<higgsPtWeightNom_<<std::endl;
     //////////////////////
     // Embedding weights
 

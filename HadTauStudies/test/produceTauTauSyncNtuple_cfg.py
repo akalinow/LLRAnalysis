@@ -16,18 +16,20 @@ process.fwliteInput = cms.PSet(
 )
 
 #----------------------------------------------------------------------------------------------------
-##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec07/nom/HiggsSUSYGluGlu130/"
-##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec07/nom/HiggsSUSYBB130/"
-inputFilePath = "/tmp/veelken/"
-
-inputFileNames = None
-if inputFilePath.find("/store") != -1:
-    inputFileNames = [ os.path.join(inputFilePath, file_info['file']) for file_info in eos.lsl(inputFilePath) ]
-else:
-    inputFileNames = [ os.path.join(inputFilePath, file) for file in os.listdir(inputFilePath) ]
-print " inputFileNames = %s" % inputFileNames
-
-process.fwliteInput.fileNames = cms.vstring(inputFileNames)
+##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec07/v0_2/nom/HiggsSUSYGluGlu130/"
+##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec07/v0_2/nom/HiggsSUSYBB130/"
+##inputFilePath = "/tmp/veelken/"
+##inputFilePath = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec10/v0_4/nom/HiggsSUSYGluGlu130/"
+##
+##inputFileNames = None
+##if inputFilePath.find("/store") != -1:
+##    inputFileNames = [ os.path.join(inputFilePath, file_info['file']) for file_info in eos.lsl(inputFilePath) ]
+##else:
+##    inputFileNames = [ os.path.join(inputFilePath, file) for file in os.listdir(inputFilePath) ]
+##print " inputFileNames = %s" % inputFileNames
+##
+##process.fwliteInput.fileNames = cms.vstring(inputFileNames)
+process.fwliteInput.fileNames = cms.vstring('ntuple_HadTauStream.root')
 #----------------------------------------------------------------------------------------------------
 
 process.produceTauTauSyncNtuple = cms.PSet(
@@ -35,9 +37,9 @@ process.produceTauTauSyncNtuple = cms.PSet(
     isHiggsMC = cms.bool(True),
 
     isEmbed = cms.bool(False),
-    embedType = cms.bool("PfEmbed"),
+    embedType = cms.string("PfEmbed"),
 
-    inputTreeName = cms.string('tauTauNtupleProducer/tauIdMVATrainingNtuple'),
+    inputTreeName = cms.string('tauTauNtupleProducer/H2TauTauTreeProducerTauTau'),
     outputTreeName = cms.string('H2TauTauSyncTreeTauTau'),
 
     addBranches = cms.PSet(
@@ -60,7 +62,7 @@ process.produceTauTauSyncNtuple = cms.PSet(
         q_1 = cms.string("l1Charge/F->D"),
         iso_1 = cms.string("l1RawDB3HIso/Formula->D"),
         antiele_1 = cms.string("l1againstElectronMVA3raw/Formula->D"),
-        d0_1 = cms.string("l1dxy/F->D"),
+        ##d0_1 = cms.string("l1dxy/F->D"),
         dZ_1 = cms.string("(l1VertexZ - vertexZ)/Formula->D"),
         mt_1 = cms.string("mt1/F->D"),
         idweight_1 = cms.string("1.0/Formula->D"),
@@ -79,7 +81,7 @@ process.produceTauTauSyncNtuple = cms.PSet(
         q_2 = cms.string("l2Charge/F->D"),
         iso_2 = cms.string("l2RawDB3HIso/Formula->D"),
         antiele_2 = cms.string("l2againstElectronMVA3raw/Formula->D"),
-        d0_2 = cms.string("l2dxy/F->D"),
+        ##d0_2 = cms.string("l2dxy/F->D"),
         dZ_2 = cms.string("(l2VertexZ - vertexZ)/Formula->D"),
         mt_2 = cms.string("mt2/F->D"),
         idweight_2 = cms.string("1.0/Formula->D"),
@@ -139,5 +141,7 @@ process.produceTauTauSyncNtuple = cms.PSet(
         electron1Pt = cms.string("electron1Pt/F->D")
     ),
 
-    outputFileName = cms.string('H2TauTauSyncTreeTauTau.root')
+    outputFileName = cms.string('H2TauTauSyncTreeTauTau.root'),
+
+    verbosity = cms.int32(0)
 )

@@ -52,7 +52,7 @@ def submitAnalysisToGrid(configFile = None,
 
     # Build crab options
     crabOptions = {
-        'number_of_jobs'  : _number_of_jobs(sample_info),
+        ##'number_of_jobs'  : _number_of_jobs(sample_info),
         'datasetpath'     : sample_info['datasetpath'],
         'dbs_url'         : sample_info['dbs_url'],
         'user_remote_dir' : outputFilePath,
@@ -68,6 +68,16 @@ def submitAnalysisToGrid(configFile = None,
         'SE_white_list'   : sample_info['SE_white_list'],
         'SE_black_list'   : sample_info['SE_black_list']
     }
+    
+    split_job_option = None
+    print sample_info
+    if sample_info['type'].find('MC') != -1 and 'events_per_job' in sample_info.keys():
+        split_job_option = "events_per_job = %i" % sample_info['events_per_job']
+    elif (sample_info['type'] == 'Data' or sample_info['type'].find('EmbeddedData') != -1) and 'lumis_per_job' in sample_info.keys():
+        split_job_option = "lumis_per_job = %i" % sample_info['lumis_per_job']
+    else:
+        split_job_option = "number_of_jobs = %i" % _number_of_jobs(sample_info)
+    crabOptions['split_job_option'] = split_job_option
 
     submitToGrid(configFile, jobInfo, crabOptions, create = True, submit = True, cfgdir = crabFilePath)
     ##submitToGrid(configFile, jobInfo, crabOptions, create = False, submit = False, cfgdir = crabFilePath) # CV: only for testing

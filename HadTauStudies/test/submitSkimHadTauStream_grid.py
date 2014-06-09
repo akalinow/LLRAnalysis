@@ -10,15 +10,30 @@ import subprocess
 import time
 
 configFile = 'patTuple_PAT_SkimHadTauStream_cfg.py'
-jobId = '2013Dec07'
+jobId = '2014Jan10'
 
-outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
-##outputFilePath = ''
+##outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
+outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 
 samplesToAnalyze = [
-    "HiggsSUSYGluGlu130",
-    "HiggsSUSYBB130"
+    # CV: leave empty in order to submit jobs for all samples
+    ##"WJetsExt"
+    ##'DY2JetsExt'
+    ##'HiggsSUSYBB300v2'
+    ##'HiggsVH125'
+    'W1JetsExt',
+    'W2JetsExt',
+    'W3JetsExt'
 ]
+
+#--------------------------------------------------------------------------------
+##mssmHiggsMassPoints = [ 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+##for massPoint in mssmHiggsMassPoints:
+##    ggSampleName = "HiggsSUSYGluGlu%1.0f" % massPoint
+##    samplesToAnalyze.append(ggSampleName)##
+##    bbSampleName = "HiggsSUSYBB%1.0f" % massPoint
+##    samplesToAnalyze.append(bbSampleName)
+#--------------------------------------------------------------------------------
 
 if len(samplesToAnalyze) == 0:
     samplesToAnalyze = recoSampleDefinitionsAHtoTauTau_8TeV['SAMPLES_TO_ANALYZE']
@@ -40,8 +55,8 @@ def getStringRep(value):
         raise ValueError("<getStringRep>: Function argument 'value' is of unsupported type !!")
     return retVal
 
-# Function to prepare customized config files specific to TauIdEff. skim 
-def customizeConfigFile(sampleName, cfgFileName_original, cfgFileName_modified = None):
+# Function to prepare customized config files 
+def customizeConfigFile(sampleName, jobId, cfgFileName_original, cfgFileName_modified = None):
     cfgFile_original = open(cfgFileName_original, "r")
     cfg_original = cfgFile_original.read()
     cfgFile_original.close()
@@ -52,7 +67,7 @@ def customizeConfigFile(sampleName, cfgFileName_original, cfgFileName_modified =
     
     if cfgFileName_modified is None:
         cfgFileName_modified = "crab/%s" % cfgFileName_original
-        cfgFileName_modified = cfgFileName_modified.replace("_cfg.py", "_customized_%s_cfg.py" % sampleName)
+        cfgFileName_modified = cfgFileName_modified.replace("_cfg.py", "_customized_%s_%s_cfg.py" % (sampleName, jobId))
     cfgFile_modified = open(cfgFileName_modified, "w")
     cfgFile_modified.write(cfg_modified)
     cfgFile_modified.close()
@@ -80,8 +95,8 @@ def createFilePath_recursively(filePath):
 
 for sampleToAnalyze in samplesToAnalyze:
 
-    # prepare customized config file as basis for further modifications by "TauAnalysis machinery"...
-    configFile_customized = customizeConfigFile(sampleToAnalyze, configFile)
+    # prepare customized config file 
+    configFile_customized = customizeConfigFile(sampleToAnalyze, jobId, configFile)
 
     # create output directory
     outputFilePath_sample = os.path.join(outputFilePath, sampleToAnalyze)

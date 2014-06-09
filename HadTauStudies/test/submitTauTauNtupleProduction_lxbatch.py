@@ -4,7 +4,9 @@ from LLRAnalysis.HadTauStudies.recoSampleDefinitionsAHtoTauTau_8TeV_grid_cfi imp
 from LLRAnalysis.HadTauStudies.tools.submitAnalysisToGrid import submitAnalysisToGrid
 import LLRAnalysis.HadTauStudies.tools.eos as eos
 from LLRAnalysis.HadTauStudies.tools.jobtools import make_bsub_script
+from LLRAnalysis.HadTauStudies.tools.harvestingLXBatch import make_harvest_scripts
 
+import json
 import os
 import random
 import re
@@ -14,27 +16,52 @@ import sys
 import time
 
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
-jobId = '2013Dec07'
+jobId = '2014Jan10'
 
-version = "v1"
+version = "v1_8"
 
-inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
+inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
+##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
-maxEventsPerJob = 5000
+maxEventsPerJob = 10000
 
 ##lxbatch_queue = '1nw'
 lxbatch_queue = '1nd'
 ##lxbatch_queue = '8nh'
 
 samplesToAnalyze = [
-    "HiggsSUSYGluGlu130",
-    "HiggsSUSYBB130"
+    # CV: leave empty in order to produce Ntuples for all samples
+    ##"HiggsSUSYBB300v2"
+    ##"HiggsVH125"
+    ##'W1JetsExt',
+    ##'W2JetsExt',
+    ##'W3JetsExt'
 ]
 
+numEventsFileName = 'submitTauTauNtupleProduction.json'
+
+numEvents_dict = {}
+if os.path.exists(numEventsFileName):
+    if os.path.isfile(numEventsFileName):
+        print("Loading #Events from File %s" % numEventsFileName)
+        numEventsFile = open(numEventsFileName, "r")
+        numEvents_dict = json.load(numEventsFile)
+        #print(numEvents_dict)
+        numEventsFile.close()
+    else:
+        raise ValueError("File %s exists, but is a directory !!" % numEventsFileName)
+else:
+    print("File %s does not yet exist...creating it." % numEventsFileName)
+
+if len(samplesToAnalyze) == 0:
+    samplesToAnalyze = recoSampleDefinitionsAHtoTauTau_8TeV['SAMPLES_TO_ANALYZE']
+    
 skipExistingPATtuples = True
 
-outputFileMachine_and_Path = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s" % jobId
-#outputFileMachine_and_Path = "ucdavis:/data1/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s" % jobId
+##outputFileMachine_and_Path = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
+outputFileMachine_and_Path = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
+##outputFileMachine_and_Path = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec19f/%s" % (jobId, version)
+#outputFileMachine_and_Path = "ucdavis:/data1/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
 outputFileMachine = None
 outputFilePath = None
@@ -88,16 +115,21 @@ def runCommand(commandLine):
 
 def getNumEventsInFile(inputFilePath, inputFileName):
     numEventsInFile = None
-    edmFileUtil_output = runCommand('edmFileUtil %s' % os.path.join(inputFilePath, inputFileName))
-    edmFileUtil_regex = r"[a-zA-Z0-9_/:.]*\s*\([0-9]+\s*runs,\s*[0-9]+\s*lumis,\s*(?P<events>[0-9]+)\s*events,\s*[0-9]+\s*bytes\)\s*"
-    edmFileUtil_matcher = re.compile(edmFileUtil_regex)
-    for line in edmFileUtil_output:
-        edmFileUtil_match = edmFileUtil_matcher.match(line)
-        if edmFileUtil_match:
-            numEventsInFile = int(edmFileUtil_match.group('events'))
-    if numEventsInFile is None:
-        raise ValueError("Failed to read number of events contained in file = %s !!" % inputFileName)
-    print " numEventsInFile = %i" % numEventsInFile
+    key = os.path.join(inputFilePath, inputFileName)
+    if numEvents_dict.has_key(key):
+        numEventsInFile = numEvents_dict[key]
+    else:
+        edmFileUtil_output = runCommand('edmFileUtil %s' % os.path.join(inputFilePath, inputFileName))
+        edmFileUtil_regex = r"[a-zA-Z0-9_/:.]*\s*\([0-9]+\s*runs,\s*[0-9]+\s*lumis,\s*(?P<events>[0-9]+)\s*events,\s*[0-9]+\s*bytes\)\s*"
+        edmFileUtil_matcher = re.compile(edmFileUtil_regex)
+        for line in edmFileUtil_output:
+            edmFileUtil_match = edmFileUtil_matcher.match(line)
+            if edmFileUtil_match:
+                numEventsInFile = int(edmFileUtil_match.group('events'))
+        if numEventsInFile is None:
+            raise ValueError("Failed to read number of events contained in file = %s !!" % inputFileName)
+        print " numEventsInFile = %i" % numEventsInFile
+        numEvents_dict[key] = numEventsInFile       
     return numEventsInFile
 
 def divideInputFiles_in_chunks(inputFilePath, inputFileNames):
@@ -111,8 +143,8 @@ def divideInputFiles_in_chunks(inputFilePath, inputFileNames):
         numEventsInFile = getNumEventsInFile(inputFilePath, inputFileName)
         if (numEvents_in_currentChunk + numEventsInFile) > maxEventsPerJob:
             inputFileNames_in_chunks.append(inputFileNames_in_currentChunk)
-            inputFileNames_in_currentChunk = []
-            numEvents_in_currentChunk = 0
+            inputFileNames_in_currentChunk = [ inputFileName ]
+            numEvents_in_currentChunk = numEventsInFile
         else:
             inputFileNames_in_currentChunk.append(inputFileName)
             numEvents_in_currentChunk = numEvents_in_currentChunk + numEventsInFile
@@ -152,7 +184,7 @@ def getStringRep(value):
         else:
             retVal = "False"
     else:
-        raise ValueError("<getStringRep>: Function argument 'value' is of unsupported type !!")
+        raise ValueError("<getStringRep>: Function argument 'value' is of unsupported type = %s !!" % type(value))	
     return retVal
 
 # Function to prepare customized config files specific to Tau(ED)Ntuple production
@@ -165,12 +197,12 @@ def customizeConfigFile(sampleName, nom_or_sysShift, inputFileNames, outputFileN
     for parameterName, parameterValue in recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sampleName]['parameters_to_overwrite'].items():
         cfg_modified = cfg_modified.replace("$%s" % parameterName, getStringRep(parameterValue))
 
-    higgsSample_regex = r"[ggHiggs|vbfHiggs|ggA|bbA](?P<mass>[0-9]+)[a-zA-Z]*"
+    higgsSample_regex = r"(HiggsGGH|HiggsVBF|HiggsSUSYGluGlu|HiggsSUSYBB)(?P<mass>[0-9]+)"
     higgsSample_matcher = re.compile(higgsSample_regex)
     higgsSample_match = higgsSample_matcher.match(sampleName)
     if higgsSample_match:
         cfg_modified = cfg_modified.replace("$applyHiggsMassCut", getStringRep(True))
-        nomHiggsMass = higgsSample_match.group('mass')
+        nomHiggsMass = int(higgsSample_match.group('mass'))
         cfg_modified = cfg_modified.replace("$nomHiggsMass", getStringRep(nomHiggsMass))
     else:
         cfg_modified = cfg_modified.replace("$applyHiggsMassCut", getStringRep(False))
@@ -201,9 +233,6 @@ def customizeConfigFile(sampleName, nom_or_sysShift, inputFileNames, outputFileN
 
     return cfgFileName_modified
 
-if len(samplesToAnalyze) == 0:
-    samplesToAnalyze = samples.keys()
-
 #--------------------------------------------------------------------------------
 # Build config files for producing PAT-tuples on lxbatch
 bsubFileNames       = {}
@@ -228,10 +257,12 @@ for sampleToAnalyze in samplesToAnalyze:
     #print " inputFileNames = %s" % inputFileNames
     
     inputFileNames_matched = [ os.path.basename(input_file) for input_file in input_mapper(inputFileNames, sampleToAnalyze) ]
-    #print "inputFileNames_matched = %s" % inputFileNames_matched
+    print "inputFileNames_matched = %s" % inputFileNames_matched
     print "--> found %i inputFiles" % len(inputFileNames_matched)
 
     inputFileNames_matched_in_chunks = divideInputFiles_in_chunks(inputFilePath_sample, inputFileNames_matched)
+    print "inputFileNames_matched_in_chunks:"
+    print inputFileNames_matched_in_chunks
 
     for nom_or_sysShift in [ "nom", "up", "down" ]:
 
@@ -278,6 +309,74 @@ for sampleToAnalyze in samplesToAnalyze:
  
             bsubJobName = "TauTauNtuple%s_%s_%i" % (sampleToAnalyze, nom_or_sysShift, chunkId)
             bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId] = bsubJobName
+
+    numEventsFile = open(numEventsFileName, "w")
+    json.dump(numEvents_dict, numEventsFile)
+    numEventsFile.close()
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+#
+# build shell script for running 'hadd' in order to collect all histograms
+# for same Data/MC sample into single .root file
+#
+bsubFileNames_harvesting = {}
+bsubJobNames_harvesting  = {}
+for sampleToAnalyze in samplesToAnalyze:
+    
+    bsubFileNames_harvesting[sampleToAnalyze] = {}
+    bsubJobNames_harvesting[sampleToAnalyze]  = {}
+
+    for nom_or_sysShift in [ "nom", "up", "down" ]:
+
+        outputFileMachine_and_Path_sample = os.path.join(outputFileMachine_and_Path, nom_or_sysShift, sampleToAnalyze)
+
+        plot_regex = r"H2TauTauTreeProducerTauTau_[0-9]+.root"
+        skim_regex = r"dont match anything"
+        
+        def local_copy_mapper(sample):
+            return os.path.join(
+                outputFileMachine_and_Path,
+                'H2TauTauTreeProducerTauTau_all.root')
+    
+        inputFileInfos = []
+        for chunkId in bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift].keys():
+            for inputFileName in bsubFileNames[sampleToAnalyze][nom_or_sysShift][chunkId]:
+                inputFileInfo = {
+                    'path'        : os.path.join(outputFileMachine_and_Path, inputFileName),
+                    'size'        : 1,           # dummy
+                    'time'        : time.localtime(),
+                    'file'        : inputFileName,
+                    'permissions' : 'mrw-r--r--' # "ordinary" file access permissions
+                }
+                #print "inputFileInfo = %s" % inputFileInfo
+                inputFileInfos.append(inputFileInfo)
+
+        retVal_make_harvest_scripts = make_harvest_scripts(
+            plot_regex,
+            skim_regex,
+            channel = "TauTauNtupleHarvesting",
+            sampleToAnalyze = sampleToAnalyze,
+            job_id = version,
+            input_files_info = inputFileInfos,
+            harvester_command = executable_hadd,
+            abort_on_rfcp_error = False,
+            castor_output_directory = outputFileMachine_and_Path_sample,
+            script_directory = configFilePath,
+            merge_script_name = \
+            os.path.join(configFilePath, "_".join(['submit', sampleToAnalyze, nom_or_sysShift, 'merge']) + '.sh'),
+            local_copy_mapper = local_copy_mapper,
+            chunk_size = 2.e+9, # 2 GB
+            run_merging = False,
+            check_old_files = False,
+            max_bsub_concurrent_file_access = 250,
+            verbosity = 0
+        )
+
+        bsubFileNames_harvesting[sampleToAnalyze][nom_or_sysShift] = retVal_make_harvest_scripts
+
+        bsubJobName = "TauTauNtupleHarvesting%s%s" % (sampleToAnalyze, nom_or_sysShift)
+        bsubJobNames_harvesting[sampleToAnalyze][nom_or_sysShift] = bsubJobName
 #--------------------------------------------------------------------------------
 
 def make_MakeFile_vstring(list_of_strings):
@@ -307,7 +406,7 @@ for sampleToAnalyze in samplesToAnalyze:
                 if not outputFileName in existingOutputFiles:
                     outputFilesExist = False
             if skipExistingPATtuples and outputFilesExist:
-                print "Output files for sample = %s, nom_or_sysShift = %, chunkId = %i exist --> skipping !!" % (sampleToAnalyze, nom_or_sysShift, chunkId)
+                print "Output files for sample = %s, nom_or_sysShift = %s, chunkId = %i exist --> skipping !!" % (sampleToAnalyze, nom_or_sysShift, chunkId)
             else:
                 jobsTauTauNtupleProduction.append(bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId])
 #--------------------------------------------------------------------------------    
@@ -338,6 +437,19 @@ for sampleToAnalyze in samplesToAnalyze:
                    bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift][chunkId]))
                 makeFile.write("\tsleep 1\n")
         makeFile.write("\n")
+jobsTauTauNtupleHarvesting = []
+for sampleToAnalyze in samplesToAnalyze:
+    for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
+        jobsTauTauNtupleHarvesting.append(bsubJobNames_harvesting[sampleToAnalyze][nom_or_sysShift])        
+makeFile.write("harvesting: %s\n" % make_MakeFile_vstring(jobsTauTauNtupleHarvesting))
+for sampleToAnalyze in samplesToAnalyze:
+    for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
+        makeFile.write("%s:\n" %
+          (bsubJobNames_harvesting[sampleToAnalyze][nom_or_sysShift]))
+        makeFile.write("\t%s %s\n" %
+          (executable_shell,
+           bsubFileNames_harvesting[sampleToAnalyze][nom_or_sysShift]['harvest_script_name']))
+        makeFile.write("\n")        
 makeFile.write(".PHONY: clean\n")
 makeFile.write("clean:\n")
 for sampleToAnalyze in samplesToAnalyze:
@@ -345,10 +457,19 @@ for sampleToAnalyze in samplesToAnalyze:
         for chunkId in bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift].keys():
             for outputFileName in bsubFileNames[sampleToAnalyze][nom_or_sysShift][chunkId]:
                 makeFile.write("\t%s %s\n" %
-                  (executable_rfrm,
+                  (executable_rfrm,                   
                    os.path.join(outputFilePath, outputFileName)))
+for sampleToAnalyze in samplesToAnalyze:
+    for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
+        makeFile.write("\t%s %s\n" %
+          (executable_rfrm,
+           bsubFileNames_harvesting[sampleToAnalyze][nom_or_sysShift]))                
 makeFile.write("\techo 'Finished deleting old files.'\n")
 makeFile.write("\n")
 makeFile.close()
+
+numEventsFile = open(numEventsFileName, "w")
+json.dump(numEvents_dict, numEventsFile)
+numEventsFile.close()
 
 print("Finished building Makefile. Now execute 'make -f %s'." % makeFileName)

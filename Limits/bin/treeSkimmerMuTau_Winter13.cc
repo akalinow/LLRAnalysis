@@ -491,6 +491,19 @@ Bool_t isbtagged(Bool_t isBQuark, Double_t btagCSV, Bool_t isdata, UInt_t btagef
   return btagged;
 }  
 
+float getTauFakeCorrection(double pt)
+{
+  float correction = 0;
+  float p0 = 0.718127;
+  float p1 = -0.143612;
+  float p2 = -0.0431415;
+  float p3 = -0.0981383;
+  float X = (pt-163.7)/100;//(x-meanPt)/100
+  correction = p0+p1*X+p2*X*X+p3*X*X*X;
+
+  return correction;
+}
+
 int getJetIDMVALoose(double pt, double eta, double rawMVA)
 {
   float eta_bin[] = {0,2.5,2.75,3.0,5.0};
@@ -811,13 +824,39 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,
-    weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,
-    highPtWeightUp,highPtWeightDown;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown;
+
+  //Higgs pT weight MSSM
+  //mhmax
+  float mssmHiggsPtReweightGluGlu_mhmax ;
+  float                                  mssmHiggsPtReweightGluGlu_mhmax_HqTUp, mssmHiggsPtReweightGluGlu_mhmax_HqTDown ;//HqT
+  float                                  mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp, mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown ;//HIGLU
+  float                                  mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp, mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown ;//tanBeta
+  
+  //mhmodplus
+  float mssmHiggsPtReweightGluGlu_mhmodplus ;
+  float                                  mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp, mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown ;//HqT
+  float                                  mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp, mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown ;//HIGLU
+  float                                  mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp, mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown ;//tanBeta
+  
+  //mhmodminus
+  float mssmHiggsPtReweightGluGlu_mhmodminus ;
+  float                                  mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp, mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown ;//HqT
+  float                                  mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp, mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown ;//HIGLU
+  float                                  mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp, mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown ;//tanBeta
+  
+  //lowmH
+  float mssmHiggsPtReweightGluGlu_lowmH ;
+  float                                  mssmHiggsPtReweightGluGlu_lowmH_HqTUp, mssmHiggsPtReweightGluGlu_lowmH_HqTDown ;//HqT
+  float                                  mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp, mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown ;//HIGLU
+  float                                  mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp, mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown ;//tanBeta
+  
+  float  weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,highPtWeightUp,highPtWeightDown;
+  
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   int nPUVertices_;
- 
+  
   // Event trigger matching
   float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8, HLTxDiTau;
   float HLTmatchMu, HLTmatchTau, HLTmatch, HLTmatchQCD, HLTmatchSoft, HLTmatchQCDSoft, HLTmatchIsoMu8Tau20, HLTmatchIsoMu15ETM20, HLTmatchMu8, HLTmatchDiTau, HLTmatchDiTauMu, HLTmatchDiTauTau, HLTmatchDiTauL1, HLTmatchDiTauL2;
@@ -830,14 +869,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float SFMu, SFMu_ABC, SFMu_D, SFMu_ABCD;
   float EffMuID_ABC, EffMuID_D, EffMuID_ABCD, EffMuID_ABC_MC, EffMuID_D_MC, EffMuID_ABCD_MC;
   float EffMuIso_ABC, EffMuIso_D, EffMuIso_ABCD, EffMuIso_ABC_MC, EffMuIso_D_MC, EffMuIso_ABCD_MC;
-
+  
   // Tau weights
   float HLTTau, HLTTauD, HLTTauABC;
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC;
   float SFTau;
   float weightDecayMode_, weightTauFakeWJet_, weightTauFakeWJetUp_, weightTauFakeWJetDown_;
-
+  
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
   int isTauLegMatchedToLep_;
@@ -847,12 +886,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //Parton Info for W+NJet
   int parton_, genPartMult_, leadGenPartPdg_, hepNUP_;
   float leadGenPartPt_;
-
+  
   // event id
   ULong64_t event_,run_,lumi_;
   int index_, pairIndex, counter;
   bool passQualityCuts;
-
+  
   float uParl, uPerp, metParl, metPerp, metSigmaParl, metSigmaPerp;
   
   outTreePtOrd->Branch("pt1",  &pt1,"pt1/F");
@@ -864,29 +903,29 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("Deta", &Deta,"Deta/F");
   outTreePtOrd->Branch("Dphi", &Dphi,"Dphi/F");
   outTreePtOrd->Branch("Mjj",  &Mjj,"Mjj/F");
-
+  
   /*
-  outTreePtOrd->Branch("pt1_v2",  &pt1_v2,"pt1_v2/F");
-  outTreePtOrd->Branch("pt2_v2",  &pt2_v2,"pt2_v2/F");
-  outTreePtOrd->Branch("eta1_v2", &eta1_v2,"eta1_v2/F");
-  outTreePtOrd->Branch("eta2_v2", &eta2_v2,"eta2_v2/F");
-  outTreePtOrd->Branch("phi1_v2", &phi1_v2,"phi1_v2/F");
-  outTreePtOrd->Branch("phi2_v2", &phi2_v2,"phi2_v2/F");
-  outTreePtOrd->Branch("Deta_v2", &Deta_v2,"Deta_v2/F");
-  outTreePtOrd->Branch("Dphi_v2", &Dphi_v2,"Dphi_v2/F");
-  outTreePtOrd->Branch("Mjj_v2",  &Mjj_v2,"Mjj_v2/F");
+    outTreePtOrd->Branch("pt1_v2",  &pt1_v2,"pt1_v2/F");
+    outTreePtOrd->Branch("pt2_v2",  &pt2_v2,"pt2_v2/F");
+    outTreePtOrd->Branch("eta1_v2", &eta1_v2,"eta1_v2/F");
+    outTreePtOrd->Branch("eta2_v2", &eta2_v2,"eta2_v2/F");
+    outTreePtOrd->Branch("phi1_v2", &phi1_v2,"phi1_v2/F");
+    outTreePtOrd->Branch("phi2_v2", &phi2_v2,"phi2_v2/F");
+    outTreePtOrd->Branch("Deta_v2", &Deta_v2,"Deta_v2/F");
+    outTreePtOrd->Branch("Dphi_v2", &Dphi_v2,"Dphi_v2/F");
+    outTreePtOrd->Branch("Mjj_v2",  &Mjj_v2,"Mjj_v2/F");
   */
-
+  
   outTreePtOrd->Branch("diJetPt",  &diJetPt , "diJetPt/F");
   outTreePtOrd->Branch("diJetPhi", &diJetPhi , "diJetPhi/F");
   outTreePtOrd->Branch("dPhiHjet", &dPhiHjet ,"dPhiHjet/F");
   outTreePtOrd->Branch("c1",       &c1 , "c1/F");
   outTreePtOrd->Branch("c2",       &c2 , "c2/F");
-
+  
   outTreePtOrd->Branch("ptB1",  &ptB1, "ptB1/F");
   outTreePtOrd->Branch("etaB1", &etaB1,"etaB1/F");
   outTreePtOrd->Branch("phiB1", &phiB1,"phiB1/F");
-
+  
   outTreePtOrd->Branch("MVAvbf",        &MVAvbf,         "MVAvbf/F");
   outTreePtOrd->Branch("jet1PUMVA",     &jet1PUMVA,      "jet1PUMVA/F");
   outTreePtOrd->Branch("jet2PUMVA",     &jet2PUMVA,      "jet2PUMVA/F");
@@ -894,7 +933,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("jet1PUWP",      &jet1PUWP,       "jet1PUWP/F");
   outTreePtOrd->Branch("jet2PUWP",      &jet2PUWP,       "jet2PUWP/F");
   outTreePtOrd->Branch("jetVetoPUWP",   &jetVetoPUWP,    "jetVetoPUWP/F");
-
+  
   outTreePtOrd->Branch("jet1QGmlp",     &jet1QGmlp,      "jet1QGmlp/F");
   outTreePtOrd->Branch("jet1QGlike",    &jet1QGlike,     "jet1QGlike/F");
   outTreePtOrd->Branch("jet1QGrhoIso",  &jet1QGrhoIso,   "jet1QGrhoIso/F");
@@ -1226,6 +1265,57 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("HqTWeight",          &HqTWeight,"HqTWeight/F");
   outTreePtOrd->Branch("HqTWeightUp",          &HqTWeightUp,"HqTWeightUp/F");
   outTreePtOrd->Branch("HqTWeightDown",          &HqTWeightDown,"HqTWeightDown/F");
+
+  //Higgs pT weight MSSM
+
+  //mhmax - nominal
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax", &mssmHiggsPtReweightGluGlu_mhmax, "mssmHiggsPtReweightGluGlu_mhmax/F");
+  //mhmax - HqT up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_HqTUp", &mssmHiggsPtReweightGluGlu_mhmax_HqTUp, "mssmHiggsPtReweightGluGlu_mhmax_HqTUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_HqTDown", &mssmHiggsPtReweightGluGlu_mhmax_HqTDown, "mssmHiggsPtReweightGluGlu_mhmax_HqTDown/F");
+  //mhmax - HIGLU up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp", &mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp, "mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown", &mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown, "mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown/F");
+  //mhmax - tanBeta up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp", &mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp, "mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown", &mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown, "mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown/F");
+
+  //mhmodplus - nominal
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus", &mssmHiggsPtReweightGluGlu_mhmodplus, "mssmHiggsPtReweightGluGlu_mhmodplus/F");
+  //mhmodplus - HqT up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp", &mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp, "mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown", &mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown, "mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown/F");
+  //mhmodplus - HIGLU up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp", &mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp, "mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown", &mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown, "mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown/F");
+  //mhmodplus - tanBeta up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp", &mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp, "mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown", &mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown, "mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown/F");
+
+  //mhmodminus - nominal
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus", &mssmHiggsPtReweightGluGlu_mhmodminus, "mssmHiggsPtReweightGluGlu_mhmodminus/F");
+  //mhmodminus - HqT up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp", &mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp, "mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown", &mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown, "mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown/F");
+  //mhmodminus - HIGLU up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp", &mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp, "mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown", &mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown, "mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown/F");
+  //mhmodminus - tanBeta up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp", &mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp, "mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown", &mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown, "mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown/F");
+
+  //lowmH - nominal
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH", &mssmHiggsPtReweightGluGlu_lowmH, "mssmHiggsPtReweightGluGlu_lowmH/F");
+  //lowmH - HqT up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_HqTUp", &mssmHiggsPtReweightGluGlu_lowmH_HqTUp, "mssmHiggsPtReweightGluGlu_lowmH_HqTUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_HqTDown", &mssmHiggsPtReweightGluGlu_lowmH_HqTDown, "mssmHiggsPtReweightGluGlu_lowmH_HqTDown/F");
+  //lowmH - HIGLU up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp", &mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp, "mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown", &mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown, "mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown/F");
+  //lowmH - tanBeta up/down
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp/F");
+  outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown/F");
+
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
 
@@ -1924,6 +2014,144 @@ void fillTrees_MuTauStream(TChain* currentTree,
       histoDown = (TH1F*)(HqT->Get("Down"));
     }
   }
+  cout << "Reweighting powheg with HqT mH=" << mH << endl;
+
+  //Filling pT weights for MSSM
+  int MSSMmH = 100 ;
+  TString SampleT(sample_);
+  TFile f_mssmHiggsPtReweightGluGlu_mhmax("../../HadTauStudies/data/mssmHiggsPtReweightGluGlu_mhmax.root");
+  TFile f_mssmHiggsPtReweightGluGlu_mhmodplus("../../HadTauStudies/data/mssmHiggsPtReweightGluGlu_mhmod+.root");
+  TFile f_mssmHiggsPtReweightGluGlu_mhmodminus("../../HadTauStudies/data/mssmHiggsPtReweightGluGlu_mhmod-.root");
+  TFile f_mssmHiggsPtReweightGluGlu_lowmH("../../HadTauStudies/data/mssmHiggsPtReweightGluGlu_low-mH.root");
+
+  TH1D* h_mhmax ;
+  TH1D* h_mhmax_HqTUp ;
+  TH1D* h_mhmax_HqTDown ;
+  TH1D* h_mhmax_HIGLUUp ;
+  TH1D* h_mhmax_HIGLUDown ;
+  TH1D* h_mhmax_tanBetaUp ;
+  TH1D* h_mhmax_tanBetaDown ;
+
+  TH1D* h_mhmodplus ;
+  TH1D* h_mhmodplus_HqTUp ;
+  TH1D* h_mhmodplus_HqTDown ;
+  TH1D* h_mhmodplus_HIGLUUp ;
+  TH1D* h_mhmodplus_HIGLUDown ;
+  TH1D* h_mhmodplus_tanBetaUp ;
+  TH1D* h_mhmodplus_tanBetaDown ;
+
+  TH1D* h_mhmodminus ;
+  TH1D* h_mhmodminus_HqTUp ;
+  TH1D* h_mhmodminus_HqTDown ;
+  TH1D* h_mhmodminus_HIGLUUp ;
+  TH1D* h_mhmodminus_HIGLUDown ;
+  TH1D* h_mhmodminus_tanBetaUp ;
+  TH1D* h_mhmodminus_tanBetaDown ;
+
+  TH1D* h_lowmH ;
+  TH1D* h_lowmH_HqTUp ;
+  TH1D* h_lowmH_HqTDown ;
+  TH1D* h_lowmH_HIGLUUp ;
+  TH1D* h_lowmH_HIGLUDown ;
+  TH1D* h_lowmH_tanBetaUp ;
+  TH1D* h_lowmH_tanBetaDown ;
+
+  if(SampleT.Contains("GGH") && SampleT.Contains("SUSY"))
+    {
+      if(SampleT.Contains("80")) MSSMmH = 80;
+      else if(SampleT.Contains("90")) MSSMmH = 90;
+      else if(SampleT.Contains("100")) MSSMmH = 100;
+      else if(SampleT.Contains("110")) MSSMmH = 110;
+      else if(SampleT.Contains("120")) MSSMmH = 120;
+      else if(SampleT.Contains("130")) MSSMmH = 130;
+      else if(SampleT.Contains("140")) MSSMmH = 140;
+      else if(SampleT.Contains("160")) MSSMmH = 160;
+      else if(SampleT.Contains("180")) MSSMmH = 180;
+      else if(SampleT.Contains("200")) MSSMmH = 200;
+      else if(SampleT.Contains("250")) MSSMmH = 250;
+      else if(SampleT.Contains("300")) MSSMmH = 300;
+      else if(SampleT.Contains("350")) MSSMmH = 350;
+      else if(SampleT.Contains("400")) MSSMmH = 400;
+      else if(SampleT.Contains("450")) MSSMmH = 450;
+      else if(SampleT.Contains("500")) MSSMmH = 500;
+      else if(SampleT.Contains("600")) MSSMmH = 600;
+      else if(SampleT.Contains("700")) MSSMmH = 700;
+      else if(SampleT.Contains("800")) MSSMmH = 800;
+      else if(SampleT.Contains("900")) MSSMmH = 900;    
+      else if(SampleT.Contains("1000")) MSSMmH = 1000;    
+
+      TString HistoName_mhmax = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_HqTUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_HqTDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_HIGLUUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_HIGLUDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_tanBetaUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaHigh", MSSMmH, MSSMmH);
+      TString HistoName_mhmax_tanBetaDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaLow", MSSMmH, MSSMmH);
+
+      h_mhmax = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax.Data());
+      h_mhmax_HqTUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_HqTUp.Data());
+      h_mhmax_HqTDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_HqTDown.Data());
+      h_mhmax_HIGLUUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_HIGLUUp.Data());
+      h_mhmax_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_HIGLUDown.Data());
+      h_mhmax_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_tanBetaUp.Data());
+      h_mhmax_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmax.Get(HistoName_mhmax_tanBetaDown.Data());
+
+      TString HistoName_mhmodplus = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_HqTUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_HqTDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_HIGLUUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_HIGLUDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_tanBetaUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaHigh", MSSMmH, MSSMmH);
+      TString HistoName_mhmodplus_tanBetaDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaLow", MSSMmH, MSSMmH);
+
+      h_mhmodplus = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus.Data());
+      h_mhmodplus_HqTUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_HqTUp.Data());
+      h_mhmodplus_HqTDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_HqTDown.Data());
+      h_mhmodplus_HIGLUUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_HIGLUUp.Data());
+      h_mhmodplus_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_HIGLUDown.Data());
+      h_mhmodplus_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_tanBetaUp.Data());
+      h_mhmodplus_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodplus.Get(HistoName_mhmodplus_tanBetaDown.Data());
+
+      TString HistoName_mhmodminus = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_HqTUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_HqTDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HqTscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_HIGLUUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleUp", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_HIGLUDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_HIGLUscaleDown", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_tanBetaUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaHigh", MSSMmH, MSSMmH);
+      TString HistoName_mhmodminus_tanBetaDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaLow", MSSMmH, MSSMmH);
+
+      h_mhmodminus = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus.Data());
+      h_mhmodminus_HqTUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HqTUp.Data());
+      h_mhmodminus_HqTDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HqTDown.Data());
+      h_mhmodminus_HIGLUUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HIGLUUp.Data());
+      h_mhmodminus_HIGLUDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_HIGLUDown.Data());
+      h_mhmodminus_tanBetaUp = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaUp.Data());
+      h_mhmodminus_tanBetaDown = (TH1D*)f_mssmHiggsPtReweightGluGlu_mhmodminus.Get(HistoName_mhmodminus_tanBetaDown.Data());
+    }
+  else
+    {
+      //mhmax
+      mssmHiggsPtReweightGluGlu_mhmax = 1. ;
+      mssmHiggsPtReweightGluGlu_mhmax_HqTUp = 1. ; mssmHiggsPtReweightGluGlu_mhmax_HqTDown =1. ;
+      mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp = 1. ; mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown = 1 ;
+      mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp = 1. ; mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown = 1. ;
+      //mhmodplus
+      mssmHiggsPtReweightGluGlu_mhmodplus = 1. ;
+      mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown =1. ;
+      mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown = 1 ;
+      mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown = 1. ;
+      //mhmodminus
+      mssmHiggsPtReweightGluGlu_mhmodminus = 1. ;
+      mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown =1. ;
+      mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown = 1 ;
+      mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp = 1. ; mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown = 1. ;
+      //lowmH
+      mssmHiggsPtReweightGluGlu_lowmH = 1. ;
+      mssmHiggsPtReweightGluGlu_lowmH_HqTUp = 1. ; mssmHiggsPtReweightGluGlu_lowmH_HqTDown =1. ;
+      mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp = 1. ; mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown = 1 ;
+      mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp = 1. ; mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown = 1. ;
+    }
+
 
   // protection against multiple pairs per event
   ULong64_t lastEvent = 0;
@@ -2716,7 +2944,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Add a weight for tauPt reweighting , coefficiencts are from Andrew
       float ptTau_ = ptL2;
       if(ptTau_ > 200.)ptTau_ = 200.;
-      weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+//       weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      weightTauFakeWJet_ = getTauFakeCorrection(ptTau_);
       weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
       weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
@@ -2743,6 +2972,32 @@ void fillTrees_MuTauStream(TChain* currentTree,
     HqTWeightUp = histoUp!=0 ? histoUp->GetBinContent( histoUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
     HqTWeightDown = histoDown!=0 ? histoDown->GetBinContent( histoDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
 
+    if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
+      {
+	mssmHiggsPtReweightGluGlu_mhmax = h_mhmax!=0 ? h_mhmax->GetBinContent( h_mhmax->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_HqTUp = h_mhmax_HqTUp!=0 ? h_mhmax_HqTUp->GetBinContent( h_mhmax_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_HqTDown = h_mhmax_HqTDown!=0 ? h_mhmax_HqTDown->GetBinContent( h_mhmax_HqTDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_HIGLUUp = h_mhmax_HIGLUUp!=0 ? h_mhmax_HIGLUUp->GetBinContent( h_mhmax_HIGLUUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_HIGLUDown = h_mhmax_HIGLUDown!=0 ? h_mhmax_HIGLUDown->GetBinContent( h_mhmax_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_tanBetaUp = h_mhmax_tanBetaUp!=0 ? h_mhmax_tanBetaUp->GetBinContent( h_mhmax_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmax_tanBetaDown = h_mhmax_tanBetaDown!=0 ? h_mhmax_tanBetaDown->GetBinContent( h_mhmax_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+
+	mssmHiggsPtReweightGluGlu_mhmodplus = h_mhmodplus!=0 ? h_mhmodplus->GetBinContent( h_mhmodplus->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_HqTUp = h_mhmodplus_HqTUp!=0 ? h_mhmodplus_HqTUp->GetBinContent( h_mhmodplus_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_HqTDown = h_mhmodplus_HqTDown!=0 ? h_mhmodplus_HqTDown->GetBinContent( h_mhmodplus_HqTDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUUp = h_mhmodplus_HIGLUUp!=0 ? h_mhmodplus_HIGLUUp->GetBinContent( h_mhmodplus_HIGLUUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_HIGLUDown = h_mhmodplus_HIGLUDown!=0 ? h_mhmodplus_HIGLUDown->GetBinContent( h_mhmodplus_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaUp = h_mhmodplus_tanBetaUp!=0 ? h_mhmodplus_tanBetaUp->GetBinContent( h_mhmodplus_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodplus_tanBetaDown = h_mhmodplus_tanBetaDown!=0 ? h_mhmodplus_tanBetaDown->GetBinContent( h_mhmodplus_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+
+	mssmHiggsPtReweightGluGlu_mhmodminus = h_mhmodminus!=0 ? h_mhmodminus->GetBinContent( h_mhmodminus->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_HqTUp = h_mhmodminus_HqTUp!=0 ? h_mhmodminus_HqTUp->GetBinContent( h_mhmodminus_HqTUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_HqTDown = h_mhmodminus_HqTDown!=0 ? h_mhmodminus_HqTDown->GetBinContent( h_mhmodminus_HqTDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUUp = h_mhmodminus_HIGLUUp!=0 ? h_mhmodminus_HIGLUUp->GetBinContent( h_mhmodminus_HIGLUUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_HIGLUDown = h_mhmodminus_HIGLUDown!=0 ? h_mhmodminus_HIGLUDown->GetBinContent( h_mhmodminus_HIGLUDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaUp = h_mhmodminus_tanBetaUp!=0 ? h_mhmodminus_tanBetaUp->GetBinContent( h_mhmodminus_tanBetaUp->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+	mssmHiggsPtReweightGluGlu_mhmodminus_tanBetaDown = h_mhmodminus_tanBetaDown!=0 ? h_mhmodminus_tanBetaDown->GetBinContent( h_mhmodminus_tanBetaDown->FindBin( (*genVP4)[0].Pt() ) ) : 1.0;
+      }
     
     numOfLooseIsoDiTaus_= numOfLooseIsoDiTaus;
 
@@ -2998,7 +3253,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxQCDSoft     = 1.0;
       HLTxIsoMu8Tau20 = 1.0;
 
-      if( !sample.Contains("Emb") ) { // Check trigger matching only for MC
+      if( !sample.Contains("Emb") || sample.Contains("TTJets-Embedded")  ) { // Check trigger matching only for MC
 	
 	// L1 ETM
 	L1etmCorr_     = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
@@ -3121,7 +3376,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;      
 
       weightDecayMode_ = 1.0;
-      if( sample.Contains("Emb") ){
+      if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
 	if(decayMode == 0) weightDecayMode_ = 0.88;
       }
       else{
@@ -3334,6 +3589,41 @@ void fillTrees_MuTauStream(TChain* currentTree,
     // Fill entry
     outTreePtOrd->Fill();
   }
+
+  if(SampleT.Contains("SUSY") && SampleT.Contains("GGH"))
+    {
+      delete h_mhmax ;
+      delete h_mhmax_HqTUp ;
+      delete h_mhmax_HqTDown ;
+      delete h_mhmax_HIGLUUp ;
+      delete h_mhmax_HIGLUDown ;
+      delete h_mhmax_tanBetaUp ;
+      delete h_mhmax_tanBetaDown ;
+
+      delete h_mhmodplus ;
+      delete h_mhmodplus_HqTUp ;
+      delete h_mhmodplus_HqTDown ;
+      delete h_mhmodplus_HIGLUUp ;
+      delete h_mhmodplus_HIGLUDown ;
+      delete h_mhmodplus_tanBetaUp ;
+      delete h_mhmodplus_tanBetaDown ;
+
+      delete h_mhmodminus ;
+      delete h_mhmodminus_HqTUp ;
+      delete h_mhmodminus_HqTDown ;
+      delete h_mhmodminus_HIGLUUp ;
+      delete h_mhmodminus_HIGLUDown ;
+      delete h_mhmodminus_tanBetaUp ;
+      delete h_mhmodminus_tanBetaDown ;
+
+      delete h_lowmH ;
+      delete h_lowmH_HqTUp ;
+      delete h_lowmH_HqTDown ;
+      delete h_lowmH_HIGLUUp ;
+      delete h_lowmH_HIGLUDown ;
+      delete h_lowmH_tanBetaUp ;
+      delete h_lowmH_tanBetaDown ;
+    }
   
   delete jets; /*delete jets_v2;*/ delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete tauXTriggers; delete triggerBits;

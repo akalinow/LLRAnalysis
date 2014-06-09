@@ -17,7 +17,8 @@ datasetpath = $datasetpath
 dbs_url = $dbs_url
 pset = $pset
 total_number_of_$split_type = $total_number
-number_of_jobs = $number_of_jobs
+$split_job_option
+
 output_file = $output_file
 get_edm_output = $get_edm_output
 $lumi_mask
@@ -30,9 +31,7 @@ copy_data = $copy_data
 publish_data = $publish_data
 publish_data_name = $publish_data_name
 dbs_url_for_publication = $dbs_url_for_publication
-storage_element = $storage_element
-user_remote_dir = $user_remote_dir
-#check_user_remote_dir = 0
+$storage_options
 
 [GRID]
 rb = CERN
@@ -42,22 +41,13 @@ $SE_black_list
 ''')
 
 _CRAB_DEFAULTS = {
-    'number_of_jobs' : 150,
+    ##'number_of_jobs' : 300,
     'total_number' : -1,
     'return_data' : 0,
     'copy_data' : 1,
     'use_server' : 0,
     'get_edm_output' : 0,
     'scheduler' : 'remoteGlidein',
-    ##'scheduler' : 'gLite',
-    #------------------------------------
-    # for storing output of crab job on castor @ CERN
-    ##'storage_element' : 'srm-cms.cern.ch',
-    ##'storage_path' : '/srm/managerv2?SFN=/castor/cern.ch',
-    ##'publish_data' : 0,
-    'publish_data_name' : "",
-    'dbs_url_for_publication' : "",
-    #------------------------------------
     #------------------------------------
     # for storing output of crab job on eos @ CERN    
     'storage_element' : 'T2_CH_CERN',
@@ -106,6 +96,32 @@ def submitToGrid(configFile, jobInfo, crabOptions, crabFileName_full = None, ui_
         if fullCrabOptions['runselection']:
             fullCrabOptions['runselection'] = (
                 'runselection = ' + fullCrabOptions['runselection'])
+
+        # CV: Generate commands to tell crab where to store the output file.
+        #     A work-around is needed in order to write to EOS group space,
+        #     as described in https://hypernews.cern.ch/HyperNews/CMS/get/crabFeedback/7094/1/1.html
+        #
+        #     The following setting are used:
+        #      - storage_element = srm-eoscms.cern.ch
+        #       (taken from section "SEs" of https://cmsweb.cern.ch/sitedb/prod/sites/T2_CH_CERN )
+        #      - storage_path = /srm/v2/server?SFN=/eos/cms
+        #       (following section "Stage out and publication to a 'non Official CMS site'" of https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideCrabFaq
+        #        and reverse engineering of the log-file that is created by crab when writing the crab output to /store/user)
+        #      - user_remote_dir = /store/group/...
+        #       (following section "Stage out and publication to a 'non Official CMS site'" of https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideCrabFaq )
+        #
+        storage_options = ""
+        if crabOptions['storage_element'] == 'T2_CH_CERN' and crabOptions['user_remote_dir'].find("/store/group/") != -1:            
+            storage_options += "storage_element = srm-eoscms.cern.ch\n"
+            storage_options += "storage_path = /srm/v2/server?SFN=/eos/cms\n" 
+            storage_options += "user_remote_dir = %s\n" % crabOptions['user_remote_dir']
+        else:
+            storage_options += "storage_element = %s\n" % crabOptions['storage_element']
+            storage_options += "user_remote_dir = %s\n" % crabOptions['user_remote_dir']
+            ##storage_options += "check_user_remote_dir = 0\n"
+        print "storage_options:"
+        print storage_options
+        fullCrabOptions['storage_options'] = storage_options
 
         # Add SE_white_list/SE_back_list commands if specified
         if fullCrabOptions['SE_white_list'] and fullCrabOptions['SE_white_list'] != '':

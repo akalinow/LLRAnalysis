@@ -10,3 +10,75 @@
   <use   name="root"/>
   <use   name="roottmva"/>
 </bin>
+<bin   file="FWLiteTauTauAnalyzer.cc" name="FWLiteTauTauAnalyzer">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="determineJetToTauFakeRate.cc" name="determineJetToTauFakeRate">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="addBackgroundZTT.cc" name="addBackgroundZTT">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="addBackgroundQCD.cc" name="addBackgroundQCD">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="prepareTauTauDatacards.cc" name="prepareTauTauDatacards">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="makeTauTauPlots.cc" name="makeTauTauPlots">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>

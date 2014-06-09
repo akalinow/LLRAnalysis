@@ -110,21 +110,21 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
     //file available only for ZTT, not Zll+fakes
     if(counterZ==1 && counterW==0 && counterH==0){
       genDecay_ = 23;
-      recoilCorr_ = new  RecoilCorrector(inputFileNamezjets_.fullPath().data());
+      recoilCorr_ = new RecoilCorrector(inputFileNamezjets_.fullPath().data());
       recoilCorr_->addMCFile(inputFileNamezmm42X_.fullPath().data());
       recoilCorr_->addDataFile(inputFileNamedatamm_.fullPath().data());
       if(verbose_) cout << "Loading corrections for DY" << endl;
     }
     else if(counterZ==0 && counterW==1 && counterH==0){
       genDecay_ = 24;
-      recoilCorr_ = new  RecoilCorrector(inputFileNamewjets_.fullPath().data());
+      recoilCorr_ = new RecoilCorrector(inputFileNamewjets_.fullPath().data());
       recoilCorr_->addMCFile(inputFileNamezmm42X_.fullPath().data());
       recoilCorr_->addDataFile(inputFileNamedatamm_.fullPath().data());
       if(verbose_) cout << "Loading corrections for W+jets" << endl;
     }
     else if(counterZ==0 && counterW==0 && counterH==1){
       genDecay_ = 25;
-      recoilCorr_ = new  RecoilCorrector(inputFileNamehiggs_.fullPath().data());
+      recoilCorr_ = new RecoilCorrector(inputFileNamehiggs_.fullPath().data());
       recoilCorr_->addMCFile(inputFileNamezmm42X_.fullPath().data());
       recoilCorr_->addDataFile(inputFileNamedatamm_.fullPath().data());
       if(verbose_) cout << "Loading corrections for Higgs" << endl;
@@ -135,7 +135,6 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
       recoilCorr_ = 0;
     }
   }
-
 
   if(recoilCorr_!=0){
 
@@ -205,7 +204,6 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
     double u1 = 0; double u2 = 0;
     int eventDecay=-99;
     unsigned int bosonIndex=0;
-    
    
     for(unsigned int k = 0; k < genParticles->size(); k ++){
 
@@ -238,9 +236,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
       if(verbose_) cout << "Decays to pdgId " << eventDecay/(*genParticles)[k].pdgId()  << endl;
       break;
     }
-    
-    
-    
+        
     // Z/H->tautau, tau->tau_h, tau->l
     if(fabs(eventDecay)==23*15 || fabs(eventDecay)==25*15){
 
@@ -744,8 +740,6 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 
   }
   
-
-
   TLorentzVector LVscaledMETN;
   LVscaledMETN.SetPtEtaPhiM(scaledMETPtN,0,scaledMETPhiN,0);
   scaledMETPxN = LVscaledMETN.Px();
@@ -771,7 +765,6 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
   scaledMETPxDs = LVscaledMETDs.Px();
   scaledMETPyDs = LVscaledMETDs.Py();
 
-
   pat::MET scaledMETN( reco::MET(((*mets)[0]).sumEt(), 
 				 reco::MET::LorentzVector(scaledMETPxN, scaledMETPyN, 0, sqrt(scaledMETPxN*scaledMETPxN+scaledMETPyN*scaledMETPyN)), 
 				 reco::MET::Point(0,0,0)) );
@@ -794,7 +787,6 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 				 reco::MET::Point(0,0,0)) );
   scaledMETDs.setSignificanceMatrix(((*mets)[0]).getSignificanceMatrix());
   
-
   MEtRescaledCollN->push_back(scaledMETN);  
 
   MEtRescaledCollUm->push_back(scaledMETUm);  

@@ -127,7 +127,7 @@ VertexMultiplicityReweightExtractor::VertexMultiplicityReweightExtractor(const e
     type_(kUndefined)
 {
   edm::FileInPath inputFileName = cfg.getParameter<edm::FileInPath>("inputFileName");
-  if ( !inputFileName.isLocal()) throw cms::Exception("VertexMultiplicityReweightExtractor") 
+  if ( !inputFileName.isLocal() ) throw cms::Exception("VertexMultiplicityReweightExtractor") 
     << " Failed to find File = " << inputFileName << " !!\n";
   std::string lutName = cfg.getParameter<std::string>("lutName");
   std::string type_string = cfg.getParameter<std::string>("type");
@@ -222,16 +222,16 @@ double VertexMultiplicityReweightExtractor::operator()(const edm::Event& evt) co
     edm::Handle<PileupSummaryInfoCollection> genPileUpInfos;
     evt.getByLabel(src_, genPileUpInfos);
 
-    int numPileUp_bxPrevious = -1;
-    int numPileUp_inTime     = -1;
-    int numPileUp_bxNext     = -1;
+    float numPileUp_bxPrevious = -1;
+    float numPileUp_inTime     = -1;
+    float numPileUp_bxNext     = -1;
     for ( PileupSummaryInfoCollection::const_iterator genPileUpInfo = genPileUpInfos->begin();
 	  genPileUpInfo != genPileUpInfos->end(); ++genPileUpInfo ) {
       // CV: in-time PU is stored in getBunchCrossing = 0, 
       //    cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupInformation
       int bx = genPileUpInfo->getBunchCrossing();
       //std::cout << "bx = " << bx << ": numPileUpInteractions = " << genPileUpInfo->getPU_NumInteractions() << " (true = " << genPileUpInfo->getTrueNumInteractions() << ")" << std::endl;
-      int numPileUp = genPileUpInfo->getPU_NumInteractions();
+      float numPileUp = genPileUpInfo->getTrueNumInteractions();
       if      ( bx == bxPrevious_ ) numPileUp_bxPrevious = numPileUp;
       else if ( bx ==  0          ) numPileUp_inTime     = numPileUp;
       else if ( bx == bxNext_     ) numPileUp_bxNext     = numPileUp;
