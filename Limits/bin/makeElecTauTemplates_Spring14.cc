@@ -18,6 +18,7 @@
 #define RESCALETO1PB true
 #define DO2DFIT false
 #define OldCat false
+#define HiggsPtReweighting true
 
 using namespace std;
 
@@ -180,12 +181,45 @@ void produce(
   if(bin_.find("vh")!=string::npos) 
     binNameSpace =  "2jet";
 
-  if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos) 
-    binNameSpace =  "btag";
-
+  if(bin_.find("bTag")!=string::npos && bin_.find("nobTag")==string::npos)
+    {
+      binNameSpace =  "btag";
+      if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	{
+// 	  binNameSpace = "btaghigh" ;
+// 	  binNameSpace = "btag_hightau" ;
+	  binNameSpace = "btag_high" ;
+	}
+      else if(bin_.find("bTagLow")!=string::npos)
+	{
+// 	  binNameSpace = "btaglow" ;
+// 	  binNameSpace = "btag_lowtau" ;
+	  binNameSpace = "btag_low" ;
+	}
+    }
   else if(bin_.find("nobTag")!=string::npos)
-    binNameSpace =  "nobtag";
-  
+    {
+      binNameSpace =  "nobtag";
+      if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	{
+// 	  binNameSpace = "nobtaghigh" ;
+// 	  binNameSpace = "nobtag_hightau" ;
+	  binNameSpace = "nobtag_high" ;
+	}
+      else if(bin_.find("nobTagMedium")!=string::npos)
+	{
+// 	  binNameSpace = "nobtagmedium" ;
+// 	  binNameSpace = "nobtag_mediumtau" ;
+	  binNameSpace = "nobtag_medium" ;
+	}
+      else if(bin_.find("nobTagLow")!=string::npos)
+	{
+// 	  binNameSpace = "nobtaglow" ;
+// 	  binNameSpace = "nobtag_lowtau" ;
+	  binNameSpace = "nobtag_low" ;
+	}
+    }
+
   else if(bin_.find("twoJets")!=string::npos) 
     binNameSpace =  "SMpre2";
 
@@ -196,7 +230,11 @@ void produce(
 
   string theory =  !DOSUSY ? "SM" : "MSSM" ;
 
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str()),"UPDATE");
+//   TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str()),"UPDATE");
+  TString WeightNoWeight = "PtWeight" ;
+  if(HiggsPtReweighting) WeightNoWeight = "PtWeight" ;
+  else WeightNoWeight = "NoPtWeight" ;
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_newNames-test4_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
   
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -278,41 +316,70 @@ void produce(
       }
     }
     else{//SUSY
-      TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
-      hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
-      hSgn1->Write(Form("ggH%d%s"   ,mH_,suffix.c_str()));
 
-      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1 ;
+      if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+      hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
+      hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
+
+      TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+      TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
       hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
-      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
-      hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
-      hSgn2->Write(Form("bbH%d%s"   ,mH_,suffix.c_str()));
+//       TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+      TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      //IN test
+      hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+      //
+      hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 
-      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+//       TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+      TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      //IN test
+      hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+      //
+      hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      
+      TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2->SetName(Form("bbH%d%s" ,mH_,suffix.c_str()));
+      hSgn2->Write(Form("bbH%d%s" ,mH_,suffix.c_str()));
+
+      TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 
-      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+      TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
-//       TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-//       hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
+      TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 
-//       TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-//       hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
+      TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      
+      //SM signal
+      TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      hSMGGFH125->SetName("ggH_SM125" );
+      hSMGGFH125->Write("ggH_SM125");
 
-//       TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-//       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//       hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
+      TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      hSMVBFH125->SetName("qqH_SM125" );
+      hSMVBFH125->Write("qqH_SM125");
+
+      TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      hSMVH125->SetName("VH_SM125" );
+      hSMVH125->Write("VH_SM125");
+
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -544,15 +611,23 @@ void produce(
 	    hQCDDown->SetBinContent(b,0.9*hQCDDown->GetBinContent(b));
 	  }
 	}
+	checkValidity(hQCDUp);
 	hQCDUp->Write(QCDShape+"_8TeVUp");
+	checkValidity(hQCDDown);
 	hQCDDown->Write(QCDShape+"_8TeVDown");
       }//suffix
       
       TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
       hQCD_fb->SetName(Form("QCD%s_fine_binning"    ,suffix.c_str()));
+      if(bin_.find("nobTag")!=string::npos){
+	for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	  if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	    hQCD_fb->SetBinContent(b,1.1*hQCD_fb->GetBinContent(b));
+	  }
+	}
+      }
       //checkValidity(hQCD_fb);
       hQCD_fb->Write(Form("QCD%s_fine_binning"    ,suffix.c_str()));
-
       //Add a 10% shape uncert. to QCD for mass < 60 GeV
       if(suffix == ""){
         TString QCDShapeFb("QCD_CMS_htt_QCDShape_etau");
@@ -581,14 +656,62 @@ void produce(
         hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
-        if(suffix == ""){
-          TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-          hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-          hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-          TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-          hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-          hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-        }
+	if(suffix == ""){
+          TString WShape("W_CMS_htt_WShape_etau");
+//           WShape = WShape+"_"+binNameSpace;
+	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");
+	    }	    
+	  else if(bin_.find("nobTagMedium")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }
+	  else if(bin_.find("nobTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }
+	}
       }
       else{
         TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
@@ -597,12 +720,48 @@ void produce(
 
 	//Up/Down for TauFake weight
         if(suffix == ""){
-          TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-          hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
-          hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
-          TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-          hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
-          hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+          TString WShape("W_CMS_htt_WShape_etau");
+//           WShape = WShape+"_"+binNameSpace;
+
+	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }
+	  else if(bin_.find("bTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }	  
+	  else
+	    {
+	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 	      hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
+// 	      hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+	      TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 	      hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
+// 	      hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	    }
         }
       }
 
@@ -612,21 +771,104 @@ void produce(
       
       //Up/Down for TauFake weight
       if(suffix == ""){
+	TString WShape("W_CMS_htt_WShape_etau");
+// 	WShape = WShape+"_"+binNameSpace;
 	if(bin_.find("nobTag")!=string::npos){
-	  TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	  hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	  hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	  TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	  hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
-	  hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+
+	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("nobTagMedium")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("nobTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
 	}
-	else {
-	  TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	  hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	  hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	  TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	  hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
-	  hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	else{
+	  
+	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
+	  else if(bin_.find("bTagLow")!=string::npos)
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
+	  else
+	    {
+	      TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 	      hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+// 	      hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+	      hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+	      hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+	      TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 	      hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+// 	      hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	      hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+	      hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	    }
 	}
       }
      
@@ -663,6 +905,13 @@ void produce(
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
       hTTb->Write(Form("TT%s"        ,suffix.c_str()));
+      TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
       hVV->Write(Form("VV%s"         ,suffix.c_str()));
@@ -711,6 +960,12 @@ void produce(
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"     ,suffix.c_str()));
       hTTb->Write(Form("TT%s"       ,suffix.c_str()));
+      TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
       // ----- VV ------
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
@@ -781,50 +1036,87 @@ void produce(
     }
     else{//SUSY
       if(dir->FindObjectAny(Form("ggH%d%s"         ,mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn1 = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
 	hSgn1->SetName(Form("ggH%d%s" ,mH_,suffix.c_str()));
         hSgn1->Write(Form("ggH%d%s" ,mH_,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
-	TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	TH1F* hSgn1_Up = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
 	hSgn1_Up->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 	hSgn1_Up->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
-	TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hGGH%d",mH_));
+	TH1F* hSgn1_Down = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
 	hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
+// 	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	//IN test
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+	hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+	//
+	hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+	hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
+// 	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	//IN test
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+	hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+	//
+	hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+	hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      }
       if(dir->FindObjectAny(Form("bbH%d%s"          , mH_,suffix.c_str()))==0 ){
-        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+        TH1F* hSgn2 = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2->SetName(Form("bbH%d%s" , mH_,suffix.c_str()));
         hSgn2->Write(Form("bbH%d%s" , mH_,suffix.c_str()));
       }
       if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_))==0){
-	TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	TH1F* hSgn2_Up = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Up->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
 	hSgn2_Up->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_))==0){
-	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hBBH%d",mH_));
+	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
-//       if(dir->FindObjectAny(Form("ggH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn2 = (TH1F*)fin->Get(Form("hGGFH%d",125));
-//         hSMSgn2->SetName(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-// 	hSMSgn2->Write(Form("ggH_SM%d%s" ,125,suffix.c_str()));
-//       }
-//       if(dir->FindObjectAny(Form("qqH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn1 = (TH1F*)fin->Get(Form("hVBFH%d",125));
-// 	hSMSgn1->SetName(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//         hSMSgn1->Write(Form("qqH_SM%d%s" ,125,suffix.c_str()));
-//       }
-//       if(dir->FindObjectAny(Form("VH_SM%d%s"         ,mH_,suffix.c_str()))==0 ){
-//         TH1F* hSMSgn3 = (TH1F*)fin->Get(Form("hVH%d",125));
-//         hSMSgn3->SetName(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//         hSMSgn3->Write(Form("VH_SM%d%s" ,125,suffix.c_str()));
-//       }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
+	TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+	hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
+	TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+	hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      }
+      //SM signal
+      if(dir->FindObjectAny("ggH_SM125")==0 ){
+      	TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
+      	hSMGGFH125->SetName("ggH_SM125");
+      	hSMGGFH125->Write("ggH_SM125");
+      }
+      if(dir->FindObjectAny("qqH_SM125")==0 ){
+      	TH1F* hSMVBFH125 = (TH1F*)fin->Get("hVBFH125");
+      	hSMVBFH125->SetName("qqH_SM125");
+      	hSMVBFH125->Write("qqH_SM125");
+      }
+      if(dir->FindObjectAny("VH_SM125")==0 ){
+      	TH1F* hSMVH125 = (TH1F*)fin->Get("hVH125");
+      	hSMVH125->SetName("VH_SM125");
+      	hSMVH125->Write("VH_SM125");
+      }
     }
 
     if(bin_.find("novbf")!=string::npos){
@@ -1088,9 +1380,15 @@ void produce(
 	
 	TH1F *hQCD_fb = ((TH1F*)fin->Get("hQCD_fb"));
 	hQCD_fb->SetName(Form("QCD%s_fine_binning"    ,suffix.c_str()));
+	if(bin_.find("nobTag")!=string::npos){
+	  for(Int_t b=1;b<=hQCD_fb->GetNbinsX();b++){
+	    if(hQCD_fb->GetBinCenter(b)<=maxBin){
+	      hQCD_fb->SetBinContent(b,1.1*hQCD_fb->GetBinContent(b));
+	    }
+	  }
+	}
 	//checkValidity(hQCD_fb);
 	hQCD_fb->Write(Form("QCD%s_fine_binning"    ,suffix.c_str()));
-
 	//Add a 10% shape uncert. to QCD for mass < 60 GeV
 	if(suffix == ""){
 	  TString QCDShapeFb("QCD_CMS_htt_QCDShape_etau");
@@ -1104,9 +1402,9 @@ void produce(
 	      hQCD_fbDown->SetBinContent(b,0.9*hQCD_fbDown->GetBinContent(b));
 	    }
 	  }
-	  //checkValidity(hQCD_fbUp);
+	  checkValidity(hQCD_fbUp);
 	  hQCD_fbUp->Write(QCDShapeFb+"_8TeVUp_fine_binning");
-	  //checkValidity(hQCD_fbDown);
+	  checkValidity(hQCD_fbDown);
 	  hQCD_fbDown->Write(QCDShapeFb+"_8TeVDown_fine_binning");
 	}
       }
@@ -1118,14 +1416,62 @@ void produce(
           hW->Write(Form("W%s"           ,suffix.c_str()));
 	  
 	  //Up/Down for TauFake weight
-          if(suffix == ""){
-            TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
-	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-            hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
-            TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
-            hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-            hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
-          }
+	  if(suffix == ""){
+	    TString WShape("W_CMS_htt_WShape_etau");
+// 	    WShape = WShape+"_"+binNameSpace;
+	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	    else if(bin_.find("nobTagMedium")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	    else if(bin_.find("nobTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp");
+	      hW_TFUp->SetName(WShape+"_8TeVUp");
+	      hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hW_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown");
+	      hW_TFDown->SetName(WShape+"_8TeVDown");
+	      hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	  }
         }
         else{
           TH1F* hW = ((TH1F*)fin->Get("hWLooseBTag"));
@@ -1133,14 +1479,49 @@ void produce(
           hW->Write(Form("W%s"           ,suffix.c_str()));
 
 	  //Up/Down for TauFake weight
-          if(suffix == ""){
-            TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
-	    hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
-            hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
-            TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
-            hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
-            hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
-          }
+	  if(suffix == ""){
+	    TString WShape("W_CMS_htt_WShape_etau");
+// 	    WShape = WShape+"_"+binNameSpace;
+	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	    else if(bin_.find("bTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }	  
+	    else
+	      {
+		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
+// 		hW_TFUp->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp");
+// 		hW_TFUp->Write("W_CMS_htt_WShape_etau_btag_8TeVUp");
+		hW_TFUp->SetName(WShape+"_8TeVUp");
+		hW_TFUp->Write(WShape+"_8TeVUp");
+		TH1F* hW_TFDown = ((TH1F*)fin->Get("hWLooseBTag_TFDown"));
+// 		hW_TFDown->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown");
+// 		hW_TFDown->Write("W_CMS_htt_WShape_etau_btag_8TeVDown");
+		hW_TFDown->SetName(WShape+"_8TeVDown");
+		hW_TFDown->Write(WShape+"_8TeVDown");	    
+	      }
+	  }
         }
 
 	TH1F* hW_fb = ((TH1F*)fin->Get("hW_fb"));
@@ -1148,22 +1529,99 @@ void produce(
         hW_fb->Write(Form("W%s_fine_binning"           ,suffix.c_str()));
 
 	//Up/Down for TauFake weight
-        if(suffix == ""){
+	if(suffix == ""){
+	  TString WShape("W_CMS_htt_WShape_etau");
+// 	  WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTag")!=string::npos){
-	    TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	    hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	    hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
-	    TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	    hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
-	    hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaghigh_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("nobTagMedium")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtagmedium_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("nobTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_nobtag_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
 	  }
-	  else {
-	    TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
-	    hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	    hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
-	    TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
-	    hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
-	    hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+	  else{
+	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaghigh_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
+	    else if(bin_.find("bTagLow")!=string::npos)
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btaglow_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
+	    else
+	      {
+		TH1F* hW_TFUp_fb = ((TH1F*)fin->Get("hW_TFUp_fb"));
+// 		hW_TFUp_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+// 		hW_TFUp_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVUp_fine_binning");
+		hW_TFUp_fb->SetName(WShape+"_8TeVUp_fine_binning");
+		hW_TFUp_fb->Write(WShape+"_8TeVUp_fine_binning");
+		TH1F* hW_TFDown_fb = ((TH1F*)fin->Get("hW_TFDown_fb"));
+// 		hW_TFDown_fb->SetName("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+// 		hW_TFDown_fb->Write("W_CMS_htt_WShape_etau_btag_8TeVDown_fine_binning");
+		hW_TFDown_fb->SetName(WShape+"_8TeVDown_fine_binning");
+		hW_TFDown_fb->Write(WShape+"_8TeVDown_fine_binning");
+	      }
 	  }
 	}
       }
@@ -1211,6 +1669,14 @@ void produce(
         hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
         hTTb->Write(Form("TT%s"        ,suffix.c_str()));
 	
+        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+ 
+	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+		
 	TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));
         hTTb_fb->SetName(Form("TT%s_fine_binning"        ,suffix.c_str()));
         hTTb_fb->Write(Form("TT%s_fine_binning"        ,suffix.c_str()));
@@ -1274,6 +1740,13 @@ void produce(
 	TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
 	hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
 	hTTb->Write(Form("TT%s"        ,suffix.c_str()));
+        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVUp"));
+ 	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_mutau_8TeVDown"));
+
       }
       // ----- VV ------
       if(dir->FindObjectAny(Form("VV%s"       ,suffix.c_str()))==0 ){
@@ -1375,10 +1848,10 @@ void produce(
   //        /////////////////////////////////////////////
   //        /////////////////////////////////////////////
   //        
-  //        TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hGGFH%d",mH_)) : (TH1F*)fin->Get(Form("hGG%d",mH_));
+  //        TH1F* hSgn2 = !DOSUSY ? (TH1F*)fin->Get(Form("hGGFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYGG%d",mH_));
   //        //hSgn2->Scale(1./rescaleGGFH);
   //        
-  //        TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hVBFH%d",mH_)) : (TH1F*)fin->Get(Form("hBB%d",mH_));
+  //        TH1F* hSgn1 = !DOSUSY ? (TH1F*)fin->Get(Form("hVBFH%d",mH_)) : (TH1F*)fin->Get(Form("hSUSYBB%d",mH_));
   //        //hSgn1->Scale(1./rescaleVBFH);
   //        
   //        TH1F* hSgn3 = (TH1F*)fin->Get(Form("hVH%d",mH_));
@@ -1477,18 +1950,18 @@ void produce(
   //
   //        }
   //        else{//SUSY
-  //          VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral())),
-  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral()))
+  //          VBFrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral())),
+  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral()))
   //                              );
-  //          VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral());
-  //          VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hGG%d",mH_)))->Integral());
+  //          VBFrelUp   = (((TH1F*)fin_jUp->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral());
+  //          VBFrelDown = (((TH1F*)fin_jDown->Get(Form("hSUSYGG%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYGG%d",mH_)))->Integral());
   //
-  //          SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral())),
-  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral()))
+  //          SMrel  = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral())),
+  //                              TMath::Abs((((TH1F*)fin_jDown->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral()))
   //                              );
   //
-  //          SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral());
-  //          SMrelDown = (((TH1F*)fin_jDown->Get(Form("hBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hBB%d",mH_)))->Integral());
+  //          SMrelUp   = (((TH1F*)fin_jUp->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral());
+  //          SMrelDown = (((TH1F*)fin_jDown->Get(Form("hSUSYBB%d",mH_)))->Integral()/((TH1F*)fin->Get(Form("hSUSYBB%d",mH_)))->Integral());
   //        }
   //        float ZTTrel = TMath::Max(TMath::Abs((((TH1F*)fin_jUp->Get("hZtt"))->Integral()/((TH1F*)fin->Get("hZtt"))->Integral())),
   //      			    TMath::Abs((((TH1F*)fin_jDown->Get("hZtt"))->Integral()/((TH1F*)fin->Get("hZtt"))->Integral()))
@@ -1583,8 +2056,9 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
   vector<int> mH;
   vector<std::string> analysis;
 
-  variables.push_back("diTauVisMass");
-//   variables.push_back("diTauNSVfitMass");
+//   variables.push_back("genVPt");
+//   variables.push_back("diTauVisMass");
+  variables.push_back("diTauNSVfitMass");
 //   variables.push_back("ptL2");
 
   if(!DOSUSY){
@@ -1707,11 +2181,42 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 	produce(mH[j],variables[i], "JetUp"   , "bTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "bTag", outputDir,true);
 
+	produce(mH[j],variables[i], "nominal" , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "bTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "bTagLow", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "bTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "bTagHigh", outputDir,true);
+
 	produce(mH[j],variables[i], "nominal" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "TauDown" , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetUp"   , "nobTag", outputDir,true);
 	produce(mH[j],variables[i], "JetDown" , "nobTag", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagLow", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagLow", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagMedium", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagMedium", outputDir,true);
+
+	produce(mH[j],variables[i], "nominal" , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauUp"   , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "TauDown" , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetUp"   , "nobTagHigh", outputDir,true);
+	produce(mH[j],variables[i], "JetDown" , "nobTagHigh", outputDir,true);
+
       }     
     }//mH
   }//variables
@@ -1720,7 +2225,16 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 
 
 void produceAll(){ 
-//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
+  
+  TString OutFileName ;
+  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/eTau*_PtWeight.root") ;
+  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights/datacards/eTau*_NoPtWeight.root") ;
+  TString Command = "rm "+OutFileName ;
+//   gSystem->Exec(Command.Data());
+
+  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
+
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Loose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);
@@ -1782,8 +2296,8 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel_ZeeSFDatacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0BL_ZeeSFDatacards",true); 
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong0Pi0EC_ZeeSFDatacards",true); 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
-  produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0BL_ZeeSFDatacards",true); 
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSDB3H_TauOldDM_OldEleID_ZeeSel1Prong1Pi0EC_ZeeSFDatacards",true);
 
 ///////TauptBins
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_taupt3045_OldEleID_ZeeSel_ZeeSFDatacards",true); 

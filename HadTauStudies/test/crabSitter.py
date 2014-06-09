@@ -29,12 +29,14 @@ import time
 print("<crabSitter>:")
 
 ##crabFilePath = '/afs/cern.ch/work/v/veelken/CMSSW_5_3_x/crab/LLRAnalysis_HadTauStudies'
-crabFilePath = '/afs/cern.ch/work/v/veelken/CMSSW_5_3_x/crab/TauAnalysis_HiggsPtReweighting'
+##crabFilePath = '/afs/cern.ch/work/v/veelken/CMSSW_5_3_x/crab/TauAnalysis_HiggsPtReweighting'
+crabFilePath = '/afs/cern.ch/work/v/veelken/CMSSW_5_3_x/crab/TauAnalysis_Skimming'
 
 statusFileName = 'crabSitter.json'
 
 ##jobName_regex = r'crabdir_patTuple_PAT_SkimHadTauStream_customized_(?P<sample>[a-zA-Z0-9_]*)'
-jobName_regex = r'crabdir_fillHiggsPtHistogram_customized_(?P<sample>[a-zA-Z0-9_]*)'
+##jobName_regex = r'crabdir_fillHiggsPtHistogram_customized_(?P<sample>[a-zA-Z0-9_]*)'
+jobName_regex = r'crabdir_copyToCastor_mssmHtautau_customized_(?P<sample>[a-zA-Z0-9_]*)_2014Mar20'
 
 samples = [
     # leave empty to check all samples    

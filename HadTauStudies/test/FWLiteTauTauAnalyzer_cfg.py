@@ -35,13 +35,15 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     tau2PtMin = cms.double(45.),
     tau2PtMax = cms.double(-1.),
 
+    applyTauTriggerTurnOn = cms.string("tree"),
+
     applyTightBtag = cms.bool(True),
     
     applyBJetLooseToTightWeight = cms.bool(False), # CV: ratio of probabilities for jets to pass tight/loose b-tag discriminators
     bJetLooseToTightWeight = cms.PSet(
         inputFileName = cms.string(""),
-        fitFunctionNormName = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionNorm_SSvrelaxedTightBtag_div_SSvrelaxedLooseBtag"),
-        fitFunctionShapeName_bJet1 = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionShape_bJet1PtL_SSvrelaxedTightBtag_div_SSvrelaxedLooseBtag"),
+        fitFunctionNormName = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionNorm_SSvrelaxed1_vrelaxed2_TightBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"),
+        fitFunctionShapeName_bJet1 = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionShape_bJet1PtL_SSvrelaxed1_vrelaxed2_TightBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"),
         fitFunctionShapePower_bJet1 = cms.double(1.0),
         fitFunctionShapeName_bJet2 = cms.string(""),
         fitFunctionShapePower_bJet2 = cms.double(0.)

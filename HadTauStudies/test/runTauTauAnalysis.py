@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jan10'
 
-version = "v1_6"
+version = "v1_12"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_9/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_3/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -25,8 +25,8 @@ lumiScale_DY = 2.12
 stitchingWeights_DY = [ 1.0, 0.412/lumiScale_DY, 0.167/lumiScale_DY, 0.097/lumiScale_DY, 0.0759/lumiScale_DY ]
 
 lumiScale_W = 8.83
-##stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ]
-stitchingWeights_W = [ 1.0, 3.25/lumiScale_W, 1.06/lumiScale_W, 0.681/lumiScale_W, 0.340/lumiScale_W ]
+stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ] # CV: with "Ext" samples
+##stitchingWeights_W = [ 1.0, 3.25/lumiScale_W, 1.06/lumiScale_W, 0.681/lumiScale_W, 0.340/lumiScale_W ] # CV: without "Ext" samples
 
 def getLumiScale(sample, x_sec = -1.):
     if x_sec < 0.:
@@ -89,11 +89,11 @@ samples = {
             "WJets",
             "WJetsExt",
             "W1Jets",
-            #"W1JetsExt",
+            "W1JetsExt",
             "W2Jets",
-            #"W2JetsExt",
+            "W2JetsExt",
             "W3Jets",
-            #"W3JetsExt",
+            "W3JetsExt",
             "W4Jets"
         ],
         'lumiScale' : lumiScale_W,
@@ -152,7 +152,7 @@ for massPoint in mssmHiggsMassPoints:
         'processes' : [ "ggH%1.0f" % massPoint ],
         'inputFiles' : [ ggSampleName ],
         'lumiScale' : getLumiScale(ggSampleName, 1.*_picobarns), # CV: normalize MSSM Higgs -> tautau signal MCs to cross-section of 1pb
-        'addWeights' : [ "higgsPtWeightNom" ]
+        'addWeights' : [ "mssmHiggsPtReweightGluGlu_mhmax_A_mA%1.0f_mu200_central" % massPoint ]
     }
     bbSampleName = "HiggsSUSYBB%1.0f" % massPoint
     if bbSampleName == "HiggsSUSYBB300":
@@ -169,39 +169,55 @@ def makeJetToTauFakeRateCorrection(par0, par1, par2, par3, x0 = 163.7):
 
 discriminators = {
     'HPScombIso3HitsMedium' : {
-        'tau1Selection'              : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'              : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_relaxed'      : "l1RawDB3HIso < 2.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
-        'tau2Selection_relaxed'      : "l2RawDB3HIso < 2.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_vrelaxed'     : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5 && l2MediumDB3HIso > 0.5)",
-        'tau2Selection_vrelaxed'     : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection' : {
+            'iso'      : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+            'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)",
+            'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)"
+        },
+        'tau2Selection' : {
+            'iso'      : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+            'relaxed'  : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)",
+            'vrelaxed' : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)"
+        },
         'tau1FRwEtaBins'             : [ -1., 1.479, 9.9 ],
         'tau2FRwEtaBins'             : [ -1., 1.479, 9.9 ],
+        ##'tau1FRwEtaBins'             : [ -1., 9.9 ],
+        ##'tau2FRwEtaBins'             : [ -1., 9.9 ],
         # jetToTauFakeRateCorrection taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
     },
     'MVAwLToldDMsTight' : {
-        'tau1Selection'              : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-        'tau2Selection'              : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",        
-        'tau2Selection_relaxed'      : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-        'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
-        'tau2Selection_vrelaxed'     : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+        'tau1Selection' : {
+            'iso'      : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+            'relaxed'  : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)",
+            'vrelaxed' : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLT > 0.5)"
+        },
+        'tau2Selection' : {
+            'iso'      : "l2TightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+            'relaxed'  : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2TightMVAwLT > 0.5)",
+            'vrelaxed' : "l2VLooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2TightMVAwLT > 0.5)"
+        },
         'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+        ##'tau1FRwEtaBins'             : [ -1., 9.9 ],
         'tau2FRwEtaBins'             : [ -1., 9.9 ],
         # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
     },
 ##     'MVAwLToldDMsVTight' : {
-##         'tau1Selection'              : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-##         'tau2Selection'              : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##         'tau1Selection_relaxed'      : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
-##         'tau2Selection_relaxed'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-##         'tau1Selection_vrelaxed'     : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",        
-##         'tau2Selection_vrelaxed'     : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##         'tau1Selection' : {
+##             'iso'      : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+##             'relaxed'  : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)",
+##             'vrelaxed' : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1VTightMVAwLT > 0.5)"
+##         },
+##         'tau2Selection' : {
+##             'iso'      : "l2VTightMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##             'relaxed'  : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2VTightMVAwLT > 0.5)",
+##             'vrelaxed' : "l2VLooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2VTightMVAwLT > 0.5)"
+##         },
 ##         'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+##         ##'tau1FRwEtaBins'             : [ -1., 9.9 ],
 ##         'tau2FRwEtaBins'             : [ -1., 9.9 ],
-##         # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight   
+##          # CV: parameters for jetToTauFakeRateCorrection obtained for MVAwLToldDMsTight
 ##         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
 ##     }
 }
@@ -229,19 +245,19 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
-    'CMS_higgsPtReweight_8TeVUp' : {
+    'CMS_htt_higgsPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : [ "higgsPtWeightUp" ]
+        'addWeights_extension'    : [ "central -> tanBetaLow" ]
     },
-    'CMS_higgsPtReweight_8TeVDown' : {
+    'CMS_htt_higgsPtReweight_8TeVDown' : {
         'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : [ "higgsPtWeightDown" ]
+        'addWeights_extension'    : [ "central -> tanBetaHigh" ]
     },
-    'CMS_ttbarPtReweight_8TeVUp' : {
+    'CMS_htt_ttbarPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightUp" ]
     },
-    'CMS_ttbarPtReweight_8TeVDown' : {
+    'CMS_htt_ttbarPtReweight_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightDown" ]
     },
@@ -256,14 +272,28 @@ central_or_shifts = {
 }
 
 signalRegions = [
-    "OSisoLooseBtag", "OSrelaxedLooseBtag", "OSvrelaxedLooseBtag", "OSrelaxedFRwLooseBtag", "OSvrelaxedFRwLooseBtag", "OSrelaxedFRwLooseBtagFRw", "OSvrelaxedFRwLooseBtagFRw",
-    "OSisoTightBtag", "OSrelaxedTightBtag", "OSvrelaxedTightBtag", "OSrelaxedFRwTightBtag", "OSvrelaxedFRwTightBtag",
-    "SSrelaxedFRwLooseBtag", "SSvrelaxedFRwLooseBtag", "SSrelaxedFRwLooseBtagFRw", "SSvrelaxedFRwLooseBtagFRw",    
-    "SSrelaxedFRwTightBtag", "SSvrelaxedFRwTightBtag"
+    "SSiso1_iso2_LooseBtagFRw",
+    "SSvrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight_LooseBtag", "SSrelaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight_LooseBtag",
+    "SSvrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose_LooseBtag", "SSrelaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose_LooseBtag",
+    "SSvrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight_LooseBtagFRw", "SSrelaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight_TightBtag",
+    "SSvrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose_LooseBtagFRw", "SSrelaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose_TightBtag",
+    "SSiso1_vrelaxed2FRw1stTauTight_LooseBtag", "SSiso1_relaxed2FRw1stTauTight_LooseBtag",
+    "SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag", "SSrelaxed1FRw2ndTauTight_iso2_LooseBtag",
+    "SSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw", "SSrelaxed1FRw2ndTauTight_iso2_TightBtag",
+    "OSvrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight_LooseBtag", "OSrelaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight_LooseBtag",
+    "OSvrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose_LooseBtag", "OSrelaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose_LooseBtag", 
+    "OSvrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight_LooseBtagFRw", "OSrelaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight_TightBtag",
+    "OSvrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose_LooseBtagFRw", "OSrelaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose_TightBtag",
+    "OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag", "OSrelaxed1FRw2ndTauTight_iso2_LooseBtag",
+    "OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw", "OSrelaxed1FRw2ndTauTight_iso2_TightBtag",
+    "OSiso1_iso2_LooseBtag", "OSiso1_iso2_LooseBtagFRw", "OSiso1_iso2_TightBtag"
 ]
 qcdRegions = [
-    "SSisoLooseBtag", "SSrelaxedLooseBtag", "SSvrelaxedLooseBtag", 
-    "SSisoTightBtag", "SSrelaxedTightBtag", "SSvrelaxedTightBtag"
+    "SSrelaxed1_relaxed2_LooseBtag", "SSvrelaxed1_vrelaxed2_LooseBtag", "SSvrelaxed1_vrelaxed2_TightBtag", 
+    "SSiso1_relaxed2_LooseBtag", "SSiso1_vrelaxed2_LooseBtag", 
+    "SSrelaxed1_iso2_LooseBtag", "SSvrelaxed1_iso2_LooseBtag",
+    "SSiso1_iso2_LooseBtag", "SSiso1_iso2_TightBtag",
+    "OSrelaxed1_relaxed2_LooseBtag", "OSvrelaxed1_vrelaxed2_LooseBtag", "OSvrelaxed1_vrelaxed2_TightBtag"
 ]
 regions = []
 regions.extend(signalRegions)
@@ -271,10 +301,10 @@ regions.extend(qcdRegions)
 
 tauPtBins = [
     (45.,-1.), # CV: run for comparison with unbinned analysis HIG-13-021
-##     (45.,60.), # CV: used in no-B-tag and B-tag category
-##     (60.,80.), # CV: used in no-B-tag category
-##     (80.,-1.), # CV: used in no-B-tag category
-##     (60.,-1.)  # CV: used in B-tag category
+    (45.,60.), # CV: used in no-B-tag and B-tag category
+    (60.,80.), # CV: used in no-B-tag category
+    (80.,-1.), # CV: used in no-B-tag category
+    (60.,-1.)  # CV: used in B-tag category
 ]
 
 execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])
@@ -352,7 +382,9 @@ def getStringRep_vstring(collection):
 
 def addWeights_shift_and_remove_central(addWeights_central, addWeights_extension_shift):
     retVal = []
-    retVal.extend(addWeights_extension_shift)
+    for addWeight_shift in addWeights_extension_shift:
+        if addWeight_shift.find("->") == -1:
+            retVal.append(addWeight_shift)
     for addWeight_central in addWeights_central:
         matchesShift = False
         for addWeight_shift in addWeights_extension_shift:
@@ -401,6 +433,11 @@ def getParticleEtaLabel(particleType, particle1EtaMin, particle1EtaMax, particle
     particleEtaBin_label = particleEtaBin_label.replace(".", "")
     return particleEtaBin_label
 
+def runCommand(command):
+    print "Executing '%s'" % command
+    print " It is now: %s" % time.strftime("%c")
+    os.system(command)
+
 #--------------------------------------------------------------------------------
 # CV: declare outputFileNames of determineJetToTauFakeRate macro in advance,
 #     so that files can be used as input when  running FWLiteTauTauAnalyzer macro
@@ -425,18 +462,32 @@ for sample in samples.keys():
     print "processing sample = %s" % sample
     for process in samples[sample]['processes']:
         for region in regions:
-            if region in qcdRegions and (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
+            if region not in [ "OSiso1_iso2_TightBtag", "SSiso1_iso2_TightBtag" ] and (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
                 continue
             central_or_shifts_region = copy.deepcopy(central_or_shifts)
-            if (region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1) and not (sample.find("HiggsSUSYGluGlu") != -1 or sample.find("HiggsSUSYBB") != -1):
+            if region.find("relaxed1FRw") != -1 or region.find("vrelaxed1FRw") != -1 or region.find("relaxed2FRw") != -1 or region.find("vrelaxed2FRw") != -1:
                 tauFR_fitFunctionNormName_Up   = None
                 tauFR_fitFunctionNormName_Down = None
-                if region.find("vrelaxedFRw") != -1 :
-                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
-                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                if region.find("vrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight") != -1 or region.find("vrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose") != -1:                    
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                elif region.find("relaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight") != -1 or region.find("relaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose") != -1:
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                elif region.find("iso1_vrelaxed2FRw1stTauTight") != -1:                    
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                elif region.find("iso1_relaxed2FRw1stTauTight") != -1:                    
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                elif region.find("vrelaxed1FRw2ndTauTight_iso2") != -1:                    
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                elif region.find("relaxed1FRw2ndTauTight_iso2") != -1:                    
+                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
+                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
                 else:
-                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSisoLooseBtag_div_SSrelaxedLooseBtag"
-                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSisoLooseBtag_div_SSrelaxedLooseBtag"
+                    raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
                 central_or_shifts_region.update({
                     'CMS_htt_QCDfrNorm_tautau_8TeVUp' : {
                         'inputFilePath_extension'    : "nom",
@@ -462,11 +513,13 @@ for sample in samples.keys():
                     }})                           
             for central_or_shift in central_or_shifts_region.keys():
 
-                if central_or_shift in [ 'CMS_higgsPtReweight_8TeVUp', 'CMS_higgsPtReweight_8TeVDown' ] and sample.find("HiggsSUSYGluGlu") == -1:
+                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
-                if central_or_shift in [ 'CMS_ttbarPtReweight_8TeVUp', 'CMS_ttbarPtReweight_8TeVDown' ] and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
+                if central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
-                if central_or_shift in [ 'CMS_htt_WShape_tautau_8TeVUp', 'CMS_htt_WShape_tautau_8TeVDown' ] and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
+                if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
+                    continue
+                if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
 
                 inputFileNames = []
@@ -499,7 +552,7 @@ for sample in samples.keys():
                         if region.find("LooseBtagFRw") != -1:
                             FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator].append(
                               hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator])
-                        if region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1:
+                        if region.find("relaxed1FRw") != -1 or region.find("vrelaxed1FRw") != -1 or region.find("relaxed2FRw") != -1 or region.find("vrelaxed2FRw") != -1:
                             FWLiteTauTauAnalyzer_inputFileNames[sample][process][central_or_shift][region][tauPtBin_label][discriminator].append(
                               hadd_determineJetToTauFakeRate_outputFileNames[discriminator])
 
@@ -539,18 +592,23 @@ for sample in samples.keys():
                         cfg_modified += "process.FWLiteTauTauAnalyzer.region = cms.string('%s')\n" % region
                         cfg_modified += "process.FWLiteTauTauAnalyzer.central_or_shift = cms.string('%s')\n" % central_or_shift
                         tau1Selection = None
-                        tau2Selection = None
-                        if region.find("OSiso") != -1 or region.find("SSiso") != -1:
-                            tau1Selection = discriminators[discriminator]['tau1Selection']
-                            tau2Selection = discriminators[discriminator]['tau2Selection']
-                        elif region.find("OSrelaxed") != -1 or region.find("SSrelaxed") != -1:
-                            tau1Selection = discriminators[discriminator]['tau1Selection_relaxed']
-                            tau2Selection = discriminators[discriminator]['tau2Selection_relaxed']    
-                        elif region.find("OSvrelaxed") != -1 or region.find("SSvrelaxed") != -1:
-                            tau1Selection = discriminators[discriminator]['tau1Selection_vrelaxed']
-                            tau2Selection = discriminators[discriminator]['tau2Selection_vrelaxed']                        
+                        if region.find("iso1") != -1:
+                            tau1Selection = discriminators[discriminator]['tau1Selection']['iso']
+                        elif region.find("vrelaxed1") != -1:
+                            tau1Selection = discriminators[discriminator]['tau1Selection']['vrelaxed']
+                        elif region.find("relaxed1") != -1:
+                            tau1Selection = discriminators[discriminator]['tau1Selection']['relaxed']
                         else:
-                            raise ValueError("No tau selection defined for region = '%s' !!" % region)
+                            raise ValueError("No tau1 selection defined for region = '%s' !!" % region)
+                        tau2Selection = None
+                        if region.find("iso2") != -1:
+                            tau2Selection = discriminators[discriminator]['tau2Selection']['iso']
+                        elif region.find("vrelaxed2") != -1:
+                            tau2Selection = discriminators[discriminator]['tau2Selection']['vrelaxed']    
+                        elif region.find("relaxed2") != -1:
+                            tau2Selection = discriminators[discriminator]['tau2Selection']['relaxed']                        
+                        else:
+                            raise ValueError("No tau2 selection defined for region = '%s' !!" % region)
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1Selection = cms.string('%s')\n" % tau1Selection
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMin = cms.double(45.)\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1PtMax = cms.double(-1.)\n"
@@ -565,21 +623,51 @@ for sample in samples.keys():
                             inputFileName = hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator]
                             cfg_modified += "process.FWLiteTauTauAnalyzer.bJetLooseToTightWeight.inputFileName = cms.string('%s')\n" % inputFileName
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyBJetLooseToTightWeight = cms.bool(True)\n"
-                        if region.find("relaxedFRw") != -1 or region.find("vrelaxedFRw") != -1:
+                        if region.find("relaxed1FRw") != -1 or region.find("vrelaxed1FRw") != -1 or region.find("relaxed2FRw") != -1 or region.find("vrelaxed2FRw") != -1:
                             inputFileName = hadd_determineJetToTauFakeRate_outputFileNames[discriminator]
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.inputFileName = cms.string('%s')\n" % inputFileName
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyJetToTauFakeRateLooseToTightWeight = cms.bool(True)\n"
                             fitFunctionNormName = None
-                            fitFunctionShapeName_tau1 = None
-                            fitFunctionShapeName_tau2 = None
-                            if region.find("vrelaxedFRw") != -1:
-                                fitFunctionNormName       = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSvrelaxedLooseBtag"
+                            if region.find("vrelaxed1FRw2ndTauLoose_vrelaxed2FRw1stTauTight") != -1 or region.find("vrelaxed1FRw2ndTauTight_vrelaxed2FRw1stTauLoose") != -1:                    
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                            elif region.find("relaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight") != -1 or region.find("relaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose") != -1:
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                            elif region.find("iso1_vrelaxed2FRw1stTauTight") != -1:                    
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                            elif region.find("iso1_relaxed2FRw1stTauTight") != -1:                    
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                            elif region.find("vrelaxed1FRw2ndTauTight_iso2") != -1:                    
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                            elif region.find("relaxed1FRw2ndTauTight_iso2") != -1:                    
+                                fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
                             else:
-                                fitFunctionNormName       = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSisoLooseBtag_div_SSrelaxedLooseBtag"
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"
+                                raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
+                            fitFunctionShapeName_tau1 = None
+                            if region.find("vrelaxed1FRw2ndTauLoose") != -1:
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_vrelaxed2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                            elif region.find("vrelaxed1FRw2ndTauTight") != -1:
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                            elif region.find("relaxed1FRw2ndTauLoose") != -1:
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_relaxed2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                            elif region.find("relaxed1FRw2ndTauTight") != -1:
+                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
+                            elif region.find("iso1") != -1:
+                                fitFunctionShapeName_tau1 = ""
+                            else:
+                                raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
+                            fitFunctionShapeName_tau2 = None
+                            if region.find("vrelaxed2FRw1stTauLoose") != -1:
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                            elif region.find("vrelaxed2FRw1stTauTight") != -1:
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                            elif region.find("relaxed2FRw1stTauLoose") != -1:
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSrelaxed1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                            elif region.find("relaxed2FRw1stTauTight") != -1:
+                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                            elif region.find("iso2") != -1:
+                                fitFunctionShapeName_tau2 = ""    
+                            else:
+                                raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
                             if 'fitFunctionNormName' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionNormName = central_or_shifts_region[central_or_shift]['fitFunctionNormName']
                             if 'fitFunctionShapeName_tau1' in central_or_shifts_region[central_or_shift].keys():
@@ -589,12 +677,14 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionNormName = cms.string('%s')\n" % fitFunctionNormName
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1 = cms.string('%s')\n" % fitFunctionShapeName_tau1
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2 = cms.string('%s')\n" % fitFunctionShapeName_tau2
+                            fitFunctionShapePower_tau1 = 1.
                             if 'fitFunctionShapePower_tau1' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapePower_tau1 = central_or_shifts_region[central_or_shift]['fitFunctionShapePower_tau1']
-                                cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau1 = cms.double(%f)\n" % fitFunctionShapePower_tau1
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau1 = cms.double(%f)\n" % fitFunctionShapePower_tau1
+                            fitFunctionShapePower_tau2 = 1.
                             if 'fitFunctionShapePower_tau2' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapePower_tau2 = central_or_shifts_region[central_or_shift]['fitFunctionShapePower_tau2']
-                                cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau2 = cms.double(%f)\n" % fitFunctionShapePower_tau2
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapePower_tau2 = cms.double(%f)\n" % fitFunctionShapePower_tau2
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau1EtaBins = cms.vdouble(%s)\n" % getStringRep_vdouble(discriminators[discriminator]['tau1FRwEtaBins'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2EtaBins = cms.vdouble(%s)\n" % getStringRep_vdouble(discriminators[discriminator]['tau2FRwEtaBins'])
                         if 'applyJetToTauFakeRateCorrection' in samples[sample].keys():
@@ -606,7 +696,15 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.stitchingWeights = cms.vdouble(%s)\n" % getStringRep_vdouble(samples[sample]['stitchingWeights'])
                         addWeights = []
                         if 'addWeights' in samples[sample].keys():
-                            addWeights.extend(samples[sample]['addWeights'])                            
+                            for addWeight in samples[sample]['addWeights']:
+                                if sample.find("HiggsSUSYGluGlu") != -1 and addWeight.find("mssmHiggsPtReweightGluGlu") != -1:
+                                    if central_or_shift == "CMS_htt_higgsPtReweight_8TeVUp":
+                                        addWeights.append(addWeight.replace("central", "tanBetaLow"))
+                                        continue
+                                    elif central_or_shift == "CMS_htt_higgsPtReweight_8TeVDown":
+                                        addWeights.append(addWeight.replace("central", "tanBetaHigh"))
+                                        continue
+                                addWeights.append(addWeight)
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
                         if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
@@ -742,7 +840,7 @@ determineBJetLooseToTightWeight_outputFileNames = {} # key = (tau ID) discrimina
 determineBJetLooseToTightWeight_configFileNames = {} # key = (tau ID) discriminator, looseRegion
 determineBJetLooseToTightWeight_logFileNames    = {} # key = (tau ID) discriminator, looseRegion
 for discriminator in discriminators.keys():
-    for looseRegion in [ "SSrelaxedLooseBtag", "SSvrelaxedLooseBtag" ]:
+    for looseRegion in [ "SSvrelaxed1_vrelaxed2_LooseBtag" ]:
         for idxBJet1EtaBin in range(len(bJet1FRwEtaBins) - 1):
             bJet1EtaMin = bJet1FRwEtaBins[idxBJet1EtaBin]
             bJet1EtaMax = bJet1FRwEtaBins[idxBJet1EtaBin + 1]
@@ -786,56 +884,74 @@ for discriminator in discriminators.keys():
             determineBJetLooseToTightWeight_logFileNames[discriminator][looseRegion][bJet1EtaBin_label] = logFileName           
 
 print "Info: building config files for determineJetToTauFakeRate macro"
-determineJetToTauFakeRate_outputFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
-determineJetToTauFakeRate_configFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
-determineJetToTauFakeRate_logFileNames    = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion
+determineJetToTauFakeRate_outputFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion, tight Region
+determineJetToTauFakeRate_configFileNames = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion, tight Region
+determineJetToTauFakeRate_logFileNames    = {} # key = (tau ID) discriminator, category, btagDiscriminator, looseRegion, tight Region
 for discriminator in discriminators.keys():
-    for category in [ "inclusive", "nobtag", "btag" ] :
-        for btagDiscriminator in [ "LooseBtag", "TightBtag" ]:
-            for looseRegion in [ "SSrelaxed%s" % btagDiscriminator, "SSvrelaxed%s" % btagDiscriminator ]:
-                for idxTau1EtaBin in range(len(discriminators[discriminator]['tau1FRwEtaBins']) - 1):
-                    tau1EtaMin = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin]
-                    tau1EtaMax = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin + 1]
-                    tau1EtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, -1., 9.9)
-                    for idxTau2EtaBin in range(len(discriminators[discriminator]['tau2FRwEtaBins']) - 1):
-                        tau2EtaMin = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin]
-                        tau2EtaMax = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin + 1]
-                        tau2EtaBin_label = getParticleEtaLabel("tau", -1., 9.9, tau2EtaMin, tau2EtaMax)
+    for category in [ "inclusive" ] :
+        for btagDiscriminator in [ "LooseBtag" ]:
+            looseRegions = [
+                "SSrelaxed1_relaxed2_%s" % btagDiscriminator, "SSvrelaxed1_vrelaxed2_%s" % btagDiscriminator,
+                "SSiso1_relaxed2_%s" % btagDiscriminator, "SSiso1_vrelaxed2_%s" % btagDiscriminator, 
+                "SSrelaxed1_iso2_%s" % btagDiscriminator, "SSvrelaxed1_iso2_%s" % btagDiscriminator
+            ]
+            for looseRegion in looseRegions:
+                tightRegions = []                
+                if looseRegion.find("vrelaxed1") != -1:
+                    tightRegions.append(looseRegion.replace("vrelaxed1", "iso1"))
+                elif looseRegion.find("relaxed1") != -1:
+                    tightRegions.append(looseRegion.replace("relaxed1", "iso1"))    
+                if looseRegion.find("vrelaxed2") != -1:
+                    tightRegions.append(looseRegion.replace("vrelaxed2", "iso2"))                
+                elif looseRegion.find("relaxed2") != -1:
+                    tightRegions.append(looseRegion.replace("relaxed2", "iso2"))
+                if looseRegion.find("vrelaxed1") != -1 and looseRegion.find("vrelaxed2") != -1:
+                    tightRegions.append(looseRegion.replace("vrelaxed1", "iso1").replace("vrelaxed2", "iso2"))
+                elif looseRegion.find("relaxed1") != -1 and looseRegion.find("relaxed2") != -1:
+                    tightRegions.append(looseRegion.replace("relaxed1", "iso1").replace("relaxed2", "iso2"))
+                for tightRegion in tightRegions:
+                    for idxTau1EtaBin in range(len(discriminators[discriminator]['tau1FRwEtaBins']) - 1):
+                        tau1EtaMin = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin]
+                        tau1EtaMax = discriminators[discriminator]['tau1FRwEtaBins'][idxTau1EtaBin + 1]
+                        tau1EtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, -1., 9.9)
+                        for idxTau2EtaBin in range(len(discriminators[discriminator]['tau2FRwEtaBins']) - 1):
+                            tau2EtaMin = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin]
+                            tau2EtaMax = discriminators[discriminator]['tau2FRwEtaBins'][idxTau2EtaBin + 1]
+                            tau2EtaBin_label = getParticleEtaLabel("tau", -1., 9.9, tau2EtaMin, tau2EtaMax)
                         
-                        tauEtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax)
+                            tauEtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax)
 
-                        outputFileName = os.path.join(outputFilePath, discriminator, "determineJetToTauFakeRate_%s_%s_%s_%s_%s.root" % \
-                          (discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label))                        
-                        initDict(determineJetToTauFakeRate_outputFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
-                        determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = outputFileName
+                            outputFileName = os.path.join(outputFilePath, discriminator, "determineJetToTauFakeRate_%s_%s_%s_%s_%s_%s.root" % \
+                              (discriminator, category, btagDiscriminator, looseRegion, tightRegion, tauEtaBin_label))                        
+                            initDict(determineJetToTauFakeRate_outputFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tightRegion, tauEtaBin_label ])
+                            determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin_label] = outputFileName
             
-                        cfgFileName_original = configFile_determineJetToTauFakeRate
-                        cfgFile_original = open(cfgFileName_original, "r")
-                        cfg_original = cfgFile_original.read()
-                        cfgFile_original.close()
-                        cfg_modified  = cfg_original
-                        cfg_modified += "\n"
-                        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage3_outputFileNames[discriminator]["qcdRegion"]
-                        cfg_modified += "\n"
-                        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
-                        cfg_modified += "\n"
-                        cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
-                        tightRegion = "SSiso%s" % btagDiscriminator
-                        cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
-                        cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s')\n" % category
-                        cfg_modified += "process.determineJetToTauFakeRate.particle1EtaBin = cms.string('%s')\n" % tau1EtaBin_label
-                        cfg_modified += "process.determineJetToTauFakeRate.particle2EtaBin = cms.string('%s')\n" % tau2EtaBin_label
-                        cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_cfg.py" % \
-                          (discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label)))
-                        cfgFile_modified = open(cfgFileName_modified, "w")
-                        cfgFile_modified.write(cfg_modified)
-                        cfgFile_modified.close()
-                        initDict(determineJetToTauFakeRate_configFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
-                        determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = cfgFileName_modified
+                            cfgFileName_original = configFile_determineJetToTauFakeRate
+                            cfgFile_original = open(cfgFileName_original, "r")
+                            cfg_original = cfgFile_original.read()
+                            cfgFile_original.close()
+                            cfg_modified  = cfg_original
+                            cfg_modified += "\n"
+                            cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage3_outputFileNames[discriminator]["qcdRegion"]
+                            cfg_modified += "\n"
+                            cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
+                            cfg_modified += "\n"
+                            cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
+                            cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
+                            cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s')\n" % category
+                            cfg_modified += "process.determineJetToTauFakeRate.particle1EtaBin = cms.string('%s')\n" % tau1EtaBin_label
+                            cfg_modified += "process.determineJetToTauFakeRate.particle2EtaBin = cms.string('%s')\n" % tau2EtaBin_label
+                            cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
+                              (discriminator, category, btagDiscriminator, looseRegion, tightRegion, tauEtaBin_label)))
+                            cfgFile_modified = open(cfgFileName_modified, "w")
+                            cfgFile_modified.write(cfg_modified)
+                            cfgFile_modified.close()
+                            initDict(determineJetToTauFakeRate_configFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tightRegion, tauEtaBin_label ])
+                            determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin_label] = cfgFileName_modified
                     
-                        logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
-                        initDict(determineJetToTauFakeRate_logFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tauEtaBin_label ])
-                        determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin_label] = logFileName
+                            logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+                            initDict(determineJetToTauFakeRate_logFileNames, [ discriminator, category, btagDiscriminator, looseRegion, tightRegion, tauEtaBin_label ])
+                            determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin_label] = logFileName
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -861,8 +977,10 @@ for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
     for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
             for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
-                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
-                    hadd_determineJetToTauFakeRate_inputFileNames[discriminator].append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin])
+                for tightRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion].keys():
+                        hadd_determineJetToTauFakeRate_inputFileNames[discriminator].append(
+                          determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin])
 
     hadd_determineJetToTauFakeRate_logFileNames[discriminator] = hadd_determineJetToTauFakeRate_outputFileNames[discriminator].replace(".root", ".log")
 #--------------------------------------------------------------------------------
@@ -949,7 +1067,7 @@ for discriminator in discriminators.keys():
         cfg_modified += "\n"
         cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage4_outputFileNames[discriminator]
         cfg_modified += "\n"
-        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator]
+        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator][qcdOption]
         cfg_modified += "\n"
         cfg_modified += "process.addBackgroundQCD.tauPtBins = cms.vstring(%s)\n" % getStringRep_vstring([ getTauPtLabel(tauPtBin[0], tauPtBin[1]) for tauPtBin in tauPtBins])
         cfg_modified += "\n"
@@ -1110,8 +1228,9 @@ for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
     for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
             for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
-                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
-                    outputFileNames.append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin])
+                for tightRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion].keys():
+                        outputFileNames.append(determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin])
 for discriminator in hadd_determineBJetLooseToTightWeight_outputFileNames.keys():
     outputFileNames.append(hadd_determineBJetLooseToTightWeight_outputFileNames[discriminator])                    
 for discriminator in hadd_determineJetToTauFakeRate_outputFileNames.keys():
@@ -1128,7 +1247,27 @@ for discriminator in hadd_stage5_outputFileNames.keys():
 for discriminator in prepareTauTauDatacards_outputFileNames.keys():
     outputFileNames.append(prepareTauTauDatacards_outputFileNames[discriminator])
 for discriminator in makeTauTauPlots_outputFileNames.keys():
-    outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator]) 
+    outputFileNames.append(makeTauTauPlots_outputFileNames[discriminator])
+# CV: check existing output files and delete corrupted files (of size < 10 kb)
+for outputFileName in outputFileNames:
+    if (outputFileName.find("FWLiteTauTauAnalyzer") != -1 or outputFileName.find("hadd") != -1) and os.path.isfile(outputFileName):
+        ##isSignalRegion_hadd = False
+        ##if outputFileName.find("hadd") != -1:
+        ##    for signalRegion in signalRegions:
+        ##        if outputFileName.find(signalRegion) != -1:
+        ##            isSignalRegion_hadd = True
+        ##if isSignalRegion_hadd:
+        ##    print "file = %s is 'hadd' file for signal region --> deleting it." % outputFileName
+        ##    command = "%s %s" % (executable_rm, outputFileName)
+        ##    runCommand(command)
+        ##    continue
+        outputFileSize = os.stat(outputFileName).st_size
+        if outputFileSize < 10000:
+            print "file = %s has size = %i --> deleting it." % (outputFileName, outputFileSize)
+            command = "%s %s" % (executable_rm, outputFileName)
+            runCommand(command)
+        ##else:
+        ##    print "file = %s has size = %i --> keeping it." % (outputFileName, outputFileSize)
 makeFile.write("all: %s\n" % make_MakeFile_vstring(outputFileNames))
 makeFile.write("\techo 'Finished running MSSM Higgs -> tau tau -> tau_h tau_h analysis.'\n")
 makeFile.write("\n")
@@ -1205,14 +1344,15 @@ for discriminator in determineJetToTauFakeRate_outputFileNames.keys():
     for category in determineJetToTauFakeRate_outputFileNames[discriminator].keys():
         for btagDiscriminator in determineJetToTauFakeRate_outputFileNames[discriminator][category].keys():
             for looseRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator].keys():
-                for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
-                    makeFile.write("%s: %s\n" %                       
-                      (determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin],
-                       hadd_stage3_outputFileNames[discriminator]["qcdRegion"]))
-                    makeFile.write("\t%s%s %s &> %s\n" %
-                      (nice, executable_determineJetToTauFakeRate,
-                       determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin],
-                       determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tauEtaBin]))
+                for tightRegion in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion].keys():
+                    for tauEtaBin in determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion].keys():
+                        makeFile.write("%s: %s\n" %                       
+                          (determineJetToTauFakeRate_outputFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin],
+                           hadd_stage3_outputFileNames[discriminator]["qcdRegion"]))
+                        makeFile.write("\t%s%s %s &> %s\n" %
+                          (nice, executable_determineJetToTauFakeRate,
+                           determineJetToTauFakeRate_configFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin],
+                           determineJetToTauFakeRate_logFileNames[discriminator][category][btagDiscriminator][looseRegion][tightRegion][tauEtaBin]))
 makeFile.write("\n")
 for discriminator in hadd_determineBJetLooseToTightWeight_outputFileNames.keys():
     makeFile.write("%s: %s\n" %

@@ -22,7 +22,7 @@ def treeSkim( ana, sample, runInSeries=False):
     if runInSeries:
          print "Running in series via the command ..."
          configFileName = "./Configs/treeSkimmerMuTau_Winter13_%s_%s_cfg.py" % (sample,ana)
-         runInSeries   = 'treeSkimmer'+stream+'_Winter13 '+configFileName+'\n'
+         runInSeries   = 'treeSkimmer'+stream+'_Spring14 '+configFileName+'\n'
          print runInSeries
          os.system(runInSeries)
 
@@ -39,7 +39,8 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/home/llr/cms/davignon/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/"\n')
+        f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/"\n')
+        #f.write('export WORKINGDIR="/home/llr/cms/davignon/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/data_CMS/cms/ivo/HTauTauAnalysis/CMSSWRelesases/CMSSW_5_3_11_p6_prodv3/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ndaci/WorkArea/HTauTau/Analysis/CMSSW_534p2_Winter13_Trees/src/LLRAnalysis/Limits/bin/"\n')
         f.write('')
@@ -51,7 +52,7 @@ def treeSkim( ana, sample, runInSeries=False):
         f.write('## source /opt/exp_soft/cms/ROOTLOCAL/v5.28.00/bin/thisroot.sh\n')
         ##
         configFileName = "./Configs/treeSkimmerMuTau_Winter13_%s_%s_cfg.py" % (sample,ana)
-        f.write('treeSkimmer'+stream+'_Winter13 '+configFileName+' > '+fileLog+'\n')
+        f.write('treeSkimmer'+stream+'_Spring14 '+configFileName+' > '+fileLog+'\n')
         f.close()
         os.system('chmod u+x batch/*.sh')
 
@@ -60,7 +61,7 @@ os.system('python makeTreeSkimmerMuTau_Winter13.py')
     
 ###########################################
 ###########################################
-##Data
+## ##Data
 treeSkim("nominal","Run2012A-22Jan2013-Data",False)
 treeSkim("nominal","Run2012B-22Jan2013-p1-Data",False)
 treeSkim("nominal","Run2012B-22Jan2013-p2-Data",False)
@@ -151,8 +152,23 @@ for iAnMC in range(0,len(anaMC)):
 
     treeSkim( anaMC[iAnMC] , "TTJets"        , False)
     treeSkim( anaMC[iAnMC] , "TTJets_SemiLept", False)
-    treeSkim( anaMC[iAnMC] , "TTJets_FullLept", False)
+##     treeSkim( anaMC[iAnMC] , "TTJets_FullLept", False)
+    
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p0", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p1", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p2", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p3", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p4", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p5", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p6", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p7", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p8", False)
+    treeSkim( anaMC[iAnMC] , "TTJets_FullLept_p9", False)
+
     treeSkim( anaMC[iAnMC] , "TTJets_Had"     , False)
+    treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
+
+    
     treeSkim( anaMC[iAnMC] , "T-tW"          , False)
     treeSkim( anaMC[iAnMC] , "Tbar-tW"       , False)
     treeSkim( anaMC[iAnMC] , "WWJetsTo2L2Nu" , False)
@@ -165,9 +181,11 @@ for iAnMC in range(0,len(anaMC)):
     ##treeSkim( anaMC[iAnMC] , "WGstarToLNu2E"     , False)
     ##treeSkim( anaMC[iAnMC] , "WGstarToLNu2Mu"    , False)
     ##treeSkim( anaMC[iAnMC] , "WGstarToLNu2Tau"   , False)
-    treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
 
-    ##SM Higgs MC
+## ##     ##SM Higgs MC
+    treeSkim( anaMC[iAnMC] , "GGFHH125"       , False)
+
+
     treeSkim( anaMC[iAnMC] , "GGFH90"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH95"        , False)
     treeSkim( anaMC[iAnMC] , "GGFH100"       , False)

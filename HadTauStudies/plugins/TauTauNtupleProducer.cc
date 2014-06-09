@@ -60,6 +60,9 @@
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEtFwd.h"
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 
+// Trigger turn-on curves
+#include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
+
 #include <TMath.h>
 
 #include <iostream>
@@ -518,74 +521,6 @@ namespace
   }
   //-----------------------------------------------------------------------------
 
-  //-----------------------------------------------------------------------------
-  // CV: copied from https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorkingSummer2013#TauTau_Trigger
-  
-  // Tau Parked with HLT_DoubleMediumIsoPFTau35_Trk*_eta2p1_v*
-  double eff2012IsoParkedTau19fb_Simone(double pt, double eta) 
-  {
-    return (  0.826969 * 0.5 * (TMath::Erf((pt - 42.2274)/2./0.783258 /sqrt(pt)) + 1.) ) ; // only one eta bin
-  }
-
-  double eff2012IsoParkedTau19fbMC_Simone(double pt, double eta) 
-  {
-    const double data_plateau = 0.826969 ;
-    if      ( pt < 140. ) return ( 0.813769 * 0.5 * (TMath::Erf((pt - 39.9322)/2./0.819354 /sqrt(pt)) + 1.) ) ; // only one eta bin
-    else if ( pt > 400. ) return data_plateau / 2.03467;
-    else if ( pt > 300. ) return data_plateau / 1.31593;
-    else if ( pt > 250. ) return data_plateau / 1.25698;
-    else if ( pt > 200. ) return data_plateau / 1.18941;
-    else if ( pt > 180. ) return data_plateau / 1.17448;
-    else if ( pt > 160. ) return data_plateau / 1.0964 ;
-    else                  return data_plateau / 1.09279;
-  }
-
-  double eff2012IsoTau19fb_Simone(double pt, double eta) {
-    if ( fabs(eta) < 1.4 ) {
-      return (  808.411  * ( 0.764166 * 0.5 * (TMath::Erf((pt - 33.2236)/2./0.97289 /sqrt(pt)) + 1.))   // 2012A by Bastian not split in eta
-              + 4428.0   * ( 0.75721  * 0.5 * (TMath::Erf((pt - 39.0836)/2./1.07753 /sqrt(pt)) + 1.))   // 2012B
-              + 6892.158 * ( 0.791464 * 0.5 * (TMath::Erf((pt - 38.4932)/2./1.01232 /sqrt(pt)) + 1.))   // 2012C measured in v2 only
-              + 7274.    * ( 0.779446 * 0.5 * (TMath::Erf((pt - 38.4603)/2./1.01071 /sqrt(pt)) + 1.)) ) // 2012D measured in one go
-              /( 808.411 + 4428.0 + 6892.158 + 7274. );
-    } else {
-      return (  808.411  * ( 0.764166 * 0.5 * (TMath::Erf((pt - 33.2236)/2./0.97289 /sqrt(pt)) + 1.))   // 2012A by Bastian not split in eta
-              + 4428.0   * ( 0.693788 * 0.5 * (TMath::Erf((pt - 37.7719)/2./1.09202 /sqrt(pt)) + 1.))   // 2012B
-              + 6892.158 * ( 0.698909 * 0.5 * (TMath::Erf((pt - 36.5533)/2./1.05743 /sqrt(pt)) + 1.))   // 2012C measured in v2 only
-              + 7274.    * ( 0.703532 * 0.5 * (TMath::Erf((pt - 38.8609)/2./1.05514 /sqrt(pt)) + 1.)) ) // 2012D measured in one go
-              /( 808.411 + 4428.0 + 6892.158 + 7274. );
-    } 
-  }
-
-  double eff2012IsoTau19fbMC_Simone(double pt, double eta)
-  {
-    if ( fabs(eta) < 1.4 ) {
-      return ( 0.807425 * 0.5 * (TMath::Erf((pt - 35.2214)/2./1.04214  /sqrt(pt)) + 1.) ) ;
-    } else {
-      return ( 0.713068 * 0.5 * (TMath::Erf((pt - 33.4584)/2./0.994692 /sqrt(pt)) + 1.) ) ;
-    }
-  }
-
-  double eff2012Jet19fb(double pt, double eta)
-  {
-    return ( abs(eta) <= 2.1 )*
-    ( ( 808.411 * ( 0.99212  * 0.5 * (TMath::Erf((pt - 31.3706)/2./1.22821/sqrt(pt)) + 1.))
-      + 4428.0  * ( 0.99059  * 0.5 * (TMath::Erf((pt - 32.1104)/2./1.23292/sqrt(pt)) + 1.))
-      + 1783.003* ( 0.988256 * 0.5 * (TMath::Erf((pt - 31.3103)/2./1.18766/sqrt(pt)) + 1.))
-      + 5109.155* ( 0.988578 * 0.5 * (TMath::Erf((pt - 31.6391)/2./1.22826/sqrt(pt)) + 1.))
-      + 4131.   * ( 0.989049 * 0.5 * (TMath::Erf((pt - 31.9836)/2./1.23871/sqrt(pt)) + 1.))
-      + 3143.   * ( 0.988047 * 0.5 * (TMath::Erf((pt - 31.6975)/2./1.25372/sqrt(pt)) + 1.)))
-    /(808.411+4428.0+1783.003+5109.155+4131+3143)) +
-    ( abs(eta) > 2.1 )*
-    ( ( 808.411 *( 0.969591  * 0.5 * (TMath::Erf((pt - 36.8179)/2./0.904254/sqrt(pt)) + 1.))
-      + 4428.0  *( 0.975932  * 0.5 * (TMath::Erf((pt - 37.2121)/2./0.961693/sqrt(pt)) + 1.))
-      + 1783.003*( 0.990305  * 0.5 * (TMath::Erf((pt - 36.3096)/2./0.979524/sqrt(pt)) + 1.))
-      + 5109.155*( 0.971612  * 0.5 * (TMath::Erf((pt - 36.2294)/2./0.871726/sqrt(pt)) + 1.))
-      + 4131.   *( 0.977958  * 0.5 * (TMath::Erf((pt - 37.131 )/2./0.987523/sqrt(pt)) + 1.))
-      + 3143.   *( 0.968457  * 0.5 * (TMath::Erf((pt - 36.3159)/2./0.895031/sqrt(pt)) + 1.)))
-    /(808.411+4428.0+1783.003+5109.155+4131+3143));
-  }    
-  //-----------------------------------------------------------------------------
-
   TFile* openFile(const edm::FileInPath& inputFileName)
   {
     if ( !inputFileName.isLocal() ) throw cms::Exception("TauTauNtupleProducer") 
@@ -622,23 +557,31 @@ namespace
 
   double compTopPtWeight(double top1Pt, double top2Pt)
   {
+    //std::cout << "<compTopPtWeight>:" << std::endl;
     double topPtWeight2 = compTopPtWeight(top1Pt)*compTopPtWeight(top2Pt);
+    //std::cout << " top1Pt = " << top1Pt << ", top2Pt = " << top2Pt << ": topPtWeight2 = " << topPtWeight2 << std::endl;
     return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
   }
   //-----------------------------------------------------------------------------
 
-  bool findGenParticle(const reco::GenParticleCollection& genParticles, int absPdgId1, int absPdgId2, int absPdgId3, reco::Candidate::LorentzVector& p4)
+  bool findGenParticle(const reco::GenParticleCollection& genParticles, int pdgId1, int pdgId2, int pdgId3, reco::Candidate::LorentzVector& p4)
   {
+    //std::cout << "<findGenParticle>:" << std::endl;
+    //std::cout << " pdgId1 = " << pdgId1 << std::endl;
+    //std::cout << " pdgId2 = " << pdgId2 << std::endl;
+    //std::cout << " pdgId3 = " << pdgId3 << std::endl;
     for ( reco::GenParticleCollection::const_iterator genParticle = genParticles.begin();
 	  genParticle != genParticles.end(); ++genParticle ) {
-      int absGenParticlePdgId = TMath::Abs(genParticle->pdgId());
-      if ( (absPdgId1 != 0 && absGenParticlePdgId == absPdgId1) ||
-	   (absPdgId2 != 0 && absGenParticlePdgId == absPdgId2) ||
-	   (absPdgId3 != 0 && absGenParticlePdgId == absPdgId3) ) {
+      int genParticlePdgId = genParticle->pdgId();
+      if ( (pdgId1 != 0 && genParticlePdgId == pdgId1) ||
+	   (pdgId2 != 0 && genParticlePdgId == pdgId2) ||
+	   (pdgId3 != 0 && genParticlePdgId == pdgId3) ) {
 	p4 = genParticle->p4();
+	//std::cout << "--> returning true." << std::endl;
 	return true;
       }
     }
+    //std::cout << "--> returning false." << std::endl;
     return false;
   }
 
@@ -659,7 +602,7 @@ namespace
 	  std::string genTauDecayMode = getGenTauDecayMode(&(*genParticle));
 	  if ( genTauDecayMode == "electron" ) {
 	    matchesGenElectron = true;
-	  } else if ( genTauDecayMode == "muons" ) {
+	  } else if ( genTauDecayMode == "muon" ) {
 	    matchesGenMuon = true;
 	  } else {
 	    matchesGenHadTau = true;
@@ -1009,7 +952,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     evt.getByLabel(srcLHE_, LHE);
     if ( LHE.isValid() ) {
       setValueF("NUP", LHE->hepeup().NUP);
-    }
+    } 
   }
 
   if ( isMC_ || isEmbedded_ ) {

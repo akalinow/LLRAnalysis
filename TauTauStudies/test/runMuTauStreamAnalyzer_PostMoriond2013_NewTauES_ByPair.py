@@ -70,6 +70,7 @@ process.source = cms.Source(
         #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
         #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/SUSYGGH120/patTuples_LepTauStream_100_1_coi.root'
         'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/SUSYGGH800/patTuples_LepTauStream_100_1_ONJ.root'
+        #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/TTbarJets_NewTauID/patTuples_LepTauStream_TTJets_FullLeptMGDecays_8TeV_93_1_IeY.root'
         #'file:patTuples_LepTauStream.root'
         #'file:VBFH125.root'
         #'file:data2012D.root'        

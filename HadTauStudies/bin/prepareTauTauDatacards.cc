@@ -20,6 +20,7 @@
 
 #include <TFile.h>
 #include <TH1.h>
+#include <TArrayD.h>
 #include <TBenchmark.h>
 #include <TMath.h>
 #include "TPRegexp.h"
@@ -37,6 +38,18 @@ typedef std::vector<std::string> vstring;
 
 namespace
 {
+  TArrayD getBinning(const TH1* histogram)
+  {
+    TAxis* xAxis = histogram->GetXaxis();
+    int numBins = xAxis->GetNbins();
+    TArrayD binning(numBins + 1);
+    for ( int iBin = 1; iBin <= numBins; ++iBin ) {
+      binning[iBin - 1] = xAxis->GetBinLowEdge(iBin);
+      binning[iBin] = xAxis->GetBinUpEdge(iBin);
+    }
+    return binning;
+  }
+
   void copyHistogram(TDirectory* dir_input, const std::string& process, const std::string& histogramName_input, 
 		     const std::string& histogramName_output, const std::string& central_or_shift, bool enableException)
   {
@@ -61,7 +74,24 @@ namespace
     std::string histogramName_output_full = process;
     if ( !(central_or_shift == "" || central_or_shift == "central") ) histogramName_output_full.append("_").append(central_or_shift);
     if ( histogramName_output != "" ) histogramName_output_full.append("_").append(histogramName_output);
-    TH1* histogram_output = (TH1*)histogram_input->Clone(histogramName_output_full.data());
+    // CV: save output histogram as TH1F in order to keep size of datacard.root files small;
+    //     and also because the tailfit macro HiggsAnalysis/HiggsToTauTau/macros/addAllNuisance.C
+    //     saves its output as TH1F, which causes error message
+    //         File "/afs/cern.ch/user/v/veelken/scratch0/mssmHtautauLimits/CMSSW_6_1_1/python/HiggsAnalysis/CombinedLimit/ShapeTools.py", line 386, in getPdf
+    //           if shapeUp.ClassName()   != shapeNominal.ClassName(): raise RuntimeError, "Mismatched shape types for channel %s, process %s, syst %s" % (channel,process,syst)
+    //       RuntimeError: Mismatched shape types for channel htt_tt_14_8TeV, process QCD, syst CMS_htt_QCDfrNorm_tautau_8TeV
+    //     in case one mixes TH1D and TH1F
+    //histogram_output = (TH1*)histogram_input->Clone(histogramName_output_full.data());
+    TArrayD histogramBinning = getBinning(histogram_input);
+    int numBins = histogramBinning.GetSize() - 1;
+    TH1* histogram_output = new TH1F(histogramName_output_full.data(), histogramName_output_full.data(), numBins, histogramBinning.GetArray());
+    if ( !histogram_output->GetSumw2N() ) histogram_output->Sumw2();
+    for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
+      double binContent = histogram_input->GetBinContent(iBin);
+      histogram_output->SetBinContent(iBin, binContent);
+      double binError = histogram_input->GetBinError(iBin);
+      histogram_output->SetBinError(iBin, binError);
+    }
   }
     
   std::string getSubdirNameOutput(const std::string& category, const std::string& tauPtBin) 
@@ -69,13 +99,12 @@ namespace
     // CV: workaround for compatibility with HIG-13-021 datacards
     //     that do not use tauPt bins
     std::string subdirName_output = "";
-    if ( tauPtBin == "tau1PtGt45tau2PtGt45" ) subdirName_output = Form("tauTau_%s", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_lowtau", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt60to80" ) subdirName_output = Form("tauTau_%s_mediumtau", category.data());
-    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2PtGt80"   ) subdirName_output = Form("tauTau_%s_hightau", category.data());
-    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_lowtau", category.data());
-    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2PtGt60"   ) subdirName_output = Form("tauTau_%s_hightau", category.data());
-    else subdirName_output = Form("tauTau_%s_%s", category.data(), tauPtBin.data());
+    if      (                                                      tauPtBin == "tau1PtGt45tau2PtGt45"   ) subdirName_output = Form("tauTau_%s",        category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_low",    category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2Pt60to80" ) subdirName_output = Form("tauTau_%s_medium", category.data());
+    else if ( (category == "inclusive" || category == "nobtag") && tauPtBin == "tau1PtGt45tau2PtGt80"   ) subdirName_output = Form("tauTau_%s_high",   category.data());
+    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2Pt45to60" ) subdirName_output = Form("tauTau_%s_low",    category.data());
+    else if (  category == "btag"                               && tauPtBin == "tau1PtGt45tau2PtGt60"   ) subdirName_output = Form("tauTau_%s_high",   category.data());
     return subdirName_output;
   }
 }
@@ -169,6 +198,7 @@ int main(int argc, char* argv[])
 	      std::cout << "histogramToCopy = " << histogramToCopy->first << ", central_or_shift = " << (*central_or_shift) << std::endl;
 
 	      std::string subdirName_output = getSubdirNameOutput(*category, *tauPtBin);
+	      if ( subdirName_output == "" ) continue; // CV: skip tau Pt bins that are not used in datacards, in order to keep size of datacard.root files small
 	      TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);
 	      subdir_output->cd();
 	      copyHistogram(subdir, subdir->GetName(), histogramToCopy->first, histogramToCopy->second, *central_or_shift, (*central_or_shift) == "" || (*central_or_shift) == "central");	      

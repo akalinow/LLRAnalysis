@@ -469,7 +469,7 @@ bbSampleName = "HiggsSUSYBB300v2"
 RECO_SAMPLES[bbSampleName] = {
     'datasetpath'      : '/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM',
     'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
-    'events_processed' : 2000000,
+    'events_processed' : eventsProcessed["bbPhi_300"],
     'events_per_job'   : 20000,
     'type'             : 'bsmMC'
 }

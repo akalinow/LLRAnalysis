@@ -32,8 +32,8 @@ class TauTauHistManager
 
   /// book and fill histograms
   void bookHistograms(TFileDirectory&);
-  void fillHistograms(double, double, double, int, double, double, 
-		      double, double, double, int, double, double, 
+  void fillHistograms(double, double, double, int, int, double, double, 
+		      double, double, double, int, int, double, double, 
 		      double, double, double, 
 		      double, double, 
 		      double, double, double, double, 
@@ -95,8 +95,9 @@ class TauTauHistManager
   TH1* histogramTau1Eta_;
   TH1* histogramTau1Phi_;
   TH1* histogramTau1DecayMode_;
-  TH1* histogramTau1IsoDiscrS_;
-  TH1* histogramTau1IsoDiscrL_;
+  TH1* histogramTau1GenMatch_;
+  TH1* histogramTau1IsoPtSum_;
+  TH1* histogramTau1MVA_;
 
   TH1* histogramTau2PtS_;
   TH1* histogramTau2PtL_;
@@ -104,8 +105,9 @@ class TauTauHistManager
   TH1* histogramTau2Eta_;
   TH1* histogramTau2Phi_;
   TH1* histogramTau2DecayMode_;
-  TH1* histogramTau2IsoDiscrS_;
-  TH1* histogramTau2IsoDiscrL_;
+  TH1* histogramTau2GenMatch_;
+  TH1* histogramTau2IsoPtSum_;
+  TH1* histogramTau2MVA_;
 
   TH1* histogramVisMassS_;
   TH1* histogramVisMassL_;

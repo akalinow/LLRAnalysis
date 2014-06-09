@@ -430,7 +430,7 @@ def drange(start, stop, step):
 
 mssmHiggsPtReweights = []
 
-mssm_models = [ "mhmax" , "mhmod+", "mhmod-", "low-mH" ]
+mssm_models = [ "mhmax" , "mhmod+", "mhmod-", "low-mH", 'tau-phobic', 'light_stop', 'light_stau' ]
 if applyHiggsMassCut:
     for mssm_model in mssm_models:
         inputFileName = None
@@ -448,15 +448,33 @@ if applyHiggsMassCut:
             elif mssm_model == "mhmod-":
                 inputFileName = "mssmHiggsPtReweightGluGlu_mhmod-.root"
                 moduleName = "mhmodMinusHiggsPtReweightGluGlu"
-            mA_values = [ 90, 100, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+            mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
             mu_values = [ 200, ]
-            instanceLabel = "$higgsTypemA$mA$central_or_shift"
+            instanceLabel = "$higgsTypemA$mA$central_or_shift"            
         elif mssm_model in [ "low-mH" ]:
             inputFileName = "mssmHiggsPtReweightGluGlu_low-mH.root"
             moduleName = "lowmHHiggsPtReweightGluGlu"
             mA_values = [ 110, ]
             mu_values = [ mu_value for mu_value in drange(300, 3501, 200) ]
             instanceLabel = "$higgsTypemu$mu$central_or_shift"
+        elif mssm_model in [ "tau-phobic" ]:
+            inputFileName = "mssmHiggsPtReweightGluGlu_tau-phobic.root"
+            moduleName = "tauphobicHiggsPtReweightGluGlu"
+            mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+            mu_values = [ 2000, ]
+            instanceLabel = "$higgsTypemA$mA$central_or_shift"
+        elif mssm_model in [ "light_stop"] :
+            inputFileName = "mssmHiggsPtReweightGluGlu_light_stop.root"
+            moduleName = "lightstopHiggsPtReweightGluGlu"
+            mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+            mu_values = [ 350, ]
+            instanceLabel = "$higgsTypemA$mA$central_or_shift"
+        elif mssm_model in [ "light_stau" ]:
+            inputFileName = "mssmHiggsPtReweightGluGlu_light_stau.root"
+            moduleName = "lightstauHiggsPtReweightGluGlu"
+            mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+            mu_values = [ 500, ]
+            instanceLabel = "$higgsTypemA$mA$central_or_shift"    
         if not (inputFileName and mA_values and mu_values and moduleName and instanceLabel):
             raise ValueError("Invalid MSSM model = %s !!" % mssm_model)        
         mssmHiggsPtReweightProducerGluGlu = cms.EDProducer("MSSMHiggsPtReweightProducerGluGlu",

@@ -18,7 +18,7 @@ import time
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
 jobId = '2014Jan10'
 
-version = "v1_8"
+version = "v1_12"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 ##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
@@ -85,7 +85,7 @@ def createFilePath(filePath):
         print "filePath = %s does not yet exist, creating it." % filePath
         eos.mkdir(filePath)
         time.sleep(3)
-        eos.chmod(filePath, 777)
+        eos.chmod(filePath, 750)
 
 def createFilePath_recursively(filePath):
     filePath_items = filePath.split('/')
@@ -307,7 +307,7 @@ for sampleToAnalyze in samplesToAnalyze:
 
             bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift][chunkId] = bsubScriptFileName
  
-            bsubJobName = "TauTauNtuple%s_%s_%i" % (sampleToAnalyze, nom_or_sysShift, chunkId)
+            bsubJobName = "TauTauNtuple_%s_%s_%i" % (sampleToAnalyze, nom_or_sysShift, chunkId)
             bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId] = bsubJobName
 
     numEventsFile = open(numEventsFileName, "w")

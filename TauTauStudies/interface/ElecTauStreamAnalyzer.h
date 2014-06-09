@@ -145,6 +145,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genMETP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genVP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* genEleFromVP4_;
+  std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* gentopP4_;
   int NumEleFromV_;
   int genDecay_;
   int hepNUP_;
@@ -355,6 +356,11 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float higgsPtWeightNom_ ;
   float higgsPtWeightUp_ ;
   float higgsPtWeightDown_ ;
+
+  //IN top pt reweighting
+  float topPtWeightNom_ ;
+  float topPtWeightUp_ ;
+  float topPtWeightDown_ ;
 
   float mcPUweight_;
 

@@ -19,7 +19,7 @@ process.fwliteOutput = cms.PSet(
 
 process.prepareTauTauDatacards = cms.PSet(
 
-    signalRegion = cms.string("OSisoTightBtag"),
+    signalRegion = cms.string("OSiso1_iso2_TightBtag"),
 
     processesToCopy = cms.vstring(
         "data_obs",
@@ -29,6 +29,7 @@ process.prepareTauTauDatacards = cms.PSet(
         "W",
         "ggH_SM[0-9]+",
         "qqH_SM[0-9]+",
+	"VH_SM[0-9]+",
         "TT",
         "VV",
         "QCD",
@@ -52,10 +53,12 @@ process.prepareTauTauDatacards = cms.PSet(
     sysShifts = cms.vstring(
         "CMS_scale_t_tautau_8TeVUp",
         "CMS_scale_t_tautau_8TeVDown",
-        "CMS_higgsPtReweight_8TeVUp",
-        "CMS_higgsPtReweight_8TeVDown",
-        "CMS_ttbarPtReweight_8TeVUp",
-        "CMS_ttbarPtReweight_8TeVDown",        
+        "CMS_eff_t_mssmHigh_tautau_8TeVUp",
+        "CMS_eff_t_mssmHigh_tautau_8TeVDown",
+        "CMS_htt_higgsPtReweight_8TeVUp",
+        "CMS_htt_higgsPtReweight_8TeVDown",
+        "CMS_htt_ttbarPtReweight_8TeVUp",
+        "CMS_htt_ttbarPtReweight_8TeVDown",        
         "CMS_htt_WShape_tautau_8TeVUp",
         "CMS_htt_WShape_tautau_8TeVDown",
         "CMS_htt_QCDfrNorm_tautau_8TeVUp",
