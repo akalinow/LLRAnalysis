@@ -1,3 +1,4 @@
+
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 
 #include <cstdlib>
@@ -415,28 +416,31 @@ void drawHistogram(TCut sbinPair,
 //       cout<<"weightW : "<<weightW<<endl;
       
 
-      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*weightDecayMode)";
-      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
-      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*weightDecayMode)";
+      if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*ZmmWeight*weightDecayMode)";
+      else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*ZmmWeight*weightDecayMode)";
+      else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*ZmmWeight*weightDecayMode)";
       else if(!version_.Contains("Soft")) {
-	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*weightDecayMode)";
-	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode)";
+	if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*ZmmWeight*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*ZmmWeight*weightDecayMode)";
+	else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*ZmmWeight*weightDecayMode)";
       }      
 
       // DecayModeNoCorr
       if(version_.Contains("DecayModeNoCorr"))
 	{
-	  if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC)";
-	  else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
-	  else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D)";
+	  if(     version_.Contains("SoftABC"))  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABCShift*SFTau*SFMu_ABC*ZmmWeight)";
+	  else if(version_.Contains("SoftD"))    weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*ZmmWeight)";
+	  else if(version_.Contains("SoftLTau")) weight = "(puWeightDLow*puWeightDHigh*HLTTauD*HLTMuSoft*SFTau*SFMu_D*ZmmWeight)";
 	  else if(!version_.Contains("Soft")) {
-	    if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC)";
-	    else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D)";
-	    else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu)";
+	    if(     RUN=="ABC")                  weight = "(puWeightHCP*HLTweightTauABC*HLTweightMuABC*SFTau*SFMu_ABC*ZmmWeight)";
+	    else if(RUN=="D")                    weight = "(puWeightD*HLTweightTauD*HLTweightMuD*SFTau*SFMu_D*ZmmWeight)";
+	    else                                 weight = "(puWeight*HLTweightTau*HLTweightMu*SFTau*SFMu*ZmmWeight)";
 	  }      
 	}
 
+    if(version_.Contains("NoPU")) {
+      weight = "(HLTweightTau*HLTweightMu*SFTau*SFMu*weightDecayMode*ZmmWeight)";
+    }
       //to be used when weight is available
       if(!type.Contains("SUSY"))
 	{
@@ -464,28 +468,28 @@ void drawHistogram(TCut sbinPair,
 
       if(version_.Contains("Soft")) {
 	weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight";
-	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*weightDecayMode)";
-	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*weightDecayMode)";
-	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*weightDecayMode)";
+	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*ZmmWeight*weightDecayMode)";
+	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*ZmmWeight*weightDecayMode)";
+	else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*ZmmWeight*weightDecayMode)";
       }
       else if(!version_.Contains("Soft")) {
-	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*weightDecayMode)";
-	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*weightDecayMode)";
-	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*weightDecayMode)";
+	if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*ZmmWeight*weightDecayMode)";
+	else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*ZmmWeight*weightDecayMode)";
+	else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*ZmmWeight*weightDecayMode)";
       }
 
       if(version_.Contains("DecayModeNoCorr"))
 	{
 	  if(version_.Contains("Soft")) {
-	    weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight";
-	    if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC)";
-	    else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D)";
-	    else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D)";
+	    weightEmb = "embeddingFilterEffWeight*TauSpinnerWeight*ZmumuEffWeight*ZmmWeight";
+	    if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTMuABCShift*SFTau*SFMuID_ABC*ZmmWeight)";
+	    else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*ZmmWeight)";
+	    else if(version_.Contains("SoftLTau")) weight = "(HLTTauD*HLTMuSoft*SFTau*SFMuID_D*ZmmWeight)";
 	  }
 	  else if(!version_.Contains("Soft")) {
-	    if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC)";
-	    else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D)";
-	    else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID)";
+	    if(RUN=="ABC")                       weight = "(HLTTauABC*HLTMuABC*SFTau*SFMuID_ABC*ZmmWeight)";
+	    else if(RUN=="D")                    weight = "(HLTTauD*HLTMuD*SFTau*SFMuID_D*ZmmWeight)";
+	    else                                 weight = "(HLTTau*HLTMu*SFTau*SFMuID*ZmmWeight)";
 	  }
 	}
     }
@@ -1107,7 +1111,11 @@ void plotMuTau( Int_t mH_           = 120,
 
   if(DEBUG) cout << "createBins" << endl;
   TArrayF bins = createBins(nBins_, xMin_, xMax_, nBins, selection_, variable_);
-
+  if(selection_.find("ZmmSel")!=string::npos)
+    bins = createBins(nBins_, xMin_, xMax_, nBins, "inclusive", variable_);
+  cout<<"Bins : "<<endl;
+  for(int i=0 ; i<bins.GetSize() ; i++)cout<<"bin "<<i<<"   "<<bins[i]<<endl;
+  
   // LUMINOSITY //
   float Lumi, LumiABC, LumiD, LumiSoftABC;
   //
@@ -1172,6 +1180,8 @@ void plotMuTau( Int_t mH_           = 120,
   string antiWcut = useMt ? "MtLeg1MVA" : "-(pZetaMVA-1.5*pZetaVisMVA)" ; 
   //   float antiWsgn  = useMt ? 20. :  20. ;
   float antiWsgn  = useMt ? 30. :  20. ; // mTcut at 30
+  if(selection_.find("ZmmSel")!=string::npos) antiWsgn  = useMt ? 40. :  20. ; //mt cut at 40 for ZeeSF
+
   float antiWsdb  = useMt ? 70. :  40. ; 
 
   bool use2Dcut   = false;
@@ -1462,7 +1472,7 @@ void plotMuTau( Int_t mH_           = 120,
   backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsTauTau_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTL_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsZTTJ_MuTau_"+fileAnalysis+".root");
-  if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsEToTau_MuTau_"+fileAnalysis+".root");
+  if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsMuToTau_MuTau_"+fileAnalysis+".root");
   if(!FastMode) backgroundDY      ->Add(pathToFileDY+"/nTupleDYJetsJetToTau_MuTau_"+fileAnalysis+".root");
   
   if(!version_.Contains("NoDYExcl")) {
@@ -1676,7 +1686,17 @@ void plotMuTau( Int_t mH_           = 120,
     tpt = tpt&&TCut("hasSecVtx>0.5");
   }
 
-  
+  if(selection_.find("1Prong0Pi0")!=string::npos || version_.Contains("1Prong0Pi0"))
+    tpt = tpt&&TCut("decayMode==0");
+  if(selection_.find("1Prong1Pi0")!=string::npos || version_.Contains("1Prong1Pi0"))
+    tpt = tpt&&TCut("decayMode==1");
+  if(selection_.find("3Prongs")!=string::npos || version_.Contains("3Prongs"))
+    tpt = tpt&&TCut("decayMode==2");
+  if(selection_.find("BL")!=string::npos || version_.Contains("BL"))
+    tpt = tpt&&TCut("TMath::Abs(etaL2)<1.479");
+  if(selection_.find("EC")!=string::npos || version_.Contains("EC"))
+    tpt = tpt&&TCut("TMath::Abs(etaL2)>1.479");
+
   //Barrel/EndCap
   if(version_.Contains("Barrel"))
     {
@@ -1788,7 +1808,8 @@ void plotMuTau( Int_t mH_           = 120,
   TCut inclusive("");
 
   TCut novbf("nJets30<1 && nJets20BTagged==0");
-  
+  TCut ZmmSel("MEtMVA<30 && nJets30<2 && ptL2>30");
+
   if(!MSSM)
     {
       if(selection_.find("High")!=string::npos) {
@@ -1864,6 +1885,7 @@ void plotMuTau( Int_t mH_           = 120,
   else if(selection_.find("twoJets")!=string::npos)   sbinCat = twoJets;
   else if(selection_.find("vh")!=string::npos)        sbinCat = vh;
   else if(selection_.find("novbf")!=string::npos)     sbinCat = novbf;
+  else if(selection_.find("ZmmSel")!=string::npos)     sbinCat = ZmmSel;
   else if(selection_.find("boost")!=string::npos)     sbinCat = boost;
   else if(selection_.find("nobTag")!=string::npos)    sbinCat = nobTag;
   else if(selection_.find("vbf")!=string::npos && selection_.find("novbf")==string::npos && selection_.find("vbfTight")==string::npos)   sbinCat = vbf;
@@ -2779,8 +2801,16 @@ void plotMuTau( Int_t mH_           = 120,
 	    float NormDYMutoTau = 0.;
 	    if(useZDataMC)
 	      drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);
-	    else 
-	      drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+	    else
+	      {
+		cout<<"Zmm checks = "<<endl;
+		cout<<"sbinPresel = "<<sbinPresel<<endl;
+		cout<<"sbinCat = "<<sbinCat<<endl;
+		cout<<"sbin = "<<sbin<<endl;
+		cout<<"Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000. = "<<Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000.<<endl;
+		drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYMutoTau, Error,   Lumi*lumiCorrFactor*MutoTauCorrectionFactor*hltEff_/1000., h1, sbin, 1);
+		cout<<"Integral = "<<h1->Integral()<<endl;
+	      }
 	    hZmm->Add(h1, 1.0); //hZmm->Sumw2();
 	    hZfakes->Add(h1,1.0); //hZfakes->Sumw2();
 	    //hEWK->Add(h1,1.0);

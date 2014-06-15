@@ -1245,6 +1245,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   vector<string> XtriggerPaths;
   vector<string> HLTfiltersMu;
   vector<string> HLTfiltersTau;
+  vector<string> HLTfiltersTauJet;
 
   if(isMC_){
     
@@ -1253,6 +1254,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     XtriggerPaths.push_back("HLT_Mu8_v*");//1
     XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//2
     XtriggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v*");
+    XtriggerPaths.push_back("HLT_PFJet320_v*");
     // for Summer12-53X
     //HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v1
 
@@ -1260,7 +1262,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_Mu8_v16");//1
     triggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v5");//2
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v7");//3
-
+    triggerPaths.push_back("HLT_PFJet320_v5");//4
+    
     HLTfiltersMu.push_back("hltL1sMu14erORMu16er");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15");//1
     HLTfiltersMu.push_back("hltOverlapFilterIsoMu17LooseIsoPFTau20");//2
@@ -1277,7 +1280,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersTau.push_back("hltL2TauIsoFilter"); //12 //IsoL2Tau
     //trgTau//13, not stored/used 
     //l1tau 44 or l1jet 64//13
-    
+
+    HLTfiltersTauJet.push_back("hlt1PFJet320");
   }
   else{
     
@@ -1289,6 +1293,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     XtriggerPaths.push_back("HLT_Mu8_eta2p1_LooseIsoPFTau20_L1ETM26_v*");//5
     XtriggerPaths.push_back("HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v*");//6
     XtriggerPaths.push_back("HLT_IsoMu15_eta2p1_L1ETM20_v*");//7
+    XtriggerPaths.push_back("HLT_PFJet320_v*");//8
 
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4");//0
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v5");//1
@@ -1332,6 +1337,14 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v3");//37
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v1");//38
     triggerPaths.push_back("HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v4");//39
+    triggerPaths.push_back("HLT_PFJet320_v3");//40
+    triggerPaths.push_back("HLT_PFJet320_v4");//40
+    triggerPaths.push_back("HLT_PFJet320_v5");//40
+    triggerPaths.push_back("HLT_PFJet320_v6");//40
+    triggerPaths.push_back("HLT_PFJet320_v7");//40
+    triggerPaths.push_back("HLT_PFJet320_v8");//40
+    triggerPaths.push_back("HLT_PFJet320_v9");//40
+    triggerPaths.push_back("HLT_PFJet320_v10");//40
 
     HLTfiltersMu.push_back("hltSingleMuIsoL1s14L3IsoFiltered15eta2p1");//0
     HLTfiltersMu.push_back("hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10");//1
@@ -1367,6 +1380,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     HLTfiltersTau.push_back("hltL2TauIsoFilter"); //30 //IsoL2Tau
     //trgTau//31, not stored/used
     //l1tau 44 or l1jet 64//31
+    HLTfiltersTauJet.push_back("hlt1PFJet320");
   }
 
   for(unsigned int i=0;i<triggerPaths.size();i++){
@@ -1767,6 +1781,32 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     else
       tauXTriggers_->push_back(0);
     
+    //matching to hlt1PFJet320
+    for(unsigned int i=0 ; i< HLTfiltersTauJet.size() ; i++){
+      bool matched = false;
+      for(pat::TriggerObjectStandAloneCollection::const_iterator it = triggerObjs->begin() ; it !=triggerObjs->end() ; it++){
+	pat::TriggerObjectStandAlone *aObj = const_cast<pat::TriggerObjectStandAlone*>(&(*it));
+        if(verbose_) {
+          if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5 ){
+            for(unsigned int k =0; k < (aObj->filterLabels()).size() ; k++){
+              cout << "Object passing " << (aObj->filterLabels())[k] << " within 0.5 of tau" << endl;
+            }
+          }
+        }
+        if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(HLTfiltersTauJet[i]) && aObj->hasTriggerObjectType(trigger::TriggerJet) ){
+          matched = true;
+        }
+      }
+      if(matched)
+        tauXTriggers_->push_back(1);
+      else
+	tauXTriggers_->push_back(0);
+      if(verbose_){
+        if(matched) cout << "Tau matched within dR=0.5 with trigger object passing filter " << HLTfiltersTauJet[i] << endl;
+        else cout << "!!! Tau is not trigger matched to " << HLTfiltersTauJet[i] << "within dR=0.5 !!!" << endl;
+      }
+    }
+
     diTauLegsP4_->push_back(leg1->p4());
     diTauLegsP4_->push_back(leg2->p4());
     diTauLegsAltP4_->push_back(leg1->p4());

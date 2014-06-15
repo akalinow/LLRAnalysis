@@ -18,7 +18,7 @@
 #define RESCALETO1PB true
 #define DO2DFIT false
 #define OldCat false
-#define HiggsPtReweighting false
+#define HiggsPtReweighting true
 
 using namespace std;
 
@@ -234,7 +234,7 @@ void produce(
   TString WeightNoWeight = "PtWeight" ;
   if(HiggsPtReweighting) WeightNoWeight = "PtWeight" ;
   else WeightNoWeight = "NoPtWeight" ;
-  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_newNames4_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
+  TFile* fTemplOut = new TFile(Form(location+"%s/datacards/eTau%s_%s_newNames-test4_%s.root",outputDir.Data(), theory.c_str(),variable_.c_str(), WeightNoWeight.Data()),"UPDATE");
   
   string suffix = "";
   if(analysis_.find("TauUp")!=string::npos)
@@ -331,11 +331,19 @@ void produce(
       hSgn1_Down->SetName(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
-      TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+//       TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+      TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      //IN test
+      hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+      //
       hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
       hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 
-      TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+//       TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+      TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+      //IN test
+      hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+      //
       hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       
@@ -351,6 +359,14 @@ void produce(
       hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 
+      TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+
+      TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+      hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+      
       //SM signal
       TH1F* hSMGGFH125 = (TH1F*)fin->Get("hGGFH125");
       hSMGGFH125->SetName("ggH_SM125" );
@@ -1037,12 +1053,26 @@ void produce(
 	hSgn1_Down->Write(Form("ggH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
-	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+// 	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%dUp",mH_));
+	TH1F* hSgn1_PtUp = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	//IN test
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+	hSgn1_PtUp->Scale(1.2*hSgn1->Integral()/hSgn1_PtUp->Integral()); 
+	//
 	hSgn1_PtUp->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
 	hSgn1_PtUp->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
       }
       if(dir->FindObjectAny(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
-	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+// 	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%dDown",mH_));
+	TH1F* hSgn1_PtDown = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	//IN test
+        TH1F* hSgn1 ;
+	if(HiggsPtReweighting) hSgn1 = (TH1F*)fin->Get(Form("hSUSYGGH%d",mH_));
+	else hSgn1 = (TH1F*)fin->Get(Form("hSUSYNoWeightGGH%d",mH_));
+	hSgn1_PtDown->Scale(0.8*hSgn1->Integral()/hSgn1_PtDown->Integral()); 
+	//
 	hSgn1_PtDown->SetName(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
 	hSgn1_PtDown->Write(Form("ggH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       }
@@ -1060,6 +1090,16 @@ void produce(
 	TH1F* hSgn2_Down = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
 	hSgn2_Down->SetName(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
 	hSgn2_Down->Write(Form("bbH%d_CMS_eff_t_mssmHigh_etau_8TeVDown",mH_));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_))==0){
+	TH1F* hSgn2_PtUp = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtUp->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+	hSgn2_PtUp->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVUp",mH_));
+      }
+      if(dir->FindObjectAny(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_))==0){
+	TH1F* hSgn2_PtDown = (TH1F*)fin->Get(Form("hSUSYBBH%d",mH_));
+	hSgn2_PtDown->SetName(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
+	hSgn2_PtDown->Write(Form("bbH%d_CMS_htt_higgsPtReweight_8TeVDown",mH_));
       }
       //SM signal
       if(dir->FindObjectAny("ggH_SM125")==0 ){
@@ -2193,6 +2233,7 @@ void produceAll(){
 //   gSystem->Exec(Command.Data());
 
   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
+//   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_DatacardsTTWeights",true);
 
 // //   //##AntiEMVA5
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5VLoose_HPSDB3H_TauOldDM_OldEleID_Datacards",true);

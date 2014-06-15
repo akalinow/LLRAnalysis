@@ -846,7 +846,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int genDecayMode_;
 
   // event-related variables
-  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown;
+  float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZmmWeight;
 
   //Top pT weights
   float topPtWeightNom_,topPtWeightUp_,topPtWeightDown_;
@@ -1377,6 +1377,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp/F");
   outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown/F");
 
+  outTreePtOrd->Branch("ZmmWeight",          &ZmmWeight,"ZmmWeight/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
   outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
 
@@ -3819,6 +3820,22 @@ void fillTrees_MuTauStream(TChain* currentTree,
     
     //nVetoLepton += vetoElectronsP4->size();
     if(DEBUG) cout << "End 3rd lepton veto" << endl;
+
+    // Reweight for Zmm
+    ZmmWeight = 1;
+    if( sample_.find("DYJets")!=string::npos ){
+      //New Zmm SF 06May2014
+      if(decayMode==0 && leptFakeTau){
+	ZmmWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+	  0.760006 : 
+	  0.737036;
+      }
+      else if (decayMode==1 && leptFakeTau){
+	ZmmWeight = TMath::Abs((*diTauLegsP4)[1].Eta())<1.479 ?
+	  1.20777 : 
+	  0.752396;
+      }
+    }
 
     isPFMuon_        = isPFMuon;
     isTightMuon_     = isTightMuon;
