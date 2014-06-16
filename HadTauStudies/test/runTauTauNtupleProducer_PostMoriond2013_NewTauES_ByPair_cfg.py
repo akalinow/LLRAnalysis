@@ -419,7 +419,10 @@ if runOnMC:
         mcPeriod = cms.string("Summer12_S10")
     )
     process.vertexMultiplicityReweightSequence += process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686
-
+    if runOnEmbed :
+        process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686.src = cms.InputTag('addPileupInfo::HLT')
+        process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686.src = cms.InputTag('addPileupInfo::HLT')
+        
 #######################################################################
 
 def drange(start, stop, step):
@@ -544,12 +547,14 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
         againstMuonMVAraw = cms.string("againstMuonMVAraw"),                                          
     ),
     srcTriggerResults = cms.InputTag('patTriggerEvent'),                                              
-    hltPaths_diTau = cms.PSet(),
-    hltPaths_diTauJet = cms.PSet(),                                          
+    hltPaths_diTau = cms.vstring(),
+    hltPaths_diTauJet = cms.vstring(),
+    hltPaths_singleJet = cms.vstring(),
     srcTriggerObjects = cms.InputTag('patTrigger'),                                          
     hltTauFilters_diTau = cms.vstring(),
     hltTauFilters_diTauJet = cms.vstring(),
     hltJetFilters_diTauJet = cms.vstring(),
+    hltJetFilters_singleJet = cms.vstring(),
     srcL1Taus = cms.InputTag('l1extraParticles', 'Tau'),
     srcL1Jets = cms.InputTag('l1extraParticles', 'Central'),
     srcElectrons = cms.InputTag('electronsForVeto'),
@@ -559,7 +564,8 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     wpPileupJetId = cms.string("Loose"),
     srcPileupJetIdMVA = cms.InputTag('puJetMva', 'fullDiscriminant'),
     bJetDiscriminator = cms.string("combinedSecondaryVertexBJetTags"),
-    jetCorrPayload = cms.string(""),
+    jetCorrLabel = cms.string(""),   # CV: for jet energy corrections                      
+    jetCorrPayload = cms.string(""), # CV: for jet energy uncertainties
     jecUncertaintyFile = cms.FileInPath("LLRAnalysis/HadTauStudies/data/Summer13_V1_DATA_UncertaintySources_AK5PF.txt"),                                          
     jecUncertaintyTag = cms.string("SubTotalMC"),
     minJetPt = cms.double(30.),
@@ -589,6 +595,9 @@ if runOnMC :
     process.tauTauNtupleProducer.hltPaths_diTauJet = cms.vstring(
         "HLT_DoubleMediumIsoPFTau30_Trk5_eta2p1_Jet30_v2"
     )
+    process.tauTauNtupleProducer.hltPaths_singleJet = cms.vstring(
+         "HLT_PFJet320_v5"
+    )
     process.tauTauNtupleProducer.hltTauFilters_diTau = cms.vstring(
         "hltDoublePFTau35TrackPt5MediumIsolationProng4Dz02",
         "hltDoublePFTau35TrackPt1MediumIsolationProng4Dz02"
@@ -600,6 +609,10 @@ if runOnMC :
     process.tauTauNtupleProducer.hltJetFilters_diTauJet = cms.vstring(
         "hltTripleL2Jets30eta3"
     )
+    process.tauTauNtupleProducer.hltJetFilters_singleJet = cms.vstring(
+        "hlt1PFJet320"
+    )
+    process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
     process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
 else :    
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
@@ -617,6 +630,14 @@ else :
         "HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1_Jet30_v4",
         "HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1_Jet30_v5"
     )
+    process.tauTauNtupleProducer.hltPaths_singleJet = cms.vstring(
+        "HLT_PFJet320_v3",
+        "HLT_PFJet320_v4",
+        "HLT_PFJet320_v5",
+        "HLT_PFJet320_v6",
+        "HLT_PFJet320_v8",
+        "HLT_PFJet320_v9"
+    )
     process.tauTauNtupleProducer.hltTauFilters_diTau = cms.vstring(
         "hltDoublePFTau35TrackPt5MediumIsolationProng4Dz02",
         "hltDoublePFTau35TrackPt1MediumIsolationProng4Dz02"
@@ -628,8 +649,13 @@ else :
     process.tauTauNtupleProducer.hltJetFilters_diTauJet = cms.vstring(
         "hltTripleL2Jets30eta3"
     )
+    process.tauTauNtupleProducer.hltJetFilters_singleJet = cms.vstring(
+        "hlt1PFJet320"
+    )
+    process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
     
 if runOnEmbed :
+    process.tauTauNtupleProducer.srcGenPileUpSummary = cms.InputTag('addPileupInfo::HLT')
     if embedType == "PfEmbed" :
         process.tauTauNtupleProducer.srcEmbeddingWeight = cms.InputTag('generator', 'minVisPtFilter', 'EmbeddedRECO')
     elif embedType == "RhEmbed" :

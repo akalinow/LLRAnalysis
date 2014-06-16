@@ -6,15 +6,19 @@ from LLRAnalysis.HadTauStudies.recoSampleDefaults_cfi import SAMPLE_DEFAULTS
 
 # List of samples to run in the analysis
 SAMPLES_TO_ANALYZE = [
-    'data_Run2012A_22Jan2013_v1',
-    'data_Run2012B_22Jan2013_v1',
-    'data_Run2012C_22Jan2013_v1',
-    'data_Run2012D_22Jan2013_v1',
-    'pfEmbed_Run2012A_22Jan2013_v1',
+    ##'data_Tau_Run2012A_22Jan2013_v1',
+    'data_TauParked_Run2012B_22Jan2013_v1',
+    'data_TauParked_Run2012C_22Jan2013_v1',
+    'data_TauParked_Run2012D_22Jan2013_v1',
+    ##'data_Jet_Run2012A_22Jan2013ReReco_v1',
+    'data_JetHT_Run2012B_22Jan2013ReReco_v1',
+    'data_JetHT_Run2012C_22Jan2013ReReco_v1',
+    'data_JetHT_Run2012D_22Jan2013ReReco_v1',
+    ##'pfEmbed_Run2012A_22Jan2013_v1',
     'pfEmbed_Run2012B_22Jan2013_v1',
     'pfEmbed_Run2012C_22Jan2013_v1',
     'pfEmbed_Run2012D_22Jan2013_v1',
-    'rhEmbed_TTJetsFullLept',
+    'pfEmbed_TTJetsFullLept',
     'DYJets',
     'DY1Jets',
     'DY2Jets',
@@ -50,17 +54,18 @@ _femtobarns = 1.0e-3
 TARGET_LUMI = 18.3/_femtobarns # CV: estimated luminosity of 2012 run A+B+C+D data
 
 RECO_SAMPLES = {
-    'data_Run2012A_22Jan2013_v1' : {
-        'datasetpath'      : '/Tau/Run2012A-22Jan2013-v1/AOD',
-        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
-        'events_processed' : 4316637, # 2013/11/30
-        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-        'runselection'     : "190456-193621",
-        'conditions'       : 'FT_53_V6_AN2::All',
-        'lumis_per_job'    : 20,
-        'type'             : 'Data'
-    },
-    'data_Run2012B_22Jan2013_v1' : {
+    ##'data_Tau_Run2012A_22Jan2013_v1' : {
+    ##    'datasetpath'      : '/Tau/Run2012A-22Jan2013-v1/AOD',
+    ##    'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+    ##    'events_processed' : 4316637, # 2013/11/30
+    ##    'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+    ##    'runselection'     : "190456-193621",
+    ##    'conditions'       : 'FT_53_V6_AN2::All',
+    ##    'lumis_per_job'    : 20,
+    ##    'type'             : 'Data',
+    ##    'trigger'          : 'Tau'
+    ##},
+    'data_TauParked_Run2012B_22Jan2013_v1' : {
         'datasetpath'      : '/TauParked/Run2012B-22Jan2013-v1/AOD',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
         'events_processed' : 46187183, # 2013/11/30
@@ -68,9 +73,10 @@ RECO_SAMPLES = {
         'runselection'     : "193833-196531",
         'conditions'       : 'FT_53_V6_AN2::All',
         'lumis_per_job'    : 15,
-        'type'             : 'Data'
+        'type'             : 'Data',
+        'trigger'          : 'Tau'
     },
-    'data_Run2012C_22Jan2013_v1' : {
+    'data_TauParked_Run2012C_22Jan2013_v1' : {
         'datasetpath'      : '/TauParked/Run2012C-22Jan2013-v1/AOD',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
         'events_processed' : 58371814, # 2013/11/30
@@ -78,9 +84,10 @@ RECO_SAMPLES = {
         'runselection'     : "198022-203742",
         'conditions'       : 'GR_P_V40::All',
         'lumis_per_job'    : 15,
-        'type'             : 'Data'
+        'type'             : 'Data',
+        'trigger'          : 'Tau'
     },
-    'data_Run2012D_22Jan2013_v1' : {
+    'data_TauParked_Run2012D_22Jan2013_v1' : {
         'datasetpath'      : '/TauParked/Run2012D-22Jan2013-v1/AOD',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
         'events_processed' : 63220920, # 2013/11/30
@@ -88,18 +95,63 @@ RECO_SAMPLES = {
         'runselection'     : "203777-208686",
         'conditions'       : 'GR_P_V40::All',
         'lumis_per_job'    : 15,
-        'type'             : 'Data'
+        'type'             : 'Data',
+        'trigger'          : 'Tau'
     },
-    'pfEmbed_Run2012A_22Jan2013_v1' : {
-        'datasetpath'      : '/DoubleMu/StoreResults-Run2012A_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
+    ##'data_Jet_Run2012A_22Jan2013ReReco_v1' : {
+    ##    'datasetpath'      : '/Jet/Run2012A-22Jan2013-v1/AOD',
+    ##    'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+    ##    'events_processed' : 9400333, # 2014/06/08
+    ##    'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+    ##    'runselection'     : "190456-193621",
+    ##    'conditions'       : 'FT_53_V6_AN2::All',
+    ##    'lumis_per_job'    : 20,
+    ##    'type'             : 'Data',
+    ##    'trigger'          : 'Jet'
+    ##},
+    'data_JetHT_Run2012B_22Jan2013ReReco_v1' : {
+        'datasetpath'      : '/JetHT/Run2012B-22Jan2013-v1/AOD',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
-        'events_processed' : 328647, # 2013/12/05
+        'events_processed' : 15513284, # 2014/06/08
         'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-        'runselection'     : "190456-193621",
+        'runselection'     : "193833-196531",
         'conditions'       : 'FT_53_V6_AN2::All',
-        'lumis_per_job'    : 20,
-        'type'             : 'pfEmbeddedData'
+        'lumis_per_job'    : 15,
+        'type'             : 'Data',
+        'trigger'          : 'Jet'
     },
+    'data_JetHT_Run2012C_22Jan2013ReReco_v1' : {
+        'datasetpath'      : '/JetHT/Run2012C-22Jan2013-v1/AOD',
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+        'events_processed' : 25789161, # 2014/06/08
+        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+        'runselection'     : "198022-203742",
+        'conditions'       : 'GR_P_V40::All',
+        'lumis_per_job'    : 15,
+        'type'             : 'Data',
+        'trigger'          : 'Jet'
+    },
+    'data_JetHT_Run2012D_22Jan2013ReReco_v1' : {
+        'datasetpath'      : '/JetHT/Run2012D-22Jan2013-v1/AOD',
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+        'events_processed' : 27572330, # 2014/06/08
+        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+        'runselection'     : "203777-208686",
+        'conditions'       : 'GR_P_V40::All',
+        'lumis_per_job'    : 15,
+        'type'             : 'Data',
+        'trigger'          : 'Jet'
+    },
+    ##'pfEmbed_Run2012A_22Jan2013_v1' : {
+    ##    'datasetpath'      : '/DoubleMu/StoreResults-Run2012A_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
+    ##    'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+    ##    'events_processed' : 328647, # 2013/12/05
+    ##    'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+    ##    'runselection'     : "190456-193621",
+    ##    'conditions'       : 'FT_53_V6_AN2::All',
+    ##    'lumis_per_job'    : 20,
+    ##    'type'             : 'pfEmbeddedData'
+    ##},
     'pfEmbed_Run2012B_22Jan2013_v1' : {
         'datasetpath'      : '/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
@@ -130,8 +182,8 @@ RECO_SAMPLES = {
         'lumis_per_job'    : 15,
         'type'             : 'pfEmbeddedData'
     },
-    'rhEmbed_TTJetsFullLept' : {
-        'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph/StoreResults-Summer12_DR53X_PU_S10_START53_V7A_v1_ReplaceRecMuons_RHembedded_trans1_tau132_pthad1_30had2_30_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    'pfEmbed_TTJetsFullLept' : {
+        'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/StoreResults-Summer12_TTJets_FullLeptMGDecays_DR53X_PU_S10_START53_V7C_v2_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 158124,
         'events_per_job'   : 20000,
@@ -485,19 +537,32 @@ for sample in RECO_SAMPLES.keys():
         parameters_to_overwrite['runOnMC']    = False
         parameters_to_overwrite['runOnEmbed'] = False
         parameters_to_overwrite['embedType']  = ""
+        parameters_to_overwrite['trigger']    = RECO_SAMPLES[sample]['trigger']
     elif RECO_SAMPLES[sample]['type'] == "pfEmbeddedData":
         parameters_to_overwrite['runOnMC']    = False
         parameters_to_overwrite['runOnEmbed'] = True
         parameters_to_overwrite['embedType']  = "PfEmbed"
+        parameters_to_overwrite['trigger']    = "TauPlusJet"
     elif RECO_SAMPLES[sample]['type'] == "rhEmbeddedData":
         parameters_to_overwrite['runOnMC']    = False
         parameters_to_overwrite['runOnEmbed'] = True
         parameters_to_overwrite['embedType']  = "RhEmbed"
-    elif RECO_SAMPLES[sample]['type'] == "smMC" or RECO_SAMPLES[sample]['type'] == "bsmMC" or \
-         RECO_SAMPLES[sample]['type'] == "pfEmbeddedMC" or RECO_SAMPLES[sample]['type'] == "rhEmbeddedMC":
+        parameters_to_overwrite['trigger']    = "TauPlusJet"
+    elif RECO_SAMPLES[sample]['type'] == "smMC" or RECO_SAMPLES[sample]['type'] == "bsmMC":
         parameters_to_overwrite['runOnMC']    = True
         parameters_to_overwrite['runOnEmbed'] = False
         parameters_to_overwrite['embedType']  = ""
+        parameters_to_overwrite['trigger']    = "TauPlusJet"
+    elif RECO_SAMPLES[sample]['type'] == "pfEmbeddedMC":
+        parameters_to_overwrite['runOnMC']    = True
+        parameters_to_overwrite['runOnEmbed'] = True
+        parameters_to_overwrite['embedType']  = "PfEmbed"
+        parameters_to_overwrite['trigger']    = "TauPlusJet"
+    elif RECO_SAMPLES[sample]['type'] == "rhEmbeddedMC":
+        parameters_to_overwrite['runOnMC']    = True
+        parameters_to_overwrite['runOnEmbed'] = True
+        parameters_to_overwrite['embedType']  = "RhEmbed"
+        parameters_to_overwrite['trigger']    = "TauPlusJet"
     else:
         raise ValueError("Invalid Configuration Parameter 'type' = %s for sample = %s !!" % (RECO_SAMPLES[sample]['type'], sample))
     RECO_SAMPLES[sample]['parameters_to_overwrite'] = parameters_to_overwrite

@@ -40,7 +40,7 @@ class TauTauHistManager
 		      double, double, double, double, int,
 		      double, double, double, 
 		      double, double, double, int,
-		      double, int, double,
+		      double, int, double, double,
 		      double);
   
  protected:
@@ -150,6 +150,7 @@ class TauTauHistManager
 
   TH1* histogramNumVertices_;
 
+  TH1* histogramGenHiggsPt_;
   TH1* histogramNUP_;
 
   struct histogramIn2dParticleEtaBinsEntryType

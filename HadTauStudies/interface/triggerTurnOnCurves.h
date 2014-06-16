@@ -17,4 +17,10 @@ double eff2012IsoParkedTauMC_Arun_cutMedium(double, double);
 double eff2012IsoParkedTauMC_Arun_mvaTight(double, double);
 double eff2012IsoParkedTauMC_Arun_mvaVTight(double, double);
 
+double effPFJet320_vs_jetPt(double, double);
+double effPFJet320MC_vs_jetPt(double, double);
+double effPFJet320MC_vs_tauPt(double, double);
+double effPFJet320(double, double, double);
+double effPFJet320MC(double, double, double);
+
 #endif

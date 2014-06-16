@@ -16,12 +16,11 @@ import sys
 import time
 
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
-jobId = '2014Jan10'
+jobId = '2014Jun09'
 
-version = "v1_12"
+version = "v2_02"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
-##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
 maxEventsPerJob = 10000
 
@@ -31,11 +30,6 @@ lxbatch_queue = '1nd'
 
 samplesToAnalyze = [
     # CV: leave empty in order to produce Ntuples for all samples
-    ##"HiggsSUSYBB300v2"
-    ##"HiggsVH125"
-    ##'W1JetsExt',
-    ##'W2JetsExt',
-    ##'W3JetsExt'
 ]
 
 numEventsFileName = 'submitTauTauNtupleProduction.json'
@@ -58,8 +52,8 @@ if len(samplesToAnalyze) == 0:
     
 skipExistingPATtuples = True
 
-##outputFileMachine_and_Path = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
-outputFileMachine_and_Path = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
+outputFileMachine_and_Path = "/store/user/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
+##outputFileMachine_and_Path = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 ##outputFileMachine_and_Path = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/Ntuples/AHtoTauTau/2013Dec19f/%s" % (jobId, version)
 #outputFileMachine_and_Path = "ucdavis:/data1/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
@@ -79,13 +73,20 @@ executable_shell = '/bin/csh'
 
 # Functions to create output directory on eos
 def createFilePath(filePath):
-    try:
-        eos.lsl(filePath)
-    except IOError:
-        print "filePath = %s does not yet exist, creating it." % filePath
-        eos.mkdir(filePath)
-        time.sleep(3)
-        eos.chmod(filePath, 750)
+    if not filePath.endswith('/'):
+        filePath += '/'
+    if filePath.startswith('/store/'):
+        try:
+            eos.lsl(filePath)
+        except IOError:
+            print "filePath = %s does not yet exist, creating it." % filePath
+            eos.mkdir(filePath)
+            time.sleep(3)
+            eos.chmod(filePath, 777)
+    else:
+        if not os.path.exists(filePath):
+            print "filePath = %s does not yet exist, creating it." % filePath
+            os.mkdir(filePath)
 
 def createFilePath_recursively(filePath):
     filePath_items = filePath.split('/')
@@ -96,15 +97,11 @@ def createFilePath_recursively(filePath):
             continue
         createFilePath(currentFilePath)
 
-if not os.path.isdir("lxbatch"):
-    os.mkdir('lxbatch')
+configFilePath = os.path.join(os.getcwd(), "lxbatch", version)
+createFilePath_recursively(configFilePath)
 
-configFilePath = os.path.join(os.getcwd(), "lxbatch")
-
-if not os.path.isdir("lxbatch_log"):
-    os.mkdir('lxbatch_log')
-
-logFilePath = os.path.join(os.getcwd(), "lxbatch_log")
+logFilePath = os.path.join(os.getcwd(), "lxbatch_log", version)
+createFilePath_recursively(logFilePath)
 
 def runCommand(commandLine):
     sys.stdout.write("%s\n" % commandLine)
@@ -241,10 +238,15 @@ bsubJobNames        = {}
 for sampleToAnalyze in samplesToAnalyze:
 
     print "checking sample %s" % sampleToAnalyze
-    
+
     bsubFileNames[sampleToAnalyze]       = {}
     bsubScriptFileNames[sampleToAnalyze] = {}
     bsubJobNames[sampleToAnalyze]        = {}
+
+    if sampleToAnalyze == "HiggsSUSYBB300": # CV: skip obsolete sample (superseded by HiggsSUSYBB300v2)
+        continue    
+    if sampleToAnalyze == "data_TauParked_Run2012C_22Jan2013_v1": # CV: skip, because PAT-tuple production jobs have not yet finished
+        continue
     
     inputFilePath_sample = os.path.join(inputFilePath, sampleToAnalyze)
     print " inputFilePath = %s" % inputFilePath_sample
@@ -265,6 +267,9 @@ for sampleToAnalyze in samplesToAnalyze:
     print inputFileNames_matched_in_chunks
 
     for nom_or_sysShift in [ "nom", "up", "down" ]:
+
+        if recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sampleToAnalyze]['type'] == "Data" and nom_or_sysShift != "nom":
+            continue
 
         bsubFileNames[sampleToAnalyze][nom_or_sysShift]       = {}
         bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift] = {}
@@ -328,6 +333,9 @@ for sampleToAnalyze in samplesToAnalyze:
     bsubJobNames_harvesting[sampleToAnalyze]  = {}
 
     for nom_or_sysShift in [ "nom", "up", "down" ]:
+
+        if not nom_or_sysShift in bsubScriptFileNames[sampleToAnalyze].keys():
+            continue
 
         outputFileMachine_and_Path_sample = os.path.join(outputFileMachine_and_Path, nom_or_sysShift, sampleToAnalyze)
 

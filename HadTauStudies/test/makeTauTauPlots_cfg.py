@@ -110,6 +110,11 @@ process.makeTauTauPlots = cms.PSet(
             yAxisTitle = cms.string("dN/d#phi_{#tau_{1}}")
         ),
         cms.PSet(
+            histogramName = cms.string("tau1DecayMode"),
+            xAxisTitle = cms.string("#tau_{1} Decay mode"),
+            yAxisTitle = cms.string("N")
+        ),
+        cms.PSet(
             histogramName = cms.string("tau1IsoDiscrS"),
             xAxisTitle = cms.string("MVA_{#tau_{1}}"),
             yAxisTitle = cms.string("dN/dMVA_{#tau_{1}}")
@@ -140,6 +145,11 @@ process.makeTauTauPlots = cms.PSet(
             yAxisTitle = cms.string("dN/d#phi_{#tau_{2}}")
         ),
         cms.PSet(
+            histogramName = cms.string("tau2DecayMode"),
+            xAxisTitle = cms.string("#tau_{2} Decay mode"),
+            yAxisTitle = cms.string("N")
+        ),
+        cms.PSet(
             histogramName = cms.string("tau2IsoDiscrS"),
             xAxisTitle = cms.string("MVA_{#tau_{2}}"),
             yAxisTitle = cms.string("dN/dMVA_{#tau_{2}}")
@@ -152,14 +162,14 @@ process.makeTauTauPlots = cms.PSet(
         cms.PSet(
             histogramName = cms.string("svFitMassS"),
             xAxisTitle = cms.string("m_{#tau#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]")
-            ##keepBlinded = cms.vstring("100:1500")
+            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]"),
+            keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("visMassS"),
             xAxisTitle = cms.string("m_{vis} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]")
-            ##keepBlinded = cms.vstring("100:1500")
+            yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
+            keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("bJet1PtS"),
@@ -187,6 +197,7 @@ process.makeTauTauPlots = cms.PSet(
             yAxisTitle = cms.string("dN/dN_{vtx}")
         )
     ),
+    showBgrUncertainty = cms.bool(False),
 
     labelOnTop = cms.string("CMS Preliminary, H#rightarrow #tau#tau, %1.1f fb^{-1} at 8 TeV"),    
     intLumiData = cms.double(18.3), # in units of fb^-1

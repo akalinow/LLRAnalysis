@@ -19,6 +19,79 @@
   <use   name="DataFormats/Math"/>
   <use   name="PhysicsTools/FWLite"/>
   <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="LLRAnalysis/Utilities"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerDEBUG.cc" name="FWLiteTauTauAnalyzerDEBUG">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerDEBUGcmgTuplesFromRiccardo.cc" name="FWLiteTauTauAnalyzerDEBUGcmgTuplesFromRiccardo">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerDEBUGhiggsPtReweightingFromRiccardo.cc" name="FWLiteTauTauAnalyzerDEBUGhiggsPtReweightingFromRiccardo">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerWithSingleJetTrigger.cc" name="FWLiteTauTauAnalyzerWithSingleJetTrigger">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerExclSingleJetTrigger.cc" name="FWLiteTauTauAnalyzerExclSingleJetTrigger">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
+<bin   file="FWLiteTauTauAnalyzerForXavier.cc" name="FWLiteTauTauAnalyzerForXavier">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
   <use   name="root"/>
   <use   name="roottmva"/>
 </bin>

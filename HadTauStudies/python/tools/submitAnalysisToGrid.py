@@ -79,5 +79,5 @@ def submitAnalysisToGrid(configFile = None,
         split_job_option = "number_of_jobs = %i" % _number_of_jobs(sample_info)
     crabOptions['split_job_option'] = split_job_option
 
-    submitToGrid(configFile, jobInfo, crabOptions, create = True, submit = True, cfgdir = crabFilePath)
-    ##submitToGrid(configFile, jobInfo, crabOptions, create = False, submit = False, cfgdir = crabFilePath) # CV: only for testing
+    ##submitToGrid(configFile, jobInfo, crabOptions, create = True, submit = True, cfgdir = crabFilePath)
+    submitToGrid(configFile, jobInfo, crabOptions, create = True, submit = False, cfgdir = crabFilePath) # CV: only for testing

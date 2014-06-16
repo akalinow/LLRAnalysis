@@ -157,7 +157,7 @@ process.makeTauTauPlots = cms.PSet(
             CMS_htt_QCDfrShape_tautau_8TeV = cms.string("0.00 +/- 1.00")
         )
     ),
-    showBgrUncertainty = cms.bool(True),
+    showBgrUncertainty = cms.bool(False),
 
     labelOnTop = cms.string("CMS Preliminary, H#rightarrow #tau#tau, %1.1f fb^{-1} at 8 TeV"),    
     intLumiData = cms.double(18.3), # in units of fb^-1

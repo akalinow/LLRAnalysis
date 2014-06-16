@@ -69,6 +69,7 @@
 
 TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg) 
   : moduleLabel_(cfg.getParameter<std::string>("@module_label")),
+    jec_(0),
     jecUncertainty_(0),
     inputFileHiggsPtWeight_(0),
     lutHiggsPtWeightNom_(0),
@@ -102,10 +103,17 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
     hltPaths_diTauJet_.push_back(StringEntryType(*hltPath, *hltPath));
   }
   hltPathsToStore_.insert(hltPathsToStore_.end(), hltPaths_diTauJet_.begin(), hltPaths_diTauJet_.end());
+  vstring hltPaths_singleJet_vstring = cfg.getParameter<vstring>("hltPaths_singleJet");
+  for ( vstring::const_iterator hltPath = hltPaths_singleJet_vstring.begin();
+	hltPath != hltPaths_singleJet_vstring.end(); ++hltPath ) {
+    hltPaths_singleJet_.push_back(StringEntryType(*hltPath, *hltPath));
+  }
+  hltPathsToStore_.insert(hltPathsToStore_.end(), hltPaths_singleJet_.begin(), hltPaths_singleJet_.end());
   srcTriggerObjects_ = cfg.getParameter<edm::InputTag>("srcTriggerObjects");
   hltTauFilters_diTau_ = cfg.getParameter<vstring>("hltTauFilters_diTau");
   hltTauFilters_diTauJet_ = cfg.getParameter<vstring>("hltTauFilters_diTauJet");
   hltJetFilters_diTauJet_ = cfg.getParameter<vstring>("hltJetFilters_diTauJet");
+  hltJetFilters_singleJet_ = cfg.getParameter<vstring>("hltJetFilters_singleJet");
 
   srcL1Taus_ = cfg.getParameter<edm::InputTag>("srcL1Taus");
   srcL1Jets_ = cfg.getParameter<edm::InputTag>("srcL1Jets");
@@ -123,6 +131,7 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
     << "Invalid Configuration Parameter 'wpPileupJetId' = " << wpPileupJetId_string << " !!\n";
   srcPileupJetIdMVA_ = cfg.getParameter<edm::InputTag>("srcPileupJetIdMVA");
   bJetDiscriminator_ = cfg.getParameter<std::string>("bJetDiscriminator");  
+  jetCorrLabel_ = cfg.getParameter<std::string>("jetCorrLabel");
   jecUncertaintyTag_ = cfg.getParameter<std::string>("jecUncertaintyTag");
   if ( cfg.exists("jecUncertaintyFile") ) {
     edm::FileInPath jecUncertaintyFile = cfg.getParameter<edm::FileInPath>("jecUncertaintyFile");
@@ -234,6 +243,7 @@ void TauTauNtupleProducer::beginJob()
   addBranch_PtEtaPhiMass("l1L1");
   addBranchI("l1TrigMatched_diTau");
   addBranchI("l1TrigMatched_diTauJet");
+  addBranchI("l1TrigMatched_singleJet");
   addBranchF("mt1");
  
   addBranch_Tau("l2");
@@ -249,6 +259,7 @@ void TauTauNtupleProducer::beginJob()
   addBranch_PtEtaPhiMass("l2L1");
   addBranchI("l2TrigMatched_diTau");
   addBranchI("l2TrigMatched_diTauJet");
+  addBranchI("l2TrigMatched_singleJet");
   addBranchF("mt2");
   
   // jet observables
@@ -295,9 +306,12 @@ void TauTauNtupleProducer::beginJob()
     addBranchF(evtWeight->branchName_);
   }
   addBranchF("genFilter");
+  addBranchF("genHiggsPt");
   addBranchF("higgsPtWeightNom");
   addBranchF("higgsPtWeightUp");
   addBranchF("higgsPtWeightDown");
+  addBranchF("genTopPlusPt");
+  addBranchF("genTopMinusPt");
   addBranchF("topPtWeightNom");
   addBranchF("topPtWeightUp");
   addBranchF("topPtWeightDown");
@@ -523,8 +537,9 @@ namespace
 
   TFile* openFile(const edm::FileInPath& inputFileName)
   {
-    if ( !inputFileName.isLocal() ) throw cms::Exception("TauTauNtupleProducer") 
-      << " Failed to find File = " << inputFileName << " !!\n";
+    if ( !inputFileName.isLocal() ) 
+      throw cms::Exception("TauTauNtupleProducer") 
+	<< " Failed to find file = " << inputFileName << " !!\n";
     TFile* inputFile = new TFile(inputFileName.fullPath().data());
     return inputFile;
   }
@@ -715,10 +730,12 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects;
   evt.getByLabel(srcTriggerObjects_, triggerObjects);
 
-  bool leg1HLT_diTau_matched    = matchHLTFilter(leg1->p4(), *triggerObjects, hltTauFilters_diTau_, trigger::TriggerTau);
-  bool leg1HLT_diTauJet_matched = matchHLTFilter(leg1->p4(), *triggerObjects, hltTauFilters_diTauJet_, trigger::TriggerTau);
-  bool leg2HLT_diTau_matched    = matchHLTFilter(leg2->p4(), *triggerObjects, hltTauFilters_diTau_, trigger::TriggerTau);
-  bool leg2HLT_diTauJet_matched = matchHLTFilter(leg2->p4(), *triggerObjects, hltTauFilters_diTauJet_, trigger::TriggerTau);
+  bool leg1HLT_diTau_matched     = matchHLTFilter(leg1->p4(), *triggerObjects, hltTauFilters_diTau_, trigger::TriggerTau);
+  bool leg1HLT_diTauJet_matched  = matchHLTFilter(leg1->p4(), *triggerObjects, hltTauFilters_diTauJet_, trigger::TriggerTau);
+  bool leg1HLT_singleJet_matched = matchHLTFilter(leg1->p4(), *triggerObjects, hltJetFilters_singleJet_, trigger::TriggerJet);
+  bool leg2HLT_diTau_matched     = matchHLTFilter(leg2->p4(), *triggerObjects, hltTauFilters_diTau_, trigger::TriggerTau);
+  bool leg2HLT_diTauJet_matched  = matchHLTFilter(leg2->p4(), *triggerObjects, hltTauFilters_diTauJet_, trigger::TriggerTau);
+  bool leg2HLT_singleJet_matched = matchHLTFilter(leg2->p4(), *triggerObjects, hltJetFilters_singleJet_, trigger::TriggerJet);
 
   setValue_diTau("diTau", *bestDiTau);
 
@@ -730,7 +747,11 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     setValueF("dRttL1", deltaR(leg1L1->p4(), leg2L1->p4()));
   }
 
-  setValue_Tau("l1", *leg1);
+  if ( jetCorrLabel_ != "" ) {
+    jec_ = JetCorrector::getJetCorrector(jetCorrLabel_, es);
+  }
+
+  setValue_Tau("l1", *leg1, evt, es);
   setValue_TauLT_base("l1", *leg1);
   setValue_TauLT_extended("l1", *leg1);    
   bool leg1isGenHadTau   = false;
@@ -758,10 +779,11 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   }
   setValueI("l1TrigMatched_diTau", leg1HLT_diTau_matched);
   setValueI("l1TrigMatched_diTauJet", leg1HLT_diTauJet_matched);
+  setValueI("l1TrigMatched_singleJet", leg1HLT_singleJet_matched);
   double mt1 = compMt(leg1->p4(), met->px(), met->py());
   setValueF("mt1", mt1);
 
-  setValue_Tau("l2", *leg2);
+  setValue_Tau("l2", *leg2, evt, es);
   setValue_TauLT_base("l2", *leg2);
   setValue_TauLT_extended("l2", *leg2);
   bool leg2isGenHadTau   = false;
@@ -789,6 +811,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   }
   setValueI("l2TrigMatched_diTau", leg2HLT_diTau_matched);
   setValueI("l2TrigMatched_diTauJet", leg2HLT_diTauJet_matched); 
+  setValueI("l2TrigMatched_singleJet", leg2HLT_singleJet_matched); 
   double mt2 = compMt(leg2->p4(), met->px(), met->py());
   setValueF("mt2", mt2);
 
@@ -1049,6 +1072,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     setValueF(evtWeight->branchName_, *evtWeightValue);
   }
 
+  double genHiggsPt = -1.;
   double higgsPtWeightNom  = 1.;
   double higgsPtWeightUp   = 1.;
   double higgsPtWeightDown = 1.;
@@ -1073,17 +1097,20 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 	  lutHiggsPtWeightDown_ = loadLUT(inputFileHiggsPtWeight_, "Down");
 	  lastInputFileHiggsPtWeight_ = inputFileName;
 	}
-	double higgsPt = higgsP4.pt();
-	higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, higgsPt);
-	higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, higgsPt);
-	higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, higgsPt);
+	higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, genHiggsPt);
+	higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, genHiggsPt);
+	higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, genHiggsPt);
       }
+      genHiggsPt = higgsP4.pt();
     }
   }
+  setValueF("genHiggsPt", genHiggsPt);
   setValueF("higgsPtWeightNom", higgsPtWeightNom);
   setValueF("higgsPtWeightUp", higgsPtWeightUp);
   setValueF("higgsPtWeightDown", higgsPtWeightDown);
 
+  double genTopPlusPt = -1.;
+  double genTopMinusPt = -1.;
   double topPtWeightNom  = 1.;
   double topPtWeightUp   = 1.;
   double topPtWeightDown = 1.;
@@ -1096,11 +1123,15 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     reco::Candidate::LorentzVector topMinusP4;
     bool topMinusFound = findGenParticle(*genParticles, -6, 0, 0, topMinusP4);
     if ( topPlusFound && topMinusFound ) {
-      topPtWeightNom = compTopPtWeight(topPlusP4.pt(), topMinusP4.pt());
+      genTopPlusPt = topPlusP4.pt();
+      genTopMinusPt = topMinusP4.pt();
+      topPtWeightNom = compTopPtWeight(genTopPlusPt, genTopMinusPt);
       topPtWeightUp = topPtWeightNom*topPtWeightNom; // CV: assign 100% systematic uncertainty to top quark Pt reweighting,
       topPtWeightDown = 1.0;                         //     following https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
     }
   }
+  setValueF("genTopPlusPt", genTopPlusPt);
+  setValueF("genTopMinusPt", genTopMinusPt);
   setValueF("topPtWeightNom", topPtWeightNom);
   setValueF("topPtWeightUp", topPtWeightUp);
   setValueF("topPtWeightDown", topPtWeightDown);
@@ -1321,6 +1352,10 @@ void TauTauNtupleProducer::addBranch_Tau(const std::string& name)
 	tauIdDiscrEntry != tauIdDiscrinatorsToStore_.end(); ++tauIdDiscrEntry ) {
     addBranchF(name + tauIdDiscrEntry->branchName_);
   }
+  addBranchF(name + "RawJetPt");
+  addBranchF(name + "RawJetEta");
+  addBranchF(name + "RawJetPhi");  
+  addBranchF(name + "CorrJetPt");
 }
 
 void TauTauNtupleProducer::addBranch_TauLT_base(const std::string& name)
@@ -1356,6 +1391,7 @@ void TauTauNtupleProducer::addBranch_Jet(const std::string& name)
   addBranch_PtEtaPhiMass(name + "raw");
   addBranchF(name + "Charge");
   addBranchF(name + "Btag");
+  addBranchI(name + "GenPartonFlavour");
 }
 
 void TauTauNtupleProducer::addBranch_bJet(const std::string& name) 
@@ -1366,6 +1402,7 @@ void TauTauNtupleProducer::addBranch_bJet(const std::string& name)
   addBranch_PtEtaPhiMass(name + "raw");
   addBranchF(name + "Charge");
   addBranchF(name + "Btag");
+  addBranchI(name + "GenPartonFlavour");
 }
 
 void TauTauNtupleProducer::addBranch_Electron(const std::string& name)
@@ -1488,7 +1525,7 @@ namespace
   }
 }
 
-void TauTauNtupleProducer::setValue_Tau(const std::string& name, const pat::Tau& tau) 
+void TauTauNtupleProducer::setValue_Tau(const std::string& name, const pat::Tau& tau, const edm::Event& evt, const edm::EventSetup& es) 
 {
   setValue_EnPxPyPz(name, tau.p4());
   setValue_PtEtaPhiMass(name, tau.p4());
@@ -1504,6 +1541,16 @@ void TauTauNtupleProducer::setValue_Tau(const std::string& name, const pat::Tau&
 	tauIdDiscrEntry != tauIdDiscrinatorsToStore_.end(); ++tauIdDiscrEntry ) {
     setValueF(name + tauIdDiscrEntry->branchName_, tau.tauID(tauIdDiscrEntry->src_));
   }
+  double rawJetPt = tau.p4Jet().pt();
+  setValueF(name + "RawJetPt", rawJetPt);
+  setValueF(name + "RawJetEta", tau.p4Jet().eta());
+  setValueF(name + "RawJetPhi", tau.p4Jet().phi());
+  double corrJetPt = -1.;
+  if ( jec_ && tau.pfJetRef().isNonnull() && tau.pfJetRef().isAvailable() ) {
+    double jec_value = jec_->correction(*tau.pfJetRef(), evt, es);
+    corrJetPt = rawJetPt*jec_value;
+  }
+  setValueF(name + "CorrJetPt", corrJetPt);
 }
 
 void TauTauNtupleProducer::setValue_TauLT_base(const std::string& name, const pat::Tau& tau)
@@ -1546,6 +1593,7 @@ void TauTauNtupleProducer::setValue_Jet(const std::string& name, const pat::Jet&
   setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
   setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
+  setValueI(name + "GenPartonFlavour", jet.partonFlavour());
 }
 
 void TauTauNtupleProducer::setValue_bJet(const std::string& name, const pat::Jet& jet) 
@@ -1557,6 +1605,7 @@ void TauTauNtupleProducer::setValue_bJet(const std::string& name, const pat::Jet
   setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
   setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
+  setValueI(name + "GenPartonFlavour", jet.partonFlavour());
 }
 
 void TauTauNtupleProducer::setValue_Electron(const std::string& name, const pat::Electron& electron)

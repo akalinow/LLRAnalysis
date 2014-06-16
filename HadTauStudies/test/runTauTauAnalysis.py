@@ -13,7 +13,7 @@ version = "v1_12"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_3/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_8/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -64,10 +64,14 @@ samples = {
     'Data' : {
         'processes' : [ "data_obs" ],
         'inputFiles' : [
-            "data_Run2012A_22Jan2013_v1",
+            ##"data_Run2012A_22Jan2013_v1",
             "data_Run2012B_22Jan2013_v1",
             "data_Run2012C_22Jan2013_v1",
-            "data_Run2012D_22Jan2013_v1"
+            "data_Run2012D_22Jan2013_v1",
+            ##"data_Jet_Run2012A_22Jan2013ReReco_v1",
+            "data_JetHT_Run2012B_22Jan2013ReReco_v1",
+            "data_JetHT_Run2012C_22Jan2013ReReco_v1",
+            "data_JetHT_Run2012D_22Jan2013ReReco_v1"
         ]
     },
     'DYJets' : {
@@ -103,7 +107,7 @@ samples = {
     'DYJets_Embedded' : {
         'processes' : [ "ZTT_Embedded" ],
         'inputFiles' : [
-            "pfEmbed_Run2012A_22Jan2013_v1",
+            ##"pfEmbed_Run2012A_22Jan2013_v1",
             "pfEmbed_Run2012B_22Jan2013_v1",
             "pfEmbed_Run2012C_22Jan2013_v1",
             "pfEmbed_Run2012D_22Jan2013_v1"
@@ -112,7 +116,7 @@ samples = {
     },
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
-        'inputFiles' : [ "rhEmbed_TTJetsFullLept" ],
+        'inputFiles' : [ "pfEmbed_TTJetsFullLept" ],
         'lumiScale' : getLumiScale('TTJetsFullLept'),
         'addWeights' : [ "topPtWeightNom" ]
     },
@@ -152,7 +156,7 @@ for massPoint in mssmHiggsMassPoints:
         'processes' : [ "ggH%1.0f" % massPoint ],
         'inputFiles' : [ ggSampleName ],
         'lumiScale' : getLumiScale(ggSampleName, 1.*_picobarns), # CV: normalize MSSM Higgs -> tautau signal MCs to cross-section of 1pb
-        'addWeights' : [ "mssmHiggsPtReweightGluGlu_mhmax_A_mA%1.0f_mu200_central" % massPoint ]
+        'addWeights' : []
     }
     bbSampleName = "HiggsSUSYBB%1.0f" % massPoint
     if bbSampleName == "HiggsSUSYBB300":
@@ -245,13 +249,29 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
+    'CMS_eff_b_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_eff_b_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_fake_b_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_fake_b_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },    
     'CMS_htt_higgsPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : [ "central -> tanBetaLow" ]
+        'addWeights_extension'    : []
     },
     'CMS_htt_higgsPtReweight_8TeVDown' : {
         'inputFilePath_extension' : "nom",
-        'addWeights_extension'    : [ "central -> tanBetaHigh" ]
+        'addWeights_extension'    : []
     },
     'CMS_htt_ttbarPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
@@ -521,15 +541,17 @@ for sample in samples.keys():
                     continue
                 if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
-
+                if len(central_or_shift) > 0 and central_or_shift.find('central') == -1 and sample == "Data":
+                    continue
+                
                 inputFileNames = []
                 for inputFilePath_extension_sample in samples[sample]['inputFiles']:
                     inputFileNames_sample = getInputFileNames(os.path.join(inputFilePath, central_or_shifts_region[central_or_shift]['inputFilePath_extension'], inputFilePath_extension_sample))
                     inputFileNames.extend(inputFileNames_sample)
                 if len(inputFileNames) == 0:
                     raise ValueError("Failed to find input files for sample = '%s' !!" % sample)
-                if central_or_shift == "" or central_or_shift == "central":
-                    print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
+                ##if central_or_shift == "" or central_or_shift == "central":
+                print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
 
                 for tauPtBin in tauPtBins:
 
@@ -582,6 +604,7 @@ for sample in samples.keys():
                         elif central_or_shifts_region[central_or_shift]['inputFilePath_extension'] == "down":
                             cfg_modified += "process.FWLiteTauTauAnalyzer.treeName = cms.string('tauTauNtupleProducerTauDown/H2TauTauTreeProducerTauTau')\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.process = cms.string('%s')\n" % process
+                        massPoint = None
                         if sample in recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'].keys() and recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == 'bsmMC':
                             massPoint_match = massPoint_matcher.match(sample)
                             if massPoint_match:
@@ -615,6 +638,13 @@ for sample in samples.keys():
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2Selection = cms.string('%s')\n" % tau2Selection
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMin = cms.double(%1.0f)\n" % tauPtMin
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMax = cms.double(%1.0f)\n" % tauPtMax
+                        trigger = None
+                        if recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == "Data":
+                            trigger = recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['trigger']
+                        else:
+                            trigger = "TauPlusJet"
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.trigger = cms.string('%s')\n" % trigger
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.applyTauTriggerTurnOn = cms.string('%s')\n" % discriminator                    
                         if region.find("LooseBtag") != -1:
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyTightBtag = cms.bool(False)\n"
                         else: 
@@ -696,22 +726,26 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.stitchingWeights = cms.vdouble(%s)\n" % getStringRep_vdouble(samples[sample]['stitchingWeights'])
                         addWeights = []
                         if 'addWeights' in samples[sample].keys():
-                            for addWeight in samples[sample]['addWeights']:
-                                if sample.find("HiggsSUSYGluGlu") != -1 and addWeight.find("mssmHiggsPtReweightGluGlu") != -1:
-                                    if central_or_shift == "CMS_htt_higgsPtReweight_8TeVUp":
-                                        addWeights.append(addWeight.replace("central", "tanBetaLow"))
-                                        continue
-                                    elif central_or_shift == "CMS_htt_higgsPtReweight_8TeVDown":
-                                        addWeights.append(addWeight.replace("central", "tanBetaHigh"))
-                                        continue
-                                addWeights.append(addWeight)
+                            addWeights = samples[sample]['addWeights']:
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
+                        if sample.find("HiggsSUSYGluGlu") == -1:
+                            if not massPoint:
+                                raise ValueError("Failed to decode mass-point for sample = %s !!" % sample)                            
+                            lutNameHiggsPtReweighting = "A_mA%s_mu200/mssmHiggsPtReweight_A_mA%s_mu200_central" % (massPoint, massPoint)
+                            if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVUp':
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "tanBetaLow")
+                            if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVDown':
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "tanBetaHigh")
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.applyHiggsPtReweighting = cms.bool(True)\n"
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.higgsPtReweighting.lutName = cms.string('%s')\n" % lutNameHiggsPtReweighting
+                        else:
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.applyHiggsPtReweighting = cms.bool(False)\n"
                         if region == "OSisoTightBtag" and (central_or_shift == "" or central_or_shift == "central"):
                             selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")
                             cfg_modified += "process.FWLiteTauTauAnalyzer.selEventsFileName = cms.string('%s')\n" % selEventsFileName
-                        cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
-                                                                              (discriminator, sample, process, region, tauPtBin_label, central_or_shift)))
+                        cfgFileName_modified = os.path.join(outputFilePath_subdir, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
+                                                                                     (discriminator, sample, process, region, tauPtBin_label, central_or_shift)))
                         cfgFileName_modified = cfgFileName_modified.replace("__", "_")
                         cfgFileName_modified = cfgFileName_modified.replace("_.", ".")
                         ##print " cfgFileName_modified = '%s'" % cfgFileName_modified
@@ -1262,6 +1296,7 @@ for outputFileName in outputFileNames:
         ##    runCommand(command)
         ##    continue
         outputFileSize = os.stat(outputFileName).st_size
+        #if outputFileSize < 10000 or outputFileName.find("TT_Embedded") != -1:
         if outputFileSize < 10000:
             print "file = %s has size = %i --> deleting it." % (outputFileName, outputFileSize)
             command = "%s %s" % (executable_rm, outputFileName)

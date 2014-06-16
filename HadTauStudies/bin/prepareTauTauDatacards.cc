@@ -91,6 +91,12 @@ namespace
       histogram_output->SetBinContent(iBin, binContent);
       double binError = histogram_input->GetBinError(iBin);
       histogram_output->SetBinError(iBin, binError);
+      // CV: set underflow, overflow and all bins below 50 GeV to zero
+      double binCenter = histogram_input->GetBinCenter(iBin);
+      if ( iBin == 0 || binCenter < 50. || iBin == (numBins + 1) ) {
+	histogram_output->SetBinContent(iBin, 0.);
+	histogram_output->SetBinError(iBin, 0.);
+      }
     }
   }
     

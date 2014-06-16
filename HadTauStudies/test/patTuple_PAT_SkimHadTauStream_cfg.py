@@ -35,6 +35,7 @@ else:
 #__runOnMC = $runOnMC
 #__runOnEmbed = $runOnEmbed
 #__embedType = $embedType
+#__trigger = $trigger
 #
 #--------------------------------------------------------------------------------
 
@@ -99,14 +100,29 @@ if runOnEmbed :
     )
     process.hltFilterSequence += process.HLTFilterMuMu
 else :
+    HLTPaths_Tau = [
+        "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v*",
+        "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v*",
+        "HLT_DoubleMediumIsoPFTau30_Trk5_eta2p1_Jet30_v*",
+        "HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1_Jet30_v*",
+    ]
+    HLTPaths_Jet = [
+        "HLT_PFJet320_v*",
+    ]
+    HLTPaths = None
+    if trigger == "Tau":
+        HLTPaths = HLTPaths_Tau
+    elif trigger == "Jet":
+        HLTPaths = HLTPaths_Jet
+    elif trigger == "TauPlusJet":
+        HLTPaths = []
+        HLTPaths.extend(HLTPaths_Tau)
+        HLTPaths.extend(HLTPaths_Jet)
+    else:
+        raise ValueError("Invalid trigger option = %s !!" % trigger)
     process.HLTFilterTauTau = cms.EDFilter("HLTHighLevel",
-        TriggerResultsTag = cms.InputTag("TriggerResults", "", "HLT"),
-        HLTPaths = cms.vstring(
-            "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v*",
-            "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_v*",
-            "HLT_DoubleMediumIsoPFTau30_Trk5_eta2p1_Jet30_v*",
-            "HLT_DoubleMediumIsoPFTau30_Trk1_eta2p1_Jet30_v*"
-        ),
+        TriggerResultsTag = cms.InputTag("TriggerResults", "", "HLT"),                                           
+        HLTPaths = cms.vstring(HLTPaths),
         eventSetupPathsKey = cms.string(''),
         andOr = cms.bool(True), # OR
         throw = cms.bool(False)

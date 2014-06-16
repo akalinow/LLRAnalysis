@@ -471,6 +471,7 @@ namespace
 
   TH1* blindHistogram(TH1* histogram, const std::vector<pdouble>& keepBlinded)
   {
+    //std::cout << "<blindHistogram>:" << std::endl;
     std::string blindedHistogramName = Form("%s_blinded", histogram->GetName());
     TH1* blindedHistogram = (TH1*)histogram->Clone(blindedHistogramName.data());
     if ( !blindedHistogram->GetSumw2N() ) blindedHistogram->Sumw2();
@@ -485,11 +486,14 @@ namespace
 	  break;
 	}
       }
+      //std::cout << "x = " << x << ": isBlinded = " << isBlinded << std::endl;
       if ( isBlinded ) {
 	blindedHistogram->SetBinContent(iBin, -10.);
 	blindedHistogram->SetBinError(iBin, 0.);
       }
     }
+    //std::cout << "histogram: name = " << histogram->GetName() << ", integral = " << histogram->Integral() << std::endl;
+    //std::cout << "histogram(blinded): name = " << blindedHistogram->GetName() << ", integral = " << blindedHistogram->Integral() << std::endl;
     return blindedHistogram;
   }
 
@@ -557,7 +561,7 @@ namespace
 		TH1* histogramSignal1, const std::string& legendEntrySignal1,
 		TH1* histogramSignal2, const std::string& legendEntrySignal2,
 		TH1* histogramSignal3, const std::string& legendEntrySignal3,
-		TH1* histogramData,
+		TH1* histogramData, TH1* histogramData_blinded,
 		TH1* histogramZTT,
 		TH1* histogramTT,
 		TH1* histogramEWK,
@@ -587,6 +591,8 @@ namespace
       histogramSignal3_density = divideHistogramByBinWidth(histogramSignal3);
     }
     TH1* histogramData_density = divideHistogramByBinWidth(histogramData);
+    checkCompatibleBinning(histogramData_blinded, histogramData);
+    TH1* histogramData_blinded_density = divideHistogramByBinWidth(histogramData_blinded);
     checkCompatibleBinning(histogramZTT, histogramData);
     TH1* histogramZTT_density = divideHistogramByBinWidth(histogramZTT);
     checkCompatibleBinning(histogramTT, histogramData);
@@ -630,13 +636,13 @@ namespace
     topPad->Draw();
     topPad->cd();
 
-    TAxis* xAxis_top = histogramData_density->GetXaxis();
+    TAxis* xAxis_top = histogramData_blinded_density->GetXaxis();
     xAxis_top->SetTitle(xAxisTitle.data());
     xAxis_top->SetTitleOffset(xAxisOffset);
     xAxis_top->SetLabelColor(10);
     xAxis_top->SetTitleColor(10);
     
-    TAxis* yAxis_top = histogramData_density->GetYaxis();
+    TAxis* yAxis_top = histogramData_blinded_density->GetYaxis();
     yAxis_top->SetTitle(yAxisTitle.data());
     yAxis_top->SetTitleOffset(yAxisOffset);
     yAxis_top->SetTitleSize(0.05);
@@ -659,17 +665,17 @@ namespace
       yMin = 0.;
     }
 
-    histogramData_density->SetTitle("");
-    histogramData_density->SetStats(false);
-    histogramData_density->SetMaximum(yMax);
-    histogramData_density->SetMinimum(yMin);
-    histogramData_density->SetMarkerStyle(20);
-    histogramData_density->SetMarkerSize(1.2);
-    histogramData_density->SetMarkerColor(kBlack);
-    histogramData_density->SetLineColor(kBlack);
-    legend->AddEntry(histogramData_density, "observed", "p");
+    histogramData_blinded_density->SetTitle("");
+    histogramData_blinded_density->SetStats(false);
+    histogramData_blinded_density->SetMaximum(yMax);
+    histogramData_blinded_density->SetMinimum(yMin);
+    histogramData_blinded_density->SetMarkerStyle(20);
+    histogramData_blinded_density->SetMarkerSize(1.2);
+    histogramData_blinded_density->SetMarkerColor(kBlack);
+    histogramData_blinded_density->SetLineColor(kBlack);
+    legend->AddEntry(histogramData_blinded_density, "observed", "p");
 
-    histogramData_density->Draw("ep");
+    histogramData_blinded_density->Draw("ep");
 
     histogramZTT_density->SetFillColor(kOrange - 4);
     legend->AddEntry(histogramZTT_density, "Z #rightarrow #tau#tau", "f");
@@ -678,7 +684,7 @@ namespace
     legend->AddEntry(histogramTT_density, "t#bar{t}", "f");
     
     histogramEWK_density->SetFillColor(kRed + 2);
-    legend->AddEntry(histogramEWK_density, "electroweak", "f");
+    legend->AddEntry(histogramEWK_density, "Electroweak", "f");
 
     histogramQCD_density->SetFillColor(kMagenta - 10);
     legend->AddEntry(histogramQCD_density, "QCD", "f");
@@ -728,7 +734,8 @@ namespace
       legend->AddEntry(histogramSignal3_density, legendEntrySignal3.data(), "l");
     }
 
-    histogramData_density->Draw("epsame");
+    histogramData_blinded_density->Draw("epsame");
+    histogramData_blinded_density->Draw("axissame");
 
     legend->Draw();
 
@@ -769,24 +776,25 @@ namespace
     histogramBgr->Add(histogramTT);
     histogramBgr->Add(histogramEWK);
     histogramBgr->Add(histogramQCD);
-    TH1* histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
+    TH1* histogramRatio = (TH1*)histogramData_blinded->Clone("histogramRatio");
     if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
     checkCompatibleBinning(histogramRatio, histogramBgr);
     histogramRatio->Divide(histogramBgr);
     int numBins_bottom = histogramRatio->GetNbinsX();
     for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
       double binContent = histogramRatio->GetBinContent(iBin);
-      histogramRatio->SetBinContent(iBin, binContent - 1.0);
+      if ( histogramData_blinded->GetBinContent(iBin) > 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
+      else histogramRatio->SetBinContent(iBin, -10.);
     }
 
     histogramRatio->SetTitle("");
     histogramRatio->SetStats(false);
     histogramRatio->SetMinimum(-0.50);
     histogramRatio->SetMaximum(+0.50);
-    histogramRatio->SetMarkerStyle(histogramData_density->GetMarkerStyle());
-    histogramRatio->SetMarkerSize(histogramData_density->GetMarkerSize());
-    histogramRatio->SetMarkerColor(histogramData_density->GetMarkerColor());
-    histogramRatio->SetLineColor(histogramData_density->GetLineColor());
+    histogramRatio->SetMarkerStyle(histogramData_blinded_density->GetMarkerStyle());
+    histogramRatio->SetMarkerSize(histogramData_blinded_density->GetMarkerSize());
+    histogramRatio->SetMarkerColor(histogramData_blinded_density->GetMarkerColor());
+    histogramRatio->SetLineColor(histogramData_blinded_density->GetLineColor());
 
     TAxis* xAxis_bottom = histogramRatio->GetXaxis();
     xAxis_bottom->SetTitle(xAxis_top->GetTitle());
@@ -851,6 +859,7 @@ namespace
     delete histogramSignal2_density;
     delete histogramSignal3_density;
     delete histogramData_density;
+    delete histogramData_blinded_density;
     delete histogramZTT_density;
     delete histogramTT_density;
     delete histogramEWK_density;
@@ -1017,7 +1026,7 @@ int main(int argc, char* argv[])
 	  histogramEWK->Add(histogramZJ);
 	  histogramEWK->Add(histogramVV);
 
-	  TH1* histogramData_blinded = ( (*distribution)->keepBlinded_.size() >= 1 ) ? blindHistogram(histogramData, (*distribution)->keepBlinded_) : histogramData;
+	  TH1* histogramData_blinded = ( (*distribution)->keepBlinded_.size() >= 1 ) ? blindHistogram(histogramData, (*distribution)->keepBlinded_) : histogramData;	  
 
 	  TH1* histogramBgrUncertainty = 0;
 	  if ( showBgrUncertainty ) {
@@ -1043,7 +1052,7 @@ int main(int argc, char* argv[])
 		   histogramSignal1, legendEntrySignal1,
 		   histogramSignal2, legendEntrySignal2,
 		   histogramSignal3, legendEntrySignal3,
-		   histogramData,
+		   histogramData, histogramData_blinded,
 		   histogramZTT,
 		   histogramTT,
 		   histogramEWK,
@@ -1059,7 +1068,7 @@ int main(int argc, char* argv[])
 		   histogramSignal1, legendEntrySignal1,
 		   histogramSignal2, legendEntrySignal2,
 		   histogramSignal3, legendEntrySignal3,
-		   histogramData,
+		   histogramData, histogramData_blinded,
 		   histogramZTT,
 		   histogramTT,
 		   histogramEWK,

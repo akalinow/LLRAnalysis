@@ -99,12 +99,12 @@ void makeAccTimesEffTable()
 
   TH1::AddDirectory(false);
 
-  std::string inputFilePath_unweighted = "/data1/veelken/tmp/tauTauAnalysis/v1_11_3_woHiggsPtReweighting/";
+  std::string inputFilePath_unweighted = "/data1/veelken/tmp/tauTauAnalysis/v1_12_6_woHiggsPtReweighting/";
   std::string inputFileName_unweighted = "MVAwLToldDMsTight/hadd_stage5_MVAwLToldDMsTight.root";
   TFile* inputFile_unweighted = new TFile(Form("%s%s", inputFilePath_unweighted.data(), inputFileName_unweighted.data()));
   assert(inputFile_unweighted);
 
-  std::string inputFilePath_weighted = "/data1/veelken/tmp/tauTauAnalysis/v1_11_3/";
+  std::string inputFilePath_weighted = "/data1/veelken/tmp/tauTauAnalysis/v1_12_6/";
   std::string inputFileName_weighted = "MVAwLToldDMsTight/hadd_stage5_MVAwLToldDMsTight.root";
   TFile* inputFile_weighted = new TFile(Form("%s%s", inputFilePath_weighted.data(), inputFileName_weighted.data()));
   assert(inputFile_weighted);

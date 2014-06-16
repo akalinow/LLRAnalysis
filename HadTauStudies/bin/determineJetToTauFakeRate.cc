@@ -680,17 +680,22 @@ int main(int argc, char* argv[])
 	std::cout << "EigenVector #" << idxPar << ":" << std::endl;
 	eigenVector_and_Value->eigenVector_.Print();
 	std::cout << "EigenValue #" << idxPar << " = " << eigenVector_and_Value->eigenValue_ << std::endl;
+	assert(eigenVector_and_Value->eigenValue_ >= 0.);
 	std::string fitFunctionShapeParUpName = Form("fitFunctionShapePar%iUp_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
 	TF1* fitFunctionShapeParUp = new TF1(fitFunctionShapeParUpName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
 	for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
-	  fitFunctionShapeParUp->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) + eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
+	  fitFunctionShapeParUp->SetParameter(
+            iComponent, 
+	    fitFunctionShape->GetParameter(iComponent) + TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(iComponent));
 	}
 	fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParUp, Form("EigenVec #%i", idxPar)));
 	fitFunctionShapeParUp->Write();
 	std::string fitFunctionShapeParDownName = Form("fitFunctionShapePar%iDown_%s_%s_div_%s", idxPar, histogramToFit->data(), tightRegion.data(), looseRegion.data());
 	TF1* fitFunctionShapeParDown = new TF1(fitFunctionShapeParDownName.data(), fitFunction_formula_wrt_x0.data(), xMin, xMax);
 	for ( size_t iComponent = 0; iComponent < dimension; ++iComponent ) {    
-	  fitFunctionShapeParDown->SetParameter(iComponent, fitFunctionShape->GetParameter(iComponent) - eigenVector_and_Value->eigenValue_*eigenVector_and_Value->eigenVector_(iComponent));
+	  fitFunctionShapeParDown->SetParameter(
+            iComponent, 
+	    fitFunctionShape->GetParameter(iComponent) - TMath::Sqrt(eigenVector_and_Value->eigenValue_)*eigenVector_and_Value->eigenVector_(iComponent));
 	}
 	fitFunctions_sysShifts.push_back(fitFunction_and_legendEntry(fitFunctionShapeParDown, Form("EigenVec #%i", idxPar)));
 	fitFunctionShapeParDown->Write();

@@ -132,14 +132,14 @@ process.makeTauTauPlots = cms.PSet(
         cms.PSet(
             histogramName = cms.string("svFitMassS"),
             xAxisTitle = cms.string("m_{#tau#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]")
-            ##keepBlinded = cms.vstring("100:1500")
+            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]"),
+            keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("visMassS"),
             xAxisTitle = cms.string("m_{vis} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]")
-            ##keepBlinded = cms.vstring("100:1500")
+            yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
+            keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("jet1PtS"),
@@ -244,7 +244,7 @@ process.makeTauTauPlots = cms.PSet(
             CMS_htt_QCDfrShape_tautau_8TeV = cms.string("0.00 +/- 1.00")
         )
     ),
-    showBgrUncertainty = cms.bool(True),
+    showBgrUncertainty = cms.bool(False),
 
     labelOnTop = cms.string("CMS Preliminary, H#rightarrow #tau#tau, %1.1f fb^{-1} at 8 TeV"),    
     intLumiData = cms.double(18.3), # in units of fb^-1

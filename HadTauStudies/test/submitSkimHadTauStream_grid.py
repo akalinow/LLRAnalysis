@@ -10,10 +10,10 @@ import subprocess
 import time
 
 configFile = 'patTuple_PAT_SkimHadTauStream_cfg.py'
-jobId = '2014Jan10'
+jobId = '2014Jun15'
 
-##outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
-outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
+outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
+##outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 
 samplesToAnalyze = [
     # CV: leave empty in order to submit jobs for all samples
@@ -21,9 +21,13 @@ samplesToAnalyze = [
     ##'DY2JetsExt'
     ##'HiggsSUSYBB300v2'
     ##'HiggsVH125'
-    'W1JetsExt',
-    'W2JetsExt',
-    'W3JetsExt'
+    ##'W1JetsExt',
+    ##'W2JetsExt',
+    ##'W3JetsExt'
+    ##'pfEmbed_TTJetsFullLept_v2'
+    ##'HiggsSUSYGluGlu800'
+    'data_TauParked_Run2012B_22Jan2013_v1',
+    'data_TauParked_Run2012C_22Jan2013_v1'
 ]
 
 #--------------------------------------------------------------------------------
@@ -76,13 +80,20 @@ def customizeConfigFile(sampleName, jobId, cfgFileName_original, cfgFileName_mod
 
 # Functions to create output directory on eos
 def createFilePath(filePath):
-    try:
-        eos.lsl(filePath)
-    except IOError:
-        print "filePath = %s does not yet exist, creating it." % filePath
-        eos.mkdir(filePath)
-        time.sleep(3)
-        eos.chmod(filePath, 777)
+    if not filePath.endswith('/'):
+        filePath += '/'
+    if filePath.startswith('/store/'):
+        try:
+            eos.lsl(filePath)
+        except IOError:
+            print "filePath = %s does not yet exist, creating it." % filePath
+            eos.mkdir(filePath)
+            time.sleep(3)
+            eos.chmod(filePath, 777)
+    else:
+        if not os.path.exists(filePath):
+            print "filePath = %s does not yet exist, creating it." % filePath
+            os.mkdir(filePath)
 
 def createFilePath_recursively(filePath):
     filePath_items = filePath.split('/')

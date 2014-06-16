@@ -152,6 +152,7 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
 
   histogramNumVertices_   = book1D(dir, "numVertices",   "N_{vtx}", 50, -0.5, 49.5);
 
+  histogramGenHiggsPt_    = book1D(dir, "genHiggsPt",    "gen. P_{T}^{#Phi} / GeV", 100, 0., 500.);
   histogramNUP_           = book1D(dir, "NUP",           "NUP", 15, -0.5, 14.5);
 
   histogramEventCounter_  = book1D(dir, "EventCounter",  "", 1, -0.5, +0.5);
@@ -188,7 +189,7 @@ void TauTauHistManager::fillHistograms(
        double jet2Pt, double jet2Eta, double jet2Phi, double jet2BtagDiscr, int numJets,
        double bjet1Pt, double bjet1Eta, double bjet1Phi, 
        double bjet2Pt, double bjet2Eta, double bjet2Phi, int numBJets,
-       double met, int numVertices, double NUP,
+       double met, int numVertices, double genHiggsPt, double NUP,
        double evtWeight)
 {
   double absTau1Eta = TMath::Abs(tau1Eta);
@@ -278,6 +279,7 @@ void TauTauHistManager::fillHistograms(
 
   histogramNumVertices_->Fill(numVertices, evtWeight);
 
+  histogramGenHiggsPt_->Fill(genHiggsPt, evtWeight); 
   histogramNUP_->Fill(NUP, evtWeight); 
 
   histogramEventCounter_->Fill(0., evtWeight);  

@@ -27,6 +27,7 @@
 
 #include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
 #include "DataFormats/JetReco/interface/PileupJetIdentifier.h" 
+#include "JetMETCorrections/Objects/interface/JetCorrector.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEt.h"
@@ -82,7 +83,7 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   void setValueUL(const std::string&, unsigned long);
 
   void setValue_diTau(const std::string&, const PATDiTauPair&);
-  void setValue_Tau(const std::string&, const pat::Tau&);
+  void setValue_Tau(const std::string&, const pat::Tau&, const edm::Event&, const edm::EventSetup&);
   void setValue_TauLT_base(const std::string&, const pat::Tau&);
   void setValue_TauLT_extended(const std::string&, const pat::Tau&);
   void setValue_Jet(const std::string&, const pat::Jet&);
@@ -130,11 +131,13 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   edm::InputTag srcTriggerResults_;
   std::vector<StringEntryType> hltPaths_diTau_;
   std::vector<StringEntryType> hltPaths_diTauJet_;
+  std::vector<StringEntryType> hltPaths_singleJet_;
   std::vector<StringEntryType> hltPathsToStore_;
   edm::InputTag srcTriggerObjects_;
   vstring hltTauFilters_diTau_;
   vstring hltTauFilters_diTauJet_;
   vstring hltJetFilters_diTauJet_;
+  vstring hltJetFilters_singleJet_;
 
   edm::InputTag srcL1Taus_;
   edm::InputTag srcL1Jets_;
@@ -147,6 +150,8 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   PileupJetIdentifier::Id wpPileupJetId_;
   edm::InputTag srcPileupJetIdMVA_;
   std::string bJetDiscriminator_;
+  std::string jetCorrLabel_;
+  const JetCorrector* jec_;
   std::string jetCorrPayload_;
   std::string jecUncertaintyTag_;
   JetCorrectionUncertainty* jecUncertainty_;
