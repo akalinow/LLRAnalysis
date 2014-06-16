@@ -2,6 +2,7 @@
 #define BtagSF_hh
 
 #include "TRandom3.h"
+#include <TMath.h>
 #include <iostream>
 
 class BtagSF{
@@ -235,7 +236,7 @@ Double_t BtagSF::getSFc(Float_t pt, UInt_t btagsys, Bool_t is2012)
 Double_t BtagSF::getSFl(Float_t pt, Float_t eta, UInt_t mistagsys, Bool_t is2012)
 {
 
-  Float_t x = min(double(pt), is2012 ? 670.0 : 800.0);
+  Float_t x = TMath::Min(double(pt), is2012 ? 670.0 : 800.0);
 
   Double_t SFl = 0;
 
@@ -276,7 +277,7 @@ Double_t BtagSF::getSFl(Float_t pt, Float_t eta, UInt_t mistagsys, Bool_t is2012
 Double_t BtagSF::getMistag(Float_t pt, Float_t eta)
 {
 
-  Float_t x = min(double(pt), 670.0);
+  Float_t x = TMath::Min(double(pt), 670.0);
 
   Double_t eff_l = 0.0;
 
