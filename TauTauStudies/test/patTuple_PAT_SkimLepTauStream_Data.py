@@ -141,6 +141,9 @@ process.HLTFilterMuTau = cms.EDFilter(
                                      "HLT_IsoMu15_eta2p1_L1ETM20_v*",
                                      "HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v*",
                                      "HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v*",#monitoring
+                                     "HLT_IsoMu24_v*",#single muon no eta restriction
+                                     "HLT_IsoMu24_eta2p1_v*",#single muon eta restriction
+                                     "HLT_PFJet320_v*",#single jet (for efficiency studies)
                                      ),
     eventSetupPathsKey = cms.string(''),
     andOr              = cms.bool(True),   # OR
@@ -153,6 +156,9 @@ process.HLTFilterEleTau.HLTPaths = cms.vstring("HLT_Ele20_CaloIdVT_CaloIsoRhoT_T
                                                "HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v*",
                                                "HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_L1ETM36_v*",
                                                "HLT_Ele13_eta2p1_WP90Rho_LooseIsoPFTau20_v*",#monitoring
+                                               "HLT_Ele27_WP80_v*",#single electron
+                                               
+                                               "HLT_PFJet320_v*",#single jet (for efficiency studies)
                                                )
 
 ### to "emulate" e/mu+tau_etm triggers in MC
