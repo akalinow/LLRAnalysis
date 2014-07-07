@@ -44,6 +44,7 @@
 #define useZDataMC       false
 #define includeWG        true
 #define FastMode         false
+#define StudyQCDOlivier  true
 
 typedef map<TString, TChain* >  mapchain;
 
@@ -170,7 +171,8 @@ void chooseSelection(TString variable_,
   if(version_.Contains("NewEleID")) lveto = "elecFlag==0 && vetoEventNew==0";
 
   //TauID
-  if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0";
+  if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0.5";
+  //if(version_.Contains("TauOldDM")) tdecaymode = "decayModeFindingOldDM>0";
   else if(version_.Contains("TauNewDM")) tdecaymode = "decayModeFindingNewDM>0";
 
   // TauIso
@@ -864,6 +866,11 @@ void evaluateQCD(mapchain mapAllTrees, TString version_ = "",
   float Error = 0.;
   float SSQCDinSignalRegionDATAIncl = 0.;
   drawHistogram(sbinPairIso,sbinCatForSbin, "Data", version_, RUN, mapAllTrees["Data"], variable,              SSQCDinSignalRegionDATAIncl,        Error, 1.0,         hExtrap, sbin, 1);
+  cout<<"********* HERE IS STANDARD MEASUREMENT OF QCD IN SS *********"<<endl;
+  cout<<"      sbinPairIso = "<<sbinPairIso<<endl;
+  cout<<"      sbinCatForSbin = "<<sbinCatForSbin<<endl;
+  cout<<"      sbin = "<<sbin<<endl;
+  cout<<"********* END *********"<<endl;
   if(qcdHisto!=0) qcdHisto->Add(hExtrap,  1.0);
   if(ssHisto !=0) ssHisto->Add( hExtrap,  1.0);
 
@@ -1227,6 +1234,29 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hDataAntiIsoLooseTauIso           = new TH1F( "hDataAntiIsoLooseTauIso"   ,"data anti-iso, loose tau-iso"          , nBins , bins.GetArray()); hDataAntiIsoLooseTauIso->SetFillColor(kMagenta-10);
   TH1F* hDataAntiIsoLooseTauIsoQCD        = new TH1F( "hDataAntiIsoLooseTauIsoQCD"   ,"data anti-iso, norm QCD"            , nBins , bins.GetArray()); hDataAntiIsoLooseTauIsoQCD->SetFillColor(kMagenta-10);
 
+  // QCD shapes
+  // Olivier
+  // SS tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_TightTauIsoMVA = new TH1F("hQCD_SS_ReverseElecIso_TightTauIsoMVA","hQCD_SS_ReverseElecIso_TightTauIsoMVA",nBins,bins.GetArray());
+  // SS loose non-tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA = new TH1F("hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA","hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA",nBins,bins.GetArray());
+  // SS tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_central = new TH1F("hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_central","hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_central",nBins,bins.GetArray());
+  // SS loose non-tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_central = new TH1F("hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_central","hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_central",nBins,bins.GetArray());
+  // SS tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium = new TH1F("hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium","hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium",nBins,bins.GetArray());
+  // SS loose non-tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium = new TH1F("hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium","hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium",nBins,bins.GetArray());
+  // SS tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_forward = new TH1F("hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_forward","hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_forward",nBins,bins.GetArray());
+  // SS loose non-tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_forward = new TH1F("hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_forward","hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_forward",nBins,bins.GetArray());
+  // SS tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium_forward = new TH1F("hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium_forward","hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium_forward",nBins,bins.GetArray());
+  // SS loose non-tight tau iso
+  TH1F* hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium_forward = new TH1F("hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium_forward","hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium_forward",nBins,bins.GetArray());
+
   //W Up/Down
   TH1F* hW_TFUp        = new TH1F( "hW_TFUp"      ,"W+jets"            , nBins , bins.GetArray());         hW_TFUp->SetFillColor(kRed+2);
   TH1F* hW_TFDown        = new TH1F( "hW_TFDown"      ,"W+jets"            , nBins , bins.GetArray());    hW_TFDown->SetFillColor(kRed+2);
@@ -1551,7 +1581,8 @@ void plotElecTau( Int_t mH_           = 120,
   TCut antimu("tightestAntiMuWP>0");
   TCut antiele("tightestAntiEMVA5WP > 0");
   TCut tiso("hpsDB3H<1.5");
-  TCut tdecaymode("decayModeFindingOldDM>0");
+  TCut tdecaymode("decayModeFindingOldDM>0.5");
+  //TCut tdecaymode("decayModeFindingOldDM>0");
   TCut ltiso("hpsDB3H<10.0");
   TCut mtiso("hpsDB3H<5.0");
   TCut lveto("elecFlag==0 && vetoEventOld==0"); //elecFlag==0
@@ -2705,7 +2736,295 @@ void plotElecTau( Int_t mH_           = 120,
 	  drawHistogram(sbinPresel,sbinCat, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , h1, sbin, 1);
 	  hData->Add(h1, 1.0);
 	  if ( !hData->GetSumw2N() ) hData->Sumw2();
+
+	  // Other QCD shapes
+	  TH1F* hExtrapNadir = new TH1F("hExtrapNadir","",nBins , bins.GetArray());
+	  float dummy1 = 0.;
+
+	  if(StudyQCDOlivier)
+	    {
+	      //Olivier -- QCD shape template correction
+
+	      //SS, lepton anti-iso, tau_h tight iso
+	      //tightestHPSMVA3oldDMwLTWP>2
+	      TCut sbinSSaIso_TightIso_Olivier = "(((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_TightIso_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_TightIso_Olivier = "((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_TightIso_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_TightIso_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_TightIso_Olivier = "((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_TightIso_Olivier = "(((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_TightTauIsoMVA, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_TightIso_Olivier,
+			  sbinCat_TightIso_Olivier,
+			  sbinPZetaRelSSaIso_TightIso_Olivier, pZ_TightIso_Olivier, apZ_TightIso_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_TightIso_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_Olivier, sbinPZetaRelSSaIso_TightIso_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_TightIso_Olivier, sbinCat_TightIso_Olivier, sbinaIsoPresel_TightIso_Olivier, sbinaIsoPresel_TightIso_Olivier, true);//52
 	  
+	      //SS, lepton anti-iso, tau_h loose non tight iso
+	      // tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3
+	      TCut sbinSSaIso_LooseNonTightIso_Olivier = "(((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_LooseNonTightIso_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_LooseNonTightIso_Olivier = "((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_LooseNonTightIso_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_LooseNonTightIso_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_Olivier = "((((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_LooseNonTightIso_Olivier = "(((((((((((ptL1>24)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_LooseNonTightIso_Olivier,
+			  sbinCat_LooseNonTightIso_Olivier,
+			  sbinPZetaRelSSaIso_LooseNonTightIso_Olivier, pZ_LooseNonTightIso_Olivier, apZ_LooseNonTightIso_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_Olivier, sbinPZetaRelSSaIso_LooseNonTightIso_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_LooseNonTightIso_Olivier, sbinCat_LooseNonTightIso_Olivier, sbinaIsoPresel_LooseNonTightIso_Olivier, sbinaIsoPresel_LooseNonTightIso_Olivier, true);//52
+
+
+	      //central eta < 1.2
+	      //SS, lepton anti-iso, tau_h tight iso
+	      //tightestHPSMVA3oldDMwLTWP>2
+	      TCut sbinSSaIso_TightIso_eta_central_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_TightIso_eta_central_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_TightIso_eta_central_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_TightIso_eta_central_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_TightIso_eta_central_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_TightIso_eta_central_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_TightIso_eta_central_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_central, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_TightIso_eta_central_Olivier,
+			  sbinCat_TightIso_eta_central_Olivier,
+			  sbinPZetaRelSSaIso_TightIso_eta_central_Olivier, pZ_TightIso_eta_central_Olivier, apZ_TightIso_eta_central_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_central_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_TightIso_eta_central_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_central_Olivier, sbinPZetaRelSSaIso_TightIso_eta_central_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_TightIso_eta_central_Olivier, sbinCat_TightIso_eta_central_Olivier, sbinaIsoPresel_TightIso_eta_central_Olivier, sbinaIsoPresel_TightIso_eta_central_Olivier, true);//52
+	  
+	      //SS, lepton anti-iso, tau_h loose non tight iso
+	      // tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3
+	      TCut sbinSSaIso_LooseNonTightIso_eta_central_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_LooseNonTightIso_eta_central_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_LooseNonTightIso_eta_central_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_LooseNonTightIso_eta_central_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_LooseNonTightIso_eta_central_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_central_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_LooseNonTightIso_eta_central_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)<1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_central, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_LooseNonTightIso_eta_central_Olivier,
+			  sbinCat_LooseNonTightIso_eta_central_Olivier,
+			  sbinPZetaRelSSaIso_LooseNonTightIso_eta_central_Olivier, pZ_LooseNonTightIso_eta_central_Olivier, apZ_LooseNonTightIso_eta_central_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_central_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_central_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_central_Olivier, sbinPZetaRelSSaIso_LooseNonTightIso_eta_central_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_LooseNonTightIso_eta_central_Olivier, sbinCat_LooseNonTightIso_eta_central_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_central_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_central_Olivier, true);//52
+
+
+	      //medium eta in 1.2,1.7
+	      //SS, lepton anti-iso, tau_h tight iso
+	      //tightestHPSMVA3oldDMwLTWP>2
+	      TCut sbinSSaIso_TightIso_eta_medium_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_TightIso_eta_medium_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_TightIso_eta_medium_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_TightIso_eta_medium_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_TightIso_eta_medium_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_TightIso_eta_medium_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_TightIso_eta_medium_Olivier,
+			  sbinCat_TightIso_eta_medium_Olivier,
+			  sbinPZetaRelSSaIso_TightIso_eta_medium_Olivier, pZ_TightIso_eta_medium_Olivier, apZ_TightIso_eta_medium_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_Olivier, sbinPZetaRelSSaIso_TightIso_eta_medium_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_TightIso_eta_medium_Olivier, sbinCat_TightIso_eta_medium_Olivier, sbinaIsoPresel_TightIso_eta_medium_Olivier, sbinaIsoPresel_TightIso_eta_medium_Olivier, true);//52
+	  
+	      //SS, lepton anti-iso, tau_h loose non tight iso
+	      // tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3
+	      TCut sbinSSaIso_LooseNonTightIso_eta_medium_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_LooseNonTightIso_eta_medium_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_LooseNonTightIso_eta_medium_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_LooseNonTightIso_eta_medium_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_LooseNonTightIso_eta_medium_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2&&TMath::Abs(etaL2)<1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_LooseNonTightIso_eta_medium_Olivier,
+			  sbinCat_LooseNonTightIso_eta_medium_Olivier,
+			  sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_Olivier, pZ_LooseNonTightIso_eta_medium_Olivier, apZ_LooseNonTightIso_eta_medium_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_Olivier, sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_LooseNonTightIso_eta_medium_Olivier, sbinCat_LooseNonTightIso_eta_medium_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_medium_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_medium_Olivier, true);//52
+
+
+	      //forward eta > 1.7
+	      //SS, lepton anti-iso, tau_h tight iso
+	      //tightestHPSMVA3oldDMwLTWP>2
+	      TCut sbinSSaIso_TightIso_eta_forward_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_TightIso_eta_forward_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_TightIso_eta_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_TightIso_eta_forward_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_TightIso_eta_forward_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_TightIso_eta_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_TightIso_eta_forward_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_forward, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_TightIso_eta_forward_Olivier,
+			  sbinCat_TightIso_eta_forward_Olivier,
+			  sbinPZetaRelSSaIso_TightIso_eta_forward_Olivier, pZ_TightIso_eta_forward_Olivier, apZ_TightIso_eta_forward_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_forward_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_TightIso_eta_forward_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_forward_Olivier, sbinPZetaRelSSaIso_TightIso_eta_forward_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_TightIso_eta_forward_Olivier, sbinCat_TightIso_eta_forward_Olivier, sbinaIsoPresel_TightIso_eta_forward_Olivier, sbinaIsoPresel_TightIso_eta_forward_Olivier, true);//52
+	  
+	      //SS, lepton anti-iso, tau_h loose non tight iso
+	      // tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3
+	      TCut sbinSSaIso_LooseNonTightIso_eta_forward_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_LooseNonTightIso_eta_forward_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_LooseNonTightIso_eta_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_LooseNonTightIso_eta_forward_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_LooseNonTightIso_eta_forward_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_LooseNonTightIso_eta_forward_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.7)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_forward, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_LooseNonTightIso_eta_forward_Olivier,
+			  sbinCat_LooseNonTightIso_eta_forward_Olivier,
+			  sbinPZetaRelSSaIso_LooseNonTightIso_eta_forward_Olivier, pZ_LooseNonTightIso_eta_forward_Olivier, apZ_LooseNonTightIso_eta_forward_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_forward_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_forward_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_forward_Olivier, sbinPZetaRelSSaIso_LooseNonTightIso_eta_forward_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_LooseNonTightIso_eta_forward_Olivier, sbinCat_LooseNonTightIso_eta_forward_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_forward_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_forward_Olivier, true);//52
+
+
+	      //central eta > 1.2
+	      //SS, lepton anti-iso, tau_h tight iso
+	      //tightestHPSMVA3oldDMwLTWP>2
+	      TCut sbinSSaIso_TightIso_eta_medium_forward_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_TightIso_eta_medium_forward_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_TightIso_eta_medium_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_TightIso_eta_medium_forward_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_TightIso_eta_medium_forward_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_TightIso_eta_medium_forward_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&(tightestHPSMVA3oldDMwLTWP>2))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium_forward, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_TightIso_eta_medium_forward_Olivier,
+			  sbinCat_TightIso_eta_medium_forward_Olivier,
+			  sbinPZetaRelSSaIso_TightIso_eta_medium_forward_Olivier, pZ_TightIso_eta_medium_forward_Olivier, apZ_TightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_forward_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIsoInclusive_TightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIso_TightIso_eta_medium_forward_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_TightIso_eta_medium_forward_Olivier, sbinCat_TightIso_eta_medium_forward_Olivier, sbinaIsoPresel_TightIso_eta_medium_forward_Olivier, sbinaIsoPresel_TightIso_eta_medium_forward_Olivier, true);//52
+	  
+	      //SS, lepton anti-iso, tau_h loose non tight iso
+	      // tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3
+	      TCut sbinSSaIso_LooseNonTightIso_eta_medium_forward_Olivier = "(((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(((MtLeg1MVA)<30.000000)))&&(HLTx==1&& HLTmatch==1)";
+	      TCut sbinCat_LooseNonTightIso_eta_medium_forward_Olivier = "etaL1<999";
+	      TCut sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1&&HLTmatch==1)";;
+	      TCut pZ_LooseNonTightIso_eta_medium_forward_Olivier = "((MtLeg1MVA)<30.000000)";
+	      TCut apZ_LooseNonTightIso_eta_medium_forward_Olivier = "((MtLeg1MVA)>70.000000)";
+	      TCut sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_forward_Olivier = "((((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(diTauCharge!=0))&&(HLTx==1         && HLTmatch==1)";
+	      TCut sbinaIsoPresel_LooseNonTightIso_eta_medium_forward_Olivier = "(((((((((((ptL1>24&&TMath::Abs(etaL2)>1.2)&&(ptL1>-999))&&(((TMath::Abs(scEtaL1)<0.80 && mvaPOGNonTrig>0.925) || (TMath::Abs(scEtaL1)<1.479 && TMath::Abs(scEtaL1)>0.80 && mvaPOGNonTrig>0.975) || (TMath::Abs(scEtaL1)>1.479 && mvaPOGNonTrig>0.985)) && nHits<0.5 && TMath::Abs(etaL1)<2.1))&&((ptL2>30)&&(TMath::Abs(etaL2)<2.3 && (ZimpactTau<-1.5 || ZimpactTau>0.5))))&&( tightestHPSMVA3oldDMwLTWP>0 && tightestHPSMVA3oldDMwLTWP< 3))&&(decayModeFindingOldDM>0.5))&&(tightestAntiMu3WP>0))&&(tightestAntiEMVA5WP > 2))&&(combRelIsoLeg1DBetav2>0.20 && combRelIsoLeg1DBetav2<0.50))&&(elecFlag==0 && vetoEventOld==0))&&(diTauNSVfitMass>-999))&&(HLTx==1         && HLTmatch==1)";
+
+	      evaluateQCD(mapAllTrees, version_,"MC_WJet",RUN, hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium_forward, hCleaner, true, "SS", false, removeMtCut, selection_, 
+			  SSQCDinSignalRegionDATA , dummy1 , scaleFactorTTSS,
+			  extrapFactorWSS, 
+			  SSWinSignalRegionDATA, SSWinSignalRegionMC,//18
+			  SSWinSidebandRegionDATA, SSWinSidebandRegionMC,
+			  hExtrapNadir, variable,
+			  Lumi/1000*hltEff_,  TTxsectionRatio, lumiCorrFactor,
+			  ExtrapolationFactorSidebandZDataMC, ExtrapolationFactorZDataMC,
+			  ElectoTauCorrectionFactor, JtoTauCorrectionFactor, 
+			  OStoSSRatioQCD,
+			  antiWsdb, antiWsgn, useMt,//34
+			  sbinSSaIso_LooseNonTightIso_eta_medium_forward_Olivier,
+			  sbinCat_LooseNonTightIso_eta_medium_forward_Olivier,
+			  sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_forward_Olivier, pZ_LooseNonTightIso_eta_medium_forward_Olivier, apZ_LooseNonTightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_forward_Olivier, 
+			  sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIsoInclusive_LooseNonTightIso_eta_medium_forward_Olivier, sbinPZetaRelSSaIso_LooseNonTightIso_eta_medium_forward_Olivier, // useless arguments
+			  vbfLoose, oneJet, zeroJet, sbinCat_LooseNonTightIso_eta_medium_forward_Olivier, sbinCat_LooseNonTightIso_eta_medium_forward_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_medium_forward_Olivier, sbinaIsoPresel_LooseNonTightIso_eta_medium_forward_Olivier, true);//52
+
+	    }
+
 	  if(selection_.find("vbfTight")!=string::npos && selection_.find("novbf")==string::npos){
 	    
 	    drawHistogram(sbinaIsoPresel,vbfRelaxedTightQCD, "Data", version_, RUN, currentTree, variable, NormData,  Error, 1.0 , hCleaner, sbinSSaIsoInclusive ,1);
@@ -3504,6 +3823,22 @@ void plotElecTau( Int_t mH_           = 120,
   hWLooseBTag->Write();
   hDataAntiIsoLooseTauIso->Write();
   hDataAntiIsoLooseTauIsoQCD->Write();
+
+  hQCD_SS_ReverseElecIso_TightTauIsoMVA->Write();
+  hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA->Write();
+
+  hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_central->Write();
+  hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_central->Write();
+
+  hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium->Write();
+  hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium->Write();
+
+  hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_forward->Write();
+  hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_forward->Write();
+
+  hQCD_SS_ReverseElecIso_TightTauIsoMVA_eta_medium_forward->Write();
+  hQCD_SS_ReverseElecIso_LooseNonTightTauIsoMVA_eta_medium_forward->Write();
+
   hData->Write();
   hParameters->Write();
 
@@ -3748,6 +4083,12 @@ void plotElecTauAll( Int_t useEmbedded = 1, TString outputDir = ""){
 
 int main(int argc, const char* argv[])
 {
+  if(StudyQCDOlivier)
+    {
+      std::cout<<"!!! WARNING !!!"<<endl;
+      std::cout<<"StudyQCDOlivier is ON, so the QCD estimation may be different from the standard one !"<<endl;
+      std::cout<<"!!! END OF WARNING !!!"<<endl;
+    }
 
   std::cout << "plotElecTau()" << std::endl;
   gROOT->SetBatch(true);

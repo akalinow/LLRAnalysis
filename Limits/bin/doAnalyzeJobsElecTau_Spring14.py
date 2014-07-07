@@ -12,9 +12,14 @@ sys.path.append('./')
 
 def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax,magnify,hltEff,logy,maxY,RUN,stream="ElecTau",version="Moriond",useEmb=1):
     
-    release="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/"
+    #release="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/"
+    release = os.getcwd()+"/../../.."
+    
+    #os.system('cp -r results/model/ results/'+stream+'/'+outputDir)
+    #os.system('mkdir batch/analyze/'+stream+'/'+outputDir)
 
-    os.system('cp -r results/model/ results/'+stream+'/'+outputDir)
+    os.system('mkdir results/'+stream+'/'+outputDir)
+    os.system('cp -rf results/model/* results/'+stream+'/'+outputDir+'/.')
     os.system('mkdir batch/analyze/'+stream+'/'+outputDir)
 
     if(variable!="diTauVisMass" and variable!="diTauNSVfitMass"):
@@ -96,7 +101,7 @@ versionList=[
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID',
 
 ###MSSM standard Mar14
-    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
+    #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
 
 ###E->Tau FR SF 
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_ZeeSel',
@@ -176,6 +181,10 @@ versionList=[
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTLoose_TauOldDM_taupt3045_OldEleID',####pt>30 pt<45
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTLoose_TauOldDM_taupt4560_OldEleID',####pt>45 pt<60
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTLoose_TauOldDM_taupt60_OldEleID',####pt>60
+
+    ##for QCD shape templates
+    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
+
              ]
 
 data = 'ABCD'
@@ -189,9 +198,10 @@ data = 'ABCD'
 #iteration = 'JetTauFR'
 #iteration = 'Control'
 #iteration = 'Datacards'
-iteration = 'Test'
+#iteration = 'Test'
 #iteration = 'ControlMVAIso'
 #iteration = 'ControlTTbarEmb'
+iteration  = 'QCDShapeTemplateCorrection_010714'
 
 useEmb=1
 
@@ -200,7 +210,11 @@ for version in versionList:
     outputDir = 'Results_'+data+'_'+version+'_'+iteration
 
 ## Standard analysis Mar14 with consistent implementation of bTag/nobTag categories in had. tau pT
-    analyze(125,"nobTagHigh"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##    analyze(125,"nobTagHigh"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+
+## QCD shape templates studies
+    analyze(125,"inclusive","nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,50,0   ,500,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+
     
 ##     ### Datacards
 ##     analyze(125,"inclusive"         ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);

@@ -111,9 +111,13 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< float >* jetQuarkGluon_;   // Quark/gluon id
   std::vector< float >* jetQuarkGluonGen_;   // Quark/gluon id
   std::vector< float >* metSgnMatrix_;
-  
-  std::vector< int >* tauXTriggers_;
-  std::vector< int >* triggerBits_;
+
+  std::map< std::string,int >* triggerPaths_;
+  std::map< std::string,int >* HLTfiltersElec_;  
+  std::map< std::string,int >* HLTfiltersTau_;  
+  std::map< std::string,int >* HLTfiltersTauJet_;  
+/*   std::vector< int >* tauXTriggers_; */
+/*   std::vector< int >* triggerBits_; */
 
   std::vector< double >* sigDCA_;
 
