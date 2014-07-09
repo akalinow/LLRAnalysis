@@ -104,6 +104,9 @@ void chooseSelection(TString variable_,
 		     )
 {
   cout<<"VERSION in chooseSelection :"<< version_<<endl;
+
+  if(version_.Contains("SVfitMassCut")) selection = selection && "diTauNSVfitMass>50.";
+
   if(version_.Contains("tauptbin")) 
     tpt="ptL2>45 && ptL2<50";
   else if(version_.Contains("taupt20"))

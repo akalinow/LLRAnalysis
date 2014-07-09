@@ -817,6 +817,9 @@ void makeFile(){
   QCDWeight_mutau_forward->SetNpx(25600);
   QCDWeight_mutau_forward->Write();
 
+  TF1* QCDWeight_etau_inclusive = new TF1("QCDWeight_etau_inclusive","1.63E+00+(-1.58E-02)*x",30.,2000.);
+  QCDWeight_etau_inclusive->SetNpx(25600);
+  QCDWeight_etau_inclusive->Write();
 
   fout->Write();
   fout->Close();

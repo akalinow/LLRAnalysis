@@ -39,7 +39,8 @@ process.source = cms.Source("PoolSource",
     #'file:/data_CMS/cms/ivo/RootFiles/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/tautauSkimmAOD_99_1_sTF.root'
     #'file:/data_CMS/cms/ivo/RootFiles/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/tautauSkimmAOD_6_1_7nf.root'
     #'file:./pickevents_DataRun2012D_AOD.root'
-    'file:/data_CMS/cms/ivo/HTauTauAnalysis/AOD/DataRun2012D_ReReco22Jan/02CFA40C-9E8C-E211-B65B-002481E94B6C.root'
+    'file:~/TestTrees/002F5062-346F-E211-BF00-1CC1DE04DF20.root'
+    #'file:/data_CMS/cms/ivo/HTauTauAnalysis/AOD/DataRun2012D_ReReco22Jan/02CFA40C-9E8C-E211-B65B-002481E94B6C.root'
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/mc/Summer12_DR53X/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S10_START53_V7A-v1/0000/FE414F4B-F6D2-E111-A4E9-003048674048.root' #12.5k
     #'file:/data_CMS/cms/anayak/HTauTauSynchronization/8TeV/53X/VBF_HToTauTau_M-125_8TeV-powheg-pythia6-Summer12_DR53X-PU_S10_START53_V7A-v1-1200542B-D9ED-E111-B708-00237DA1A548.root' #7k
     #'file:/data_CMS/cms/mbluj/Production/test/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball-Summer12_DR53X-PU_S10_START53_V7A-v2-AODSIM-FE4F82A9-68F3-E111-8CD3-003048D476AE.root' #13k
