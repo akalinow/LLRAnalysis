@@ -183,7 +183,7 @@ versionList=[
 ##     'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTLoose_TauOldDM_taupt60_OldEleID',####pt>60
 
     ##for QCD shape templates
-    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
+    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
              ]
 
