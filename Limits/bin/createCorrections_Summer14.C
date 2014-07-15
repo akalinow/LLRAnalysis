@@ -796,10 +796,12 @@ void makeFile(){
     }
   }
 
-  //Correction for QCD templates (difference between loose and tight regions)
-  //Is obtained by the [Tight] to [Loose Non-Tight] ratio in SS
-  //Beyond analyze, the code is availabe at /home/llr/cms/davignon/GenericTools/DrawQCDShapeTemplate.C on polui
-  
+  //Correction for QCD templates (--> difference between loose and tight regions)
+  //Is obtained by the [Tight] to [Loose Non-Tight] ratio in SS in MuTau channel
+  //The code to derive this is availabe at /home/llr/cms/davignon/GenericTools/DrawQCDShapeTemplate.C on polui
+  //Switch on StudyQCDOlivier to obtain the histograms in analyze
+
+  //MuTau
   TF1* QCDWeight_mutau_inclusive = new TF1("QCDWeight_mutau_inclusive","1.25E+00+(-6.31E-03)*x",30.,2000.);
   TF1* QCDWeight_mutau_central = new TF1("QCDWeight_mutau_central","1.22E+00+(-5.71E-03)*x",30.,2000.);
   TF1* QCDWeight_mutau_medium = new TF1("QCDWeight_mutau_medium","1.52E+00+(-1.34E-02)*x",30.,2000.);
@@ -817,9 +819,23 @@ void makeFile(){
   QCDWeight_mutau_forward->SetNpx(25600);
   QCDWeight_mutau_forward->Write();
 
-  TF1* QCDWeight_etau_inclusive = new TF1("QCDWeight_etau_inclusive","1.63E+00+(-1.58E-02)*x",30.,2000.);
+  //ETau = corrections from MuTau MuTau
+  TF1* QCDWeight_etau_inclusive = new TF1("QCDWeight_etau_inclusive","1.25E+00+(-6.31E-03)*x",30.,2000.);
+  TF1* QCDWeight_etau_central = new TF1("QCDWeight_etau_central","1.22E+00+(-5.71E-03)*x",30.,2000.);
+  TF1* QCDWeight_etau_medium = new TF1("QCDWeight_etau_medium","1.52E+00+(-1.34E-02)*x",30.,2000.);
+  TF1* QCDWeight_etau_forward = new TF1("QCDWeight_etau_forward","1.43E+00+(-1.09E-02)*x",30.,2000.);
+
   QCDWeight_etau_inclusive->SetNpx(25600);
   QCDWeight_etau_inclusive->Write();
+
+  QCDWeight_etau_central->SetNpx(25600);
+  QCDWeight_etau_central->Write();
+
+  QCDWeight_etau_medium->SetNpx(25600);
+  QCDWeight_etau_medium->Write();
+
+  QCDWeight_etau_forward->SetNpx(25600);
+  QCDWeight_etau_forward->Write();
 
   fout->Write();
   fout->Close();
