@@ -2332,6 +2332,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 //   for (int n = 0; n < 10000 ; n++) {
 
     currentTree->GetEntry(n);
+//     cout<<"n = "<<n<<endl;
     if(n%1000==0) cout << n <<"/"<<(n2-n1)<< endl;
 //     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
 
@@ -3146,26 +3147,56 @@ void fillTrees_MuTauStream(TChain* currentTree,
     weightHepNupHighStatW =1;
     weightHepNupDY = 1;
     weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
-    //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
-    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
-    if(f_JetFakeCorrection.IsZombie())
-      cout << "Jet Fake correction file not available" << endl;   
-    TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-    TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-    TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-    weightJetFakeQCD_=1;
-    if( TMath::Abs(etaL2)<=1.2 )
+
+    //jet->tau fake correction for antiiso events in the QCD estimation (taken from mutau measurements, see createCorrections_Summer14.C)
+    //new implementation by Olivier - July 14
+
+    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root");
+
+    //Get the functions
+    TF1* QCDWeight_mutau_central = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_central");
+    TF1* QCDWeight_mutau_medium = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_medium");
+    TF1* QCDWeight_mutau_forward = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_forward");
+
+    //init
+    weightJetFakeQCD_=1.;
+
+    //compute the weights
+    if(TMath::Abs(etaL2)<=1.2 )
       {
-	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
+	weightJetFakeQCD_=QCDWeight_mutau_central->Eval(ptL2);
       }
-    else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
+    else if(TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
       {
-	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
+	weightJetFakeQCD_=QCDWeight_mutau_medium->Eval(ptL2);
       }
-    else if( TMath::Abs(etaL2)>1.7)
+    else if(TMath::Abs(etaL2)>1.7)
       {
-	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
-      }
+	weightJetFakeQCD_=QCDWeight_mutau_forward->Eval(ptL2);
+      } 
+
+    if(weightJetFakeQCD_<0.) weightJetFakeQCD_=0.;
+    
+//     //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
+//     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
+//     if(f_JetFakeCorrection.IsZombie())
+//       cout << "Jet Fake correction file not available" << endl;   
+//     TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+//     TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+//     TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+//     weightJetFakeQCD_=1;
+//     if( TMath::Abs(etaL2)<=1.2 )
+//       {
+// 	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
+//       }
+//     else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
+//       {
+// 	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
+//       }
+//     else if( TMath::Abs(etaL2)>1.7)
+//       {
+// 	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
+//       }
 
     // Reweight W+Jets
     //cout << "SAMPLE : " << sample_ << endl;
