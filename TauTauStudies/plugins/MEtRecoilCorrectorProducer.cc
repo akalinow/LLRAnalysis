@@ -102,9 +102,9 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 
     for(unsigned int k = 0; k < genParticles->size(); k ++){
       reco::GenParticle gen = (*genParticles)[k];
-      if( gen.pdgId()== 23       && gen.status()==3 ) counterZ++;
-      if( fabs(gen.pdgId())== 24 && gen.status()==3 ) counterW++;
-      if( gen.pdgId()== 25       && gen.status()==3 ) counterH++;
+      if( gen.pdgId()== 23                                           && gen.status()==3 ) counterZ++;
+      if( fabs(gen.pdgId())== 24                                     && gen.status()==3 ) counterW++;
+      if( (gen.pdgId()== 25 || gen.pdgId()== 35 || gen.pdgId()== 36) && gen.status()==3 ) counterH++;
     }
     if(verbose_) cout << "Zs = " << counterZ << ", Ws = " << counterW << ", Hs = " << counterH << endl;
     //file available only for ZTT, not Zll+fakes
