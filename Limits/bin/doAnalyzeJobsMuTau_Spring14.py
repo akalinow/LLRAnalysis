@@ -17,7 +17,8 @@ def analyze(mH,category,analysis,variable,xtitle,unity,outputDir,nBins,xMin,xMax
     #release="/home/llr/cms/davignon//TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src"
     release = os.getcwd()+"/../../.."
 
-    os.system('cp -r results/model/ results/'+stream+'/'+outputDir)
+    os.system('mkdir results/'+stream+'/'+outputDir)
+    os.system('cp -rf results/model/* results/'+stream+'/'+outputDir+'/.')
     os.system('mkdir batch/analyze/'+stream+'/'+outputDir)
 
     if(variable!="diTauVisMass" and variable!="diTauNSVfitMass"):
@@ -181,7 +182,8 @@ versionList=[
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt6090_OldEleID',#pt>60 pt<90
 ##     'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_taupt90_OldEleID',####pt>90
 
-    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID'
+    ##for QCD shape templates
+    'AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
     ]
 
@@ -199,7 +201,7 @@ data = 'ABCD'
 #iteration = 'JetTauFR_thth'
 #iteration  = 'CheckHqTSUSY'
 #iteration  = 'PlotsHiggspT'
-iteration   = '080414'
+iteration   = 'QCDShapeTemplateCorrection_200614'
 
 useEmb=1
 
@@ -366,7 +368,7 @@ for version in versionList:
 ##     analyze(125,"nobTag"            ,"JetDown" ,"diTauVisMass" ,"'Vis Mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 
 ## ####TauPt
-##     analyze(125,"inclusive"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
+##    analyze(125,"inclusive"         ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"bTag"              ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 ##     analyze(125,"nobTag"            ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
 
@@ -436,7 +438,7 @@ for version in versionList:
 ##     analyze(125,"inclusive"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 
 ###### TauPt
-##     analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,-1,0   ,100,5.0,1.0,1,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,50,0   ,500,5.0,1.0,1,1.2  ,data,stream,version,useEmb);#QCD correction for QCD shape template -- Olivier
 ##     analyze(125,"bTag"         ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,-1,0   ,100,5.0,1.0,1,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"nobTag"       ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,-1,0   ,100,5.0,1.0,1,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,-1,0   ,100,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
@@ -1078,7 +1080,7 @@ for version in versionList:
 
 ## Standard analysis Mar14 with consistent implementation of bTag/nobTag categories in had. tau pT
 ##     ##ptL2 Embed
-    analyze(125,"inclusive"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##    analyze(125,"inclusive"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 
 ##     analyze(125,"nobTag"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 ##     analyze(125,"nobTagLow"       ,"nominal" ,"ptL2" ,"'#tau p_{T}'","GeV" ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
@@ -1442,3 +1444,6 @@ for version in versionList:
 ##     analyze(125,"boostLow" ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
 ##     analyze(125,"boostHigh","JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
 ##     analyze(125,"vbf"      ,"JetDown" ,"diTauVisMass" ,"'Vis mass'","GeV",outputDir,-1,0,100,5.0,1.0,0,1.2,data, stream, version, useEmb);
+
+#QCD correction for QCD shape template -- Olivier
+    analyze(125,"inclusive","" ,"ptL2","'#tau p_{T}'","GeV",outputDir,50,0   ,500,5.0,1.0,1,1.2  ,data,stream,version,useEmb);

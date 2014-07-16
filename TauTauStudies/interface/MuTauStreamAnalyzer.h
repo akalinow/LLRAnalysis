@@ -116,8 +116,12 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< float >* gammadR_;
   std::vector< float >* gammaPt_;
 
-  std::vector< int >* tauXTriggers_;
-  std::vector< int >* triggerBits_;
+  std::map< std::string,int >* triggerPaths_;
+  std::map< std::string,int >* HLTfiltersMu_;
+  std::map< std::string,int >* HLTfiltersTau_;
+  std::map< std::string,int >* HLTfiltersTauJet_;
+/*   std::vector< int >* tauXTriggers_; */
+/*   std::vector< int >* triggerBits_; */
 
   std::vector< double >* sigDCA_;
 
