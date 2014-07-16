@@ -207,7 +207,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
    
     for(unsigned int k = 0; k < genParticles->size(); k ++){
 
-      if( ! ((*genParticles)[k].pdgId() == 23 || abs((*genParticles)[k].pdgId()) == 24 ||(*genParticles)[k].pdgId() == 25) || 
+      if( ! ((*genParticles)[k].pdgId() == 23 || abs((*genParticles)[k].pdgId()) == 24 || (*genParticles)[k].pdgId() == 25 || (*genParticles)[k].pdgId() == 35 || (*genParticles)[k].pdgId() == 36) || 
 	  (*genParticles)[k].status()!=3 )
 	continue;
 
@@ -238,7 +238,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
     }
         
     // Z/H->tautau, tau->tau_h, tau->l
-    if(fabs(eventDecay)==23*15 || fabs(eventDecay)==25*15){
+    if(fabs(eventDecay)==23*15 || fabs(eventDecay)==25*15 || fabs(eventDecay)==35*15 || fabs(eventDecay)==36*15){
 
       if(verbose_) cout << " ==> Z->tautau event" << endl;
       
