@@ -802,7 +802,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
-  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dRL1L2,dEtaL1L2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_;
+  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,mL1,dRL1L2,dEtaL1L2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_;
   float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
@@ -1112,6 +1112,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("etaL2",   &etaL2,"etaL2/F");
   outTreePtOrd->Branch("ptL1",    &ptL1,"ptL1/F");
   outTreePtOrd->Branch("ptL2",    &ptL2,"ptL2/F");
+  outTreePtOrd->Branch("mL1",    &mL1,"mL1/F");
   outTreePtOrd->Branch("phiL1",   &phiL1,"phiL1/F");
   outTreePtOrd->Branch("phiL2",   &phiL2,"phiL2/F");
   outTreePtOrd->Branch("dRL1L2"  ,&dRL1L2,"dRL1L2/F");
@@ -2382,6 +2383,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     ptL2     = (*diTauLegsP4)[1].Pt();
     etaL1    = (*diTauLegsP4)[0].Eta();
     etaL2    = (*diTauLegsP4)[1].Eta();
+    mL1      = (*diTauLegsP4)[0].M();
     //
     isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
     if(isDuplicated) continue;
@@ -3085,7 +3087,22 @@ void fillTrees_MuTauStream(TChain* currentTree,
     float scaled_phIsoLeg1 = std::max( phIsoLeg1*(1-PUtoPVratio), float(0.0));
     combRelIsoLeg1Beta     = (chIsoLeg1+scaled_nhIsoLeg1+scaled_phIsoLeg1)/(*diTauLegsP4)[0].Pt();
     combRelIsoLeg1DBeta    = (chIsoLeg1    + std::max( nhIsoLeg1+phIsoLeg1-0.5*(nhIsoPULeg1),double(0.0)))/(*diTauLegsP4)[0].Pt();
+
+
+
     combRelIsoLeg1DBetav2  = (allChIsoLeg1 + std::max( nhIsoLeg1+phIsoLeg1-0.5*(nhIsoPULeg1),double(0.0)))/(*diTauLegsP4)[0].Pt();
+
+    if(event==355631)
+      {
+	cout<<"ISO FOR ABDOLLAH = "<<endl;
+	cout<<" combRelIsoLeg1DBetav2 = "<<combRelIsoLeg1DBetav2<<endl;
+	cout<<"      allChIsoLeg1 = "<<allChIsoLeg1<<endl;
+	cout<<"      nhIsoLeg1 = "<<nhIsoLeg1<<endl;
+	cout<<"      phIsoLeg1 = "<<phIsoLeg1<<endl;
+	cout<<"      nhIsoPULeg1 = "<<nhIsoPULeg1<<endl;
+	cout<<"END ISO FOR ABDOLLAH = "<<endl;
+      }
+
 //     isoLeg1MVA_            = isoLeg1MVA;
     float EffArea          = TMath::Pi()*0.4*0.4;
     combRelIsoLeg1Rho      = std::max(((chIsoLeg1+nhIsoLeg1+phIsoLeg1) - rhoNeutralFastJet*EffArea),float(0.0))/(*diTauLegsP4)[0].Pt();

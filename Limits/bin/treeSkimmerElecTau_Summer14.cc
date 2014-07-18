@@ -820,7 +820,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float etaTau1Fit, etaTau2Fit, phiTau1Fit, phiTau2Fit, ptTau1Fit, ptTau2Fit;
 
   // taus/MET related variables
-  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,dRL1L2,dEtaL1L2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1,VisMassL1J1,VisMassL1J2;
+  float ptL1,ptL2,etaL1,etaL2,phiL1,phiL2,mL1,dRL1L2,dEtaL1L2,dPhiL1L2,dPhiL1J1,dPhiL1J2,dPhiL2J1,dPhiL2J2,dxy1_, dz1_, scEtaL1,VisMassL1J1,VisMassL1J2;
   float diTauCharge_, chargeL1_,
     MtLeg1_,MtLeg1Corr_,MtLeg1MVA_,
     MtLeg2_,MtLeg2Corr_,MtLeg2MVA_,
@@ -1098,6 +1098,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   outTreePtOrd->Branch("etaL2",   &etaL2,"etaL2/F");
   outTreePtOrd->Branch("ptL1",    &ptL1,"ptL1/F");
   outTreePtOrd->Branch("ptL2",    &ptL2,"ptL2/F");
+  outTreePtOrd->Branch("mL1",    &mL1,"mL1/F");
   outTreePtOrd->Branch("phiL1",   &phiL1,"phiL1/F");
   outTreePtOrd->Branch("phiL2",   &phiL2,"phiL2/F");
   outTreePtOrd->Branch("dRL1L2"  ,&dRL1L2,"dRL1L2/F");
@@ -2424,6 +2425,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     ptL2     = (*diTauLegsP4)[1].Pt();
     etaL1    = (*diTauLegsP4)[0].Eta();
     etaL2    = (*diTauLegsP4)[1].Eta();
+    mL1      = (*diTauLegsP4)[0].M();
     //
     isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
     if(isDuplicated) continue;
