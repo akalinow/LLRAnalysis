@@ -136,6 +136,11 @@ namespace
     if ( idxBin > lut->GetNbinsX() ) idxBin = lut->GetNbinsX();
     return lut->GetBinContent(idxBin);
   }
+  
+  double square(double x)
+  {
+    return x*x;
+  }
 }
 
 int main(int argc, char* argv[]) 
