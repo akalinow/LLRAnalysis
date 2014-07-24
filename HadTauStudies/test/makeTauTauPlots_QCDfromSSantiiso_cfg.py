@@ -133,13 +133,19 @@ process.makeTauTauPlots = cms.PSet(
             histogramName = cms.string("svFitMassS"),
             xAxisTitle = cms.string("m_{#tau#tau} [GeV]"),
             yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]"),
-            keepBlinded = cms.vstring("100:1500")
+            ##keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("visMassS"),
             xAxisTitle = cms.string("m_{vis} [GeV]"),
             yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
-            keepBlinded = cms.vstring("100:1500")
+            ##keepBlinded = cms.vstring("100:1500")
+        ),
+        cms.PSet(
+            histogramName = cms.string("mTtotalS"),
+            xAxisTitle = cms.string("m_{T}^{total} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{T}^{total} [1/GeV]"),
+            ##keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
             histogramName = cms.string("jet1PtS"),

@@ -54,6 +54,7 @@
 #include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include "DataFormats/Math/interface/normalizedPhi.h"
 
 // SVfit
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEt.h"
@@ -76,17 +77,13 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
     lutHiggsPtWeightUp_(0),
     lutHiggsPtWeightDown_(0),
     loosePFJetIdAlgo_(0),
+    augMT2edAlgo_(0),
     ntuple_(0)
 {
   srcDiTau_ = cfg.getParameter<edm::InputTag>("srcDiTau");
   bestDiTauPreselection_ = cfg.getParameter<vstring>("bestDiTauPreselection");
   bestDiTauRanking_ = cfg.getParameter<vstring>("bestDiTauRanking");
   invertRanking_ = cfg.getParameter<bool>("invertRanking");
-  std::string svFitMode_string = cfg.getParameter<std::string>("svFitMode");
-  if      ( svFitMode_string == "VEGAS"       ) svFitMode_ = kVEGAS;
-  else if ( svFitMode_string == "MarkovChain" ) svFitMode_ = kMarkovChain;
-  else throw cms::Exception("TauTauNtupleProducer")
-    << "Invalid Configuration Parameter 'svFitMode' = " << svFitMode_string << " !!\n";
   
   tauIdDiscrinatorsToStore_ = readStringEntries(cfg, "tauIdDiscriminators");
   
@@ -155,6 +152,7 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
   wpBJetDiscriminator_ = cfg.getParameter<double>("wpBJetDiscriminator");
 
   srcRawPFMEt_ = cfg.getParameter<edm::InputTag>("srcRawPFMEt");
+  srcGenMEt_ = cfg.getParameter<edm::InputTag>("srcGenMEt");
 
   srcVertices_ = cfg.getParameter<edm::InputTag>("srcVertices");
   srcRho_ = cfg.getParameter<edm::InputTag>("srcRho");
@@ -188,6 +186,8 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
   cfgPFJetIdAlgo.addParameter<std::string>("quality", "LOOSE");
   loosePFJetIdAlgo_ = new PFJetIDSelectionFunctor(cfgPFJetIdAlgo);
 
+  augMT2edAlgo_ = new mt2Interface();
+
   verbosity_ = ( cfg.exists("verbosity") ) ?
     cfg.getParameter<int>("verbosity") : 0;
 }
@@ -197,6 +197,10 @@ TauTauNtupleProducer::~TauTauNtupleProducer()
   delete jecUncertainty_;
 
   delete inputFileHiggsPtWeight_;
+
+  delete loosePFJetIdAlgo_;
+
+  delete augMT2edAlgo_;
 }
 
 std::vector<TauTauNtupleProducer::StringEntryType> TauTauNtupleProducer::readStringEntries(const edm::ParameterSet& cfg, const std::string& psetName)
@@ -274,6 +278,16 @@ void TauTauNtupleProducer::beginJob()
   addBranchF("jet2PUJetId");
   addBranchF("jet2PUJetIdMVA");
   addBranchF("jet2Bmatch");
+  addBranch_Jet("jet3");
+  addBranchF("jet3PtErr");
+  addBranchF("jet3PUJetId");
+  addBranchF("jet3PUJetIdMVA");
+  addBranchF("jet3Bmatch");
+  addBranch_Jet("jet4");
+  addBranchF("jet4PtErr");
+  addBranchF("jet4PUJetId");
+  addBranchF("jet4PUJetIdMVA");
+  addBranchF("jet4Bmatch");
   addBranchI("nCentralJets");
   addBranchI("nJets");
   addBranchF("dPhijj");
@@ -284,7 +298,11 @@ void TauTauNtupleProducer::beginJob()
   // b-jet observables
   addBranch_bJet("bjet1");
   addBranch_bJet("bjet2");
+  addBranch_bJet("bjet3");
+  addBranch_bJet("bjet4");
   addBranchI("nbJets");
+  addBranchF("mbb");
+  addBranchF("ptbb");
 
   // MET observables
   addBranchF("met");
@@ -293,6 +311,19 @@ void TauTauNtupleProducer::beginJob()
   addBranchF("metPhi");
   addBranch_Cov2d("mvacov");
   addBranchF("rawMET");
+  addBranchF("rawMEx");
+  addBranchF("rawMEy");
+  if ( srcGenMEt_.label() != "" ) {
+    addBranchF("genMET");
+    addBranchF("genMEx");
+    addBranchF("genMEy");
+  }
+
+  // augMT2ed variable, described in the paper
+  //  "Di-Higgs final states augMTed - selecting hh events at the high luminosity LHC",
+  //   A.J. Barr, M.J. Dolan, C. Englert and M. Spannowsky
+  //  arXiv: 1309.6318
+  addBranchF("augMT2ed");
 
   // (veto) electron observables
   addBranch_Electron("electron1");
@@ -425,6 +456,19 @@ namespace
     {
       return (particle1->pt() > particle2->pt());
     }
+  };
+
+  struct isHigherBtagDiscriminator
+  {
+    isHigherBtagDiscriminator(const std::string& bJetDiscriminator)
+      : bJetDiscriminator_(bJetDiscriminator)
+    {}
+    ~isHigherBtagDiscriminator() {}
+    bool operator() (const pat::Jet* jet1, const pat::Jet* jet2)
+    {
+      return (jet1->bDiscriminator(bJetDiscriminator_) > jet2->bDiscriminator(bJetDiscriminator_));
+    }
+    std::string bJetDiscriminator_;
   };
 
   // functions for matching in dR
@@ -849,7 +893,8 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     }
   }
   std::sort(jets_sorted.begin(), jets_sorted.end(), isHigherPtParticle());
-  std::sort(bJets_sorted.begin(), bJets_sorted.end(), isHigherPtParticle());
+  //std::sort(bJets_sorted.begin(), bJets_sorted.end(), isHigherPtParticle());
+  std::sort(bJets_sorted.begin(), bJets_sorted.end(), isHigherBtagDiscriminator(bJetDiscriminator_));
 
   if ( jetCorrPayload_ != "" ) {
     edm::ESHandle<JetCorrectorParametersCollection> jetCorrParameters;
@@ -861,6 +906,8 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
   const pat::Jet* jet1 = ( jets_sorted.size() >= 1 ) ? jets_sorted.at(0) : 0;
   const pat::Jet* jet2 = ( jets_sorted.size() >= 2 ) ? jets_sorted.at(1) : 0;
+  const pat::Jet* jet3 = ( jets_sorted.size() >= 3 ) ? jets_sorted.at(2) : 0;
+  const pat::Jet* jet4 = ( jets_sorted.size() >= 4 ) ? jets_sorted.at(3) : 0;
   if ( jet1 ) {
     setValue_Jet("jet1", *jet1);  
     int puJetIdFlag = (*puJetIdFlags)[jet1->originalObjectRef()];
@@ -884,6 +931,30 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     double shift = jecUncertainty_->getUncertainty(true);
     setValueF("jet2PtErr", shift*jet2->pt());  
     setValueF("jet2Bmatch", jet2->bDiscriminator(bJetDiscriminator_) > wpBJetDiscriminator_);
+  }
+  if ( jet3 ) {
+    setValue_Jet("jet3", *jet3);  
+    int puJetIdFlag = (*puJetIdFlags)[jet3->originalObjectRef()];
+    setValueF("jet3PUJetId", puJetIdFlag);
+    double puJetIdMVA = (*puJetIdMVAs)[jet3->originalObjectRef()];
+    setValueF("jet3PUJetIdMVA", puJetIdMVA);
+    jecUncertainty_->setJetEta(jet3->eta());
+    jecUncertainty_->setJetPt(jet3->pt());
+    double shift = jecUncertainty_->getUncertainty(true);
+    setValueF("jet3PtErr", shift*jet3->pt());  
+    setValueF("jet3Bmatch", jet3->bDiscriminator(bJetDiscriminator_) > wpBJetDiscriminator_);
+  }
+  if ( jet4 ) {
+    setValue_Jet("jet4", *jet4);
+    int puJetIdFlag = (*puJetIdFlags)[jet4->originalObjectRef()];
+    setValueF("jet4PUJetId", puJetIdFlag);
+    double puJetIdMVA = (*puJetIdMVAs)[jet4->originalObjectRef()];
+    setValueF("jet4PUJetIdMVA", puJetIdMVA);
+    jecUncertainty_->setJetEta(jet4->eta());
+    jecUncertainty_->setJetPt(jet4->pt());
+    double shift = jecUncertainty_->getUncertainty(true);
+    setValueF("jet4PtErr", shift*jet4->pt());  
+    setValueF("jet4Bmatch", jet4->bDiscriminator(bJetDiscriminator_) > wpBJetDiscriminator_);
   }
   int nCentralJets = 0;
   if ( jet1 && jet2 ) {
@@ -912,13 +983,30 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
   const pat::Jet* bJet1 = ( bJets_sorted.size() >= 1 ) ? bJets_sorted.at(0) : 0;
   const pat::Jet* bJet2 = ( bJets_sorted.size() >= 2 ) ? bJets_sorted.at(1) : 0;
+  const pat::Jet* bJet3 = ( bJets_sorted.size() >= 3 ) ? bJets_sorted.at(2) : 0;
+  const pat::Jet* bJet4 = ( bJets_sorted.size() >= 4 ) ? bJets_sorted.at(3) : 0;
   if ( bJet1 ) {
     setValue_bJet("bjet1", *bJet1);
   }
   if ( bJet2 ) {
     setValue_bJet("bjet2", *bJet2);
   }
+  if ( bJet3 ) {
+    setValue_bJet("bjet3", *bJet3);
+  }
+  if ( bJet4 ) {
+    setValue_bJet("bjet4", *bJet4);
+  }
   setValueI("nbJets", bJets_sorted.size());
+  if ( bJet1 && bJet2 ) {
+    reco::Candidate::LorentzVector bbP4 = bJet1->p4() + bJet2->p4(); // CV: consider doing something more sophisticated like b-jet energy regression in the future...
+    double mbb = bbP4.mass();
+    //std::cout << "mbb = " << mbb << std::endl;
+    setValueF("mbb", mbb);
+    double ptbb = bbP4.pt();
+    //std::cout << "ptbb = " << ptbb << std::endl;
+    setValueF("ptbb", ptbb);
+  }
 
   setValueF("met", met->pt());
   setValueF("mex", met->px());
@@ -928,8 +1016,24 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 
   typedef edm::View<reco::MET> METView;
   edm::Handle<METView> rawMEt;
-  evt.getByLabel(srcRawPFMEt_, rawMEt);
+  evt.getByLabel(srcRawPFMEt_, rawMEt);  
   setValueF("rawMET", rawMEt->front().pt());
+  setValueF("rawMEx", rawMEt->front().px());
+  setValueF("rawMEy", rawMEt->front().py());
+
+  if ( srcGenMEt_.label() != "" ) {
+    edm::Handle<METView> genMEt;
+    evt.getByLabel(srcGenMEt_, genMEt);
+    setValueF("genMET", genMEt->front().pt());
+    setValueF("genMEx", genMEt->front().px());
+    setValueF("genMEy", genMEt->front().py());
+  }
+
+  if ( leg1 && leg2 && met && bJet1 && bJet2 ) {
+    double augMT2ed = (*augMT2edAlgo_)(bJet1->p4(), bJet2->p4(), leg1->p4(), leg2->p4(), met->p4());
+    //std::cout << "augMT2ed = " << augMT2ed << std::endl;
+    setValueF("augMT2ed", augMT2ed);
+  }
 
   if ( looseElectron1 ) {
     setValue_Electron("electron1", *looseElectron1);
@@ -1333,6 +1437,9 @@ void TauTauNtupleProducer::addBranch_diTau(const std::string& name)
   addBranchF("visMass");
   addBranchF("svfitMass");
   addBranchF("svfitMassErr");
+  addBranch_EnPxPyPz("svfitMarkovChain");
+  addBranch_PtEtaPhiMass("svfitMarkovChain");
+  addBranchF("mTtotal");
   addBranchF("dEtatt");
   addBranchF("dPhitt");
   addBranchF("dRtt");
@@ -1472,6 +1579,18 @@ void TauTauNtupleProducer::addBranch_Cov3d(const std::string& name)
 //-------------------------------------------------------------------------------
 //
 
+namespace
+{
+  double compMt2(const reco::Candidate::LorentzVector& leg1P4, const reco::Candidate::LorentzVector& leg2P4)
+  {
+    double dphi = normalizedPhi(leg1P4.phi() - leg2P4.phi());
+    double mt2 = 2.*leg1P4.pt()*leg2P4.pt()*(1. - TMath::Cos(dphi));
+    // CV: protection against rounding errors
+    if ( mt2 < 0. ) mt2 = 0.; 
+    return mt2;
+  }
+}
+
 void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTauPair& diTau) 
 {
   const pat::Tau* leg1 = &(*diTau.leg1());
@@ -1490,25 +1609,26 @@ void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTa
   Vector measuredMEt(met->px(), met->py(), 0.);
   NSVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons, measuredMEt, met->getSignificanceMatrix(), verbosity_);
   svFitAlgorithm.addLogM(false);
-  if ( svFitMode_ == kMarkovChain ) {
-    svFitAlgorithm.integrateMarkovChain();
-  } else if ( svFitMode_ == kVEGAS ) {
-    svFitAlgorithm.integrateVEGAS();
-  } else assert(0);
+  svFitAlgorithm.integrateVEGAS();
   if ( svFitAlgorithm.isValidSolution() ) {
     setValueF("svfitMass", svFitAlgorithm.getMass());
     setValueF("svfitMassErr", svFitAlgorithm.massUncert());
-    if ( svFitMode_ == kMarkovChain ) {
-      math::PtEtaPhiMLorentzVectorD svFitP4(svFitAlgorithm.pt(), svFitAlgorithm.eta(), svFitAlgorithm.phi(), svFitAlgorithm.mass());
-      setValue_EnPxPyPz(name, svFitP4);
-      setValue_PtEtaPhiMass(name, svFitP4);
-    }
+  }
+  svFitAlgorithm.integrateMarkovChain();
+  if ( svFitAlgorithm.isValidSolution() ) {
+    math::PtEtaPhiMLorentzVectorD svFitP4(svFitAlgorithm.pt(), svFitAlgorithm.eta(), svFitAlgorithm.phi(), svFitAlgorithm.mass());
+    setValue_EnPxPyPz("svfitMarkovChain", svFitP4);
+    setValue_PtEtaPhiMass("svfitMarkovChain", svFitP4);
   }
   setValueF(name + "Charge", leg1->charge() + leg2->charge());
   if ( leg1->genLepton() && leg2->genLepton() ) {
     setValueF("genMass", (leg1->genLepton()->p4() + leg2->genLepton()->p4()).mass());
   }
   setValueF("visMass", (leg1->p4() + leg2->p4()).mass());
+  // compute "total transverse mass" used in ATLAS MSSM Higgs -> tautau analysis,
+  // cf. https://cds.cern.ch/record/1744694/files/ATLAS-CONF-2014-049.pdf
+  double mTtotal = TMath::Sqrt(compMt2(leg1->p4(), leg2->p4()) + compMt2(leg1->p4(), met->p4()) + compMt2(leg2->p4(), met->p4()));
+  setValueF("mTtotal", mTtotal);
   setValueF("dEtatt", TMath::Abs(leg1->eta() - leg2->eta()));
   setValueF("dPhitt", reco::deltaPhi(leg1->phi(), leg2->phi()));
   setValueF("dRtt", deltaR(leg1->p4(), leg2->p4()));

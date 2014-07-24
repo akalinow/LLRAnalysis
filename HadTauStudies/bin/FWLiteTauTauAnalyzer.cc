@@ -20,6 +20,7 @@
 #include "LLRAnalysis/HadTauStudies/interface/histogramAuxFunctions.h"
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
 #include "LLRAnalysis/HadTauStudies/interface/RunLumiSectionEventNumberSelector.h"
+#include "LLRAnalysis/HadTauStudies/interface/particleIDlooseToTightWeightEntryType.h"
 #include "LLRAnalysis/Utilities/interface/BtagSF.hh"
 
 #include <TFile.h>
@@ -29,6 +30,7 @@
 #include <TBenchmark.h>
 #include <TMath.h>
 #include <TF1.h>
+#include <TGraphAsymmErrors.h>
 #include <TFormula.h>
 
 #include <iostream>
@@ -79,73 +81,6 @@ bool contains(const std::string& fullstring, const std::string& substring)
 {
   return (fullstring.find(substring) != std::string::npos);
 }
-
-struct particleIDlooseToTightWeightEntryType
-{
-  particleIDlooseToTightWeightEntryType(TFile* inputFile, 
-					const std::string& particleType, double particle1EtaMin, double particle1EtaMax, double particle2EtaMin, double particle2EtaMax,
-					const std::string& fitFunctionNormName, 
-					const std::string& fitFunctionShapeName_particle1, double fitFunctionShapePower_particle1, 
-					const std::string& fitFunctionShapeName_particle2, double fitFunctionShapePower_particle2)
-    : particle1EtaMin_(particle1EtaMin),
-      particle1EtaMax_(particle1EtaMax),
-      particle2EtaMin_(particle2EtaMin),
-      particle2EtaMax_(particle2EtaMax),
-      norm_(0),
-      shapeCorr_particle1_(0),
-      shapeCorrPow_particle1_(fitFunctionShapePower_particle1),
-      shapeCorr_particle2_(0),
-      shapeCorrPow_particle2_(fitFunctionShapePower_particle2)
-  {
-    std::string particleEtaBin_label = getParticleEtaLabel(particleType, particle1EtaMin_, particle1EtaMax_, particle2EtaMin_, particle2EtaMax_);
-
-    std::string fitFunctionNormName_particleEtaBin = TString(fitFunctionNormName.data()).ReplaceAll("$particleEtaBin", particleEtaBin_label.data()).Data();
-    TF1* fitFunctionNorm = dynamic_cast<TF1*>(inputFile->Get(fitFunctionNormName_particleEtaBin.data()));
-    if ( !fitFunctionNorm ) throw cms::Exception("FWLiteTauTauAnalyzer") 
-      << "Failed to load fitFunction = " << fitFunctionNormName_particleEtaBin << " from file = " << inputFile->GetName() << " !!\n";
-    norm_ = (TF1*)fitFunctionNorm->Clone();
-
-    std::string fitFunctionShapeName_particle1_particleEtaBin = TString(fitFunctionShapeName_particle1.data()).ReplaceAll("$particleEtaBin", particleEtaBin_label.data()).Data();
-    if ( fitFunctionShapeName_particle1_particleEtaBin != "" ) {
-      TF1* fitFunctionShape_particle1 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionShapeName_particle1_particleEtaBin.data()));
-      if ( !fitFunctionShape_particle1 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
-	<< "Failed to load fitFunction = " << fitFunctionShapeName_particle1_particleEtaBin << " from file = " << inputFile->GetName() << " !!\n";
-      shapeCorr_particle1_ = (TF1*)fitFunctionShape_particle1->Clone();
-    }
-    
-    std::string fitFunctionShapeName_particle2_particleEtaBin = TString(fitFunctionShapeName_particle2.data()).ReplaceAll("$particleEtaBin", particleEtaBin_label.data()).Data();
-    if ( fitFunctionShapeName_particle2_particleEtaBin != "" ) {
-      TF1* fitFunctionShape_particle2 = dynamic_cast<TF1*>(inputFile->Get(fitFunctionShapeName_particle2_particleEtaBin.data()));
-      if ( !fitFunctionShape_particle2 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
-	<< "Failed to load fitFunction = " << fitFunctionShapeName_particle2_particleEtaBin << " from file = " << inputFile->GetName() << " !!\n";
-      shapeCorr_particle2_ = (TF1*)fitFunctionShape_particle2->Clone();
-    }
-  }
-  ~particleIDlooseToTightWeightEntryType()
-  {
-    delete norm_;
-    delete shapeCorr_particle1_;
-    delete shapeCorr_particle2_;
-  }
-  double operator()(double particle1Pt, double particle2Pt) const
-  {
-    double weight = norm_->Eval(1.);
-    if ( shapeCorr_particle1_ ) weight *= TMath::Power(TMath::Max(0., shapeCorr_particle1_->Eval(particle1Pt)), shapeCorrPow_particle1_);
-    if ( shapeCorr_particle2_ ) weight *= TMath::Power(TMath::Max(0., shapeCorr_particle2_->Eval(particle2Pt)), shapeCorrPow_particle2_);
-    if ( weight < 0.    ) weight = 0.;
-    if ( weight > 1.e+1 ) weight = 1.e+1; // CV: ratio anti-iso/iso can indeed be greater than 1.0 in case anti-iso sideband is very "narrow"
-    return weight;
-  }
-  double particle1EtaMin_;
-  double particle1EtaMax_;
-  double particle2EtaMin_;
-  double particle2EtaMax_;
-  TF1* norm_;
-  TF1* shapeCorr_particle1_;
-  double shapeCorrPow_particle1_;
-  TF1* shapeCorr_particle2_;
-  double shapeCorrPow_particle2_;
-};
 
 int getGenMatch(int isGenHadTau, int isGenMuon, int isGenElectron, int isGenJet)
 {
@@ -339,8 +274,8 @@ int main(int argc, char* argv[])
           inputFile,
 	  "bJet", bJet1EtaMin, bJet1EtaMax, bJet2EtaMin, bJet2EtaMax,
 	  fitFunctionNormName, 
-	  fitFunctionShapeName_bJet1, fitFunctionShapePower_bJet1, 
-	  fitFunctionShapeName_bJet2, fitFunctionShapePower_bJet2);
+	  "", fitFunctionShapeName_bJet1, "", fitFunctionShapePower_bJet1, 
+	  "", fitFunctionShapeName_bJet2, "", fitFunctionShapePower_bJet2);
 	bJetLooseToTightWeights.push_back(bJetLooseToTightWeight);
       }
     }
@@ -355,9 +290,19 @@ int main(int argc, char* argv[])
     edm::ParameterSet cfgJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("jetToTauFakeRateLooseToTightWeight");
     
     std::string fitFunctionNormName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
-    std::string fitFunctionShapeName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1");
+    std::string fitFunctionShapeName_tau1_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_central");
+    std::string graphShapeName_tau1, fitFunctionShapeName_tau1_shift;
+    if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau1") ) {
+      graphShapeName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau1");
+      fitFunctionShapeName_tau1_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_shift");
+    }
     double fitFunctionShapePower_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau1");
-    std::string fitFunctionShapeName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2");
+    std::string fitFunctionShapeName_tau2_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_central");
+    std::string graphShapeName_tau2, fitFunctionShapeName_tau2_shift;
+    if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau2") ) {
+      graphShapeName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau2");
+      fitFunctionShapeName_tau2_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_shift");
+    }
     double fitFunctionShapePower_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau2");
     
     std::string inputFileName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("inputFileName");
@@ -377,8 +322,8 @@ int main(int argc, char* argv[])
           inputFile,
 	  "tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax,
 	  fitFunctionNormName, 
-	  fitFunctionShapeName_tau1, fitFunctionShapePower_tau1, 
-	  fitFunctionShapeName_tau2, fitFunctionShapePower_tau2);
+	  graphShapeName_tau1, fitFunctionShapeName_tau1_central, fitFunctionShapeName_tau1_shift, fitFunctionShapePower_tau1, 
+	  graphShapeName_tau2, fitFunctionShapeName_tau2_central, fitFunctionShapeName_tau2_shift, fitFunctionShapePower_tau2);
 	jetToTauFakeRateLooseToTightWeights.push_back(jetToTauFakeRateLooseToTightWeight);
       }
     }
@@ -480,7 +425,7 @@ int main(int argc, char* argv[])
   }
   
   if ( !(inputTree->GetListOfFiles()->GetEntries() >= 1) ) {
-    throw cms::Exception("preselectTreeTauIdMVA") 
+    throw cms::Exception("FWLiteTauTauAnalyzer") 
       << "Failed to identify input Tree !!\n";
   }
 
@@ -548,9 +493,10 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("dPhitt", &dPhi);
   inputTree->SetBranchAddress("dEtatt", &dEta);
   inputTree->SetBranchAddress("dRtt", &dR);
-  Float_t visMass, svFitMass;
+  Float_t visMass, svFitMass, mTtotal;
   inputTree->SetBranchAddress("visMass", &visMass);
   inputTree->SetBranchAddress("svfitMass", &svFitMass);
+  inputTree->SetBranchAddress("mTtotal", &mTtotal);
 
   Float_t electron1Pt, electron1Eta, electron1Phi;
   inputTree->SetBranchAddress("electron1Pt", &electron1Pt);
@@ -700,13 +646,15 @@ int main(int argc, char* argv[])
     if ( diTauChargeSel == kSS && TMath::Abs(diTauCharge) < 0.5 ) continue;
 
     int nbJets = 0;
-    if ( bjet1BtagDiscr > 0.244 && !applyTightBtag ) { 
-      ++nbJets;
-    } else {
-      if ( bTagSF->isbtagged(bjet1Pt, bjet1Eta, bjet1BtagDiscr, bjet1GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
+    if ( bjet1Pt > 20. ) {
+      if ( bjet1BtagDiscr > 0.244 && !applyTightBtag ) { 
+	++nbJets;
+      } else {
+	if ( bTagSF->isbtagged(bjet1Pt, bjet1Eta, bjet1BtagDiscr, bjet1GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
+      }
     }
     // CV: relax cut on b-jet discriminator of first b-jet only, to make tight/loose weights well defined
-    if ( bTagSF->isbtagged(bjet2Pt, bjet2Eta, bjet2BtagDiscr, bjet2GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
+    if ( bjet2Pt > 20. && bTagSF->isbtagged(bjet2Pt, bjet2Eta, bjet2BtagDiscr, bjet2GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
 
     int nElectrons = 0;
     if ( electron1Pt > 10. && TMath::Abs(electron1Eta) < 2.5 ) ++nElectrons;
@@ -756,6 +704,7 @@ int main(int argc, char* argv[])
     //---------------------------------------------------------------------------
 
     Float_t evtWeight = 1.0;
+    Float_t evtWeightErr2_relative = 0.;
     if ( isMC || isEmbedded ) {      
       if ( isEmbedded ) {
 	if ( tau1Pt > tauPtForSwitchingTriggers || tau2Pt > tauPtForSwitchingTriggers ) {
@@ -824,7 +773,7 @@ int main(int argc, char* argv[])
 	}
       }
       if ( bJetLooseToTightWeight_bJetEtaBin ) {
-	evtWeight *= (*bJetLooseToTightWeight_bJetEtaBin)(bjet1Pt, 0.);
+	evtWeight *= bJetLooseToTightWeight_bJetEtaBin->weight(bjet1Pt, 0.);
       } else {
 	std::cerr << "Warning: bjet1Eta = " << bjet1Eta << " outside range !!" << std::endl;
       }
@@ -847,7 +796,8 @@ int main(int argc, char* argv[])
 	//std::cout << "tau1: Pt = " << tau1Pt << ", eta = " << tau1Eta << std::endl;
 	//std::cout << "tau2: Pt = " << tau2Pt << ", eta = " << tau2Eta << std::endl;
 	//std::cout << " --> jetToTauFakeRateLooseToTightWeight = " << (*jetToTauFakeRateLooseToTightWeight_tauEtaBin)(tau1Pt, tau2Pt) << std::endl;
-	evtWeight *= (*jetToTauFakeRateLooseToTightWeight_tauEtaBin)(tau1Pt, tau2Pt);
+	evtWeight *= jetToTauFakeRateLooseToTightWeight_tauEtaBin->weight(tau1Pt, tau2Pt);
+        evtWeightErr2_relative += square(jetToTauFakeRateLooseToTightWeight_tauEtaBin->weightErr_relative(tau1Pt, tau2Pt));
       } else {
 	std::cerr << "Warning: tau1Eta = " << tau1Eta << ", tau2Eta = " << tau2Eta << " outside range !!" << std::endl;
       }
@@ -855,6 +805,7 @@ int main(int argc, char* argv[])
     if ( applyHiggsPtReweighting ) {
       evtWeight *= compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt);
     }
+    Float_t evtWeightErr = evtWeight*TMath::Sqrt(evtWeightErr2_relative);
 
     //---------------------------------------------------------------------------
     // CV: process dependent  additional scale-factors
@@ -883,13 +834,13 @@ int main(int argc, char* argv[])
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
       tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
       dPhi, dEta, dR, 
-      visMass, svFitMass, 
+      visMass, svFitMass, mTtotal, 
       jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
       jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
       bjet1Pt, bjet1Eta, bjet1Phi, 
       bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
       met, numVertices, genHiggsPt, NUP,
-      evtWeight*processSF_inclusive);
+      evtWeight*processSF_inclusive, evtWeightErr*processSF_inclusive);
 
     if ( selEventsFile_inclusive ) {
       (*selEventsFile_inclusive) << run << ":" << lumi << ":" << event << std::endl;
@@ -903,13 +854,13 @@ int main(int argc, char* argv[])
         tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
         tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
         dPhi, dEta, dR, 
-        visMass, svFitMass, 
+        visMass, svFitMass, mTtotal,
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
 	bjet1Pt, bjet1Eta, bjet1Phi, 
 	bjet2Pt, bjet2Eta, bjet2Phi, nbJets,
 	met, numVertices, genHiggsPt, NUP, 
-	evtWeight*processSF_nobtag);
+	evtWeight*processSF_nobtag, evtWeightErr*processSF_nobtag);
 
       if ( selEventsFile_nobtag ) {
 	(*selEventsFile_nobtag) << run << ":" << lumi << ":" << event << std::endl;
@@ -922,13 +873,13 @@ int main(int argc, char* argv[])
         tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
 	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
 	dPhi, dEta, dR, 
-	visMass, svFitMass, 
+	visMass, svFitMass, mTtotal,
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
 	bjet1Pt, bjet1Eta, bjet1Phi, 
 	bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
 	met, numVertices, genHiggsPt, NUP,
-	evtWeight*processSF_btag);
+	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
 
       if ( selEventsFile_btag ) {
 	(*selEventsFile_btag) << run << ":" << lumi << ":" << event << std::endl;

@@ -35,6 +35,7 @@ crabFilePath = '/afs/cern.ch/work/v/veelken/CMSSW_5_3_x/crab/LLRAnalysis_HadTauS
 statusFileName = 'crabSitter.json'
 
 jobName_regex = r'crabdir_patTuple_PAT_SkimHadTauStream_customized_(?P<sample>[a-zA-Z0-9_]*)_2014Jun09'
+##jobName_regex = r'crabdir_patTuple_PAT_SkimHadTauStream_customized_(?P<sample>[a-zA-Z0-9_]*_noTauPolarization)_2014Jun09'
 ##jobName_regex = r'crabdir_fillHiggsPtHistogram_customized_(?P<sample>[a-zA-Z0-9_]*)'
 ##jobName_regex = r'crabdir_copyToCastor_mssmHtautau_customized_(?P<sample>[a-zA-Z0-9_]*)_2014Mar20'
 

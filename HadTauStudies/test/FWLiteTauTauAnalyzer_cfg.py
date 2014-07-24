@@ -36,7 +36,7 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     tau2PtMax = cms.double(-1.),
 
     trigger = cms.string("TauPlusJet"),
-    tauPtForSwitchingTriggers = cms.double(320.),
+    tauPtForSwitchingTriggers = cms.double(350.),
 
     applyTauTriggerTurnOn = cms.string("tree"),
 
@@ -58,9 +58,13 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     jetToTauFakeRateLooseToTightWeight = cms.PSet(
         inputFileName = cms.string(""),
         fitFunctionNormName = cms.string("jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSisoLooseBtag_div_SSrelaxedLooseBtag"),
-        fitFunctionShapeName_tau1 = cms.string("jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"),
+        graphShapeName_tau1 = cms.string(""),
+        fitFunctionShapeName_tau1_central = cms.string("jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"),
+        fitFunctionShapeName_tau1_shift = cms.string(""),
         fitFunctionShapePower_tau1 = cms.double(1.0),
-        fitFunctionShapeName_tau2 = cms.string(""),
+        graphShapeName_tau2 = cms.string(""),
+        fitFunctionShapeName_tau2_central = cms.string(""),
+        fitFunctionShapeName_tau2_shift = cms.string(""),
         fitFunctionShapePower_tau2 = cms.double(0.)
     ),
     tau1EtaBins = cms.vdouble(-1., 1.2, 1.7, 9.9),

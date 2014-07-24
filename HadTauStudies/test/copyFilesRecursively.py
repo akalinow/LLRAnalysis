@@ -28,6 +28,8 @@ if not (len(sys.argv) == 3):
 sourceFilePath = sys.argv[1]
 targetFilePath = sys.argv[2]
 
+tmpFilePath = "/tmp/veelken"
+
 maxNumConcurrentJobs = 100
 
 def runCommand(commandLine):
@@ -152,7 +154,15 @@ def copyFile(sourceFileName, targetFilePath):
     elif sourceFileName.find("/store") == -1 and targetFilePath.find("/store") == -1: # copy from local disk to local disk
         raise ValueError("Use 'cp -r' to copy files from local disk to local disk !!")
     else:
-        raise ValueError("Copying from EOS to EOS not implemented yet !!")
+        runCommand('rm -f %s' % tmpFileName)
+        print 'eos.cp([ %s ], %s)' % (sourceFileName, tmpFilePath)
+        eos.cp([ sourceFileName ], tmpFilePath)
+        time.sleep(10)
+        tmpFileName = os.path.join(tmpFilePath, os.path.basename(sourceFileName))
+        print 'eos.cp([ %s ], %s)' % (tmpFileName, targetFilePath)
+        eos.cp([ tmpFileName ], targetFilePath)
+        time.sleep(10)
+        runCommand('rm %s' % tmpFileName)
 
 def processFilePath(sourceFilePath, targetFilePath):
     

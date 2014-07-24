@@ -13,6 +13,8 @@
 
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 
+#include "LLRAnalysis/HadTauStudies/interface/histogramAuxFunctions.h"
+
 #include <TH1.h>
 #include <TH2.h>
 #include <TString.h>
@@ -35,13 +37,13 @@ class TauTauHistManager
   void fillHistograms(double, double, double, int, int, double, double, 
 		      double, double, double, int, int, double, double, 
 		      double, double, double, 
-		      double, double, 
+		      double, double, double, 
 		      double, double, double, double, 
 		      double, double, double, double, int,
 		      double, double, double, 
 		      double, double, double, int,
 		      double, int, double, double,
-		      double);
+		      double, double);
   
  protected:
 
@@ -78,10 +80,10 @@ class TauTauHistManager
 	histogram_(histogram)
     {}
     ~histogramIn1dParticleEtaBinsEntryType() {}
-    void Fill(double absParticleEta, double x, double weight)
+    void Fill(double absParticleEta, double x, double evtWeight, double evtWeightErr)
     {
       if ( (particleEtaMin_ < 0. || absParticleEta > particleEtaMin_) && (particleEtaMax_ > 5. || absParticleEta < particleEtaMax_) ) {
-	histogram_->Fill(x, weight);
+	fill(histogram_, x, evtWeight, evtWeightErr);
       }
     }
     double particleEtaMin_;
@@ -113,6 +115,8 @@ class TauTauHistManager
   TH1* histogramVisMassL_;
   TH1* histogramSVfitMassS_;
   TH1* histogramSVfitMassL_;
+  TH1* histogramMtTotalS_;
+  TH1* histogramMtTotalL_;
   TH1* histogramDeltaPhi_;
   TH1* histogramDeltaEta_;
   TH1* histogramDeltaR_;
@@ -163,11 +167,11 @@ class TauTauHistManager
 	histogram_(histogram)
     {}
     ~histogramIn2dParticleEtaBinsEntryType() {}
-    void Fill(double absParticle1Eta, double absParticle2Eta, double x, double weight)
+    void Fill(double absParticle1Eta, double absParticle2Eta, double x, double evtWeight, double evtWeightErr)
     {
       if ( (particle1EtaMin_ < 0. || absParticle1Eta > particle1EtaMin_) && (particle1EtaMax_ > 5. || absParticle1Eta < particle1EtaMax_) &&
 	   (particle2EtaMin_ < 0. || absParticle2Eta > particle2EtaMin_) && (particle2EtaMax_ > 5. || absParticle2Eta < particle2EtaMax_) ) {
-	histogram_->Fill(x, weight);
+	fill(histogram_, x, evtWeight, evtWeightErr);
       }
     }
     double particle1EtaMin_;

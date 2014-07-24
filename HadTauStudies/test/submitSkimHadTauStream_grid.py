@@ -10,7 +10,7 @@ import subprocess
 import time
 
 configFile = 'patTuple_PAT_SkimHadTauStream_cfg.py'
-jobId = '2014Jun15'
+jobId = '2014Jun09'
 
 outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 ##outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
@@ -26,8 +26,16 @@ samplesToAnalyze = [
     ##'W3JetsExt'
     ##'pfEmbed_TTJetsFullLept_v2'
     ##'HiggsSUSYGluGlu800'
-    'data_TauParked_Run2012B_22Jan2013_v1',
-    'data_TauParked_Run2012C_22Jan2013_v1'
+    #'data_TauParked_Run2012B_22Jan2013_v1',
+    #'data_TauParked_Run2012C_22Jan2013_v1'
+    ##'DYJets_noTauPolarization'
+    ##'hhTo2b2tau_v2'
+    ##'mssmH260tohh',
+    ##'mssmH300tohh',
+    ##'mssmH350tohh'
+    'abelianZprime300tohh',
+    'abelianZprime500tohh',
+    'abelianZprime700tohh'    
 ]
 
 #--------------------------------------------------------------------------------

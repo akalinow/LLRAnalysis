@@ -192,12 +192,15 @@ def submitToGrid(configFile, jobInfo, crabOptions, crabFileName_full = None, ui_
         # (500 = maximum number of jobs crab can handle in case jobs are submitted without using crab server)
         numJobsPerSubmit = 500
         for jobIndex in range(1 + (numJobsCreated - 1)/numJobsPerSubmit):
-            crabSubmitCommand = "crab -submit %i-%i -c %s" % \
-              (1 + jobIndex*numJobsPerSubmit, min((jobIndex + 1)*numJobsPerSubmit, numJobsCreated), ui_working_dir)
+            jobRange = ""
+            firstJob = 1 + jobIndex*numJobsPerSubmit
+            lastJob = min((jobIndex + 1)*numJobsPerSubmit, numJobsCreated)
+            if lastJob > firstJob:
+                jobRange = "%i-%i" % (firstJob, lastJob)
+            crabSubmitCommand = "crab -submit %s -c %s" % (jobRange, ui_working_dir)
             print crabSubmitCommand
             subprocess.call(crabSubmitCommand, shell = True)
-            crabStatusCommand = "crab -status %i-%i -c %s" % \
-              (1 + jobIndex*numJobsPerSubmit, min((jobIndex + 1)*numJobsPerSubmit, numJobsCreated), ui_working_dir)
+            crabStatusCommand = "crab -status %s -c %s" % (jobRange, ui_working_dir)
             print crabStatusCommand
             subprocess.call(crabStatusCommand, shell = True)
 

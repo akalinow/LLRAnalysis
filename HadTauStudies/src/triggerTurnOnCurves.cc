@@ -208,7 +208,7 @@ double effPFJet320_vs_jetPt(double pt, double eta)
     n     = 3.10895e+00;
     norm  = 9.98466e-01;
   }
-  return integralCrystalBall(m, m0, sigma, alpha, n, norm); 
+  return TMath::Max(0., integralCrystalBall(m, m0, sigma, alpha, n, norm)); 
 }
 
 double effPFJet320MC_vs_jetPt(double pt, double eta) 
@@ -237,17 +237,51 @@ double effPFJet320MC_vs_jetPt(double pt, double eta)
     n     = 1.87689e+01;
     norm  = 9.98651e-01;
   }
-  return integralCrystalBall(m, m0, sigma, alpha, n, norm); 
+  return TMath::Max(0., integralCrystalBall(m, m0, sigma, alpha, n, norm)); 
 }
 
-double effPFJet320MC_vs_tauPt(double pt, double eta) 
+double effPFJet320MC_vs_tauPt_cutMedium(double pt, double eta) 
 {
-  return 1.;
+  double m = pt;
+  if ( m < 200. ) m = 200.;
+  if ( m > 500. ) m = 500.;
+  double m0    = 3.11593e+02;
+  double sigma = 1.97325e+01;
+  double alpha = 2.93861e+01;
+  double n     = 1.27852e+02;
+  double norm  = 9.83784e-01;
+  return TMath::Max(0., integralCrystalBall(m, m0, sigma, alpha, n, norm)); 
+}
+
+double effPFJet320MC_vs_tauPt_mvaTight(double pt, double eta) 
+{
+  double m = pt;
+  if ( m < 200. ) m = 200.;
+  if ( m > 500. ) m = 500.;
+  double m0    = 3.12211e+02;
+  double sigma = 2.16338e+01;
+  double alpha = 4.06313e+01;
+  double n     = 1.08321e+01;
+  double norm  = 9.84004e-01;
+  return TMath::Max(0., integralCrystalBall(m, m0, sigma, alpha, n, norm)); 
+}
+
+double effPFJet320MC_vs_tauPt_mvaVTight(double pt, double eta) 
+{
+  double m = pt;
+  if ( m < 200. ) m = 200.;
+  if ( m > 500. ) m = 500.;
+  double m0    = 3.12430e+02;
+  double sigma = 2.17269e+01;
+  double alpha = 4.23238e+01;
+  double n     = 1.57691e+02;
+  double norm  = 9.81625e-01;
+  return TMath::Max(0., integralCrystalBall(m, m0, sigma, alpha, n, norm)); 
 }
 
 double effPFJet320(double tauPt, double jetPt, double eta) 
 {
-  double eff = effPFJet320MC_vs_tauPt(tauPt, eta);
+  double eff = effPFJet320MC_vs_tauPt_mvaTight(tauPt, eta);
   if ( jetPt > 200. ) { // CV: trigger efficiency for jets of Pt < 200 GeV is zero
     double effCorr_data = effPFJet320_vs_jetPt(jetPt, eta);
     double effCorr_mc = effPFJet320MC_vs_jetPt(jetPt, eta);
@@ -261,6 +295,6 @@ double effPFJet320(double tauPt, double jetPt, double eta)
 
 double effPFJet320MC(double tauPt, double jetPt, double eta)
 {
-  return effPFJet320MC_vs_tauPt(tauPt, eta);
+  return effPFJet320MC_vs_tauPt_mvaTight(tauPt, eta);
 }
 //-------------------------------------------------------------------------------
