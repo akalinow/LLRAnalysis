@@ -4,11 +4,17 @@
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 
 #include <TH1.h>
+#include <TH2.h>
 #include <TFile.h>
 #include <TDirectory.h>
 
 #include <vector>
 #include <string>
+
+void fill(TH1*, double, double, double);
+void fillWithOverFlow(TH1*, double, double, double);
+void fill2d(TH2*, double, double, double, double);
+void fillWithOverFlow2d(TH2*, double, double, double, double);
 
 void checkCompatibleBinning(const TH1*, const TH1*);
 

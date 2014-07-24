@@ -9,6 +9,69 @@
 #include <iostream>
 #include <assert.h>
 
+void fill(TH1* histogram, double x, double evtWeight, double evtWeightErr)
+{
+  TAxis* xAxis = histogram->GetXaxis();
+  int bin = xAxis->FindBin(x);
+  int numBins = xAxis->GetNbins();
+  if ( !(bin >= 1 && bin <= numBins) ) return;
+  double binContent = histogram->GetBinContent(bin);
+  double binError = histogram->GetBinError(bin);
+  histogram->SetBinContent(bin, binContent + evtWeight);
+  histogram->SetBinError(bin, TMath::Sqrt(binError*binError + evtWeight*evtWeight + evtWeightErr*evtWeightErr));
+}
+
+void fillWithOverFlow(TH1* histogram, double x, double evtWeight, double evtWeightErr)
+{
+  TAxis* xAxis = histogram->GetXaxis();
+  int bin = xAxis->FindBin(x);
+  int numBins = xAxis->GetNbins();
+  if ( bin < 1       ) bin = 1;
+  if ( bin > numBins ) bin = numBins;
+  double binContent = histogram->GetBinContent(bin);
+  double binError = histogram->GetBinError(bin);
+  histogram->SetBinContent(bin, binContent + evtWeight);
+  histogram->SetBinError(bin, TMath::Sqrt(binError*binError + evtWeight*evtWeight + evtWeightErr*evtWeightErr));
+}
+
+void fill2d(TH2* histogram, double x, double y, double evtWeight, double evtWeightErr)
+{
+  TAxis* xAxis = histogram->GetXaxis();
+  int binX = xAxis->FindBin(x);
+  int numBinsX = xAxis->GetNbins();
+  if ( !(binX >= 1 && binX <= numBinsX) ) return;
+  TAxis* yAxis = histogram->GetYaxis();
+  int binY = yAxis->FindBin(y);
+  int numBinsY = yAxis->GetNbins();
+  if ( !(binY >= 1 && binY <= numBinsY) ) return;
+  double binContent = histogram->GetBinContent(binX, binY);
+  double binError = histogram->GetBinError(binX, binY);
+  histogram->SetBinContent(binX, binY, binContent + evtWeight);
+  histogram->SetBinError(binX, binY, TMath::Sqrt(binError*binError + evtWeight*evtWeight + evtWeightErr*evtWeightErr));
+}
+
+void fillWithOverFlow2d(TH2* histogram, double x, double y, double evtWeight, double evtWeightErr)
+{
+  TAxis* xAxis = histogram->GetXaxis();
+  int binX = xAxis->FindBin(x);
+  int numBinsX = xAxis->GetNbins();
+  if ( binX < 1        ) binX = 1;
+  if ( binX > numBinsX ) binX = numBinsX;
+  TAxis* yAxis = histogram->GetYaxis();
+  int binY = yAxis->FindBin(y);
+  int numBinsY = yAxis->GetNbins();
+  if ( binY < 1        ) binY = 1;
+  if ( binY > numBinsY ) binY = numBinsY;
+  double binContent = histogram->GetBinContent(binX, binY);
+  double binError = histogram->GetBinError(binX, binY);
+  histogram->SetBinContent(binX, binY, binContent + evtWeight);
+  histogram->SetBinError(binX, binY, TMath::Sqrt(binError*binError + evtWeight*evtWeight + evtWeightErr*evtWeightErr));
+}
+
+//
+//-------------------------------------------------------------------------------
+//
+
 void checkCompatibleBinning(const TH1* histogram1, const TH1* histogram2)
 {
   if ( !(histogram1->GetNbinsX() == histogram2->GetNbinsX()) )
