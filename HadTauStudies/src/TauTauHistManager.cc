@@ -99,6 +99,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramVisMassL_      = book1D(dir, "visMassL",      "M_{vis} / GeV", 400, 0., 2000.);
   histogramSVfitMassS_    = book1D(dir, "svFitMassS",    "M_{#tau#tau} / GeV", numMassBins, massBinning);
   histogramSVfitMassL_    = book1D(dir, "svFitMassL",    "M_{#tau#tau} / GeV", 400, 0., 2000.);
+  histogramMtTotalS_      = book1D(dir, "mTtotalS",      "m_{T}^{total} / GeV", numMassBins, massBinning);
+  histogramMtTotalL_      = book1D(dir, "mTtotalL",      "m_{T}^{total} / GeV", 400, 0., 2000.);
   histogramDeltaPhi_      = book1D(dir, "deltaPhi",      "#Delta #phi (#tau_{1},#tau_{2})", 36, -TMath::Pi(), TMath::Pi());
   histogramDeltaEta_      = book1D(dir, "deltaEta",      "#Delta #eta (#tau_{1},#tau_{2})", 50, 0., 5.);
   histogramDeltaR_        = book1D(dir, "deltaR"  ,      "#Delta R (#tau_{1},#tau_{2})", 70, 0., 7.);
@@ -184,113 +186,115 @@ void TauTauHistManager::fillHistograms(
        double tau1Pt, double tau1Eta, double tau1Phi, int tau1DecayMode, int tau1GenMatch, double tau1IsoPtSum, double tau1MVA,					    
        double tau2Pt, double tau2Eta, double tau2Phi, int tau2DecayMode, int tau2GenMatch, double tau2IsoPtSum, double tau2MVA,					    
        double dPhi, double dEta, double dR, 
-       double visMass, double svFitMass, 
+       double visMass, double svFitMass, double mTtotal, 
        double jet1Pt, double jet1Eta, double jet1Phi, double jet1BtagDiscr, 
        double jet2Pt, double jet2Eta, double jet2Phi, double jet2BtagDiscr, int numJets,
        double bjet1Pt, double bjet1Eta, double bjet1Phi, 
        double bjet2Pt, double bjet2Eta, double bjet2Phi, int numBJets,
        double met, int numVertices, double genHiggsPt, double NUP,
-       double evtWeight)
+       double evtWeight, double evtWeightErr)
 {
   double absTau1Eta = TMath::Abs(tau1Eta);
   double absTau2Eta = TMath::Abs(tau2Eta);
 
-  histogramTau1PtS_->Fill(tau1Pt, evtWeight);
-  histogramTau1PtL_->Fill(tau1Pt, evtWeight);
+  fillWithOverFlow(histogramTau1PtS_, tau1Pt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1PtL_, tau1Pt, evtWeight, evtWeightErr);
   for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramTau1Pt = histogramTau1Pt_inTauEtaBins_.begin();
 	histogramTau1Pt != histogramTau1Pt_inTauEtaBins_.end(); ++histogramTau1Pt ) {
-    (*histogramTau1Pt)->Fill(absTau1Eta, tau1Pt, evtWeight); 
+    (*histogramTau1Pt)->Fill(absTau1Eta, tau1Pt, evtWeight, evtWeightErr); 
   }
-  histogramTau1Eta_->Fill(tau1Eta, evtWeight);
-  histogramTau1Phi_->Fill(tau1Phi, evtWeight);
-  histogramTau1DecayMode_->Fill(tau1DecayMode, evtWeight);
-  histogramTau1GenMatch_->Fill(tau1GenMatch, evtWeight);
-  histogramTau1IsoPtSum_->Fill(tau1IsoPtSum, evtWeight);
-  histogramTau1MVA_->Fill(tau1MVA, evtWeight);
+  fillWithOverFlow(histogramTau1Eta_, tau1Eta, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1Phi_, tau1Phi, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1DecayMode_, tau1DecayMode, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1GenMatch_, tau1GenMatch, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1IsoPtSum_, tau1IsoPtSum, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1MVA_, tau1MVA, evtWeight, evtWeightErr);
 
-  histogramTau2PtS_->Fill(tau2Pt, evtWeight);
-  histogramTau2PtL_->Fill(tau2Pt, evtWeight);
+  fillWithOverFlow(histogramTau2PtS_, tau2Pt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2PtL_, tau2Pt, evtWeight, evtWeightErr);
   for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramTau2Pt = histogramTau2Pt_inTauEtaBins_.begin();
 	histogramTau2Pt != histogramTau2Pt_inTauEtaBins_.end(); ++histogramTau2Pt ) {
-    (*histogramTau2Pt)->Fill(absTau2Eta, tau2Pt, evtWeight); 
+    (*histogramTau2Pt)->Fill(absTau2Eta, tau2Pt, evtWeight, evtWeightErr); 
   }
-  histogramTau2Eta_->Fill(tau2Eta, evtWeight);
-  histogramTau2Phi_->Fill(tau2Phi, evtWeight);
-  histogramTau2DecayMode_->Fill(tau2DecayMode, evtWeight);
-  histogramTau2GenMatch_->Fill(tau2GenMatch, evtWeight);
-  histogramTau2IsoPtSum_->Fill(tau2IsoPtSum, evtWeight);
-  histogramTau2MVA_->Fill(tau2MVA, evtWeight);
+  fillWithOverFlow(histogramTau2Eta_, tau2Eta, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2Phi_, tau2Phi, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2DecayMode_, tau2DecayMode, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2GenMatch_, tau2GenMatch, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2IsoPtSum_, tau2IsoPtSum, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2MVA_, tau2MVA, evtWeight, evtWeightErr);
 
-  histogramVisMassS_->Fill(visMass, evtWeight);
-  histogramVisMassL_->Fill(visMass, evtWeight);
-  histogramSVfitMassS_->Fill(svFitMass, evtWeight);
-  histogramSVfitMassL_->Fill(svFitMass, evtWeight);
-  histogramDeltaPhi_->Fill(dPhi, evtWeight);
-  histogramDeltaEta_->Fill(dEta, evtWeight);
-  histogramDeltaR_->Fill(dR, evtWeight);
+  fill(histogramVisMassS_, visMass, evtWeight, evtWeightErr);
+  fill(histogramVisMassL_, visMass, evtWeight, evtWeightErr);
+  fill(histogramSVfitMassS_, svFitMass, evtWeight, evtWeightErr);
+  fill(histogramSVfitMassL_, svFitMass, evtWeight, evtWeightErr);
+  fill(histogramMtTotalS_, mTtotal, evtWeight, evtWeightErr); 
+  fill(histogramMtTotalL_, mTtotal, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramDeltaPhi_, dPhi, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramDeltaEta_, dEta, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramDeltaR_, dR, evtWeight, evtWeightErr);
   
   if ( jet1Pt > 1. ) {
-    histogramJet1PtS_->Fill(jet1Pt, evtWeight);
-    histogramJet1PtL_->Fill(jet1Pt, evtWeight);
-    histogramJet1Eta_->Fill(jet1Eta, evtWeight);
-    histogramJet1Phi_->Fill(jet1Phi, evtWeight);
-    histogramJet1BtagDiscr_->Fill(jet1BtagDiscr, evtWeight);
+    fillWithOverFlow(histogramJet1PtS_, jet1Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet1PtL_, jet1Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet1Eta_, jet1Eta, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet1Phi_, jet1Phi, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet1BtagDiscr_, jet1BtagDiscr, evtWeight, evtWeightErr);
   }
 
   if ( jet2Pt > 1. ) {
-    histogramJet2PtS_->Fill(jet2Pt, evtWeight);
-    histogramJet2PtL_->Fill(jet2Pt, evtWeight);
-    histogramJet2Eta_->Fill(jet2Eta, evtWeight);
-    histogramJet2Phi_->Fill(jet2Phi, evtWeight);
-    histogramJet2BtagDiscr_->Fill(jet2BtagDiscr, evtWeight);
+    fillWithOverFlow(histogramJet2PtS_, jet2Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet2PtL_, jet2Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet2Eta_, jet2Eta, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet2Phi_, jet2Phi, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet2BtagDiscr_, jet2BtagDiscr, evtWeight, evtWeightErr);
   }
 
-  histogramNumJets_->Fill(numJets, evtWeight);
+  fillWithOverFlow(histogramNumJets_, numJets, evtWeight, evtWeightErr);
 
   double absBJet1Eta = TMath::Abs(bjet1Eta);
   double absBJet2Eta = TMath::Abs(bjet2Eta);
 
   if ( bjet1Pt > 1. ) {
-    histogramBJet1PtS_->Fill(bjet1Pt, evtWeight);
-    histogramBJet1PtL_->Fill(bjet1Pt, evtWeight);
+    fillWithOverFlow(histogramBJet1PtS_, bjet1Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet1PtL_, bjet1Pt, evtWeight, evtWeightErr);
     for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramBJet1Pt = histogramBJet1Pt_inBJetEtaBins_.begin();
 	  histogramBJet1Pt != histogramBJet1Pt_inBJetEtaBins_.end(); ++histogramBJet1Pt ) {
-      (*histogramBJet1Pt)->Fill(absBJet1Eta, bjet1Pt, evtWeight); 
+      (*histogramBJet1Pt)->Fill(absBJet1Eta, bjet1Pt, evtWeight, evtWeightErr); 
     }
-    histogramBJet1Eta_->Fill(bjet1Eta, evtWeight);
-    histogramBJet1Phi_->Fill(bjet1Phi, evtWeight);
+    fillWithOverFlow(histogramBJet1Eta_, bjet1Eta, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet1Phi_, bjet1Phi, evtWeight, evtWeightErr);
   }
 
   if ( bjet2Pt > 1. ) {
-    histogramBJet2PtS_->Fill(bjet2Pt, evtWeight);
-    histogramBJet2PtL_->Fill(bjet2Pt, evtWeight);
+    fillWithOverFlow(histogramBJet2PtS_, bjet2Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet2PtL_, bjet2Pt, evtWeight, evtWeightErr);
     for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramBJet2Pt = histogramBJet2Pt_inBJetEtaBins_.begin();
 	  histogramBJet2Pt != histogramBJet2Pt_inBJetEtaBins_.end(); ++histogramBJet2Pt ) {
-      (*histogramBJet2Pt)->Fill(absBJet2Eta, bjet2Pt, evtWeight); 
+      (*histogramBJet2Pt)->Fill(absBJet2Eta, bjet2Pt, evtWeight, evtWeightErr); 
     }
-    histogramBJet2Eta_->Fill(bjet2Eta, evtWeight);
-    histogramBJet2Phi_->Fill(bjet2Phi, evtWeight);
+    fillWithOverFlow(histogramBJet2Eta_, bjet2Eta, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet2Phi_, bjet2Phi, evtWeight, evtWeightErr);
   }
 
-  histogramNumBJets_->Fill(numBJets, evtWeight);
+  fillWithOverFlow(histogramNumBJets_, numBJets, evtWeight, evtWeightErr);
 
-  histogramMEtS_->Fill(met, evtWeight);
-  histogramMEtL_->Fill(met, evtWeight);
+  fillWithOverFlow(histogramMEtS_, met, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramMEtL_, met, evtWeight, evtWeightErr);
 
-  histogramNumVertices_->Fill(numVertices, evtWeight);
+  fillWithOverFlow(histogramNumVertices_, numVertices, evtWeight, evtWeightErr);
 
-  histogramGenHiggsPt_->Fill(genHiggsPt, evtWeight); 
-  histogramNUP_->Fill(NUP, evtWeight); 
+  fillWithOverFlow(histogramGenHiggsPt_, genHiggsPt, evtWeight, evtWeightErr); 
+  fillWithOverFlow(histogramNUP_, NUP, evtWeight, evtWeightErr); 
 
-  histogramEventCounter_->Fill(0., evtWeight);  
+  fill(histogramEventCounter_, 0., evtWeight, evtWeightErr);  
   for ( std::vector<histogramIn2dParticleEtaBinsEntryType*>::iterator histogramEventCounter = histogramEventCounter_inTauEtaBins_.begin();
 	histogramEventCounter != histogramEventCounter_inTauEtaBins_.end(); ++histogramEventCounter ) {
-    (*histogramEventCounter)->Fill(absTau1Eta, absTau2Eta, 0., evtWeight); 
+    (*histogramEventCounter)->Fill(absTau1Eta, absTau2Eta, 0., evtWeight, evtWeightErr); 
   }
   if ( bjet1Pt > 1. ) { // CV: fill histogram for computing probabilities for jets to pass tight/loose b-tag discriminators for events with at least one b-jet
     for ( std::vector<histogramIn2dParticleEtaBinsEntryType*>::iterator histogramEventCounter = histogramEventCounter_inBJetEtaBins_.begin();
 	  histogramEventCounter != histogramEventCounter_inBJetEtaBins_.end(); ++histogramEventCounter ) {
-      (*histogramEventCounter)->Fill(absBJet1Eta, absBJet2Eta, 0., evtWeight); 
+      (*histogramEventCounter)->Fill(absBJet1Eta, absBJet2Eta, 0., evtWeight, evtWeightErr); 
     }
   }
 }

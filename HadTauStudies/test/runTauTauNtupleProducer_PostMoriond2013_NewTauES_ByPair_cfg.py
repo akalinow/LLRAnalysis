@@ -17,7 +17,7 @@ runOnEmbed     = False
 embedType      = "PfEmbed" #"PfEmbed" or "RhEmbed"
 reRunPatJets   = True
 applyTauESCorr = True 
-doSVFitReco    = True
+doSVFitReco    = False
 usePFMEtMVA    = True
 useRecoil      = True
 useMarkov      = False
@@ -34,6 +34,8 @@ runNominal     = True
 runTauEnUp     = True
 runTauEnDown   = True
 
+sampleName = None
+
 #--------------------------------------------------------------------------------
 # define "hooks" for replacing configuration parameters
 # in case running jobs on the CERN batch system/grid
@@ -46,6 +48,7 @@ runTauEnDown   = True
 #__runNominal = $runNominal
 #__runTauEnUp = $runTauEnUp
 #__runTauEnDown = $runTauEnDown
+#__sampleName = $sampleName
 #
 #--------------------------------------------------------------------------------
 
@@ -226,6 +229,23 @@ else:
     process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
 #----------------------------------------------------------------------------------
 '''
+
+#--------------------------------------------------------------------------------
+# produce genMET
+
+process.produceGenMEt = cms.Sequence()
+
+if runOnMC:
+    process.load("RecoMET.Configuration.GenMETParticles_cff")
+    process.produceGenMEt += process.genParticlesForMETAllVisible
+
+    process.load("RecoMET.METProducers.genMetTrue_cfi")
+    process.genMetFromGenParticles = process.genMetTrue.clone(
+        src = cms.InputTag('genParticlesForMETAllVisible'),
+        alias = cms.string('genMetFromGenParticles')
+    )
+    process.produceGenMEt += process.genMetFromGenParticles
+#--------------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------------
 # produce PU Jet Ids
@@ -510,7 +530,6 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     bestDiTauPreselection = cms.vstring("decayModeFindingOldDMs"),
     bestDiTauRanking = cms.vstring("byCombinedIsolationDeltaBetaCorrRaw3Hits"),
     invertRanking = cms.bool(True), # CV: set to False (True) if ranking taus by MVA output (isolation Pt-sum)
-    svFitMode = cms.string("VEGAS"), # either "VEGAS" or "MarkovChain"                                              
     tauIdDiscriminators = cms.PSet(
         decayModeFinding = cms.string("decayModeFindingOldDMs"),                                        
         LooseDB3HIso = cms.string("byLooseCombinedIsolationDeltaBetaCorr3Hits"),
@@ -575,6 +594,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     ##wpBJetDiscriminator = cms.double(0.679), # CSV tagger Medium working-point (cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP)
     wpBJetDiscriminator = cms.double(0.244), # CSV tagger Loose working-point (cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagPerformanceOP)
     srcRawPFMEt = cms.InputTag('patMETsPFlow'),
+    srcGenMEt = cms.InputTag(''),                                           
     srcVertices = cms.InputTag('selectedPrimaryVertices'),
     srcRho = cms.InputTag('kt6PFJets', 'rho'),                       
     evtWeights =  cms.PSet(),
@@ -613,6 +633,7 @@ if runOnMC :
         "hlt1PFJet320"
     )
     process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
+    process.tauTauNtupleProducer.srcGenMEt = cms.InputTag('genMetFromGenParticles')
     process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
 else :    
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
@@ -671,7 +692,7 @@ if runOnEmbed :
             process.tauTauNtupleProducer.evtWeights.genDiTauMassVsGenDiTauPt = cms.InputTag('embeddingKineReweightRECembedding', 'genDiTauMassVsGenDiTauPt', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2EtaVsGenTau1Eta = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2EtaVsGenTau1Eta', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2PtVsGenTau1Pt = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2PtVsGenTau1Pt', 'EmbeddedRECO')
-
+    
 if usePFMEtMVA :
     if useRecoil :
         process.tauTauNtupleProducer.met = cms.InputTag("metRecoilCorrector00", "N")
@@ -713,6 +734,7 @@ process.seqNominal = cms.Sequence(
     process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
     #(process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
+    process.produceGenMEt * 
     process.puJetIdSequence *
     #process.produceType1corrPFMEt*
     #process.producePFMEtNoPileUp*
@@ -736,6 +758,7 @@ process.seqTauUp = cms.Sequence(
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauUp * process.tauPtEtaIDIsoTauUpFilter * 
     process.electronsForVeto *
+    process.produceGenMEt * 
     process.puJetIdSequence *
     process.calibratedAK5PFJetsForPFMEtMVA *
     process.runMETByPairsSequenceTauUp *
@@ -754,6 +777,7 @@ process.seqTauDown = cms.Sequence(
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauDown * process.tauPtEtaIDIsoTauDownFilter * 
     process.electronsForVeto *
+    process.produceGenMEt * 
     process.puJetIdSequence *
     process.calibratedAK5PFJetsForPFMEtMVA *
     process.runMETByPairsSequenceTauDown *
@@ -763,6 +787,17 @@ process.seqTauDown = cms.Sequence(
     process.vertexMultiplicityReweightSequence *
     process.tauTauNtupleProducerTauDown
 )
+
+# run TauSpinner to simulate tau polarization effects
+# for special DYJets sample that was produced with tau polarization disabled
+if sampleName and sampleName == "DYJets_noTauPolarization":
+    process.load("TauSpinnerInterface.TauSpinnerInterface.TauSpinner_cfi")    
+    process.seqNominal.replace(process.tauTauNtupleProducer, process.TauSpinnerReco*process.tauTauNtupleProducer)
+    process.tauTauNtupleProducer.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
+    process.seqTauUp.replace(process.tauTauNtupleProducerTauUp, process.TauSpinnerReco*process.tauTauNtupleProducerTauUp)
+    process.tauTauNtupleProducerTauUp.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
+    process.seqTauDown.replace(process.tauTauNtupleProducerTauDown, process.TauSpinnerReco*process.tauTauNtupleProducerTauDown)        
+    process.tauTauNtupleProducerTauDown.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
 
 #######################################################################
 

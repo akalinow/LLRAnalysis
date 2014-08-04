@@ -1,9 +1,9 @@
-#ifndef LLRAnalysis_HadTauStudies_TauTauHistManager_h
-#define LLRAnalysis_HadTauStudies_TauTauHistManager_h
+#ifndef LLRAnalysis_HadTauStudies_TauTauHistManager2b2tau_h
+#define LLRAnalysis_HadTauStudies_TauTauHistManager2b2tau_h
 
-/** \class TauTauHistManager
+/** \class TauTauHistManager2b2tau
  *
- * Fill histograms for MSSM Higgs -> tau tau -> tau_h tau_h analysis
+ * Fill histograms for 2 Higgs -> 2 b-jet 2 tau_h analysis
  *
  * \author Christian Veelken, LLR
  *
@@ -23,26 +23,31 @@
 #include <string>
 #include <vector>
 
-class TauTauHistManager
+class TauTauHistManager2b2tau
 {
  public:
   /// constructor
-  TauTauHistManager(edm::ParameterSet const&);
+  TauTauHistManager2b2tau(edm::ParameterSet const&);
 
   /// destructor
-  ~TauTauHistManager() {}
+  ~TauTauHistManager2b2tau() {}
 
   /// book and fill histograms
   void bookHistograms(TFileDirectory&);
   void fillHistograms(double, double, double, int, int, double, double, 
 		      double, double, double, int, int, double, double, 
 		      double, double, double, 
-		      double, double, double, 
 		      double, double, double, double, 
 		      double, double, double, double, int,
 		      double, double, double, 
-		      double, double, double, int,
-		      double, int, double, double,
+		      double, double, double, 
+		      double, double, double, int, int,
+		      double, double, double, double, 
+		      double, double, double, double, 
+		      double, double, 
+		      double,
+		      double, double, 		      
+		      double, int, double,
 		      double, double);
   
  protected:
@@ -66,10 +71,6 @@ class TauTauHistManager
   int numTau1EtaBins_;
   vdouble tau2EtaBins_;
   int numTau2EtaBins_;
-  vdouble bJet1EtaBins_;
-  int numBJet1EtaBins_;
-  vdouble bJet2EtaBins_;
-  int numBJet2EtaBins_;
   std::string central_or_shift_;
  
   struct histogramIn1dParticleEtaBinsEntryType
@@ -111,16 +112,6 @@ class TauTauHistManager
   TH1* histogramTau2IsoPtSum_;
   TH1* histogramTau2MVA_;
 
-  TH1* histogramVisMassS_;
-  TH1* histogramVisMassL_;
-  TH1* histogramSVfitMassS_;
-  TH1* histogramSVfitMassL_;
-  TH1* histogramMtTotalS_;
-  TH1* histogramMtTotalL_;
-  TH1* histogramDeltaPhi_;
-  TH1* histogramDeltaEta_;
-  TH1* histogramDeltaR_;
-  
   TH1* histogramJet1PtS_;
   TH1* histogramJet1PtL_;
   TH1* histogramJet1Eta_;
@@ -137,18 +128,47 @@ class TauTauHistManager
 
   TH1* histogramBJet1PtS_;
   TH1* histogramBJet1PtL_;
-  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet1Pt_inBJetEtaBins_;
   TH1* histogramBJet1Eta_;
   TH1* histogramBJet1Phi_;
 
   TH1* histogramBJet2PtS_;
   TH1* histogramBJet2PtL_;
-  std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet2Pt_inBJetEtaBins_;
   TH1* histogramBJet2Eta_;
   TH1* histogramBJet2Phi_;
 
-  TH1* histogramNumBJets_;
+  TH1* histogramNumBJetsLoose_;
+  TH1* histogramNumBJetsMedium_;
 
+  TH1* histogramVisMassS_;
+  TH1* histogramVisMassL_;
+  TH1* histogramSVfitMassS_;
+  TH1* histogramSVfitMassL_;
+  TH1* histogramMtTotalS_;
+  TH1* histogramMtTotalL_;
+  TH1* histogramDeltaPhitt_;
+  TH1* histogramDeltaEtatt_;
+  TH1* histogramDeltaRtt_;
+  TH1* histogramMbbS_;
+  TH1* histogramMbbL_;
+  TH1* histogramDeltaPhibb_;
+  TH1* histogramDeltaEtabb_;
+  TH1* histogramDeltaRbb_;
+  TH1* histogramDeltaPhiHbbHtt_;
+  TH1* histogramDeltaPhiHbbMEt_;
+  TH1* histogramDeltaPhiHttMEt_;
+  TH1* histogramMinDeltaRbt_;
+  TH1* histogramHbbPtS_;
+  TH1* histogramHbbPtL_;
+  TH1* histogramHttPtS_;
+  TH1* histogramHttPtL_;
+  TH1* histogramMaxBJetPtS_;
+  TH1* histogramMaxBJetPtL_;
+  TH1* histogramAugMT2ed_;
+  TH1* histogramDiHiggsPtS_;
+  TH1* histogramDiHiggsPtL_;
+  TH1* histogramDiHiggsMassS_;
+  TH1* histogramDiHiggsMassL_;
+  
   TH1* histogramMEtS_;
   TH1* histogramMEtL_;
 
@@ -183,7 +203,6 @@ class TauTauHistManager
 
   TH1* histogramEventCounter_;
   std::vector<histogramIn2dParticleEtaBinsEntryType*> histogramEventCounter_inTauEtaBins_;
-  std::vector<histogramIn2dParticleEtaBinsEntryType*> histogramEventCounter_inBJetEtaBins_;
 
   std::vector<TH1*> histograms_;
 };

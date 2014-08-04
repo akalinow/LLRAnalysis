@@ -18,9 +18,10 @@ import time
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
 jobId = '2014Jun09'
 
-version = "v2_02"
+version = "v2_04"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
+##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
 maxEventsPerJob = 10000
 
@@ -30,6 +31,26 @@ lxbatch_queue = '1nd'
 
 samplesToAnalyze = [
     # CV: leave empty in order to produce Ntuples for all samples
+    ##'DYJets_noTauPolarization',
+    ##'hhTo2b2tau_v2',
+    ##'mssmH260tohh',
+    ##'mssmH300tohh',
+    ##'mssmH350tohh',
+    ##'abelianZprime300tohh',
+    ##'abelianZprime500tohh',
+    ##'abelianZprime700tohh' 
+]
+
+samplesToSkip = [
+    # CV: leave empty in order to produce Ntuples for all samples
+    'DYJets_noTauPolarization',
+    'hhTo2b2tau_v2',
+    'mssmH260tohh',
+    'mssmH300tohh',
+    'mssmH350tohh',
+    'abelianZprime300tohh',
+    'abelianZprime500tohh',
+    'abelianZprime700tohh'    
 ]
 
 numEventsFileName = 'submitTauTauNtupleProduction.json'
@@ -218,6 +239,7 @@ def customizeConfigFile(sampleName, nom_or_sysShift, inputFileNames, outputFileN
     cfg_modified = cfg_modified.replace("$runNominal", getStringRep(runNominal))
     cfg_modified = cfg_modified.replace("$runTauEnUp", getStringRep(runTauEnUp))
     cfg_modified = cfg_modified.replace("$runTauEnDown", getStringRep(runTauEnDown))
+    cfg_modified = cfg_modified.replace("$sampleName", getStringRep(sampleName))
 
     cfg_modified += "\n"
     cfg_modified += "process.source.fileNames = cms.untracked.vstring(%s)\n" % \
@@ -237,16 +259,18 @@ bsubScriptFileNames = {}
 bsubJobNames        = {}
 for sampleToAnalyze in samplesToAnalyze:
 
-    print "checking sample %s" % sampleToAnalyze
+    if sampleToAnalyze in samplesToSkip:
+        print "skipping sample %s, because explicitely requested to do so" % sampleToAnalyze
+        continue
+    else:
+        print "checking sample %s" % sampleToAnalyze
 
     bsubFileNames[sampleToAnalyze]       = {}
     bsubScriptFileNames[sampleToAnalyze] = {}
     bsubJobNames[sampleToAnalyze]        = {}
 
-    if sampleToAnalyze == "HiggsSUSYBB300": # CV: skip obsolete sample (superseded by HiggsSUSYBB300v2)
+    if sampleToAnalyze == "HiggsSUSYBB300" or sampleToAnalyze == "hhTo2b2tau": # CV: skip obsolete samples (superseded by HiggsSUSYBB300v2 and hhTo2b2tau_v2)
         continue    
-    if sampleToAnalyze == "data_TauParked_Run2012C_22Jan2013_v1": # CV: skip, because PAT-tuple production jobs have not yet finished
-        continue
     
     inputFilePath_sample = os.path.join(inputFilePath, sampleToAnalyze)
     print " inputFilePath = %s" % inputFilePath_sample
@@ -327,7 +351,7 @@ for sampleToAnalyze in samplesToAnalyze:
 #
 bsubFileNames_harvesting = {}
 bsubJobNames_harvesting  = {}
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames.keys():
     
     bsubFileNames_harvesting[sampleToAnalyze] = {}
     bsubJobNames_harvesting[sampleToAnalyze]  = {}
@@ -401,7 +425,7 @@ makeFile = open(makeFileName, "w")
 makeFile.write("\n")
 jobsTauTauNtupleProduction = []
 existingOutputFiles = None
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames.keys():
     for nom_or_sysShift in bsubScriptFileNames[sampleToAnalyze].keys():
         outputFilePath_sample = os.path.join(outputFilePath, nom_or_sysShift, sampleToAnalyze)
         if outputFilePath_sample.find("/store") != -1:
@@ -431,7 +455,7 @@ for jobIdx in range(len(jobsTauTauNtupleProduction)):
 makeFile.write("all: %s\n" % make_MakeFile_vstring(jobsTauTauNtupleProduction))
 makeFile.write("\techo 'Finished running TauTauNtupleProduction.'\n")
 makeFile.write("\n")
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames.keys():
     for nom_or_sysShift in bsubScriptFileNames[sampleToAnalyze].keys():
         for chunkId in bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift].keys():
             if bsubJobNames[sampleToAnalyze][nom_or_sysShift][chunkId] in jobsTauTauNtupleProduction:
@@ -446,11 +470,11 @@ for sampleToAnalyze in samplesToAnalyze:
                 makeFile.write("\tsleep 1\n")
         makeFile.write("\n")
 jobsTauTauNtupleHarvesting = []
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames_harvesting.keys():
     for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
         jobsTauTauNtupleHarvesting.append(bsubJobNames_harvesting[sampleToAnalyze][nom_or_sysShift])        
 makeFile.write("harvesting: %s\n" % make_MakeFile_vstring(jobsTauTauNtupleHarvesting))
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames_harvesting.keys():
     for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
         makeFile.write("%s:\n" %
           (bsubJobNames_harvesting[sampleToAnalyze][nom_or_sysShift]))
@@ -460,14 +484,14 @@ for sampleToAnalyze in samplesToAnalyze:
         makeFile.write("\n")        
 makeFile.write(".PHONY: clean\n")
 makeFile.write("clean:\n")
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames.keys():
     for nom_or_sysShift in bsubScriptFileNames[sampleToAnalyze].keys():
         for chunkId in bsubScriptFileNames[sampleToAnalyze][nom_or_sysShift].keys():
             for outputFileName in bsubFileNames[sampleToAnalyze][nom_or_sysShift][chunkId]:
                 makeFile.write("\t%s %s\n" %
                   (executable_rfrm,                   
                    os.path.join(outputFilePath, outputFileName)))
-for sampleToAnalyze in samplesToAnalyze:
+for sampleToAnalyze in bsubFileNames.keys():
     for nom_or_sysShift in bsubFileNames_harvesting[sampleToAnalyze].keys():
         makeFile.write("\t%s %s\n" %
           (executable_rfrm,

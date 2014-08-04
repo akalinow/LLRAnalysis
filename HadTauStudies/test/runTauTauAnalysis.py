@@ -7,13 +7,13 @@ import os
 import re
 import time
 
-jobId = '2014Jan10'
+jobId = '2014Jun09'
 
-version = "v1_12"
+version = "v2_04"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_8/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -23,6 +23,9 @@ print "intLumiData = %1.1f fb^-1" % (recoSampleDefinitionsAHtoTauTau_8TeV['TARGE
 
 lumiScale_DY = 2.12
 stitchingWeights_DY = [ 1.0, 0.412/lumiScale_DY, 0.167/lumiScale_DY, 0.097/lumiScale_DY, 0.0759/lumiScale_DY ]
+
+lumiScale_DY_noTauPolarization = 2.18
+stitchingWeights_DY_noTauPolarization = [ 1.0, 1.0, 1.0, 1.0, 1.0 ]
 
 lumiScale_W = 8.83
 stitchingWeights_W = [ 1.0, 1.80/lumiScale_W, 0.559/lumiScale_W, 0.357/lumiScale_W, 0.340/lumiScale_W ] # CV: with "Ext" samples
@@ -61,13 +64,18 @@ samples = {
 ##        ]
 ##    },
     #----------------------------------------------------------------------------
-    'Data' : {
+    'Data_Tau' : {
         'processes' : [ "data_obs" ],
         'inputFiles' : [
-            ##"data_Run2012A_22Jan2013_v1",
-            "data_Run2012B_22Jan2013_v1",
-            "data_Run2012C_22Jan2013_v1",
-            "data_Run2012D_22Jan2013_v1",
+            ##"data_Tau_Run2012A_22Jan2013_v1",
+            "data_TauParked_Run2012B_22Jan2013_v1",
+            "data_TauParked_Run2012C_22Jan2013_v1",
+            "data_TauParked_Run2012D_22Jan2013_v1",
+        ]
+    },
+    'Data_Jet' : {
+        'processes' : [ "data_obs" ],
+        'inputFiles' : [
             ##"data_Jet_Run2012A_22Jan2013ReReco_v1",
             "data_JetHT_Run2012B_22Jan2013ReReco_v1",
             "data_JetHT_Run2012C_22Jan2013ReReco_v1",
@@ -75,7 +83,8 @@ samples = {
         ]
     },
     'DYJets' : {
-        'processes' : [ "ZTTmc", "ZL", "ZJ" ],
+        'processes' : [ "ZL", "ZJ" ],
+        ##'processes' : [ "ZL", "ZJ", "ZTTmc" ],
         'inputFiles' : [
             "DYJets",
             "DY1Jets",
@@ -86,6 +95,15 @@ samples = {
         'lumiScale' : lumiScale_DY,
         'stitchingWeights' : stitchingWeights_DY,
         'addWeights' : []
+    },
+    'DYJets_noTauPolarization' : {
+        'processes' : [ "ZTTmc" ],
+        'inputFiles' : [
+            "DYJets_noTauPolarization"
+        ],
+        'lumiScale' : lumiScale_DY_noTauPolarization,
+        'stitchingWeights' : stitchingWeights_DY_noTauPolarization,
+        'addWeights' : [ 'TauSpinner' ] # CV: to be changed to 'tauSpin' (branch used for tau polarization in RecHit Embedded samples by Riccardo) in the future
     },
     'WJets' : {
         'processes' : [ "W" ],
@@ -533,7 +551,7 @@ for sample in samples.keys():
                     }})                           
             for central_or_shift in central_or_shifts_region.keys():
 
-                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
+                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
                 if central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
@@ -541,7 +559,7 @@ for sample in samples.keys():
                     continue
                 if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
-                if len(central_or_shift) > 0 and central_or_shift.find('central') == -1 and sample == "Data":
+                if len(central_or_shift) > 0 and central_or_shift.find('central') == -1 and sample.find("Data") != -1:
                     continue
                 
                 inputFileNames = []
@@ -605,7 +623,7 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.treeName = cms.string('tauTauNtupleProducerTauDown/H2TauTauTreeProducerTauTau')\n"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.process = cms.string('%s')\n" % process
                         massPoint = None
-                        if sample in recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'].keys() and recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == 'bsmMC':
+                        if sample in recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'].keys() and recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == "bsmMC":
                             massPoint_match = massPoint_matcher.match(sample)
                             if massPoint_match:
                                 massPoint = massPoint_match.group('massPoint')
@@ -639,8 +657,13 @@ for sample in samples.keys():
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMin = cms.double(%1.0f)\n" % tauPtMin
                         cfg_modified += "process.FWLiteTauTauAnalyzer.tau2PtMax = cms.double(%1.0f)\n" % tauPtMax
                         trigger = None
-                        if recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['type'] == "Data":
-                            trigger = recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample]['trigger']
+                        if sample.find("Data") != -1:
+                            for sample_i in samples[sample]['inputFiles']:
+                                if not trigger:
+                                    trigger = recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample_i]['trigger']
+                                else:
+                                    if recoSampleDefinitionsAHtoTauTau_8TeV['RECO_SAMPLES'][sample_i]['trigger'] != trigger:
+                                        raise ValueError("Input files of sample = '%s' do not use the same trigger !!" % sample)
                         else:
                             trigger = "TauPlusJet"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.trigger = cms.string('%s')\n" % trigger
@@ -672,41 +695,57 @@ for sample in samples.keys():
                                 fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
                             else:
                                 raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
-                            fitFunctionShapeName_tau1 = None
+                            graphName_tau1 = None
+                            fitFunctionShapeName_tau1_central = None
                             if region.find("vrelaxed1FRw2ndTauLoose") != -1:
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_vrelaxed2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                                graphName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtL_SSiso1_vrelaxed2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                                fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_vrelaxed2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
                             elif region.find("vrelaxed1FRw2ndTauTight") != -1:
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                                graphName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtL_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
+                                fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSvrelaxed1_iso2_LooseBtag"
                             elif region.find("relaxed1FRw2ndTauLoose") != -1:
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_relaxed2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                                graphName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtL_SSiso1_relaxed2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                                fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_relaxed2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
                             elif region.find("relaxed1FRw2ndTauTight") != -1:
-                                fitFunctionShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
+                                graphName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
+                                fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag"
                             elif region.find("iso1") != -1:
-                                fitFunctionShapeName_tau1 = ""
+                                fitFunctionShapeName_tau1_central = ""
                             else:
                                 raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
-                            fitFunctionShapeName_tau2 = None
+                            graphName_tau2 = None
+                            fitFunctionShapeName_tau2_central = None
                             if region.find("vrelaxed2FRw1stTauLoose") != -1:
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                                graphName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtL_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
+                                fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
                             elif region.find("vrelaxed2FRw1stTauTight") != -1:
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                                graphName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
+                                fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_vrelaxed2_LooseBtag"
                             elif region.find("relaxed2FRw1stTauLoose") != -1:
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSrelaxed1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                                graphName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtL_SSrelaxed1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
+                                fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSrelaxed1_iso2_LooseBtag_div_SSrelaxed1_relaxed2_LooseBtag"
                             elif region.find("relaxed2FRw1stTauTight") != -1:
-                                fitFunctionShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                                graphName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
+                                fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtL_SSiso1_iso2_LooseBtag_div_SSiso1_relaxed2_LooseBtag"
                             elif region.find("iso2") != -1:
-                                fitFunctionShapeName_tau2 = ""    
+                                fitFunctionShapeName_tau2_central = ""    
                             else:
                                 raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
+                            fitFunctionShapeName_tau1_shift = None
+                            fitFunctionShapeName_tau2_shift = None
                             if 'fitFunctionNormName' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionNormName = central_or_shifts_region[central_or_shift]['fitFunctionNormName']
                             if 'fitFunctionShapeName_tau1' in central_or_shifts_region[central_or_shift].keys():
-                                fitFunctionShapeName_tau1 = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau1']
+                                fitFunctionShapeName_tau1_shift = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau1']
                             if 'fitFunctionShapeName_tau2' in central_or_shifts_region[central_or_shift].keys():
-                                fitFunctionShapeName_tau2 = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau2']
+                                fitFunctionShapeName_tau2_shift = central_or_shifts_region[central_or_shift]['fitFunctionShapeName_tau2']
                             cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionNormName = cms.string('%s')\n" % fitFunctionNormName
-                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1 = cms.string('%s')\n" % fitFunctionShapeName_tau1
-                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2 = cms.string('%s')\n" % fitFunctionShapeName_tau2
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.graphName_tau1 = cms.string('%s')\n" % graphName_tau1
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1_central = cms.string('%s')\n" % fitFunctionShapeName_tau1_central
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau1_shift = cms.string('%s')\n" % fitFunctionShapeName_tau1_shift
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.graphName_tau2 = cms.string('%s')\n" % graphName_tau2
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2_central = cms.string('%s')\n" % fitFunctionShapeName_tau2_central
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.jetToTauFakeRateLooseToTightWeight.fitFunctionShapeName_tau2_shift = cms.string('%s')\n" % fitFunctionShapeName_tau2_shift
                             fitFunctionShapePower_tau1 = 1.
                             if 'fitFunctionShapePower_tau1' in central_or_shifts_region[central_or_shift].keys():
                                 fitFunctionShapePower_tau1 = central_or_shifts_region[central_or_shift]['fitFunctionShapePower_tau1']
@@ -726,17 +765,17 @@ for sample in samples.keys():
                             cfg_modified += "process.FWLiteTauTauAnalyzer.stitchingWeights = cms.vdouble(%s)\n" % getStringRep_vdouble(samples[sample]['stitchingWeights'])
                         addWeights = []
                         if 'addWeights' in samples[sample].keys():
-                            addWeights = samples[sample]['addWeights']:
+                            addWeights = samples[sample]['addWeights']
                         addWeights = addWeights_shift_and_remove_central(addWeights, central_or_shifts_region[central_or_shift]['addWeights_extension'])
                         cfg_modified += "process.FWLiteTauTauAnalyzer.addWeights = cms.vstring(%s)\n" % getStringRep_vstring(addWeights)
-                        if sample.find("HiggsSUSYGluGlu") == -1:
+                        if sample.find("HiggsSUSYGluGlu") != -1:
                             if not massPoint:
                                 raise ValueError("Failed to decode mass-point for sample = %s !!" % sample)                            
                             lutNameHiggsPtReweighting = "A_mA%s_mu200/mssmHiggsPtReweight_A_mA%s_mu200_central" % (massPoint, massPoint)
                             if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVUp':
-                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "tanBetaLow")
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaLow")
                             if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVDown':
-                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "tanBetaHigh")
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaHigh")
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyHiggsPtReweighting = cms.bool(True)\n"
                             cfg_modified += "process.FWLiteTauTauAnalyzer.higgsPtReweighting.lutName = cms.string('%s')\n" % lutNameHiggsPtReweighting
                         else:

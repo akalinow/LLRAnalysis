@@ -92,8 +92,9 @@ def cp(inputFileNames, outputFilePath):
     Copy the inFiles into the outDir
     """
     for inputFileName in inputFileNames:
-        if inputFileName.find("/group/") != -1:
-            runCommand('%s cp %s %s' % (executable_eos, inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
-        else:
-            runCommand('cmsStage %s %s' % (inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
+        ##if inputFileName.find("/group/") != -1:
+        ##    runCommand('%s cp %s %s' % (executable_eos, inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
+        ##else:
+        ##    runCommand('cmsStage %s %s' % (inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
+        runCommand('cmsStage %s %s' % (inputFileName, os.path.join(outputFilePath, os.path.basename(inputFileName))))
     return 1

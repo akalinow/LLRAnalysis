@@ -49,43 +49,27 @@ process.makeTauTauPlots = cms.PSet(
             label = cms.string("Inclusive")
         ),
         cms.PSet(
-            name = cms.string("nobtag"),
-            label = cms.string("No B-Tag")
+            name = cms.string("2bM"),
+            label = cms.string("2 B-Tags (Medium)")
         ),
         cms.PSet(
-            name = cms.string("btag"),
-            label = cms.string("B-Tag")
+            name = cms.string("2bL"),
+            label = cms.string("2 B-Tags (Loose)")
+        ),
+        cms.PSet(
+            name = cms.string("1b1j"),
+            label = cms.string("1 B-Tag (Medium)")
         )
     ),
 
     tauPtBins = cms.VPSet(
         cms.PSet(
-            name = cms.string("tau1PtGt45tau2PtGt45"),
+            name = cms.string("tau1PtGtXXtau2PtGtXX"),
             label = cms.string("")
-        ),
-        cms.PSet(
-            name = cms.string("tau1PtGt45tau2Pt45to60"),
-            label = cms.string("45 < P_{T}^{#tau_{2}} < 60 GeV")
-        ),
-        cms.PSet(
-            name = cms.string("tau1PtGt45tau2Pt60to80"),
-            label = cms.string("60 < P_{T}^{#tau_{2}} < 80 GeV")
-        ),
-        cms.PSet(
-            name = cms.string("tau1PtGt45tau2PtGt60"),
-            label = cms.string("P_{T}^{#tau_{2}} > 60 GeV")
-        ),
-        cms.PSet(
-            name = cms.string("tau1PtGt45tau2PtGt80"),
-            label = cms.string("P_{T}^{#tau_{2}} > 80 GeV")
         )
     ),
     tauPtBinsToPlot = cms.vstring(
-        "tau1PtGt45tau2PtGt45",
-        "tau1PtGt45tau2Pt45to60",
-        "tau1PtGt45tau2Pt60to80",
-        "tau1PtGt45tau2PtGt80",
-        "tau1PtGt45tau2PtGt60"
+        "tau1PtGtXXtau2PtGtXX"
     ),
 
     distributions = cms.VPSet(

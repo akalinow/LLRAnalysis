@@ -14,10 +14,10 @@ process.fwliteInput = cms.PSet(
 )
 
 process.fwliteOutput = cms.PSet(
-    fileName = cms.string('prepareTauTauDatacards.root')
+    fileName = cms.string('prepareTauTauDatacards2b2tau.root')
 )
 
-process.prepareTauTauDatacards = cms.PSet(
+process.prepareTauTauDatacards2b2tau = cms.PSet(
 
     signalRegion = cms.string("OSiso1_iso2_TightBtag"),
 
@@ -33,18 +33,15 @@ process.prepareTauTauDatacards = cms.PSet(
         "TT",
         "VV",
         "QCD",
-        "ggH[0-9]+",
-        "bbH[0-9]+"
+        "hhTo2b2tau",
+        "mssmH[0-9]+tohh",
+        "abelianZprime[0-9]+tohh"
     ),
 
-    categories = cms.vstring("inclusive", "nobtag", "btag"),
+    categories = cms.vstring("inclusive", "2bM", "2bL", "1b1j"),
 
     tauPtBins = cms.vstring(
-        "tau1PtGt45tau2PtGt45",
-        "tau1PtGt45tau2Pt45to60",
-        "tau1PtGt45tau2Pt60to80",
-        "tau1PtGt45tau2PtGt80",
-        "tau1PtGt45tau2PtGt60"
+        "tau1PtGtXXtau2PtGtXX"
     ),
 
     histogramToFit = cms.string("svFitMassS"),
@@ -59,8 +56,6 @@ process.prepareTauTauDatacards = cms.PSet(
         "CMS_eff_b_8TeVDown",
         "CMS_fake_b_8TeVUp",
         "CMS_fake_b_8TeVDown",
-        "CMS_htt_higgsPtReweight_8TeVUp",
-        "CMS_htt_higgsPtReweight_8TeVDown",
         "CMS_htt_ttbarPtReweight_8TeVUp",
         "CMS_htt_ttbarPtReweight_8TeVDown",        
         "CMS_htt_WShape_tautau_8TeVUp",

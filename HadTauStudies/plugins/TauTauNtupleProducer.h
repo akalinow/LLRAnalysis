@@ -31,6 +31,7 @@
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEt.h"
+#include "LLRAnalysis/HadTauStudies/interface/mt2Interface.h"
 
 #include <TTree.h>
 #include <TMatrixD.h>
@@ -111,8 +112,6 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   vstring bestDiTauPreselection_;
   vstring bestDiTauRanking_;
   bool invertRanking_; 
-  enum { kVEGAS, kMarkovChain };
-  int svFitMode_;
 
   struct StringEntryType
   {
@@ -162,6 +161,7 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   double wpBJetDiscriminator_;
 
   edm::InputTag srcRawPFMEt_;
+  edm::InputTag srcGenMEt_;
 
   edm::InputTag srcVertices_;
   edm::InputTag srcRho_;
@@ -192,6 +192,8 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   edm::InputTag srcEmbeddingWeight_;
 
   PFJetIDSelectionFunctor* loosePFJetIdAlgo_;
+
+  mt2Interface* augMT2edAlgo_;
 
   struct branchEntryType
   {

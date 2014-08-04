@@ -20,6 +20,7 @@ SAMPLES_TO_ANALYZE = [
     'pfEmbed_Run2012D_22Jan2013_v1',
     'pfEmbed_TTJetsFullLept',
     'DYJets',
+    'DYJets_noTauPolarization',
     'DY1Jets',
     'DY2Jets',
     'DY2JetsExt',
@@ -194,6 +195,14 @@ RECO_SAMPLES = {
         'datasetpath'      : "/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 30459503,
+        'events_per_job'   : 40000,
+        'x_sec'            : 3503.71*_picobarns, # Note: Madgraph samples are generated for M > 50 GeV      
+        'type'             : 'smMC'
+    },
+    'DYJets_noTauPolarization' : {
+        'datasetpath'      : "/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball-tauola-tauPolarOff/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 29426492,
         'events_per_job'   : 40000,
         'x_sec'            : 3503.71*_picobarns, # Note: Madgraph samples are generated for M > 50 GeV      
         'type'             : 'smMC'
@@ -525,7 +534,51 @@ RECO_SAMPLES[bbSampleName] = {
     'events_per_job'   : 20000,
     'type'             : 'bsmMC'
 }
-SAMPLES_TO_ANALYZE.append(bbSampleName)    
+SAMPLES_TO_ANALYZE.append(bbSampleName)
+
+#--------------------------------------------------------------------------------
+# CV: additional MC samples for di-Higgs production study
+
+hhTo2b2tauSampleName = "hhTo2b2tau_v2" 
+RECO_SAMPLES[hhTo2b2tauSampleName] = {
+    'datasetpath'      : '/GluGluToHHTo2B2Tau_M-125_8TeV-madgraph-pythia6/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+    'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+    'events_processed' : 94889,
+    'events_per_job'   : 20000,
+    'type'             : 'bsmMC'
+}
+SAMPLES_TO_ANALYZE.append(hhTo2b2tauSampleName)
+
+mssmHtohhMassPoints = [ 260, 300, 350 ]
+eventsProcessed["mssmHtohh_260"] = 464960
+eventsProcessed["mssmHtohh_300"] = 457250
+eventsProcessed["mssmHtohh_350"] = 570356
+for massPoint in mssmHtohhMassPoints:
+    mssmHtohhSampleName = "mssmH%1.0ftohh" % massPoint
+    RECO_SAMPLES[mssmHtohhSampleName] = {
+        'datasetpath'      : '/GluGluToHTohhTo2Tau2B_mH-%1.0f_mh-125_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM' % massPoint,
+        'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+        'events_processed' : eventsProcessed["mssmHtohh_%1.0f" % massPoint],
+        'events_per_job'   : 20000,
+        'type'             : 'bsmMC'
+    }
+    SAMPLES_TO_ANALYZE.append(mssmHtohhSampleName)
+
+abelianZprimeTohhMassPoints = [ 300, 500, 700 ]
+eventsProcessed["abelianZprimeTohh_300"] = 19996
+eventsProcessed["abelianZprimeTohh_500"] = 19996
+eventsProcessed["abelianZprimeTohh_700"] = 19997
+for massPoint in abelianZprimeTohhMassPoints:
+    abelianZprimeTohhSampleName = "abelianZprime%1.0ftohh" % massPoint
+    RECO_SAMPLES[abelianZprimeTohhSampleName] = {
+        'datasetpath'      : '/AbelianZprime_hh_TauTauBB_LHC8_M%1.0f_GENSIM_29082012/caber-Radion_hh_TauTauBB_LHC8_M%1.0f_31082013_AODSIM-c8f8ed334db8a7d6f56c62266b1dfa5b/USER' % (massPoint, massPoint),
+        'dbs_url'          : 'phys02',
+        'events_processed' : eventsProcessed["abelianZprimeTohh_%1.0f" % massPoint],
+        'events_per_job'   : 20000,
+        'type'             : 'bsmMC'
+    }
+    SAMPLES_TO_ANALYZE.append(abelianZprimeTohhSampleName)        
+#--------------------------------------------------------------------------------    
 
 # Update to use the defaults if necessary
 for sample in RECO_SAMPLES.keys():

@@ -14,15 +14,14 @@ process.fwliteInput = cms.PSet(
 )
 
 process.fwliteOutput = cms.PSet(
-    fileName = cms.string('FWLiteTauTauAnalyzer.root')
+    fileName = cms.string('FWLiteTauTauAnalyzer2b2tau.root')
 )
 
-process.FWLiteTauTauAnalyzer = cms.PSet(
+process.FWLiteTauTauAnalyzer2b2tau = cms.PSet(
 
     treeName = cms.string('tauTauNtupleProducer/H2TauTauTreeProducerTauTau'),
 
     process = cms.string("ggH130"),
-    massPoint = cms.double(130.),
 
     region = cms.string("OSiso"),
 
@@ -40,20 +39,6 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
 
     applyTauTriggerTurnOn = cms.string("tree"),
 
-    applyTightBtag = cms.bool(True),
-
-    applyBJetLooseToTightWeight = cms.bool(False), # CV: ratio of probabilities for jets to pass tight/loose b-tag discriminators
-    bJetLooseToTightWeight = cms.PSet(
-        inputFileName = cms.string(""),
-        fitFunctionNormName = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionNorm_SSvrelaxed1_vrelaxed2_TightBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"),
-        fitFunctionShapeName_bJet1 = cms.string("bJetLooseToTightWeight/btag/$particleEtaBin/fitFunctionShape_bJet1PtL_SSvrelaxed1_vrelaxed2_TightBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"),
-        fitFunctionShapePower_bJet1 = cms.double(1.0),
-        fitFunctionShapeName_bJet2 = cms.string(""),
-        fitFunctionShapePower_bJet2 = cms.double(0.)
-    ),
-    bJet1EtaBins = cms.vdouble(-1.0, 1.0, 2.0, 9.9),
-    bJet2EtaBins = cms.vdouble(-1.0, 9.9),
-    
     applyJetToTauFakeRateLooseToTightWeight = cms.bool(False), # CV: ratio of probabilities for jet -> tau fakes to pass tight/loose tau ID requirements (used for QCD background estimation)
     jetToTauFakeRateLooseToTightWeight = cms.PSet(
         inputFileName = cms.string(""),
@@ -72,12 +57,6 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     
     applyJetToTauFakeRateCorrection = cms.bool(False), # CV: data/MC correction for for jet -> tau fake-rate (used for W+jets background estimation)
     jetToTauFakeRateCorrection = cms.string("1.0"),
-
-    applyHiggsPtReweighting = cms.bool(False),
-    higgsPtReweighting = cms.PSet(
-        inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/mssmHiggsPtReweightGluGlu_mhmod+_POWHEG.root"),
-        lutName = cms.string("A_mA130_mu200/mssmHiggsPtReweight_A_mA130_mu200_central")        
-    ),
 
     lumiScale = cms.double(1.),
     stitchingWeights = cms.vdouble(),

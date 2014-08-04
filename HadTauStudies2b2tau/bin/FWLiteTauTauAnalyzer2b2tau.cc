@@ -1,7 +1,7 @@
 
-/** \executable FWLiteTauTauAnalyzer
+/** \executable FWLiteTauTauAnalyzer2b2tau
  *
- * Run MSSM -> tau tau -> tau_h tau_h analysis.
+ * Run 2 Higgs -> 2 b-jet 2 tau_h analysis.
  *
  * \author Christian Veelken, LLR
  *
@@ -16,7 +16,11 @@
 #include "DataFormats/FWLite/interface/InputSource.h"
 #include "DataFormats/FWLite/interface/OutputFiles.h"
 
-#include "LLRAnalysis/HadTauStudies/interface/TauTauHistManager.h"
+#include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/Math/interface/normalizedPhi.h"
+
+#include "LLRAnalysis/HadTauStudies2b2tau/interface/TauTauHistManager2b2tau.h"
 #include "LLRAnalysis/HadTauStudies/interface/histogramAuxFunctions.h"
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
 #include "LLRAnalysis/HadTauStudies/interface/RunLumiSectionEventNumberSelector.h"
@@ -46,7 +50,7 @@ enum { kData, kSignal, kSM_Higgs, kZTTmc, kZL, kZJ, kZTT_Embedded, kW, kTT, kTT_
 
 enum { kOS, kSS };
 
-enum { kTree, kHPScombIso3HitsMedium, kMVAwLToldDMsTight, kMVAwLToldDMsVTight };
+enum { kTree, kHPScombIso3HitsLoose, kHPScombIso3HitsMedium, kMVAwLToldDMsLoose, kMVAwLToldDMsMedium, kMVAwLToldDMsTight, kMVAwLToldDMsVTight };
 
 struct weightEntryType
 {
@@ -62,7 +66,6 @@ struct weightEntryType
 
 edm::ParameterSet makeHistManagerConfig(const std::string& process, const std::string& category, const std::string& tauPtBin, 
 					const vdouble& tau1EtaBins, const vdouble& tau2EtaBins, 
-					const vdouble& bJet1EtaBins, const vdouble& bJet2EtaBins, 
 					const std::string& central_or_shift)
 {
   edm::ParameterSet cfg;
@@ -71,8 +74,6 @@ edm::ParameterSet makeHistManagerConfig(const std::string& process, const std::s
   cfg.addParameter<std::string>("tauPtBin", tauPtBin);
   cfg.addParameter<vdouble>("tau1EtaBins", tau1EtaBins);
   cfg.addParameter<vdouble>("tau2EtaBins", tau2EtaBins);
-  cfg.addParameter<vdouble>("bJet1EtaBins", bJet1EtaBins);
-  cfg.addParameter<vdouble>("bJet2EtaBins", bJet2EtaBins);
   cfg.addParameter<std::string>("central_or_shift", central_or_shift);
   return cfg;
 }
@@ -109,12 +110,43 @@ double compTauDecayModeWeight(double tauEta, int tauDecayMode)
   return weight;
 }
 
+struct jetType
+{
+  jetType(double px, double py, double pz, double energy, double btagDiscr, int genPartonFlavour)
+    : p4_(px, py, py, energy),
+      btagDiscr_(btagDiscr),
+      genPartonFlavour_(genPartonFlavour),
+      passesLooseWP_(false),
+      passesMediumWP_(false)
+  {}
+  ~jetType() {}
+  reco::Candidate::LorentzVector p4_;
+  double btagDiscr_;
+  int genPartonFlavour_;
+  bool passesLooseWP_;
+  bool passesMediumWP_;
+};
+
+bool isHigherBtagDiscriminator(const jetType& bjet1, const jetType& bjet2)
+{
+  if (  bjet1.passesMediumWP_ && !bjet2.passesMediumWP_ ) return true;
+  if ( !bjet1.passesMediumWP_ &&  bjet2.passesMediumWP_ ) return false;
+  if (  bjet1.passesLooseWP_  && !bjet2.passesLooseWP_  ) return true;
+  if ( !bjet1.passesLooseWP_  &&  bjet2.passesLooseWP_  ) return false;
+  return (bjet1.btagDiscr_ > bjet2.btagDiscr_);
+}
+
+bool isHigherPt(const jetType& jet1, const jetType& jet2)
+{
+  return (jet1.btagDiscr_ > jet2.btagDiscr_);
+}
+
 namespace
 {
   TFile* openFile(const edm::FileInPath& inputFileName)
   {
     if ( !inputFileName.isLocal() ) 
-      throw cms::Exception("FWLiteTauTauAnalyzer") 
+      throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
 	<< " Failed to find file = " << inputFileName << " !!\n";
     TFile* inputFile = new TFile(inputFileName.fullPath().data());
     return inputFile;
@@ -124,19 +156,11 @@ namespace
   {
     TH1* lut = dynamic_cast<TH1*>(inputFile->Get(lutName.data()));
     if ( !lut ) 
-      throw cms::Exception("FWLiteTauTauAnalyzer") 
+      throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
 	<< " Failed to load LUT = " << lutName.data() << " from file = " << inputFile->GetName() << " !!\n";
     return lut;
   }
 
-  double compHiggsPtWeight(const TH1* lut, double higgsPt)
-  {
-    int idxBin = (const_cast<TH1*>(lut))->FindBin(higgsPt);
-    if ( idxBin < 1                ) idxBin = 1;
-    if ( idxBin > lut->GetNbinsX() ) idxBin = lut->GetNbinsX();
-    return lut->GetBinContent(idxBin);
-  }
-  
   double square(double x)
   {
     return x*x;
@@ -151,11 +175,11 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  std::cout << "<FWLiteTauTauAnalyzer>:" << std::endl;
+  std::cout << "<FWLiteTauTauAnalyzer2b2tau>:" << std::endl;
 
 //--- keep track of time it takes the macro to execute
   TBenchmark clock;
-  clock.Start("FWLiteTauTauAnalyzer");
+  clock.Start("FWLiteTauTauAnalyzer2b2tau");
 
 //--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") ) 
@@ -164,15 +188,15 @@ int main(int argc, char* argv[])
 
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfgFWLiteTauTauAnalyzer = cfg.getParameter<edm::ParameterSet>("FWLiteTauTauAnalyzer");
+  edm::ParameterSet cfgFWLiteTauTauAnalyzer2b2tau = cfg.getParameter<edm::ParameterSet>("FWLiteTauTauAnalyzer2b2tau");
   
-  std::string treeName = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("treeName");
+  std::string treeName = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("treeName");
 
-  std::string process_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("process");
+  std::string process_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("process");
   int process = -1;
   if      ( process_string == "data_obs"     ) process = kData;
   else if ( contains(process_string, "data2012run") ) process = kData; // CV: for checking event yield in individual data-taking periods
-  else if ( (contains(process_string, "ggH") || contains(process_string, "bbH")) && !contains(process_string, "_SM125") ) process = kSignal;
+  else if ( contains(process_string, "hhTo2b2tau") || contains(process_string, "mssmH") || contains(process_string, "abelianZprime") ) process = kSignal;
   else if ( contains(process_string, "ggH_SM125") || contains(process_string, "qqH_SM125") || contains(process_string, "VH_SM125") ) process = kSM_Higgs;
   else if ( process_string == "ZTTmc"        ) process = kZTTmc;
   else if ( process_string == "ZL"           ) process = kZL;
@@ -182,117 +206,73 @@ int main(int argc, char* argv[])
   else if ( process_string == "TT"           ) process = kTT;
   else if ( process_string == "TT_Embedded"  ) process = kTT_Embedded;
   else if ( process_string == "VV"           ) process = kVV;
-  else throw cms::Exception("FWLiteTauTauAnalyzer") 
+  else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
     << "Invalid Configuration parameter 'process' = " << process_string << " !!\n";
 
   bool isMC = !(process == kData || process == kZTT_Embedded);
   bool isEmbedded = (process == kZTT_Embedded || process == kTT_Embedded);
 
-  double massPoint = ( process == kSignal ) ?
-    cfgFWLiteTauTauAnalyzer.getParameter<double>("massPoint") : -1.;
-
   double lumiScale = ( process != kData ) ?
-    cfgFWLiteTauTauAnalyzer.getParameter<double>("lumiScale") : 1.;
+    cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("lumiScale") : 1.;
 
   vdouble stitchingWeights;
   if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
-    stitchingWeights = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("stitchingWeights");
+    stitchingWeights = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vdouble>("stitchingWeights");
     if ( stitchingWeights.size() != 5 ) throw cms::Exception("FWLiteTauTauAnalyzer") 
       << "Configuration parameter 'stitchingWeights' expected to be of size = 5 !!\n";      
   }
 
-  double tau1PtMin = cfgFWLiteTauTauAnalyzer.getParameter<double>("tau1PtMin");
-  double tau1PtMax = cfgFWLiteTauTauAnalyzer.getParameter<double>("tau1PtMax");
-  std::string tau1Selection_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("tau1Selection");
+  double tau1PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMin");
+  double tau1PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMax");
+  std::string tau1Selection_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("tau1Selection");
 
-  double tau2PtMin = cfgFWLiteTauTauAnalyzer.getParameter<double>("tau2PtMin");
-  double tau2PtMax = cfgFWLiteTauTauAnalyzer.getParameter<double>("tau2PtMax");
-  std::string tau2Selection_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("tau2Selection");
+  double tau2PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMin");
+  double tau2PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMax");
+  std::string tau2Selection_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("tau2Selection");
 
-  std::string tauPtBin = "";
-  if      ( tau1PtMin > 0. && tau1PtMax > 0. ) tauPtBin.append(Form("tau1Pt%1.0fto%1.0f", tau1PtMin, tau1PtMax));
-  else if ( tau1PtMin > 0.                   ) tauPtBin.append(Form("tau1PtGt%1.0f", tau1PtMin));
-  else if (                   tau1PtMax > 0. ) tauPtBin.append(Form("tau1PtLt%1.0f", tau1PtMax));
-  if      ( tau2PtMin > 0. && tau2PtMax > 0. ) tauPtBin.append(Form("tau2Pt%1.0fto%1.0f", tau2PtMin, tau2PtMax));
-  else if ( tau2PtMin > 0.                   ) tauPtBin.append(Form("tau2PtGt%1.0f", tau2PtMin));
-  else if (                   tau2PtMax > 0. ) tauPtBin.append(Form("tau2PtLt%1.0f", tau2PtMax));
+  std::string tauPtBin = "tau1PtGtXXtau2PtGtXX";
   
-  vdouble tau1EtaBins = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("tau1EtaBins"); // CV: eta bins in which jet -> tau fake-rates are determined
-  vdouble tau2EtaBins = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("tau2EtaBins");
+  vdouble tau1EtaBins = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vdouble>("tau1EtaBins"); // CV: eta bins in which jet -> tau fake-rates are determined
+  vdouble tau2EtaBins = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vdouble>("tau2EtaBins");
 
-  std::string region = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("region");
+  std::string region = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("region");
   int diTauChargeSel = -1;
   if      ( region.find("OS") != std::string::npos ) diTauChargeSel = kOS;
   else if ( region.find("SS") != std::string::npos ) diTauChargeSel = kSS;
-  else throw cms::Exception("FWLiteTauTauAnalyzer") 
+  else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
     << "Invalid Configuration parameter 'region' = " << region << " !!\n";
 
-  std::string trigger_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("trigger");
+  std::string trigger_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("trigger");
   int trigger = -1;
   enum { kTau, kJet, kTauPlusJet };
   if      ( trigger_string == "Tau"        ) trigger = kTau;
   else if ( trigger_string == "Jet"        ) trigger = kJet;
   else if ( trigger_string == "TauPlusJet" ) trigger = kTauPlusJet;
-  else throw cms::Exception("FWLiteTauTauAnalyzer") 
+  else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
     << "Invalid Configuration parameter 'trigger' = " << trigger_string << " !!\n";
-  double tauPtForSwitchingTriggers = cfgFWLiteTauTauAnalyzer.getParameter<double>("tauPtForSwitchingTriggers");
+  double tauPtForSwitchingTriggers = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tauPtForSwitchingTriggers");
   
-  std::string applyTauTriggerTurnOn_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("applyTauTriggerTurnOn");
+  std::string applyTauTriggerTurnOn_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("applyTauTriggerTurnOn");
   int applyTauTriggerTurnOn = -1;
+  // CV: Trigger turn-on curves for HPS combined isolation 3-hit Loose,
+  //     MVA isolation Loose and MVA isolation Medium working-points not measured yet.
+  //     Take turn-on curves for most similar measured working-point (does not make much difference).
   if      ( applyTauTriggerTurnOn_string == "tree"                  ) applyTauTriggerTurnOn = kTree;
+  else if ( applyTauTriggerTurnOn_string == "HPScombIso3HitsLoose"  ) applyTauTriggerTurnOn = kHPScombIso3HitsMedium; 
   else if ( applyTauTriggerTurnOn_string == "HPScombIso3HitsMedium" ) applyTauTriggerTurnOn = kHPScombIso3HitsMedium;
+  else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsLoose"     ) applyTauTriggerTurnOn = kMVAwLToldDMsLoose;
+  else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsMedium"    ) applyTauTriggerTurnOn = kMVAwLToldDMsMedium;
   else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsTight"     ) applyTauTriggerTurnOn = kMVAwLToldDMsTight;
   else if ( applyTauTriggerTurnOn_string == "MVAwLToldDMsVTight"    ) applyTauTriggerTurnOn = kMVAwLToldDMsVTight;
-  else throw cms::Exception("FWLiteTauTauAnalyzer") 
+  else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
     << "Invalid Configuration parameter 'applyTauTriggerTurnOn' = " << applyTauTriggerTurnOn_string << " !!\n";
-
-  bool applyTightBtag = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyTightBtag");
-
-  vdouble bJet1EtaBins = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("bJet1EtaBins"); // CV: eta bins in which probabilities for jets to pass tight/loose b-tag discriminators are determined
-  vdouble bJet2EtaBins = cfgFWLiteTauTauAnalyzer.getParameter<vdouble>("bJet2EtaBins");
-
-  std::vector<particleIDlooseToTightWeightEntryType*> bJetLooseToTightWeights;
-  bool applyBJetLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyBJetLooseToTightWeight");
-  if ( applyBJetLooseToTightWeight ) {
-    edm::ParameterSet cfgBJetLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("bJetLooseToTightWeight");
-    
-    std::string fitFunctionNormName = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
-    std::string fitFunctionShapeName_bJet1 = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_bJet1");
-    double fitFunctionShapePower_bJet1 = cfgBJetLooseToTightWeight.getParameter<double>("fitFunctionShapePower_bJet1");
-    std::string fitFunctionShapeName_bJet2 = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_bJet2");
-    double fitFunctionShapePower_bJet2 = cfgBJetLooseToTightWeight .getParameter<double>("fitFunctionShapePower_bJet2");
-
-    std::string inputFileName = cfgBJetLooseToTightWeight.getParameter<std::string>("inputFileName");
-    TFile* inputFile = new TFile(inputFileName.data());
-    
-    int numBJet1EtaBins = bJet1EtaBins.size() - 1;
-    for ( int idxBJet1EtaBin = 0; idxBJet1EtaBin < numBJet1EtaBins; ++idxBJet1EtaBin ) {
-      double bJet1EtaMin = bJet1EtaBins[idxBJet1EtaBin];
-      double bJet1EtaMax = bJet1EtaBins[idxBJet1EtaBin + 1];
-
-      int numBJet2EtaBins = bJet2EtaBins.size() - 1;
-      for ( int idxBJet2EtaBin = 0; idxBJet2EtaBin < numBJet2EtaBins; ++idxBJet2EtaBin ) {
-	double bJet2EtaMin = bJet2EtaBins[idxBJet2EtaBin];
-	double bJet2EtaMax = bJet2EtaBins[idxBJet2EtaBin + 1];
-
-        particleIDlooseToTightWeightEntryType* bJetLooseToTightWeight = new particleIDlooseToTightWeightEntryType(
-          inputFile,
-	  "bJet", bJet1EtaMin, bJet1EtaMax, bJet2EtaMin, bJet2EtaMax,
-	  fitFunctionNormName, 
-	  "", fitFunctionShapeName_bJet1, "", fitFunctionShapePower_bJet1, 
-	  "", fitFunctionShapeName_bJet2, "", fitFunctionShapePower_bJet2);
-	bJetLooseToTightWeights.push_back(bJetLooseToTightWeight);
-      }
-    }
-    delete inputFile;
-  }
 
   BtagSF* bTagSF = new BtagSF(12345);
   
   std::vector<particleIDlooseToTightWeightEntryType*> jetToTauFakeRateLooseToTightWeights;
-  bool applyJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyJetToTauFakeRateLooseToTightWeight");
+  bool applyJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<bool>("applyJetToTauFakeRateLooseToTightWeight");
   if ( applyJetToTauFakeRateLooseToTightWeight ) {
-    edm::ParameterSet cfgJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("jetToTauFakeRateLooseToTightWeight");
+    edm::ParameterSet cfgJetToTauFakeRateLooseToTightWeight = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<edm::ParameterSet>("jetToTauFakeRateLooseToTightWeight");
     
     std::string fitFunctionNormName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
     std::string fitFunctionShapeName_tau1_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_central");
@@ -336,15 +316,15 @@ int main(int argc, char* argv[])
   }
 
   TFormula* jetToTauFakeRateCorrection = 0;
-  bool applyJetToTauFakeRateCorrection = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyJetToTauFakeRateCorrection");
+  bool applyJetToTauFakeRateCorrection = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<bool>("applyJetToTauFakeRateCorrection");
   if ( applyJetToTauFakeRateCorrection ) {
-    std::string jetToTauFakeRateCorrection_string = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("jetToTauFakeRateCorrection");
+    std::string jetToTauFakeRateCorrection_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("jetToTauFakeRateCorrection");
     jetToTauFakeRateCorrection = new TFormula("jetToTauFakeRateCorrection", jetToTauFakeRateCorrection_string.data());
   }
 
-  vstring addWeights_string = cfgFWLiteTauTauAnalyzer.getParameter<vstring>("addWeights");
+  vstring addWeights_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vstring>("addWeights");
 
-  std::string central_or_shift = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("central_or_shift");
+  std::string central_or_shift = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("central_or_shift");
   bool applyHighPtTauIDeffUncertaintyUp   = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVUp");
   bool applyHighPtTauIDeffUncertaintyDown = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVDown");
   UInt_t bJetEff_shift = BtagSF::kNo;
@@ -356,21 +336,7 @@ int main(int argc, char* argv[])
 
   std::vector<TFile*> inputFilesToDelete;
 
-  bool applyHiggsPtReweighting = cfgFWLiteTauTauAnalyzer.getParameter<bool>("applyHiggsPtReweighting");
-  TH1* lutHiggsPtReweighting = 0;
-  if ( applyHiggsPtReweighting ) {
-    edm::ParameterSet cfgHiggsPtReweighting = cfgFWLiteTauTauAnalyzer.getParameter<edm::ParameterSet>("higgsPtReweighting");
-    edm::FileInPath inputFileName = cfgHiggsPtReweighting.getParameter<edm::FileInPath>("inputFileName");
-    if ( inputFileName.location() == edm::FileInPath::Unknown ) 
-      throw cms::Exception("FWLiteTauTauAnalyzer") 
-	<< " Failed to find Higgs Pt reweighting file = " << inputFileName << " !!\n";
-    std::string lutName = cfgHiggsPtReweighting.getParameter<std::string>("lutName");
-    TFile* inputFile = openFile(edm::FileInPath(inputFileName));
-    lutHiggsPtReweighting = loadLUT(inputFile, lutName.data());
-    inputFilesToDelete.push_back(inputFile);
-  }
-
-  std::string selEventsFileName_input = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("selEventsFileName_input");
+  std::string selEventsFileName_input = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("selEventsFileName_input");
   RunLumiSectionEventNumberSelector* runLumiSectionEventNumberSelector = 0;
   if ( selEventsFileName_input != "" ) {
     edm::ParameterSet cfgRunLumiSectionEventNumberSelector;
@@ -379,10 +345,12 @@ int main(int argc, char* argv[])
     runLumiSectionEventNumberSelector = new RunLumiSectionEventNumberSelector(cfgRunLumiSectionEventNumberSelector);
   }
 
-  std::string selEventsFileName_output = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("selEventsFileName_output");
+  std::string selEventsFileName_output = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("selEventsFileName_output");
   std::ostream* selEventsFile_inclusive = 0;
-  std::ostream* selEventsFile_nobtag    = 0;
-  std::ostream* selEventsFile_btag      = 0;
+  std::ostream* selEventsFile_2bM       = 0;
+  std::ostream* selEventsFile_2bL       = 0;
+  std::ostream* selEventsFile_1b1j      = 0;
+  std::ostream* selEventsFile_2j        = 0;
   if ( selEventsFileName_output != "" ) {
     size_t idx = selEventsFileName_output.find_last_of('.');
     std::string selEventsFileName_part1 = std::string(selEventsFileName_output , 0, idx);
@@ -391,12 +359,18 @@ int main(int argc, char* argv[])
     std::string selEventsFileName_inclusive = Form("%s_inclusive%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
     std::cout << "writing events selected in 'inclusive' category to file = " << selEventsFileName_inclusive << std::endl;  
     selEventsFile_inclusive = new std::ofstream(selEventsFileName_inclusive.data(), std::ios::out);
-    std::string selEventsFileName_nobtag = Form("%s_nobtag%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'nobtag' category to file = " << selEventsFileName_nobtag << std::endl;  
-    selEventsFile_nobtag = new std::ofstream(selEventsFileName_nobtag.data(), std::ios::out);
-    std::string selEventsFileName_btag = Form("%s_btag%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'btag' category to file = " << selEventsFileName_btag << std::endl;  
-    selEventsFile_btag = new std::ofstream(selEventsFileName_btag.data(), std::ios::out);
+    std::string selEventsFileName_2bM = Form("%s_2bM%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '2bM' category to file = " << selEventsFileName_2bM << std::endl;  
+    selEventsFile_2bM = new std::ofstream(selEventsFileName_2bM.data(), std::ios::out);
+    std::string selEventsFileName_2bL = Form("%s_2bL%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '2bL' category to file = " << selEventsFileName_2bL << std::endl;  
+    selEventsFile_2bL = new std::ofstream(selEventsFileName_2bL.data(), std::ios::out);
+    std::string selEventsFileName_1b1j = Form("%s_1b1j%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '1b1j' category to file = " << selEventsFileName_1b1j << std::endl;  
+    selEventsFile_1b1j = new std::ofstream(selEventsFileName_1b1j.data(), std::ios::out);
+    std::string selEventsFileName_2j = Form("%s_2j%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '2j' category to file = " << selEventsFileName_2j << std::endl;  
+    selEventsFile_2j = new std::ofstream(selEventsFileName_2j.data(), std::ios::out);
   }  
 
   fwlite::InputSource inputFiles(cfg); 
@@ -408,19 +382,29 @@ int main(int argc, char* argv[])
   fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
 
   edm::ParameterSet cfgHistManager_inclusive = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_inclusive", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, bJet1EtaBins, bJet2EtaBins, central_or_shift);
-  TauTauHistManager histManager_inclusive(cfgHistManager_inclusive);
+    process_string, Form("tauTau_%s_inclusive", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_inclusive(cfgHistManager_inclusive);
   histManager_inclusive.bookHistograms(fs);
 
-  edm::ParameterSet cfgHistManager_nobtag = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_nobtag", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, bJet1EtaBins, bJet2EtaBins, central_or_shift);
-  TauTauHistManager histManager_nobtag(cfgHistManager_nobtag);
-  histManager_nobtag.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bM = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bM", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bM(cfgHistManager_2bM);
+  histManager_2bM.bookHistograms(fs);
 
-  edm::ParameterSet cfgHistManager_btag = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_btag", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, bJet1EtaBins, bJet2EtaBins, central_or_shift);
-  TauTauHistManager histManager_btag(cfgHistManager_btag);
-  histManager_btag.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bL = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bL", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bL(cfgHistManager_2bL);
+  histManager_2bL.bookHistograms(fs);
+
+  edm::ParameterSet cfgHistManager_1b1j = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_1b1j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_1b1j(cfgHistManager_1b1j);
+  histManager_1b1j.bookHistograms(fs);
+
+  edm::ParameterSet cfgHistManager_2j = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2j(cfgHistManager_2j);
+  histManager_2j.bookHistograms(fs);
 
   TChain* inputTree = new TChain(treeName.data());
   for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
@@ -430,7 +414,7 @@ int main(int argc, char* argv[])
   }
   
   if ( !(inputTree->GetListOfFiles()->GetEntries() >= 1) ) {
-    throw cms::Exception("FWLiteTauTauAnalyzer") 
+    throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
       << "Failed to identify input Tree !!\n";
   }
 
@@ -446,10 +430,14 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("event", &event);
   inputTree->SetBranchAddress("lumi", &lumi);
 
-  Float_t tau1Pt, tau1Eta, tau1Phi;
+  Float_t tau1Pt, tau1Eta, tau1Phi, tau1Px, tau1Py, tau1Pz, tau1E;
   inputTree->SetBranchAddress("l1Pt", &tau1Pt);
   inputTree->SetBranchAddress("l1Eta", &tau1Eta);
   inputTree->SetBranchAddress("l1Phi", &tau1Phi);
+  inputTree->SetBranchAddress("l1Px", &tau1Px);
+  inputTree->SetBranchAddress("l1Py", &tau1Py);
+  inputTree->SetBranchAddress("l1Pz", &tau1Pz);
+  inputTree->SetBranchAddress("l1E", &tau1E);
   Float_t tau1DecayMode;
   inputTree->SetBranchAddress("l1DecayMode", &tau1DecayMode);
   Float_t tau1rawMVA, tau1IsoPtSum;
@@ -468,10 +456,14 @@ int main(int argc, char* argv[])
     tau1Selection = new TTreeFormula("tau1Selection", tau1Selection_string.data(), inputTree);
   }
 
-  Float_t tau2Pt, tau2Eta, tau2Phi;
+  Float_t tau2Pt, tau2Eta, tau2Phi, tau2Px, tau2Py, tau2Pz, tau2E;
   inputTree->SetBranchAddress("l2Pt", &tau2Pt);
   inputTree->SetBranchAddress("l2Eta", &tau2Eta);
   inputTree->SetBranchAddress("l2Phi", &tau2Phi);
+  inputTree->SetBranchAddress("l2Px", &tau2Px);
+  inputTree->SetBranchAddress("l2Py", &tau2Py);
+  inputTree->SetBranchAddress("l2Pz", &tau2Pz);
+  inputTree->SetBranchAddress("l2E", &tau2E);
   Float_t tau2DecayMode;
   inputTree->SetBranchAddress("l2DecayMode", &tau2DecayMode);
   Float_t tau2rawMVA, tau2IsoPtSum;
@@ -494,10 +486,10 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("diTauCharge", &diTauCharge);
   Float_t diTauGenMass;
   if ( process == kSignal ) inputTree->SetBranchAddress("genMass", &diTauGenMass);
-  Float_t dPhi, dEta, dR;
-  inputTree->SetBranchAddress("dPhitt", &dPhi);
-  inputTree->SetBranchAddress("dEtatt", &dEta);
-  inputTree->SetBranchAddress("dRtt", &dR);
+  Float_t dPhitt, dEtatt, dRtt;
+  inputTree->SetBranchAddress("dPhitt", &dPhitt);
+  inputTree->SetBranchAddress("dEtatt", &dEtatt);
+  inputTree->SetBranchAddress("dRtt", &dRtt);
   Float_t visMass, svFitMass, mTtotal;
   inputTree->SetBranchAddress("visMass", &visMass);
   inputTree->SetBranchAddress("svfitMass", &svFitMass);
@@ -513,44 +505,119 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("muon1Eta", &muon1Eta);
   inputTree->SetBranchAddress("muon1Phi", &muon1Phi);
 
-  Float_t jet1Pt, jet1Eta, jet1Phi;
+  Float_t jet1Pt, jet1Eta, jet1Phi, jet1Px, jet1Py, jet1Pz, jet1E;
   inputTree->SetBranchAddress("jet1Pt", &jet1Pt);
   inputTree->SetBranchAddress("jet1Eta", &jet1Eta);
   inputTree->SetBranchAddress("jet1Phi", &jet1Phi);
+  inputTree->SetBranchAddress("jet1Px", &jet1Px);
+  inputTree->SetBranchAddress("jet1Py", &jet1Py);
+  inputTree->SetBranchAddress("jet1Pz", &jet1Pz);
+  inputTree->SetBranchAddress("jet1E", &jet1E);
   Float_t jet1BtagDiscr;
   inputTree->SetBranchAddress("jet1Btag", &jet1BtagDiscr);
 
-  Float_t jet2Pt, jet2Eta, jet2Phi;
+  Float_t jet2Pt, jet2Eta, jet2Phi, jet2Px, jet2Py, jet2Pz, jet2E;
   inputTree->SetBranchAddress("jet2Pt", &jet2Pt);
   inputTree->SetBranchAddress("jet2Eta", &jet2Eta);
   inputTree->SetBranchAddress("jet2Phi", &jet2Phi);
+  inputTree->SetBranchAddress("jet2Px", &jet2Px);
+  inputTree->SetBranchAddress("jet2Py", &jet2Py);
+  inputTree->SetBranchAddress("jet2Pz", &jet2Pz);
+  inputTree->SetBranchAddress("jet2E", &jet2E);
   Float_t jet2BtagDiscr;
   inputTree->SetBranchAddress("jet2Btag", &jet2BtagDiscr);
+
+  Float_t jet3Pt, jet3Eta, jet3Phi, jet3Px, jet3Py, jet3Pz, jet3E;
+  inputTree->SetBranchAddress("jet3Pt", &jet3Pt);
+  inputTree->SetBranchAddress("jet3Eta", &jet3Eta);
+  inputTree->SetBranchAddress("jet3Phi", &jet3Phi);
+  inputTree->SetBranchAddress("jet3Px", &jet3Px);
+  inputTree->SetBranchAddress("jet3Py", &jet3Py);
+  inputTree->SetBranchAddress("jet3Pz", &jet3Pz);
+  inputTree->SetBranchAddress("jet3E", &jet3E);
+  Float_t jet3BtagDiscr;
+  inputTree->SetBranchAddress("jet3Btag", &jet3BtagDiscr);
+
+  Float_t jet4Pt, jet4Eta, jet4Phi, jet4Px, jet4Py, jet4Pz, jet4E;
+  inputTree->SetBranchAddress("jet4Pt", &jet4Pt);
+  inputTree->SetBranchAddress("jet4Eta", &jet4Eta);
+  inputTree->SetBranchAddress("jet4Phi", &jet4Phi);
+  inputTree->SetBranchAddress("jet4Px", &jet4Px);
+  inputTree->SetBranchAddress("jet4Py", &jet4Py);
+  inputTree->SetBranchAddress("jet4Pz", &jet4Pz);
+  inputTree->SetBranchAddress("jet4E", &jet4E);
+  Float_t jet4BtagDiscr;
+  inputTree->SetBranchAddress("jet4Btag", &jet4BtagDiscr);
 
   Int_t nJets;
   inputTree->SetBranchAddress("nJets", &nJets);
 
-  Float_t bjet1Pt, bjet1Eta, bjet1Phi;
+  Float_t bjet1Pt, bjet1Eta, bjet1Phi, bjet1Px, bjet1Py, bjet1Pz, bjet1E;
   inputTree->SetBranchAddress("bjet1Pt", &bjet1Pt);
   inputTree->SetBranchAddress("bjet1Eta", &bjet1Eta);
   inputTree->SetBranchAddress("bjet1Phi", &bjet1Phi);
+  inputTree->SetBranchAddress("bjet1Px", &bjet1Px);
+  inputTree->SetBranchAddress("bjet1Py", &bjet1Py);
+  inputTree->SetBranchAddress("bjet1Pz", &bjet1Pz);
+  inputTree->SetBranchAddress("bjet1E", &bjet1E);
   Float_t bjet1BtagDiscr;
   inputTree->SetBranchAddress("bjet1Btag", &bjet1BtagDiscr);
   Int_t bjet1GenPartonFlavour;
   inputTree->SetBranchAddress("bjet1GenPartonFlavour", &bjet1GenPartonFlavour);
 
-  Float_t bjet2Pt, bjet2Eta, bjet2Phi;
+  Float_t bjet2Pt, bjet2Eta, bjet2Phi, bjet2Px, bjet2Py, bjet2Pz, bjet2E;
   inputTree->SetBranchAddress("bjet2Pt", &bjet2Pt);
   inputTree->SetBranchAddress("bjet2Eta", &bjet2Eta);
   inputTree->SetBranchAddress("bjet2Phi", &bjet2Phi);
+  inputTree->SetBranchAddress("bjet2Px", &bjet2Px);
+  inputTree->SetBranchAddress("bjet2Py", &bjet2Py);
+  inputTree->SetBranchAddress("bjet2Pz", &bjet2Pz);
+  inputTree->SetBranchAddress("bjet2E", &bjet2E);
   Float_t bjet2BtagDiscr;
   inputTree->SetBranchAddress("bjet2Btag", &bjet2BtagDiscr);
   Int_t bjet2GenPartonFlavour;
   inputTree->SetBranchAddress("bjet2GenPartonFlavour", &bjet2GenPartonFlavour);
 
-  Float_t met;
+  Float_t bjet3Pt, bjet3Eta, bjet3Phi, bjet3Px, bjet3Py, bjet3Pz, bjet3E;
+  inputTree->SetBranchAddress("bjet3Pt", &bjet3Pt);
+  inputTree->SetBranchAddress("bjet3Eta", &bjet3Eta);
+  inputTree->SetBranchAddress("bjet3Phi", &bjet3Phi);
+  inputTree->SetBranchAddress("bjet3Px", &bjet3Px);
+  inputTree->SetBranchAddress("bjet3Py", &bjet3Py);
+  inputTree->SetBranchAddress("bjet3Pz", &bjet3Pz);
+  inputTree->SetBranchAddress("bjet3E", &bjet3E);
+  Float_t bjet3BtagDiscr;
+  inputTree->SetBranchAddress("bjet3Btag", &bjet3BtagDiscr);
+  Int_t bjet3GenPartonFlavour;
+  inputTree->SetBranchAddress("bjet3GenPartonFlavour", &bjet3GenPartonFlavour);
+
+  Float_t bjet4Pt, bjet4Eta, bjet4Phi, bjet4Px, bjet4Py, bjet4Pz, bjet4E;
+  inputTree->SetBranchAddress("bjet4Pt", &bjet4Pt);
+  inputTree->SetBranchAddress("bjet4Eta", &bjet4Eta);
+  inputTree->SetBranchAddress("bjet4Phi", &bjet4Phi);
+  inputTree->SetBranchAddress("bjet4Px", &bjet4Px);
+  inputTree->SetBranchAddress("bjet4Py", &bjet4Py);
+  inputTree->SetBranchAddress("bjet4Pz", &bjet4Pz);
+  inputTree->SetBranchAddress("bjet4E", &bjet4E);
+  Float_t bjet4BtagDiscr;
+  inputTree->SetBranchAddress("bjet4Btag", &bjet4BtagDiscr);
+  Int_t bjet4GenPartonFlavour;
+  inputTree->SetBranchAddress("bjet4GenPartonFlavour", &bjet4GenPartonFlavour);
+
+  Float_t met, mex, mey;
   inputTree->SetBranchAddress("met", &met);
-  
+  inputTree->SetBranchAddress("mex", &mex);
+  inputTree->SetBranchAddress("mey", &mey);
+
+  Float_t diTauPx, diTauPy, diTauPz, diTauE;
+  inputTree->SetBranchAddress("svfitMarkovChainPx", &diTauPx);
+  inputTree->SetBranchAddress("svfitMarkovChainPy", &diTauPy);
+  inputTree->SetBranchAddress("svfitMarkovChainPz", &diTauPz);
+  inputTree->SetBranchAddress("svfitMarkovChainE", &diTauE);
+
+  Float_t augMT2ed;
+  inputTree->SetBranchAddress("augMT2ed", &augMT2ed);
+
   Int_t numVertices;
   inputTree->SetBranchAddress("nVert", &numVertices);
 
@@ -572,9 +639,6 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("l2isGenElectron", &l2isGenElectron);
   inputTree->SetBranchAddress("l2isGenJet", &l2isGenJet);
   
-  Float_t genHiggsPt;
-  inputTree->SetBranchAddress("genHiggsPt", &genHiggsPt);
-
   Float_t NUP;
   inputTree->SetBranchAddress("NUP", &NUP);
 
@@ -601,10 +665,14 @@ int main(int argc, char* argv[])
   int analyzedEntries = 0;
   int selectedEntries_inclusive = 0;
   double selectedEntriesWeighted_inclusive = 0.;
-  int selectedEntries_nobtag = 0;
-  double selectedEntriesWeighted_nobtag = 0.;
-  int selectedEntries_btag = 0;
-  double selectedEntriesWeighted_btag = 0.;
+  int selectedEntries_2bM = 0;
+  double selectedEntriesWeighted_2bM = 0.;
+  int selectedEntries_2bL = 0;
+  double selectedEntriesWeighted_2bL = 0.;  
+  int selectedEntries_1b1j = 0;
+  double selectedEntriesWeighted_1b1j = 0.;
+  int selectedEntries_2j = 0;
+  double selectedEntriesWeighted_2j = 0.;
   for ( int iEntry = 0; iEntry < numEntries && (maxEvents == -1 || iEntry < maxEvents); ++iEntry ) {
     if ( iEntry > 0 && (iEntry % reportEvery) == 0 ) {
       std::cout << "processing Entry " << iEntry << " (" << selectedEntries_inclusive << " Entries selected in inclusive category)" << std::endl;
@@ -618,9 +686,6 @@ int main(int argc, char* argv[])
     // CV: general phase-space cuts (driven by trigger requirements)
     if ( !(TMath::Abs(tau1Eta) < 2.1 && tau1Pt > 45. && 
 	   TMath::Abs(tau2Eta) < 2.1 && tau2Pt > 45.) ) continue;
-    // CV: binning of events in tau Pt
-    if ( !((tau1PtMin == -1. || tau1Pt > tau1PtMin) && (tau1PtMax == -1. || tau1Pt < tau1PtMax) &&
-	   (tau2PtMin == -1. || tau2Pt > tau2PtMin) && (tau2PtMax == -1. || tau2Pt < tau2PtMax)) ) continue;
 
     if ( tau1Selection || tau2Selection ) {
       // CV: need to call TTreeFormula::UpdateFormulaLeaves whenever input files changes in TChain
@@ -649,18 +714,7 @@ int main(int argc, char* argv[])
  
     if ( diTauChargeSel == kOS && TMath::Abs(diTauCharge) > 0.5 ) continue;
     if ( diTauChargeSel == kSS && TMath::Abs(diTauCharge) < 0.5 ) continue;
-
-    int nbJets = 0;
-    if ( bjet1Pt > 20. ) {
-      if ( bjet1BtagDiscr > 0.244 && !applyTightBtag ) { 
-	++nbJets;
-      } else {
-	if ( bTagSF->isbtagged(bjet1Pt, bjet1Eta, bjet1BtagDiscr, bjet1GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
-      }
-    }
-    // CV: relax cut on b-jet discriminator of first b-jet only, to make tight/loose weights well defined
-    if ( bjet2Pt > 20. && bTagSF->isbtagged(bjet2Pt, bjet2Eta, bjet2BtagDiscr, bjet2GenPartonFlavour, !isMC, bJetEff_shift, bJetMistag_shift, true) ) ++nbJets;
-
+   
     int nElectrons = 0;
     if ( electron1Pt > 10. && TMath::Abs(electron1Eta) < 2.5 ) ++nElectrons;
 
@@ -671,7 +725,6 @@ int main(int argc, char* argv[])
 
     //---------------------------------------------------------------------------
     // CV: process dependent selection criteria
-    if ( process == kSignal && !(diTauGenMass > 0.7*massPoint && diTauGenMass < 1.3*massPoint) ) continue;
 
     if ( (process == kZTTmc || process == kZTT_Embedded) && !isZtt ) continue;    
     bool isZL = (l1isGenElectron || l1isGenMuon) && (l2isGenElectron || l2isGenMuon);
@@ -766,23 +819,6 @@ int main(int argc, char* argv[])
 	evtWeight *= (*addWeight)->value_;
       }
     }
-    if ( applyBJetLooseToTightWeight ) {
-      double absBJet1Eta = TMath::Abs(bjet1Eta);
-      particleIDlooseToTightWeightEntryType* bJetLooseToTightWeight_bJetEtaBin = 0;
-      for ( std::vector<particleIDlooseToTightWeightEntryType*>::const_iterator bJetLooseToTightWeight = bJetLooseToTightWeights.begin();
-	    bJetLooseToTightWeight != bJetLooseToTightWeights.end(); ++bJetLooseToTightWeight ) {
-	if ( ((*bJetLooseToTightWeight)->particle1EtaMin_ < 0. || absBJet1Eta > (*bJetLooseToTightWeight)->particle1EtaMin_) &&
-	     ((*bJetLooseToTightWeight)->particle1EtaMax_ > 5. || absBJet1Eta < (*bJetLooseToTightWeight)->particle1EtaMax_) ) {
-	  bJetLooseToTightWeight_bJetEtaBin = (*bJetLooseToTightWeight);
-	  break;
-	}
-      }
-      if ( bJetLooseToTightWeight_bJetEtaBin ) {
-	evtWeight *= bJetLooseToTightWeight_bJetEtaBin->weight(bjet1Pt, 0.);
-      } else {
-	std::cerr << "Warning: bjet1Eta = " << bjet1Eta << " outside range !!" << std::endl;
-      }
-    }
     if ( applyJetToTauFakeRateLooseToTightWeight ) {
       double absTau1Eta = TMath::Abs(tau1Eta);
       double absTau2Eta = TMath::Abs(tau2Eta);      
@@ -807,9 +843,6 @@ int main(int argc, char* argv[])
 	std::cerr << "Warning: tau1Eta = " << tau1Eta << ", tau2Eta = " << tau2Eta << " outside range !!" << std::endl;
       }
     }
-    if ( applyHiggsPtReweighting ) {
-      evtWeight *= compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt);
-    }
     Float_t evtWeightErr = evtWeight*TMath::Sqrt(evtWeightErr2_relative);
 
     //---------------------------------------------------------------------------
@@ -823,28 +856,105 @@ int main(int argc, char* argv[])
       processSF_btag      = 0.96;
     } 
     if ( process == kW ) {
-      //processSF_inclusive = 0.73; // CV: W+jets scale-factor provided by Aram
-      //processSF_nobtag    = 0.73;
-      //processSF_btag      = 1.50;
-      processSF_inclusive = 1.00; // CV: new W+jets scale-factor determined by Olivier (compatible with 1.0 within uncertainties)
+      processSF_inclusive = 1.00; // CV: W+jets scale-factor determined by Olivier (compatible with 1.0 within uncertainties)
       processSF_nobtag    = 1.00;
       processSF_btag      = 1.00;
     }
     //---------------------------------------------------------------------------
 
+    reco::Candidate::LorentzVector tau1P4(tau1Px, tau1Py, tau1Pz, tau1E);
     int tau1GenMatch = getGenMatch(l1isGenHadTau, l1isGenMuon, l1isGenElectron, l1isGenJet);
+    reco::Candidate::LorentzVector tau2P4(tau2Px, tau2Py, tau2Pz, tau2E);
     int tau2GenMatch = getGenMatch(l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet);
+ 
+    std::vector<jetType> bjets;
+    if ( bjet1Pt > 20. && bjet1BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet1Px, bjet1Py, bjet1Pz, bjet1E, bjet1BtagDiscr, bjet1GenPartonFlavour));
+    if ( bjet2Pt > 20. && bjet2BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet2Px, bjet2Py, bjet2Pz, bjet2E, bjet2BtagDiscr, bjet2GenPartonFlavour));
+    if ( bjet3Pt > 20. && bjet3BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet3Px, bjet3Py, bjet3Pz, bjet3E, bjet3BtagDiscr, bjet3GenPartonFlavour));
+    if ( bjet4Pt > 20. && bjet4BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet4Px, bjet4Py, bjet4Pz, bjet4E, bjet4BtagDiscr, bjet4GenPartonFlavour));
+    for ( std::vector<jetType>::iterator bjet = bjets.begin();
+	  bjet != bjets.end(); ++bjet ) {
+      bjet->passesLooseWP_ = ( bjet->btagDiscr_ > 0.244 ) ? true : false;
+      bjet->passesMediumWP_ = bTagSF->isbtagged(bjet->p4_.pt(), bjet->p4_.eta(), bjet->btagDiscr_, bjet->genPartonFlavour_, !isMC, bJetEff_shift, bJetMistag_shift, true);
+    }
+    std::sort(bjets.begin(), bjets.end(), isHigherBtagDiscriminator);
+
+    std::vector<jetType> jets;
+    if ( jet1Pt > 20. ) jets.push_back(jetType(jet1Px, jet1Py, jet1Pz, jet1E, jet1BtagDiscr, -1));
+    if ( jet2Pt > 20. ) jets.push_back(jetType(jet2Px, jet2Py, jet2Pz, jet2E, jet2BtagDiscr, -1));
+    if ( jet3Pt > 20. ) jets.push_back(jetType(jet3Px, jet3Py, jet3Pz, jet3E, jet3BtagDiscr, -1));
+    if ( jet4Pt > 20. ) jets.push_back(jetType(jet4Px, jet4Py, jet4Pz, jet4E, jet4BtagDiscr, -1));
+    std::sort(jets.begin(), jets.end(), isHigherPt);
+
+    int nbJetsLoose  = 0;
+    int nbJetsMedium = 0;
+    for ( std::vector<jetType>::iterator bjet = bjets.begin();
+	  bjet != bjets.end(); ++bjet ) {
+      if ( bjet->passesLooseWP_  ) ++nbJetsLoose;
+      if ( bjet->passesMediumWP_ ) ++nbJetsMedium;
+    }      
+    reco::Candidate::LorentzVector* bjet1P4 = 0;
+    reco::Candidate::LorentzVector* bjet2P4 = 0;
+    if ( bjets.size() >= 1 ) bjet1P4 = &bjets[0].p4_;
+    if ( bjets.size() >= 2 ) bjet2P4 = &bjets[1].p4_;
+    if ( !(bjet1P4 && bjet2P4) ) {
+      for ( std::vector<jetType>::iterator jet = jets.begin();
+	    jet != jets.end(); ++jet ) {
+	if ( !bjet1P4 ) {
+	  bjet1P4 = &jet->p4_;
+	  continue;
+	} 
+	if ( bjet1P4 && deltaR(*bjet1P4, jet->p4_) < 0.3 ) continue;
+	if ( !bjet2P4 ) {
+	  bjet2P4 = &jet->p4_;
+	}
+      }
+    }
+    if ( !(bjet1P4 && bjet2P4) ) continue;
+        
+    reco::Candidate::LorentzVector HttP4(diTauPx, diTauPy, diTauPz, diTauE);
+    reco::Candidate::LorentzVector HbbP4 = (*bjet1P4) + (*bjet2P4); 
+    reco::Candidate::LorentzVector metP4(mex, mey, met, met);
+    reco::Candidate::LorentzVector diHiggsP4 = HttP4 + HbbP4;
+
+    double bjet1Pt     = bjet1P4->pt();
+    double bjet1Eta    = bjet1P4->eta();
+    double bjet1Phi    = bjet1P4->phi();
+    double bjet2Pt     = bjet2P4->pt();
+    double bjet2Eta    = bjet2P4->eta();
+    double bjet2Phi    = bjet2P4->phi();
+    double dPhibb      = normalizedPhi(bjet1P4->phi() - bjet2P4->phi());
+    double dEtabb      = TMath::Abs(bjet1P4->eta() - bjet2P4->eta());
+    double dRbb        = deltaR(*bjet1P4, *bjet2P4);
+    double mbb         = HbbP4.mass(); 
+    double dPhiHbbHtt  = normalizedPhi(HbbP4.phi() - HttP4.phi());
+    double dPhiHbbMEt  = normalizedPhi(HbbP4.phi() - metP4.phi());
+    double dPhiHttMEt  = normalizedPhi(HttP4.phi() - metP4.phi());
+    double minDRbt = 9.9;
+    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, *bjet1P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, *bjet2P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, *bjet1P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, *bjet2P4));
+    double HbbPt       = HbbP4.pt();
+    double HttPt       = HttP4.pt();
+    double diHiggsPt   = diHiggsP4.pt();
+    double diHiggsMass = diHiggsP4.mass();
     
     histManager_inclusive.fillHistograms(
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
       tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
-      dPhi, dEta, dR, 
-      visMass, svFitMass, mTtotal, 
+      dPhitt, dEtatt, dRtt,       
       jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
       jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
       bjet1Pt, bjet1Eta, bjet1Phi, 
-      bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
-      met, numVertices, genHiggsPt, NUP,
+      bjet2Pt, bjet2Eta, bjet2Phi, 
+      dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+      visMass, svFitMass, mTtotal, mbb, 
+      dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+      HbbPt, HttPt,
+      augMT2ed,
+      diHiggsPt, diHiggsMass,
+      met, numVertices, NUP,
       evtWeight*processSF_inclusive, evtWeightErr*processSF_inclusive);
 
     if ( selEventsFile_inclusive ) {
@@ -854,44 +964,102 @@ int main(int argc, char* argv[])
     ++selectedEntries_inclusive;
     selectedEntriesWeighted_inclusive += (evtWeight*processSF_inclusive);
 
-    if ( nbJets == 0 ) {
-      histManager_nobtag.fillHistograms(
-        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
-        tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
-        dPhi, dEta, dR, 
-        visMass, svFitMass, mTtotal,
-	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
-	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, nbJets,
-	met, numVertices, genHiggsPt, NUP, 
-	evtWeight*processSF_nobtag, evtWeightErr*processSF_nobtag);
-
-      if ( selEventsFile_nobtag ) {
-	(*selEventsFile_nobtag) << run << ":" << lumi << ":" << event << std::endl;
-      }
-      
-      ++selectedEntries_nobtag;
-      selectedEntriesWeighted_nobtag += (evtWeight*processSF_nobtag);
-    } else if ( nbJets >= 1 && nJets <= 1 ) {
-      histManager_btag.fillHistograms(
+    if ( nbJetsMedium >= 2 ) {
+      histManager_2bM.fillHistograms(
         tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
 	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
-	dPhi, dEta, dR, 
-	visMass, svFitMass, mTtotal,
+	dPhitt, dEtatt, dRtt,       
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
 	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
-	met, numVertices, genHiggsPt, NUP,
+	bjet2Pt, bjet2Eta, bjet2Phi, 
+	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	visMass, svFitMass, mTtotal, mbb, 
+	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	HbbPt, HttPt,
+	augMT2ed,
+	diHiggsPt, diHiggsMass,	
+	met, numVertices, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
 
-      if ( selEventsFile_btag ) {
-	(*selEventsFile_btag) << run << ":" << lumi << ":" << event << std::endl;
+      if ( selEventsFile_2bM ) {
+	(*selEventsFile_2bM) << run << ":" << lumi << ":" << event << std::endl;
       }
       
-      ++selectedEntries_btag;
-      selectedEntriesWeighted_btag += (evtWeight*processSF_btag);
+      ++selectedEntries_2bM;
+      selectedEntriesWeighted_2bM += (evtWeight*processSF_btag);
+    } else if ( nbJetsLoose >= 2 ) {
+      histManager_2bL.fillHistograms(
+        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	dPhitt, dEtatt, dRtt,       
+	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	bjet1Pt, bjet1Eta, bjet1Phi, 
+	bjet2Pt, bjet2Eta, bjet2Phi, 
+	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	visMass, svFitMass, mTtotal, mbb, 
+	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	HbbPt, HttPt,
+	augMT2ed,
+	diHiggsPt, diHiggsMass,
+	met, numVertices, NUP,
+	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+
+      if ( selEventsFile_2bL ) {
+	(*selEventsFile_2bL) << run << ":" << lumi << ":" << event << std::endl;
+      }
+      
+      ++selectedEntries_2bL;
+      selectedEntriesWeighted_2bL += (evtWeight*processSF_btag);
+    } else if ( nbJetsMedium >= 1 ) {
+      histManager_1b1j.fillHistograms(
+        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	dPhitt, dEtatt, dRtt,       
+	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	bjet1Pt, bjet1Eta, bjet1Phi, 
+	bjet2Pt, bjet2Eta, bjet2Phi, 
+	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	visMass, svFitMass, mTtotal, mbb, 
+	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	HbbPt, HttPt,
+	augMT2ed,
+	diHiggsPt, diHiggsMass,
+	met, numVertices, NUP,
+	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+
+      if ( selEventsFile_1b1j ) {
+	(*selEventsFile_1b1j) << run << ":" << lumi << ":" << event << std::endl;
+      }
+      
+      ++selectedEntries_1b1j;
+      selectedEntriesWeighted_1b1j += (evtWeight*processSF_btag);
+    } else {
+      histManager_2j.fillHistograms(
+        tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	dPhitt, dEtatt, dRtt,       
+	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	bjet1Pt, bjet1Eta, bjet1Phi, 
+	bjet2Pt, bjet2Eta, bjet2Phi, 
+	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	visMass, svFitMass, mTtotal, mbb, 
+	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	HbbPt, HttPt,
+	augMT2ed,
+	diHiggsPt, diHiggsMass,
+	met, numVertices, NUP,
+	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+
+      if ( selEventsFile_2j ) {
+	(*selEventsFile_2j) << run << ":" << lumi << ":" << event << std::endl;
+      }
+      
+      ++selectedEntries_2j;
+      selectedEntriesWeighted_2j += (evtWeight*processSF_nobtag);
     }
   }
 
@@ -899,22 +1067,21 @@ int main(int argc, char* argv[])
   std::cout << " analyzed = " << analyzedEntries << std::endl;
   std::cout << " selected in category:" << std::endl;
   std::cout << "  inclusive = " << selectedEntries_inclusive << " (weighted = " << selectedEntriesWeighted_inclusive << ")" << std::endl;
-  std::cout << "  nobtag = " << selectedEntries_nobtag << " (weighted = " << selectedEntriesWeighted_nobtag << ")" << std::endl;
-  std::cout << "  btag = " << selectedEntries_btag << " (weighted = " << selectedEntriesWeighted_btag << ")" << std::endl;
+  std::cout << "  2bM = " << selectedEntries_2bM << " (weighted = " << selectedEntriesWeighted_2bM << ")" << std::endl;
+  std::cout << "  2bL = " << selectedEntries_2bL << " (weighted = " << selectedEntriesWeighted_2bL << ")" << std::endl;
+  std::cout << "  1b1j = " << selectedEntries_1b1j << " (weighted = " << selectedEntriesWeighted_1b1j << ")" << std::endl;
+  std::cout << "  2j = " << selectedEntries_2j << " (weighted = " << selectedEntriesWeighted_2j << ")" << std::endl;
   
   delete runLumiSectionEventNumberSelector;
 
   delete selEventsFile_inclusive;
-  delete selEventsFile_nobtag;
-  delete selEventsFile_btag;
+  delete selEventsFile_2bM;
+  delete selEventsFile_2bL;
+  delete selEventsFile_1b1j;
 
   delete tau1Selection;
   delete tau2Selection;
   
-  for ( std::vector<particleIDlooseToTightWeightEntryType*>::const_iterator it = bJetLooseToTightWeights.begin();
-	it != bJetLooseToTightWeights.end(); ++it ) {
-    delete (*it);
-  }
   for ( std::vector<particleIDlooseToTightWeightEntryType*>::iterator it = jetToTauFakeRateLooseToTightWeights.begin();
 	it != jetToTauFakeRateLooseToTightWeights.end(); ++it ) {
     delete (*it);
@@ -934,7 +1101,7 @@ int main(int argc, char* argv[])
   
   delete inputTree;
   
-  clock.Show("FWLiteTauTauAnalyzer");
+  clock.Show("FWLiteTauTauAnalyzer2b2tau");
 
   return 0;
 }
