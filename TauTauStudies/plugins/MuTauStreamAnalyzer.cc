@@ -52,6 +52,7 @@
 
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
 
+
 ////// for DCA ///////////////////////////////
 
 #include "TrackingTools/Records/interface/TransientTrackRecord.h"
@@ -190,7 +191,8 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
   : inputFileHiggsPtWeight_(0),
     lutHiggsPtWeightNom_(0),
     lutHiggsPtWeightUp_(0),
-    lutHiggsPtWeightDown_(0)
+    lutHiggsPtWeightDown_(0),
+    loosePFJetIdAlgo_(0)
 {
   diTauTag_          = iConfig.getParameter<edm::InputTag>("diTaus");
   jetsTag_           = iConfig.getParameter<edm::InputTag>("jets");
@@ -212,6 +214,12 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
   doIsoOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoOrdering", false);
+
+  //#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
+  edm::ParameterSet cfgPFJetIdAlgo;
+  cfgPFJetIdAlgo.addParameter<std::string>("version", "FIRSTDATA");
+  cfgPFJetIdAlgo.addParameter<std::string>("quality", "LOOSE");
+  loosePFJetIdAlgo_ = new PFJetIDSelectionFunctor(cfgPFJetIdAlgo);
 
 //   edm::ParameterSet evtWeights = iConfig.getParameter<edm::ParameterSet>("evtWeights");
 //   typedef std::vector<std::string> vstring;
@@ -264,6 +272,9 @@ void MuTauStreamAnalyzer::beginJob(){
   jetsIDL1OffsetP4_= new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genJetsIDP4_     = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
 
+  //new Olivier from PFJetIDSelectionFunctor
+  //jetsP4_PFJetIDSelectionFunctor_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+
   diTauVisP4_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   diTauCAP4_    = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   diTauICAP4_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -273,11 +284,14 @@ void MuTauStreamAnalyzer::beginJob(){
   diTauLegsAltP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genDiTauLegsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  genTausCharge_  = new std::vector< int >();
   METP4_          = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   caloMETNoHFP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genMETP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   gentopP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+
+  genTausDecayLeptonically_ = new std::vector<int>() ;
 
   leptonJets_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   extraMuons_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -437,6 +451,8 @@ void MuTauStreamAnalyzer::beginJob(){
   tree_->Branch("diTauLegsAltP4_","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&diTauLegsAltP4_);
   tree_->Branch("genDiTauLegsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genDiTauLegsP4_);
   tree_->Branch("genTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genTausP4_);
+  tree_->Branch("genTausCharge","std::vector< int >",&genTausCharge_);
+  tree_->Branch("genTausDecayLeptonically","std::vector< int >",&genTausDecayLeptonically_);
 
   tree_->Branch("METP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&METP4_);
   tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
@@ -649,7 +665,7 @@ void MuTauStreamAnalyzer::beginJob(){
 
 MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete inputFileHiggsPtWeight_;
-  delete jetsP4_; delete jetsIDP4_; delete jetsIDUpP4_; delete jetsIDDownP4_; 
+  delete jetsP4_; delete jetsIDP4_; delete jetsIDUpP4_; delete jetsIDDownP4_;
   delete METP4_; delete caloMETNoHFP4_; delete diTauVisP4_; delete diTauCAP4_; delete diTauICAP4_; 
   delete diTauSVfitP4_; delete genVP4_; delete gentopP4_;
   delete diTauLegsP4_; delete jetsBtagHE_; delete jetsBtagHP_; delete jetsBtagCSV_;
@@ -664,6 +680,8 @@ MuTauStreamAnalyzer::~MuTauStreamAnalyzer(){
   delete pfMuons_; delete jetsIDL1OffsetP4_;
   delete leptonJets_;
   delete genTausP4_;
+  delete genTausCharge_;
+  delete genTausDecayLeptonically_;
   delete jetsChNfraction_; delete jetsChEfraction_;delete jetMoments_;
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
@@ -682,6 +700,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
   caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
+  genTausCharge_->clear();
+  genTausDecayLeptonically_->clear();
   pfMuons_->clear();
   triggerPaths_->clear();
 //   triggerBits_->clear();
@@ -841,9 +861,77 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       }
       genTausP4_->push_back((*genParticles)[index1].p4());
       genTausP4_->push_back((*genParticles)[index2].p4());
+
+      int charge_index1 = 0;
+      if((*genParticles)[index1].pdgId()==15) charge_index1 = -1;
+      else if((*genParticles)[index1].pdgId()==-15) charge_index1 = +1;//tau+
+      
+      int charge_index2 = 0;
+      if((*genParticles)[index2].pdgId()==15) charge_index2 = -1;//tau-
+      else if((*genParticles)[index2].pdgId()==-15) charge_index2 = +1;//tau+    
+      
+      genTausCharge_->push_back(charge_index1);
+      genTausCharge_->push_back(charge_index2);
+
+      //checking daughters for index1 tau
+//       cout<<"Gen tau k = "<<index1<<endl;
+      int n = (*genParticles)[index1].numberOfDaughters();
+//       cout<<" --> has "<<n<<" daughters"<<endl;
+      int IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index1].daughter(j);
+	  int dauId = d->pdgId();
+// 	  cout<<"     daughter #"<<j<<" = "<<dauId<<endl;
+	  if(dauId==-13 || dauId==+13)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
+//       if(IsDecayingLeptonically) cout<<" === decays leptonically"<<endl;
+//       else cout<<" === decays hadronically"<<endl;
+
+      //checking daughters for index2 tau
+//       cout<<"Gen tau k = "<<index2<<endl;
+      n = (*genParticles)[index2].numberOfDaughters();
+//       cout<<" --> has "<<n<<" daughters"<<endl;
+      IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index2].daughter(j);
+	  int dauId = d->pdgId();
+// 	  cout<<"     daughter #"<<j<<" = "<<dauId<<endl;
+
+	  if(dauId==-13 || dauId==+13)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
+//       if(IsDecayingLeptonically) cout<<" === decays leptonically"<<endl;
+//       else cout<<" === decays hadronically"<<endl;
+
     }
 
   }
+
+// for(size_t i = 0; i < genParticles->size(); ++ i) {
+//      const GenParticle & p = (*genParticles)[i];
+//      int id = p.pdgId();
+//      int st = p.status();  
+//      const Candidate * mom = p.mother();
+//      double pt = p.pt(), eta = p.eta(), phi = p.phi(), mass = p.mass();
+//      double vx = p.vx(), vy = p.vy(), vz = p.vz();
+//      int charge = p.charge();
+//      int n = p.numberOfDaughters();
+//      for(size_t j = 0; j < n; ++ j) {
+//        const Candidate * d = p.daughter( j );
+//        int dauId = d->pdgId();
+//        // . . . 
+//      }
 
   if(isMC_){
 
@@ -1602,10 +1690,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	 triggerPath->wasAccept() && 
 	 triggerPath->prescale()==1)
 	{
-	  cout<<"trigger matched Olivier!!!"<<endl;
-	  cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
+// 	  cout<<"trigger matched Olivier!!!"<<endl;
+// 	  cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
 	  (*triggerPaths_)[iter_trigger->first] = 1;
-	  cout<<"value = "<<(*triggerPaths_)[iter_trigger->first]<<endl;
+// 	  cout<<"value = "<<(*triggerPaths_)[iter_trigger->first]<<endl;
 	}
       else if (triggerPath && triggerPath->wasRun() && 
 	       triggerPath->wasAccept() && 
@@ -1741,6 +1829,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     metSgnMatrix_->clear();
     genJetsIDP4_->clear();
     genDiTauLegsP4_->clear();
+    genTausP4_->clear();
+    genTausP4_->clear();
+    genTausCharge_->clear();
+    genTausDecayLeptonically_->clear();  
     jetsBtagHE_->clear();
     jetsBtagHP_->clear();
     jetsBtagCSV_->clear();
@@ -2964,6 +3056,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       /////////////////////////////////////////////////////////////////////    
     }
     
+
+
     for(CImap it = sortedJets.begin(); it != sortedJets.end() ; it++){
       jetsP4_->push_back( it->second );
     }
@@ -3006,6 +3100,45 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       jetPUWP_->push_back( (it->second)[2] );
       jetPUWP_->push_back( (it->second)[3] );
     }
+
+
+    /*
+    //Code from Christian using PFJetIDSelectionFunctor
+    for(unsigned int it = 0; it < jets->size() ; it++){
+      
+      pat::Jet* jet = const_cast<pat::Jet*>(&(*jets)[it]);
+
+      bool passesLoosePFJetId = (*loosePFJetIdAlgo_)(*jet);
+      if ( !passesLoosePFJetId ) continue;
+      
+      int puJetIdFlag = (*puJetIdFlags)[jet->originalObjectRef()];
+      bool passesPileupJetId = PileupJetIdentifier::passJetId(puJetIdFlag, PileupJetIdentifier::kLoose);
+      if ( !passesPileupJetId ) continue;
+      
+      // CV: remove jets overlapping with tau decay products
+      double dRleg1Jet = deltaR(leg1->p4(), jet->p4());
+      double dRleg2Jet = deltaR(leg2->p4(), jet->p4());
+      if ( dRleg1Jet < 0.5 || dRleg2Jet < 0.5 ) continue;
+      
+      double jetPt = jet->pt();
+      double jetAbsEta = TMath::Abs(jet->eta());
+
+      sortedJets_PFJetIDSelectionFunctor.insert( make_pair( newJet->correctedJet("Uncorrected").p4().Pt() ,newJet->correctedJet("Uncorrected").p4() ) );
+      
+      if ( jetPt > minJetPt_ && jetAbsEta < 4.7 ) {
+	jetsP4_PFJetIDSelectionFunctor_.push_back(&(*jet));
+      }
+      if ( jetPt > minBJetPt_ && jetAbsEta < 2.4 && jet->bDiscriminator(bJetDiscriminator_) > wpBJetDiscriminator_ ) {      
+	bJets_sorted.push_back(&(*jet));
+      }
+       
+    }
+    */
+  
+
+    //here Olivier create the new jet collections!!!
+
+    
 
     //////////////////////
     // Quark/gluon id

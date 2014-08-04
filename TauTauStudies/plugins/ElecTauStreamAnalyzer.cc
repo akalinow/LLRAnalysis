@@ -293,6 +293,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   diTauLegsAltP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genDiTauLegsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  genTausCharge_  = new std::vector< int >();
   METP4_          = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   caloMETNoHFP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   l1ETMP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -300,6 +301,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genEleFromVP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   gentopP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+
+  genTausDecayLeptonically_ = new std::vector<int>() ;
 
   leptonJets_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   extraElectrons_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -453,6 +456,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("diTauLegsAltP4_","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&diTauLegsAltP4_);
   tree_->Branch("genDiTauLegsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genDiTauLegsP4_);
   tree_->Branch("genTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genTausP4_);
+  tree_->Branch("genTausCharge","std::vector< int >",&genTausCharge_);
+  tree_->Branch("genTausDecayLeptonically","std::vector< int >",&genTausDecayLeptonically_);
 
   tree_->Branch("METP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&METP4_);
   tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
@@ -716,6 +721,8 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete l1IsoElectrons_; delete l1NoIsoElectrons_;
   delete pfElectrons_;
   delete genTausP4_;
+  delete genTausCharge_;
+  delete genTausDecayLeptonically_;
   delete jetsChNfraction_; delete jetsChEfraction_; delete jetMoments_;
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
@@ -735,6 +742,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
+  genTausCharge_->clear();
+  genTausDecayLeptonically_->clear();
   pfElectrons_->clear();
   triggerPaths_->clear();
 //   triggerBits_->clear();
@@ -906,6 +915,46 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       }
       genTausP4_->push_back((*genParticles)[index1].p4());
       genTausP4_->push_back((*genParticles)[index2].p4());
+
+      int charge_index1 = 0;
+      if((*genParticles)[index1].pdgId()==15) charge_index1 = -1;//tau -
+      else if((*genParticles)[index1].pdgId()==-15) charge_index1 = +1;//tau+
+      
+      int charge_index2 = 0;
+      if((*genParticles)[index2].pdgId()==15) charge_index2 = -1;//tau-
+      else if((*genParticles)[index2].pdgId()==-15) charge_index2 = +1;//tau+    
+      
+      genTausCharge_->push_back(charge_index1);
+      genTausCharge_->push_back(charge_index2);
+
+      int n = (*genParticles)[index1].numberOfDaughters();
+      int IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index1].daughter(j);
+	  int dauId = d->pdgId();
+	  if(dauId==-11 || dauId==+11)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
+
+      n = (*genParticles)[index2].numberOfDaughters();
+      IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index2].daughter(j);
+	  int dauId = d->pdgId();
+
+	  if(dauId==-11 || dauId==+11)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
     }
   }
 
@@ -1704,6 +1753,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     genJetsIDP4_->clear();
     genDiTauLegsP4_->clear();
     genTausP4_->clear();
+    genTausCharge_->clear();
+    genTausDecayLeptonically_->clear();
     jetsBtagHE_->clear();
     jetsBtagHP_->clear();
     jetsBtagCSV_->clear();

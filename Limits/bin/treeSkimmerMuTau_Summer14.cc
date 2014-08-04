@@ -842,8 +842,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
-  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt, genMass;
-  float genMuPt, genMuEta;
+  float visGenTauMass, genTauPt, genTauEta, genTauPhi, genVMass, genVPt, genMass;
+  float genTrueTau1Pt, genTrueTau1Eta, genTrueTau1Phi, genTrueTau2Pt, genTrueTau2Eta, genTrueTau2Phi;
+  int genTrueTau1DecaysLeptonically, genTrueTau2DecaysLeptonically;
+  int genTrueTau1Charge, genTrueTau2Charge;
+  float genMuPt, genMuEta, genMuPhi;
   int genDecayMode_;
 
   // event-related variables
@@ -1141,12 +1144,28 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
   outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
   outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genTauPhi",               &genTauPhi, "genTauPhi/F");
   outTreePtOrd->Branch("genMuPt",                 &genMuPt, "genMuPt/F");
   outTreePtOrd->Branch("genMuEta",                &genMuEta, "genMuEta/F");
+  outTreePtOrd->Branch("genMuPhi",                &genMuPhi, "genMuPhi/F");
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
   outTreePtOrd->Branch("genVPt",                  &genVPt,     "genVPt/F");
   outTreePtOrd->Branch("genMass",                 &genMass,     "genMass/F");
+
+  outTreePtOrd->Branch("genTrueTau1Pt",                 &genTrueTau1Pt,     "genTrueTau1Pt/F");
+  outTreePtOrd->Branch("genTrueTau1Eta",                 &genTrueTau1Eta,     "genTrueTau1Eta/F");
+  outTreePtOrd->Branch("genTrueTau1Phi",                 &genTrueTau1Phi,     "genTrueTau1Phi/F");
+
+  outTreePtOrd->Branch("genTrueTau2Pt",                 &genTrueTau2Pt,     "genTrueTau2Pt/F");
+  outTreePtOrd->Branch("genTrueTau2Eta",                 &genTrueTau2Eta,     "genTrueTau2Eta/F");
+  outTreePtOrd->Branch("genTrueTau2Phi",                 &genTrueTau2Phi,     "genTrueTau2Phi/F");
+
+  outTreePtOrd->Branch("genTrueTau1DecaysLeptonically",                 &genTrueTau1DecaysLeptonically,     "genTrueTau1DecaysLeptonically/I");
+  outTreePtOrd->Branch("genTrueTau2DecaysLeptonically",                 &genTrueTau2DecaysLeptonically,     "genTrueTau2DecaysLeptonically/I");
+
+  outTreePtOrd->Branch("genTrueTau1Charge",                 &genTrueTau1Charge,     "genTrueTau1Charge/I");
+  outTreePtOrd->Branch("genTrueTau2Charge",                 &genTrueTau2Charge,     "genTrueTau2Charge/I");
 
   outTreePtOrd->Branch("pfJetPt",                 &pfJetPt_,"pfJetPt/F");
   outTreePtOrd->Branch("fakeRateRun2011",         &fakeRateRun2011,"fakeRateRun2011/F");
@@ -1566,6 +1585,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("genDiTauLegsP4"        ,1);
   currentTree->SetBranchStatus("genDiTauMass"          ,1);
   currentTree->SetBranchStatus("genTausP4"             ,1);
+  currentTree->SetBranchStatus("genTausDecayLeptonically",1);
+  currentTree->SetBranchStatus("genTausCharge",1);
+
   //currentTree->SetBranchStatus("chIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("nhIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("phIsoLeg1v1"           ,0);
@@ -1813,6 +1835,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   std::vector< LV >* genTausP4 = new std::vector< LV >();
   currentTree->SetBranchAddress("genTausP4",    &genTausP4);
+
+  std::vector< int >* genTausDecayLeptonically = new std::vector < int >();
+  currentTree->SetBranchAddress("genTausDecayLeptonically",    &genTausDecayLeptonically);
+
+  std::vector< int >* genTausCharge = new std::vector < int >();
+  currentTree->SetBranchAddress("genTausCharge",    &genTausCharge);
+
 
   std::vector< LV >* genVP4         = new std::vector< LV >();
   currentTree->SetBranchAddress("genVP4",          &genVP4);
@@ -2836,14 +2865,44 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // genMass
     genMass = 0;
+    genTrueTau1Pt = -99.;
+    genTrueTau1Eta = -99.;
+    genTrueTau1Phi = -99.;
+    genTrueTau2Pt = -99.;
+    genTrueTau2Eta = -99.;
+    genTrueTau2Phi = -99.;
+
+    genTrueTau2DecaysLeptonically = -1 ;
+    genTrueTau1DecaysLeptonically = -1 ;
+
+    genTrueTau1Charge = -99 ;
+    genTrueTau2Charge = -99 ;
+
+
     if(genTausP4->size()>1) {
       genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
+
+      genTrueTau1Pt = (*genTausP4)[0].Pt();
+      genTrueTau1Eta = (*genTausP4)[0].Eta();
+      genTrueTau1Phi = (*genTausP4)[0].Phi();
+      genTrueTau1DecaysLeptonically = (*genTausDecayLeptonically)[0];
+      genTrueTau1Charge = (*genTausCharge)[0];
+
+      genTrueTau2Pt = (*genTausP4)[1].Pt();
+      genTrueTau2Eta = (*genTausP4)[1].Eta();
+      genTrueTau2Phi = (*genTausP4)[1].Phi();
+      genTrueTau2DecaysLeptonically = (*genTausDecayLeptonically)[1];
+      genTrueTau2Charge = (*genTausCharge)[1];
+
+
+
     }
 
     // genMu info
     if(genDiTauLegsP4->size()>0) {
       genMuPt   = (*genDiTauLegsP4)[0].Pt();
       genMuEta  = (*genDiTauLegsP4)[0].Eta();
+      genMuPhi  = (*genDiTauLegsP4)[0].Phi();
     }
     else genMuPt = genMuEta = -99;
     
@@ -2851,6 +2910,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     if(genDiTauLegsP4->size()>1) {
       genTauPt   = (*genDiTauLegsP4)[1].Pt();
       genTauEta  = (*genDiTauLegsP4)[1].Eta();
+      genTauPhi  = (*genDiTauLegsP4)[1].Phi();
     }
     else genTauPt = genTauEta = -99;
 
@@ -4195,6 +4255,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }
   
   delete jets; /*delete jets_v2;*/ delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
+  delete genTausCharge; delete genTausDecayLeptonically;
   delete HLTfiltersMu; delete HLTfiltersTau, delete HLTfiltersTauJet ; delete triggerPaths;
 //   delete tauXTriggers; delete triggerBits;
   delete METP4; delete jetsBtagHE; delete jetsBtagHP; delete jetsBtagCSV; delete jetsChNfraction; delete genVP4; delete genMETP4;
