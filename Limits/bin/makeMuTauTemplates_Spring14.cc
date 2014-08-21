@@ -632,7 +632,7 @@ void produce(
 	//Up/Down for TauFake weight
 	if(suffix == ""){
           TString WShape("W_CMS_htt_WShape_mutau");
-//           WShape = WShape+"_"+binNameSpace;
+	  WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
 	      TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
@@ -695,7 +695,7 @@ void produce(
 	//Up/Down for TauFake weight
         if(suffix == ""){
           TString WShape("W_CMS_htt_WShape_mutau");
-//           WShape = WShape+"_"+binNameSpace;
+	  WShape = WShape+"_"+binNameSpace;
 
 	  if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	    {
@@ -746,7 +746,7 @@ void produce(
       //Up/Down for TauFake weight
       if(suffix == ""){
 	TString WShape("W_CMS_htt_WShape_mutau");
-// 	WShape = WShape+"_"+binNameSpace;
+ 	WShape = WShape+"_"+binNameSpace;
 	if(bin_.find("nobTag")!=string::npos){
 
 	  if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
@@ -1457,7 +1457,7 @@ void produce(
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
 	    TString WShape("W_CMS_htt_WShape_mutau");
-// 	    WShape = WShape+"_"+binNameSpace;
+ 	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hW_TFUp"));
@@ -1520,7 +1520,7 @@ void produce(
 	  //Up/Down for TauFake weight
 	  if(suffix == ""){
 	    TString WShape("W_CMS_htt_WShape_mutau");
-// 	    WShape = WShape+"_"+binNameSpace;
+ 	    WShape = WShape+"_"+binNameSpace;
 	    if(bin_.find("bTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {
 		TH1F* hW_TFUp = ((TH1F*)fin->Get("hWLooseBTag_TFUp"));
@@ -1570,7 +1570,7 @@ void produce(
 	//Up/Down for TauFake weight
 	if(suffix == ""){
 	  TString WShape("W_CMS_htt_WShape_mutau");
-// 	  WShape = WShape+"_"+binNameSpace;
+ 	  WShape = WShape+"_"+binNameSpace;
 	  if(bin_.find("nobTag")!=string::npos){
 	    if(bin_.find("nobTagHigh")!=string::npos && !bin_.find("HighMt")!=string::npos)
 	      {

@@ -43,7 +43,7 @@
 #define useZDataMC       false
 #define useWMC           false
 #define StudyQCD         false
-#define StudyQCDOlivier  true
+#define StudyQCDOlivier  false
 #define includeWG        true
 #define FastMode         false
 

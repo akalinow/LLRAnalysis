@@ -884,7 +884,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
-  int nPUVertices_;
+  float nPUVertices_;
   
   // Event trigger matching HLTmatchPFJet320
   float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8, HLTxDiTau, HLTPFJet320, HLTIsoMu24, HLTIsoMu24_eta2p1;
@@ -1400,7 +1400,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   outTreePtOrd->Branch("ZmmWeight",          &ZmmWeight,"ZmmWeight/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
-  outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
+  outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/F");
 
   outTreePtOrd->Branch("HLTx",         &HLTx, "HLTx/F");
   outTreePtOrd->Branch("HLTIsoMu24",         &HLTIsoMu24, "HLTIsoMu24/F");
@@ -3965,13 +3965,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Weight to correct for mis-modeling of the decay mode distribution between MC and data
       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
 	{
-	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.479)//Barrel
+	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
 	      if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
 	    }
-	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.479)//EndCaps
+	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
@@ -4214,8 +4214,27 @@ void fillTrees_MuTauStream(TChain* currentTree,
       else
 	pairIndex = -1;
     }
-    
-    // Fill entry
+
+    //displaying Abdollah's info
+    //run=1   lumi=353   event=187672   l1Pt=55.7683   l1eta=0.223352   l1Phi=1.14464   l2Pt=46.7634   l2Eta=0.108624   l2Phi=-1.29245   MVAMet=21.6821   numJet30=1   numBJet20=1   PU_Weight=1   npu=15   erightLepton_id_iso=0.973673   lepton_trg_Weight=0.985811   tau_Trg_Weight=0.985262
+    cout<<"run="<<run
+	<<"\t event="<<event
+	<<"\t l1Pt="<<ptL1
+	<<"\t l1eta="<<etaL1
+	<<"\t l1Phi="<<phiL1
+	<<"\t l2Pt="<<ptL2
+	<<"\t l2eta="<<etaL2
+	<<"\t l2Phi="<<phiL2
+ 	<<"\t MVAMet="<<MEtMVA
+ 	<<"\t numJet30="<<nJets30
+ 	<<"\t numBJet20="<<nJets20BTagged
+ 	<<"\t PU_Weight="<<puWeight//OK
+ 	<<"\t npu="<<nPUVertices_//OK
+ 	<<"\t weightLepton_id_iso="<<SFMu//OK
+ 	<<"\t lepton_trg_Weight="<<HLTweightMu
+ 	<<"\t tau_Trg_Weight="<<HLTweightTau<<endl;
+
+
     outTreePtOrd->Fill();
   }
 
