@@ -3315,6 +3315,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     edm::Handle< std::vector<reco::CompositeCandidate> > genDiTauHandle;
     genDiTauMass_ = 9999;
 
+    iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
+    TauSpinnerWeight = TauSpinnerHandle.isValid() ? (*TauSpinnerHandle) : 1.0;
+    cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
+
     if (isRhEmb_){
       iEvent.getByLabel("genZdecayToTausForEmbeddingKineReweight", genDiTauHandle);
       iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
