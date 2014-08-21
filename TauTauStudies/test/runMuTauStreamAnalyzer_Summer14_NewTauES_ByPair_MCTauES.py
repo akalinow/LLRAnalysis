@@ -533,19 +533,6 @@ process.filterSequence = cms.Sequence(
 
 #######################################################################
 #######################################################################
-#process.TauSpinnerReweightSequenceZTT = cms.Sequence()
-
-#process.load("TauSpinnerInterface.TauSpinnerInterface.TauSpinner_cfi")
-#process.tauTauNtupleProducer.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
-#process.tauTauNtupleProducerTauUp.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
-#process.tauTauNtupleProducerTauDown.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT')
-
-#process.seqNominal.replace(process.tauTauNtupleProducer, process.TauSpinnerReco*process.tauTauNtupleProducer)
-#process.seqTauUp.replace(process.tauTauNtupleProducerTauUp, process.TauSpinnerReco*process.tauTauNtupleProducerTauUp)
-#process.seqTauDown.replace(process.tauTauNtupleProducerTauDown, process.TauSpinnerReco*process.tauTauNtupleProducerTauDown)        
-
-#######################################################################
-#######################################################################
 process.mssmHiggsPtReweightSequenceGluGlu = cms.Sequence()
 
 def drange(start, stop, step):
@@ -698,11 +685,6 @@ if runOnEmbed:
                 process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
                 
 #######################################################################
-
-#ADD HERE
-#process.load(TauSpinner...)
-#before the last one in each seqNominal, add process.TauSpinnerReco
-
 process.load("TauSpinnerInterface.TauSpinnerInterface.TauSpinner_cfi")
 
 process.seqNominal = cms.Sequence(

@@ -748,6 +748,8 @@ if runOnEmbed:
                 process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
 
 #######################################################################
+process.load("TauSpinnerInterface.TauSpinnerInterface.TauSpinner_cfi")
+                
 process.seqNominal = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
@@ -772,6 +774,7 @@ process.seqNominal = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.elecTauStreamAnalyzer
     )
 process.seqElecUp = cms.Sequence(
@@ -799,6 +802,7 @@ process.seqElecUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.elecTauStreamAnalyzerElecUp
     )
 process.seqElecDown = cms.Sequence(
@@ -826,6 +830,7 @@ process.seqElecDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.elecTauStreamAnalyzerElecDown
     )
 
@@ -854,6 +859,7 @@ process.seqTauUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.elecTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -881,6 +887,7 @@ process.seqTauDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.elecTauStreamAnalyzerTauDown
     )
 
