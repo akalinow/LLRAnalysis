@@ -684,6 +684,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("mcPUweight",&mcPUweight_,"mcPUweight/F");
   tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");//FilterEfficiency()
   tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
+  tree_->Branch("TauSpinnerWeight",&TauSpinnerWeight_,"TauSpinnerWeight/F");
   tree_->Branch("nPUVertices",&nPUVertices_,"nPUVertices/F");
   tree_->Branch("nPUVerticesM1",&nPUVerticesM1_,"nPUVerticesM1/F");
   tree_->Branch("nPUVerticesP1",&nPUVerticesP1_,"nPUVerticesP1/F");
@@ -3317,7 +3318,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
     TauSpinnerWeight = TauSpinnerHandle.isValid() ? (*TauSpinnerHandle) : 1.0;
-    cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
+    //cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
 
     if (isRhEmb_){
       iEvent.getByLabel("genZdecayToTausForEmbeddingKineReweight", genDiTauHandle);
@@ -3365,6 +3366,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     embeddingWeights_->push_back(muonRadiationWeight);
     embeddingWeights_->push_back(muonRadiationDownWeight);
     embeddingWeights_->push_back(muonRadiationUpWeight);
+
+    TauSpinnerWeight_ = TauSpinnerWeight ; 
 
     tree_->Fill();
 
