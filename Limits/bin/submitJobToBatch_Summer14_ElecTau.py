@@ -42,7 +42,8 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/Limits/bin"\n')
+        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/Limits/bin"\n')
+        #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/Limits/bin"\n')
         #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewTrees_NewTriggers/src/LLRAnalysis/Limits/bin"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/data_CMS/cms/ivo/HTauTauAnalysis/CMSSWRelesases/CMSSW_5_3_11_p6_prodv3/src/LLRAnalysis/Limits/bin/"\n')

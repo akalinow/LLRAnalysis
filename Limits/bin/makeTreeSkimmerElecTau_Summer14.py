@@ -531,6 +531,57 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    ##DYJets tauPolarOff
+    'DYJetsTauTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_EleTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsZTTL_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_EleTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsZTTJ_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_EleTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsMuToTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsMuToTau_tauPolarOff_EleTau.root',
+    'sample'         : 'DYJetsMuToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsJetToTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_EleTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },    
     ##DY1Jets
     'DYJets1Jets' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_11Mar2014_Trees_EleTau_v1/',

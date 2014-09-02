@@ -285,20 +285,30 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
     else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
-  else return 1 ;
-
+  else return 1. ;
 }
 
-float reweightHEPNUPDYJets(int hepNUP) {
+float reweightHEPNUPDYJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
 
-  if(nJets==0)      return 0.115028141;
-  else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009068275;
-  else if(nJets==3) return 0.005270592;
-  else if(nJets>=4) return 0.004113813;
-  else return 1 ;
+  if(set==0) { //old set with buggy tau polarization
+    if(nJets==0)      return 0.115028141;
+    else if(nJets==1) return 0.022330692;
+    else if(nJets==2) return 0.009068275;
+    else if(nJets==3) return 0.005270592;
+    else if(nJets>=4) return 0.004113813;
+    else return 1 ;
+  }
+  else if(set==1) { //new samples with TauSpinner reweighting - OD
+    if(nJets==0)      return 0.11906618;
+    else if(nJets==1) return 0.022478688;
+    else if(nJets==2) return 0.009092586;
+    else if(nJets==3) return 0.005278795;
+    else if(nJets>=4) return 0.004118808;
+    else return 1 ;
+  }
+  else return 1.;
 }
 
 void createReWeighting3D(){
@@ -851,6 +861,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   // event-related variables
   float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZmmWeight;
+  float TauSpinnerWeight_;
 
   //Top pT weights
   float topPtWeightNom_,topPtWeightUp_,topPtWeightDown_;
@@ -882,7 +893,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   
   float  weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,highPtWeightUp,highPtWeightDown;
   
-  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
+  float embeddingFilterEffWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
   float nPUVertices_;
   
@@ -1324,8 +1335,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("puWeight2",          &puWeight2,     "puWeight2/F");
 
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
+  outTreePtOrd->Branch("TauSpinnerWeight",    &TauSpinnerWeight_,"TauSpinnerWeight/F");
+
   outTreePtOrd->Branch("embeddingFilterEffWeight",&embeddingFilterEffWeight_,"embeddingFilterEffWeight/F");//IN
-  outTreePtOrd->Branch("TauSpinnerWeight",   &TauSpinnerWeight_,"TauSpinnerWeight/F");//IN
   outTreePtOrd->Branch("ZmumuEffWeight",     &ZmumuEffWeight_,"ZmumuEffWeight/F");//IN
   outTreePtOrd->Branch("diTauMassVSdiTauPtWeight",&diTauMassVSdiTauPtWeight_,"diTauMassVSdiTauPtWeight/F");//IN
   outTreePtOrd->Branch("tau2EtaVStau1EtaWeight",&tau2EtaVStau1EtaWeight_,"tau2EtaVStau1EtaWeight/F");//IN
@@ -1757,6 +1769,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("lumi"                  ,1);
   currentTree->SetBranchStatus("mcPUweight"            ,1);
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
+  currentTree->SetBranchStatus("TauSpinnerWeight"       ,1);
 
   if(RERECO) currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
 
@@ -1786,6 +1799,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(RERECO) {
     currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
   }
+  float TauSpinnerWeight ;
+  currentTree->SetBranchAddress("TauSpinnerWeight",     &TauSpinnerWeight);//OD
+
   std::vector< LV >* jets           = new std::vector< LV >();
 
   if(analysis_.find("JetUp")!=string::npos) 
@@ -3204,6 +3220,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
     embeddingWeight_ *=  tau2PtVStau1PtWeight_;
     embeddingWeight_ *=  muonRadiationWeight_;
 
+    TauSpinnerWeight_ = TauSpinnerWeight ;
+
+//     cout<<"embedding weight = "<<embeddingWeight_<<endl;
+//     cout<<"tau spinner weight = "<<TauSpinnerWeight_<<endl;
+//     cout<<"ratio = "<<embeddingWeight_/TauSpinnerWeight_<<endl;
+
     if(sample.Contains("Emb") && UnfoldDen1 && genTausP4->size()>1){
       float corrFactorEmbed = (UnfoldDen1->GetBinContent( UnfoldDen1->GetXaxis()->FindBin( (*genTausP4)[0].Eta() ) ,  UnfoldDen1->GetYaxis()->FindBin( (*genTausP4)[1].Eta() ) )); 
       embeddingWeight_ *=  corrFactorEmbed;
@@ -3308,7 +3330,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 1);//with TauSpinner weights - OD Sept 2014
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
     }
@@ -4214,7 +4236,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       else
 	pairIndex = -1;
     }
-
+    /*
     //displaying Abdollah's info
     //run=1   lumi=353   event=187672   l1Pt=55.7683   l1eta=0.223352   l1Phi=1.14464   l2Pt=46.7634   l2Eta=0.108624   l2Phi=-1.29245   MVAMet=21.6821   numJet30=1   numBJet20=1   PU_Weight=1   npu=15   erightLepton_id_iso=0.973673   lepton_trg_Weight=0.985811   tau_Trg_Weight=0.985262
     cout<<"run="<<run
@@ -4233,7 +4255,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
  	<<"\t weightLepton_id_iso="<<SFMu//OK
  	<<"\t lepton_trg_Weight="<<HLTweightMu
  	<<"\t tau_Trg_Weight="<<HLTweightTau<<endl;
-
+    */
 
     outTreePtOrd->Fill();
   }

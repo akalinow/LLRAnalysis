@@ -39,7 +39,8 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/Limits/bin"\n')
+        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/Limits/bin"\n')
+        #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/Limits/bin"\n')
         #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewTrees_NewTriggers/src/LLRAnalysis/Limits/bin"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/davignon/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/"\n')
@@ -135,12 +136,15 @@ for iAnMC in range(0,len(anaMC)):
 
 ##     ##BackgroundsMC
 ##     ##DY
-##     for finalState in ListFinalState:
+    for finalState in ListFinalState:
 ##         treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
+
+        ##DY with TauPolOff
+        treeSkim(anaMC[iAnMC] , "DYJets"+finalState+"_tauPolarOff", False)
 
 ##     ##W
 ##     treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
@@ -264,7 +268,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH90"         , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH100"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH110"        , False)
-    treeSkim( anaMC[iAnMC] , "SUSYBBH120"        , False)
+##     treeSkim( anaMC[iAnMC] , "SUSYBBH120"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH130"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH140"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH160"        , False)

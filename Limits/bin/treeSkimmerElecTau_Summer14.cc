@@ -203,17 +203,40 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
   else return 1 ;
 }
 
-float reweightHEPNUPDYJets(int hepNUP) {
+float reweightHEPNUPDYJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
-  
-  if(nJets==0)      return 0.115028141;
-  else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009068275;
-  else if(nJets==3) return 0.005270592;
-  else if(nJets>=4) return 0.004113813;
-  else return 1 ;
+
+  if(set==0) { //old set with buggy tau polarization
+    if(nJets==0)      return 0.115028141;
+    else if(nJets==1) return 0.022330692;
+    else if(nJets==2) return 0.009068275;
+    else if(nJets==3) return 0.005270592;
+    else if(nJets>=4) return 0.004113813;
+    else return 1 ;
+  }
+  else if(set==1) {//new samples with TauSpinner reweighting - OD
+    if(nJets==0)      return 0.11906618;
+    else if(nJets==1) return 0.022478688;
+    else if(nJets==2) return 0.009092586;
+    else if(nJets==3) return 0.005278795;
+    else if(nJets>=4) return 0.004118808;
+    else return 1 ;
+  }
+  else return 1.;
 }
+
+// float reweightHEPNUPDYJets(int hepNUP) {
+
+//   int nJets = hepNUP-5;
+  
+//   if(nJets==0)      return 0.115028141;
+//   else if(nJets==1) return 0.022330692;
+//   else if(nJets==2) return 0.009068275;
+//   else if(nJets==3) return 0.005270592;
+//   else if(nJets>=4) return 0.004113813;
+//   else return 1 ;
+// }
 
 /////////EleIDSF for RecHitEmbedded
 // Tight e-Id as in e+tau, Pt>20, |eta|<2.1

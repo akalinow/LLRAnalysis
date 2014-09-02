@@ -16,11 +16,13 @@ runOnMC     = True
 runOnEmbed  = False
 embedType   = "RhEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
-applyTauESCorr= True 
-#doSVFitReco = False
-doSVFitReco = True
+applyTauESCorr= False 
+#applyTauESCorr= True 
+doSVFitReco = False
+#doSVFitReco = True
 usePFMEtMVA = True
-useRecoil   = True
+#useRecoil   = True
+useRecoil   = False
 useMarkov   = False
 
 # CV: flags for cutting low mass tail from MSSM Higgs -> tautau samples
@@ -69,7 +71,8 @@ process.source = cms.Source(
     fileNames = cms.untracked.vstring(
         #'file:patTuples_LepTauStream_VBFH125.root'
         #'file:patTuples_LepTauStream.root'#was here
-        'file:/data_CMS/cms/davignon/AOD/TauPolarOff/patTuples_LepTauStream_1000_1_pns.root'#testing TauSpinnerReco
+        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
+        #'file:/data_CMS/cms/davignon/AOD/TauPolarOff/patTuples_LepTauStream_1000_1_pns.root'#testing TauSpinnerReco
         #'file:patTuples_LepTauStream.root'#Shalhout 2 events
         #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'#Shalhout jets
         #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
