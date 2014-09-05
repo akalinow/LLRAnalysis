@@ -57,6 +57,8 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   TTree* tree_;
 
   edm::LumiReWeighting LumiWeights_;
+
+/*   ofstream myfile; */
  
   edm::InputTag diTauTag_;
   edm::InputTag jetsTag_;

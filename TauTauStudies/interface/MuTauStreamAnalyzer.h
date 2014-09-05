@@ -58,7 +58,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
 
   edm::LumiReWeighting LumiWeights_;
 
-  ofstream myfile;
+/*   ofstream myfile; */
 
   edm::InputTag diTauTag_;
   edm::InputTag jetsTag_;

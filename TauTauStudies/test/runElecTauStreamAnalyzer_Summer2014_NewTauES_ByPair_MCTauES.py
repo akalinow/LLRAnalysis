@@ -16,10 +16,13 @@ runOnMC     = True
 runOnEmbed  = False
 embedType   = "RhEmbedEleTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
+#applyTauESCorr= False
 applyTauESCorr= True
+#doSVFitReco = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
+#useRecoil   = False
 useAntiZee   = True
 useLepTauPAT = True
 useMarkov   = False
@@ -74,7 +77,8 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
     #'file:patTuples_LepTauStream_VBFH125.root'
-    'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
+    'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
+    #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
     #'root://polgrid4.in2p3.fr//dpm/in2p3.fr/home/cms/trivcat/store/user/mbluj/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/LepTauStream-07Dec2012_VBFH125-LepTau-powheg-PUS10_pat/fbab02682d6b416ae6da687406f89be0/patTuples_LepTauStream_100_1_PYQ.root'
@@ -896,8 +900,8 @@ process.seqTauDown = cms.Sequence(
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
-    process.pTauUp              = cms.Path( process.seqTauUp)
-    process.pTauDown            = cms.Path( process.seqTauDown )
+    #process.pTauUp              = cms.Path( process.seqTauUp)#commented for Abdollah
+    #process.pTauDown            = cms.Path( process.seqTauDown )#commented for Abdollah
     #process.pElecUp                  = cms.Path( process.seqElecUp)    # TO BE STUDIED LATER
     #process.pElecDown                = cms.Path( process.seqElecDown)  # TO BE STUDIED LATER
 

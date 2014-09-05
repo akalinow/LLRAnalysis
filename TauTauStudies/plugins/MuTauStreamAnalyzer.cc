@@ -239,7 +239,7 @@ MuTauStreamAnalyzer::MuTauStreamAnalyzer(const edm::ParameterSet & iConfig)
 
 void MuTauStreamAnalyzer::beginJob(){
 
-  myfile.open ("ForAbdollah.txt");
+//   myfile.open ("ForAbdollah_MuTau.txt");
 
   edm::Service<TFileService> fs;
   tree_ = fs->make<TTree>("tree","qqH tree");
@@ -1906,9 +1906,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     const pat::Muon* leg1 = dynamic_cast<const pat::Muon*>( (theDiTau->leg1()).get() );
     const pat::Tau*  leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
 
-    
-//     myfile << "Writing this to a file.\n";
-
+    /*
     myfile<<""<<endl;
     myfile<<""<<endl;
     myfile<<""<<endl;
@@ -1916,11 +1914,17 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     myfile <<  "Run " << iEvent.run() << ", event " << (iEvent.eventAuxiliary()).event() 
 	 << ", lumi " << iEvent.luminosityBlock() << endl;
 
-    myfile<<"Raw MET              = "<<(*METP4_)[0].Et()<<endl;
+    myfile<<"Raw MET = "<<(*METP4_)[0].Et()<<endl;
     myfile<<"MVA MET = "<<(*METP4_)[1].Et()<<endl;
     myfile<<"   for leptons: - lepton E/p/pt/eta/phi = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<endl;
     myfile<<"                - tau    E/p/pt/eta/phi = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<endl;
+    myfile<<"MET covariance matrix: "<<endl;
+    myfile<<"            (0,0) = "<<cov(0,0)<<endl;
+    myfile<<"            (0,1) = "<<cov(0,1)<<endl;
+    myfile<<"            (1,0) = "<<cov(1,0)<<endl;
+    myfile<<"            (1,1) = "<<cov(1,1)<<endl;
     myfile<<"***********************"<<endl;
+    */
 
     muFlag_       = 0;  
     muVetoRelIso_ = 0.;  
@@ -2946,16 +2950,19 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       // is jet matched to a b-quark?
       //bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->genParticleById(5,0,true)).isNonnull()  ) );
 
+      /*
       myfile<<"jet #"<<it<<endl;
       myfile<<"jet pt        = "<<newJet->p4().Pt()<<endl;
       myfile<<"jet eta       = "<<newJet->p4().Eta()<<endl;
       myfile<<"jet phi       = "<<newJet->p4().Phi()<<endl;
       myfile<<"partonFlavour = "<<jet->partonFlavour()<<endl;
+      */
 
       bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->partonFlavour())  ) );
 
-
+      /*
       myfile<<"-"<<endl;
+      */
 
       // add pu information
       jetPVassociation.insert( make_pair( newJet->p4().Pt(), make_pair(aMap["chFracRawJetE"],

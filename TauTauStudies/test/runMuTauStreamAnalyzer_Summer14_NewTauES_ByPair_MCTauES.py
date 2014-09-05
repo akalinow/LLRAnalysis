@@ -16,13 +16,13 @@ runOnMC     = True
 runOnEmbed  = False
 embedType   = "RhEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
-applyTauESCorr= False 
-#applyTauESCorr= True 
-doSVFitReco = False
-#doSVFitReco = True
+#applyTauESCorr= False 
+applyTauESCorr= True 
+#doSVFitReco = False
+doSVFitReco = True
 usePFMEtMVA = True
-#useRecoil   = True
-useRecoil   = False
+useRecoil   = True
+#useRecoil   = False
 useMarkov   = False
 
 # CV: flags for cutting low mass tail from MSSM Higgs -> tautau samples
@@ -834,8 +834,8 @@ process.seqTauDown = cms.Sequence(
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
-    process.pTauUp              = cms.Path( process.seqTauUp)
-    process.pTauDown            = cms.Path( process.seqTauDown )
+    #process.pTauUp              = cms.Path( process.seqTauUp)#was commented
+    #process.pTauDown            = cms.Path( process.seqTauDown )#was commented
     #process.pMuUp                  = cms.Path( process.seqMuUp)    #NOT INTERESTING FOR ANALYSIS
     #process.pMuDown                = cms.Path( process.seqMuDown)  #NOT INTERESTING FOR ANALYSIS
     ####
