@@ -562,7 +562,7 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
-    'DYJetsMuToTau_tauPolarOff' : {
+    'DYJetsEToTau_tauPolarOff' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_EleTau_v3/',
     'outputFileName' : OutDir+'nTupleDYJetsMuToTau_tauPolarOff_EleTau.root',
     'sample'         : 'DYJetsMuToTau_tauPolarOff',
