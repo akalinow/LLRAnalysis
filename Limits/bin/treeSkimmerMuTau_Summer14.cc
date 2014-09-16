@@ -285,20 +285,30 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
     else if(nJets>=4) return 0.018980202;
     else return 1 ;
   }
-  else return 1 ;
-
+  else return 1. ;
 }
 
-float reweightHEPNUPDYJets(int hepNUP) {
+float reweightHEPNUPDYJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
 
-  if(nJets==0)      return 0.115028141;
-  else if(nJets==1) return 0.022330692;
-  else if(nJets==2) return 0.009068275;
-  else if(nJets==3) return 0.005270592;
-  else if(nJets>=4) return 0.004113813;
-  else return 1 ;
+  if(set==0) { //old set with buggy tau polarization
+    if(nJets==0)      return 0.115028141;
+    else if(nJets==1) return 0.022330692;
+    else if(nJets==2) return 0.009068275;
+    else if(nJets==3) return 0.005270592;
+    else if(nJets>=4) return 0.004113813;
+    else return 1 ;
+  }
+  else if(set==1) { //new samples with TauSpinner reweighting - OD
+    if(nJets==0)      return 0.11906618;
+    else if(nJets==1) return 0.022478688;
+    else if(nJets==2) return 0.009092586;
+    else if(nJets==3) return 0.005278795;
+    else if(nJets>=4) return 0.004118808;
+    else return 1 ;
+  }
+  else return 1.;
 }
 
 void createReWeighting3D(){
@@ -842,12 +852,16 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float hasGsf_, signalPFGammaCands_, signalPFChargedHadrCands_;
   float etaMom2,phiMom2,gammaFrac,visibleTauMass_;
   float fakeRateRun2011, fakeRateWMC, effDYMC, CDFWeight;
-  float visGenTauMass, genTauPt, genTauEta, genVMass, genVPt, genMass;
-  float genMuPt, genMuEta;
+  float visGenTauMass, genTauPt, genTauEta, genTauPhi, genVMass, genVPt, genMass;
+  float genTrueTau1Pt, genTrueTau1Eta, genTrueTau1Phi, genTrueTau2Pt, genTrueTau2Eta, genTrueTau2Phi;
+  int genTrueTau1DecaysLeptonically, genTrueTau2DecaysLeptonically;
+  int genTrueTau1Charge, genTrueTau2Charge;
+  float genMuPt, genMuEta, genMuPhi;
   int genDecayMode_;
 
   // event-related variables
   float numPV_ , sampleWeight, sampleWeightW, sampleWeightDY, puWeight, puWeight2, embeddingWeight_,HqTWeight,HqTWeightUp,HqTWeightDown,ZmmWeight;
+  float TauSpinnerWeight_;
 
   //Top pT weights
   float topPtWeightNom_,topPtWeightUp_,topPtWeightDown_;
@@ -879,9 +893,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   
   float  weightHepNup,weightHepNupHighStatW,weightHepNupDY, puWeightHCP, puWeightD, puWeightDLow, puWeightDHigh,highPtWeightUp,highPtWeightDown;
   
-  float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
+  float embeddingFilterEffWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_;//IN
   int numOfLooseIsoDiTaus_;
-  int nPUVertices_;
+  float nPUVertices_;
   
   // Event trigger matching HLTmatchPFJet320
   float HLTx, HLTxQCD, HLTxSoft, HLTxQCDSoft, HLTxIsoMu8Tau20, HLTxIsoMu15ETM20, HLTxMu8, HLTxMu17Mu8, HLTxDiTau, HLTPFJet320, HLTIsoMu24, HLTIsoMu24_eta2p1;
@@ -1141,12 +1155,28 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("visGenTauMass",           &visGenTauMass, "visGenTauMass/F");
   outTreePtOrd->Branch("genTauPt",                &genTauPt, "genTauPt/F");
   outTreePtOrd->Branch("genTauEta",               &genTauEta, "genTauEta/F");
+  outTreePtOrd->Branch("genTauPhi",               &genTauPhi, "genTauPhi/F");
   outTreePtOrd->Branch("genMuPt",                 &genMuPt, "genMuPt/F");
   outTreePtOrd->Branch("genMuEta",                &genMuEta, "genMuEta/F");
+  outTreePtOrd->Branch("genMuPhi",                &genMuPhi, "genMuPhi/F");
   outTreePtOrd->Branch("genDecayMode",            &genDecayMode_, "genDecayMode/I");
   outTreePtOrd->Branch("genVMass",                &genVMass,     "genVMass/F");
   outTreePtOrd->Branch("genVPt",                  &genVPt,     "genVPt/F");
   outTreePtOrd->Branch("genMass",                 &genMass,     "genMass/F");
+
+  outTreePtOrd->Branch("genTrueTau1Pt",                 &genTrueTau1Pt,     "genTrueTau1Pt/F");
+  outTreePtOrd->Branch("genTrueTau1Eta",                 &genTrueTau1Eta,     "genTrueTau1Eta/F");
+  outTreePtOrd->Branch("genTrueTau1Phi",                 &genTrueTau1Phi,     "genTrueTau1Phi/F");
+
+  outTreePtOrd->Branch("genTrueTau2Pt",                 &genTrueTau2Pt,     "genTrueTau2Pt/F");
+  outTreePtOrd->Branch("genTrueTau2Eta",                 &genTrueTau2Eta,     "genTrueTau2Eta/F");
+  outTreePtOrd->Branch("genTrueTau2Phi",                 &genTrueTau2Phi,     "genTrueTau2Phi/F");
+
+  outTreePtOrd->Branch("genTrueTau1DecaysLeptonically",                 &genTrueTau1DecaysLeptonically,     "genTrueTau1DecaysLeptonically/I");
+  outTreePtOrd->Branch("genTrueTau2DecaysLeptonically",                 &genTrueTau2DecaysLeptonically,     "genTrueTau2DecaysLeptonically/I");
+
+  outTreePtOrd->Branch("genTrueTau1Charge",                 &genTrueTau1Charge,     "genTrueTau1Charge/I");
+  outTreePtOrd->Branch("genTrueTau2Charge",                 &genTrueTau2Charge,     "genTrueTau2Charge/I");
 
   outTreePtOrd->Branch("pfJetPt",                 &pfJetPt_,"pfJetPt/F");
   outTreePtOrd->Branch("fakeRateRun2011",         &fakeRateRun2011,"fakeRateRun2011/F");
@@ -1305,8 +1335,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("puWeight2",          &puWeight2,     "puWeight2/F");
 
   outTreePtOrd->Branch("embeddingWeight",    &embeddingWeight_,"embeddingWeight/F");
+  outTreePtOrd->Branch("TauSpinnerWeight",    &TauSpinnerWeight_,"TauSpinnerWeight/F");
+
   outTreePtOrd->Branch("embeddingFilterEffWeight",&embeddingFilterEffWeight_,"embeddingFilterEffWeight/F");//IN
-  outTreePtOrd->Branch("TauSpinnerWeight",   &TauSpinnerWeight_,"TauSpinnerWeight/F");//IN
   outTreePtOrd->Branch("ZmumuEffWeight",     &ZmumuEffWeight_,"ZmumuEffWeight/F");//IN
   outTreePtOrd->Branch("diTauMassVSdiTauPtWeight",&diTauMassVSdiTauPtWeight_,"diTauMassVSdiTauPtWeight/F");//IN
   outTreePtOrd->Branch("tau2EtaVStau1EtaWeight",&tau2EtaVStau1EtaWeight_,"tau2EtaVStau1EtaWeight/F");//IN
@@ -1381,7 +1412,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   outTreePtOrd->Branch("ZmmWeight",          &ZmmWeight,"ZmmWeight/F");
   outTreePtOrd->Branch("numOfLooseIsoDiTaus",&numOfLooseIsoDiTaus_,"numOfLooseIsoDiTaus/I");
-  outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/I");
+  outTreePtOrd->Branch("nPUVertices",        &nPUVertices_, "nPUVertices/F");
 
   outTreePtOrd->Branch("HLTx",         &HLTx, "HLTx/F");
   outTreePtOrd->Branch("HLTIsoMu24",         &HLTIsoMu24, "HLTIsoMu24/F");
@@ -1566,6 +1597,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("genDiTauLegsP4"        ,1);
   currentTree->SetBranchStatus("genDiTauMass"          ,1);
   currentTree->SetBranchStatus("genTausP4"             ,1);
+  currentTree->SetBranchStatus("genTausDecayLeptonically",1);
+  currentTree->SetBranchStatus("genTausCharge",1);
+
   //currentTree->SetBranchStatus("chIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("nhIsoLeg1v1"           ,0);
   //currentTree->SetBranchStatus("phIsoLeg1v1"           ,0);
@@ -1735,6 +1769,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("lumi"                  ,1);
   currentTree->SetBranchStatus("mcPUweight"            ,1);
   currentTree->SetBranchStatus("embeddingWeight"       ,1);
+  currentTree->SetBranchStatus("TauSpinnerWeight"       ,1);
 
   if(RERECO) currentTree->SetBranchStatus("embeddingWeights"      ,1);//IN
 
@@ -1764,6 +1799,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
   if(RERECO) {
     currentTree->SetBranchAddress("embeddingWeights",     &embeddingWeights);//IN
   }
+  float TauSpinnerWeight ;
+  currentTree->SetBranchAddress("TauSpinnerWeight",     &TauSpinnerWeight);//OD
+
   std::vector< LV >* jets           = new std::vector< LV >();
 
   if(analysis_.find("JetUp")!=string::npos) 
@@ -1813,6 +1851,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
   std::vector< LV >* genTausP4 = new std::vector< LV >();
   currentTree->SetBranchAddress("genTausP4",    &genTausP4);
+
+  std::vector< int >* genTausDecayLeptonically = new std::vector < int >();
+  currentTree->SetBranchAddress("genTausDecayLeptonically",    &genTausDecayLeptonically);
+
+  std::vector< int >* genTausCharge = new std::vector < int >();
+  currentTree->SetBranchAddress("genTausCharge",    &genTausCharge);
+
 
   std::vector< LV >* genVP4         = new std::vector< LV >();
   currentTree->SetBranchAddress("genVP4",          &genVP4);
@@ -2836,14 +2881,44 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // genMass
     genMass = 0;
+    genTrueTau1Pt = -99.;
+    genTrueTau1Eta = -99.;
+    genTrueTau1Phi = -99.;
+    genTrueTau2Pt = -99.;
+    genTrueTau2Eta = -99.;
+    genTrueTau2Phi = -99.;
+
+    genTrueTau2DecaysLeptonically = -1 ;
+    genTrueTau1DecaysLeptonically = -1 ;
+
+    genTrueTau1Charge = -99 ;
+    genTrueTau2Charge = -99 ;
+
+
     if(genTausP4->size()>1) {
       genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
+
+      genTrueTau1Pt = (*genTausP4)[0].Pt();
+      genTrueTau1Eta = (*genTausP4)[0].Eta();
+      genTrueTau1Phi = (*genTausP4)[0].Phi();
+      genTrueTau1DecaysLeptonically = (*genTausDecayLeptonically)[0];
+      genTrueTau1Charge = (*genTausCharge)[0];
+
+      genTrueTau2Pt = (*genTausP4)[1].Pt();
+      genTrueTau2Eta = (*genTausP4)[1].Eta();
+      genTrueTau2Phi = (*genTausP4)[1].Phi();
+      genTrueTau2DecaysLeptonically = (*genTausDecayLeptonically)[1];
+      genTrueTau2Charge = (*genTausCharge)[1];
+
+
+
     }
 
     // genMu info
     if(genDiTauLegsP4->size()>0) {
       genMuPt   = (*genDiTauLegsP4)[0].Pt();
       genMuEta  = (*genDiTauLegsP4)[0].Eta();
+      genMuPhi  = (*genDiTauLegsP4)[0].Phi();
     }
     else genMuPt = genMuEta = -99;
     
@@ -2851,6 +2926,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     if(genDiTauLegsP4->size()>1) {
       genTauPt   = (*genDiTauLegsP4)[1].Pt();
       genTauEta  = (*genDiTauLegsP4)[1].Eta();
+      genTauPhi  = (*genDiTauLegsP4)[1].Phi();
     }
     else genTauPt = genTauEta = -99;
 
@@ -3144,6 +3220,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
     embeddingWeight_ *=  tau2PtVStau1PtWeight_;
     embeddingWeight_ *=  muonRadiationWeight_;
 
+    TauSpinnerWeight_ = TauSpinnerWeight ;
+
+//     cout<<"embedding weight = "<<embeddingWeight_<<endl;
+//     cout<<"tau spinner weight = "<<TauSpinnerWeight_<<endl;
+//     cout<<"ratio = "<<embeddingWeight_/TauSpinnerWeight_<<endl;
+
     if(sample.Contains("Emb") && UnfoldDen1 && genTausP4->size()>1){
       float corrFactorEmbed = (UnfoldDen1->GetBinContent( UnfoldDen1->GetXaxis()->FindBin( (*genTausP4)[0].Eta() ) ,  UnfoldDen1->GetYaxis()->FindBin( (*genTausP4)[1].Eta() ) )); 
       embeddingWeight_ *=  corrFactorEmbed;
@@ -3248,7 +3330,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 1);//with TauSpinner weights - OD Sept 2014
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
     }
@@ -3905,13 +3987,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Weight to correct for mis-modeling of the decay mode distribution between MC and data
       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
 	{
-	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.479)//Barrel
+	  if(TMath::Abs((*diTauLegsP4)[1].Eta())<=1.5)//Barrel
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.87;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.06;//1-prong + pi0s
 	      if(decayMode == 4) weightDecayMode_ = 1.02;//3-prong
 	    }
-	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.479)//EndCaps
+	  else if(TMath::Abs((*diTauLegsP4)[1].Eta())>1.5)//EndCaps
 	    {
 	      if(decayMode == 0) weightDecayMode_ = 0.96;//1-prong
 	      if(decayMode == 1) weightDecayMode_ = 1.00;//1-prong + pi0s
@@ -4154,8 +4236,27 @@ void fillTrees_MuTauStream(TChain* currentTree,
       else
 	pairIndex = -1;
     }
-    
-    // Fill entry
+    /*
+    //displaying Abdollah's info
+    //run=1   lumi=353   event=187672   l1Pt=55.7683   l1eta=0.223352   l1Phi=1.14464   l2Pt=46.7634   l2Eta=0.108624   l2Phi=-1.29245   MVAMet=21.6821   numJet30=1   numBJet20=1   PU_Weight=1   npu=15   erightLepton_id_iso=0.973673   lepton_trg_Weight=0.985811   tau_Trg_Weight=0.985262
+    cout<<"run="<<run
+	<<"\t event="<<event
+	<<"\t l1Pt="<<ptL1
+	<<"\t l1eta="<<etaL1
+	<<"\t l1Phi="<<phiL1
+	<<"\t l2Pt="<<ptL2
+	<<"\t l2eta="<<etaL2
+	<<"\t l2Phi="<<phiL2
+ 	<<"\t MVAMet="<<MEtMVA
+ 	<<"\t numJet30="<<nJets30
+ 	<<"\t numBJet20="<<nJets20BTagged
+ 	<<"\t PU_Weight="<<puWeight//OK
+ 	<<"\t npu="<<nPUVertices_//OK
+ 	<<"\t weightLepton_id_iso="<<SFMu//OK
+ 	<<"\t lepton_trg_Weight="<<HLTweightMu
+ 	<<"\t tau_Trg_Weight="<<HLTweightTau<<endl;
+    */
+
     outTreePtOrd->Fill();
   }
 
@@ -4195,6 +4296,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }
   
   delete jets; /*delete jets_v2;*/ delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
+  delete genTausCharge; delete genTausDecayLeptonically;
   delete HLTfiltersMu; delete HLTfiltersTau, delete HLTfiltersTauJet ; delete triggerPaths;
 //   delete tauXTriggers; delete triggerBits;
   delete METP4; delete jetsBtagHE; delete jetsBtagHP; delete jetsBtagCSV; delete jetsChNfraction; delete genVP4; delete genMETP4;

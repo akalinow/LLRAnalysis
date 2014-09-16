@@ -57,6 +57,8 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   TTree* tree_;
 
   edm::LumiReWeighting LumiWeights_;
+
+/*   ofstream myfile; */
  
   edm::InputTag diTauTag_;
   edm::InputTag jetsTag_;
@@ -142,6 +144,9 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* diTauLegsAltP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genDiTauLegsP4_; 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genTausP4_;
+
+  std::vector< int >* genTausCharge_;
+  std::vector< int >* genTausDecayLeptonically_;
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* METP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* caloMETNoHFP4_;
@@ -350,6 +355,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   float rhoNeutralFastJet_;
   float embeddingWeight_;
   std::vector< double >* embeddingWeights_;
+  float TauSpinnerWeight_;
   float genDiTauMass_;
   float nPUVertices_;
   float nPUaverage_;

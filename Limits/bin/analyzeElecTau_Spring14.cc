@@ -44,7 +44,7 @@
 #define useZDataMC       false
 #define includeWG        true
 #define FastMode         false
-#define StudyQCDOlivier  true
+#define StudyQCDOlivier  false
 
 typedef map<TString, TChain* >  mapchain;
 

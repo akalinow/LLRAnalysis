@@ -6,13 +6,18 @@ import shlex
 import string
 import subprocess
 
-WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_TriggerCut/MuTau/'
-#WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
-WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
+#WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_Abdollah/MuTau/'
+#WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_TriggerCut/MuTau/'
+#WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_AbdollahWeight/MuTau/'
+WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
+#WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
+WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_MELA/MuTau/'
+#WorkdirLocSM = '/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/'
 WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/MuTau/'
 #WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/MuTau/'
-#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/MuTau/temp/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES_TriggerCut/MuTau/temp/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_AbdollahWeight/MuTau/temp/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/MuTau/temp/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES_Abdollah/MuTau/temp/'
 
 #OutDir   = './'
 
@@ -487,7 +492,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsTauTau_MuTau.root',
     'sample'         : 'DYJetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -497,7 +502,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsZTTL_MuTau.root',
     'sample'         : 'DYJetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -507,7 +512,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsZTTJ_MuTau.root',
     'sample'         : 'DYJetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -517,7 +522,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsMuToTau_MuTau.root',
     'sample'         : 'DYJetsMuToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -527,7 +532,58 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJetsJetToTau_MuTau.root',
     'sample'         : 'DYJetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    ##DYJets tauPolarOff
+    'DYJetsTauTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_MuTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_MuTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsZTTL_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_MuTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_MuTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsZTTJ_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_MuTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_MuTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsMuToTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_MuTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsMuToTau_tauPolarOff_MuTau.root',
+    'sample'         : 'DYJetsMuToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 1
+    },
+    'DYJetsJetToTau_tauPolarOff' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_Trees_MuTau_v3/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_MuTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -538,7 +594,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_MuTau.root',
     'sample'         : 'DYJets1JetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3814746./24045248.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -548,7 +604,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_MuTau.root',
     'sample'         : 'DYJets1JetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3814746./24045248.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -558,7 +614,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_MuTau.root',
     'sample'         : 'DYJets1JetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3814746./24045248.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -568,7 +624,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsMuToTau_MuTau.root',
     'sample'         : 'DYJets1JetsMuToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3814746./24045248.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -578,7 +634,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_MuTau.root',
     'sample'         : 'DYJets1JetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3814746./24045248.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -589,7 +645,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_MuTau.root',
     'sample'         : 'DYJets2JetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 6111403./21837156.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -599,7 +655,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_MuTau.root',
     'sample'         : 'DYJets2JetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 6111403./21837156.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -609,7 +665,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_MuTau.root',
     'sample'         : 'DYJets2JetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 6111403./21837156.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -619,7 +675,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsMuToTau_MuTau.root',
     'sample'         : 'DYJets2JetsMuToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 6111403./21837156.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -629,7 +685,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_MuTau.root',
     'sample'         : 'DYJets2JetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 6111403./21837156.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -640,7 +696,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_MuTau.root',
     'sample'         : 'DYJets3JetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 4195616./10987445.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -650,7 +706,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_MuTau.root',
     'sample'         : 'DYJets3JetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 4195616./10987445.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -660,7 +716,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_MuTau.root',
     'sample'         : 'DYJets3JetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 4195616./10987445.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -670,7 +726,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets3JetsMuToTau_MuTau.root',
     'sample'         : 'DYJets3JetsMuToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 4195616./10987445.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -680,7 +736,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_MuTau.root',
     'sample'         : 'DYJets3JetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 4195616./10987445.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -691,7 +747,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets4JetsTauTau_MuTau.root',
     'sample'         : 'DYJets4JetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3125999./6402827.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -701,7 +757,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets4JetsZTTL_MuTau.root',
     'sample'         : 'DYJets4JetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3125999./6402827.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -711,7 +767,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets4JetsZTTJ_MuTau.root',
     'sample'         : 'DYJets4JetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3125999./6402827.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -721,7 +777,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets4JetsMuToTau_MuTau.root',
     'sample'         : 'DYJets4JetsMuToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3125999./6402827.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -731,7 +787,7 @@ options = {
     'outputFileName' : OutDir+'nTupleDYJets4JetsJetToTau_MuTau.root',
     'sample'         : 'DYJets4JetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 3125999./6402827.,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -751,7 +807,7 @@ options = {
     'outputFileName' : OutDir+'nTupleTTJets_MuTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
-    'skimEff'        : 1.0 * 0.503752 * 2660824./3487856,
+    'skimEff'        : 1.0 * 0.503752 * 2660824./3487856,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -764,7 +820,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.438 * 0.561995,
     #'skimEff'        : 0.438 * 13732045./23474208,
-    'skimEff'        : 1.0* 13732045./23474208,
+    'skimEff'        : 1.0 * 13732045./23474208,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -777,7 +833,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0 * 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -790,7 +846,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
@@ -803,7 +859,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
@@ -816,7 +872,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
@@ -829,7 +885,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
@@ -842,7 +898,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
@@ -855,7 +911,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
@@ -868,7 +924,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
@@ -881,7 +937,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
@@ -894,7 +950,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
@@ -907,7 +963,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
-    'skimEff'        : 1.0* 8187961./11921428,
+    'skimEff'        : 1.0* 8187961./11921428,#OK
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
@@ -920,7 +976,7 @@ options = {
     #'xSection'       : 249.5,
     #'skimEff'        : 0.457 * 0.120926,
     #'skimEff'        : 0.457 * 3847510./31023821,
-    'skimEff'        : 1.0 * 3847510./31023821,
+    'skimEff'        : 1.0 * 3847510./31023821,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -930,7 +986,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets-p1_MuTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.108752 * 533250./2000279,
+    'skimEff'        : 1.0 * 0.108752 * 533250./2000279,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -940,7 +996,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets-p2_MuTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 0.108710 * 1674658./6273656,
+    'skimEff'        : 1.0 * 0.108710 * 1674658./6273656,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -960,7 +1016,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets2Jets_MuTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 5867536./34044921,
+    'skimEff'        : 1.0 * 5867536./34044921,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -970,7 +1026,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets3Jets_MuTau.root',
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
-    'skimEff'        :  1.0 * 3829211./15219503,
+    'skimEff'        :  1.0 * 3829211./15219503,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -980,12 +1036,12 @@ options = {
     'outputFileName' : OutDir+'nTupleWJets4Jets_MuTau.root',
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
-    'skimEff'        : 1.0 * 4542508./13382803,##
+    'skimEff'        : 1.0 * 4542508./13382803,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
-        # High stat samples V19
+    # High stat samples V19
     'WJets1JetsV19' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_11Mar2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets1JetsV19_MuTau.root',
@@ -1022,7 +1078,7 @@ options = {
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
     #'skimEff'        : 0.437682 * 160607./490658,
-    'skimEff'        : 1.0 * 160607./490658,
+    'skimEff'        : 1.0 * 160607./490658,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1033,7 +1089,7 @@ options = {
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
     #'skimEff'        : 0.437851 * 0.668091,
-    'skimEff'        : 1.0 * 161536./493460,
+    'skimEff'        : 1.0 * 161536./493460,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1044,7 +1100,7 @@ options = {
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
     #'skimEff'        : 0.535690 * 0.410962,
-    'skimEff'        : 0.535690 * 459248./1007187,
+    'skimEff'        : 0.535690 * 459248./1007187,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1055,7 +1111,7 @@ options = {
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
     #'skimEff'        : 0.471732 * 0.658115,
-    'skimEff'        : 1.0 * 1135312./3215990,
+    'skimEff'        : 1.0 * 1135312./3215990,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1066,7 +1122,7 @@ options = {
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
     #'skimEff'        : 1.0 * 0.618550 * 0.458578,
-    'skimEff'        : 1.0 * 670103./2017979,
+    'skimEff'        : 1.0 * 670103./2017979,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1077,7 +1133,7 @@ options = {
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
     #'skimEff'        : 0.468227 * 0.322101,
-    'skimEff'        : 1.0 * 170171./954911,
+    'skimEff'        : 1.0 * 170171./954911,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1088,7 +1144,7 @@ options = {
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
     #'skimEff'        : 0.533349 * 0.648352,
-    'skimEff'        : 1.0 * 762432./1929727,
+    'skimEff'        : 1.0 * 762432./1929727,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1099,7 +1155,7 @@ options = {
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
     #'skimEff'        : 0.577947 * 0.457893,
-    'skimEff'        : 1.0 * 1396571./4793893,
+    'skimEff'        : 1.0 * 1396571./4793893,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1109,7 +1165,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWGToLNuG_MuTau.root',
     'sample'         : 'WGToLNuG',
     'xSection'       : 461.6,
-    'skimEff'        : 1.0 * 248374./4772358,
+    'skimEff'        : 1.0 * 248374./4772358,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1119,7 +1175,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWGstarToLNu2E_MuTau.root',
     'sample'         : 'WGstarToLNu2E',
     'xSection'       : 5.873,
-    'skimEff'        : 1.0 * 10134./314653 ,
+    'skimEff'        : 1.0 * 10134./314653,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1129,7 +1185,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWGstarToLNu2Mu_MuTau.root',
     'sample'         : 'WGstarToLNu2Mu',
     'xSection'       : 1.914,
-    'skimEff'        : 1.0 * 9233./299973,
+    'skimEff'        : 1.0 * 9233./299973,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1139,7 +1195,7 @@ options = {
     'outputFileName' : OutDir+'nTupleWGstarToLNu2Tau_MuTau.root',
     'sample'         : 'WGstarToLNu2Tau',
     'xSection'       : 0.336,
-    'skimEff'        : 1.0 * 1287./49997,
+    'skimEff'        : 1.0 * 1287./49997,#OK
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -1376,7 +1432,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_29Jul2014_MELA_Trees_MuTau_v2/',
     'outputFileName' : OutDir+'nTupleVBFH125_MuTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -1607,7 +1663,7 @@ options = {
     },
     ######MSSM
     'SUSYGGH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH80_MuTau.root',
     'sample'         : 'SUSYGGH80',
     'xSection'       : 1.0,
@@ -1618,7 +1674,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH90_MuTau.root',
     'sample'         : 'SUSYGGH90',
     'xSection'       : 1.0,
@@ -1629,7 +1685,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH100_MuTau.root',
     'sample'         : 'SUSYGGH100',
     'xSection'       : 1.0,
@@ -1640,7 +1696,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH110_MuTau.root',
     'sample'         : 'SUSYGGH110',
     'xSection'       : 1.0,
@@ -1651,7 +1707,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH120_MuTau.root',
     'sample'         : 'SUSYGGH120',
     'xSection'       : 1.0,
@@ -1662,7 +1718,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH130_MuTau.root',
     'sample'         : 'SUSYGGH130',
     'xSection'       : 1.0,
@@ -1673,7 +1729,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH140_MuTau.root',
     'sample'         : 'SUSYGGH140',
     'xSection'       : 1.0,
@@ -1684,7 +1740,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH160_MuTau.root',
     'sample'         : 'SUSYGGH160',
     'xSection'       : 1.0,
@@ -1695,7 +1751,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH180_MuTau.root',
     'sample'         : 'SUSYGGH180',
     'xSection'       : 1.0,
@@ -1706,7 +1762,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH200_MuTau.root',
     'sample'         : 'SUSYGGH200',
     'xSection'       : 1.0,
@@ -1717,7 +1773,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-MC_HTT_11Mar2014_Trees_MuTau_v3/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-MC_HTT_21Jul2014_Trees_MuTau_v3/',
     'outputFileName' : OutDir+'nTupleSUSYGGH250_MuTau.root',
     'sample'         : 'SUSYGGH250',
     'xSection'       : 1.0,
@@ -1728,7 +1784,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH300_MuTau.root',
     'sample'         : 'SUSYGGH300',
     'xSection'       : 1.0,
@@ -1739,7 +1795,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH350_MuTau.root',
     'sample'         : 'SUSYGGH350',
     'xSection'       : 1.0,
@@ -1750,7 +1806,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH400_MuTau.root',
     'sample'         : 'SUSYGGH400',
     'xSection'       : 1.0,
@@ -1761,7 +1817,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH450_MuTau.root',
     'sample'         : 'SUSYGGH450',
     'xSection'       : 1.0,
@@ -1772,7 +1828,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH500_MuTau.root',
     'sample'         : 'SUSYGGH500',
     'xSection'       : 1.0,
@@ -1783,7 +1839,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH600_MuTau.root',
     'sample'         : 'SUSYGGH600',
     'xSection'       : 1.0,
@@ -1794,7 +1850,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH700_MuTau.root',
     'sample'         : 'SUSYGGH700',
     'xSection'       : 1.0,
@@ -1805,7 +1861,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-MC_HTT_20Jun2014_Trees_NewTriggers_MuTau_v5/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH800_MuTau.root',
     'sample'         : 'SUSYGGH800',
     'xSection'       : 1.0,
@@ -1816,7 +1872,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH900_MuTau.root',
     'sample'         : 'SUSYGGH900',
     'xSection'       : 1.0,
@@ -1827,7 +1883,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH1000_MuTau.root',
     'sample'         : 'SUSYGGH1000',
     'xSection'       : 1.0,
@@ -1838,7 +1894,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH80_MuTau.root',
     'sample'         : 'SUSYBBH80',
     'xSection'       : 1.0,
@@ -1849,7 +1905,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH90_MuTau.root',
     'sample'         : 'SUSYBBH90',
     'xSection'       : 1.0,
@@ -1860,7 +1916,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH100_MuTau.root',
     'sample'         : 'SUSYBBH100',
     'xSection'       : 1.0,
@@ -1871,7 +1927,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH110_MuTau.root',
     'sample'         : 'SUSYBBH110',
     'xSection'       : 1.0,
@@ -1882,7 +1938,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH120_MuTau.root',
     'sample'         : 'SUSYBBH120',
     'xSection'       : 1.0,
@@ -1893,7 +1949,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH130_MuTau.root',
     'sample'         : 'SUSYBBH130',
     'xSection'       : 1.0,
@@ -1904,7 +1960,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH140_MuTau.root',
     'sample'         : 'SUSYBBH140',
     'xSection'       : 1.0,
@@ -1915,7 +1971,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH160_MuTau.root',
     'sample'         : 'SUSYBBH160',
     'xSection'       : 1.0,
@@ -1926,7 +1982,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH180_MuTau.root',
     'sample'         : 'SUSYBBH180',
     'xSection'       : 1.0,
@@ -1937,7 +1993,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH200_MuTau.root',
     'sample'         : 'SUSYBBH200',
     'xSection'       : 1.0,
@@ -1948,7 +2004,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH250_MuTau.root',
     'sample'         : 'SUSYBBH250',
     'xSection'       : 1.0,
@@ -1959,7 +2015,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH300_MuTau.root',
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
@@ -1970,7 +2026,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH350_MuTau.root',
     'sample'         : 'SUSYBBH350',
     'xSection'       : 1.0,
@@ -1981,7 +2037,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH400_MuTau.root',
     'sample'         : 'SUSYBBH400',
     'xSection'       : 1.0,
@@ -1992,7 +2048,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH450_MuTau.root',
     'sample'         : 'SUSYBBH450',
     'xSection'       : 1.0,
@@ -2003,7 +2059,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH500_MuTau.root',
     'sample'         : 'SUSYBBH500',
     'xSection'       : 1.0,
@@ -2014,7 +2070,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH600_MuTau.root',
     'sample'         : 'SUSYBBH600',
     'xSection'       : 1.0,
@@ -2025,7 +2081,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH700_MuTau.root',
     'sample'         : 'SUSYBBH700',
     'xSection'       : 1.0,
@@ -2036,7 +2092,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-MC_HTT_20Jun2014_Trees_NewTriggers_MuTau_v5/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH800_MuTau.root',
     'sample'         : 'SUSYBBH800',
     'xSection'       : 1.0,
@@ -2047,7 +2103,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH900_MuTau.root',
     'sample'         : 'SUSYBBH900',
     'xSection'       : 1.0,
@@ -2058,7 +2114,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-MC_HTT_11Mar2014_Trees_MuTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-MC_HTT_21Jul2014_Trees_MuTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH1000_MuTau.root',
     'sample'         : 'SUSYBBH1000',
     'xSection'       : 1.0,

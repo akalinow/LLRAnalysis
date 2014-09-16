@@ -246,6 +246,8 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig)
 
 void ElecTauStreamAnalyzer::beginJob(){
 
+//   myfile.open ("ForAbdollah_ElecTau.txt");
+
   edm::Service<TFileService> fs;
   tree_ = fs->make<TTree>("tree","qqH tree");
  
@@ -293,6 +295,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   diTauLegsAltP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genDiTauLegsP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genTausP4_      = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+  genTausCharge_  = new std::vector< int >();
   METP4_          = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   caloMETNoHFP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   l1ETMP4_ = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -300,6 +303,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   genVP4_         = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   genEleFromVP4_  = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   gentopP4_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
+
+  genTausDecayLeptonically_ = new std::vector<int>() ;
 
   leptonJets_       = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
   extraElectrons_   = new std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >();
@@ -453,6 +458,8 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("diTauLegsAltP4_","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&diTauLegsAltP4_);
   tree_->Branch("genDiTauLegsP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genDiTauLegsP4_);
   tree_->Branch("genTausP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&genTausP4_);
+  tree_->Branch("genTausCharge","std::vector< int >",&genTausCharge_);
+  tree_->Branch("genTausDecayLeptonically","std::vector< int >",&genTausDecayLeptonically_);
 
   tree_->Branch("METP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&METP4_);
   tree_->Branch("caloMETNoHFP4","std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >",&caloMETNoHFP4_);
@@ -679,6 +686,7 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("mcPUweight",&mcPUweight_,"mcPUweight/F");
   tree_->Branch("embeddingWeight",&embeddingWeight_,"embeddingWeight/F");//FilterEfficiency()
   tree_->Branch("embeddingWeights",    "std::vector<double>",&embeddingWeights_);//All other embedding weights
+  tree_->Branch("TauSpinnerWeight",&TauSpinnerWeight_,"TauSpinnerWeight/F");
   tree_->Branch("nPUVertices",&nPUVertices_,"nPUVertices/F");
   tree_->Branch("nPUVerticesM1",&nPUVerticesM1_,"nPUVerticesM1/F");
   tree_->Branch("nPUVerticesP1",&nPUVerticesP1_,"nPUVerticesP1/F");
@@ -716,6 +724,8 @@ ElecTauStreamAnalyzer::~ElecTauStreamAnalyzer(){
   delete l1IsoElectrons_; delete l1NoIsoElectrons_;
   delete pfElectrons_;
   delete genTausP4_;
+  delete genTausCharge_;
+  delete genTausDecayLeptonically_;
   delete jetsChNfraction_; delete jetsChEfraction_; delete jetMoments_;
   delete jetPUMVA_; delete jetPUWP_;
   delete gammadR_ ; delete gammadPhi_; delete gammadEta_; delete gammaPt_;
@@ -735,6 +745,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   caloMETNoHFP4_->clear();
   genMETP4_->clear();
   genTausP4_->clear();
+  genTausCharge_->clear();
+  genTausDecayLeptonically_->clear();
   pfElectrons_->clear();
   triggerPaths_->clear();
 //   triggerBits_->clear();
@@ -906,6 +918,46 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       }
       genTausP4_->push_back((*genParticles)[index1].p4());
       genTausP4_->push_back((*genParticles)[index2].p4());
+
+      int charge_index1 = 0;
+      if((*genParticles)[index1].pdgId()==15) charge_index1 = -1;//tau -
+      else if((*genParticles)[index1].pdgId()==-15) charge_index1 = +1;//tau+
+      
+      int charge_index2 = 0;
+      if((*genParticles)[index2].pdgId()==15) charge_index2 = -1;//tau-
+      else if((*genParticles)[index2].pdgId()==-15) charge_index2 = +1;//tau+    
+      
+      genTausCharge_->push_back(charge_index1);
+      genTausCharge_->push_back(charge_index2);
+
+      int n = (*genParticles)[index1].numberOfDaughters();
+      int IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index1].daughter(j);
+	  int dauId = d->pdgId();
+	  if(dauId==-11 || dauId==+11)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
+
+      n = (*genParticles)[index2].numberOfDaughters();
+      IsDecayingLeptonically = 0 ; 
+      for(int j = 0; j < n; ++ j)
+	{
+	  const Candidate * d = (*genParticles)[index2].daughter(j);
+	  int dauId = d->pdgId();
+
+	  if(dauId==-11 || dauId==+11)
+	    {
+	      IsDecayingLeptonically = 1 ;
+	      break;
+	    }
+	}
+      genTausDecayLeptonically_->push_back(IsDecayingLeptonically);
     }
   }
 
@@ -1568,7 +1620,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       const pat::TriggerPath *triggerPath =  trigger->path(iter_trigger->first);
       if(verbose_)
 	{
-	  cout<<  "Testing " << iter_trigger->first << endl;
+// 	  cout<<  "Testing " << iter_trigger->first << endl;
 	  if(triggerPath) cout << "Is there..." << endl;
 	  if(triggerPath && triggerPath->wasRun()) cout << "Was run..." << endl;
 	  if(triggerPath && triggerPath->wasRun() && triggerPath->wasAccept()) cout << "Was accepted..." << endl;
@@ -1578,10 +1630,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	 triggerPath->wasAccept() && 
 	 triggerPath->prescale()==1)
 	{
-	  cout<<"trigger matched Olivier!!!"<<endl;
-	  cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
+// 	  cout<<"trigger matched Olivier!!!"<<endl;
+// 	  cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
 	  (*triggerPaths_)[iter_trigger->first] = 1;
-	  cout<<"value = "<<(*triggerPaths_)[iter_trigger->first]<<endl;
+// 	  cout<<"value = "<<(*triggerPaths_)[iter_trigger->first]<<endl;
 	}
       else if (triggerPath && triggerPath->wasRun() && 
 	       triggerPath->wasAccept() && 
@@ -1704,6 +1756,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     genJetsIDP4_->clear();
     genDiTauLegsP4_->clear();
     genTausP4_->clear();
+    genTausCharge_->clear();
+    genTausDecayLeptonically_->clear();
     jetsBtagHE_->clear();
     jetsBtagHP_->clear();
     jetsBtagCSV_->clear();
@@ -1764,6 +1818,27 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     const pat::Electron* leg1 = dynamic_cast<const pat::Electron*>( (theDiTau->leg1()).get() );
     const pat::Tau*      leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
+    
+    /*
+    myfile<<""<<endl;
+    myfile<<""<<endl;
+    myfile<<""<<endl;
+    myfile<<""<<endl;
+    myfile <<  "Run " << iEvent.run() << ", event " << (iEvent.eventAuxiliary()).event() 
+	 << ", lumi " << iEvent.luminosityBlock() << endl;
+
+    myfile<<"Raw MET = "<<(*METP4_)[0].Et()<<endl;
+    myfile<<"MVA MET = "<<(*METP4_)[1].Et()<<endl;
+    myfile<<"   for leptons: - lepton E/p/pt/eta/phi = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<endl;
+    myfile<<"                - tau    E/p/pt/eta/phi = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<endl;
+    myfile<<"MET covariance matrix: "<<endl;
+    myfile<<"            (0,0) = "<<cov(0,0)<<endl;
+    myfile<<"            (0,1) = "<<cov(0,1)<<endl;
+    myfile<<"            (1,0) = "<<cov(1,0)<<endl;
+    myfile<<"            (1,1) = "<<cov(1,1)<<endl;
+    myfile<<"-"<<endl;
+    myfile<<"***********************"<<endl;
+    */ 
 
     elecFlag_       = 0;  
     elecVetoRelIso_ = 0;  
@@ -2873,7 +2948,21 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       
       // is jet matched to a b-quark?
       //bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->genParticleById(5,0,true)).isNonnull()  ) );
+
+      /*
+      myfile<<"jet #"<<it<<endl;
+      myfile<<"jet pt        = "<<newJet->p4().Pt()<<endl;
+      myfile<<"jet eta       = "<<newJet->p4().Eta()<<endl;
+      myfile<<"jet phi       = "<<newJet->p4().Phi()<<endl;
+      myfile<<"partonFlavour = "<<jet->partonFlavour()<<endl;
+      */
+
       bQuark.insert(       make_pair( newJet->p4().Pt(), (jet->partonFlavour()) ) );
+
+      /*
+      myfile<<"-"<<endl;
+      */
+      
       // add pu information
       jetPVassociation.insert( make_pair( newJet->p4().Pt(), make_pair(aMap["chFracRawJetE"],
 								       aMap["chFracAllChargE"]) ) );
@@ -3264,6 +3353,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     edm::Handle< std::vector<reco::CompositeCandidate> > genDiTauHandle;
     genDiTauMass_ = 9999;
 
+    iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
+    TauSpinnerWeight = TauSpinnerHandle.isValid() ? (*TauSpinnerHandle) : 1.0;
+    //cout<<"TauSpinner weight: "<<TauSpinnerWeight<<endl;
+
     if (isRhEmb_){
       iEvent.getByLabel("genZdecayToTausForEmbeddingKineReweight", genDiTauHandle);
       iEvent.getByLabel(edm::InputTag("TauSpinnerReco","TauSpinnerWT"), TauSpinnerHandle);
@@ -3310,6 +3403,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     embeddingWeights_->push_back(muonRadiationWeight);
     embeddingWeights_->push_back(muonRadiationDownWeight);
     embeddingWeights_->push_back(muonRadiationUpWeight);
+
+    TauSpinnerWeight_ = TauSpinnerWeight ; 
 
     tree_->Fill();
 

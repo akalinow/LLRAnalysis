@@ -39,7 +39,9 @@ def treeSkim( ana, sample, runInSeries=False):
         ##
         f = open(fileJob,'w')    
         f.write('#!/bin/sh\n\n')
-        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewTrees_NewTriggers/src/LLRAnalysis/Limits/bin"\n')
+        f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/Limits/bin"\n')
+        #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/Limits/bin"\n')
+        #f.write('export WORKINGDIR="/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewTrees_NewTriggers/src/LLRAnalysis/Limits/bin"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/ivo/HTauTauAnalysis/CMSSW_5_3_11_p6_NewTauID/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/home/llr/cms/davignon/TAU_ID/Release_OlivierTES/CMSSW_5_3_11_p6_analysis/src/LLRAnalysis/Limits/bin/"\n')
         #f.write('export WORKINGDIR="/data_CMS/cms/ivo/HTauTauAnalysis/CMSSWRelesases/CMSSW_5_3_11_p6_prodv3/src/LLRAnalysis/Limits/bin/"\n')
@@ -134,12 +136,15 @@ for iAnMC in range(0,len(anaMC)):
 
 ##     ##BackgroundsMC
 ##     ##DY
-##     for finalState in ListFinalState:
+    for finalState in ListFinalState:
 ##         treeSkim( anaMC[iAnMC] , "DYJets"+finalState      , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets1Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets2Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets3Jets"+finalState , False)
 ##         treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
+
+        ##DY with TauPolOff
+        treeSkim(anaMC[iAnMC] , "DYJets"+finalState+"_tauPolarOff", False)
 
 ##     ##W
 ##     treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
@@ -236,7 +241,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "VH155"         , False)
 ##     treeSkim( anaMC[iAnMC] , "VH160"         , False)
 
-##     #MSSM Higgs MC
+    #MSSM Higgs MC
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH80"         , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH90"         , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH100"        , False)
@@ -255,7 +260,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH500"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH600"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH700"        , False)
-    treeSkim( anaMC[iAnMC] , "SUSYGGH800"        , False)
+##     treeSkim( anaMC[iAnMC] , "SUSYGGH800"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH900"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYGGH1000"       , False)
 
@@ -277,7 +282,7 @@ for iAnMC in range(0,len(anaMC)):
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH500"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH600"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH700"        , False)
-    treeSkim( anaMC[iAnMC] , "SUSYBBH800"        , False)
+##     treeSkim( anaMC[iAnMC] , "SUSYBBH800"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH900"        , False)
 ##     treeSkim( anaMC[iAnMC] , "SUSYBBH1000"       , False)
 

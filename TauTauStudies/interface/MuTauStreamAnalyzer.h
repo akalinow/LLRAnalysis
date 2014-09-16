@@ -12,7 +12,7 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
-
+#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
 
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
@@ -58,6 +58,8 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
 
   edm::LumiReWeighting LumiWeights_;
 
+/*   ofstream myfile; */
+
   edm::InputTag diTauTag_;
   edm::InputTag jetsTag_;
   edm::InputTag newJetsTag_;
@@ -78,6 +80,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   TH1* lutHiggsPtWeightNom_;
   TH1* lutHiggsPtWeightUp_;
   TH1* lutHiggsPtWeightDown_;
+  PFJetIDSelectionFunctor* loosePFJetIdAlgo_;
 
   struct InputTagEntryType
   {
@@ -141,6 +144,9 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* diTauLegsAltP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genDiTauLegsP4_; 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > >* genTausP4_; 
+
+  std::vector< int >* genTausCharge_;
+  std::vector< int >* genTausDecayLeptonically_;
 
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* METP4_;
   std::vector< ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >  >* caloMETNoHFP4_;
@@ -311,6 +317,7 @@ class MuTauStreamAnalyzer : public edm::EDAnalyzer{
   float rhoNeutralFastJet_;
   float embeddingWeight_;
   std::vector< double >* embeddingWeights_;
+  float TauSpinnerWeight_;
   float genDiTauMass_;
   float nPUVertices_;
   float nPUVerticesM1_;
