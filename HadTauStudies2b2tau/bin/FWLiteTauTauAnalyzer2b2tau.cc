@@ -25,7 +25,11 @@
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
 #include "LLRAnalysis/HadTauStudies/interface/RunLumiSectionEventNumberSelector.h"
 #include "LLRAnalysis/HadTauStudies/interface/particleIDlooseToTightWeightEntryType.h"
+#include "LLRAnalysis/HadTauStudies/interface/mt2Interface.h"
+#include "LLRAnalysis/HHKinFit/interface/DiJetKinFitMaster.h"
+#include "LLRAnalysis/HHKinFit/interface/HHKinFitMaster.h"
 #include "LLRAnalysis/Utilities/interface/BtagSF.hh"
+#include "TauAnalysis/CandidateTools/interface/candidateAuxFunctions.h"
 
 #include <TFile.h>
 #include <TChain.h>
@@ -36,6 +40,7 @@
 #include <TF1.h>
 #include <TGraphAsymmErrors.h>
 #include <TFormula.h>
+#include <TLorentzVector.h>
 
 #include <iostream>
 #include <fstream>
@@ -107,28 +112,37 @@ double compTauDecayModeWeight(double tauEta, int tauDecayMode)
     else if ( tauDecayMode ==  1 ) weight = 1.00;
     else if ( tauDecayMode == 10 ) weight = 1.06;
   }
+  //std::cout << "tauDecayMode = " << tauDecayMode << ": weight = " << weight << std::endl;
   return weight;
 }
 
 struct jetType
 {
-  jetType(double px, double py, double pz, double energy, double btagDiscr, int genPartonFlavour)
-    : p4_(px, py, py, energy),
+  jetType(double px, double py, double pz, double energy, double enRegFactor, double btagDiscr, int genPartonFlavour)
+    : p4_(px, py, pz, energy),
+      p4Reg_(px*enRegFactor, py*enRegFactor, pz*enRegFactor, energy*enRegFactor),
+      enRegFactor_(enRegFactor),
       btagDiscr_(btagDiscr),
       genPartonFlavour_(genPartonFlavour),
       passesLooseWP_(false),
-      passesMediumWP_(false)
+      passesMediumWP_(false),
+      passesTightWP_(false)
   {}
   ~jetType() {}
   reco::Candidate::LorentzVector p4_;
+  reco::Candidate::LorentzVector p4Reg_;
+  double enRegFactor_;
   double btagDiscr_;
   int genPartonFlavour_;
   bool passesLooseWP_;
   bool passesMediumWP_;
+  bool passesTightWP_;
 };
 
 bool isHigherBtagDiscriminator(const jetType& bjet1, const jetType& bjet2)
 {
+  if (  bjet1.passesTightWP_  && !bjet2.passesTightWP_  ) return true;
+  if ( !bjet1.passesTightWP_  &&  bjet2.passesTightWP_  ) return false;
   if (  bjet1.passesMediumWP_ && !bjet2.passesMediumWP_ ) return true;
   if ( !bjet1.passesMediumWP_ &&  bjet2.passesMediumWP_ ) return false;
   if (  bjet1.passesLooseWP_  && !bjet2.passesLooseWP_  ) return true;
@@ -140,6 +154,103 @@ bool isHigherPt(const jetType& jet1, const jetType& jet2)
 {
   return (jet1.btagDiscr_ > jet2.btagDiscr_);
 }
+
+//-------------------------------------------------------------------------------
+// CV: kinematic fit developed by the University of Hamburg group,
+//     presented in the H -> tautau meeting on August 21st 2014:
+//       https://indico.cern.ch/event/333569/session/8/contribution/17/material/slides/0.pdf
+//    (I adapted the code to make it work only on the h -> bb decay)
+
+struct kinFitResult
+{
+  reco::Candidate::LorentzVector bJet1P4_fitted_; // filled in case of 2-body fit only
+  reco::Candidate::LorentzVector bJet2P4_fitted_;
+  double mhh_;
+  double chi2_;
+};
+
+kinFitResult compKinFit2bdy(const reco::Candidate::LorentzVector& bJet1P4, 
+			    const reco::Candidate::LorentzVector& bJet2P4, 
+			    const reco::Candidate::LorentzVector& HttP4,
+			    double mh = 125.)
+{
+  //std::cout << "<compKinFit2bdy>:" << std::endl;
+  //std::cout << " bJet1: Pt = " << bJet1P4.pt() << ", eta = " << bJet1P4.eta() << ", phi = " << bJet1P4.phi() << ", mass = " << bJet1P4.mass() << std::endl;
+  //std::cout << " bJet2: Pt = " << bJet2P4.pt() << ", eta = " << bJet2P4.eta() << ", phi = " << bJet2P4.phi() << ", mass = " << bJet2P4.mass() << std::endl;
+  //std::cout << " Htt: Pt = " << HttP4.pt() << ", eta = " << HttP4.eta() << ", phi = " << HttP4.phi() << ", mass = " << HttP4.mass() << std::endl;
+  //std::cout << " mh = " << mh << std::endl;
+  TLorentzVector* bJet1P4_lorentzvector = new TLorentzVector(bJet1P4.px(), bJet1P4.py(), bJet1P4.pz(), bJet1P4.E());
+  TLorentzVector* bJet2P4_lorentzvector = new TLorentzVector(bJet2P4.px(), bJet2P4.py(), bJet2P4.pz(), bJet2P4.E());
+  DiJetKinFitMaster kinFit = DiJetKinFitMaster(bJet1P4_lorentzvector, bJet2P4_lorentzvector);  
+  kinFit.addMhHypothesis(mh);
+  kinFit.doFullFit();
+  TLorentzVector bJet1P4_fitted_lorentzvector = kinFit.getFitJet1();
+  reco::Candidate::LorentzVector bJet1P4_fitted(
+    bJet1P4_fitted_lorentzvector.Px(), 
+    bJet1P4_fitted_lorentzvector.Py(), 
+    bJet1P4_fitted_lorentzvector.Pz(), 
+    bJet1P4_fitted_lorentzvector.E());
+  TLorentzVector bJet2P4_fitted_lorentzvector = kinFit.getFitJet2();
+  reco::Candidate::LorentzVector bJet2P4_fitted(
+    bJet2P4_fitted_lorentzvector.Px(), 
+    bJet2P4_fitted_lorentzvector.Py(), 
+    bJet2P4_fitted_lorentzvector.Pz(), 
+    bJet2P4_fitted_lorentzvector.E());
+
+  reco::Candidate::LorentzVector hhP4_fitted = (bJet1P4_fitted + bJet2P4_fitted + HttP4);
+
+  kinFitResult fitResult;
+  fitResult.bJet1P4_fitted_ = bJet1P4_fitted;
+  fitResult.bJet2P4_fitted_ = bJet2P4_fitted;
+  fitResult.mhh_ = hhP4_fitted.mass();
+  fitResult.chi2_ = kinFit.getBestChi2FullFit();
+
+  delete bJet1P4_lorentzvector;
+  delete bJet2P4_lorentzvector;
+
+  return fitResult;
+}
+
+kinFitResult compKinFit4bdy(const reco::Candidate::LorentzVector& bJet1P4, 
+			    const reco::Candidate::LorentzVector& bJet2P4,
+			    const reco::Candidate::LorentzVector& tau1P4,
+			    const reco::Candidate::LorentzVector& tau2P4,
+			    const reco::Candidate::LorentzVector& metP4, const TMatrixD& metCov,
+			    double mh = 125.)
+{
+  //std::cout << "<compKinFit4bdy>:" << std::endl;
+  //std::cout << " bJet1: Pt = " << bJet1P4.pt() << ", eta = " << bJet1P4.eta() << ", phi = " << bJet1P4.phi() << ", mass = " << bJet1P4.mass() << std::endl;
+  //std::cout << " bJet2: Pt = " << bJet2P4.pt() << ", eta = " << bJet2P4.eta() << ", phi = " << bJet2P4.phi() << ", mass = " << bJet2P4.mass() << std::endl;
+  //std::cout << " tau1: Pt = " << tau1P4.pt() << ", eta = " << tau1P4.eta() << ", phi = " << tau1P4.phi() << ", mass = " << tau1P4.mass() << std::endl;
+  //std::cout << " tau2: Pt = " << tau2P4.pt() << ", eta = " << tau2P4.eta() << ", phi = " << tau2P4.phi() << ", mass = " << tau2P4.mass() << std::endl;
+  //std::cout << " met: Pt = " << metP4.pt() << ", phi = " << metP4.phi() << std::endl;
+  //std::cout << " metCov:" << std::endl;
+  //metCov.Print();
+  //std::cout << " mh = " << mh << std::endl;
+  TLorentzVector* bJet1P4_lorentzvector = new TLorentzVector(bJet1P4.px(), bJet1P4.py(), bJet1P4.pz(), bJet1P4.E());
+  TLorentzVector* bJet2P4_lorentzvector = new TLorentzVector(bJet2P4.px(), bJet2P4.py(), bJet2P4.pz(), bJet2P4.E());
+  TLorentzVector* tau1P4_lorentzvector  = new TLorentzVector(tau1P4.px(), tau1P4.py(), tau1P4.pz(), tau1P4.E());
+  TLorentzVector* tau2P4_lorentzvector  = new TLorentzVector(tau2P4.px(), tau2P4.py(), tau2P4.pz(), tau2P4.E());
+  TLorentzVector* metP4_lorentzvector   = new TLorentzVector(metP4.px(), metP4.py(), metP4.pz(), metP4.E());
+  HHKinFitMaster kinFit = HHKinFitMaster(bJet1P4_lorentzvector, bJet2P4_lorentzvector, tau1P4_lorentzvector, tau2P4_lorentzvector);
+  kinFit.setAdvancedBalance(metP4_lorentzvector, metCov);
+  kinFit.addMh1Hypothesis(mh);
+  kinFit.addMh2Hypothesis(mh);
+  kinFit.doFullFit();
+
+  kinFitResult fitResult;
+  fitResult.mhh_ = kinFit.getBestMHFullFit();
+  fitResult.chi2_ = kinFit.getBestChi2FullFit();
+
+  delete bJet1P4_lorentzvector;
+  delete bJet2P4_lorentzvector;
+  delete tau1P4_lorentzvector;
+  delete tau2P4_lorentzvector;
+  delete metP4_lorentzvector; 
+
+  return fitResult;
+}
+//-------------------------------------------------------------------------------
 
 namespace
 {
@@ -164,6 +275,17 @@ namespace
   double square(double x)
   {
     return x*x;
+  }
+
+  std::ostream* openSelEventsFile_output(const std::string& selEventsFileName_output, const std::string& category)
+  {
+    size_t idx = selEventsFileName_output.find_last_of('.');
+    std::string selEventsFileName_part1 = std::string(selEventsFileName_output, 0, idx);
+    std::string selEventsFileName_part2 = ( idx != std::string::npos ) ? std::string(selEventsFileName_output, idx, std::string::npos) : "";
+    std::string selEventsFileName = Form("%s_%s%s", selEventsFileName_part1.data(), category.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '" << category << "' category to file = " << selEventsFileName << std::endl;  
+    std::ostream* selEventsFile = new std::ofstream(selEventsFileName.data(), std::ios::out);
+    return selEventsFile;
   }
 }
 
@@ -195,14 +317,21 @@ int main(int argc, char* argv[])
   std::string process_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("process");
   int process = -1;
   if      ( process_string == "data_obs"     ) process = kData;
-  else if ( contains(process_string, "data2012run") ) process = kData; // CV: for checking event yield in individual data-taking periods
-  else if ( contains(process_string, "hhTo2b2tau") || contains(process_string, "mssmH") || contains(process_string, "abelianZprime") ) process = kSignal;
-  else if ( contains(process_string, "ggH_SM125") || contains(process_string, "qqH_SM125") || contains(process_string, "VH_SM125") ) process = kSM_Higgs;
+  else if ( contains(process_string, "data2012run")   ) process = kData; // CV: for checking event yield in individual data-taking periods
+  else if ( contains(process_string, "hhTo2b2tau")    || 
+	    contains(process_string, "mssmH")         || 
+	    contains(process_string, "abelianZprime") ||
+	    contains(process_string, "radion")        ||
+	    contains(process_string, "graviton")      ) process = kSignal;
+  else if ( contains(process_string, "ggH_SM125")     || 
+	    contains(process_string, "qqH_SM125")     || 
+	    contains(process_string, "VH_SM125")      || 
+	    contains(process_string, "singleH_SM125") ) process = kSM_Higgs;
   else if ( process_string == "ZTTmc"        ) process = kZTTmc;
   else if ( process_string == "ZL"           ) process = kZL;
   else if ( process_string == "ZJ"           ) process = kZJ;
   else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
-  else if ( process_string == "W"            ) process = kW;
+  else if ( process_string == "Wtmp"         ) process = kW;
   else if ( process_string == "TT"           ) process = kTT;
   else if ( process_string == "TT_Embedded"  ) process = kTT_Embedded;
   else if ( process_string == "VV"           ) process = kVV;
@@ -222,12 +351,12 @@ int main(int argc, char* argv[])
       << "Configuration parameter 'stitchingWeights' expected to be of size = 5 !!\n";      
   }
 
-  double tau1PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMin");
-  double tau1PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMax");
+  //double tau1PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMin");
+  //double tau1PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau1PtMax");
   std::string tau1Selection_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("tau1Selection");
 
-  double tau2PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMin");
-  double tau2PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMax");
+  //double tau2PtMin = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMin");
+  //double tau2PtMax = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<double>("tau2PtMax");
   std::string tau2Selection_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("tau2Selection");
 
   std::string tauPtBin = "tau1PtGtXXtau2PtGtXX";
@@ -276,23 +405,37 @@ int main(int argc, char* argv[])
     
     std::string fitFunctionNormName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
     std::string fitFunctionShapeName_tau1_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_central");
-    std::string graphShapeName_tau1, fitFunctionShapeName_tau1_shift;
+    std::string graphShapeName_tau1, fitFunctionShapeName_tau1_shift;    
+    int applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kFitFunction;
     if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau1") ) {
       graphShapeName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau1");
       fitFunctionShapeName_tau1_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_shift");
+      std::string applyFitFunction_or_graph_tau1_string = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("applyFitFunction_or_graph_tau1");
+      if      ( applyFitFunction_or_graph_tau1_string == "fitFunction" ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kFitFunction;
+      else if ( applyFitFunction_or_graph_tau1_string == "graph"       ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kGraph;
+      else if ( applyFitFunction_or_graph_tau1_string == "notApplied"  ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kNotApplied;
+      else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
+	<< "Invalid Configuration parameter 'applyFitFunction_or_graph_tau1' = " << applyFitFunction_or_graph_tau1_string << " !!\n";
     }
     double fitFunctionShapePower_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau1");
     std::string fitFunctionShapeName_tau2_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_central");
     std::string graphShapeName_tau2, fitFunctionShapeName_tau2_shift;
+    int applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kFitFunction;
     if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau2") ) {
       graphShapeName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau2");
       fitFunctionShapeName_tau2_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_shift");
+      std::string applyFitFunction_or_graph_tau2_string = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("applyFitFunction_or_graph_tau2");
+      if      ( applyFitFunction_or_graph_tau2_string == "fitFunction" ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kFitFunction;
+      else if ( applyFitFunction_or_graph_tau2_string == "graph"       ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kGraph;
+      else if ( applyFitFunction_or_graph_tau2_string == "notApplied"  ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kNotApplied;
+      else throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
+	<< "Invalid Configuration parameter 'applyFitFunction_or_graph_tau2' = " << applyFitFunction_or_graph_tau2_string << " !!\n";
     }
     double fitFunctionShapePower_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau2");
-    
+
     std::string inputFileName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("inputFileName");
     TFile* inputFile = new TFile(inputFileName.data());
-    
+
     int numTau1EtaBins = tau1EtaBins.size() - 1;
     for ( int idxTau1EtaBin = 0; idxTau1EtaBin < numTau1EtaBins; ++idxTau1EtaBin ) {
       double tau1EtaMin = tau1EtaBins[idxTau1EtaBin];
@@ -307,8 +450,8 @@ int main(int argc, char* argv[])
           inputFile,
 	  "tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax,
 	  fitFunctionNormName, 
-	  graphShapeName_tau1, fitFunctionShapeName_tau1_central, fitFunctionShapeName_tau1_shift, fitFunctionShapePower_tau1, 
-	  graphShapeName_tau2, fitFunctionShapeName_tau2_central, fitFunctionShapeName_tau2_shift, fitFunctionShapePower_tau2);
+	  graphShapeName_tau1, fitFunctionShapeName_tau1_central, fitFunctionShapeName_tau1_shift, applyFitFunction_or_graph_tau1, fitFunctionShapePower_tau1, 
+	  graphShapeName_tau2, fitFunctionShapeName_tau2_central, fitFunctionShapeName_tau2_shift, applyFitFunction_or_graph_tau2, fitFunctionShapePower_tau2);
 	jetToTauFakeRateLooseToTightWeights.push_back(jetToTauFakeRateLooseToTightWeight);
       }
     }
@@ -337,6 +480,7 @@ int main(int argc, char* argv[])
   std::vector<TFile*> inputFilesToDelete;
 
   std::string selEventsFileName_input = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("selEventsFileName_input");
+  std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiSectionEventNumberSelector* runLumiSectionEventNumberSelector = 0;
   if ( selEventsFileName_input != "" ) {
     edm::ParameterSet cfgRunLumiSectionEventNumberSelector;
@@ -352,25 +496,11 @@ int main(int argc, char* argv[])
   std::ostream* selEventsFile_1b1j      = 0;
   std::ostream* selEventsFile_2j        = 0;
   if ( selEventsFileName_output != "" ) {
-    size_t idx = selEventsFileName_output.find_last_of('.');
-    std::string selEventsFileName_part1 = std::string(selEventsFileName_output , 0, idx);
-    std::string selEventsFileName_part2 = ( idx != std::string::npos ) ?
-      std::string(selEventsFileName_output , idx, std::string::npos) : "";
-    std::string selEventsFileName_inclusive = Form("%s_inclusive%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'inclusive' category to file = " << selEventsFileName_inclusive << std::endl;  
-    selEventsFile_inclusive = new std::ofstream(selEventsFileName_inclusive.data(), std::ios::out);
-    std::string selEventsFileName_2bM = Form("%s_2bM%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in '2bM' category to file = " << selEventsFileName_2bM << std::endl;  
-    selEventsFile_2bM = new std::ofstream(selEventsFileName_2bM.data(), std::ios::out);
-    std::string selEventsFileName_2bL = Form("%s_2bL%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in '2bL' category to file = " << selEventsFileName_2bL << std::endl;  
-    selEventsFile_2bL = new std::ofstream(selEventsFileName_2bL.data(), std::ios::out);
-    std::string selEventsFileName_1b1j = Form("%s_1b1j%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in '1b1j' category to file = " << selEventsFileName_1b1j << std::endl;  
-    selEventsFile_1b1j = new std::ofstream(selEventsFileName_1b1j.data(), std::ios::out);
-    std::string selEventsFileName_2j = Form("%s_2j%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in '2j' category to file = " << selEventsFileName_2j << std::endl;  
-    selEventsFile_2j = new std::ofstream(selEventsFileName_2j.data(), std::ios::out);
+    selEventsFile_inclusive = openSelEventsFile_output(selEventsFileName_output, "inclusive");
+    selEventsFile_2bM       = openSelEventsFile_output(selEventsFileName_output, "2bM");
+    selEventsFile_2bL       = openSelEventsFile_output(selEventsFileName_output, "2bL");
+    selEventsFile_1b1j      = openSelEventsFile_output(selEventsFileName_output, "1b1j");
+    selEventsFile_2j        = openSelEventsFile_output(selEventsFileName_output, "2j");
   }  
 
   fwlite::InputSource inputFiles(cfg); 
@@ -390,21 +520,53 @@ int main(int argc, char* argv[])
     process_string, Form("tauTau_%s_2bM", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bM(cfgHistManager_2bM);
   histManager_2bM.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bM_nonresonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bM_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bM_nonresonant(cfgHistManager_2bM_nonresonant);
+  histManager_2bM_nonresonant.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bM_resonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bM_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bM_resonant(cfgHistManager_2bM_resonant);
+  histManager_2bM_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_2bL = makeHistManagerConfig(
     process_string, Form("tauTau_%s_2bL", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bL(cfgHistManager_2bL);
   histManager_2bL.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bL_nonresonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bL_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bL_nonresonant(cfgHistManager_2bL_nonresonant);
+  histManager_2bL_nonresonant.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2bL_resonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2bL_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2bL_resonant(cfgHistManager_2bL_resonant);
+  histManager_2bL_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_1b1j = makeHistManagerConfig(
     process_string, Form("tauTau_%s_1b1j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_1b1j(cfgHistManager_1b1j);
   histManager_1b1j.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_1b1j_nonresonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_1b1j_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_1b1j_nonresonant(cfgHistManager_1b1j_nonresonant);
+  histManager_1b1j_nonresonant.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_1b1j_resonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_1b1j_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_1b1j_resonant(cfgHistManager_1b1j_resonant);
+  histManager_1b1j_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_2j = makeHistManagerConfig(
     process_string, Form("tauTau_%s_2j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2j(cfgHistManager_2j);
   histManager_2j.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2j_nonresonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2j_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2j_nonresonant(cfgHistManager_2j_nonresonant);
+  histManager_2j_nonresonant.bookHistograms(fs);
+  edm::ParameterSet cfgHistManager_2j_resonant = makeHistManagerConfig(
+    process_string, Form("tauTau_%s_2j_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+  TauTauHistManager2b2tau histManager_2j_resonant(cfgHistManager_2j_resonant);
+  histManager_2j_resonant.bookHistograms(fs);
 
   TChain* inputTree = new TChain(treeName.data());
   for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
@@ -448,8 +610,6 @@ int main(int argc, char* argv[])
   Int_t tau1IsTriggerMatched_diTau, tau1IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &tau1IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l1TrigMatched_singleJet", &tau1IsTriggerMatched_singleJet);
-  Float_t tau1GenPt;
-  inputTree->SetBranchAddress("l1GenPt", &tau1GenPt);
 
   TTreeFormula* tau1Selection = 0;
   if ( tau1Selection_string != "" ) {
@@ -474,8 +634,6 @@ int main(int argc, char* argv[])
   Int_t tau2IsTriggerMatched_diTau, tau2IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &tau2IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l2TrigMatched_singleJet", &tau2IsTriggerMatched_singleJet);
-  Float_t tau2GenPt; 
-  inputTree->SetBranchAddress("l2GenPt", &tau2GenPt);
 
   TTreeFormula* tau2Selection = 0;
   if ( tau2Selection_string != "" ) {
@@ -560,6 +718,8 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("bjet1Py", &bjet1Py);
   inputTree->SetBranchAddress("bjet1Pz", &bjet1Pz);
   inputTree->SetBranchAddress("bjet1E", &bjet1E);
+  Float_t bjet1EnRegFactor;
+  inputTree->SetBranchAddress("bjet1EnRegFactor", &bjet1EnRegFactor);
   Float_t bjet1BtagDiscr;
   inputTree->SetBranchAddress("bjet1Btag", &bjet1BtagDiscr);
   Int_t bjet1GenPartonFlavour;
@@ -573,6 +733,8 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("bjet2Py", &bjet2Py);
   inputTree->SetBranchAddress("bjet2Pz", &bjet2Pz);
   inputTree->SetBranchAddress("bjet2E", &bjet2E);
+  Float_t bjet2EnRegFactor;
+  inputTree->SetBranchAddress("bjet2EnRegFactor", &bjet2EnRegFactor);
   Float_t bjet2BtagDiscr;
   inputTree->SetBranchAddress("bjet2Btag", &bjet2BtagDiscr);
   Int_t bjet2GenPartonFlavour;
@@ -586,6 +748,8 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("bjet3Py", &bjet3Py);
   inputTree->SetBranchAddress("bjet3Pz", &bjet3Pz);
   inputTree->SetBranchAddress("bjet3E", &bjet3E);
+  Float_t bjet3EnRegFactor;
+  inputTree->SetBranchAddress("bjet3EnRegFactor", &bjet3EnRegFactor);
   Float_t bjet3BtagDiscr;
   inputTree->SetBranchAddress("bjet3Btag", &bjet3BtagDiscr);
   Int_t bjet3GenPartonFlavour;
@@ -599,6 +763,8 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("bjet4Py", &bjet4Py);
   inputTree->SetBranchAddress("bjet4Pz", &bjet4Pz);
   inputTree->SetBranchAddress("bjet4E", &bjet4E);
+  Float_t bjet4EnRegFactor;
+  inputTree->SetBranchAddress("bjet4EnRegFactor", &bjet4EnRegFactor);
   Float_t bjet4BtagDiscr;
   inputTree->SetBranchAddress("bjet4Btag", &bjet4BtagDiscr);
   Int_t bjet4GenPartonFlavour;
@@ -608,15 +774,24 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("met", &met);
   inputTree->SetBranchAddress("mex", &mex);
   inputTree->SetBranchAddress("mey", &mey);
+  Float_t metCov00, metCov01, metCov10, metCov11;
+  inputTree->SetBranchAddress("mvacov00", &metCov00);
+  inputTree->SetBranchAddress("mvacov01", &metCov01);
+  inputTree->SetBranchAddress("mvacov10", &metCov10);
+  inputTree->SetBranchAddress("mvacov11", &metCov11);
 
-  Float_t diTauPx, diTauPy, diTauPz, diTauE;
-  inputTree->SetBranchAddress("svfitMarkovChainPx", &diTauPx);
-  inputTree->SetBranchAddress("svfitMarkovChainPy", &diTauPy);
-  inputTree->SetBranchAddress("svfitMarkovChainPz", &diTauPz);
-  inputTree->SetBranchAddress("svfitMarkovChainE", &diTauE);
+  Float_t genMEx, genMEy;  
+  inputTree->SetBranchAddress("genMEx", &genMEx);
+  inputTree->SetBranchAddress("genMEy", &genMEy);
 
-  Float_t augMT2ed;
-  inputTree->SetBranchAddress("augMT2ed", &augMT2ed);
+  Float_t HttPx, HttPy, HttPz, HttE;
+  inputTree->SetBranchAddress("svfitMarkovChainPx", &HttPx);
+  inputTree->SetBranchAddress("svfitMarkovChainPy", &HttPy);
+  inputTree->SetBranchAddress("svfitMarkovChainPz", &HttPz);
+  inputTree->SetBranchAddress("svfitMarkovChainE", &HttE);
+
+  //Float_t augMT2ed;
+  //inputTree->SetBranchAddress("augMT2ed", &augMT2ed);
 
   Int_t numVertices;
   inputTree->SetBranchAddress("nVert", &numVertices);
@@ -658,6 +833,8 @@ int main(int argc, char* argv[])
     weightEntryType* addWeight = new weightEntryType(inputTree, *addWeight_string);
     addWeights.push_back(addWeight);
   }
+
+  mt2Interface* augMT2edAlgo = new mt2Interface();
     
   int currentTreeNumber = inputTree->GetTreeNumber();
   
@@ -745,7 +922,7 @@ int main(int argc, char* argv[])
     if ( applyTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
-    } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsTight ) {
+    } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsLoose || applyTauTriggerTurnOn == kMVAwLToldDMsMedium || applyTauTriggerTurnOn == kMVAwLToldDMsTight ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaTight;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
     } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
@@ -778,8 +955,8 @@ int main(int argc, char* argv[])
 	  evtWeight *= triggerWeight_singleJet;
 	} else evtWeight *= triggerWeight_diTau;
       }
-      if ( tau1GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
-      if ( tau2GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
+      if ( l1isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
+      if ( l2isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
       if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
 	Float_t stitchingWeight = 1.0;
 	int idxNUP = TMath::Nint(NUP) - 5;
@@ -868,93 +1045,162 @@ int main(int argc, char* argv[])
     int tau2GenMatch = getGenMatch(l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet);
  
     std::vector<jetType> bjets;
-    if ( bjet1Pt > 20. && bjet1BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet1Px, bjet1Py, bjet1Pz, bjet1E, bjet1BtagDiscr, bjet1GenPartonFlavour));
-    if ( bjet2Pt > 20. && bjet2BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet2Px, bjet2Py, bjet2Pz, bjet2E, bjet2BtagDiscr, bjet2GenPartonFlavour));
-    if ( bjet3Pt > 20. && bjet3BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet3Px, bjet3Py, bjet3Pz, bjet3E, bjet3BtagDiscr, bjet3GenPartonFlavour));
-    if ( bjet4Pt > 20. && bjet4BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet4Px, bjet4Py, bjet4Pz, bjet4E, bjet4BtagDiscr, bjet4GenPartonFlavour));
+    if ( bjet1Pt > 20. && bjet1BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet1Px, bjet1Py, bjet1Pz, bjet1E, bjet1EnRegFactor, bjet1BtagDiscr, bjet1GenPartonFlavour));
+    if ( bjet2Pt > 20. && bjet2BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet2Px, bjet2Py, bjet2Pz, bjet2E, bjet2EnRegFactor, bjet2BtagDiscr, bjet2GenPartonFlavour));
+    if ( bjet3Pt > 20. && bjet3BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet3Px, bjet3Py, bjet3Pz, bjet3E, bjet3EnRegFactor, bjet3BtagDiscr, bjet3GenPartonFlavour));
+    if ( bjet4Pt > 20. && bjet4BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet4Px, bjet4Py, bjet4Pz, bjet4E, bjet4EnRegFactor, bjet4BtagDiscr, bjet4GenPartonFlavour));
     for ( std::vector<jetType>::iterator bjet = bjets.begin();
 	  bjet != bjets.end(); ++bjet ) {
-      bjet->passesLooseWP_ = ( bjet->btagDiscr_ > 0.244 ) ? true : false;
+      bjet->passesLooseWP_  = bjet->btagDiscr_ > 0.244;
       bjet->passesMediumWP_ = bTagSF->isbtagged(bjet->p4_.pt(), bjet->p4_.eta(), bjet->btagDiscr_, bjet->genPartonFlavour_, !isMC, bJetEff_shift, bJetMistag_shift, true);
+      bjet->passesTightWP_  = bjet->passesMediumWP_ && bjet->btagDiscr_ > 0.898;
     }
     std::sort(bjets.begin(), bjets.end(), isHigherBtagDiscriminator);
 
     std::vector<jetType> jets;
-    if ( jet1Pt > 20. ) jets.push_back(jetType(jet1Px, jet1Py, jet1Pz, jet1E, jet1BtagDiscr, -1));
-    if ( jet2Pt > 20. ) jets.push_back(jetType(jet2Px, jet2Py, jet2Pz, jet2E, jet2BtagDiscr, -1));
-    if ( jet3Pt > 20. ) jets.push_back(jetType(jet3Px, jet3Py, jet3Pz, jet3E, jet3BtagDiscr, -1));
-    if ( jet4Pt > 20. ) jets.push_back(jetType(jet4Px, jet4Py, jet4Pz, jet4E, jet4BtagDiscr, -1));
+    if ( jet1Pt > 20. ) jets.push_back(jetType(jet1Px, jet1Py, jet1Pz, jet1E, 1., jet1BtagDiscr, -1));
+    if ( jet2Pt > 20. ) jets.push_back(jetType(jet2Px, jet2Py, jet2Pz, jet2E, 1., jet2BtagDiscr, -1));
+    if ( jet3Pt > 20. ) jets.push_back(jetType(jet3Px, jet3Py, jet3Pz, jet3E, 1., jet3BtagDiscr, -1));
+    if ( jet4Pt > 20. ) jets.push_back(jetType(jet4Px, jet4Py, jet4Pz, jet4E, 1., jet4BtagDiscr, -1));
     std::sort(jets.begin(), jets.end(), isHigherPt);
 
     int nbJetsLoose  = 0;
     int nbJetsMedium = 0;
+    int nbJetsTight  = 0;
     for ( std::vector<jetType>::iterator bjet = bjets.begin();
 	  bjet != bjets.end(); ++bjet ) {
       if ( bjet->passesLooseWP_  ) ++nbJetsLoose;
       if ( bjet->passesMediumWP_ ) ++nbJetsMedium;
+      if ( bjet->passesTightWP_  ) ++nbJetsTight;
     }      
-    reco::Candidate::LorentzVector* bjet1P4 = 0;
-    reco::Candidate::LorentzVector* bjet2P4 = 0;
-    if ( bjets.size() >= 1 ) bjet1P4 = &bjets[0].p4_;
-    if ( bjets.size() >= 2 ) bjet2P4 = &bjets[1].p4_;
-    if ( !(bjet1P4 && bjet2P4) ) {
+    reco::Candidate::LorentzVector bjet1P4;
+    reco::Candidate::LorentzVector bjet1RegP4;
+    bool bjet1_found = false;
+    reco::Candidate::LorentzVector bjet2P4;    
+    reco::Candidate::LorentzVector bjet2RegP4;
+    bool bjet2_found = false;
+    if ( bjets.size() >= 1 ) {
+      bjet1P4 = bjets[0].p4_;
+      bjet1RegP4 = bjets[0].p4Reg_;
+      bjet1_found = true;
+    }
+    if ( bjets.size() >= 2 ) {
+      bjet2P4 = bjets[1].p4_;
+      bjet2RegP4 = bjets[1].p4Reg_;
+      bjet2_found = true;
+    }
+    if ( !(bjet1_found && bjet2_found) ) {
       for ( std::vector<jetType>::iterator jet = jets.begin();
 	    jet != jets.end(); ++jet ) {
-	if ( !bjet1P4 ) {
-	  bjet1P4 = &jet->p4_;
+	if ( !bjet1_found ) {
+	  bjet1P4 = jet->p4_;
+	  bjet1RegP4 = jet->p4Reg_;
+	  bjet1_found = true;
 	  continue;
 	} 
-	if ( bjet1P4 && deltaR(*bjet1P4, jet->p4_) < 0.3 ) continue;
-	if ( !bjet2P4 ) {
-	  bjet2P4 = &jet->p4_;
+	if ( bjet1_found && deltaR(bjet1P4, jet->p4_) < 0.3 ) continue;
+	if ( !bjet2_found ) {
+	  bjet2P4 = jet->p4_;
+	  bjet2RegP4 = jet->p4Reg_;
+	  bjet2_found = true;
 	}
       }
     }
-    if ( !(bjet1P4 && bjet2P4) ) continue;
-        
-    reco::Candidate::LorentzVector HttP4(diTauPx, diTauPy, diTauPz, diTauE);
-    reco::Candidate::LorentzVector HbbP4 = (*bjet1P4) + (*bjet2P4); 
-    reco::Candidate::LorentzVector metP4(mex, mey, met, met);
-    reco::Candidate::LorentzVector diHiggsP4 = HttP4 + HbbP4;
-
-    double bjet1Pt     = bjet1P4->pt();
-    double bjet1Eta    = bjet1P4->eta();
-    double bjet1Phi    = bjet1P4->phi();
-    double bjet2Pt     = bjet2P4->pt();
-    double bjet2Eta    = bjet2P4->eta();
-    double bjet2Phi    = bjet2P4->phi();
-    double dPhibb      = normalizedPhi(bjet1P4->phi() - bjet2P4->phi());
-    double dEtabb      = TMath::Abs(bjet1P4->eta() - bjet2P4->eta());
-    double dRbb        = deltaR(*bjet1P4, *bjet2P4);
-    double mbb         = HbbP4.mass(); 
-    double dPhiHbbHtt  = normalizedPhi(HbbP4.phi() - HttP4.phi());
-    double dPhiHbbMEt  = normalizedPhi(HbbP4.phi() - metP4.phi());
-    double dPhiHttMEt  = normalizedPhi(HttP4.phi() - metP4.phi());
-    double minDRbt = 9.9;
-    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, *bjet1P4));
-    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, *bjet2P4));
-    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, *bjet1P4));
-    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, *bjet2P4));
-    double HbbPt       = HbbP4.pt();
-    double HttPt       = HttP4.pt();
-    double diHiggsPt   = diHiggsP4.pt();
-    double diHiggsMass = diHiggsP4.mass();
+    if ( !(bjet1_found && bjet2_found) ) continue;
     
+    reco::Candidate::LorentzVector HttP4(HttPx, HttPy, HttPz, HttE);
+    reco::Candidate::LorentzVector HbbP4 = bjet1P4 + bjet2P4; 
+    reco::Candidate::LorentzVector HbbRegP4 = bjet1RegP4 + bjet2RegP4;
+    reco::Candidate::LorentzVector metP4(mex, mey, met, met);
+    TMatrixD metCov(2,2);
+    metCov(0,0) = metCov00;
+    metCov(0,1) = metCov01;
+    metCov(1,0) = metCov10;
+    metCov(1,1) = metCov11;
+    reco::Candidate::LorentzVector HHP4 = HttP4 + HbbP4;
+    reco::Candidate::LorentzVector HHbRegP4 = HttP4 + HbbRegP4;
+
+    double augMT2ed = (*augMT2edAlgo)(bjet1P4, bjet2P4, tau1P4, tau2P4, metP4);
+    //std::cout << "augMT2ed = " << augMT2ed << std::endl;
+
+    double zetaX = tau1P4.px() + tau2P4.px();
+    double zetaY = tau1P4.py() + tau2P4.py();
+    double zetaR = TMath::Sqrt(zetaX*zetaX + zetaY*zetaY);
+    if ( zetaR > 0. ) {
+      zetaX /= zetaR;
+      zetaY /= zetaR;
+    }
+    double visPx = tau1P4.px() + tau2P4.px();
+    double visPy = tau1P4.py() + tau2P4.py();
+    double pZetaVis = visPx*zetaX + visPy*zetaY;
+    double px = visPx + mex;
+    double py = visPy + mey;
+    double pZeta = px*zetaX + py*zetaY;
+    double pZetaComb = pZeta - pZetaVis;
+
+    reco::Candidate::LorentzVector zetaP4(zetaX, zetaY, 0., zetaR);
+    int errorFlag = 0;
+    std::pair<double, double> deltaMEt = compMEtProjU(zetaP4, mex - genMEx, mey - genMEy, errorFlag, false);
+    double deltaMEtParl = deltaMEt.first;
+    double deltaMEtPerp = deltaMEt.second;
+
+    double dPhibb     = normalizedPhi(bjet1P4.phi() - bjet2P4.phi());
+    double dEtabb     = TMath::Abs(bjet1P4.eta() - bjet2P4.eta());
+    double dRbb       = deltaR(bjet1P4, bjet2P4);
+    double mbb        = HbbP4.mass(); 
+    double mbbReg     = HbbRegP4.mass(); 
+    double dPhiHbbHtt = normalizedPhi(HbbP4.phi() - HttP4.phi());
+    double dPhiHbbMEt = normalizedPhi(HbbP4.phi() - metP4.phi());
+    double dPhiHttMEt = normalizedPhi(HttP4.phi() - metP4.phi());
+    double minDRbt = 9.9;
+    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, bjet1P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau1P4, bjet2P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, bjet1P4));
+    minDRbt = TMath::Min(minDRbt, deltaR(tau2P4, bjet2P4));
+    double HbbPt      = HbbP4.pt();
+    double HbbRegPt   = HbbRegP4.pt();
+    double HttPt      = HttP4.pt();
+    double HHPt       = HHP4.pt();
+    double HHMass     = HHP4.mass();
+    double HHbRegPt   = HHbRegP4.pt();
+    double HHbRegMass = HHbRegP4.mass();
+    
+    //std::cout << "calling compKinFit2bdy without b-jet energy regression" << std::endl;
+    kinFitResult kinFitResult_2bdy = compKinFit2bdy(bjet1P4, bjet2P4, HttP4);
+    double HH2bdyKinFitMass = kinFitResult_2bdy.mhh_;
+    double HH2bdyKinFitChi2 = kinFitResult_2bdy.chi2_;
+    //std::cout << "calling compKinFit2bdy with b-jet energy regression" << std::endl;
+    kinFitResult kinFitResult_bReg_2bdy = compKinFit2bdy(bjet1RegP4, bjet2RegP4, HttP4);
+    double HHbReg2bdyKinFitMass = kinFitResult_bReg_2bdy.mhh_;
+    double HHbReg2bdyKinFitChi2 = kinFitResult_bReg_2bdy.chi2_;
+    
+    //std::cout << "calling compKinFit4bdy without b-jet energy regression" << std::endl;
+    kinFitResult kinFitResult_4bdy = compKinFit4bdy(bjet1P4, bjet2P4, tau1P4, tau2P4, metP4, metCov);
+    double HH4bdyKinFitMass = kinFitResult_4bdy.mhh_;
+    double HH4bdyKinFitChi2 = kinFitResult_4bdy.chi2_;
+    //std::cout << "calling compKinFit4bdy with b-jet energy regression" << std::endl;
+    kinFitResult kinFitResult_bReg_4bdy = compKinFit4bdy(bjet1RegP4, bjet2RegP4, tau1P4, tau2P4, metP4, metCov);
+    double HHbReg4bdyKinFitMass = kinFitResult_bReg_4bdy.mhh_;
+    double HHbReg4bdyKinFitChi2 = kinFitResult_bReg_4bdy.chi2_;
+
     histManager_inclusive.fillHistograms(
       tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
       tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
       dPhitt, dEtatt, dRtt,       
       jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
       jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-      bjet1Pt, bjet1Eta, bjet1Phi, 
-      bjet2Pt, bjet2Eta, bjet2Phi, 
+      bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+      bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
       dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
-      visMass, svFitMass, mTtotal, mbb, 
+      visMass, svFitMass, mTtotal, mbb, mbbReg, 
       dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
-      HbbPt, HttPt,
+      HbbPt, HbbRegPt, HttPt,
       augMT2ed,
-      diHiggsPt, diHiggsMass,
-      met, numVertices, NUP,
+      pZetaVis, pZeta, pZetaComb,
+      HHPt, HHbRegPt, HHMass, HHbRegMass,
+      HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+      HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+      met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
       evtWeight*processSF_inclusive, evtWeightErr*processSF_inclusive);
 
     if ( selEventsFile_inclusive ) {
@@ -971,16 +1217,61 @@ int main(int argc, char* argv[])
 	dPhitt, dEtatt, dRtt,       
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, 
+	bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
 	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
-	visMass, svFitMass, mTtotal, mbb, 
+	visMass, svFitMass, mTtotal, mbb, mbbReg, 
 	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
-	HbbPt, HttPt,
+	HbbPt, HbbRegPt, HttPt,
 	augMT2ed,
-	diHiggsPt, diHiggsMass,	
-	met, numVertices, NUP,
+	pZetaVis, pZeta, pZetaComb,
+	HHPt, HHbRegPt, HHMass, HHbRegMass,
+	HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      if ( dRtt < 2.0 && svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+        histManager_2bM_nonresonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
+      if ( svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) { 
+        histManager_2bM_resonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
 
       if ( selEventsFile_2bM ) {
 	(*selEventsFile_2bM) << run << ":" << lumi << ":" << event << std::endl;
@@ -995,16 +1286,61 @@ int main(int argc, char* argv[])
 	dPhitt, dEtatt, dRtt,       
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, 
+	bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
 	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
-	visMass, svFitMass, mTtotal, mbb, 
+	visMass, svFitMass, mTtotal, mbb, mbbReg, 
 	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
-	HbbPt, HttPt,
+	HbbPt, HbbRegPt, HttPt,
 	augMT2ed,
-	diHiggsPt, diHiggsMass,
-	met, numVertices, NUP,
+	pZetaVis, pZeta, pZetaComb,
+	HHPt, HHbRegPt, HHMass, HHbRegMass,
+	HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      if ( dRtt < 2.0 && svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) { 
+	histManager_2bL_nonresonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
+      if ( svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+	histManager_2bL_resonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
 
       if ( selEventsFile_2bL ) {
 	(*selEventsFile_2bL) << run << ":" << lumi << ":" << event << std::endl;
@@ -1012,23 +1348,68 @@ int main(int argc, char* argv[])
       
       ++selectedEntries_2bL;
       selectedEntriesWeighted_2bL += (evtWeight*processSF_btag);
-    } else if ( nbJetsMedium >= 1 ) {
+    } else if ( nbJetsTight >= 1 ) {
       histManager_1b1j.fillHistograms(
         tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
 	tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
 	dPhitt, dEtatt, dRtt,       
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, 
+	bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
 	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
-	visMass, svFitMass, mTtotal, mbb, 
+	visMass, svFitMass, mTtotal, mbb, mbbReg, 
 	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
-	HbbPt, HttPt,
+	HbbPt, HbbRegPt, HttPt,
 	augMT2ed,
-	diHiggsPt, diHiggsMass,
-	met, numVertices, NUP,
+	pZetaVis, pZeta, pZetaComb,
+	HHPt, HHbRegPt, HHMass, HHbRegMass,
+	HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      if ( dRtt < 2.0 && svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+	histManager_1b1j_nonresonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
+      if ( svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+	histManager_1b1j_resonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
 
       if ( selEventsFile_1b1j ) {
 	(*selEventsFile_1b1j) << run << ":" << lumi << ":" << event << std::endl;
@@ -1043,16 +1424,61 @@ int main(int argc, char* argv[])
 	dPhitt, dEtatt, dRtt,       
 	jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
-	bjet1Pt, bjet1Eta, bjet1Phi, 
-	bjet2Pt, bjet2Eta, bjet2Phi, 
+	bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
 	dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
-	visMass, svFitMass, mTtotal, mbb, 
+	visMass, svFitMass, mTtotal, mbb, mbbReg, 
 	dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
-	HbbPt, HttPt,
+	HbbPt, HbbRegPt, HttPt,
 	augMT2ed,
-	diHiggsPt, diHiggsMass,
-	met, numVertices, NUP,
+	pZetaVis, pZeta, pZetaComb,
+	HHPt, HHbRegPt, HHMass, HHbRegMass,
+	HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      if ( dRtt < 2.0 && svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+	histManager_2j_nonresonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
+      if ( svFitMass > 80. && svFitMass < 140. && mbbReg > 80. && mbbReg < 170. && HHbReg2bdyKinFitChi2 < 20. ) {
+	histManager_2j_resonant.fillHistograms(
+          tau1Pt, tau1Eta, tau1Phi, TMath::Nint(tau1DecayMode), tau1GenMatch, tau1IsoPtSum, tau1rawMVA, 
+	  tau2Pt, tau2Eta, tau2Phi, TMath::Nint(tau2DecayMode), tau2GenMatch, tau2IsoPtSum, tau2rawMVA, 
+	  dPhitt, dEtatt, dRtt,       
+	  jet1Pt, jet1Eta, jet1Phi, jet1BtagDiscr, 
+	  jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
+	  bjet1P4.pt(), bjet1P4.eta(), bjet1P4.phi(),
+	  bjet2P4.pt(), bjet2P4.eta(), bjet2P4.phi(),
+	  dPhibb, dEtabb, dRbb, nbJetsLoose, nbJetsMedium, 
+	  visMass, svFitMass, mTtotal, mbb, mbbReg, 
+	  dPhiHbbHtt, dPhiHbbMEt, dPhiHttMEt, minDRbt,
+	  HbbPt, HbbRegPt, HttPt,
+	  augMT2ed,
+	  pZetaVis, pZeta, pZetaComb,
+	  HHPt, HHbRegPt, HHMass, HHbRegMass,
+	  HH2bdyKinFitMass, HH2bdyKinFitChi2, HHbReg2bdyKinFitMass, HHbReg2bdyKinFitChi2,
+	  HH4bdyKinFitMass, HH4bdyKinFitChi2, HHbReg4bdyKinFitMass, HHbReg4bdyKinFitChi2,
+	  met, deltaMEtParl, deltaMEtPerp, numVertices, NUP,
+	  evtWeight*processSF_btag, evtWeightErr*processSF_btag);
+      }
 
       if ( selEventsFile_2j ) {
 	(*selEventsFile_2j) << run << ":" << lumi << ":" << event << std::endl;
@@ -1093,6 +1519,8 @@ int main(int argc, char* argv[])
 	it != addWeights.end(); ++it ) {
     delete (*it);
   }
+
+  delete augMT2edAlgo;
 
   for ( std::vector<TFile*>::iterator it = inputFilesToDelete.begin();
 	it != inputFilesToDelete.end(); ++it ) {

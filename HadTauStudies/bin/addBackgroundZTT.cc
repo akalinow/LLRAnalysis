@@ -78,8 +78,9 @@ int main(int argc, char* argv[])
 
   vstring categories = cfgAddBackgroundZTT.getParameter<vstring>("categories");
   std::string category_inclusive = cfgAddBackgroundZTT.getParameter<std::string>("category_inclusive");
-
+  
   vstring tauPtBins = cfgAddBackgroundZTT.getParameter<vstring>("tauPtBins");
+  std::string tauPtBin_inclusive = cfgAddBackgroundZTT.getParameter<std::string>("tauPtBin_inclusive");
 
   vstring central_or_shifts = cfgAddBackgroundZTT.getParameter<vstring>("sysShifts");
   central_or_shifts.push_back(""); // CV: add central value
@@ -95,27 +96,29 @@ int main(int argc, char* argv[])
 
   for ( vstring::const_iterator region = regions.begin();
 	region != regions.end(); ++region ) {
+
+    TDirectory* dir_inclusive = getDirectory(inputFile, *region, category_inclusive, tauPtBin_inclusive, true);
+    assert(dir_inclusive);
+    
+    TH1* histogramZTTmc_inclusive = getHistogram(dir_inclusive, processZTTmc, "EventCounter", "central", true);
+    assert(histogramZTTmc_inclusive);
+    std::cout << " integral(ZTTmc_inclusive) = " << histogramZTTmc_inclusive->Integral() << std::endl;
+    TH1* histogramZTT_Embedded_inclusive = getHistogram(dir_inclusive, processZTT_Embedded, "EventCounter", "central", true);
+    assert(histogramZTT_Embedded_inclusive);
+    std::cout << " integral(ZTT_Embedded_inclusive) = " << histogramZTT_Embedded_inclusive->Integral() << std::endl;
+    TH1* histogramTT_Embedded_inclusive = getHistogram(dir_inclusive, processTT_Embedded, "EventCounter", "central", true);
+    assert(histogramTT_Embedded_inclusive);
+    std::cout << " integral(TT_Embedded_inclusive) = " << histogramTT_Embedded_inclusive->Integral() << std::endl;
+    
+    double sfZTTfromEmbedded = (histogramZTTmc_inclusive->Integral() + histogramTT_Embedded_inclusive->Integral())/histogramZTT_Embedded_inclusive->Integral();
+    if ( sfZTTfromEmbedded < 0. ) sfZTTfromEmbedded = 0.;
+    std::cout << " sfZTTfromEmbedded = " << sfZTTfromEmbedded << std::endl;
+
     for ( vstring::const_iterator category = categories.begin();
 	  category != categories.end(); ++category ) {
       for ( vstring::const_iterator tauPtBin = tauPtBins.begin();
 	    tauPtBin != tauPtBins.end(); ++tauPtBin ) {
 	std::cout << "processing region = " << (*region) << ", category = " << (*category) << ", tauPtBin = " << (*tauPtBin) << std::endl;
-	
-	TDirectory* dir_inclusive = getDirectory(inputFile, *region, category_inclusive, *tauPtBin, true);
-	assert(dir_inclusive);
-	
-	TH1* histogramZTTmc_inclusive = getHistogram(dir_inclusive, processZTTmc, "EventCounter", "central", true);
-	assert(histogramZTTmc_inclusive);
-	std::cout << " integral(ZTTmc_inclusive) = " << histogramZTTmc_inclusive->Integral() << std::endl;
-	TH1* histogramZTT_Embedded_inclusive = getHistogram(dir_inclusive, processZTT_Embedded, "EventCounter", "central", true);
-	assert(histogramZTT_Embedded_inclusive);
-	std::cout << " integral(ZTT_Embedded_inclusive) = " << histogramZTT_Embedded_inclusive->Integral() << std::endl;
-	TH1* histogramTT_Embedded_inclusive = getHistogram(dir_inclusive, processTT_Embedded, "EventCounter", "central", true);
-	assert(histogramTT_Embedded_inclusive);
-	std::cout << " integral(TT_Embedded_inclusive) = " << histogramTT_Embedded_inclusive->Integral() << std::endl;
-	
-	double sfZTTfromEmbedded = histogramZTTmc_inclusive->Integral()/(histogramZTT_Embedded_inclusive->Integral() - histogramTT_Embedded_inclusive->Integral());
-	std::cout << " sfZTTfromEmbedded = " << sfZTTfromEmbedded << std::endl;
 	
 	TDirectory* dir = getDirectory(inputFile, *region, *category, *tauPtBin, true);
 	assert(dir);
@@ -151,9 +154,21 @@ int main(int argc, char* argv[])
 	  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 		central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
 	    
+	    int verbosity = ( histogram->find("svFitMass") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
+
 	    TH1* histogramZTT_Embedded = getHistogram(dir, processZTT_Embedded, *histogram, *central_or_shift, true);
+	    if ( verbosity ) {
+	      std::cout << " integral(ZTT_Embedded, before sfZTTfromEmbedded) = " << histogramZTT_Embedded->Integral() << std::endl;
+	    }
+	    histogramZTT_Embedded->Scale(sfZTTfromEmbedded);
+	    if ( verbosity ) {
+	      std::cout << " integral(ZTT_Embedded, after sfZTTfromEmbedded) = " << histogramZTT_Embedded->Integral() << std::endl;
+	    }
 	    TH1* histogramTT_Embedded = getHistogram(dir, processTT_Embedded, *histogram, *central_or_shift, false);
 	    if ( !histogramTT_Embedded ) histogramTT_Embedded = getHistogram(dir, processTT_Embedded, *histogram, "central", true);
+	    if ( verbosity ) {
+	      std::cout << " integral(TT_Embedded) = " << histogramTT_Embedded->Integral() << std::endl;
+	    }
 	    
 	    std::string subdirName_output = getSubdirNameOutput(*region, *category, *tauPtBin, processZTT);
 	    TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);
@@ -163,9 +178,15 @@ int main(int argc, char* argv[])
 	    if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) histogramNameZTTfromEmbedded.append("_").append(*central_or_shift);
 	    histogramNameZTTfromEmbedded.append("_").append(*histogram);
 	    TH1* histogramZTTfromEmbedded = subtractHistograms(histogramNameZTTfromEmbedded, histogramZTT_Embedded, histogramTT_Embedded);
-	    histogramZTTfromEmbedded->Scale(sfZTTfromEmbedded);
-	    makeBinContentsPositive(histogramZTTfromEmbedded);
-	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	    makeBinContentsPositive(histogramZTTfromEmbedded, verbosity);
+	    if ( histogramZTTfromEmbedded->Integral() < 1.e-3 ) {
+	      TH1* histogramZTTmc = getHistogram(dir, processZTTmc, *histogram, *central_or_shift, true);	      
+	      int numBins = histogramZTTmc->GetNbinsX();
+	      for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
+		histogramZTTfromEmbedded->SetBinError(iBin, histogramZTTmc->GetBinContent(iBin));
+	      }
+	    }
+	    if ( verbosity ) {
 	      std::cout << " integral(ZTTfromEmbedded) = " << histogramZTTfromEmbedded->Integral() << std::endl;
 	    }
 	  }

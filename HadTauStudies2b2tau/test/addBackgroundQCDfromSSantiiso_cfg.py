@@ -21,55 +21,69 @@ process.addBackgroundQCD = cms.PSet(
 
     regions = cms.VPSet(
         cms.PSet(
-            name = cms.string("OSiso1_iso2_TightBtag"),
-            qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
+            name = cms.string("OSiso1_iso2"),
+            region_norm = cms.PSet(
+                category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2")
             ),        
-            qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
+            region_shape = cms.PSet(
+                category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_nonresonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_resonant = cms.string("OSrelaxed1FRw2ndTauTight_iso2")
             )
         ),
         cms.PSet(
-            name = cms.string("OSiso1_iso2_LooseBtag"),
-            qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
+            name = cms.string("SSiso1_iso2"),
+            region_norm = cms.PSet(
+                category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2")
             ),        
-            qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
-            )
-        ),
-        cms.PSet(
-            name = cms.string("SSiso1_iso2_TightBtag"),
-            qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
-            ),        
-            qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
-            )
-        ),
-        cms.PSet(
-            name = cms.string("SSiso1_iso2_LooseBtag"),
-            qcdRegion_norm = cms.PSet(
-                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
-            ),        
-            qcdRegion_shape = cms.PSet(
-                inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
+            region_shape = cms.PSet(
+                category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bM_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2bL_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_1b1j_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_nonresonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2"),
+                category_2j_resonant = cms.string("SSrelaxed1FRw2ndTauTight_iso2")
             )
         )
     ),
@@ -80,12 +94,26 @@ process.addBackgroundQCD = cms.PSet(
         "ZTTmc",
         "ZL",
         "ZJ",
-        "W",
+        "Wtmp",
         "TT",
         "VV"
     ),
 
-    categories = cms.vstring("inclusive", "nobtag", "btag"),
+    categories = cms.vstring(
+        "inclusive",
+        "2bM",
+        "2bM_nonresonant",
+        "2bM_resonant",
+        "2bL",
+        "2bL_nonresonant",
+        "2bL_resonant",
+        "1b1j",
+        "1b1j_nonresonant",
+        "1b1j_resonant",
+        "2j",
+        "2j_nonresonant",
+        "2j_resonant"
+    ),
 
     tauPtBins = cms.vstring(
         "tau1PtGt45tau2PtGt45",

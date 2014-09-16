@@ -143,7 +143,7 @@ namespace
   {
     TH1* histogramSignal_ggH = getHistogram(dir, signal.process_ggH_, histogramName, central_or_shift, enableException);
     TH1* histogramSignal_bbH = getHistogram(dir, signal.process_bbH_, histogramName, central_or_shift, enableException);
-    if ( !(histogramSignal_ggH && histogramSignal_bbH) ) {
+    if ( !(histogramSignal_ggH || histogramSignal_bbH) ) {
       if ( enableException ) {
 	throw cms::Exception("getHistogramSignal") 
 	  << "Failed to find histogram = " << histogramName << " in directory = " << dir->GetName() << " !!\n";    
@@ -151,12 +151,15 @@ namespace
       return 0;
     }
 
-    std::string histogramNameSignal = Form("%s_plus_bbH", histogramSignal_ggH->GetName());
-    TH1* histogramSignal = (TH1*)histogramSignal_ggH->Clone(histogramNameSignal.data());
+    TH1* histogramSignal_ref = histogramSignal_ggH;
+    if ( !histogramSignal_ref ) histogramSignal_ref = histogramSignal_bbH;
+
+    std::string histogramNameSignal = Form("%s_plus_bbH", histogramSignal_ref->GetName());
+    TH1* histogramSignal = (TH1*)histogramSignal_ref->Clone(histogramNameSignal.data());
     histogramSignal->Reset();
     if ( !histogramSignal->GetSumw2N() ) histogramSignal->Sumw2();
-    histogramSignal->Add(histogramSignal_ggH, signal.sf_ggH_);
-    histogramSignal->Add(histogramSignal_bbH, signal.sf_bbH_);
+    if ( histogramSignal_ggH ) histogramSignal->Add(histogramSignal_ggH, signal.sf_ggH_);
+    if ( histogramSignal_bbH ) histogramSignal->Add(histogramSignal_bbH, signal.sf_bbH_);
     return histogramSignal;
   }
 
@@ -195,6 +198,7 @@ namespace
 		     const std::string& processTT, 
 		     const std::string& processW, const std::string& processVV, 
 		     const std::string& processQCD,
+		     const std::vector<categoryEntryType*>& categories,
 		     const edm::ParameterSet& cfg)
       : currentDir_(0),	
 	isUpToDate_(false),
@@ -212,12 +216,14 @@ namespace
       for ( vstring::const_iterator process = processes_.begin();
 	    process != processes_.end(); ++process ) {
 	edm::ParameterSet cfgNormalization_process = cfgNormalization.getParameter<edm::ParameterSet>(*process);
-	normEntryType processEntry;
-	processEntry.process_ = (*process);
-	parseValue_and_Uncertainty(cfgNormalization_process.getParameter<std::string>("inclusive"), processEntry.sf_inclusive_, processEntry.sfErr_inclusive_);
-	parseValue_and_Uncertainty(cfgNormalization_process.getParameter<std::string>("nobtag"), processEntry.sf_nobtag_, processEntry.sfErr_nobtag_);
-	parseValue_and_Uncertainty(cfgNormalization_process.getParameter<std::string>("btag"), processEntry.sf_btag_, processEntry.sfErr_btag_);
-	normalizationValues_and_Uncertainties_[*process] = processEntry;
+	for ( std::vector<categoryEntryType*>::const_iterator category = categories.begin();
+	      category != categories.end(); ++category ) {
+	  normEntryType processEntry;
+	  processEntry.process_ = (*process);
+	  processEntry.category_ = ((*category)->name_);
+	  parseValue_and_Uncertainty(cfgNormalization_process.getParameter<std::string>(Form("category_%s", (*category)->name_.data())), processEntry.sf_, processEntry.sfErr_);
+	  normalizationValues_and_Uncertainties_[*process][(*category)->name_] = processEntry;
+	}
       }
 
       edm::ParameterSet cfgShape = cfg.getParameter<edm::ParameterSet>("shape");
@@ -246,11 +252,7 @@ namespace
     }
     void setCategory(const std::string& category)
     {
-      if      ( category == "inclusive" ) currentCategory_ = kInclusive;
-      else if ( category == "nobtag"    ) currentCategory_ = kNoBtag;
-      else if ( category == "btag"      ) currentCategory_ = kBtag;
-      else throw cms::Exception("HistogramManager") 
-	<< "Invalid category = " << category << " !!\n";
+      currentCategory_ = category;
       isUpToDate_ = false;
     }
     void setHistogram(const std::string& histogramName)
@@ -291,19 +293,10 @@ namespace
 
     void getSF(const std::string& process, double& sf, double& sfErr)
     {
-      sf = 1.;
-      sfErr = 0.;
       assert(normalizationValues_and_Uncertainties_.find(process) != normalizationValues_and_Uncertainties_.end());
-      if ( currentCategory_ == kInclusive ) {
-	sf = normalizationValues_and_Uncertainties_[process].sf_inclusive_;
-	sfErr = normalizationValues_and_Uncertainties_[process].sfErr_inclusive_;
-      } else if ( currentCategory_ == kNoBtag ) {
-	sf = normalizationValues_and_Uncertainties_[process].sf_nobtag_;
-	sfErr = normalizationValues_and_Uncertainties_[process].sfErr_nobtag_;
-      } else if ( currentCategory_ == kBtag ) {
-	sf = normalizationValues_and_Uncertainties_[process].sf_btag_;
-	sfErr = normalizationValues_and_Uncertainties_[process].sfErr_btag_;
-      } else assert(0);
+      assert(normalizationValues_and_Uncertainties_[process].find(currentCategory_) != normalizationValues_and_Uncertainties_[process].end());
+      sf = normalizationValues_and_Uncertainties_[process][currentCategory_].sf_;
+      sfErr = normalizationValues_and_Uncertainties_[process][currentCategory_].sfErr_;
     } 
 
     void update()
@@ -433,14 +426,12 @@ namespace
     struct normEntryType
     {     
       std::string process_;
-      double sf_inclusive_;
-      double sfErr_inclusive_;
-      double sf_nobtag_;
-      double sfErr_nobtag_;
-      double sf_btag_;
-      double sfErr_btag_;
+      std::string category_;
+      double sf_;
+      double sfErr_;
     };
-    std::map<std::string, normEntryType> normalizationValues_and_Uncertainties_; // key = process
+    typedef std::map<std::string, normEntryType> stringToNormEntryTypeMap;
+    std::map<std::string, stringToNormEntryTypeMap> normalizationValues_and_Uncertainties_; // keys = process, category
 
     vstring sysShifts_;
     struct shapeEntryType
@@ -453,8 +444,7 @@ namespace
 
     TDirectory* currentDir_;
 
-    enum { kInclusive, kNoBtag, kBtag } ;
-    int currentCategory_;
+    std::string currentCategory_;
 
     std::string currentHistogramName_;
 
@@ -601,6 +591,10 @@ namespace
     TH1* histogramEWK_density = divideHistogramByBinWidth(histogramEWK);
     checkCompatibleBinning(histogramQCD, histogramData);
     TH1* histogramQCD_density = divideHistogramByBinWidth(histogramQCD);
+    TH1* histogramBgrSum_density = (TH1*)histogramZTT_density->Clone("histogramBgrSum_density"); // CV: used for y-axis normalization only
+    histogramBgrSum_density->Add(histogramTT_density);
+    histogramBgrSum_density->Add(histogramEWK_density);
+    histogramBgrSum_density->Add(histogramQCD_density);
     TH1* histogramBgrUncertainty_density = 0;
     if ( histogramBgrUncertainty ) {
       checkCompatibleBinning(histogramBgrUncertainty, histogramData);
@@ -659,9 +653,17 @@ namespace
     if ( useLogScale ) {
       const double numOrdersOfMagnitude = 4.5;
       yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude);
-      yMin = TMath::Power(10., -numOrdersOfMagnitude)*histogramData_density->GetBinContent(histogramData_density->GetMaximumBin());
+      yMax = TMath::Max(yMax, compYmaxForClearance(histogramBgrSum_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
+      if ( histogramSignal1_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal1_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
+      if ( histogramSignal2_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal2_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
+      if ( histogramSignal3_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal3_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
+      yMin = TMath::Power(10., -numOrdersOfMagnitude)*TMath::Max(1., histogramData_density->GetBinContent(histogramData_density->GetMaximumBin()));
     } else {
       yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.);
+      yMax = TMath::Max(yMax, compYmaxForClearance(histogramBgrSum_density, legendPosX, legendPosY, labelPosY, false, -1.));
+      if ( histogramSignal1_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal1_density, legendPosX, legendPosY, labelPosY, false, -1.));
+      if ( histogramSignal2_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal2_density, legendPosX, legendPosY, labelPosY, false, -1.));
+      if ( histogramSignal3_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal3_density, legendPosX, legendPosY, labelPosY, false, -1.));
       yMin = 0.;
     }
 
@@ -724,7 +726,7 @@ namespace
       histogramSignal2_density->SetLineStyle(kDashed);
       histogramSignal2_density->SetLineColor(kRed);
       histogramSignal2_density->Draw("histsame");
-      legend->AddEntry(histogramSignal2, legendEntrySignal2.data(), "l");
+      legend->AddEntry(histogramSignal2_density, legendEntrySignal2.data(), "l");
     }
     if ( histogramSignal3_density ) {    
       histogramSignal3_density->SetLineWidth(2);
@@ -864,6 +866,7 @@ namespace
     delete histogramTT_density;
     delete histogramEWK_density;
     delete histogramQCD_density;
+    delete histogramBgrSum_density;
     delete histogramBgrUncertainty_density;
     delete legend;
     delete labelOnTop_pave;
@@ -954,6 +957,7 @@ int main(int argc, char* argv[])
     processTT, 
     processW, processVV, 
     processQCD, 
+    categories,
     cfgNuisanceParameters);
   bool showBgrUncertainty = cfgMakeTauTauPlots.getParameter<bool>("showBgrUncertainty");
 

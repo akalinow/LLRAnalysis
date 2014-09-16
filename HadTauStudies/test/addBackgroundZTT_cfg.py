@@ -41,6 +41,7 @@ process.addBackgroundZTT = cms.PSet(
         "tau1PtGt45tau2PtGt80",
         "tau1PtGt45tau2PtGt60"
     ),
+    tauPtBin_inclusive = cms.string("tau1PtGt45tau2PtGt45"),
 
     sysShifts = cms.vstring(
         "CMS_scale_t_tautau_8TeVUp",

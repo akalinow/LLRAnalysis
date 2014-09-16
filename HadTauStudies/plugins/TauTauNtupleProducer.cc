@@ -179,6 +179,7 @@ TauTauNtupleProducer::TauTauNtupleProducer(const edm::ParameterSet& cfg)
 
   if ( isMC_ || isEmbedded_ ) {
     srcGenParticles_ = cfg.getParameter<edm::InputTag>("srcGenParticles");
+    srcGenParticlesForTopPtReweighting_ = cfg.getParameter<edm::InputTag>("srcGenParticlesForTopPtReweighting");
   } 
 
   edm::ParameterSet cfgPFJetIdAlgo;
@@ -302,6 +303,7 @@ void TauTauNtupleProducer::beginJob()
   addBranch_bJet("bjet4");
   addBranchI("nbJets");
   addBranchF("mbb");
+  addBranchF("mbbReg");
   addBranchF("ptbb");
 
   // MET observables
@@ -520,15 +522,15 @@ namespace
       if ( triggerObject->hasTriggerObjectType(triggerType) ) {
 	double dR = deltaR(p4, (const_cast<pat::TriggerObjectStandAlone*>(&(*triggerObject)))->triggerObject().p4());
 	if ( dR < 0.5 ) {
-	  bool matchesFilteName = false;
+	  bool matchesFilterName = false;
 	  for ( std::vector<std::string>::const_iterator hltFilter = hltFilters.begin();
 		hltFilter != hltFilters.end(); ++hltFilter ) {
 	    if ( triggerObject->hasFilterLabel(*hltFilter) ) {
-	      matchesFilteName = true;
+	      matchesFilterName = true;
 	      break;
 	    }
 	  }
-	  if ( matchesFilteName ) return true;
+	  if ( matchesFilterName ) return true;
 	}
       }
     }
@@ -1001,8 +1003,13 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   if ( bJet1 && bJet2 ) {
     reco::Candidate::LorentzVector bbP4 = bJet1->p4() + bJet2->p4(); // CV: consider doing something more sophisticated like b-jet energy regression in the future...
     double mbb = bbP4.mass();
-    //std::cout << "mbb = " << mbb << std::endl;
+    double mbbReg2 = mbb*mbb*bJet1->userFloat("bJetEnReg")*bJet2->userFloat("bJetEnReg");
+    if ( mbbReg2 < 0. ) mbbReg2 = 0.;
+    double mbbReg = TMath::Sqrt(mbbReg2);
+    //std::cout << "mbb: without energy regression = " << mbb << ", with regression = " << mbbReg << std::endl;
     setValueF("mbb", mbb);
+    setValueF("mbbReg", mbbReg);
+
     double ptbb = bbP4.pt();
     //std::cout << "ptbb = " << ptbb << std::endl;
     setValueF("ptbb", ptbb);
@@ -1220,7 +1227,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   double topPtWeightDown = 1.;
   if ( isMC_ ) {
     edm::Handle<reco::GenParticleCollection> genParticles;
-    evt.getByLabel(srcGenParticles_, genParticles);
+    evt.getByLabel(srcGenParticlesForTopPtReweighting_, genParticles);
 
     reco::Candidate::LorentzVector topPlusP4;
     bool topPlusFound = findGenParticle(*genParticles, +6, 0, 0, topPlusP4);
@@ -1509,6 +1516,7 @@ void TauTauNtupleProducer::addBranch_bJet(const std::string& name)
   addBranch_PtEtaPhiMass(name + "raw");
   addBranchF(name + "Charge");
   addBranchF(name + "Btag");
+  addBranchF(name + "EnRegFactor");
   addBranchI(name + "GenPartonFlavour");
 }
 
@@ -1712,7 +1720,7 @@ void TauTauNtupleProducer::setValue_Jet(const std::string& name, const pat::Jet&
   setValue_EnPxPyPz(name + "raw", jetP4_raw);
   setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
-  setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
+  setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));  
   setValueI(name + "GenPartonFlavour", jet.partonFlavour());
 }
 
@@ -1725,6 +1733,7 @@ void TauTauNtupleProducer::setValue_bJet(const std::string& name, const pat::Jet
   setValue_PtEtaPhiMass(name + "raw", jetP4_raw);
   setValueF(name + "Charge", jet.charge());
   setValueF(name + "Btag", jet.bDiscriminator(bJetDiscriminator_));
+  setValueF(name + "EnRegFactor", jet.userFloat("bJetEnReg"));
   setValueI(name + "GenPartonFlavour", jet.partonFlavour());
 }
 

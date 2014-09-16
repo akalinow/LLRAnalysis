@@ -182,6 +182,7 @@ class TauTauNtupleProducer : public edm::EDAnalyzer
   edm::InputTag srcGenPileUpSummary_;
   edm::InputTag srcLHE_;
   edm::InputTag srcGenParticles_;
+  edm::InputTag srcGenParticlesForTopPtReweighting_;
   std::string lastInputFileHiggsPtWeight_;
   TFile* inputFileHiggsPtWeight_;
   TH1* lutHiggsPtWeightNom_;

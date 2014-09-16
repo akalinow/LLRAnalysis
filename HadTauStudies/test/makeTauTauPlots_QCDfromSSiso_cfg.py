@@ -42,6 +42,13 @@ process.makeTauTauPlots = cms.PSet(
         sf_bbH = cms.double(0.59374 + 0.41421),
         legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=160 GeV, tan#beta=8)"),
     ),
+    signal2 = cms.PSet(
+        process_ggH = cms.string("ggH500"),
+        sf_ggH = cms.double(0.00185 + 0.00127),
+        process_bbH = cms.string("bbH500"),
+        sf_bbH = cms.double(0.01541 + 0.01479),
+        legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=500 GeV, tan#beta=20)"),
+    ),
 
     categories = cms.VPSet(
         cms.PSet(
@@ -114,40 +121,40 @@ process.makeTauTauPlots = cms.PSet(
     nuisanceParameters = cms.PSet(
         normalization = cms.PSet(
             ZTT = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.20"),
-                nobtag = cms.string("1.0 +/- 0.20"),
-                btag = cms.string("1.0 +/- 0.20")
+                category_inclusive = cms.string("1.0 +/- 0.20"),
+                category_nobtag = cms.string("1.0 +/- 0.20"),
+                category_btag = cms.string("1.0 +/- 0.20")
             ),
             ZL = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.20"),
-                nobtag = cms.string("1.0 +/- 0.20"),
-                btag = cms.string("1.0 +/- 0.20")
+                category_inclusive = cms.string("1.0 +/- 0.20"),
+                category_nobtag = cms.string("1.0 +/- 0.20"),
+                category_btag = cms.string("1.0 +/- 0.20")
             ),
             ZJ = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.20"),
-                nobtag = cms.string("1.0 +/- 0.20"),
-                btag = cms.string("1.0 +/- 0.20")
+                category_inclusive = cms.string("1.0 +/- 0.20"),
+                category_nobtag = cms.string("1.0 +/- 0.20"),
+                category_btag = cms.string("1.0 +/- 0.20")
             ),
             TT = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.12"),
-                nobtag = cms.string("1.0 +/- 0.12"),
-                btag = cms.string("1.0 +/- 0.12")
+                category_inclusive = cms.string("1.0 +/- 0.12"),
+                category_nobtag = cms.string("1.0 +/- 0.12"),
+                category_btag = cms.string("1.0 +/- 0.12")
             ),
             W = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.30"),
-                nobtag = cms.string("1.0 +/- 0.30"),
-                btag = cms.string("1.0 +/- 0.30")
+                category_inclusive = cms.string("1.0 +/- 0.30"),
+                category_nobtag = cms.string("1.0 +/- 0.30"),
+                category_btag = cms.string("1.0 +/- 0.30")
             ),
             VV = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.25"),
-                nobtag = cms.string("1.0 +/- 0.25"),
-                btag = cms.string("1.0 +/- 0.25")
+                category_inclusive = cms.string("1.0 +/- 0.25"),
+                category_nobtag = cms.string("1.0 +/- 0.25"),
+                category_btag = cms.string("1.0 +/- 0.25")
             ),
             QCDalt = cms.PSet(
-                inclusive = cms.string("1.0 +/- 0.35"),
-                nobtag = cms.string("1.0 +/- 0.35"),
-                btag = cms.string("1.0 +/- 0.35")
-            )
+                category_inclusive = cms.string("1.0 +/- 0.35"),
+                category_nobtag = cms.string("1.0 +/- 0.35"),
+                category_btag = cms.string("1.0 +/- 0.35")
+            )            
         ),
         shape = cms.PSet(
             CMS_scale_t_tautau_8TeV = cms.string("0.00 +/- 1.00"),

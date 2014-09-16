@@ -30,7 +30,7 @@ process.determineJetToTauFakeRate = cms.PSet(
         "ZTTmc",
         "ZL",
         "ZJ",
-        "W",
+        "Wtmp",
         "TT",
         "VV"
     ),
@@ -40,7 +40,7 @@ process.determineJetToTauFakeRate = cms.PSet(
     tauPtBin = cms.string("tau1PtGt45tau2PtGt45"),
     
     histogramsToFit = cms.vstring(
-        "bJet1PtL"
+        "bJet1PtS"
     ),
 
     fitFunction = cms.string("[0]*[0]*TMath::Erf([1]*(x - [2]))"),
@@ -50,5 +50,5 @@ process.determineJetToTauFakeRate = cms.PSet(
         p2 = cms.double(-20.)
     ),
     xMin = cms.double(20.),
-    xMax = cms.double(1000.)
+    xMax = cms.double(200.)
 )

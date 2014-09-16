@@ -81,14 +81,11 @@ process.source = cms.Source("PoolSource",
         ##'/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/2013Dec10/HiggsSUSYGluGlu130/patTuple_HadTauStream_1_2_NrD.root'
         ##'file:/data1/veelken/tmp/patTuple_HadTauStream.root'
         'file:/data1/veelken/CMSSW_5_3_x/PATTuples/patTuple_HadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root'                        
-    )
+    ),
+    ##eventsToProcess = cms.untracked.VEventRange(
+    ##    '1:152:97124'
+    ##)
 )
-
-#process.source.skipEvents = cms.untracked.uint32(90)
-
-#process.source.eventsToProcess = cms.untracked.VEventRange(
-#    '1:69216'
-#    )
 
 process.allEventsFilter = cms.EDFilter("AllEventsFilter")
 
@@ -101,134 +98,6 @@ if applyHiggsMassCut:
         filter = cms.bool(True)
     )
     process.genFilterSequence += process.genHiggsMassFilter
-
-#######################################################################
-#quark/gluon jets
-process.load('QuarkGluonTagger.EightTeV.QGTagger_RecoJets_cff')  
-process.QGTagger.srcJets = cms.InputTag("selectedPatJets")
-process.QGTagger.isPatJet = cms.untracked.bool(True) 
-#Switch for when PFJets with CHS are used (only supported for LD):
-#process.QGTagger.useCHS  = cms.untracked.bool(True) 
-#If an uncorrected jet source is used as input, you can correct the pt on the fly inside the QGTagger:
-#process.QGTagger.jec     = cms.untracked.string('ak5PFL1FastL2L3')
-
-###################################################################################
-'''
-#----------------------------------------------------------------------------------
-# produce No-PU MET
-
-process.load("JetMETCorrections.METPUSubtraction.noPileUpPFMET_cff")
-
-doSmearJets = None
-if runOnMC:
-    doSmearJets = True
-else:
-    doSmearJets = False
-
-from PhysicsTools.PatUtils.tools.runNoPileUpMEtUncertainties import runNoPileUpMEtUncertainties
-runNoPileUpMEtUncertainties(
-    process,
-    electronCollection = '',
-    photonCollection = '',
-    muonCollection = '',
-    tauCollection = tausForPFMEtMVA,
-    jetCollection = cms.InputTag('selectedPatJets'),     
-    doApplyChargedHadronSubtraction = False,
-    doSmearJets = doSmearJets,
-    jecUncertaintyTag = "SubTotalMC",
-    addToPatDefaultSequence = False
-)
-
-if runOnMC:
-    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3")
-else:
-    process.calibratedAK5PFJetsForNoPileUpPFMEt.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
-
-process.producePFMEtNoPileUp = cms.Sequence(process.pfNoPileUpMEtUncertaintySequence)
-#----------------------------------------------------------------------------------
-
-#----------------------------------------------------------------------------------
-# produce Type-1 corrected PFMET
-
-process.load("PhysicsTools.PatUtils.patPFMETCorrections_cff")
-
-process.load("JetMETCorrections.Type1MET.pfMETsysShiftCorrections_cfi")
-sysShiftCorrParameter = None
-if runOnMC:
-    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_mc
-else:
-    sysShiftCorrParameter = process.pfMEtSysShiftCorrParameters_2012runABCvsNvtx_data
-
-from PhysicsTools.PatUtils.tools.runType1PFMEtUncertainties import runType1PFMEtUncertainties
-runType1PFMEtUncertainties(
-    process,
-    electronCollection = '',
-    photonCollection = '',
-    muonCollection = '',
-    tauCollection = tausForPFMEtMVA,
-    jetCollection = cms.InputTag('selectedPatJets'),        
-    doSmearJets = doSmearJets,
-    jecUncertaintyTag = "SubTotalMC",
-    makeType1corrPFMEt = True,
-    makeType1p2corrPFMEt = False,
-    doApplyType0corr = True,
-    sysShiftCorrParameter = sysShiftCorrParameter,
-    doApplySysShiftCorr = True,
-    addToPatDefaultSequence = False
-)
-
-# CV: collections of MET and jets used as input for SysShiftMETcorrInputProducer
-#     are not fully consistent, but we anyway use parametrization of MET x/y shift as function of Nvtx
-process.pfMEtSysShiftCorr.srcMEt = cms.InputTag('patMETs')
-process.pfMEtSysShiftCorr.srcJets = cms.InputTag('selectedPatJets')
-
-##from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
-##massSearchReplaceAnyInputTag(process.producePatPFMETCorrections, cms.InputTag('patPFMet'), cms.InputTag('patMETs'))
-process.patPFMet.addGenMET = cms.bool(runOnMC)
-process.patPFMetJetEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetJetEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetMuonEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetMuonEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetTauEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetTauEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpJetEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpJetEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpMuonEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpMuonEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpTauEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpTauEnDown.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpUnclusteredEnUp.addGenMET = cms.bool(runOnMC)
-process.patPFMetNoPileUpUnclusteredEnDown.addGenMET = cms.bool(runOnMC)
-##process.producePatPFMETCorrections.remove(process.patPFMet)
-
-process.produceType1corrPFMEt = cms.Sequence()
-if runOnMC:
-    process.patPFJetMETtype1p2Corr.jetCorrLabel = cms.string("L3Absolute")
-    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
-else:
-    # CV: apply data/MC residual correction to "unclustered energy"
-    process.calibratedPFCandidates = cms.EDProducer("PFCandResidualCorrProducer",
-        src = cms.InputTag('particleFlow'),
-        residualCorrLabel = cms.string("ak5PFResidual"),
-        residualCorrEtaMax = cms.double(9.9),
-        extraCorrFactor = cms.double(1.05)
-    )
-    process.produceType1corrPFMEt += process.calibratedPFCandidates
-    process.pfCandidateToVertexAssociation.PFCandidateCollection = cms.InputTag('calibratedPFCandidates')
-    process.patPFJetMETtype1p2Corr.type2ResidualCorrLabel = cms.string("ak5PFResidual")
-    process.patPFJetMETtype1p2Corr.type2ResidualCorrEtaMax = cms.double(9.9)
-    process.pfCandMETresidualCorr = process.pfCandMETcorr.clone(                
-        residualCorrLabel = cms.string("ak5PFResidual"),
-        residualCorrEtaMax = cms.double(9.9),
-        residualCorrOffset = cms.double(1.),
-        extraCorrFactor = cms.double(1.05)
-    )
-    process.producePatPFMETCorrections.replace(process.pfCandMETcorr, process.pfCandMETcorr + process.pfCandMETresidualCorr)
-    process.patType1CorrectedPFMet.srcType1Corrections.append(cms.InputTag('pfCandMETresidualCorr'))
-    process.produceType1corrPFMEt += process.pfType1MEtUncertaintySequence
-#----------------------------------------------------------------------------------
-'''
 
 #--------------------------------------------------------------------------------
 # produce genMET
@@ -273,8 +142,8 @@ process.puJetIdSequence = cms.Sequence(process.puJetMva)
 #process.puJetIdAndMvaMet = cms.Sequence(process.puJetIdSequence *
 #                                        (process.pfMEtMVAsequence*process.patPFMetByMVA))
 
-######################################################
-#ReRun patJet
+#######################################################################
+# ReRun patJets
 process.runPatJets = cms.Sequence()
 
 if reRunPatJets:
@@ -311,6 +180,21 @@ if reRunPatJets:
     process.patJetCorrFactors.useRho = True
     
     process.runPatJets = cms.Sequence(process.makePatJets*process.selectedPatJets)
+
+#######################################################################
+
+# CV: add b-jet energy regression scale-factors
+
+process.load("LLRAnalysis.HadTauStudies2b2tau.patJetBJetEnRegEmbedder_cfi")
+##process.selectedPatJetsBJetEnReg.inputFileName_jetPtLt100 = cms.string("/afs/cern.ch/user/o/ojalvo/public/bJetRegression/Example/factoryJetRegNewGenJetsAll_BDT_LT100.weights.xml")
+##process.selectedPatJetsBJetEnReg.inputFileName_jetPtGt100 = cms.string("/afs/cern.ch/user/o/ojalvo/public/bJetRegression/Example/factoryJetRegNewGenJetsAll_BDT_GT100.weights.xml")
+##process.selectedPatJetsBJetEnReg.inputFileType = cms.string("XML")
+process.selectedPatJetsBJetEnReg.inputFileName_jetPtLt100 = cms.FileInPath("LLRAnalysis/HadTauStudies2b2tau/data_nocrab/gbrBjetEnReg_allJetPt.root")
+process.selectedPatJetsBJetEnReg.gbrForestName_jetPtLt100 = cms.string("gbrBjetEnReg") 
+process.selectedPatJetsBJetEnReg.inputFileName_jetPtGt100 = cms.FileInPath("LLRAnalysis/HadTauStudies2b2tau/data_nocrab/gbrBjetEnReg_allJetPt.root")
+process.selectedPatJetsBJetEnReg.gbrForestName_jetPtGt100 = cms.string("gbrBjetEnReg")
+process.selectedPatJetsBJetEnReg.verbosity = cms.int32(0)
+process.runPatJets += process.selectedPatJetsBJetEnReg
 
 ###################################################################################
 
@@ -578,7 +462,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     srcL1Jets = cms.InputTag('l1extraParticles', 'Central'),
     srcElectrons = cms.InputTag('electronsForVeto'),
     srcMuons = cms.InputTag('muonsForVeto'),                                          
-    srcJets = cms.InputTag('selectedPatJets'),
+    srcJets = cms.InputTag('selectedPatJetsBJetEnReg'),
     srcPileupJetId = cms.InputTag('puJetMva', 'fullId'),
     wpPileupJetId = cms.string("Loose"),
     srcPileupJetIdMVA = cms.InputTag('puJetMva', 'fullDiscriminant'),
@@ -602,6 +486,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     srcGenPileUpSummary = cms.InputTag('addPileupInfo'),
     srcLHE = cms.InputTag('source'),
     srcGenParticles = cms.InputTag('genParticles'),
+    srcGenParticlesForTopPtReweighting = cms.InputTag('genParticles'),                                
     isEmbedded = cms.bool(runOnEmbed),                                          
     srcEmbeddingWeight = cms.InputTag(''),
     verbosity = cms.int32(0)                                              
@@ -692,6 +577,8 @@ if runOnEmbed :
             process.tauTauNtupleProducer.evtWeights.genDiTauMassVsGenDiTauPt = cms.InputTag('embeddingKineReweightRECembedding', 'genDiTauMassVsGenDiTauPt', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2EtaVsGenTau1Eta = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2EtaVsGenTau1Eta', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2PtVsGenTau1Pt = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2PtVsGenTau1Pt', 'EmbeddedRECO')
+    if runOnMC :
+        process.tauTauNtupleProducer.srcGenParticlesForTopPtReweighting = cms.InputTag('genParticles::SIM')  
     
 if usePFMEtMVA :
     if useRecoil :
@@ -744,7 +631,6 @@ process.seqNominal = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA *
     process.runMETByPairsSequence *
     process.selectedDiTau * process.selectedDiTauFilter *
-    process.QuarkGluonTagger * #quark/gluon jets
     process.kineWeightsForEmbed * #IN
     process.vertexMultiplicityReweightSequence * 
     process.tauTauNtupleProducer
@@ -763,7 +649,6 @@ process.seqTauUp = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA *
     process.runMETByPairsSequenceTauUp *
     process.selectedDiTauTauUp * process.selectedDiTauTauUpFilter *
-    process.QuarkGluonTagger * #quark/gluon jets
     process.kineWeightsForEmbed * #IN
     process.vertexMultiplicityReweightSequence * 
     process.tauTauNtupleProducerTauUp
@@ -782,7 +667,6 @@ process.seqTauDown = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA *
     process.runMETByPairsSequenceTauDown *
     process.selectedDiTauTauDown * process.selectedDiTauTauDownFilter *
-    process.QuarkGluonTagger * #quark/gluon jets
     process.kineWeightsForEmbed * #IN
     process.vertexMultiplicityReweightSequence *
     process.tauTauNtupleProducerTauDown

@@ -43,18 +43,18 @@ namespace
     regionEntryType(const edm::ParameterSet& cfg, const vstring& categories)
     {
       name_ = cfg.getParameter<std::string>("name");
-      edm::ParameterSet cfgQCDregion_norm = cfg.getParameter<edm::ParameterSet>("qcdRegion_norm");
-      edm::ParameterSet cfgQCDregion_shape = cfg.getParameter<edm::ParameterSet>("qcdRegion_shape");
+      edm::ParameterSet cfgRegion_norm = cfg.getParameter<edm::ParameterSet>("region_norm");
+      edm::ParameterSet cfgRegion_shape = cfg.getParameter<edm::ParameterSet>("region_shape");
       for ( vstring::const_iterator category = categories.begin();
 	    category != categories.end(); ++category ) {
-	qcdRegion_norm_[*category] = cfgQCDregion_norm.getParameter<std::string>(*category);
-	qcdRegion_shape_[*category] = cfgQCDregion_shape.getParameter<std::string>(*category);
+	region_norm_[*category] = cfgRegion_norm.getParameter<std::string>(Form("category_%s", category->data()));
+	region_shape_[*category] = cfgRegion_shape.getParameter<std::string>(Form("category_%s", category->data()));
       }
     }
     ~regionEntryType() {}
     std::string name_;
-    std::map<std::string, std::string> qcdRegion_norm_;  // key = category
-    std::map<std::string, std::string> qcdRegion_shape_; // key = category
+    std::map<std::string, std::string> region_norm_;  // key = category
+    std::map<std::string, std::string> region_shape_; // key = category
   };
 
   std::string getSubdirNameOutput(const std::string& region, const std::string& category, const std::string& tauPtBin, const std::string& process) 
@@ -204,45 +204,48 @@ int main(int argc, char* argv[])
 	  }
 	}
 
-	TDirectory* dir_qcdRegion_norm = getDirectory(inputFile, (*region)->qcdRegion_norm_[*category], *category, *tauPtBin, true);
-	assert(dir_qcdRegion_norm);
-	std::cout << "dir_qcdRegion_norm = " << dir_qcdRegion_norm << ": name = " << dir_qcdRegion_norm->GetName() << std::endl;
-	TDirectory* dir_qcdRegion_shape = getDirectory(inputFile, (*region)->qcdRegion_shape_[*category], *category, *tauPtBin, true);
-	assert(dir_qcdRegion_shape);
-	std::cout << "dir_qcdRegion_shape = " << dir_qcdRegion_norm << ": name = " << dir_qcdRegion_shape->GetName() << std::endl;
+	TDirectory* dir_region_norm = getDirectory(inputFile, (*region)->region_norm_[*category], *category, *tauPtBin, true);
+	assert(dir_region_norm);
+	std::cout << "dir_region_norm = " << dir_region_norm << ": name = " << dir_region_norm->GetName() << std::endl;
+	TDirectory* dir_region_shape = getDirectory(inputFile, (*region)->region_shape_[*category], *category, *tauPtBin, true);
+	assert(dir_region_shape);
+	std::cout << "dir_region_shape = " << dir_region_norm << ": name = " << dir_region_shape->GetName() << std::endl;
 	
 	for ( std::set<std::string>::const_iterator histogram = histograms.begin();
 	      histogram != histograms.end(); ++histogram ) {
 	  std::cout << "histogram = " << (*histogram) << std::endl;
 	  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 		central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
-	    TH1* histogramData_norm = getHistogram(dir_qcdRegion_norm, processData, *histogram, "central", true);
-	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+
+	    int verbosity = ( histogram->find("svFitMass") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
+
+	    TH1* histogramData_norm = getHistogram(dir_region_norm, processData, *histogram, "central", true);
+	    if ( verbosity ) {
 	      std::cout << " integral(Data_norm) = " << histogramData_norm->Integral() << std::endl;
 	    }
 	    
 	    std::vector<TH1*> histogramsToSubtract_norm;
 	    for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
 		  processToSubtract != processesToSubtract.end(); ++processToSubtract ) {
-	      TH1* histogramToSubtract = getHistogram(dir_qcdRegion_norm, *processToSubtract, *histogram, *central_or_shift, false);
-	      if ( !histogramToSubtract ) histogramToSubtract = getHistogram(dir_qcdRegion_norm, *processToSubtract, *histogram, "central", true);
-	      if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	      TH1* histogramToSubtract = getHistogram(dir_region_norm, *processToSubtract, *histogram, *central_or_shift, false);
+	      if ( !histogramToSubtract ) histogramToSubtract = getHistogram(dir_region_norm, *processToSubtract, *histogram, "central", true);
+	      if ( verbosity ) {
 		std::cout << " integral(" << (*processToSubtract) << ") = " << histogramToSubtract->Integral() << std::endl;
 	      }
 	      histogramsToSubtract_norm.push_back(histogramToSubtract);
 	    }
 	    
-	    TH1* histogramData_shape = getHistogram(dir_qcdRegion_shape, processData, *histogram, "central", true);
-	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	    TH1* histogramData_shape = getHistogram(dir_region_shape, processData, *histogram, "central", true);
+	    if ( verbosity ) {
 	      std::cout << " integral(Data_shape) = " << histogramData_shape->Integral() << std::endl;
 	    }
 	    
 	    std::vector<TH1*> histogramsToSubtract_shape;
 	    for ( vstring::const_iterator processToSubtract = processesToSubtract.begin();
 		  processToSubtract != processesToSubtract.end(); ++processToSubtract ) {
-	      TH1* histogramToSubtract = getHistogram(dir_qcdRegion_shape, *processToSubtract, *histogram, *central_or_shift, false);
-	      if ( !histogramToSubtract ) histogramToSubtract = getHistogram(dir_qcdRegion_shape, *processToSubtract, *histogram, "central", true);
-	      if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	      TH1* histogramToSubtract = getHistogram(dir_region_shape, *processToSubtract, *histogram, *central_or_shift, false);
+	      if ( !histogramToSubtract ) histogramToSubtract = getHistogram(dir_region_shape, *processToSubtract, *histogram, "central", true);
+	      if ( verbosity ) {
 		std::cout << "integral(" << (*processToSubtract) << ") = " << histogramToSubtract->Integral() << std::endl;
 	      }
 	      histogramsToSubtract_shape.push_back(histogramToSubtract);
@@ -256,16 +259,16 @@ int main(int argc, char* argv[])
 	    if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) histogramNameQCD.append("_").append(*central_or_shift);
 	    histogramNameQCD.append("_").append(*histogram);
 	    TH1* histogramQCD_norm = subtractHistograms(Form("%s_norm", histogramNameQCD.data()), histogramData_norm, histogramsToSubtract_norm);
-	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	    if ( verbosity ) {
 	      std::cout << " integral(QCD_norm) = " << histogramQCD_norm->Integral() << std::endl;
 	    }
 	    TH1* histogramQCD_shape = subtractHistograms(histogramNameQCD.data(), histogramData_shape, histogramsToSubtract_shape);
-	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
+	    if ( verbosity ) {
 	      std::cout << " integral(QCD_shape) = " << histogramQCD_shape->Integral() << std::endl;
 	    }
 	    double sfQCD_shape = ( histogramQCD_shape->Integral() > 0. ) ? (histogramQCD_norm->Integral()/histogramQCD_shape->Integral()) : 1.;
 	    histogramQCD_shape->Scale(sfQCD_shape);
-	    makeBinContentsPositive(histogramQCD_shape);	  
+	    makeBinContentsPositive(histogramQCD_shape, verbosity);	  
 
 	    // CV: add 10% extra bin-by-bin uncertainty for SVfit mass range 100-150 GeV,
 	    //     where QCD shape template is subject to "turn-on" effects which are difficult to model;
