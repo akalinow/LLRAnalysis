@@ -19,6 +19,7 @@ postfix     = "PFlow"
 runOnMC     = True
 runOnEmbed  = False
 embedType   = "RhEmbed" #"PfEmbed" or "RhEmbed"
+trigger     = "Tau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
 #process.GlobalTag.globaltag = cms.string( autoCond[ 'startup' ] )
@@ -177,7 +178,7 @@ process.primaryVertexFilter = cms.EDFilter("VertexCountFilter",
 from PhysicsTools.PatAlgos.tools.helpers import massSearchReplaceAnyInputTag
 
 from PhysicsTools.PatAlgos.tools.coreTools import *
-if not runOnMC:
+if not (runOnMC or runOnEmbed):
     removeMCMatching(process, ["All"])
 
 removeSpecificPATObjects(process, ['Photons'], outputInProcess = None)

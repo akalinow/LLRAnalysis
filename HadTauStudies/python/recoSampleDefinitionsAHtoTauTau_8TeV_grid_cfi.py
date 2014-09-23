@@ -186,9 +186,9 @@ RECO_SAMPLES = {
     'pfEmbed_TTJetsFullLept' : {
         'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/StoreResults-Summer12_TTJets_FullLeptMGDecays_DR53X_PU_S10_START53_V7C_v2_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
-        'events_processed' : 158124,
+        'events_processed' : 468406,
         'events_per_job'   : 20000,
-        'x_sec'            : 245.8*_picobarns*0.1050, # CV: taken from arXiv:1303.6254
+        'x_sec'            : 245.8*_picobarns*0.1050*0.648*0.648, # CV: taken from arXiv:1303.6254, need to multiply by branching fraction for both taus to decay hadronically
         'type'             : 'pfEmbeddedMC'
     },
     'DYJets' : {
@@ -462,6 +462,26 @@ RECO_SAMPLES[vhSampleName] = {
     'type'             : 'smMC'
 }
 SAMPLES_TO_ANALYZE.append(vhSampleName)
+whbbSampleName = "HiggsWHbb125"
+RECO_SAMPLES[whbbSampleName] = {
+    'datasetpath'      : '/WH_WToLNu_HToBB_M-125_8TeV-powheg-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+    'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+    'events_processed' : 1000000,
+    'events_per_job'   : 20000,
+    'x_sec'            : 0.7046*0.326*0.577*_picobarns,
+    'type'             : 'smMC'
+}
+SAMPLES_TO_ANALYZE.append(whbbSampleName)
+zhbbSampleName = "HiggsZHbb125"
+RECO_SAMPLES[zhbbSampleName] = {
+    'datasetpath'      : '/ZH_ZToLL_HToBB_M-125_8TeV-powheg-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+    'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+    'events_processed' : 999462,
+    'events_per_job'   : 20000,
+    'x_sec'            : 0.4153*0.101*0.577*_picobarns,
+    'type'             : 'smMC'
+}
+SAMPLES_TO_ANALYZE.append(zhbbSampleName)
 
 # CV: add MSSM Higgs signal Monte Carlo samples
 mssmHiggsMassPoints = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
@@ -577,7 +597,41 @@ for massPoint in abelianZprimeTohhMassPoints:
         'events_per_job'   : 20000,
         'type'             : 'bsmMC'
     }
-    SAMPLES_TO_ANALYZE.append(abelianZprimeTohhSampleName)        
+    SAMPLES_TO_ANALYZE.append(abelianZprimeTohhSampleName)
+
+gravitonTohhMassPoints = [ 270, 300, 500, 700, 1000 ]
+eventsProcessed["gravitonTohh_270"]  = 99800
+eventsProcessed["gravitonTohh_300"]  = 99863
+eventsProcessed["gravitonTohh_500"]  = 99959
+eventsProcessed["gravitonTohh_700"]  = 99957
+eventsProcessed["gravitonTohh_1000"] = 99975
+for massPoint in gravitonTohhMassPoints:
+    gravitonTohhSampleName = "graviton%1.0fTohh" % massPoint
+    RECO_SAMPLES[gravitonTohhSampleName] = {
+        'datasetpath'      : '/GravitonToHH_2Tau_2b_M-%1.0f_8TeV-Madgraph_pythia6/Summer12_DR53X-PU_S10_START53_V19-v2/AODSIM' % massPoint,
+        'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+        'events_processed' : eventsProcessed["gravitonTohh_%1.0f" % massPoint],
+        'events_per_job'   : 20000,
+        'type'             : 'bsmMC'
+    }
+    SAMPLES_TO_ANALYZE.append(gravitonTohhSampleName)
+    
+radionTohhMassPoints = [ 300, 500, 700, 1000 ]
+eventsProcessed["radionTohh_300"]  = 99836
+eventsProcessed["radionTohh_500"]  = 99947
+eventsProcessed["radionTohh_700"]  = 99957
+eventsProcessed["radionTohh_1000"] = 99569
+for massPoint in radionTohhMassPoints:
+    radionTohhSampleName = "radion%1.0fTohh" % massPoint
+    RECO_SAMPLES[radionTohhSampleName] = {
+        'datasetpath'      : '/RadionToHH_2Tau_2b_M-%1.0f_8TeV-Madgraph_pythia6/Summer12_DR53X-PU_S10_START53_V19-v2/AODSIM' % massPoint,
+        'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+        'events_processed' : eventsProcessed["radionTohh_%1.0f" % massPoint],
+        'events_per_job'   : 20000,
+        'type'             : 'bsmMC'
+    }
+    SAMPLES_TO_ANALYZE.append(radionTohhSampleName)
+
 #--------------------------------------------------------------------------------    
 
 # Update to use the defaults if necessary

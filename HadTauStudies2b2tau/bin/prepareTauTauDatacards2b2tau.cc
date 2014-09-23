@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
   
   edm::ParameterSet cfg = edm::readPSetsFrom(argv[1])->getParameter<edm::ParameterSet>("process");
 
-  edm::ParameterSet cfgPrepareTauTauDatacards2b2tau = cfg.getParameter<edm::ParameterSet>("prepareTauTauDatacards");
+  edm::ParameterSet cfgPrepareTauTauDatacards2b2tau = cfg.getParameter<edm::ParameterSet>("prepareTauTauDatacards2b2tau");
   
   std::string signalRegion = cfgPrepareTauTauDatacards2b2tau.getParameter<std::string>("signalRegion");
 
@@ -141,6 +141,7 @@ int main(int argc, char* argv[])
   }
 
   vstring categories = cfgPrepareTauTauDatacards2b2tau.getParameter<vstring>("categories");
+  std::string discriminator = cfgPrepareTauTauDatacards2b2tau.getParameter<std::string>("discriminator");
 
   vstring tauPtBins = cfgPrepareTauTauDatacards2b2tau.getParameter<vstring>("tauPtBins");
   if ( tauPtBins.size() != 1 )
@@ -152,7 +153,7 @@ int main(int argc, char* argv[])
 
   std::map<std::string, std::string> histogramMapping; // key = inputHistogramName, value = outputHistogramName
   histogramMapping[histogramToFit] = "";
-  histogramMapping[histogramToFit_fine_binning] = "fine_binning";
+  if ( histogramToFit_fine_binning != histogramToFit ) histogramMapping[histogramToFit_fine_binning] = "fine_binning";
 
   vstring central_or_shifts = cfgPrepareTauTauDatacards2b2tau.getParameter<vstring>("sysShifts");
   central_or_shifts.push_back(""); // CV: add central value
@@ -198,7 +199,14 @@ int main(int argc, char* argv[])
 		  central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
 	      std::cout << "histogramToCopy = " << histogramToCopy->first << ", central_or_shift = " << (*central_or_shift) << std::endl;
 
-	      std::string subdirName_output = getSubdirNameOutput(*category, *tauPtBin);
+	      std::string category_and_discriminator;
+	      if ( category->find('_') != std::string::npos ) {
+		size_t idx = category->find_last_of('_');
+		category_and_discriminator = Form("%s_%s%s", std::string(*category, 0, idx).data(), discriminator.data(), std::string(*category, idx).data());
+	      } else {
+		category_and_discriminator = Form("%s_%s", category->data(), discriminator.data());
+	      }
+	      std::string subdirName_output = getSubdirNameOutput(category_and_discriminator, *tauPtBin);
 	      if ( subdirName_output == "" ) continue; // CV: skip tau Pt bins that are not used in datacards, in order to keep size of datacard.root files small
 	      TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);
 	      subdir_output->cd();

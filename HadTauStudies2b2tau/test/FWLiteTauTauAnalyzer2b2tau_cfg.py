@@ -47,10 +47,12 @@ process.FWLiteTauTauAnalyzer2b2tau = cms.PSet(
         fitFunctionShapeName_tau1_central = cms.string("jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtL_SSisoLooseBtag_div_SSrelaxedLooseBtag"),
         fitFunctionShapeName_tau1_shift = cms.string(""),
         fitFunctionShapePower_tau1 = cms.double(1.0),
+        applyFitFunction_or_graph_tau1 = cms.string("fitFunction"),
         graphShapeName_tau2 = cms.string(""),
         fitFunctionShapeName_tau2_central = cms.string(""),
         fitFunctionShapeName_tau2_shift = cms.string(""),
-        fitFunctionShapePower_tau2 = cms.double(0.)
+        fitFunctionShapePower_tau2 = cms.double(0.),
+        applyFitFunction_or_graph_tau2 = cms.string("notApplied")
     ),
     tau1EtaBins = cms.vdouble(-1., 1.2, 1.7, 9.9),
     tau2EtaBins = cms.vdouble(-1., 9.9),

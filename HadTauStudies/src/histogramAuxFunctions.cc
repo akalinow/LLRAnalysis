@@ -111,17 +111,18 @@ namespace
 
 TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>& histogramsToAdd)
 {
-  //std::cout << "<addHistograms>:" << std::endl;
-  //std::cout << " newHistogramName = " << newHistogramName << std::endl;
+  std::cout << "<addHistograms>:" << std::endl;
+  std::cout << " newHistogramName = " << newHistogramName << std::endl;
   if ( histogramsToAdd.size() == 0 )
     throw cms::Exception("addHistograms") 
       << "No histograms given to add !!\n";
   const TH1* histogramRef = histogramsToAdd.front();
-  //std::cout << "histogramRef = " << histogramRef->GetName() << std::endl;
+  std::cout << "histogramRef = " << histogramRef->GetName() << std::endl;
+  std::cout << "#histogramsToAdd = " << histogramsToAdd.size() << std::endl;
   for ( std::vector<TH1*>::const_iterator histogramToAdd = histogramsToAdd.begin();
 	histogramToAdd != histogramsToAdd.end(); ++histogramToAdd ) {
     if ( (*histogramToAdd) == histogramRef ) continue;
-    //std::cout << "histogramToAdd" << (*histogramToAdd)->GetName() << std::endl;
+    std::cout << "histogramToAdd = " << (*histogramToAdd)->GetName() << ", integral = " << (*histogramToAdd)->Integral() << std::endl;
     checkCompatibleBinning(*histogramToAdd, histogramRef);
   }
   TH1* newHistogram = (TH1*)histogramRef->Clone(newHistogramName.data());
@@ -136,9 +137,11 @@ TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>&
     double sumBinError2 = 0.;
     for ( std::vector<TH1*>::const_iterator histogramToAdd = histogramsToAdd.begin();
 	  histogramToAdd != histogramsToAdd.end(); ++histogramToAdd ) {
+      std::cout << "histogramToAdd = " << (*histogramToAdd)->GetName() << ", binContent = " << (*histogramToAdd)->GetBinContent(iBin) << ", binError = " << (*histogramToAdd)->GetBinError(iBin) << std::endl;
       sumBinContent += (*histogramToAdd)->GetBinContent(iBin);
       sumBinError2 += square((*histogramToAdd)->GetBinError(iBin));
     }
+    std::cout << "bin #" << iBin << ": sumBinContent = " << sumBinContent << ", sumBinError2 = " << sumBinError2 << std::endl;
     newHistogram->SetBinContent(iBin, sumBinContent);
     assert(sumBinError2 >= 0.);
     newHistogram->SetBinError(iBin, TMath::Sqrt(sumBinError2));
@@ -148,8 +151,8 @@ TH1* addHistograms(const std::string& newHistogramName, const std::vector<TH1*>&
 
 TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogramMinuend, const TH1* histogramSubtrahend)
 {
-  //std::cout << "<subtractHistograms>:" << std::endl;
-  //std::cout << " newHistogramName = " << newHistogramName << std::endl;
+  std::cout << "<subtractHistograms>:" << std::endl;
+  std::cout << " newHistogramName = " << newHistogramName << std::endl;
   checkCompatibleBinning(histogramMinuend, histogramSubtrahend);
   TH1* newHistogram = (TH1*)histogramMinuend->Clone(newHistogramName.data());
   newHistogram->Reset();
@@ -170,6 +173,10 @@ TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogra
 
 TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogram, const std::vector<TH1*>& histogramsToSubtract)
 {
+  std::cout << "<subtractHistograms>:" << std::endl;
+  std::cout << " newHistogramName = " << newHistogramName << std::endl;
+  std::cout << "histogram = " << histogram->GetName() << std::endl;
+  std::cout << "#histogramsToSubtract = " << histogramsToSubtract.size() << std::endl;
   if ( !histogram ) 
     throw cms::Exception("subtractHistograms") 
       << "No histograms given to subtract !!\n";
@@ -196,12 +203,17 @@ double compIntegral(TH1* histogram, bool includeUnderflowBin, bool includeOverfl
   return sumBinContent;
 }
 
-void makeBinContentsPositive(TH1* histogram)
+void makeBinContentsPositive(TH1* histogram, int verbosity)
 {
-  std::cout << "<makeBinContentsPositive>:" << std::endl;
-  std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
+  if ( verbosity ) {
+    std::cout << "<makeBinContentsPositive>:" << std::endl;
+    std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
+  }
   double integral_original = compIntegral(histogram, true, true);
-  std::cout << " integral_original = " << integral_original << std::endl;
+  if ( integral_original < 0. ) integral_original = 0.;
+  if ( verbosity ) {
+    std::cout << " integral_original = " << integral_original << std::endl;
+  }
   int numBins = histogram->GetNbinsX();
   for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
     double binContent_original = histogram->GetBinContent(iBin);
@@ -210,20 +222,33 @@ void makeBinContentsPositive(TH1* histogram)
       double binContent_modified = 0.;
       double binError2_modified = binError2_original + square(binContent_original - binContent_modified);
       assert(binError2_modified >= 0.);
-      std::cout << "bin #" << iBin << ": binContent = " << binContent_original << " +/- " << TMath::Sqrt(binError2_original) 
-		<< " --> setting it to binContent = " << binContent_modified << " +/- " << TMath::Sqrt(binError2_modified) << std::endl;
+      if ( verbosity ) {
+	std::cout << "bin #" << iBin << ": binContent = " << binContent_original << " +/- " << TMath::Sqrt(binError2_original) 
+		  << " --> setting it to binContent = " << binContent_modified << " +/- " << TMath::Sqrt(binError2_modified) << std::endl;
+      }
       histogram->SetBinContent(iBin, binContent_modified);
       histogram->SetBinError(iBin, TMath::Sqrt(binError2_modified));
     }
   }
   double integral_modified = compIntegral(histogram, true, true);
-  std::cout << " integral_modified = " << integral_modified << std::endl;
-  if ( integral_modified != 0. ) {
-    double sf = integral_original/integral_modified;
-    std::cout << "--> scaling histogram by factor = " << sf << std::endl;
-    histogram->Scale(sf);
+  if ( integral_modified < 0. ) integral_modified = 0.;
+  if ( verbosity ) {
+    std::cout << " integral_modified = " << integral_modified << std::endl;
   }
-  std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
+  if ( integral_modified > 0. ) {
+    double sf = integral_original/integral_modified;
+    if ( verbosity ) {
+      std::cout << "--> scaling histogram by factor = " << sf << std::endl;
+    }
+    histogram->Scale(sf);
+  } else {
+    for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
+      histogram->SetBinContent(iBin, 0.);
+    }
+  }
+  if ( verbosity ) {
+    std::cout << " integral(" << histogram->GetName() << ") = " << histogram->Integral() << std::endl;
+  }
 }
 
 //

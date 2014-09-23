@@ -24,7 +24,7 @@ TH1* addHistograms(const std::string&, const std::vector<TH1*>&);
 TH1* subtractHistograms(const std::string&, const TH1*, const TH1*);
 TH1* subtractHistograms(const std::string&, const TH1*, const std::vector<TH1*>&);
 
-void makeBinContentsPositive(TH1*);
+void makeBinContentsPositive(TH1*, int);
 
 std::string getParticleEtaLabel(const std::string&, double, double, double, double);
 

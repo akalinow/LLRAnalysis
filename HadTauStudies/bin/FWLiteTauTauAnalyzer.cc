@@ -141,6 +141,17 @@ namespace
   {
     return x*x;
   }
+
+  std::ostream* openSelEventsFile_output(const std::string& selEventsFileName_output, const std::string& category)
+  {
+    size_t idx = selEventsFileName_output.find_last_of('.');
+    std::string selEventsFileName_part1 = std::string(selEventsFileName_output, 0, idx);
+    std::string selEventsFileName_part2 = ( idx != std::string::npos ) ? std::string(selEventsFileName_output, idx, std::string::npos) : "";
+    std::string selEventsFileName = Form("%s_%s%s", selEventsFileName_part1.data(), category.data(), selEventsFileName_part2.data());
+    std::cout << "writing events selected in '" << category << "' category to file = " << selEventsFileName << std::endl;  
+    std::ostream* selEventsFile = new std::ofstream(selEventsFileName.data(), std::ios::out);
+    return selEventsFile;
+  }
 }
 
 int main(int argc, char* argv[]) 
@@ -178,7 +189,7 @@ int main(int argc, char* argv[])
   else if ( process_string == "ZL"           ) process = kZL;
   else if ( process_string == "ZJ"           ) process = kZJ;
   else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
-  else if ( process_string == "W"            ) process = kW;
+  else if ( process_string == "Wtmp"         ) process = kW;
   else if ( process_string == "TT"           ) process = kTT;
   else if ( process_string == "TT_Embedded"  ) process = kTT_Embedded;
   else if ( process_string == "VV"           ) process = kVV;
@@ -259,9 +270,7 @@ int main(int argc, char* argv[])
     std::string fitFunctionNormName = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
     std::string fitFunctionShapeName_bJet1 = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_bJet1");
     double fitFunctionShapePower_bJet1 = cfgBJetLooseToTightWeight.getParameter<double>("fitFunctionShapePower_bJet1");
-    std::string fitFunctionShapeName_bJet2 = cfgBJetLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_bJet2");
-    double fitFunctionShapePower_bJet2 = cfgBJetLooseToTightWeight .getParameter<double>("fitFunctionShapePower_bJet2");
-
+    
     std::string inputFileName = cfgBJetLooseToTightWeight.getParameter<std::string>("inputFileName");
     TFile* inputFile = new TFile(inputFileName.data());
     
@@ -279,8 +288,8 @@ int main(int argc, char* argv[])
           inputFile,
 	  "bJet", bJet1EtaMin, bJet1EtaMax, bJet2EtaMin, bJet2EtaMax,
 	  fitFunctionNormName, 
-	  "", fitFunctionShapeName_bJet1, "", fitFunctionShapePower_bJet1, 
-	  "", fitFunctionShapeName_bJet2, "", fitFunctionShapePower_bJet2);
+	  "", fitFunctionShapeName_bJet1, "", particleIDlooseToTightWeightEntryType::kFitFunction, fitFunctionShapePower_bJet1, 
+	  "", "",                         "", particleIDlooseToTightWeightEntryType::kNotApplied,  1.);
 	bJetLooseToTightWeights.push_back(bJetLooseToTightWeight);
       }
     }
@@ -296,23 +305,37 @@ int main(int argc, char* argv[])
     
     std::string fitFunctionNormName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionNormName");
     std::string fitFunctionShapeName_tau1_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_central");
-    std::string graphShapeName_tau1, fitFunctionShapeName_tau1_shift;
+    std::string graphShapeName_tau1, fitFunctionShapeName_tau1_shift;    
+    int applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kFitFunction;
     if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau1") ) {
       graphShapeName_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau1");
       fitFunctionShapeName_tau1_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau1_shift");
+      std::string applyFitFunction_or_graph_tau1_string = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("applyFitFunction_or_graph_tau1");
+      if      ( applyFitFunction_or_graph_tau1_string == "fitFunction" ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kFitFunction;
+      else if ( applyFitFunction_or_graph_tau1_string == "graph"       ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kGraph;
+      else if ( applyFitFunction_or_graph_tau1_string == "notApplied"  ) applyFitFunction_or_graph_tau1 = particleIDlooseToTightWeightEntryType::kNotApplied;
+      else throw cms::Exception("FWLiteTauTauAnalyzer") 
+	<< "Invalid Configuration parameter 'applyFitFunction_or_graph_tau1' = " << applyFitFunction_or_graph_tau1_string << " !!\n";
     }
     double fitFunctionShapePower_tau1 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau1");
     std::string fitFunctionShapeName_tau2_central = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_central");
     std::string graphShapeName_tau2, fitFunctionShapeName_tau2_shift;
+    int applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kFitFunction;
     if ( cfgJetToTauFakeRateLooseToTightWeight.exists("graphShapeName_tau2") ) {
       graphShapeName_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("graphShapeName_tau2");
       fitFunctionShapeName_tau2_shift = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("fitFunctionShapeName_tau2_shift");
+      std::string applyFitFunction_or_graph_tau2_string = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("applyFitFunction_or_graph_tau2");
+      if      ( applyFitFunction_or_graph_tau2_string == "fitFunction" ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kFitFunction;
+      else if ( applyFitFunction_or_graph_tau2_string == "graph"       ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kGraph;
+      else if ( applyFitFunction_or_graph_tau2_string == "notApplied"  ) applyFitFunction_or_graph_tau2 = particleIDlooseToTightWeightEntryType::kNotApplied;
+      else throw cms::Exception("FWLiteTauTauAnalyzer") 
+	<< "Invalid Configuration parameter 'applyFitFunction_or_graph_tau2' = " << applyFitFunction_or_graph_tau2_string << " !!\n";
     }
     double fitFunctionShapePower_tau2 = cfgJetToTauFakeRateLooseToTightWeight.getParameter<double>("fitFunctionShapePower_tau2");
-    
+
     std::string inputFileName = cfgJetToTauFakeRateLooseToTightWeight.getParameter<std::string>("inputFileName");
     TFile* inputFile = new TFile(inputFileName.data());
-    
+
     int numTau1EtaBins = tau1EtaBins.size() - 1;
     for ( int idxTau1EtaBin = 0; idxTau1EtaBin < numTau1EtaBins; ++idxTau1EtaBin ) {
       double tau1EtaMin = tau1EtaBins[idxTau1EtaBin];
@@ -327,8 +350,8 @@ int main(int argc, char* argv[])
           inputFile,
 	  "tau", tau1EtaMin, tau1EtaMax, tau2EtaMin, tau2EtaMax,
 	  fitFunctionNormName, 
-	  graphShapeName_tau1, fitFunctionShapeName_tau1_central, fitFunctionShapeName_tau1_shift, fitFunctionShapePower_tau1, 
-	  graphShapeName_tau2, fitFunctionShapeName_tau2_central, fitFunctionShapeName_tau2_shift, fitFunctionShapePower_tau2);
+	  graphShapeName_tau1, fitFunctionShapeName_tau1_central, fitFunctionShapeName_tau1_shift, applyFitFunction_or_graph_tau1, fitFunctionShapePower_tau1, 
+	  graphShapeName_tau2, fitFunctionShapeName_tau2_central, fitFunctionShapeName_tau2_shift, applyFitFunction_or_graph_tau2, fitFunctionShapePower_tau2);
 	jetToTauFakeRateLooseToTightWeights.push_back(jetToTauFakeRateLooseToTightWeight);
       }
     }
@@ -371,6 +394,7 @@ int main(int argc, char* argv[])
   }
 
   std::string selEventsFileName_input = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("selEventsFileName_input");
+  std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
   RunLumiSectionEventNumberSelector* runLumiSectionEventNumberSelector = 0;
   if ( selEventsFileName_input != "" ) {
     edm::ParameterSet cfgRunLumiSectionEventNumberSelector;
@@ -380,23 +404,14 @@ int main(int argc, char* argv[])
   }
 
   std::string selEventsFileName_output = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("selEventsFileName_output");
+  std::cout << "selEventsFileName_output = " << selEventsFileName_output << std::endl;
   std::ostream* selEventsFile_inclusive = 0;
   std::ostream* selEventsFile_nobtag    = 0;
   std::ostream* selEventsFile_btag      = 0;
   if ( selEventsFileName_output != "" ) {
-    size_t idx = selEventsFileName_output.find_last_of('.');
-    std::string selEventsFileName_part1 = std::string(selEventsFileName_output , 0, idx);
-    std::string selEventsFileName_part2 = ( idx != std::string::npos ) ?
-      std::string(selEventsFileName_output , idx, std::string::npos) : "";
-    std::string selEventsFileName_inclusive = Form("%s_inclusive%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'inclusive' category to file = " << selEventsFileName_inclusive << std::endl;  
-    selEventsFile_inclusive = new std::ofstream(selEventsFileName_inclusive.data(), std::ios::out);
-    std::string selEventsFileName_nobtag = Form("%s_nobtag%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'nobtag' category to file = " << selEventsFileName_nobtag << std::endl;  
-    selEventsFile_nobtag = new std::ofstream(selEventsFileName_nobtag.data(), std::ios::out);
-    std::string selEventsFileName_btag = Form("%s_btag%s", selEventsFileName_part1.data(), selEventsFileName_part2.data());
-    std::cout << "writing events selected in 'btag' category to file = " << selEventsFileName_btag << std::endl;  
-    selEventsFile_btag = new std::ofstream(selEventsFileName_btag.data(), std::ios::out);
+    selEventsFile_inclusive = openSelEventsFile_output(selEventsFileName_output, "inclusive");
+    selEventsFile_nobtag    = openSelEventsFile_output(selEventsFileName_output, "nobtag");
+    selEventsFile_btag      = openSelEventsFile_output(selEventsFileName_output, "btag");
   }  
 
   fwlite::InputSource inputFiles(cfg); 
@@ -460,8 +475,6 @@ int main(int argc, char* argv[])
   Int_t tau1IsTriggerMatched_diTau, tau1IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &tau1IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l1TrigMatched_singleJet", &tau1IsTriggerMatched_singleJet);
-  Float_t tau1GenPt;
-  inputTree->SetBranchAddress("l1GenPt", &tau1GenPt);
 
   TTreeFormula* tau1Selection = 0;
   if ( tau1Selection_string != "" ) {
@@ -482,8 +495,6 @@ int main(int argc, char* argv[])
   Int_t tau2IsTriggerMatched_diTau, tau2IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &tau2IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l2TrigMatched_singleJet", &tau2IsTriggerMatched_singleJet);
-  Float_t tau2GenPt; 
-  inputTree->SetBranchAddress("l2GenPt", &tau2GenPt);
 
   TTreeFormula* tau2Selection = 0;
   if ( tau2Selection_string != "" ) {
@@ -725,8 +736,8 @@ int main(int argc, char* argv[])
 	  evtWeight *= triggerWeight_singleJet;
 	} else evtWeight *= triggerWeight_diTau;
       }
-      if ( tau1GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
-      if ( tau2GenPt > 1.0 ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
+      if ( l1isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
+      if ( l2isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
       if ( process == kZTTmc || process == kZL || process == kZJ || process == kW ) {
 	Float_t stitchingWeight = 1.0;
 	int idxNUP = TMath::Nint(NUP) - 5;

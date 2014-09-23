@@ -170,7 +170,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
             runMETByPairsSequence += moduleLeg2
             srcLeg2 = moduleNameLeg2
 
-            moduleNameMVAMET = "pfMEtMVAcomb%i%i%s" % (idxLeg1, idxLeg2 ,postfix)
+            moduleNameMVAMET = "pfMEtMVAcomb%i%i%s" % (idxLeg1, idxLeg2, postfix)
             moduleMVAMET = process.pfMEtMVA.clone(
                 srcLeptons = cms.VInputTag(cms.InputTag(srcLeg1), cms.InputTag(srcLeg2))
             )

@@ -33,9 +33,20 @@ samplesToAnalyze = [
     ##'mssmH260tohh',
     ##'mssmH300tohh',
     ##'mssmH350tohh'
-    'abelianZprime300tohh',
-    'abelianZprime500tohh',
-    'abelianZprime700tohh'    
+    ##'abelianZprime300tohh',
+    ##'abelianZprime500tohh',
+    ##'abelianZprime700tohh'
+    ##'HiggsZHbb125'
+    #'graviton270Tohh',
+    #'graviton300Tohh',
+    #'graviton500Tohh',
+    #'graviton700Tohh',
+    #'graviton1000Tohh',
+    #'radion300Tohh',
+    #'radion500Tohh',
+    #'radion700Tohh',
+    #'radion1000Tohh',
+    'HiggsWHbb125'
 ]
 
 #--------------------------------------------------------------------------------

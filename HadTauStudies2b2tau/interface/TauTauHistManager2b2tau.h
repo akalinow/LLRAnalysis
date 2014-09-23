@@ -42,12 +42,15 @@ class TauTauHistManager2b2tau
 		      double, double, double, 
 		      double, double, double, 
 		      double, double, double, int, int,
+		      double, double, double, double, double, 
 		      double, double, double, double, 
-		      double, double, double, double, 
-		      double, double, 
+		      double, double, double, 
 		      double,
-		      double, double, 		      
-		      double, int, double,
+		      double, double, double, 
+		      double, double, double, double, 	 
+		      double, double, double, double, 
+		      double, double, double, double, 
+		      double, double, double, int, double,
 		      double, double);
   
  protected:
@@ -150,6 +153,8 @@ class TauTauHistManager2b2tau
   TH1* histogramDeltaRtt_;
   TH1* histogramMbbS_;
   TH1* histogramMbbL_;
+  TH1* histogramMbbRegS_;
+  TH1* histogramMbbRegL_;
   TH1* histogramDeltaPhibb_;
   TH1* histogramDeltaEtabb_;
   TH1* histogramDeltaRbb_;
@@ -159,18 +164,42 @@ class TauTauHistManager2b2tau
   TH1* histogramMinDeltaRbt_;
   TH1* histogramHbbPtS_;
   TH1* histogramHbbPtL_;
+  TH1* histogramHbbRegPtS_;
+  TH1* histogramHbbRegPtL_;
   TH1* histogramHttPtS_;
   TH1* histogramHttPtL_;
   TH1* histogramMaxBJetPtS_;
   TH1* histogramMaxBJetPtL_;
   TH1* histogramAugMT2ed_;
-  TH1* histogramDiHiggsPtS_;
-  TH1* histogramDiHiggsPtL_;
-  TH1* histogramDiHiggsMassS_;
-  TH1* histogramDiHiggsMassL_;
+  TH1* histogramPzetaVis_;
+  TH1* histogramPzeta_;
+  TH1* histogramPzetaComb_;
+  TH1* histogramHHPtS_;
+  TH1* histogramHHPtL_;
+  TH1* histogramHHbRegPtS_;
+  TH1* histogramHHbRegPtL_;
+  TH1* histogramHHMassM_;
+  TH1* histogramHHMassL_;
+  TH1* histogramHHbRegMassM_;
+  TH1* histogramHHbRegMassL_;
+  TH1* histogramHH2bdyKinFitMassM_;
+  TH1* histogramHH2bdyKinFitMassL_;
+  TH1* histogramHH2bdyKinFitChi2_;
+  TH1* histogramHHbReg2bdyKinFitMassM_;
+  TH1* histogramHHbReg2bdyKinFitMassL_;
+  TH1* histogramHHbReg2bdyKinFitChi2_;
+  TH1* histogramHH4bdyKinFitMassM_;
+  TH1* histogramHH4bdyKinFitMassL_;
+  TH1* histogramHH4bdyKinFitChi2_;
+  TH1* histogramHHbReg4bdyKinFitMassM_;
+  TH1* histogramHHbReg4bdyKinFitMassL_;
+  TH1* histogramHHbReg4bdyKinFitChi2_;
   
   TH1* histogramMEtS_;
   TH1* histogramMEtL_;
+
+  TH1* histogramDeltaMEtParl_;
+  TH1* histogramDeltaMEtPerp_;
 
   TH1* histogramNumVertices_;
 
