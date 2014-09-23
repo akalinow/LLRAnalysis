@@ -768,7 +768,7 @@ options = {
     'xSection'       : 3504,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1,
-    'iDiv'           : 1,
+    'iDiv'           : 0,
     'nDiv'           : 1
     },
     ##WJets
