@@ -18,12 +18,22 @@
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
 
+<bin   file="analyzeMuTau_Summer14.cc"  name="analyzeMuTau_Summer14">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
+
 <bin   file="analyzeElecTau_Winter13.cc"  name="analyzeElecTau_Winter13">
   <use   name="FWCore/FWLite"/>
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
 
 <bin   file="analyzeElecTau_Spring14.cc"  name="analyzeElecTau_Spring14">
+  <use   name="FWCore/FWLite"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+</bin>
+
+<bin   file="analyzeElecTau_Summer14.cc"  name="analyzeElecTau_Summer14">
   <use   name="FWCore/FWLite"/>
   <use   name="HiggsAnalysis/CombinedLimit"/>
 </bin>
@@ -156,6 +166,18 @@
   <use   name="rootgraphics"/>
 </bin>
 
+<bin   file="makeMuTauTemplates_Summer14.cc" name="makeMuTauTemplates_Summer14">
+  <use   name="DataFormats/FWLite"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="roofit"/>
+  <use   name="root"/>
+  <use   name="rootgraphics"/>
+</bin>
+
 <bin   file="makeMuTauTemplates_Spring14.cc" name="makeMuTauTemplates_Spring14">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
@@ -169,6 +191,18 @@
 </bin>
 
 <bin   file="makeMuTauTemplates_Summer14.cc" name="makeMuTauTemplates_Summer14">
+  <use   name="DataFormats/FWLite"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="HiggsAnalysis/CombinedLimit"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="roofit"/>
+  <use   name="root"/>
+  <use   name="rootgraphics"/>
+</bin>
+
+<bin   file="makeElecTauTemplates_Summer14.cc" name="makeElecTauTemplates_Summer14">
   <use   name="DataFormats/FWLite"/>
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>
