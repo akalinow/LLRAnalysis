@@ -9,7 +9,7 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_06"
+version = "v3_07"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
@@ -722,7 +722,7 @@ for sample in samples.keys():
                                 raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
                             graphShapeName_tau2 = None
                             fitFunctionShapeName_tau2_central = None
-                            applyFitFunction_or_graph_tau2 = "graph"
+                            applyFitFunction_or_graph_tau2 = "fitFunction"
                             if region.find("vrelaxed2FRw1stTauLoose") != -1:
                                 graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
                                 fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
@@ -795,6 +795,8 @@ for sample in samples.keys():
                         if region == "OSiso1_iso2_TightBtag" and (central_or_shift == "" or central_or_shift == "central"):
                             selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")
                             cfg_modified += "process.FWLiteTauTauAnalyzer.selEventsFileName_output = cms.string('%s')\n" % selEventsFileName
+                            failEventsFileName = outputFileName.replace(".root", "_failEvents.txt")
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.failEventsFileName_output = cms.string('%s')\n" % failEventsFileName
                         cfgFileName_modified = os.path.join(outputFilePath_subdir, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
                                                                                      (discriminator, sample, process, region, tauPtBin_label, central_or_shift)))
                         cfgFileName_modified = cfgFileName_modified.replace("__", "_")

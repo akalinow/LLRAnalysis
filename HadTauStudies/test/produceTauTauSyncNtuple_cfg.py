@@ -131,15 +131,20 @@ process.produceTauTauSyncNtuple = cms.PSet(
         l1TrigMatched_diTauJet = cms.string("l1TrigMatched_diTauJet/I"),
         l2TrigMatched_diTauJet = cms.string("l2TrigMatched_diTauJet/I"),
         jetTrigMatched_diTauJet = cms.string("jetTrigMatched_diTauJet/I"),
-        triggerWeight_diTauJet = cms.string("triggerWeight_diTauJet/F->D"),
-        triggerEffMC_diTauJet = cms.string("triggerEffMC_diTauJet/F->D"),
-        triggerEffData_diTauJet = cms.string("triggerEffData_diTauJet/F->D"),
-        triggerWeight_diTau = cms.string("triggerWeight_diTau/F->D"),
-        triggerEffMC_diTau = cms.string("triggerEffMC_diTau/F->D"),
-        triggerEffData_diTau = cms.string("triggerEffData_diTau/F->D"),
+        ##triggerWeight_diTauJet = cms.string("triggerWeight_diTauJet/F->D"),
+        ##triggerEffMC_diTauJet = cms.string("triggerEffMC_diTauJet/F->D"),
+        ##triggerEffData_diTauJet = cms.string("triggerEffData_diTauJet/F->D"),
+        ##triggerWeight_diTau = cms.string("triggerWeight_diTau/F->D"),
+        ##triggerEffMC_diTau = cms.string("triggerEffMC_diTau/F->D"),
+        ##triggerEffData_diTau = cms.string("triggerEffData_diTau/F->D"),
         muon1Pt = cms.string("muon1Pt/F->D"),
         electron1Pt = cms.string("electron1Pt/F->D")
     ),
+
+    trigger = cms.string("TauPlusJet"),
+    tauPtForSwitchingTriggers = cms.double(350.),
+    
+    takeTauTriggerTurnOn = cms.string("tree"),
 
     outputFileName = cms.string('H2TauTauSyncTreeTauTau.root'),
 

@@ -413,30 +413,42 @@ namespace
     {}
     bool operator() (const PATDiTauPair* diTau1, const PATDiTauPair* diTau2)
     {
+      //std::cout << "<isMoreIsolatedDiTau::operator()>:" << std::endl;
+      //std::cout << "diTau1:" << std::endl;
+      //std::cout << " leg1: Pt = " << diTau1->leg1()->pt() << ", eta = " << diTau1->leg1()->eta() << ", phi = " << diTau1->leg1()->phi() << std::endl;
+      //std::cout << " leg2: Pt = " << diTau1->leg2()->pt() << ", eta = " << diTau1->leg2()->eta() << ", phi = " << diTau1->leg2()->phi() << std::endl;
+      //std::cout << "diTau2:" << std::endl;
+      //std::cout << " leg1: Pt = " << diTau2->leg1()->pt() << ", eta = " << diTau2->leg1()->eta() << ", phi = " << diTau2->leg1()->phi() << std::endl;
+      //std::cout << " leg2: Pt = " << diTau2->leg2()->pt() << ", eta = " << diTau2->leg2()->eta() << ", phi = " << diTau2->leg2()->phi() << std::endl;
       const pat::Tau* diTau1leg1 = &(*diTau1->leg1());
       const pat::Tau* diTau1leg2 = &(*diTau1->leg2());
       const pat::Tau* diTau2leg1 = &(*diTau2->leg1());
       const pat::Tau* diTau2leg2 = &(*diTau2->leg2());
       for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrPreselection_.begin();
 	    tauIdDiscr != tauIdDiscrPreselection_.end(); ++tauIdDiscr ) {
+	//std::cout << "tauIdDiscr = " << (*tauIdDiscr) << std::endl;
 	int numPassed1 = 0;
 	if ( diTau1leg1->tauID(*tauIdDiscr) > 0.5 ) ++numPassed1;
 	if ( diTau1leg2->tauID(*tauIdDiscr) > 0.5 ) ++numPassed1;
 	int numPassed2 = 0;
 	if ( diTau2leg1->tauID(*tauIdDiscr) > 0.5 ) ++numPassed2;
 	if ( diTau2leg2->tauID(*tauIdDiscr) > 0.5 ) ++numPassed2;
+	//std::cout << "numPassed1 = " << numPassed1 << ", numPassed2 = " << numPassed2 << std::endl;
 	if ( numPassed1 > numPassed2 ) return true;
 	if ( numPassed2 > numPassed1 ) return false;
       }
       for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrRanking_.begin();
 	    tauIdDiscr != tauIdDiscrRanking_.end(); ++tauIdDiscr ) {
-	double rank1 = diTau1leg1->tauID(*tauIdDiscr)*diTau1leg2->tauID(*tauIdDiscr);
-	double rank2 = diTau2leg1->tauID(*tauIdDiscr)*diTau2leg2->tauID(*tauIdDiscr);
+	//std::cout << "tauIdDiscr = " << (*tauIdDiscr) << std::endl;
+	double rank1 = diTau1leg1->tauID(*tauIdDiscr) + diTau1leg2->tauID(*tauIdDiscr);
+	double rank2 = diTau2leg1->tauID(*tauIdDiscr) + diTau2leg2->tauID(*tauIdDiscr);
+	//std::cout << "rank1 = " << rank1 << ", rank2 = " << rank2 << std::endl;
 	if ( rank1 > rank2 ) return (true^invertRanking_);
 	if ( rank2 > rank1 ) return (false^invertRanking_);
       }
       // CV: both diTau objects have the same isolation,
       //     take the higher Pt object to make the sorting order well-defined in all cases
+      //std::cout << "diTau1 and diTau2 have equal rank --> returning diTau of higher Pt." << std::endl;
       return ((diTau1leg1->pt()*diTau1leg2->pt()) > (diTau2leg1->pt()*diTau2leg2->pt()));
     }
     std::vector<std::string> tauIdDiscrPreselection_;
@@ -719,10 +731,39 @@ namespace
     // CV: reconstructed tau neither matches generator level electron, muon nor tau
     isGenJet = true;
   }
+
+  void printDiTau(const PATDiTauPair& diTau, const std::vector<std::string>& tauIdDiscrPreselection, const std::vector<std::string>& tauIdDiscrRanking)
+  {
+    std::cout << " leg1: Pt = " << diTau.leg1()->pt() << ", eta = " << diTau.leg1()->eta() << ", phi = " << diTau.leg1()->phi() << ", ";
+    for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrPreselection.begin();
+	  tauIdDiscr != tauIdDiscrPreselection.end(); ++tauIdDiscr ) {
+      std::cout << (*tauIdDiscr) << " = " << diTau.leg1()->tauID(*tauIdDiscr) << ", ";
+    }
+    for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrRanking.begin();
+	  tauIdDiscr != tauIdDiscrRanking.end(); ++tauIdDiscr ) {
+      std::cout << (*tauIdDiscr) << " = " << diTau.leg1()->tauID(*tauIdDiscr) << ", ";
+    }
+    std::cout << std::endl;
+    std::cout << " leg2: Pt = " << diTau.leg2()->pt() << ", eta = " << diTau.leg2()->eta() << ", phi = " << diTau.leg2()->phi() << ", ";
+    for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrPreselection.begin();
+	  tauIdDiscr != tauIdDiscrPreselection.end(); ++tauIdDiscr ) {
+      std::cout << (*tauIdDiscr) << " = " << diTau.leg2()->tauID(*tauIdDiscr) << ", ";
+    }
+    for ( std::vector<std::string>::const_iterator tauIdDiscr = tauIdDiscrRanking.begin();
+	  tauIdDiscr != tauIdDiscrRanking.end(); ++tauIdDiscr ) {
+      std::cout << (*tauIdDiscr) << " = " << diTau.leg2()->tauID(*tauIdDiscr) << ", ";
+    }
+    std::cout << std::endl;
+  }
 }
 
 void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup& es) 
 {
+  //if ( verbosity_ >= 1 ) {
+  //  std::cout << "<TauTauNtupleProducer::analyze>:" << std::endl;
+  //  std::cout << " invertRanking = " << invertRanking_ << std::endl;
+  //}
+
   assert(ntuple_);
 
   resetBranches();
@@ -733,14 +774,27 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   
   edm::Handle<PATDiTauPairCollection> diTaus;
   evt.getByLabel(srcDiTau_, diTaus);
+  //if ( verbosity_ >= 1 ) {  
+  //  std::cout << "#diTaus = " << diTaus->size() << std::endl;
+  //}
   std::vector<const PATDiTauPair*> diTaus_sorted;
+  int idx = 0;
   for ( PATDiTauPairCollection::const_iterator diTau = diTaus->begin();
 	diTau != diTaus->end(); ++diTau ) {
+    //if ( verbosity_ >= 1 ) {      
+    //  std::cout << "diTau #" << idx << ":" << std::endl;
+    //  printDiTau(*diTau, bestDiTauPreselection_, bestDiTauRanking_);
+    //}
     diTaus_sorted.push_back(&(*diTau));
+    ++idx;
   }
   std::sort(diTaus_sorted.begin(), diTaus_sorted.end(), isMoreIsolatedDiTau(bestDiTauPreselection_, bestDiTauRanking_, invertRanking_));
   if ( !(diTaus_sorted.size() >= 1) ) return;
   const PATDiTauPair* bestDiTau = diTaus_sorted.front();
+  //if ( verbosity_ >= 1 ) {      
+  //  std::cout << "best diTau:" << std::endl;
+  //  printDiTau(*bestDiTau, bestDiTauPreselection_, bestDiTauRanking_);
+  //}
 
   const pat::Tau* leg1 = &(*bestDiTau->leg1());
   const pat::Tau* leg2 = &(*bestDiTau->leg2());
@@ -1397,7 +1451,7 @@ void TauTauNtupleProducer::printBranches(std::ostream& stream)
 
 void TauTauNtupleProducer::setValueF(const std::string& name, double value) 
 {
-  if ( verbosity_ ) std::cout << "branch = " << name << ": value = " << value << std::endl;
+  if ( verbosity_ >= 1 ) std::cout << "branch = " << name << ": value = " << value << std::endl;
   branchMap::iterator branch = branches_.find(name);
   if ( branch != branches_.end() ) {
     branch->second.valueF_ = value;
@@ -1409,7 +1463,7 @@ void TauTauNtupleProducer::setValueF(const std::string& name, double value)
 
 void TauTauNtupleProducer::setValueI(const std::string& name, int value) 
 {
-  if ( verbosity_ ) std::cout << "branch = " << name << ": value = " << value << std::endl;
+  if ( verbosity_ >= 1 ) std::cout << "branch = " << name << ": value = " << value << std::endl;
   branchMap::iterator branch = branches_.find(name);
   if ( branch != branches_.end() ) {
     branch->second.valueI_ = value;
@@ -1421,7 +1475,7 @@ void TauTauNtupleProducer::setValueI(const std::string& name, int value)
 
 void TauTauNtupleProducer::setValueUL(const std::string& name, unsigned long value) 
 {
-  if ( verbosity_ ) std::cout << "branch = " << name << ": value = " << value << std::endl;
+  if ( verbosity_ >= 1 ) std::cout << "branch = " << name << ": value = " << value << std::endl;
   branchMap::iterator branch = branches_.find(name);
   if ( branch != branches_.end() ) {
     branch->second.valueUL_ = value;
@@ -1655,6 +1709,24 @@ namespace
 
 void TauTauNtupleProducer::setValue_Tau(const std::string& name, const pat::Tau& tau, const edm::Event& evt, const edm::EventSetup& es) 
 {
+  if ( verbosity_ >= 1 ) {
+    std::cout << "<TauTauNtupleProducer::setValue_Tau>:" << std::endl;
+    std::cout << " tau: Pt = " << tau.pt() << ", eta = " << tau.eta() << ", phi = " << tau.phi() << std::endl;
+    std::cout << " genLepton: ";
+    if ( tau.genLepton() != 0 ) {
+      std::cout << "Pt = " << tau.genLepton()->pt() << ", eta = " << tau.genLepton()->eta() << ", phi = " << tau.genLepton()->phi();
+    } else {
+      std::cout << "N/A";
+    }
+    std::cout << std::endl;
+    std::cout << " genJet: ";
+    if ( tau.genJet() != 0 ) {
+      std::cout << "Pt = " << tau.genJet()->pt() << ", eta = " << tau.genJet()->eta() << ", phi = " << tau.genJet()->phi();
+    } else {
+      std::cout << "N/A";
+    }
+    std::cout << std::endl;
+  }
   setValue_EnPxPyPz(name, tau.p4());
   setValue_PtEtaPhiMass(name, tau.p4());
   setValueF(name + "Charge", tau.charge());

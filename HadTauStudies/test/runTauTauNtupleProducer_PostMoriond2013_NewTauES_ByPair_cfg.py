@@ -80,10 +80,13 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         ##'/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/2013Dec10/HiggsSUSYGluGlu130/patTuple_HadTauStream_1_2_NrD.root'
         ##'file:/data1/veelken/tmp/patTuple_HadTauStream.root'
-        'file:/data1/veelken/CMSSW_5_3_x/PATTuples/patTuple_HadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root'                        
+        ##'file:/data1/veelken/CMSSW_5_3_x/PATTuples/patTuple_HadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root'
+        ##'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/TauAnalysis/Skimming/test/selEvents_HiggsSUSYGluGlu130_fromCecile.root'
+        'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/LLRAnalysis/HadTauStudies/test/patTuple_HadTauStream.root'
+        ##'file:/tmp/veelken/patTuple_HadTauStream_231_1_reu.root'                        
     ),
     ##eventsToProcess = cms.untracked.VEventRange(
-    ##    '1:152:97124'
+    ##    '1:1435:918133'
     ##)
 )
 
@@ -198,13 +201,59 @@ process.runPatJets += process.selectedPatJetsBJetEnReg
 
 ###################################################################################
 
+#--------------------------------------------------------------------------------
+# CV: rerun generator level matching for pat::Taus in Embedded samples
+process.applyTauES = cms.Sequence()
+
+uncorrectedTaus = "tauPtEtaID"
+if runOnEmbed:
+    from PhysicsTools.PatAlgos.mcMatchLayer0.tauMatch_cfi import tauMatch, tauGenJetMatch
+    process.tauMatchEmbeddedRECO = tauMatch.clone(
+        src = cms.InputTag(uncorrectedTaus),
+        matched = cms.InputTag("genParticles::EmbeddedRECO")
+    )
+    process.applyTauES += process.tauMatchEmbeddedRECO
+
+    from PhysicsTools.JetMCAlgos.TauGenJets_cfi import tauGenJets
+    process.tauGenJetsEmbeddedRECO = tauGenJets.clone(
+        GenParticles = cms.InputTag("genParticles::EmbeddedRECO")
+    )
+    process.applyTauES += process.tauGenJetsEmbeddedRECO
+    from PhysicsTools.JetMCAlgos.TauGenJetsDecayModeSelectorAllHadrons_cfi import tauGenJetsSelectorAllHadrons
+    process.tauGenJetsSelectorAllHadronsEmbeddedRECO = tauGenJetsSelectorAllHadrons.clone(
+        src = cms.InputTag("tauGenJetsEmbeddedRECO")
+    )
+    process.applyTauES += process.tauGenJetsSelectorAllHadronsEmbeddedRECO
+    process.tauGenJetMatchEmbeddedRECO = tauGenJetMatch.clone(
+        src = cms.InputTag(uncorrectedTaus),
+        matched = cms.InputTag("tauGenJetsSelectorAllHadronsEmbeddedRECO")
+    )
+    process.applyTauES += process.tauGenJetMatchEmbeddedRECO
+    
+    process.tauPtEtaIDGenMatched = cms.EDProducer("PATTauGenMatchEmbedder",
+        src = cms.InputTag(uncorrectedTaus),
+        srcGenParticleMatch = cms.InputTag("tauMatchEmbeddedRECO"),
+        srcGenJetMatch = cms.InputTag("tauGenJetMatchEmbeddedRECO")
+    )
+    process.applyTauES += process.tauPtEtaIDGenMatched
+
+    uncorrectedTaus = "tauPtEtaIDGenMatched"
+#--------------------------------------------------------------------------------    
+
 process.tauPtEtaIDScaled = cms.EDProducer("TauESCorrector",
-    tauTag = cms.InputTag("tauPtEtaID"),
+    tauTag = cms.InputTag(uncorrectedTaus),
     ##verbose = cms.bool(True)                
 )
+process.applyTauES += process.tauPtEtaIDScaled
+
+correctedTaus = uncorrectedTaus
+if applyTauESCorr:
+    correctedTaus = "tauPtEtaIDScaled"
+
+###################################################################################
 
 process.tauPtEtaIDIso = cms.EDFilter("PATTauSelector",
-    src = cms.InputTag("tauPtEtaID"),
+    src = cms.InputTag(correctedTaus),
     cut = cms.string(
         "pt > 40 & abs(eta) < 2.3" +
         " & tauID('decayModeFindingOldDMs') > 0.5" +                                  
@@ -212,6 +261,7 @@ process.tauPtEtaIDIso = cms.EDFilter("PATTauSelector",
     ),
     filter = cms.bool(False)
 )
+
 process.tauPtEtaIDIsoFilter = cms.EDFilter("CandViewCountFilter",
     src = cms.InputTag("tauPtEtaIDIso"),
     minNumber = cms.uint32(2),
@@ -219,7 +269,7 @@ process.tauPtEtaIDIsoFilter = cms.EDFilter("CandViewCountFilter",
 )
 
 process.rescaledTaus = cms.EDProducer("TauRescalerProducer",
-    inputCollection = cms.InputTag("tauPtEtaID"),
+    inputCollection = cms.InputTag(correctedTaus),
     shift = cms.vdouble(0.03, 0.03),
     numOfSigmas = cms.double(1.0),
     #verbose = cms.bool(True)
@@ -238,10 +288,6 @@ process.tauPtEtaIDIsoTauDown = process.tauPtEtaIDIso.clone(
 process.tauPtEtaIDIsoTauDownFilter = process.tauPtEtaIDIsoFilter.clone(
     src = cms.InputTag("tauPtEtaIDIsoTauDown")
 )
-
-if applyTauESCorr:
-    process.tauPtEtaIDIso.src = cms.InputTag("tauPtEtaIDScaled")
-    process.rescaledTaus.inputCollection = cms.InputTag("tauPtEtaIDScaled")
 
 #######################################################################
 from LLRAnalysis.TauTauStudies.runMETByLeptonPairs_cfi import *
@@ -297,7 +343,7 @@ process.electronsForVeto = cms.EDFilter("PATElectronSelector",
 )
 #########
 process.filterSequence = cms.Sequence(
-    process.tauPtEtaIDScaled *
+    process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauUp * process.tauPtEtaIDIsoTauDown
 )
@@ -323,7 +369,7 @@ if runOnMC:
         mcPeriod = cms.string("Summer12_S10")
     )
     process.vertexMultiplicityReweightSequence += process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686
-    if runOnEmbed :
+    if runOnEmbed:
         process.vertexMultiplicityReweight3d2012RunABCDruns190456to208686.src = cms.InputTag('addPileupInfo::HLT')
         process.vertexMultiplicityReweight1d2012RunABCDruns190456to208686.src = cms.InputTag('addPileupInfo::HLT')
         
@@ -370,7 +416,7 @@ if applyHiggsMassCut:
             mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
             mu_values = [ 2000, ]
             instanceLabel = "$higgsTypemA$mA$central_or_shift"
-        elif mssm_model in [ "light_stop"] :
+        elif mssm_model in [ "light_stop"]:
             inputFileName = "mssmHiggsPtReweightGluGlu_light_stop.root"
             moduleName = "lightstopHiggsPtReweightGluGlu"
             mA_values = [ 80, 90, 100, 110, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
@@ -492,7 +538,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     verbosity = cms.int32(0)                                              
 )
 
-if runOnMC :
+if runOnMC:
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
         "HLT_DoubleMediumIsoPFTau30_Trk5_eta2p1_v2",
         "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v6"
@@ -520,7 +566,7 @@ if runOnMC :
     process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
     process.tauTauNtupleProducer.srcGenMEt = cms.InputTag('genMetFromGenParticles')
     process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
-else :    
+else:    
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
         "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v2",
         "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v3",
@@ -560,30 +606,30 @@ else :
     )
     process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
     
-if runOnEmbed :
+if runOnEmbed:
     process.tauTauNtupleProducer.srcGenPileUpSummary = cms.InputTag('addPileupInfo::HLT')
-    if embedType == "PfEmbed" :
+    if embedType == "PfEmbed":
         process.tauTauNtupleProducer.srcEmbeddingWeight = cms.InputTag('generator', 'minVisPtFilter', 'EmbeddedRECO')
-    elif embedType == "RhEmbed" :
+    elif embedType == "RhEmbed":
         process.tauTauNtupleProducer.srcEmbeddingWeight = cms.InputTag('generator', 'minVisPtFilter', 'EmbeddedRECO')
         process.tauTauNtupleProducer.evtWeights.tauSpin = cms.InputTag('TauSpinnerReco', 'TauSpinnerWT', 'EmbeddedSPIN')
         process.tauTauNtupleProducer.evtWeights.zmumusel = cms.InputTag('ZmumuEvtSelEffCorrWeightProducer', 'weight', 'EmbeddedRECO')
         process.tauTauNtupleProducer.evtWeights.muradcorr = cms.InputTag('muonRadiationCorrWeightProducer', 'weight', 'EmbeddedRECO')
-        if runOnMC :
+        if runOnMC:
             process.tauTauNtupleProducer.evtWeights.genDiTauMassVsGenDiTauPt = cms.InputTag('embeddingKineReweightGENembedding', 'genDiTauMassVsGenDiTauPt', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2EtaVsGenTau1Eta = cms.InputTag('embeddingKineReweightGENembedding', 'genTau2EtaVsGenTau1Eta', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2PtVsGenTau1Pt = cms.InputTag('embeddingKineReweightGENembedding', 'genTau2PtVsGenTau1Pt', 'EmbeddedRECO')
-        else :
+        else:
             process.tauTauNtupleProducer.evtWeights.genDiTauMassVsGenDiTauPt = cms.InputTag('embeddingKineReweightRECembedding', 'genDiTauMassVsGenDiTauPt', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2EtaVsGenTau1Eta = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2EtaVsGenTau1Eta', 'EmbeddedRECO')
             process.tauTauNtupleProducer.evtWeights.genTau2PtVsGenTau1Pt = cms.InputTag('embeddingKineReweightRECembedding', 'genTau2PtVsGenTau1Pt', 'EmbeddedRECO')
-    if runOnMC :
+    if runOnMC:
         process.tauTauNtupleProducer.srcGenParticlesForTopPtReweighting = cms.InputTag('genParticles::SIM')  
     
-if usePFMEtMVA :
-    if useRecoil :
+if usePFMEtMVA:
+    if useRecoil:
         process.tauTauNtupleProducer.met = cms.InputTag("metRecoilCorrector00", "N")
-    else :
+    else:
         process.tauTauNtupleProducer.met = cms.InputTag("patPFMetByMVA00")
 
 for mssmHiggsPtReweight in mssmHiggsPtReweights:
@@ -616,7 +662,7 @@ process.seqNominal = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.tauPtEtaIDScaled *
+    process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
@@ -640,7 +686,7 @@ process.seqTauUp = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.tauPtEtaIDScaled *
+    process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauUp * process.tauPtEtaIDIsoTauUpFilter * 
     process.electronsForVeto *
@@ -658,7 +704,7 @@ process.seqTauDown = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.tauPtEtaIDScaled *
+    process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauDown * process.tauPtEtaIDIsoTauDownFilter * 
     process.electronsForVeto *
