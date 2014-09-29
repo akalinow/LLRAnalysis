@@ -1926,6 +1926,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     myfile<<"***********************"<<endl;
     */
 
+    cout<<"                - mu     E/p/pt/eta/phi = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<endl;
+    cout<<"                - tau    E/p/pt/eta/phi = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<endl;
+
+
     muFlag_       = 0;  
     muVetoRelIso_ = 0.;  
     muFlagSoft_       = 0;  
