@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_06"
+version = "v3_09"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_1/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_2/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -162,6 +162,11 @@ samples = {
         'processes' : [ "singleH_SM125" ],
         'inputFiles' : [ "HiggsWHbb125" ],
         'lumiScale' : getLumiScale('HiggsWHbb125')
+    },
+    'HiggsBB125' : {
+        'processes' : [ "singleH_SM125" ],
+        'inputFiles' : [ "HiggsBB125" ],
+        'lumiScale' : getLumiScale('HiggsBB125')
     }
 }
 for sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept" ]:
@@ -474,65 +479,64 @@ for sample in samples.keys():
         for region in regions:
             if region not in [ "OSiso1_iso2", "SSiso1_iso2" ] and isSignalMC:
                 continue
-            central_or_shifts_region = copy.deepcopy(central_or_shifts)
-            if region.find("relaxed1FRw") != -1 or region.find("relaxed2FRw") != -1:
-                tauFR_fitFunctionNormName_Up   = None
-                tauFR_fitFunctionNormName_Down = None
-                if region.find("relaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight") != -1 or region.find("relaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose") != -1:                    
-                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSrelaxed1_relaxed2"
-                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSrelaxed1_relaxed2"
-                elif region.find("iso1_relaxed2FRw1stTauTight") != -1:                    
-                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSiso1_relaxed2"
-                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSiso1_relaxed2"
-                elif region.find("relaxed1FRw2ndTauTight_iso2") != -1:                    
-                    tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSrelaxed1_iso2"
-                    tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSrelaxed1_iso2"
-                else:
-                    raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
-                central_or_shifts_region.update({
-                    'CMS_htt_QCDfrNorm_tautau_8TeVUp' : {
-                        'inputFilePath_extension'    : "nom",
-                        'addWeights_extension'       : [],
-                        'fitFunctionNormName'        : tauFR_fitFunctionNormName_Up
-                    },
-                    'CMS_htt_QCDfrNorm_tautau_8TeVDown' : {
-                        'inputFilePath_extension'    : "nom",
-                        'addWeights_extension'       : [] ,
-                        'fitFunctionNormName'        : tauFR_fitFunctionNormName_Down
-                    },
-                    'CMS_htt_QCDfrShape_tautau_8TeVUp' : {
-                        'inputFilePath_extension'    : "nom",
-                        'addWeights_extension'       : [],
-                        'fitFunctionShapePower_tau1' : 2.0,
-                        'fitFunctionShapePower_tau2' : 0.
-                    },
-                    'CMS_htt_QCDfrShape_tautau_8TeVDown' : {
-                        'inputFilePath_extension'    : "nom",
-                        'addWeights_extension'       : [],
-                        'fitFunctionShapePower_tau1' : 0.,
-                        'fitFunctionShapePower_tau2' : 0.
-                    }})                           
-            for central_or_shift in central_or_shifts_region.keys():
+            for discriminator in discriminators.keys():
+                central_or_shifts_region = copy.deepcopy(central_or_shifts)
+                if region.find("relaxed1FRw") != -1 or region.find("relaxed2FRw") != -1:
+                    tauFR_fitFunctionNormName_Up   = None
+                    tauFR_fitFunctionNormName_Down = None
+                    if region.find("relaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight") != -1 or region.find("relaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose") != -1:                    
+                        tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSrelaxed1_relaxed2" % discriminator
+                        tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSrelaxed1_relaxed2" % discriminator
+                    elif region.find("iso1_relaxed2FRw1stTauTight") != -1:                    
+                        tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSiso1_relaxed2" % discriminator
+                        tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSiso1_relaxed2" % discriminator
+                    elif region.find("relaxed1FRw2ndTauTight_iso2") != -1:                    
+                        tauFR_fitFunctionNormName_Up   = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormUp_SSiso1_iso2_div_SSrelaxed1_iso2" % discriminator
+                        tauFR_fitFunctionNormName_Down = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNormDown_SSiso1_iso2_div_SSrelaxed1_iso2" % discriminator
+                    else:
+                        raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
+                    central_or_shifts_region.update({
+                        'CMS_htt_QCDfrNorm_tautau_8TeVUp' : {
+                            'inputFilePath_extension'    : "nom",
+                            'addWeights_extension'       : [],
+                            'fitFunctionNormName'        : tauFR_fitFunctionNormName_Up
+                        },
+                        'CMS_htt_QCDfrNorm_tautau_8TeVDown' : {
+                            'inputFilePath_extension'    : "nom",
+                            'addWeights_extension'       : [] ,
+                            'fitFunctionNormName'        : tauFR_fitFunctionNormName_Down
+                        },
+                        'CMS_htt_QCDfrShape_tautau_8TeVUp' : {
+                            'inputFilePath_extension'    : "nom",
+                            'addWeights_extension'       : [],
+                            'fitFunctionShapePower_tau1' : 2.0,
+                            'fitFunctionShapePower_tau2' : 0.
+                        },
+                        'CMS_htt_QCDfrShape_tautau_8TeVDown' : {
+                            'inputFilePath_extension'    : "nom",
+                            'addWeights_extension'       : [],
+                            'fitFunctionShapePower_tau1' : 0.,
+                            'fitFunctionShapePower_tau2' : 0.
+                        }})                           
+                for central_or_shift in central_or_shifts_region.keys():
 
-                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and isSignalMC:
-                    continue
-                if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
-                    continue
-                if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
-                    continue
-                if len(central_or_shift) > 0 and central_or_shift.find('central') == -1 and sample.find("Data") != -1:
-                    continue
+                    if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and isSignalMC:
+                        continue
+                    if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
+                        continue
+                    if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
+                        continue
+                    if sample.find("Data") != -1 and not (central_or_shift == "" or central_or_shift.find("CMS_htt_QCDfr") != -1):
+                        continue
 
-                inputFileNames = []
-                for inputFilePath_extension_sample in samples[sample]['inputFiles']:
-                    inputFileNames_sample = getInputFileNames(os.path.join(inputFilePath, central_or_shifts_region[central_or_shift]['inputFilePath_extension'], inputFilePath_extension_sample))
-                    inputFileNames.extend(inputFileNames_sample)
-                if len(inputFileNames) == 0:
-                    raise ValueError("Failed to find input files for sample = '%s' !!" % sample)
-                ##if central_or_shift == "" or central_or_shift == "central":
-                print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
-
-                for discriminator in discriminators.keys():
+                    inputFileNames = []
+                    for inputFilePath_extension_sample in samples[sample]['inputFiles']:
+                        inputFileNames_sample = getInputFileNames(os.path.join(inputFilePath, central_or_shifts_region[central_or_shift]['inputFilePath_extension'], inputFilePath_extension_sample))
+                        inputFileNames.extend(inputFileNames_sample)
+                    if len(inputFileNames) == 0:
+                        raise ValueError("Failed to find input files for sample = '%s' !!" % sample)
+                    ##if central_or_shift == "" or central_or_shift == "central":
+                    print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
 
                     jetToTauFakeRateCorrection = discriminators[discriminator]['jetToTauFakeRateCorrection']
                     if central_or_shift == 'CMS_htt_WShape_tautau_8TeVUp':
@@ -592,6 +596,7 @@ for sample in samples.keys():
                         raise ValueError("No tau2 selection defined for region = '%s' !!" % region)
                     cfg_modified += "process.FWLiteTauTauAnalyzer2b2tau.tau1Selection = cms.string('%s')\n" % tau1Selection
                     cfg_modified += "process.FWLiteTauTauAnalyzer2b2tau.tau2Selection = cms.string('%s')\n" % tau2Selection
+                    cfg_modified += "process.FWLiteTauTauAnalyzer2b2tau.discriminator = cms.string('%s')\n" % discriminator
                     trigger = None
                     if sample.find("Data") != -1:
                         for sample_i in samples[sample]['inputFiles']:
@@ -610,28 +615,28 @@ for sample in samples.keys():
                         cfg_modified += "process.FWLiteTauTauAnalyzer2b2tau.applyJetToTauFakeRateLooseToTightWeight = cms.bool(True)\n"
                         fitFunctionNormName = None
                         if region.find("relaxed1FRw2ndTauLoose_relaxed2FRw1stTauTight") != -1 or region.find("relaxed1FRw2ndTauTight_relaxed2FRw1stTauLoose") != -1:                    
-                            fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSrelaxed1_relaxed2"
+                            fitFunctionNormName = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSrelaxed1_relaxed2" % discriminator
                         elif region.find("iso1_relaxed2FRw1stTauTight") != -1:                    
-                            fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSiso1_relaxed2"
+                            fitFunctionNormName = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSiso1_relaxed2" % discriminator
                         elif region.find("relaxed1FRw2ndTauTight_iso2") != -1:                    
-                            fitFunctionNormName = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSrelaxed1_iso2"
+                            fitFunctionNormName = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionNorm_SSiso1_iso2_div_SSrelaxed1_iso2" % discriminator
                         else:
                             raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
                         graphShapeName_tau1 = None
                         fitFunctionShapeName_tau1_central = None
                         applyFitFunction_or_graph_tau1 = "fitFunction"
                         if region.find("vrelaxed1FRw2ndTauLoose") != -1:
-                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_vrelaxed2_div_SSvrelaxed1_vrelaxed2"
-                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_vrelaxed2_div_SSvrelaxed1_vrelaxed2"
+                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_vrelaxed2_div_SSvrelaxed1_vrelaxed2" % discriminator
+                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_vrelaxed2_div_SSvrelaxed1_vrelaxed2" % discriminator
                         elif region.find("vrelaxed1FRw2ndTauTight") != -1:
-                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_iso2_div_SSvrelaxed1_iso2"
-                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_iso2_div_SSvrelaxed1_iso2"
+                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_iso2_div_SSvrelaxed1_iso2" % discriminator
+                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_iso2_div_SSvrelaxed1_iso2" % discriminator
                         elif region.find("relaxed1FRw2ndTauLoose") != -1:
-                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_relaxed2_div_SSrelaxed1_relaxed2"
-                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_relaxed2_div_SSrelaxed1_relaxed2"
+                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_relaxed2_div_SSrelaxed1_relaxed2" % discriminator
+                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_relaxed2_div_SSrelaxed1_relaxed2" % discriminator
                         elif region.find("relaxed1FRw2ndTauTight") != -1:
-                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_iso2_div_SSrelaxed1_iso2"
-                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_iso2_div_SSrelaxed1_iso2"
+                            graphShapeName_tau1 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau1PtS_SSiso1_iso2_div_SSrelaxed1_iso2" % discriminator
+                            fitFunctionShapeName_tau1_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau1PtS_SSiso1_iso2_div_SSrelaxed1_iso2" % discriminator
                         elif region.find("iso1") != -1:
                             graphShapeName_tau1 = ""
                             fitFunctionShapeName_tau1_central = ""
@@ -642,17 +647,17 @@ for sample in samples.keys():
                         fitFunctionShapeName_tau2_central = None
                         applyFitFunction_or_graph_tau2 = "graph"
                         if region.find("vrelaxed2FRw1stTauLoose") != -1:
-                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSvrelaxed1_iso2_div_SSvrelaxed1_vrelaxed2"
-                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSvrelaxed1_iso2_div_SSvrelaxed1_vrelaxed2"
+                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSvrelaxed1_iso2_div_SSvrelaxed1_vrelaxed2" % discriminator
+                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau2PtS_SSvrelaxed1_iso2_div_SSvrelaxed1_vrelaxed2" % discriminator
                         elif region.find("vrelaxed2FRw1stTauTight") != -1:
-                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSiso1_iso2_div_SSiso1_vrelaxed2"
-                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSiso1_iso2_div_SSiso1_vrelaxed2"
+                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSiso1_iso2_div_SSiso1_vrelaxed2" % discriminator
+                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau2PtS_SSiso1_iso2_div_SSiso1_vrelaxed2" % discriminator
                         elif region.find("relaxed2FRw1stTauLoose") != -1:
-                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSrelaxed1_iso2_div_SSrelaxed1_relaxed2"
-                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSrelaxed1_iso2_div_SSrelaxed1_relaxed2"
+                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSrelaxed1_iso2_div_SSrelaxed1_relaxed2" % discriminator
+                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau2PtS_SSrelaxed1_iso2_div_SSrelaxed1_relaxed2" % discriminator
                         elif region.find("relaxed2FRw1stTauTight") != -1:
-                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSiso1_iso2_div_SSiso1_relaxed2"
-                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSiso1_iso2_div_SSiso1_relaxed2"
+                            graphShapeName_tau2 = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSiso1_iso2_div_SSiso1_relaxed2" % discriminator
+                            fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive_%s/$particleEtaBin/fitFunctionShape_tau2PtS_SSiso1_iso2_div_SSiso1_relaxed2" % discriminator
                         elif region.find("iso2") != -1:
                             graphShapeName_tau2 = ""
                             fitFunctionShapeName_tau2_central = ""
@@ -871,7 +876,7 @@ for discriminator in discriminators.keys():
                         cfg_modified += "\n"
                         cfg_modified += "process.determineJetToTauFakeRate.looseRegion = cms.string('%s')\n" % looseRegion
                         cfg_modified += "process.determineJetToTauFakeRate.tightRegion = cms.string('%s')\n" % tightRegion
-                        cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s')\n" % category
+                        cfg_modified += "process.determineJetToTauFakeRate.category = cms.string('%s_%s')\n" % (category, discriminator)
                         cfg_modified += "process.determineJetToTauFakeRate.tauPtBin = cms.string('%s')\n" % "tau1PtGtXXtau2PtGtXX"
                         cfg_modified += "process.determineJetToTauFakeRate.particle1EtaBin = cms.string('%s')\n" % tau1EtaBin_label
                         cfg_modified += "process.determineJetToTauFakeRate.particle2EtaBin = cms.string('%s')\n" % tau2EtaBin_label
@@ -932,6 +937,23 @@ for discriminator in discriminators.keys():
 #
 # build config files for running addBackgroundZTT, addBackgroundQCD and addBackgroundW macros
 #
+
+categories_and_discriminators = {} # key = discriminator
+categories = [
+    "inclusive",
+    "2bM",
+    "2bL",
+    "1b1j",
+    "2j"
+]
+for discriminator in discriminators.keys():
+    categories_and_discriminators[discriminator] = []
+    for category in categories:
+        categories_and_discriminators[discriminator].append("%s_%s" % (category, discriminator))
+        if category != "inclusive":
+            categories_and_discriminators[discriminator].append("%s_%s_nonresonant" % (category, discriminator))
+            categories_and_discriminators[discriminator].append("%s_%s_resonant" % (category, discriminator))
+
 print "Info: building config files for addBackgroundZTT macro"
 addBackgroundZTT_configFileNames = {} # key = discriminator
 addBackgroundZTT_outputFileNames = {} # key = discriminator
@@ -953,6 +975,8 @@ for discriminator in discriminators.keys():
     cfg_modified += "\n"
     cfg_modified += "process.addBackgroundZTT.tauPtBins = cms.vstring('%s')\n" % "tau1PtGtXXtau2PtGtXX"
     cfg_modified += "process.addBackgroundZTT.tauPtBin_inclusive = cms.string('%s')\n" % "tau1PtGtXXtau2PtGtXX"
+    cfg_modified += "process.addBackgroundZTT.categories = cms.vstring(%s)\n" % categories_and_discriminators[discriminator]
+    cfg_modified += "process.addBackgroundZTT.category_inclusive = cms.string('inclusive_%s')\n" % discriminator    
     cfg_modified += "\n"
     cfgFileName_modified = os.path.join(outputFilePath, configFile_addBackgroundZTT.replace("_cfg.py", "_%s_cfg.py" % discriminator))
     cfgFile_modified = open(cfgFileName_modified, "w")
@@ -993,6 +1017,34 @@ for discriminator in discriminators.keys():
         cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundQCD_outputFileNames[discriminator][qcdOption]
         cfg_modified += "\n"
         cfg_modified += "process.addBackgroundQCD.tauPtBins = cms.vstring('%s')\n" % "tau1PtGtXXtau2PtGtXX"
+        cfg_modified += "process.addBackgroundQCD.categories = cms.vstring(%s)\n" % categories_and_discriminators[discriminator]
+        cfg_modified += "process.addBackgroundQCD.regions = cms.VPSet(\n"
+        cfg_modified += "    cms.PSet(\n"
+        cfg_modified += "        name = cms.string('OSiso1_iso2'),\n"
+        cfg_modified += "        region_norm = cms.PSet(\n"
+        for category in categories_and_discriminators[discriminator]:
+            cfg_modified += "            category_%s = cms.string('OSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+        cfg_modified += "        ),\n"
+        cfg_modified += "        region_shape = cms.PSet(\n"
+        for category in categories_and_discriminators[discriminator]:
+            if qcdOption == "QCDfromSSiso":
+                cfg_modified += "            category_%s = cms.string('SSiso1_iso2'),\n" % category
+            else:
+                cfg_modified += "            category_%s = cms.string('OSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+        cfg_modified += "        )\n"
+        cfg_modified += "    ),\n"
+        cfg_modified += "    cms.PSet(\n"
+        cfg_modified += "        name = cms.string('SSiso1_iso2'),\n"
+        cfg_modified += "        region_norm = cms.PSet(\n"
+        for category in categories_and_discriminators[discriminator]:
+            cfg_modified += "            category_%s = cms.string('SSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+        cfg_modified += "        ),\n"
+        cfg_modified += "        region_shape = cms.PSet(\n"
+        for category in categories_and_discriminators[discriminator]:
+            cfg_modified += "            category_%s = cms.string('SSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+        cfg_modified += "        )\n"
+        cfg_modified += "    )\n"
+        cfg_modified += ")\n"
         cfg_modified += "\n"
         cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s_cfg.py" % discriminator))
         cfgFile_modified = open(cfgFileName_modified, "w")
@@ -1025,6 +1077,31 @@ for discriminator in discriminators.keys():
     cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % addBackgroundW_outputFileNames[discriminator]
     cfg_modified += "\n"
     cfg_modified += "process.addBackgroundW.tauPtBins = cms.vstring('%s')\n" % "tau1PtGtXXtau2PtGtXX"
+    cfg_modified += "process.addBackgroundW.categories = cms.vstring(%s)\n" % categories_and_discriminators[discriminator]
+    cfg_modified += "process.addBackgroundW.regions = cms.VPSet(\n"
+    cfg_modified += "    cms.PSet(\n"
+    cfg_modified += "        name = cms.string('OSiso1_iso2'),\n"
+    cfg_modified += "        region_norm = cms.PSet(\n"
+    for category in categories_and_discriminators[discriminator]:
+        cfg_modified += "            category_%s = cms.string('OSiso1_iso2'),\n" % category
+    cfg_modified += "        ),\n"
+    cfg_modified += "        region_shape = cms.PSet(\n"
+    for category in categories_and_discriminators[discriminator]:
+        cfg_modified += "            category_%s = cms.string('OSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+    cfg_modified += "        )\n"
+    cfg_modified += "    ),\n"
+    cfg_modified += "    cms.PSet(\n"
+    cfg_modified += "        name = cms.string('SSiso1_iso2'),\n"
+    cfg_modified += "        region_norm = cms.PSet(\n"
+    for category in categories_and_discriminators[discriminator]:
+        cfg_modified += "            category_%s = cms.string('SSiso1_iso2'),\n" % category
+    cfg_modified += "        ),\n"
+    cfg_modified += "        region_shape = cms.PSet(\n"
+    for category in categories_and_discriminators[discriminator]:
+        cfg_modified += "            category_%s = cms.string('SSrelaxed1FRw2ndTauTight_iso2'),\n" % category
+    cfg_modified += "        )\n"
+    cfg_modified += "    )\n"
+    cfg_modified += ")\n"
     cfg_modified += "\n"
     cfgFileName_modified = os.path.join(outputFilePath, configFile_addBackgroundW.replace("_cfg.py", "_%s_cfg.py" % discriminator))
     cfgFile_modified = open(cfgFileName_modified, "w")
@@ -1062,60 +1139,77 @@ for discriminator in discriminators.keys():
 
 #--------------------------------------------------------------------------------
 #
+# build shell script for running 'hadd' in order to add histograms for different tau ID discriminators
+#
+hadd_stage6_inputFileNames = []
+for discriminator in discriminators.keys():
+    hadd_stage6_inputFileNames.append(hadd_stage5_outputFileNames[discriminator])
+hadd_stage6_outputFileName = os.path.join(outputFilePath, "hadd_stage6.root")
+hadd_stage6_logFileName    = hadd_stage6_outputFileName.replace(".root", ".log")
+#--------------------------------------------------------------------------------
+
+#--------------------------------------------------------------------------------
+#
 # build config files for running prepareTauTauDatacards2b2tau macro
 #
 print "Info: building config files for prepareTauTauDatacards2b2tau macro"
-prepareTauTauDatacards2b2tau_configFileNames = {} # key = discriminator, "nonresonant"/"resonant", histogramToFit
-prepareTauTauDatacards2b2tau_outputFileNames = {} # key = discriminator, "nonresonant"/"resonant", histogramToFit
-prepareTauTauDatacards2b2tau_logFileNames    = {} # key = discriminator, "nonresonant"/"resonant", histogramToFit
-for discriminator in discriminators.keys():
-    for categoryOption in [ "_nonresonant", "_resonant" ]:
+prepareTauTauDatacards2b2tau_configFileNames = {} # key = "nonresonant"/"resonant", histogramToFit
+prepareTauTauDatacards2b2tau_outputFileNames = {} # key = "nonresonant"/"resonant", histogramToFit
+prepareTauTauDatacards2b2tau_logFileNames    = {} # key = "nonresonant"/"resonant", histogramToFit
+for categoryOption in [ "_nonresonant", "_resonant" ]:
 
-        histogramsToFit = None
-        if categoryOption == "_nonresonant":
-            histogramsToFit = [ "augMT2ed", "svFitMassS" ]
-        elif categoryOption == "_resonant":
-            histogramsToFit = [ "augMT2ed", "svFitMassS", "HHMassM", "HHbRegMassM", "HH2bdyKinFitMassM", "HHbReg2bdyKinFitMassM", "HH4bdyKinFitMassM", "HHbReg4bdyKinFitMassM" ]
-        else:
-            raise ValueError("Invalid categoryOption = '%s' !!" % categoryOption)        
-        for histogramToFit in histogramsToFit:
+    histogramsToFit = None
+    if categoryOption == "_nonresonant":
+        histogramsToFit = [ "augMT2ed", "svFitMassS" ]
+    elif categoryOption == "_resonant":
+        histogramsToFit = [ "augMT2ed", "svFitMassS", "HHMassM", "HHbRegMassM", "HH2bdyKinFitMassM", "HHbReg2bdyKinFitMassM", "HH4bdyKinFitMassM", "HHbReg4bdyKinFitMassM" ]
+    else:
+        raise ValueError("Invalid categoryOption = '%s' !!" % categoryOption)        
+    for histogramToFit in histogramsToFit:
             
-            histogramToFit_fine_binning = histogramToFit
-            if histogramToFit_fine_binning[len(histogramToFit_fine_binning) - 1] == "S" or histogramToFit_fine_binning[len(histogramToFit_fine_binning) - 1] == "M":
-                histogramToFit_fine_binning = histogramToFit_fine_binning[:len(histogramToFit_fine_binning) - 1] + "L"
+        histogramToFit_fine_binning = histogramToFit
+        if histogramToFit_fine_binning[len(histogramToFit_fine_binning) - 1] == "S" or histogramToFit_fine_binning[len(histogramToFit_fine_binning) - 1] == "M":
+            histogramToFit_fine_binning = histogramToFit_fine_binning[:len(histogramToFit_fine_binning) - 1] + "L"
 
-            outputFileName = os.path.join(outputFilePath, "htt_tt.inputs-2b2tau-8TeV-0_%s%s_%s.root" % (discriminator, categoryOption, histogramToFit))
-            initDict(prepareTauTauDatacards2b2tau_outputFileNames, [ discriminator, categoryOption, histogramToFit ])
-            prepareTauTauDatacards2b2tau_outputFileNames[discriminator][categoryOption][histogramToFit] = os.path.join(outputFilePath, outputFileName)
+        outputFileName = os.path.join(outputFilePath, "htt_tt.inputs-2b2tau-8TeV-0%s_%s.root" % (categoryOption, histogramToFit))
+        initDict(prepareTauTauDatacards2b2tau_outputFileNames, [ categoryOption, histogramToFit ])
+        prepareTauTauDatacards2b2tau_outputFileNames[categoryOption][histogramToFit] = os.path.join(outputFilePath, outputFileName)
     
-            cfgFileName_original = configFile_prepareTauTauDatacards2b2tau
-            cfgFile_original = open(cfgFileName_original, "r")
-            cfg_original = cfgFile_original.read()
-            cfgFile_original.close()
-            cfg_modified  = cfg_original
-            cfg_modified += "\n"
-            cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage5_outputFileNames[discriminator]
-            cfg_modified += "\n"
-            cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
-            cfg_modified += "\n"
-            if categoryOption == "_nonresonant":
-                cfg_modified += "process.prepareTauTauDatacards2b2tau.categories = cms.vstring('inclusive', '2bM_nonresonant', '2bL_nonresonant', '1b1j_nonresonant', '2j_nonresonant')\n"
-            elif categoryOption == "_resonant":
-                cfg_modified += "process.prepareTauTauDatacards2b2tau.categories = cms.vstring('inclusive', '2bM_resonant', '2bL_resonant', '1b1j_resonant', '2j_resonant')\n"
-            cfg_modified += "process.prepareTauTauDatacards2b2tau.discriminator = cms.string('%s')\n" % discriminator
-            cfg_modified += "process.prepareTauTauDatacards2b2tau.histogramToFit = cms.string('%s')\n" % histogramToFit
-            cfg_modified += "process.prepareTauTauDatacards2b2tau.histogramToFit_fine_binning = cms.string('%s')\n" % histogramToFit_fine_binning
-            cfg_modified += "\n"
-            cfgFileName_modified = os.path.join(outputFilePath, configFile_prepareTauTauDatacards2b2tau.replace("_cfg.py", "_%s%s_%s_cfg.py" % (discriminator, categoryOption, histogramToFit)))
-            cfgFile_modified = open(cfgFileName_modified, "w")
-            cfgFile_modified.write(cfg_modified)
-            cfgFile_modified.close()
-            initDict(prepareTauTauDatacards2b2tau_configFileNames, [ discriminator, categoryOption, histogramToFit ])
-            prepareTauTauDatacards2b2tau_configFileNames[discriminator][categoryOption][histogramToFit] = cfgFileName_modified
+        cfgFileName_original = configFile_prepareTauTauDatacards2b2tau
+        cfgFile_original = open(cfgFileName_original, "r")
+        cfg_original = cfgFile_original.read()
+        cfgFile_original.close()
+        cfg_modified  = cfg_original
+        cfg_modified += "\n"
+        cfg_modified += "process.fwliteInput.fileNames = cms.vstring('%s')\n" % hadd_stage6_outputFileName
+        cfg_modified += "\n"
+        cfg_modified += "process.fwliteOutput.fileName = cms.string('%s')\n" % outputFileName
+        cfg_modified += "\n"
+        categories_for_datacard = []
+        for discriminator in discriminators.keys():
+            for category in categories:
+                if categoryOption == "_nonresonant":
+                    categories_for_datacard.append("%s_%s" % (category, discriminator))
+                    if category != "inclusive":
+                        categories_for_datacard.append("%s_%s_nonresonant" % (category, discriminator))
+                elif categoryOption == "_resonant":
+                    categories_for_datacard.append("%s_%s" % (category, discriminator))
+                    if category != "inclusive":
+                        categories_for_datacard.append("%s_%s_resonant" % (category, discriminator))
+        cfg_modified += "process.prepareTauTauDatacards2b2tau.categories = cms.vstring(%s)\n" % categories_for_datacard
+        cfg_modified += "process.prepareTauTauDatacards2b2tau.histogramToFit = cms.string('%s')\n" % histogramToFit
+        cfg_modified += "process.prepareTauTauDatacards2b2tau.histogramToFit_fine_binning = cms.string('%s')\n" % histogramToFit_fine_binning
+        cfg_modified += "\n"
+        cfgFileName_modified = os.path.join(outputFilePath, configFile_prepareTauTauDatacards2b2tau.replace("_cfg.py", "%s_%s_cfg.py" % (categoryOption, histogramToFit)))
+        cfgFile_modified = open(cfgFileName_modified, "w")
+        cfgFile_modified.write(cfg_modified)
+        cfgFile_modified.close()
+        initDict(prepareTauTauDatacards2b2tau_configFileNames, [ categoryOption, histogramToFit ])
+        prepareTauTauDatacards2b2tau_configFileNames[categoryOption][histogramToFit] = cfgFileName_modified
 
-            logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
-            initDict(prepareTauTauDatacards2b2tau_logFileNames, [ discriminator, categoryOption, histogramToFit ])
-            prepareTauTauDatacards2b2tau_logFileNames[discriminator][categoryOption][histogramToFit] = logFileName
+        logFileName = cfgFileName_modified.replace("_cfg.py", ".log")
+        initDict(prepareTauTauDatacards2b2tau_logFileNames, [ categoryOption, histogramToFit ])
+        prepareTauTauDatacards2b2tau_logFileNames[categoryOption][histogramToFit] = logFileName
 #--------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
@@ -1181,6 +1275,89 @@ for discriminator in discriminators.keys():
                 cfg_modified += "    sf_bbH = cms.double(0.),\n"
                 cfg_modified += "    legendEntry = cms.string(\"R #rightarrow hh #rightarrow 2b 2#tau (m=700 GeV)\")\n"
                 cfg_modified += ")\n"
+            cfg_modified += "process.makeTauTauPlots2b2tau.categories = cms.VPSet(\n"
+            cfg_modified += "    cms.PSet(\n"
+            cfg_modified += "        name = cms.string('inclusive_%s'),\n" % discriminator
+            cfg_modified += "        label = cms.string('Inclusive')\n"
+            cfg_modified += "    ),\n"
+            cfg_modified += "    cms.PSet(\n"
+            cfg_modified += "        name = cms.string('2bM_%s%s'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        label = cms.string('2 B-Tags (Medium)')\n"
+            cfg_modified += "    ),\n"
+            cfg_modified += "    cms.PSet(\n"
+            cfg_modified += "        name = cms.string('2bL_%s%s'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        label = cms.string('2 B-Tags (Loose)')\n"
+            cfg_modified += "    ),\n"
+            cfg_modified += "    cms.PSet(\n"
+            cfg_modified += "        name = cms.string('1b1j_%s%s'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        label = cms.string('1 B-Tag (Medium)')\n"
+            cfg_modified += "    ),\n"
+            cfg_modified += "    cms.PSet(\n"
+            cfg_modified += "        name = cms.string('2j_%s%s'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        label = cms.string('0 B-Tag (Medium)')\n"
+            cfg_modified += "    )\n"
+            cfg_modified += ")\n"
+            cfg_modified += "process.makeTauTauPlots2b2tau.nuisanceParameters.normalization = cms.PSet(\n"
+            cfg_modified += "    ZTT = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.20'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.20'),\n"  % (discriminator, categoryOption)               
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.20')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    ZL = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.20'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.20'),\n"  % (discriminator, categoryOption)               
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.20')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    ZJ = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.20'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.20'),\n"  % (discriminator, categoryOption)               
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.20')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    TT = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.12'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.12'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.12'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.12'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.12')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    W = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.30'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.30'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.30'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.30'),\n" % (discriminator, categoryOption)              
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.30')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    VV = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.25'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.25'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.25'),\n" % (discriminator, categoryOption)               
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.25'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.25')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            if qcdOption == "QCDfromSSiso":
+                cfg_modified += "    QCDalt = cms.PSet(\n"
+            else:
+                cfg_modified += "    QCD = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.35'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.35'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.35'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.35'),\n" % (discriminator, categoryOption)                
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.35')\n" % (discriminator, categoryOption)
+            cfg_modified += "    ),\n"
+            cfg_modified += "    singleH_SM125  = cms.PSet(\n"
+            cfg_modified += "        category_inclusive_%s = cms.string('1.0 +/- 0.20'),\n" % discriminator
+            cfg_modified += "        category_2bM_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2bL_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_1b1j_%s%s = cms.string('1.0 +/- 0.20'),\n" % (discriminator, categoryOption)
+            cfg_modified += "        category_2j_%s%s = cms.string('1.0 +/- 0.20')\n" % (discriminator, categoryOption)
+            cfg_modified += "    )\n"
+            cfg_modified += ")\n"
             cfg_modified += "\n"
             cfgFileName_modified = os.path.join(outputFilePath, cfgFileName_original.replace("_cfg.py", "_%s%s_cfg.py" % (discriminator, categoryOption)))
             cfgFile_modified = open(cfgFileName_modified, "w")
@@ -1243,11 +1420,11 @@ for discriminator in addBackgroundQCD_outputFileNames.keys():
 for discriminator in addBackgroundW_outputFileNames.keys():
     outputFileNames.append(addBackgroundW_outputFileNames[discriminator])                
 for discriminator in hadd_stage5_outputFileNames.keys():
-    outputFileNames.append(hadd_stage5_outputFileNames[discriminator])    
-for discriminator in prepareTauTauDatacards2b2tau_outputFileNames.keys():
-    for categoryOption in prepareTauTauDatacards2b2tau_outputFileNames[discriminator].keys():
-        for histogramToFit in prepareTauTauDatacards2b2tau_outputFileNames[discriminator][categoryOption].keys():
-            outputFileNames.append(prepareTauTauDatacards2b2tau_outputFileNames[discriminator][categoryOption][histogramToFit])
+    outputFileNames.append(hadd_stage5_outputFileNames[discriminator])
+outputFileNames.append(hadd_stage6_outputFileName)    
+for categoryOption in prepareTauTauDatacards2b2tau_outputFileNames.keys():
+    for histogramToFit in prepareTauTauDatacards2b2tau_outputFileNames[categoryOption].keys():
+        outputFileNames.append(prepareTauTauDatacards2b2tau_outputFileNames[categoryOption][histogramToFit])
 for discriminator in makeTauTauPlots2b2tau_outputFileNames.keys():
     for categoryOption in makeTauTauPlots2b2tau_outputFileNames[discriminator].keys():
         outputFileNames.append(makeTauTauPlots2b2tau_outputFileNames[discriminator][categoryOption])
@@ -1411,16 +1588,27 @@ for discriminator in hadd_stage5_outputFileNames.keys():
        make_MakeFile_vstring(hadd_stage5_inputFileNames[discriminator]),
        hadd_stage5_logFileNames[discriminator]))
 makeFile.write("\n")
-for discriminator in prepareTauTauDatacards2b2tau_outputFileNames.keys():
-    for categoryOption in prepareTauTauDatacards2b2tau_outputFileNames[discriminator].keys():
-        for histogramToFit in prepareTauTauDatacards2b2tau_outputFileNames[discriminator][categoryOption].keys():
-            makeFile.write("%s: %s\n" %
-              (prepareTauTauDatacards2b2tau_outputFileNames[discriminator][categoryOption][histogramToFit],
-               hadd_stage5_outputFileNames[discriminator]))
-            makeFile.write("\t%s%s %s &> %s\n" %
-              (nice, executable_prepareTauTauDatacards2b2tau,
-               prepareTauTauDatacards2b2tau_configFileNames[discriminator][categoryOption][histogramToFit],
-               prepareTauTauDatacards2b2tau_logFileNames[discriminator][categoryOption][histogramToFit]))
+makeFile.write("%s: %s\n" %
+  (hadd_stage6_outputFileName,
+   make_MakeFile_vstring(hadd_stage6_inputFileNames)))
+makeFile.write("\t%s%s %s\n" %
+  (nice, executable_rm,
+   hadd_stage6_outputFileName))
+makeFile.write("\t%s%s %s %s &> %s\n" %
+  (nice, executable_hadd,
+   hadd_stage6_outputFileName,
+   make_MakeFile_vstring(hadd_stage6_inputFileNames),
+   hadd_stage6_logFileName))
+makeFile.write("\n")
+for categoryOption in prepareTauTauDatacards2b2tau_outputFileNames.keys():
+    for histogramToFit in prepareTauTauDatacards2b2tau_outputFileNames[categoryOption].keys():
+        makeFile.write("%s: %s\n" %
+          (prepareTauTauDatacards2b2tau_outputFileNames[categoryOption][histogramToFit],
+           hadd_stage6_outputFileName))
+        makeFile.write("\t%s%s %s &> %s\n" %
+          (nice, executable_prepareTauTauDatacards2b2tau,
+           prepareTauTauDatacards2b2tau_configFileNames[categoryOption][histogramToFit],
+           prepareTauTauDatacards2b2tau_logFileNames[categoryOption][histogramToFit]))
 makeFile.write("\n")    
 for discriminator in makeTauTauPlots2b2tau_outputFileNames.keys():
     for categoryOption in makeTauTauPlots2b2tau_outputFileNames[discriminator].keys():

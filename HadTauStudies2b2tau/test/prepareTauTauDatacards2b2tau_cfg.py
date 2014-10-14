@@ -41,8 +41,7 @@ process.prepareTauTauDatacards2b2tau = cms.PSet(
         "radion[0-9]+Tohh"
     ),
 
-    categories = cms.vstring("inclusive", "2bM", "2bL", "1b1j", "2j"),
-    discriminator = cms.string('2tauT'),
+    categories = cms.vstring("inclusive_2tauT", "2bM_2tauT", "2bL_2tauT", "1b1j_2tauT", "2j_2tauT"),
 
     tauPtBins = cms.vstring(
         "tau1PtGtXXtau2PtGtXX"

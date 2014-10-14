@@ -565,7 +565,8 @@ if runOnMC:
     )
     process.tauTauNtupleProducer.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
     process.tauTauNtupleProducer.srcGenMEt = cms.InputTag('genMetFromGenParticles')
-    process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
+    process.tauTauNtupleProducer.evtWeights.vertexWeight = cms.InputTag('vertexMultiplicityReweight1d2012RunABCDruns190456to208686')
+    process.tauTauNtupleProducer.evtWeights.vertexWeight3d = cms.InputTag('vertexMultiplicityReweight3d2012RunABCDruns190456to208686')
 else:    
     process.tauTauNtupleProducer.hltPaths_diTau = cms.vstring(
         "HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_v2",

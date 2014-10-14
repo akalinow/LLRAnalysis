@@ -475,6 +475,8 @@ int main(int argc, char* argv[])
   Int_t tau1IsTriggerMatched_diTau, tau1IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &tau1IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l1TrigMatched_singleJet", &tau1IsTriggerMatched_singleJet);
+  Float_t tau1VertexZ;
+  inputTree->SetBranchAddress("l1VertexZ", &tau1VertexZ);
 
   TTreeFormula* tau1Selection = 0;
   if ( tau1Selection_string != "" ) {
@@ -495,6 +497,8 @@ int main(int argc, char* argv[])
   Int_t tau2IsTriggerMatched_diTau, tau2IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &tau2IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l2TrigMatched_singleJet", &tau2IsTriggerMatched_singleJet);
+  Float_t tau2VertexZ;
+  inputTree->SetBranchAddress("l2VertexZ", &tau2VertexZ);
 
   TTreeFormula* tau2Selection = 0;
   if ( tau2Selection_string != "" ) {
@@ -646,6 +650,9 @@ int main(int argc, char* argv[])
       if ( tau1Selection && !(tau1Selection->EvalInstance() > 0.5) ) continue;
       if ( tau2Selection && !(tau2Selection->EvalInstance() > 0.5) ) continue;
     }
+
+    // CV: no need to require that both taus originate from the same vertex (cut already applied during Ntuple production)
+    //if ( !(TMath::Abs(tau1VertexZ - tau2VertexZ) < 0.4) ) continue;
 
     if ( !isEmbedded ) {
       bool isTriggerMatched = false;

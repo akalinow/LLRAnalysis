@@ -67,6 +67,7 @@ namespace
   {
     addBinByBinUncertaintyEntryType(const edm::ParameterSet& cfg)
       : add_(0.),
+	addDerr_(0.),
 	min_(0.)
     {
       vstring tauPtBins_vector = cfg.getParameter<vstring>("tauPtBins");
@@ -74,8 +75,9 @@ namespace
 	    tauPtBin != tauPtBins_vector.end(); ++tauPtBin ) {
 	tauPtBins_.insert(*tauPtBin);
       }
-      if ( cfg.exists("add") ) add_ = cfg.getParameter<double>("add");
-      if ( cfg.exists("min") ) min_ = cfg.getParameter<double>("min");      
+      if ( cfg.exists("add")     ) add_     = cfg.getParameter<double>("add");
+      if ( cfg.exists("addDerr") ) addDerr_ = cfg.getParameter<double>("addDerr");
+      if ( cfg.exists("min")     ) min_     = cfg.getParameter<double>("min");      
       std::string range_string = cfg.getParameter<std::string>("range");
       TPRegexp regexpParser_range("([0-9.e+/-]+):([0-9.e+/-]+)");
       TObjArray* subStrings = regexpParser_range.MatchS(range_string.data());
@@ -90,6 +92,7 @@ namespace
     ~addBinByBinUncertaintyEntryType() {}
     std::set<std::string> tauPtBins_;
     double add_;
+    double addDerr_;
     double min_;
     double range_begin_;
     double range_end_;
@@ -219,7 +222,9 @@ int main(int argc, char* argv[])
 
 	    int verbosity = ( histogram->find("svFitMass") != std::string::npos && ((*central_or_shift) == "" || (*central_or_shift) == "central") ) ? 1 : 0;
 
-	    TH1* histogramData_norm = getHistogram(dir_region_norm, processData, *histogram, "central", true);
+	    std::string central_or_shiftData = "central";
+	    if ( central_or_shift->find("CMS_htt_QCDfr") != std::string::npos ) central_or_shiftData = (*central_or_shift);
+	    TH1* histogramData_norm = getHistogram(dir_region_norm, processData, *histogram, central_or_shiftData, true);
 	    if ( verbosity ) {
 	      std::cout << " integral(Data_norm) = " << histogramData_norm->Integral() << std::endl;
 	    }
@@ -285,8 +290,34 @@ int main(int argc, char* argv[])
 		      addBinByBinUncertainty != addBinByBinUncertainties.end(); ++addBinByBinUncertainty ) {
 		  if ( (*addBinByBinUncertainty)->tauPtBins_.find(*tauPtBin) == (*addBinByBinUncertainty)->tauPtBins_.end() ) continue;
 		  if ( binCenter > (*addBinByBinUncertainty)->range_begin_ && binCenter < (*addBinByBinUncertainty)->range_end_ ) {
-		    if ( (*addBinByBinUncertainty)->add_ > 0. ) binErr2_add += square((*addBinByBinUncertainty)->add_*binContent);
-		    if ( binError_min < ((*addBinByBinUncertainty)->min_*binContent) ) binError_min = (*addBinByBinUncertainty)->min_*binContent;
+		    if ( (*addBinByBinUncertainty)->add_ > 0. ) {
+		      binErr2_add += square((*addBinByBinUncertainty)->add_*binContent);
+		    }
+		    std::cout << "bin #" << iBin << " (binCenter = " << binCenter << "): binContent = " << binContent << ", sqrt(binErr2_add) = " << TMath::Sqrt(binErr2_add) << std::endl;
+		    if ( (*addBinByBinUncertainty)->addDerr_ > 0. ) {
+		      double binErr2_addDerr = 0.;
+		      int numBins_addDerr = 0;
+		      if ( iBin >= 2 ) {
+			double binCenter_left = histogramQCD_shape->GetBinCenter(iBin - 1);
+			double binContent_left = histogramQCD_shape->GetBinContent(iBin - 1);
+			binErr2_addDerr += square((*addBinByBinUncertainty)->addDerr_*TMath::Abs(binContent - binContent_left)/TMath::Max(1., TMath::Abs(binCenter - binCenter_left)));
+			++numBins_addDerr;
+		      }
+		      if ( iBin <= (numBins - 1) ) {
+			double binCenter_right = histogramQCD_shape->GetBinCenter(iBin + 1);
+			double binContent_right = histogramQCD_shape->GetBinContent(iBin + 1);
+			binErr2_addDerr += square((*addBinByBinUncertainty)->addDerr_*TMath::Abs(binContent - binContent_right)/TMath::Max(1., TMath::Abs(binCenter - binCenter_right)));
+			++numBins_addDerr;
+		      }
+		      std::cout << " sqrt(binErr2_addDerr) = " << TMath::Sqrt(binErr2_addDerr) << std::endl;
+		      if ( numBins_addDerr > 0 ) {
+			binErr2_add += (binErr2_addDerr/numBins_addDerr);
+			std::cout << "--> setting sqrt(binErr2_add) = " << TMath::Sqrt(binErr2_add) << std::endl;
+		      }
+		    }
+		    if ( binError_min < ((*addBinByBinUncertainty)->min_*binContent) ) {
+		      binError_min = (*addBinByBinUncertainty)->min_*binContent;
+		    }
 		  }
 		}
 		assert(binErr2_add >= 0.);

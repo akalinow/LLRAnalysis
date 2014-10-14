@@ -24,8 +24,8 @@ process.addBackgroundW = cms.PSet(
             name = cms.string("OSiso1_iso2_TightBtag"),
             region_norm = cms.PSet(
                 category_inclusive = cms.string("OSiso1_iso2_TightBtag"),
-                category_nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                category_btag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag")
+                category_nobtag = cms.string("OSiso1_iso2_TightBtag"),
+                category_btag = cms.string("OSiso1_iso2_TightBtag")
             ),        
             region_shape = cms.PSet(
                 category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
@@ -36,9 +36,9 @@ process.addBackgroundW = cms.PSet(
         cms.PSet(
             name = cms.string("OSiso1_iso2_LooseBtag"),
             region_norm = cms.PSet(
-                category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                category_nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                category_btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
+                category_inclusive = cms.string("OSiso1_iso2_LooseBtag"),
+                category_nobtag = cms.string("OSiso1_iso2_LooseBtag"),
+                category_btag = cms.string("OSiso1_iso2_LooseBtag")
             ),        
             region_shape = cms.PSet(
                 category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
@@ -49,9 +49,9 @@ process.addBackgroundW = cms.PSet(
         cms.PSet(
             name = cms.string("SSiso1_iso2_TightBtag"),
             region_norm = cms.PSet(
-                category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                category_nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                category_btag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag")
+                category_inclusive = cms.string("SSiso1_iso2_TightBtag"),
+                category_nobtag = cms.string("SSiso1_iso2_TightBtag"),
+                category_btag = cms.string("SSiso1_iso2_TightBtag")
             ),        
             region_shape = cms.PSet(
                 category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
@@ -62,9 +62,9 @@ process.addBackgroundW = cms.PSet(
         cms.PSet(
             name = cms.string("SSiso1_iso2_LooseBtag"),
             region_norm = cms.PSet(
-                category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                category_nobtag = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),
-                category_btag = cms.string("SSvrelaxed1FRw2ndTauTight_iso2_LooseBtag")
+                category_inclusive = cms.string("SSiso1_iso2_LooseBtag"),
+                category_nobtag = cms.string("SSiso1_iso2_LooseBtag"),
+                category_btag = cms.string("SSiso1_iso2_LooseBtag")
             ),        
             region_shape = cms.PSet(
                 category_inclusive = cms.string("SSrelaxed1FRw2ndTauTight_iso2_LooseBtag"),

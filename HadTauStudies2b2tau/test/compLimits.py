@@ -10,22 +10,25 @@ import subprocess
 
 jobId = '2014Jun09'
 
-version = "v3_01"
+version = "v3_09"
 
-inputFilePath  = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_13/" % version
+inputFilePath  = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_2/" % version
 
 combineFilePath = "/afs/cern.ch/work/v/veelken/mssmHtautauLimits/CMSSW_6_1_1/src/tmp"
 
 categoryOptions = {
     'nonresonant' : {
-        'inputFileName' : 'htt_tt.inputs-2b2tau-8TeV-0_%s_nonresonant_%s.root',
+        'inputFileName' : 'htt_tt.inputs-2b2tau-8TeV-0_nonresonant_%s.root',
         'signal_processes' : [
             "hhTo2b2tau"
         ],
         'categories' : [
-            "2bM_nonresonant",
-            "2bL_nonresonant",
-            "1b1j_nonresonant"
+            "2bM_2tauT_nonresonant",
+            "2bL_2tauT_nonresonant",
+            "1b1j_2tauT_nonresonant",
+            "2bM_2tauL_nonresonant",
+            "2bL_2tauL_nonresonant",
+            "1b1j_2tauL_nonresonant"
         ],
         'histogramsToFit' : [
             "augMT2ed",
@@ -33,16 +36,19 @@ categoryOptions = {
         ]
     },
     'resonant' : {
-        'inputFileName' : 'htt_tt.inputs-2b2tau-8TeV-0_%s_resonant_%s.root',
+        'inputFileName' : 'htt_tt.inputs-2b2tau-8TeV-0_resonant_%s.root',
         'signal_processes' : [
             "mssmH260tohh", "mssmH300tohh", "mssmH350tohh",
             "graviton270Tohh", "graviton300Tohh", "graviton500Tohh", "graviton700Tohh", "graviton1000Tohh",
             "radion300Tohh", "radion500Tohh", "radion700Tohh", "radion1000Tohh"
         ],
         'categories' : [
-            "2bM_resonant",
-            "2bL_resonant",
-            "1b1j_resonant"
+            "2bM_2tauT_resonant",
+            "2bL_2tauT_resonant",
+            "1b1j_2tauT_resonant",
+            "2bM_2tauL_resonant",
+            "2bL_2tauL_resonant",
+            "1b1j_2tauL_resonant"
         ],
         'histogramsToFit' : [
             "augMT2ed",
@@ -56,8 +62,6 @@ categoryOptions = {
         ]
     }
 }
-
-discriminators = [ "2tauL", "2tauT" ]
 
 datacard_template = string.Template('''
 imax    1     number of categories 
@@ -143,40 +147,34 @@ def initDict(dictionary, keys):
             dictionary_at_keylevel[key] = {}
         dictionary_at_keylevel = dictionary_at_keylevel[key]
 
-limit_inputFileNames    = {} # key = categoryOption, discriminator, category, signal_process, histogramToFit
-limit_datacardFileNames = {} # key = categoryOption, discriminator, category, signal_process, histogramToFit
-limit_logFileNames      = {} # key = categoryOption, discriminator, category, signal_process, histogramToFit
+limit_inputFileNames    = {} # key = categoryOption, category, signal_process, histogramToFit
+limit_datacardFileNames = {} # key = categoryOption, category, signal_process, histogramToFit
+limit_logFileNames      = {} # key = categoryOption, category, signal_process, histogramToFit
 
 categories_and_discriminators = {} # key = categoryOption
 
 for categoryOption in categoryOptions.keys():
     categories_and_discriminators[categoryOption] = []
-    for discriminator in discriminators:
-        for category in categoryOptions[categoryOption]['categories']:
-            for histogramToFit in categoryOptions[categoryOption]['histogramsToFit']:
-                for signal_process in categoryOptions[categoryOption]['signal_processes']:
+    for category in categoryOptions[categoryOption]['categories']:
+        for histogramToFit in categoryOptions[categoryOption]['histogramsToFit']:
+            for signal_process in categoryOptions[categoryOption]['signal_processes']:
 
-                    category_and_discriminator = None
-                    if category.find('_') != -1:
-                        idx = category.rfind('_')
-                        category_and_discriminator = "%s_%s%s" % (category[0:idx], discriminator, category[idx:])
-                    else:
-                        category_and_discriminator = "%s_%s" % (category, discriminator)
-                    if not category_and_discriminator in categories_and_discriminators[categoryOption]:
-                        categories_and_discriminators[categoryOption].append(category_and_discriminator)
+                category_and_discriminator = category
+                if not category_and_discriminator in categories_and_discriminators[categoryOption]:
+                    categories_and_discriminators[categoryOption].append(category_and_discriminator)
 
-                    inputFileName = categoryOptions[categoryOption]['inputFileName'] % (discriminator, histogramToFit)
-                    initDict(limit_inputFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
-                    limit_inputFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = inputFileName
+                inputFileName = categoryOptions[categoryOption]['inputFileName'] % histogramToFit
+                initDict(limit_inputFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
+                limit_inputFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = inputFileName
                     
-                    datacardFileName = os.path.join(combineFilePath, "compLimits_%s_%s_%s_%s.txt" % (categoryOption, category_and_discriminator, signal_process, histogramToFit))
-                    makeDatacard(inputFileName, channel, category_and_discriminator, signal_process, datacardFileName)
-                    initDict(limit_datacardFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
-                    limit_datacardFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = datacardFileName
+                datacardFileName = os.path.join(combineFilePath, "compLimits_%s_%s_%s_%s.txt" % (categoryOption, category_and_discriminator, signal_process, histogramToFit))
+                makeDatacard(inputFileName, channel, category_and_discriminator, signal_process, datacardFileName)
+                initDict(limit_datacardFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
+                limit_datacardFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = datacardFileName
         
-                    logFileName = os.path.join(combineFilePath, "compLimits_%s_%s_%s_%s.log" % (categoryOption, category_and_discriminator, signal_process, histogramToFit))
-                    initDict(limit_logFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
-                    limit_logFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = logFileName
+                logFileName = os.path.join(combineFilePath, "compLimits_%s_%s_%s_%s.log" % (categoryOption, category_and_discriminator, signal_process, histogramToFit))
+                initDict(limit_logFileNames, [ categoryOption, category_and_discriminator, signal_process, histogramToFit ])
+                limit_logFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit] = logFileName
 
 executable_cmsenv = "eval `scramv1 runtime -csh`"
 

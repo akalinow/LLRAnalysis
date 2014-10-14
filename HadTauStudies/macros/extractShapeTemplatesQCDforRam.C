@@ -168,7 +168,7 @@ void extractShapeTemplatesQCDforRam()
 
   TH1::AddDirectory(false);
 
-  std::string inputFilePath_histograms = "/data1/veelken/tmp/tauTauAnalysis/v3_01_3/";
+  std::string inputFilePath_histograms = "/data1/veelken/tmp/tauTauAnalysis/v3_09_1/";
   std::string inputFileName_histograms = "MVAwLToldDMsTight/hadd_stage5_MVAwLToldDMsTight.root";
   TFile* inputFile_histograms = new TFile(Form("%s%s", inputFilePath_histograms.data(), inputFileName_histograms.data()));
   if ( !inputFile_histograms ) {
@@ -176,14 +176,14 @@ void extractShapeTemplatesQCDforRam()
     assert(0);
   }
 
-  std::string inputFilePath_fitFunctions_tau = "/data1/veelken/tmp/tauTauAnalysis/v3_01_3/";
+  std::string inputFilePath_fitFunctions_tau = "/data1/veelken/tmp/tauTauAnalysis/v3_09_1/";
   std::string inputFileName_fitFunctions_tau = "MVAwLToldDMsTight/determineJetToTauFakeRate_MVAwLToldDMsTight.root";
   TFile* inputFile_fitFunctions_tau = new TFile(Form("%s%s", inputFilePath_fitFunctions_tau.data(), inputFileName_fitFunctions_tau.data()));
   if ( !inputFile_fitFunctions_tau ) {
     std::cerr << "Failed to open input file containing fitFunctions !!" << std::endl;
     assert(0);
   }
-  std::string inputFilePath_fitFunctions_bjet = "/data1/veelken/tmp/tauTauAnalysis/v3_01_3/";
+  std::string inputFilePath_fitFunctions_bjet = "/data1/veelken/tmp/tauTauAnalysis/v3_09_1/";
   std::string inputFileName_fitFunctions_bjet = "MVAwLToldDMsTight/determineBJetLooseToTightWeight_MVAwLToldDMsTight.root";
   TFile* inputFile_fitFunctions_bjet = new TFile(Form("%s%s", inputFilePath_fitFunctions_bjet.data(), inputFileName_fitFunctions_bjet.data()));
   if ( !inputFile_fitFunctions_bjet ) {

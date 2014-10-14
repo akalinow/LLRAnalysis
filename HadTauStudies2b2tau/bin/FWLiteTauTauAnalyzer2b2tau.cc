@@ -364,6 +364,8 @@ int main(int argc, char* argv[])
   vdouble tau1EtaBins = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vdouble>("tau1EtaBins"); // CV: eta bins in which jet -> tau fake-rates are determined
   vdouble tau2EtaBins = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vdouble>("tau2EtaBins");
 
+  std::string discriminator = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("discriminator");
+
   std::string region = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("region");
   int diTauChargeSel = -1;
   if      ( region.find("OS") != std::string::npos ) diTauChargeSel = kOS;
@@ -496,11 +498,11 @@ int main(int argc, char* argv[])
   std::ostream* selEventsFile_1b1j      = 0;
   std::ostream* selEventsFile_2j        = 0;
   if ( selEventsFileName_output != "" ) {
-    selEventsFile_inclusive = openSelEventsFile_output(selEventsFileName_output, "inclusive");
-    selEventsFile_2bM       = openSelEventsFile_output(selEventsFileName_output, "2bM");
-    selEventsFile_2bL       = openSelEventsFile_output(selEventsFileName_output, "2bL");
-    selEventsFile_1b1j      = openSelEventsFile_output(selEventsFileName_output, "1b1j");
-    selEventsFile_2j        = openSelEventsFile_output(selEventsFileName_output, "2j");
+    selEventsFile_inclusive = openSelEventsFile_output(selEventsFileName_output, Form("inclusive_%s", discriminator.data()));
+    selEventsFile_2bM       = openSelEventsFile_output(selEventsFileName_output, Form("2bM_%s", discriminator.data()));
+    selEventsFile_2bL       = openSelEventsFile_output(selEventsFileName_output, Form("2bL_%s", discriminator.data()));
+    selEventsFile_1b1j      = openSelEventsFile_output(selEventsFileName_output, Form("1b1j_%s", discriminator.data()));
+    selEventsFile_2j        = openSelEventsFile_output(selEventsFileName_output, Form("2j_%s", discriminator.data()));
   }  
 
   fwlite::InputSource inputFiles(cfg); 
@@ -512,59 +514,59 @@ int main(int argc, char* argv[])
   fwlite::TFileService fs = fwlite::TFileService(outputFile.file().data());
 
   edm::ParameterSet cfgHistManager_inclusive = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_inclusive", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_inclusive_%s", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_inclusive(cfgHistManager_inclusive);
   histManager_inclusive.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_2bM = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bM", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bM_%s", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bM(cfgHistManager_2bM);
   histManager_2bM.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2bM_nonresonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bM_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bM_%s_nonresonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bM_nonresonant(cfgHistManager_2bM_nonresonant);
   histManager_2bM_nonresonant.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2bM_resonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bM_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bM_%s_resonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bM_resonant(cfgHistManager_2bM_resonant);
   histManager_2bM_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_2bL = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bL", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bL_%s", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bL(cfgHistManager_2bL);
   histManager_2bL.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2bL_nonresonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bL_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bL_%s_nonresonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bL_nonresonant(cfgHistManager_2bL_nonresonant);
   histManager_2bL_nonresonant.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2bL_resonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2bL_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2bL_%s_resonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2bL_resonant(cfgHistManager_2bL_resonant);
   histManager_2bL_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_1b1j = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_1b1j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_1b1j_%s", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_1b1j(cfgHistManager_1b1j);
   histManager_1b1j.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_1b1j_nonresonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_1b1j_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_1b1j_%s_nonresonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_1b1j_nonresonant(cfgHistManager_1b1j_nonresonant);
   histManager_1b1j_nonresonant.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_1b1j_resonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_1b1j_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_1b1j_%s_resonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_1b1j_resonant(cfgHistManager_1b1j_resonant);
   histManager_1b1j_resonant.bookHistograms(fs);
 
   edm::ParameterSet cfgHistManager_2j = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2j", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2j_%s", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2j(cfgHistManager_2j);
   histManager_2j.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2j_nonresonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2j_nonresonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2j_%s_nonresonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2j_nonresonant(cfgHistManager_2j_nonresonant);
   histManager_2j_nonresonant.bookHistograms(fs);
   edm::ParameterSet cfgHistManager_2j_resonant = makeHistManagerConfig(
-    process_string, Form("tauTau_%s_2j_resonant", region.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
+    process_string, Form("tauTau_%s_2j_%s_resonant", region.data(), discriminator.data()), tauPtBin, tau1EtaBins, tau2EtaBins, central_or_shift);
   TauTauHistManager2b2tau histManager_2j_resonant(cfgHistManager_2j_resonant);
   histManager_2j_resonant.bookHistograms(fs);
 
