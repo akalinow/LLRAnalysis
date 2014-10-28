@@ -51,6 +51,8 @@ public:
 	  shiftMass = 1.01;
 	}
       }
+
+//       std::cout<<"shiftP = "<<shiftP<<std::endl;
       
       double pxS = aTau.px()*shiftP;
       double pyS = aTau.py()*shiftP;

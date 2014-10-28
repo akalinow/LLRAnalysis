@@ -19,6 +19,8 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 
+#include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
+
 #include <TFile.h>
 #include <TChain.h>
 #include <TTree.h>
@@ -30,6 +32,8 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+
+enum { kTree, kHPScombIso3HitsMedium, kMVAwLToldDMsTight, kMVAwLToldDMsVTight };
 
 struct branchEntryBaseType
 {
@@ -179,6 +183,25 @@ int main(int argc, char* argv[])
     else throw cms::Exception("produceTauTauSyncNtuple")
       << "Invalid Configuration Parameter 'embedType' = " << embedType_string << " !!\n";
   }
+
+  std::string trigger_string = cfgProduceTauTauSyncNtuple.getParameter<std::string>("trigger");
+  int trigger = -1;
+  enum { kTau, kJet, kTauPlusJet };
+  if      ( trigger_string == "Tau"        ) trigger = kTau;
+  else if ( trigger_string == "Jet"        ) trigger = kJet;
+  else if ( trigger_string == "TauPlusJet" ) trigger = kTauPlusJet;
+  else throw cms::Exception("produceTauTauSyncNtuple") 
+    << "Invalid Configuration parameter 'trigger' = " << trigger_string << " !!\n";
+  double tauPtForSwitchingTriggers = cfgProduceTauTauSyncNtuple.getParameter<double>("tauPtForSwitchingTriggers");
+  
+  std::string takeTauTriggerTurnOn_string = cfgProduceTauTauSyncNtuple.getParameter<std::string>("takeTauTriggerTurnOn");
+  int takeTauTriggerTurnOn = -1;
+  if      ( takeTauTriggerTurnOn_string == "tree"                  ) takeTauTriggerTurnOn = kTree;
+  else if ( takeTauTriggerTurnOn_string == "HPScombIso3HitsMedium" ) takeTauTriggerTurnOn = kHPScombIso3HitsMedium;
+  else if ( takeTauTriggerTurnOn_string == "MVAwLToldDMsTight"     ) takeTauTriggerTurnOn = kMVAwLToldDMsTight;
+  else if ( takeTauTriggerTurnOn_string == "MVAwLToldDMsVTight"    ) takeTauTriggerTurnOn = kMVAwLToldDMsVTight;
+  else throw cms::Exception("produceTauTauSyncNtuple") 
+    << "Invalid Configuration parameter 'takeTauTriggerTurnOn' = " << takeTauTriggerTurnOn_string << " !!\n";
   
   std::string inputTreeName = cfgProduceTauTauSyncNtuple.getParameter<std::string>("inputTreeName");
   std::string outputTreeName = cfgProduceTauTauSyncNtuple.getParameter<std::string>("outputTreeName");
@@ -266,8 +289,10 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("l1againstElectronLooseMVA3", &leg1againstElectronLoose);
   Int_t leg1TrigMatched;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &leg1TrigMatched);
-  Float_t leg1triggerEffMC_diTau;
+  Float_t leg1triggerWeight_diTau, leg1triggerEffMC_diTau, leg1triggerEffData_diTau;
+  inputTree->SetBranchAddress("leg1triggerWeight_diTau", &leg1triggerWeight_diTau);
   inputTree->SetBranchAddress("leg1triggerEffMC_diTau", &leg1triggerEffMC_diTau);
+  inputTree->SetBranchAddress("leg1triggerEffData_diTau", &leg1triggerEffData_diTau);
 
   Float_t leg2Px, leg2Py, leg2Pz, leg2En;
   inputTree->SetBranchAddress("l2Px", &leg2Px);
@@ -284,8 +309,10 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("l2againstElectronLooseMVA3", &leg2againstElectronLoose);
   Int_t leg2TrigMatched;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &leg2TrigMatched);
-  Float_t leg2triggerEffMC_diTau;
+  Float_t leg2triggerWeight_diTau, leg2triggerEffMC_diTau, leg2triggerEffData_diTau;
+  inputTree->SetBranchAddress("leg2triggerWeight_diTau", &leg2triggerWeight_diTau);
   inputTree->SetBranchAddress("leg2triggerEffMC_diTau", &leg2triggerEffMC_diTau);
+  inputTree->SetBranchAddress("leg2triggerEffData_diTau", &leg2triggerEffData_diTau);
 
   Float_t jet1Px, jet1Py, jet1Pz, jet1En;
   inputTree->SetBranchAddress("jet1Px", &jet1Px);
@@ -323,9 +350,6 @@ int main(int argc, char* argv[])
       inputTree->SetBranchAddress("genTau2PtVsGenTau1Pt", &genTau2PtVsGenTau1Pt); 
     } else assert(0);
   }
-  Float_t leg1triggerWeight_diTau, leg2triggerWeight_diTau;
-  inputTree->SetBranchAddress("leg1triggerWeight_diTau", &leg1triggerWeight_diTau);
-  inputTree->SetBranchAddress("leg2triggerWeight_diTau", &leg2triggerWeight_diTau);
   
   TFile* outputFile = new TFile(outputFileName.data(), "RECREATE");
   TTree* outputTree = new TTree(outputTreeName.data(), outputTreeName.data());
@@ -338,21 +362,22 @@ int main(int argc, char* argv[])
   outputTree->Branch("embedweight", &embedweight, "embedweight/D");
   outputTree->Branch("weight", &weight, "weight/D");
 
+  Double_t triggerWeight_diTau, triggerEffMC_diTau, triggerEffData_diTau;
+  outputTree->Branch("triggerWeight_diTau", &triggerWeight_diTau, "triggerWeight_diTau/D");
+  outputTree->Branch("triggerEffMC_diTau", &triggerEffMC_diTau, "triggerEffMC_diTau/D");
+  outputTree->Branch("triggerEffData_diTau", &triggerEffData_diTau, "triggerEffData_diTau/D");
+
   Double_t antiele_1;
   Int_t passid_1, passiso_1;
-  Double_t trigWeight_1;
   outputTree->Branch("antiele_1", &antiele_1, "antiele_1/D");
   outputTree->Branch("passid_1", &passid_1, "passid_1/I");
   outputTree->Branch("passiso_1", &passiso_1, "passiso_1/I");
-  outputTree->Branch("trigWeight_1", &trigWeight_1, "trigWeight_1/D");
 
   Double_t antiele_2;
   Int_t passid_2, passiso_2;
-  Double_t trigWeight_2;
   outputTree->Branch("antiele_2", &antiele_2, "antiele_2/D");
   outputTree->Branch("passid_2", &passid_2, "passid_2/I");
   outputTree->Branch("passiso_2", &passiso_2, "passiso_2/I");
-  outputTree->Branch("trigWeight_2", &trigWeight_2, "trigWeight_2/D");
 
   Double_t mjj, jdeta, jdphi, dijetpt, dijetphi;
   outputTree->Branch("mjj", &mjj, "mjj/D");
@@ -409,16 +434,14 @@ int main(int argc, char* argv[])
 	 leg2decayModeFinding > 0.5 && leg2byIsolationMedium > 0.5 && leg2TrigMatched &&
 	 (leg1againstElectronLoose > 0.5 || leg2againstElectronLoose > 0.5 ) ) isSelected = true;
     if ( !isSelected) continue;
-   
+       
     antiele_1    = leg1againstElectronLoose;
     passid_1     = leg1decayModeFinding;
     passiso_1    = leg1byIsolationMedium;
-    trigWeight_1 = leg1triggerWeight_diTau; // CV: MSSM analysis -> ignore diTauJet trigger
     
     antiele_2    = leg2againstElectronLoose;
     passid_2     = leg2decayModeFinding;
     passiso_2    = leg2byIsolationMedium;
-    trigWeight_2 = leg2triggerWeight_diTau; // CV: MSSM analysis -> ignore diTauJet trigger
 
     mcweight = vertexWeight;
     if ( isHiggsMC ) {
@@ -431,9 +454,36 @@ int main(int argc, char* argv[])
     if ( leg1GenPt > 1. && leg1DecayMode == 0 ) decaymodeweight *= 0.88; // CV: data/MC difference for taus to be reconstructed in 1-prong 0pi0 decay mode, determined by Phil
     if ( leg2GenPt > 1. && leg2DecayMode == 0 ) decaymodeweight *= 0.88;
 
-    effweight = trigWeight_1*trigWeight_2;
+    if ( takeTauTriggerTurnOn == kTree ) {
+      triggerEffData_diTau = leg2triggerEffData_diTau*leg2triggerEffData_diTau;
+      triggerEffMC_diTau   = leg1triggerEffMC_diTau*leg2triggerEffMC_diTau;
+      triggerWeight_diTau  = leg1triggerWeight_diTau*leg2triggerWeight_diTau;
+    } else {
+      typedef double (*triggerTurnOnCurvePtr)(double, double);
+      triggerTurnOnCurvePtr tauTriggerEffData = 0;
+      triggerTurnOnCurvePtr tauTriggerEffMC   = 0;
+      if ( takeTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
+	tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
+	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
+      } else if ( takeTauTriggerTurnOn == kMVAwLToldDMsTight ) {
+	tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaTight;
+	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
+      } else if ( takeTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
+	tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaVTight;
+	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight;  
+      } 
+      assert(tauTriggerEffData);
+      assert(tauTriggerEffMC);
+      triggerEffData_diTau = (*tauTriggerEffData)(leg1P4.pt(), leg1P4.eta())*(*tauTriggerEffData)(leg2P4.pt(), leg2P4.eta());
+      triggerEffMC_diTau   = (*tauTriggerEffMC)(leg1P4.pt(), leg1P4.eta())*(*tauTriggerEffMC)(leg2P4.pt(), leg2P4.eta());
+      triggerWeight_diTau   = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+    }
+
+    effweight = 1.0;
     if ( isEmbed ) {
-      effweight *= (leg1triggerEffMC_diTau*leg2triggerEffMC_diTau);
+      effweight *= (triggerEffData_diTau);
+    } else {
+      effweight *= triggerWeight_diTau;
     }
 
     embedweight = 1.0;

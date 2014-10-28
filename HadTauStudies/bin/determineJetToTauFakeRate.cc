@@ -165,8 +165,11 @@ void makeControlPlot(TGraphAsymmErrors* graph,
   xAxis_top->SetTitleColor(10);
 
   TAxis* yAxis_top = dummyHistogram_top->GetYaxis();
-  yAxis_top->SetTitle("Fake-rate");
-  yAxis_top->SetTitleOffset(1.2);
+  //yAxis_top->SetTitle("Fake-rate");
+  yAxis_top->SetTitle("f_{#tau}");
+  yAxis_top->SetTitleSize(0.050);
+  //yAxis_top->SetTitleOffset(1.2);
+  yAxis_top->SetTitleOffset(1.15);
 
   dummyHistogram_top->Draw();
 
@@ -241,8 +244,9 @@ void makeControlPlot(TGraphAsymmErrors* graph,
   xAxis_bottom->SetTickLength(0.055);
 
   TAxis* yAxis_bottom = dummyHistogram_bottom->GetYaxis();
-  yAxis_bottom->SetTitle("");
-  yAxis_bottom->SetTitleOffset(0.85);
+  //yAxis_bottom->SetTitle("");
+  yAxis_bottom->SetTitle("#frac{f_{#tau} - Fit}{Fit}");
+  yAxis_bottom->SetTitleOffset(0.75);
   yAxis_bottom->SetNdivisions(505);
   yAxis_bottom->CenterTitle();
   yAxis_bottom->SetTitleSize(0.08);
@@ -532,20 +536,26 @@ int main(int argc, char* argv[])
       double nFailErr = histogram_fail->GetBinError(iBin);     
       double jetToTauFakeRate, jetToTauFakeRateErrUp, jetToTauFakeRateErrDown;
       compFakeRate(nPass, nPassErr, nFail, nFailErr, jetToTauFakeRate, jetToTauFakeRateErrUp, jetToTauFakeRateErrDown, errorFlag);
+      std::cout << "bin #" << iBin << "(x = " << histogram_pass->GetBinCenter(iBin) << ")" << ":" 
+		<< " nPass = " << nPass << " +/- " << nPassErr << ", nFail = " << nFail << " +/- " << nFailErr 
+		<< " --> jetToTauFakeRate = " << jetToTauFakeRate << " + " << jetToTauFakeRateErrUp << " - " << jetToTauFakeRateErrDown << std::endl;
       if ( errorFlag ) continue;
       assert(TMath::Abs(histogram_fail->GetBinCenter(iBin) - histogram_pass->GetBinCenter(iBin)) < 1.e-3*TMath::Abs(histogram_fail->GetBinCenter(iBin) + histogram_pass->GetBinCenter(iBin)));
       TAxis* xAxis = histogram_fail->GetXaxis();
       double x = xAxis->GetBinCenter(iBin);
       points_x.push_back(x);
       double y = jetToTauFakeRate/avJetToTauFakeRate;
+      //double y = jetToTauFakeRate; // CV: only to be used for the purpose of making control plots !!
       points_y.push_back(y);
       double xErrUp = xAxis->GetBinUpEdge(iBin) - xAxis->GetBinCenter(iBin);
       points_xErrUp.push_back(xErrUp);
       double xErrDown = xAxis->GetBinCenter(iBin) - xAxis->GetBinLowEdge(iBin);
       points_xErrDown.push_back(xErrDown);
       double yErrUp = jetToTauFakeRateErrUp/avJetToTauFakeRate;
+      //double yErrUp = jetToTauFakeRateErrUp; // CV: only to be used for the purpose of making control plots !!
       points_yErrUp.push_back(yErrUp);
       double yErrDown = jetToTauFakeRateErrDown/avJetToTauFakeRate;
+      //double yErrDown = jetToTauFakeRateErrDown; // CV: only to be used for the purpose of making control plots !!
       points_yErrDown.push_back(yErrDown);
     }
     int numPoints = points_x.size();
@@ -616,7 +626,7 @@ int main(int argc, char* argv[])
     }
     std::string controlPlotFileName = TString(outputFile.file().data()).ReplaceAll(".root", Form("_%s_controlPlot.png", histogramToFit->data())).Data();    
     makeControlPlot(graph_pass_div_fail, avJetToTauFakeRate, avJetToTauFakeRate + avJetToTauFakeRateErrUp, TMath::Max(0., avJetToTauFakeRate - avJetToTauFakeRateErrDown), 
-		    fitFunctionShape, fitFunctions_sysShifts, xMin, xMax, *histogramToFit, 1.e-1, 1.e+1, controlPlotFileName);
+		    fitFunctionShape, fitFunctions_sysShifts, xMin, xMax, "P_{T} [GeV]", 1.e-1, 1.e+1, controlPlotFileName);
   }
 
   delete inputFile;

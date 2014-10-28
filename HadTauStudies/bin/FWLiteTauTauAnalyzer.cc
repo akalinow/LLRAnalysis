@@ -475,6 +475,8 @@ int main(int argc, char* argv[])
   Int_t tau1IsTriggerMatched_diTau, tau1IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &tau1IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l1TrigMatched_singleJet", &tau1IsTriggerMatched_singleJet);
+  Float_t tau1VertexZ;
+  inputTree->SetBranchAddress("l1VertexZ", &tau1VertexZ);
 
   TTreeFormula* tau1Selection = 0;
   if ( tau1Selection_string != "" ) {
@@ -495,6 +497,8 @@ int main(int argc, char* argv[])
   Int_t tau2IsTriggerMatched_diTau, tau2IsTriggerMatched_singleJet;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &tau2IsTriggerMatched_diTau);
   inputTree->SetBranchAddress("l2TrigMatched_singleJet", &tau2IsTriggerMatched_singleJet);
+  Float_t tau2VertexZ;
+  inputTree->SetBranchAddress("l2VertexZ", &tau2VertexZ);
 
   TTreeFormula* tau2Selection = 0;
   if ( tau2Selection_string != "" ) {
@@ -647,6 +651,9 @@ int main(int argc, char* argv[])
       if ( tau2Selection && !(tau2Selection->EvalInstance() > 0.5) ) continue;
     }
 
+    // CV: no need to require that both taus originate from the same vertex (cut already applied during Ntuple production)
+    //if ( !(TMath::Abs(tau1VertexZ - tau2VertexZ) < 0.4) ) continue;
+
     if ( !isEmbedded ) {
       bool isTriggerMatched = false;
       if ( (trigger == kTau || trigger == kTauPlusJet) &&   
@@ -717,6 +724,14 @@ int main(int argc, char* argv[])
       Float_t triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta)*(*tauTriggerEffMC)(tau2Pt, tau2Eta);
       triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
     }
+    
+    double triggerWeight = 1.0;
+    if ( tau1Pt > tauPtForSwitchingTriggers || tau2Pt > tauPtForSwitchingTriggers ) {
+      double triggerEffData_singleJet = (1. - (1. - effPFJet320(tau1Pt, tau1JetPt, tau1Eta))*(1. - effPFJet320(tau2Pt, tau2JetPt, tau2Eta)));
+      double triggerEffMC_singleJet   = (1. - (1. - effPFJet320MC(tau1Pt, tau1JetPt, tau1Eta))*(1. - effPFJet320MC(tau2Pt, tau2JetPt, tau2Eta)));
+      double triggerWeight_singleJet  = ( triggerEffMC_singleJet > 0. ) ? (triggerEffData_singleJet/triggerEffMC_singleJet) : 1.;
+      triggerWeight = triggerWeight_singleJet;
+    } else triggerWeight = triggerWeight_diTau;
     //---------------------------------------------------------------------------
 
     Float_t evtWeight = 1.0;
@@ -729,12 +744,7 @@ int main(int argc, char* argv[])
 	} else evtWeight *= triggerEffData_diTau;
 	evtWeight *= embeddingWeight;
       } else if ( isMC ) {
-	if ( tau1Pt > tauPtForSwitchingTriggers || tau2Pt > tauPtForSwitchingTriggers ) {
-	  double triggerEffData_singleJet = (1. - (1. - effPFJet320(tau1Pt, tau1JetPt, tau1Eta))*(1. - effPFJet320(tau2Pt, tau2JetPt, tau2Eta)));
-	  double triggerEffMC_singleJet   = (1. - (1. - effPFJet320MC(tau1Pt, tau1JetPt, tau1Eta))*(1. - effPFJet320MC(tau2Pt, tau2JetPt, tau2Eta)));
-	  double triggerWeight_singleJet  = ( triggerEffMC_singleJet > 0. ) ? (triggerEffData_singleJet/triggerEffMC_singleJet) : 1.;
-	  evtWeight *= triggerWeight_singleJet;
-	} else evtWeight *= triggerWeight_diTau;
+	evtWeight *= triggerWeight;
       }
       if ( l1isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau1Eta, TMath::Nint(tau1DecayMode));
       if ( l2isGenHadTau ) evtWeight *= compTauDecayModeWeight(tau2Eta, TMath::Nint(tau2DecayMode));
@@ -860,6 +870,8 @@ int main(int argc, char* argv[])
 
     if ( selEventsFile_inclusive ) {
       (*selEventsFile_inclusive) << run << ":" << lumi << ":" << event << std::endl;
+      //(*selEventsFile_inclusive) << "weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
+      //			   << " svFitMass = " << svFitMass << std::endl;
     }
 
     ++selectedEntries_inclusive;
@@ -880,6 +892,8 @@ int main(int argc, char* argv[])
 
       if ( selEventsFile_nobtag ) {
 	(*selEventsFile_nobtag) << run << ":" << lumi << ":" << event << std::endl;
+	//(*selEventsFile_nobtag) << "weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
+	//			  << " svFitMass = " << svFitMass << std::endl;
       }
       
       ++selectedEntries_nobtag;
@@ -899,6 +913,8 @@ int main(int argc, char* argv[])
 
       if ( selEventsFile_btag ) {
 	(*selEventsFile_btag) << run << ":" << lumi << ":" << event << std::endl;
+	//(*selEventsFile_btag) << " weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
+	//		        << " svFitMass = " << svFitMass << std::endl;
       }
       
       ++selectedEntries_btag;

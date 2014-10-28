@@ -462,6 +462,16 @@ RECO_SAMPLES[vhSampleName] = {
     'type'             : 'smMC'
 }
 SAMPLES_TO_ANALYZE.append(vhSampleName)
+bbhSampleName = "HiggsBB125"
+RECO_SAMPLES[bbhSampleName] = {
+    'datasetpath'      : '/BBH_HToTauTau_M_125_TuneZ2star_8TeV_pythia6_tauola/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+    'dbs_url'          : 'http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet',
+    'events_processed' : 300300,
+    'events_per_job'   : 20000,
+    'x_sec'            : 0.2035*0.0632*_picobarns, # taken from https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingSummer2013#53X_MC_Samples
+    'type'             : 'smMC'
+}
+SAMPLES_TO_ANALYZE.append(bbhSampleName)
 whbbSampleName = "HiggsWHbb125"
 RECO_SAMPLES[whbbSampleName] = {
     'datasetpath'      : '/WH_WToLNu_HToBB_M-125_8TeV-powheg-herwigpp/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',

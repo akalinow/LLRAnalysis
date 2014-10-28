@@ -110,19 +110,22 @@ process.addBackgroundQCD = cms.PSet(
     addBinByBinUncertainties = cms.VPSet(
         cms.PSet(
             tauPtBins = cms.vstring("tau1PtGt45tau2PtGt45", "tau1PtGt45tau2Pt45to60"),
-            #add = cms.double(0.10),
+            ##add = cms.double(0.10),
+            ##addDerr = cms.double(0.),
             min = cms.double(0.10),
             ranges = cms.vstring("50:155") # CV: extend slightly beyond 150 GeV as btag category uses binning {..., 140, 160,...}
         ),
         cms.PSet(
             tauPtBins = cms.vstring("tau1PtGt45tau2Pt60to80"),
-            #add = cms.double(0.10),
+            ##add = cms.double(0.10),
+            ##addDerr = cms.double(0.),
             min = cms.double(0.10),
             ranges = cms.vstring("50:200")
         ),
         cms.PSet(
             tauPtBins = cms.vstring("tau1PtGt45tau2PtGt80", "tau1PtGt45tau2PtGt60"),
-            #add = cms.double(0.10),
+            ##add = cms.double(0.10),
+            ##addDerr = cms.double(0.),
             min = cms.double(0.10),
             ranges = cms.vstring("50:250")
         )

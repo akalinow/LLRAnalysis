@@ -20,6 +20,22 @@ TauTauHistManager2b2tau::TauTauHistManager2b2tau(const edm::ParameterSet& cfg)
   central_or_shift_ = cfg.getParameter<std::string>("central_or_shift");
 }
 
+namespace
+{
+  void setAxisLabelsGenMatch(TH1* histogram)
+  {
+    TAxis* xAxis = histogram->GetXaxis();
+    xAxis->SetBinLabel(1, "unknown");
+    xAxis->SetBinLabel(2, "genuine #tau_{h}");
+    xAxis->SetBinLabel(3, "#mu #rightarrow #tau_{h} fake");
+    xAxis->SetBinLabel(4, "e #rightarrow #tau_{h} fake");
+    xAxis->SetBinLabel(5, "jet #rightarrow #tau_{h} fake");
+    xAxis->LabelsOption("vu");
+    xAxis->SetLabelSize(0.050);
+    xAxis->SetLabelOffset(0.010);
+  }
+}
+
 void TauTauHistManager2b2tau::bookHistograms(TFileDirectory& dir)
 {
   const int numPtBinsS = 20;
@@ -48,6 +64,7 @@ void TauTauHistManager2b2tau::bookHistograms(TFileDirectory& dir)
   histogramTau1Phi_               = book1D(dir, "tau1Phi",               "#tau_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
   histogramTau1DecayMode_         = book1D(dir, "tau1DecayMode",         "#tau_{1} Decay Mode", 15, -0.5, 14.5);
   histogramTau1GenMatch_          = book1D(dir, "tau1GenMatch",          "#tau_{1} gen. Match", 5, -0.5, 4.5);
+  setAxisLabelsGenMatch(histogramTau1GenMatch_);
   histogramTau1IsoPtSum_          = book1D(dir, "tau1IsoDiscrL",         "#tau_{1} Isolation", 101, -0.05, 10.05);
   histogramTau1MVA_               = book1D(dir, "tau1IsoDiscrS",         "#tau_{1} MVA output", 105, -0.005, 1.045);
 
@@ -66,6 +83,7 @@ void TauTauHistManager2b2tau::bookHistograms(TFileDirectory& dir)
   histogramTau2Phi_               = book1D(dir, "tau2Phi",               "#tau_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
   histogramTau2DecayMode_         = book1D(dir, "tau2DecayMode",         "#tau_{2} Decay Mode", 15, -0.5, 14.5);
   histogramTau2GenMatch_          = book1D(dir, "tau2GenMatch",          "#tau_{2} gen. Match", 5, -0.5, 4.5);
+  setAxisLabelsGenMatch(histogramTau2GenMatch_);
   histogramTau2IsoPtSum_          = book1D(dir, "tau2IsoDiscrL",         "#tau_{2} Isolation", 101, -0.05, 10.05);
   histogramTau2MVA_               = book1D(dir, "tau2IsoDiscrS",         "#tau_{2} MVA output", 105, -0.005, 1.045);
 

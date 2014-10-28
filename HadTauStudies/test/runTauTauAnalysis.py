@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_06"
+version = "v3_09"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_3/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -135,7 +135,7 @@ samples = {
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
         'inputFiles' : [ "pfEmbed_TTJetsFullLept" ],
-        'lumiScale' : getLumiScale('TTJetsFullLept'),
+        'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from arXiv:1303.6254, need to multiply by branching fraction for both taus to decay hadronically 
         'addWeights' : [ "topPtWeightNom" ]
     },
     'HiggsGGH125' : {
@@ -190,24 +190,22 @@ def makeJetToTauFakeRateCorrection(par0, par1, par2, par3, x0 = 163.7):
     return retVal
 
 discriminators = {
-    'HPScombIso3HitsMedium' : {
-        'tau1Selection' : {
-            'iso'      : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
-            'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)",
-            'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)"
-        },
-        'tau2Selection' : {
-            'iso'      : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
-            'relaxed'  : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)",
-            'vrelaxed' : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)"
-        },
-        'tau1FRwEtaBins'             : [ -1., 1.479, 9.9 ],
-        'tau2FRwEtaBins'             : [ -1., 1.479, 9.9 ],
-        ##'tau1FRwEtaBins'             : [ -1., 9.9 ],
-        ##'tau2FRwEtaBins'             : [ -1., 9.9 ],
-        # jetToTauFakeRateCorrection taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
-        'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
-    },
+##     'HPScombIso3HitsMedium' : {
+##         'tau1Selection' : {
+##             'iso'      : "l1MediumDB3HIso > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+##             'relaxed'  : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)",
+##             'vrelaxed' : "l1RawDB3HIso < 4.0 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1MediumDB3HIso > 0.5)"
+##         },
+##         'tau2Selection' : {
+##             'iso'      : "l2MediumDB3HIso > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##             'relaxed'  : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)",
+##             'vrelaxed' : "l2RawDB3HIso < 4.0 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2MediumDB3HIso > 0.5)"
+##         },
+##         'tau1FRwEtaBins'             : [ -1., 1.479, 9.9 ],
+##         'tau2FRwEtaBins'             : [ -1., 9.9 ],
+##         # jetToTauFakeRateCorrection taken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
+##         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.18127e-1, -1.43612e-1, -4.31415e-2, -9.81383e-2)
+##     },
     'MVAwLToldDMsTight' : {
         'tau1Selection' : {
             'iso'      : "l1TightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
@@ -288,6 +286,14 @@ central_or_shifts = {
         'addWeights_extension'    : []
     },
     'CMS_htt_higgsPtReweight_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_htt_higgsPtReweight_scale_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_htt_higgsPtReweight_scale_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
@@ -552,18 +558,19 @@ for sample in samples.keys():
                         'addWeights_extension'       : [],
                         'fitFunctionShapePower_tau1' : 0.,
                         'fitFunctionShapePower_tau2' : 0.
-                    }})                           
+                    }})
+                
             for central_or_shift in central_or_shifts_region.keys():
 
-                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
+                if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") != -1:
                     continue
-                if central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 and sample.find("HiggsSUSYGluGlu") == -1:
+                if (central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 or central_or_shift.find('CMS_htt_higgsPtReweight_scale_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
                 if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
                     continue
                 if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
-                if len(central_or_shift) > 0 and central_or_shift.find('central') == -1 and sample.find("Data") != -1:
+                if sample.find("Data") != -1 and not (central_or_shift == "" or central_or_shift.find("CMS_htt_QCDfr") != -1):
                     continue
                 
                 inputFileNames = []
@@ -573,7 +580,8 @@ for sample in samples.keys():
                 if len(inputFileNames) == 0:
                     raise ValueError("Failed to find input files for sample = '%s' !!" % sample)
                 ##if central_or_shift == "" or central_or_shift == "central":
-                print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
+                ##print " central_or_shift = '%s': inputFileNames = %s" %  (central_or_shift, inputFileNames)
+                print " central_or_shift = '%s'" % central_or_shift
 
                 for tauPtBin in tauPtBins:
 
@@ -722,7 +730,7 @@ for sample in samples.keys():
                                 raise ValueError("No fake-rate weights defined for region = '%s' !!" % region)
                             graphShapeName_tau2 = None
                             fitFunctionShapeName_tau2_central = None
-                            applyFitFunction_or_graph_tau2 = "graph"
+                            applyFitFunction_or_graph_tau2 = "fitFunction"
                             if region.find("vrelaxed2FRw1stTauLoose") != -1:
                                 graphShapeName_tau2 = "jetToTauFakeRate/inclusive/$particleEtaBin/jetToTauFakeRate_tau2PtS_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
                                 fitFunctionShapeName_tau2_central = "jetToTauFakeRate/inclusive/$particleEtaBin/fitFunctionShape_tau2PtS_SSvrelaxed1_iso2_LooseBtag_div_SSvrelaxed1_vrelaxed2_LooseBtag"
@@ -786,8 +794,12 @@ for sample in samples.keys():
                             lutNameHiggsPtReweighting = "A_mA%s_mu200/mssmHiggsPtReweight_A_mA%s_mu200_central" % (massPoint, massPoint)
                             if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVUp':
                                 lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaLow")
-                            if central_or_shift == 'CMS_htt_higgsPtReweight_8TeVDown':
+                            elif central_or_shift == 'CMS_htt_higgsPtReweight_8TeVDown':
                                 lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaHigh")
+                            elif central_or_shift == 'CMS_htt_higgsPtReweight_scale_8TeVUp':
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaLow")  # CV: replace by "_scaleUp" once ready
+                            elif central_or_shift == 'CMS_htt_higgsPtReweight_scale_8TeVDown':
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaHigh") # CV: replace by "_scaleDown" once ready                    
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyHiggsPtReweighting = cms.bool(True)\n"
                             cfg_modified += "process.FWLiteTauTauAnalyzer.higgsPtReweighting.lutName = cms.string('%s')\n" % lutNameHiggsPtReweighting
                         else:
@@ -795,6 +807,8 @@ for sample in samples.keys():
                         if region == "OSiso1_iso2_TightBtag" and (central_or_shift == "" or central_or_shift == "central"):
                             selEventsFileName = outputFileName.replace(".root", "_selEvents.txt")
                             cfg_modified += "process.FWLiteTauTauAnalyzer.selEventsFileName_output = cms.string('%s')\n" % selEventsFileName
+                            failEventsFileName = outputFileName.replace(".root", "_failEvents.txt")
+                            cfg_modified += "process.FWLiteTauTauAnalyzer.failEventsFileName_output = cms.string('%s')\n" % failEventsFileName
                         cfgFileName_modified = os.path.join(outputFilePath_subdir, cfgFileName_original.replace("_cfg.py", "_%s_%s_%s_%s_%s_%s_cfg.py" % \
                                                                                      (discriminator, sample, process, region, tauPtBin_label, central_or_shift)))
                         cfgFileName_modified = cfgFileName_modified.replace("__", "_")

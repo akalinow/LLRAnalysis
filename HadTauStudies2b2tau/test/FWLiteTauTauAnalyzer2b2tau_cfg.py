@@ -33,6 +33,7 @@ process.FWLiteTauTauAnalyzer2b2tau = cms.PSet(
     tau2Selection = cms.string(""),
     tau2PtMin = cms.double(45.),
     tau2PtMax = cms.double(-1.),
+    discriminator = cms.string("2tauT"),
 
     trigger = cms.string("TauPlusJet"),
     tauPtForSwitchingTriggers = cms.double(350.),

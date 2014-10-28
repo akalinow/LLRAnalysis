@@ -141,7 +141,6 @@ int main(int argc, char* argv[])
   }
 
   vstring categories = cfgPrepareTauTauDatacards2b2tau.getParameter<vstring>("categories");
-  std::string discriminator = cfgPrepareTauTauDatacards2b2tau.getParameter<std::string>("discriminator");
 
   vstring tauPtBins = cfgPrepareTauTauDatacards2b2tau.getParameter<vstring>("tauPtBins");
   if ( tauPtBins.size() != 1 )
@@ -174,17 +173,17 @@ int main(int argc, char* argv[])
     for ( vstring::const_iterator tauPtBin = tauPtBins.begin();
 	  tauPtBin != tauPtBins.end(); ++tauPtBin ) {
       std::cout << "processing category = " << (*category) << ", tauPtBin = " << (*tauPtBin) << std::endl;
-
+      
       TDirectory* dir_signalRegion = getDirectory(inputFile, signalRegion, *category, *tauPtBin, true);
       assert(dir_signalRegion);
-
+      
       // copy histograms that do not require modifications
       std::cout << "copying histograms that do not require modifications" << std::endl;
       TList* list = dir_signalRegion->GetListOfKeys();
       TIter next(list);
       TKey* key = 0;
       while ( (key = dynamic_cast<TKey*>(next())) ) {
-        TObject* object = key->ReadObj();
+	TObject* object = key->ReadObj();
 	TDirectory* subdir = dynamic_cast<TDirectory*>(object);
 	if ( !subdir ) continue;
 	bool isToCopy = false;
@@ -198,14 +197,15 @@ int main(int argc, char* argv[])
 	    for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 		  central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
 	      std::cout << "histogramToCopy = " << histogramToCopy->first << ", central_or_shift = " << (*central_or_shift) << std::endl;
-
+	      
 	      std::string category_and_discriminator;
-	      if ( category->find('_') != std::string::npos ) {
-		size_t idx = category->find_last_of('_');
-		category_and_discriminator = Form("%s_%s%s", std::string(*category, 0, idx).data(), discriminator.data(), std::string(*category, idx).data());
-	      } else {
-		category_and_discriminator = Form("%s_%s", category->data(), discriminator.data());
-	      }
+	      //if ( category->find('_') != std::string::npos ) {
+	      //  size_t idx = category->find_last_of('_');
+	      //  category_and_discriminator = Form("%s_%s%s", std::string(*category, 0, idx).data(), discriminator->data(), std::string(*category, idx).data());
+	      //} else {
+	      //  category_and_discriminator = Form("%s_%s", category->data(), discriminator->data());
+	      //}
+	      category_and_discriminator = (*category);
 	      std::string subdirName_output = getSubdirNameOutput(category_and_discriminator, *tauPtBin);
 	      if ( subdirName_output == "" ) continue; // CV: skip tau Pt bins that are not used in datacards, in order to keep size of datacard.root files small
 	      TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);

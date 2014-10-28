@@ -48,7 +48,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         ##'/store/user/veelken/CMSSW_5_3_x/skims/simZprime2500toTauTau_RECO_2_2_0t6.root'
-        'file:/data1/veelken/CMSSW_5_3_x/skims/selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo_AOD.root'
+        ##'file:/data1/veelken/CMSSW_5_3_x/skims/selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo_AOD.root'
+        'file:/afs/cern.ch/user/a/abdollah/public/For_Olivier/pickevents_1_1_3Gd_SUSYBB_120GeV_285Events.root'                                 
     ),
     dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
     inputCommands=cms.untracked.vstring(

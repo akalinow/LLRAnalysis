@@ -46,7 +46,8 @@ samplesToAnalyze = [
     #'radion500Tohh',
     #'radion700Tohh',
     #'radion1000Tohh',
-    'HiggsWHbb125'
+    #'HiggsWHbb125'
+    'HiggsBB125'
 ]
 
 #--------------------------------------------------------------------------------
