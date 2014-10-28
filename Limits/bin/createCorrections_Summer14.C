@@ -615,11 +615,20 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
       Double_t MCValEndcaps_pt = TriggerWeightEndcaps->Eval(pt);
       Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
 
-      Double_t DataValBarrel_pt = 0.3+0.7*TriggerWeightBarrel->Eval(pt);
-      Double_t DataValBarrel_800 = 0.3+0.7*TriggerWeightBarrel->Eval(800.);
+      //0.6245691177080073 = dataABC/dataABCD = 12101.071/19375.071
+      float dataABC_dataABCD = 12101.071/19375.071 ;
+
+      Double_t DataValBarrel_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightBarrel->Eval(pt);
+      Double_t DataValBarrel_800 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightBarrel->Eval(800.);
 	  
-      Double_t DataValEndcaps_pt = 0.3+0.7*TriggerWeightEndcaps->Eval(pt);
-      Double_t DataValEndcaps_400 = 0.3+0.7*TriggerWeightEndcaps->Eval(400.);
+      Double_t DataValEndcaps_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(pt);
+      Double_t DataValEndcaps_400 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(400.);
+
+//       Double_t DataValBarrel_pt = 0.3+0.7*TriggerWeightBarrel->Eval(pt);
+//       Double_t DataValBarrel_800 = 0.3+0.7*TriggerWeightBarrel->Eval(800.);
+	  
+//       Double_t DataValEndcaps_pt = 0.3+0.7*TriggerWeightEndcaps->Eval(pt);
+//       Double_t DataValEndcaps_400 = 0.3+0.7*TriggerWeightEndcaps->Eval(400.);
 	  
       delete TriggerWeightEndcaps;
       delete TriggerWeightBarrel;
@@ -673,7 +682,7 @@ Double_t myFuncTurnOnTau(Double_t *x, Double_t *par) {
 
 void makeFile(){
 
-  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root","RECREATE");
+  TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root","RECREATE");
 //   TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root","RECREATE");
 //   TFile* fout = new TFile("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root","RECREATE");
 
