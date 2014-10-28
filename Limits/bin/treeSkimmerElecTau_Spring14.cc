@@ -689,9 +689,11 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Winter13_v8_MVAIso.root" << endl;
+  cout << "Using corrections from llrCorrections_Fall14_v10_MVAIso.root" << endl;
+//   cout << "Using corrections from llrCorrections_Winter13_v8_MVAIso.root" << endl;
 //   cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root");
+//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
 //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
   //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
@@ -928,6 +930,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   float                                  mssmHiggsPtReweightGluGlu_lowmH_HqTUp, mssmHiggsPtReweightGluGlu_lowmH_HqTDown ;//HqT
   float                                  mssmHiggsPtReweightGluGlu_lowmH_HIGLUUp, mssmHiggsPtReweightGluGlu_lowmH_HIGLUDown ;//HIGLU
   float                                  mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp, mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown ;//tanBeta
+
+  float weightForHighPtTauEfficiencySMSignalsUp ;
+  float weightForHighPtTauEfficiencySMSignalsDown ;
 
   float embeddingFilterEffWeight_,TauSpinnerWeight_,ZmumuEffWeight_,diTauMassVSdiTauPtWeight_,tau2EtaVStau1EtaWeight_,tau2PtVStau1PtWeight_,muonRadiationWeight_,muonRadiationDownWeight_,muonRadiationUpWeight_,elecEffSF_;//IN
   float nHits;
@@ -1391,6 +1396,9 @@ void fillTrees_ElecTauStream( TChain* currentTree,
   //lowmH - tanBeta up/down
   outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaUp/F");
   outTreePtOrd->Branch("mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown", &mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown, "mssmHiggsPtReweightGluGlu_lowmH_tanBetaDown/F");
+
+  outTreePtOrd->Branch("weightForHighPtTauEfficiencySMSignalsUp", &weightForHighPtTauEfficiencySMSignalsUp, "weightForHighPtTauEfficiencySMSignalsUp/F");
+  outTreePtOrd->Branch("weightForHighPtTauEfficiencySMSignalsDown", &weightForHighPtTauEfficiencySMSignalsDown, "weightForHighPtTauEfficiencySMSignalsDown/F");
 
   outTreePtOrd->Branch("ZeeWeight",          &ZeeWeight,"ZeeWeight/F");
   outTreePtOrd->Branch("ZeeWeightHCP",          &ZeeWeightHCP,"ZeeWeightHCP/F");
@@ -2431,6 +2439,20 @@ void fillTrees_ElecTauStream( TChain* currentTree,
     isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
     if(isDuplicated) continue;
     ///////////////////////
+
+    weightForHighPtTauEfficiencySMSignalsUp = 1.;
+    weightForHighPtTauEfficiencySMSignalsDown = 1.;
+    if(SampleT.Contains("SUSY"))
+      {
+	;
+      }
+    else if(!SampleT.Contains("SUSY") && (SampleT.Contains("VBFH")||SampleT.Contains("GGFH")||SampleT.Contains("VH")))
+      {
+	weightForHighPtTauEfficiencySMSignalsUp = 1+0.20/1000.*(*genDiTauLegsP4)[1].Pt();
+	weightForHighPtTauEfficiencySMSignalsDown = 1-0.20/1000.*(*genDiTauLegsP4)[1].Pt();
+// 	cout<<"weightForHighPtTauEfficiencySMSignalsUp = "<<weightForHighPtTauEfficiencySMSignalsUp<<endl;
+// 	cout<<"weightForHighPtTauEfficiencySMSignalsDown = "<<weightForHighPtTauEfficiencySMSignalsDown<<endl;
+      }    
 
     uParl=-999.; uPerp=-999.; metParl=-999.; metPerp=-999.; metSigmaParl=-999.; metSigmaPerp=-999.;
 

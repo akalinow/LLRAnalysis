@@ -9,7 +9,8 @@ import subprocess
 WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/EleTau/'
 WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES/EleTau/'
 WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_NewTauIDVariables/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/EleTau/temp/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/EleTau/temp2/'
+#OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/EleTau/temp/'
 
 options = {
     ###e+tau samples
@@ -869,8 +870,8 @@ options = {
     'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_ElecTau.root',
     'sample'         : 'TTJets-Embedded',
-    'xSection'       : 26.1975,
-    'skimEff'        : 1.0 * 630093./12011428,##12011428 ##758691
+    'xSection'       : 5.8869,#26.1975,#now accounting for BF
+    'skimEff'        : 1.0 * 630093./758691.,#12011428 ##758691
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
@@ -982,8 +983,8 @@ options = {
     'ZZJetsTo2L2Nu' : {
     'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_11Mar2014_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
-    'sample'         : 'ZZJetsTo2L2Q',
-    'xSection'       : 2.502,
+    'sample'         : 'ZZJetsTo2L2Nu',
+    'xSection'       : 0.716,#2.502,
     #'skimEff'        : 0.468227 * 144262./437751,
     'skimEff'        : 1.0 * 170171./954911,
     'iJson'          : -1,
