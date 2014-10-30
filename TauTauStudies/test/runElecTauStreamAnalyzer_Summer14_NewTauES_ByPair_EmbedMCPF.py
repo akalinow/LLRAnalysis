@@ -676,6 +676,7 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     vertices           = cms.InputTag("selectedPrimaryVertices"),
     triggerResults     = cms.InputTag("patTriggerEvent"),
     genParticles       = cms.InputTag("genParticles"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
     genTaus            = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     pileupSrc          = cms.InputTag("addPileupInfo::HLT"),#for NPU in MC PF Emb
     isMC               = cms.bool(runOnMC),

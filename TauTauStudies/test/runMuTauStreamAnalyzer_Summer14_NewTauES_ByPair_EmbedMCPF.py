@@ -606,6 +606,7 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     vertices       = cms.InputTag("selectedPrimaryVertices"),
     triggerResults = cms.InputTag("patTriggerEvent"),
     genParticles   = cms.InputTag("genParticles"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
     genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
     isRhEmb        = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
