@@ -924,11 +924,11 @@ options = {
     'nDiv'           : 1
     },
     'TTJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_30Oct14_Trees_v2/', #WorkdirLoc+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_ElecTau.root',
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 5.8869,#26.1975,#now accounting for BF
-    'skimEff'        : 1.0 * 630093./758691.,#12011428 ##758691
+    'skimEff'        : 1.0 * 630093./12011428., ##758691
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1

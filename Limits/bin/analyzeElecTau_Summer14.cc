@@ -566,6 +566,8 @@ void drawHistogram(TCut sbinPair,
       weight *= "topPtWeightDown"; 
     else if(type.Contains("TTJets")) 
       weight *= "topPtWeightNom"; 
+
+    if(type.Contains("TTJetsEmb")) weight *= "embeddingWeight";
     
     if(type.Contains("QCDCorr"))
       {
@@ -3823,7 +3825,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    cout<<"     3) Compute inclusive TTbar MC Embedded"<<endl;
 	    float NormTTjetsEmbInclusive = 0.;
-	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJets",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelEmbeddingInclusive, 1);
+	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelEmbeddingInclusive, 1);
 	    cout <<"TTbar MC Embed = "<<h1->Integral()<<endl;
 	    h1->Reset();
 
@@ -3842,7 +3844,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    cout<<"     5) Compute category TTbar MC Embedded"<<endl;
 	    float NormTTjetsEmbNew = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
+	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
 	    cout <<"TTbar MC Embed category integral = "<<h1->Integral()<<endl;
 	    cout <<"Number of bins = "<<h1->GetNbinsX()<<endl;
 	    TH1F* h_TTbarMC_Emb_category = (TH1F*)h1->Clone("h_TTbarMC_Emb_category");
@@ -3952,7 +3954,7 @@ void plotElecTau( Int_t mH_           = 120,
 	  if(selection_.find("bTag")!=string::npos)
 	    { 
 	      hCleanerfb->Reset(); float NormTTjetsEmbNew_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
+	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
 	      hTTbEmb_fb->Add(hCleanerfb,1.);
 	      hCleanerfb->Reset(); 
 	    }

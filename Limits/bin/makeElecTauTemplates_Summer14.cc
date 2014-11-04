@@ -2511,7 +2511,8 @@ void produceAll(){
 //   produceOne("Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_TauSpinner_050914",true);
 
 
-  TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_211014";
+//   TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_211014";
+  TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_WStitching";
   TString folder = "results/ElecTau/"+simple_folder;
     
   std::vector<string> variables ;
@@ -2547,10 +2548,10 @@ void produceAll(){
     {
       if(variables.at(i)=="diTauNSVfitMass")
 	{
-	  TString local_simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014";
+	  TString local_simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching";
 	  TString OutFileName = "";
-	  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014/datacards/eTau*_PtWeight.root") ;
-	  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014/datacards/eTau*_NoPtWeight.root") ;
+	  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/eTau*_PtWeight.root") ;
+	  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/eTau*_NoPtWeight.root") ;
 	  TString Command = "rm "+OutFileName ;
 	  gSystem->Exec(Command.Data());
 

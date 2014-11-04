@@ -46,7 +46,7 @@
 #define StudyQCDOlivier  false
 #define includeWG        true
 #define FastMode         false
-#define DisplayWeights   false
+#define DisplayWeights   true
 
 typedef map<TString, TChain* >  mapchain;
 
@@ -223,17 +223,20 @@ void chooseSelection(TString variable_,
   }
   else if(version_.Contains("HPSMVA3oldDMwLTMedium")) {
     tiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Tight 3
-    ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+//     ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
   else if(version_.Contains("HPSMVA3oldDMwLTTight")) {
     tiso   = "tightestHPSMVA3oldDMwLTWP>2" ;//Tight 3
-    ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+//     ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
   else if(version_.Contains("HPSMVA3oldDMwLTVTight")) {
     tiso   = "tightestHPSMVA3oldDMwLTWP>3" ;//Tight 3
-    ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
+    ltiso   = "tightestHPSMVA3oldDMwLTWP>0" ;//Loose 1
+//     ltiso   = "tightestHPSMVA3oldDMwLTWP>-1" ;//Loose 1
     mtiso   = "tightestHPSMVA3oldDMwLTWP>1" ;//Medium 2
   }
   //   else if(version_.Contains("HPSMVA3oldDMwoLT")) {
@@ -526,6 +529,8 @@ void drawHistogram(TCut sbinPair,
       weight *= "topPtWeightDown"; 
     else if(type.Contains("TTJets")) 
       weight *= "topPtWeightNom"; 
+
+    if(type.Contains("TTJetsEmb")) weight *= "embeddingWeight";
     
     if(type.Contains("QCDCorr"))
       {
@@ -3935,7 +3940,7 @@ void plotMuTau( Int_t mH_           = 120,
 	    hQCD_CorrDown_fb->Scale(hQCD->Integral()/hQCD_CorrDown_fb->Integral());
 	    
 	  }
-	  else{//no btag
+	  else{//no btag and inclusive
 
 	    TCut temp_sbinaIsoLtisoPresel = sbinaIsoLtisoPresel && "MtLeg1MVA<30.";
 	    TCut temp_sbinCat =  sbinCat && "MtLeg1MVA<30.";
@@ -4191,7 +4196,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	    cout<<"     3) Compute inclusive TTbar MC Embedded"<<endl;
 	    float NormTTjetsEmbInclusive = 0.;
-	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJets",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelEmbeddingInclusive, 1);
+	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJetsEmb",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelEmbeddingInclusive, 1);
 	    cout <<"TTbar MC Embed = "<<h1->Integral()<<endl;
 	    h1->Reset();
 
@@ -4210,7 +4215,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	    cout<<"     5) Compute category TTbar MC Embedded"<<endl;
 	    float NormTTjetsEmbNew = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
+	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
 	    cout <<"TTbar MC Embed category integral = "<<h1->Integral()<<endl;
 	    cout <<"Number of bins = "<<h1->GetNbinsX()<<endl;
 	    TH1F* h_TTbarMC_Emb_category = (TH1F*)h1->Clone("h_TTbarMC_Emb_category");
@@ -4352,7 +4357,7 @@ void plotMuTau( Int_t mH_           = 120,
 	else {//TTbarEmbedded
 	  cout<<"currentName = "<<currentName<<endl;
 	  float NormTTjetsEmb = 0.;
-	  drawHistogram(sbinEmbeddingPresel,sbinCat,"MCTTJets", version_,analysis_, RUN,currentTree, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
+	  drawHistogram(sbinEmbeddingPresel,sbinCat,"MCTTJetsEmb", version_,analysis_, RUN,currentTree, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
 	  hTTbEmb->Add(h1, 1.0);
 	  cout<<"TTbarEmbedded : "<<hTTbEmb->Integral()<<endl;
 
@@ -4360,7 +4365,7 @@ void plotMuTau( Int_t mH_           = 120,
 	  if(selection_.find("bTag")!=string::npos)
 	    { 
 	      hCleanerfb->Reset(); float NormTTjetsEmbNew_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
+	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,analysis_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
 	      hTTbEmb_fb->Add(hCleanerfb,1.);
 	      hCleanerfb->Reset(); 
 	    }

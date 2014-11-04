@@ -223,7 +223,12 @@ data = 'ABCD'
 #iteration = 'Datacards_FixedWShape_141014'
 #iteration = 'Datacards_ScalePtReweighting_141014'
 #iteration = 'Datacards_FixedTrigger_171014'
-iteration = 'ControlPlots_281014'
+#iteration = 'ControlPlots_281014'
+#iteration = 'Datacards_FixedTTbarEmb'
+#iteration = 'Datacards_WStitching'
+iteration = 'visibleTauMass_WStitching'
+#iteration = 'ControlPlots_WStitching'
+#iteration = 'ControlPlots_FixedTTbarEmb'
 #iteration = 'visibleTauMass_261014'
 
 useEmb=1
@@ -1473,7 +1478,7 @@ for version in versionList:
 
 ## ##     ##diTauNSVfitMass
 ## ###### Datacards new categories
-    #nominal
+##     #nominal
 ##     analyze(125,"inclusive"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
        
 ##     analyze(125,"nobTag"       ,"nominal" ,"diTauNSVfitMass" ,"'SVfit mass'","GeV" ,outputDir,-1,0,100,5.0,1.0,0,1.2,data,stream,version,useEmb);
@@ -1537,133 +1542,133 @@ for version in versionList:
     
 ## ## ##     ##  Visible tau mass
    
-##     analyze(125,"inclusive"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"bTag"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"nobTag"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"nobTagLow"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"nobTagMedium"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"nobTagHigh"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"bTagLow"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
-##     analyze(125,"bTagHigh"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"inclusive"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"bTag"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"nobTag"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"nobTagLow"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"nobTagMedium"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"nobTagHigh"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"bTagLow"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
+    analyze(125,"bTagHigh"      ,""   ,"visibleTauMass","'visible #tau_{h} mass'","GeV"   ,outputDir,30,0,2,5.0,1.0,0,1.2,data, stream, version, 0);
 
 
 ## ##     ##  Control plots MSSM new categories
    
     ## ## ##     ##  Control plots VisMass/SVFitMass
 
-    analyze(125,"inclusive"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"               ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"              ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"          ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"            ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"             ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"               ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"              ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"             ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"          ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"            ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"               ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"              ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"             ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"          ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"            ,"" ,"diTauVisMass","'Vis Mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"             ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"               ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"              ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"             ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"          ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"            ,"" ,"diTauNSVfitMass","'SVfit mass'","GeV"         ,outputDir,40,0,200 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
 
-    analyze(125,"inclusive"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusiveNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"inclusive"    ,""   ,"ptAllB","'All b-jets p_{T}'","GeV"              ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
-    analyze(125,"inclusive"    ,""   ,"csvAllB","'b-discriminator'","units"            ,outputDir,40,0, 1.,5.0,1.0,0,2.,data, stream, version, useEmb);
-    analyze(125,"inclusive"    ,""   ,"ptAll","'Al jets p_{T}'","GeV"                  ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
+##     analyze(125,"inclusive"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"nJets20BTagged","'bTag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusiveNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"inclusive"    ,""   ,"ptAllB","'All b-jets p_{T}'","GeV"              ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
+##     analyze(125,"inclusive"    ,""   ,"csvAllB","'b-discriminator'","units"            ,outputDir,40,0, 1.,5.0,1.0,0,2.,data, stream, version, useEmb);
+##     analyze(125,"inclusive"    ,""   ,"ptAll","'Al jets p_{T}'","GeV"                  ,outputDir,27,20,300,5.0,1.0,0,1.2,data, stream, version, useEmb);
     
-    analyze(125,"bTagLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagLowNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagLowNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 
-    analyze(125,"bTagHigh"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"bTagHigh"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"bTagHighNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagLowNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHigh"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"bTagHighNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLow"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagLowNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
 
-    analyze(125,"nobTagMedium"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMedium"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagMediumNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHigh"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
-    analyze(125,"nobTagHighNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb); 
+##     analyze(125,"nobTagMedium"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMedium"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagMediumNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"numPV","'reconstructed vertexes'","units"         ,outputDir,30,0   ,30 ,5.0,1.0,0,1.5  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"ptL1","'#mu p_{T}'","GeV"                           ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"etaL1","'#mu #eta'","units"                         ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"ptL2","'#tau p_{T}'","GeV"                        ,outputDir,38,0   ,152,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"etaL2","'#tau #eta'","units"                      ,outputDir,30,-3.0,3.0,5.0,1.0,0,2.   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"nJets30","'jet multiplicity'","units"             ,outputDir,9 ,0   ,9  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"nJets20BTagged","'btag jet multiplicity'","units" ,outputDir,4 ,0   ,4  ,5.0,1.0,1,10   ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"pt1","'Leading jet p_{T}'","GeV"                  ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"eta1","'Leading jet #eta'","units"                ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"pt2","'Sub-Leading jet p_{T}'","GeV"              ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"eta2","'Sub-Leading jet #eta'","units"            ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"ptB1","'Leading btag jet p_{T}'","GeV"            ,outputDir,20,0   ,200,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"etaB1","'Leading btag jet #eta'","units"          ,outputDir,50,-5.0,5.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"csvAll","'CSV b-discriminator'","units"           ,outputDir,25,0   ,1.0,5.0,1.0,0,2.0  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHigh"    ,"" ,"MEtMVA","'MET'","GeV"                             ,outputDir,26,0   ,104,5.0,1.0,0,1.2  ,data,stream,version,useEmb);
+##     analyze(125,"nobTagHighNoMt","" ,"MtLeg1MVA","'M_{T}(#mu#nu)'","GeV"                  ,outputDir,40,0   ,160,5.0,1.0,0,1.2  ,data,stream,version,useEmb); 
     

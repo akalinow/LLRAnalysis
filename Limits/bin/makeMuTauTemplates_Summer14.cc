@@ -2752,8 +2752,8 @@ void produceOne(  TString outputDir = "Results_ABCD_AntiMu1_AntiEle1_TauIso1_Dat
 	else
 	  {
 	    produce(mH[j],variables[i], "" , "inclusive", outputDir,true);
-	    produce(mH[j],variables[i], "" , "bTag", outputDir,true);
-	    produce(mH[j],variables[i], "" , "nobTag", outputDir,true);
+// 	    produce(mH[j],variables[i], "" , "bTag", outputDir,true);
+// 	    produce(mH[j],variables[i], "" , "nobTag", outputDir,true);
 	    produce(mH[j],variables[i], "" , "bTagHigh", outputDir,true);
 	    produce(mH[j],variables[i], "" , "nobTagHigh", outputDir,true);
 	    produce(mH[j],variables[i], "" , "nobTagMedium", outputDir,true);
@@ -2871,7 +2871,8 @@ void produceAll(){
   */
 
 //   TString simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_visibleTauMass_261014";
-  TString simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_211014";
+//   TString simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_211014";
+  TString simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_WStitching";
   TString folder = "results/MuTau/"+simple_folder;
     
   std::vector<string> variables ;
@@ -2899,7 +2900,7 @@ void produceAll(){
   variables.push_back("csvAll");
   variables.push_back("MEtMVA");
   variables.push_back("MtLeg1MVA");
-  variables.push_back("visibleTauMass");
+//   variables.push_back("visibleTauMass");
 
   TString Command2 = "rm "+folder+"/datacards/*.root" ;
   gSystem->Exec(Command2.Data());
@@ -2908,10 +2909,10 @@ void produceAll(){
     {
       if(variables.at(i)=="diTauNSVfitMass")
 	{
-	  TString local_simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014";
+	  TString local_simple_folder = "Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching";
 	  TString OutFileName = "";
-	  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014/datacards/muTau*_PtWeight.root") ;
-	  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_FixedTrigger_171014/datacards/muTau*_NoPtWeight.root") ;
+	  if(HiggsPtReweighting) OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/muTau*_PtWeight.root") ;
+	  else OutFileName = Form("results/MuTau/Results_ABCD_AntiMuMVAMedium_AntiEleLoose_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/muTau*_NoPtWeight.root") ;
 	  TString Command = "rm "+OutFileName ;
 	  gSystem->Exec(Command.Data());
 

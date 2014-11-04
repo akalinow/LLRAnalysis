@@ -796,11 +796,11 @@ options = {
     'nDiv'           : 1
     },
     'TTJets-Embedded' : {
-    'inputFilePath'  : WorkdirLoc+'EmbedMCPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_30Oct14_Trees_v2/',#WorkdirLoc+'EmbedMCPF/PFEmbed_mutau_TTJets-madgraph-PUS10_MC_Bkg_HTT_11Mar14_Trees_v2/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_MuTau.root',
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 5.8869,#26.1975,#now accounting for BF
-    'skimEff'        : 1.0 * 724837./792835.,#12011428 ##792835
+    'skimEff'        : 1.0 * 724837./12011428., ##792835
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1    

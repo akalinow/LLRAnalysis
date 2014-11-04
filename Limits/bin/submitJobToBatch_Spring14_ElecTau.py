@@ -138,22 +138,22 @@ for iAnMC in range(0,len(anaMC)):
 ##        treeSkim( anaMC[iAnMC] , "DYJets4Jets"+finalState , False)
        
 ##     ## W
-##    treeSkim( anaMC[iAnMC] , "WJets-p1"            , False)
-##    treeSkim( anaMC[iAnMC] , "WJets-p2"            , False)
-##    treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets3Jets"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets4Jets"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets2JetsV19"    , False)
-##    treeSkim( anaMC[iAnMC] , "WJets3JetsV19"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets-p1"            , False)
+   treeSkim( anaMC[iAnMC] , "WJets-p2"            , False)
+   treeSkim( anaMC[iAnMC] , "WJets1Jets"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets2Jets"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets3Jets"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets4Jets"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets1JetsV19"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets2JetsV19"    , False)
+   treeSkim( anaMC[iAnMC] , "WJets3JetsV19"    , False)
        
 ##    treeSkim( anaMC[iAnMC] , "TTJets"              , False)
 ##    treeSkim( anaMC[iAnMC] , "TTJets_SemiLept"     , False)
 ##    treeSkim( anaMC[iAnMC] , "TTJets_FullLept"     , False)
 ##    treeSkim( anaMC[iAnMC] , "TTJets_Had"          , False)
 
-   treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
+##    treeSkim( anaMC[iAnMC] , "TTJets-Embedded"        , False)
 
 ##    treeSkim( anaMC[iAnMC] , "T-tW"                , False)
 ##    treeSkim( anaMC[iAnMC] , "Tbar-tW"             , False)
