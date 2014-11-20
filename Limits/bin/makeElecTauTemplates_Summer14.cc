@@ -41,6 +41,8 @@ void checkValidity(TH1F* h){
 }
 void TreatNegativeBinsDataEmb(TH1F* h, TH1F* hData, TH1F* hTTbar){
   int nBins = h->GetNbinsX();
+
+  Double_t GoodIntegral = hData->Integral() - hTTbar->Integral();
   
   for(int i=1 ; i<=nBins+1 ; i++)
     {
@@ -51,6 +53,8 @@ void TreatNegativeBinsDataEmb(TH1F* h, TH1F* hData, TH1F* hTTbar){
 	h->SetBinError(i,Error);
       }
     }
+
+  h->Scale(GoodIntegral/h->Integral());
 
   return;
 }
@@ -1014,12 +1018,22 @@ void produce(
       TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
       hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
       hTTb->Write(Form("TT%s"        ,suffix.c_str()));
-      TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
-      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
-      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
-      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
-      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
-      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
+      if(suffix == ""){
+	TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+	hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+	hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+	hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+	hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
+	TH1F* hTTbTauFakeUp = ((TH1F*)fin->Get("hTTbTauFakeUp"));
+	hTTbTauFakeUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVUp"));
+	hTTbTauFakeUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVUp"));
+	TH1F* hTTbTauFakeDown = ((TH1F*)fin->Get("hTTbTauFakeDown"));
+	hTTbTauFakeDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVDown"));
+	hTTbTauFakeDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVDown"));
+      }
 
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
@@ -1077,11 +1091,23 @@ void produce(
       hTTb->SetName(Form("TT%s"     ,suffix.c_str()));
       hTTb->Write(Form("TT%s"       ,suffix.c_str()));
       TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
-      hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
-      hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
-      TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
-      hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
-      hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
+      if(suffix == "")
+	{
+	  hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+	  hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));
+	  TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+	  hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+	  hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));
+
+	  TH1F* hTTbTauFakeUp = ((TH1F*)fin->Get("hTTbTauFakeUp"));
+	  hTTbTauFakeUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVUp"));
+	  hTTbTauFakeUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVUp"));
+	  TH1F* hTTbTauFakeDown = ((TH1F*)fin->Get("hTTbTauFakeDown"));
+	  hTTbTauFakeDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVDown"));
+	  hTTbTauFakeDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarJetFake_8TeVDown"));
+	}
+
       // ----- VV ------
       TH1F* hVV = ((TH1F*)fin->Get("hVV"));
       hVV->SetName(Form("VV%s"         ,suffix.c_str()));
@@ -1807,13 +1833,13 @@ void produce(
         hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
         hTTb->Write(Form("TT%s"        ,suffix.c_str()));
 	
-        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
-        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
-        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
+//         TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
+//         hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));//,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
+//         hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));//,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
  
-	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
-        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
-        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
+// 	   TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+//         hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));//,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
+//         hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));//,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
 		
 	TH1F* hTTb_fb = ((TH1F*)fin->Get("hTTb_fb"));
         hTTb_fb->SetName(Form("TT%s_fine_binning"        ,suffix.c_str()));
@@ -1882,13 +1908,14 @@ void produce(
 	TH1F* hTTb = ((TH1F*)fin->Get("hTTb"));
 	hTTb->SetName(Form("TT%s"        ,suffix.c_str()));
 	hTTb->Write(Form("TT%s"        ,suffix.c_str()));
-        TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));
-        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
-        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVUp"));//changed from mutau to etau here
- 	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
-        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
-        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ZLScale_etau_8TeVDown"));//changed from mutau to etau here
 
+	TH1F* hTTbUp = ((TH1F*)fin->Get("hTTbUp"));// CMS_htt_ttbarPtReweight_8TeV
+        hTTbUp->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));//"_CMS_htt_ZLScale_mutau_8TeVUp"));
+        hTTbUp->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVUp"));//"_CMS_htt_ZLScale_mutau_8TeVUp"));
+ 
+	TH1F* hTTbDown = ((TH1F*)fin->Get("hTTbDown"));
+        hTTbDown->SetName(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));//"_CMS_htt_ZLScale_mutau_8TeVDown"));
+        hTTbDown->Write(Form("TT%s"        ,"_CMS_htt_ttbarPtReweight_8TeVDown"));//"_CMS_htt_ZLScale_mutau_8TeVDown"));
       }
       // ----- VV ------
       if(dir->FindObjectAny(Form("VV%s"       ,suffix.c_str()))==0 ){
@@ -2512,7 +2539,8 @@ void produceAll(){
 
 
 //   TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_211014";
-  TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_WStitching";
+  TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_TauRecoCorrected_151114/";
+//   TString simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_ControlPlots_nBJets_101114/";
   TString folder = "results/ElecTau/"+simple_folder;
     
   std::vector<string> variables ;
@@ -2522,36 +2550,38 @@ void produceAll(){
 //   variables.push_back("ptL2");
 
   variables.push_back("diTauNSVfitMass");
-  variables.push_back("numPV");
-  variables.push_back("ptL1");
-  variables.push_back("etaL1");
-  variables.push_back("ptL2");
-  variables.push_back("etaL2");
-  variables.push_back("nJets30");
-  variables.push_back("nJets20BTagged");
-  variables.push_back("pt1");
-  variables.push_back("eta1");
-  variables.push_back("pt2");
-  variables.push_back("eta1");
-  variables.push_back("pt2");
-  variables.push_back("eta2");
-  variables.push_back("ptB1");
-  variables.push_back("etaB1");
-  variables.push_back("csvAll");
-  variables.push_back("MEtMVA");
-  variables.push_back("MtLeg1MVA");
+//   variables.push_back("numPV");
+//   variables.push_back("ptL1");
+//   variables.push_back("etaL1");
+//   variables.push_back("ptL2");
+//   variables.push_back("etaL2");
+//   variables.push_back("nJets30");
+//   variables.push_back("nJets20BTagged");
+//   variables.push_back("pt1");
+//   variables.push_back("eta1");
+//   variables.push_back("pt2");
+//   variables.push_back("eta1");
+//   variables.push_back("pt2");
+//   variables.push_back("eta2");
+//   variables.push_back("ptB1");
+//   variables.push_back("etaB1");
+//   variables.push_back("csvAll");
+//   variables.push_back("MEtMVA");
+//   variables.push_back("MtLeg1MVA");
 	 
   TString Command2 = "rm "+folder+"/datacards/*.root" ;
   gSystem->Exec(Command2.Data());	
 
   for(UInt_t i = 0 ; i < variables.size() ; ++i)
-    {
+    {// 
+      cout<<"*** Variable = "<<variables.at(i)<<" ***"<<endl;
+
       if(variables.at(i)=="diTauNSVfitMass")
-	{
-	  TString local_simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching";
+	{//
+	  TString local_simple_folder = "Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_TTbarCorrected_201114";
 	  TString OutFileName = "";
-	  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/eTau*_PtWeight.root") ;
-	  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_WStitching/datacards/eTau*_NoPtWeight.root") ;
+	  if(HiggsPtReweighting) OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_TTbarCorrected_201114/datacards/eTau*_PtWeight.root") ;
+	  else OutFileName = Form("results/ElecTau/Results_ABCD_AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut_Datacards_TTbarCorrected_201114/datacards/eTau*_NoPtWeight.root") ;
 	  TString Command = "rm "+OutFileName ;
 	  gSystem->Exec(Command.Data());
 
