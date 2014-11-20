@@ -3381,7 +3381,11 @@ void plotMuTau( Int_t mH_           = 120,
 	    cout<<"//////CUT FOR ZJ///////"<<endl;
 
 	    float NormDYJtoTau = 0.;  
-	    drawHistogram(sbinPresel,bTagLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1); 
+	    hCleaner->Reset();
+	    if(useZDataMC) drawHistogram(sbinPresel,bTagLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbinInclusive, 1); 
+	    else drawHistogram(sbinPresel,bTagLoose,"MC", version_,analysis_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbinInclusive, 1); 
+	    cout<<"hCleaner integral = "<<hCleaner->Integral()<<endl;
+
 	    NormDYJtoTau = 0.;  
 	    if(useZDataMC)
 	      drawHistogram(sbinPresel,sbinCat,"MC", version_,analysis_, RUN,currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1);  

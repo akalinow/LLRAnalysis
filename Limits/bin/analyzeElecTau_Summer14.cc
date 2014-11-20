@@ -3109,8 +3109,10 @@ void plotElecTau( Int_t mH_           = 120,
 	    hZfakes->Add(hCleaner,1.0);
 	  }
 	  else if(selection_.find("bTag")!=string::npos && selection_.find("nobTag")==string::npos){   
-	    float NormDYJtoTau = 0.; 
-	    drawHistogram(sbinPresel,oneJet, "MC",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
+	    float NormDYJtoTau = 0.;
+	    if(useZDataMC) drawHistogram(sbinPresel,bTagLoose, "MC",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., hCleaner, sbin, 1);
+	    else drawHistogram(sbinPresel,bTagLoose, "MC",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
+// 	    drawHistogram(sbinPresel,oneJet, "MC",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*hltEff_/1000., hCleaner, sbin, 1);
 	    NormDYJtoTau = 0.; 
 	    if(useZDataMC)
 	      drawHistogram(sbinPresel,sbinCat, "MC",version_, RUN, currentTree, variable, NormDYJtoTau, Error,    Lumi*lumiCorrFactor*JtoTauCorrectionFactor*ExtrapolationFactorZDataMC*hltEff_/1000., h1, sbin, 1); 
