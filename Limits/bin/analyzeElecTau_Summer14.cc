@@ -49,6 +49,16 @@
 typedef map<TString, TChain* >  mapchain;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+void EvaluateZTTEmb(float Emb_inclusive, float ZTT_MC_inclusive, float TTbar_MC_Emb_inclusive, TH1F* h_ZTT_cat, TH1F* h_TTbar_MC_Emb_cat)
+{
+  float Weight_From_ZTT_MC = (ZTT_MC_inclusive)/(Emb_inclusive-TTbar_MC_Emb_inclusive) ;
+  h_ZTT_cat->Add(h_TTbar_MC_Emb_cat,-1.);
+  h_ZTT_cat->Scale(Weight_From_ZTT_MC);
+  
+  return ;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 TH1F* blindHistogram(TH1F* h, float xmin, float xmax, TString name) {
 
   TH1F* hOut = (TH1F*)h->Clone(name);
@@ -392,6 +402,8 @@ void drawHistogram(TCut sbinPair,
 		   TCut cut = TCut(""),
 		   int verbose = 0){
   TCut genMass("run>0");
+  TCut TrueGenTauMatching("1");
+
  //  if(DEBUG) 
 //     cout << "Start drawHistogram : " << type << " " << version_ << " " << RUN << endl;
 
@@ -506,6 +518,8 @@ void drawHistogram(TCut sbinPair,
     }
     else if(type.Contains("Embed")) {//PFEmbedding
       genMass = "HLTxMu17Mu8>0.5 && genDiTauMass>50"; // HLTxMu17Mu8
+      genMass = genMass && TrueGenTauMatching;
+
       if (version_.Contains("NoEleIDSF")){
 	if(     version_.Contains("SoftABC"))  weight = "(HLTTauABC*HLTEleABCShift*passL1etmCutABC*SFElec*embeddingFilterEffWeight*weightDecayMode)";
 	else if(version_.Contains("SoftD"))    weight = "(HLTTauD*HLTEleSoft*passL1etmCut*SFElec*embeddingFilterEffWeight*weightDecayMode)";
@@ -567,14 +581,24 @@ void drawHistogram(TCut sbinPair,
     else if(type.Contains("TTJets")) 
       weight *= "topPtWeightNom"; 
 
-    if(type.Contains("TTJetsEmb")) weight *= "embeddingWeight";
+    if(type.Contains("TTJetsEmb"))
+      {
+	weight *= "embeddingWeight";
+	genMass = genMass && TrueGenTauMatching;
+      }
+
+    if(type.Contains("TTJetsTauFakeUp") && !type.Contains("Emb")) weight *= "weightTauFakeTTbarMCUp";
+    else if(type.Contains("TTJetsTauFakeDown") && !type.Contains("Emb")) weight *= "weightTauFakeTTbarMCDown";
+    else if(type.Contains("TTJets") && !type.Contains("Emb")) weight *= "weightTauFakeTTbarMC";
     
-    if(type.Contains("QCDCorr"))
+    if(!version_.Contains("NoQCDCorr") && type.Contains("QCDCorr"))
       {
 	if(type.Contains("QCDCorrUp")) weight *= "weightJetFakeQCD*weightJetFakeQCD" ;	
 	else if(type.Contains("QCDCorrDown")) weight *= "1." ;
 	else weight *= "weightJetFakeQCD" ;
       }
+
+    if(!version_.Contains("NoLooseTightWCorr") && type.Contains("LooseTightWCorr")) weight *= "weightJetFakeW" ;
 
     if(type.Contains("SUSY")) cout<<"weight : "<<weight<<endl;
 
@@ -1265,6 +1289,8 @@ void plotElecTau( Int_t mH_           = 120,
   TH1F* hZfakes   = new TH1F( "hZfakes" ,"Z+jets            ", nBins , bins.GetArray());         hZfakes->SetFillColor(kBlue-2);
   TH1F* hTTb      = new TH1F( "hTTb"    ,"ttbar"             , nBins , bins.GetArray());         hTTb->SetFillColor(kBlue-8); 
   TH1F* hTTbUp    = new TH1F( "hTTbUp"    ,"ttbarUp"         , nBins , bins.GetArray());         hTTbUp->SetFillColor(kBlue-8); 
+  TH1F* hTTbTauFakeUp    = new TH1F( "hTTbTauFakeUp"    ,"ttbarTauFakeUp"         , nBins , bins.GetArray());         hTTbTauFakeUp->SetFillColor(kBlue-8); 
+  TH1F* hTTbTauFakeDown  = new TH1F( "hTTbTauFakeDown"    ,"ttbarTauFakeDown"     , nBins , bins.GetArray());         hTTbTauFakeDown->SetFillColor(kBlue-8); 
   TH1F* hTTbDown  = new TH1F( "hTTbDown"    ,"ttbarDown"     , nBins , bins.GetArray());         hTTbDown->SetFillColor(kBlue-8); 
   TH1F* hTTbEmb   = new TH1F( "hTTbEmb" ,"ttbarEmbedded"     , nBins , bins.GetArray());         hTTbEmb->SetLineWidth(2); hTTbEmb->SetLineColor(kMagenta);hTTbEmb->SetFillStyle(3004);
   TH1F* hQCD      = new TH1F( "hQCD"    ,"QCD"               , nBins , bins.GetArray());         hQCD->SetFillColor(kMagenta-10);
@@ -2299,6 +2325,17 @@ void plotElecTau( Int_t mH_           = 120,
 	    drawHistogram(sbinPresel,sbinCat, "MCTTJetsDown",version_, RUN, currentTree, variable, NormTTjetsDown,     Error,   Lumi*TTxsectionRatio/**scaleFactorTTOSWJets*/*hltEff_/1000., hCleaner, sbin, 1);
 	    hTTbDown->Add(hCleaner, 1.0);
 
+	    //Jet to tau FR correction (from W+Jets)
+	    hCleaner->Reset();
+	    float NormTTjetsTauFakeUp = 0.;
+	    drawHistogram(sbinPresel,sbinCat, "MCTTJetsTauFakeUp",version_, RUN, currentTree, variable, NormTTjetsTauFakeUp,     Error,   Lumi*TTxsectionRatio/**scaleFactorTTOSWJets*/*hltEff_/1000., hCleaner, sbin, 1);
+	    hTTbTauFakeUp->Add(hCleaner, 1.0);
+
+	    hCleaner->Reset();
+	    float NormTTjetsTauFakeDown = 0.;
+	    drawHistogram(sbinPresel,sbinCat, "MCTTJetsTauFakeDown",version_, RUN, currentTree, variable, NormTTjetsTauFakeDown,     Error,   Lumi*TTxsectionRatio/**scaleFactorTTOSWJets*/*hltEff_/1000., hCleaner, sbin, 1);
+	    hTTbTauFakeDown->Add(hCleaner, 1.0);
+
 	    //fine binning for MSSM
             if(selection_.find("bTag")!=string::npos){
               hCleanerfb->Reset(); float NormTTjets_fb = 0.;
@@ -2414,7 +2451,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    //Nominal shape in Loose tau iso
 	    h1->Reset();
-	    drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetUp", version_, RUN,currentTree, variable, NormWJetsUp, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
+	    drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetUp_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsUp, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
 
 	    // 	    cout<<"integral in loose = "<<h1->Integral()<<endl;
 
@@ -2457,7 +2494,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetUp", version_, RUN,currentTree, variable, NormWJets_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
+	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetUp_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJets_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
 	      // 	      cout<<"fb: integral in loose = "<<hCleanerfb->Integral()<<endl;
 	      ////compute loose to tight ratio
 	      Double_t LooseToTightRatioUp_fb = hCleanerfb->Integral()/hW_TFUpTight_fb->Integral();
@@ -2494,7 +2531,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      
 	      //loose
 	      hCleaner->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetUp", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetUp_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatioUp = hCleaner->Integral()/hWLooseBTag_TFUpTight->Integral();
@@ -2522,7 +2559,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetUp", version_, RUN,currentTree, variable, NormWJetsBTag_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetUp_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag_fbUp, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatioUp_fb = hCleanerfb->Integral()/hW_TFUpTight_fb->Integral();
@@ -2586,7 +2623,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    //Nominal shape in Loose tau iso
 	    h1->Reset();
-	    drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetDown", version_, RUN,currentTree, variable, NormWJetsDown, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
+	    drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetDown_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsDown, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
 
 	    // 	    cout<<"integral in loose = "<<h1->Integral()<<endl;
 
@@ -2629,7 +2666,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetDown", version_, RUN,currentTree, variable, NormWJets_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
+	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJetDown_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJets_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
 	      // 	      cout<<"fb: integral in loose = "<<hCleanerfb->Integral()<<endl;
 	      ////compute loose to tight ratio
 	      Double_t LooseToTightRatioDown_fb = hCleanerfb->Integral()/hW_TFDownTight_fb->Integral();
@@ -2667,7 +2704,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      
 	      //loose
 	      hCleaner->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetDown", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetDown_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatioDown = hCleaner->Integral()/hWLooseBTag_TFDownTight->Integral();
@@ -2695,7 +2732,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetDown", version_, RUN,currentTree, variable, NormWJetsBTag_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJetDown_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag_fbDown, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatioDown_fb = hCleanerfb->Integral()/hW_TFDownTight_fb->Integral();
@@ -2763,7 +2800,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	  //Loose shape -- for nobtag and btag categories
 	  h1->Reset();
-	  drawHistogram(sbinLtisoPresel,sbinCat, "MC_WJet",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
+	  drawHistogram(sbinLtisoPresel,sbinCat, "MC_WJet_LooseTightWCorr",version_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
 	  
 	  ////loose to tight ratio
 	  Double_t LooseToTightRatio = h1->Integral()/hWTight->Integral();
@@ -2792,7 +2829,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJet", version_, RUN,currentTree, variable, NormWJets_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
+	      drawHistogram(sbinLtisoPresel,sbinCat,"MC_WJet_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJets_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtiso, 1);
 
 	      Double_t LooseToTightRatio_fb = hCleanerfb->Integral()/hWTight_fb->Integral();
 	      
@@ -2818,7 +2855,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      
 	      //loose
 	      hCleaner->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJet", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJet_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag, Error,   Lumi*hltEff_/1000., hCleaner, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatio = hCleaner->Integral()/hWLooseBTagTight->Integral();
@@ -2845,7 +2882,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      //loose
 	      hCleanerfb->Reset();
-	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJet", version_, RUN,currentTree, variable, NormWJetsBTag_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
+	      drawHistogram(sbinLtisoPresel,bTagLoose,"MC_WJet_LooseTightWCorr", version_, RUN,currentTree, variable, NormWJetsBTag_fb, Error,   Lumi*hltEff_/1000., hCleanerfb, sbinLtisoInclusive, 1);
 
 	      ////loose to tight ratio
 	      Double_t LooseToTightRatio_fb = hCleanerfb->Integral()/hWTight_fb->Integral();
@@ -2860,10 +2897,11 @@ void plotElecTau( Int_t mH_           = 120,
 	      //fill histograms
 	      hW_fb->Add(hCleanerfb,1.);
 	    }
-	  else if(!version_.Contains("JetTauFR"))//nominal
+	  else if(!version_.Contains("JetTauFR"))//nominal = inclusive - shape from tight, normalization from data
 	    {
 	      hW->Reset(); hWMinusSS->Reset();
 	      hW->Add(hWTight, 1.0);
+	      hW->Scale(OSWinSignalRegionDATAWJets/hWTight->Integral());
 	      hWMinusSS->Add(hWTight, (1-OStoSSRatioQCD*SSWinSidebandRegionDATA/OSWinSidebandRegionDATAWJets));
 	      if(!USESSBKG) hEWK->Add(hWTight,1.0);
 	      else hEWK->Add(hWMinusSS,1.0);
@@ -3798,39 +3836,32 @@ void plotElecTau( Int_t mH_           = 120,
 	  }
 	  else{
 
-	    //new method Oct14	    //ZTT Embedded_cat_i = Embedded data_cat_i*weight  - TTbar MC Embedded_cat_i
-	    //weight = (NormZTTInclusive+NormTTjetsEmbInclusive)/NormEmbedInclusive
-
-	    cout<<"---------------"<<endl;
-	    cout<<"TEST TTbar Emb Olivier = "<<endl;
-
-
-// 	    cout<<"OLD = sbin Cat for Emb is = "<<sbinCat<<endl;
-// 	    cout<<"OLD = sbinEmbeddingPresel = "<<sbinEmbeddingPresel<<endl;
-// 	    cout<<""<<endl;
-// 	    cout<<"NEW = sbinCatIncl"<<sbinCatIncl<<endl;
- 	    cout<<"NEW sbin inclusive for Emb is = "<<sbinPZetaRelEmbeddingInclusive<<endl;
+	    TH1F* temp_histo_counter = new TH1F("temp_histo_counter","temp_histo_counter",1,-0.5,+0.5);
+	    temp_histo_counter->Reset();
 
 	    cout<<"     1) Compute inclusive embedded data"<<endl;
 	    float NormEmbedInclusive = 0.;
-	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl,"Embed", version_, RUN,currentTree, variable, NormEmbedInclusive,  Error, 1.0 , h1,  sbinPZetaRelEmbeddingInclusive, 1);
-	    cout<<"Embedded integral = "<<h1->Integral()<<endl;
+	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"Embed", version_, RUN,currentTree, "0", NormEmbedInclusive,  Error, 1.0 , temp_histo_counter,  sbinEmbeddingPresel, 1);
+	    cout<<"Embedded integral = "<<temp_histo_counter->Integral()<<endl;
+	    temp_histo_counter->Reset();
 	    h1->Reset();
 	    
 	    cout<<"     2) Compute inclusive ZTT MC"<<endl;
 	    float NormZTTInclusive = 0.;
-	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl,"MC", version_, RUN,mapAllTrees["DYToTauTau"], variable, NormZTTInclusive,   Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelInclusive, 1);
-	    cout <<"ZTT MC = "<<h1->Integral()<<endl;
+	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"MC", version_, RUN,mapAllTrees["DYToTauTau"], "0", NormZTTInclusive,   Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinPZetaRelInclusive, 1);
+	    cout <<"ZTT MC = "<<temp_histo_counter->Integral()<<endl;
+	    temp_histo_counter->Reset();
 	    h1->Reset();
 
 	    cout<<"     3) Compute inclusive TTbar MC Embedded"<<endl;
 	    float NormTTjetsEmbInclusive = 0.;
-	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinPZetaRelEmbeddingInclusive, 1);
-	    cout <<"TTbar MC Embed = "<<h1->Integral()<<endl;
+	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, "0", NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinEmbeddingPresel, 1);
+	    cout <<"TTbar MC Embed = "<<temp_histo_counter->Integral()<<endl;
+	    temp_histo_counter->Reset();
 	    h1->Reset();
 
-	    float Weight_From_ZTT_MC = (NormZTTInclusive+NormTTjetsEmbInclusive)/NormEmbedInclusive ;
-	    cout<<"Weight_From_ZTT_MC=(NormZTTInclusive+NormTTjetsEmbInclusive)/NormEmbedInclusive = "<<"("<<NormZTTInclusive<<"+"<<NormTTjetsEmbInclusive<<")"<<"/"<<NormEmbedInclusive<<endl;
+	    float Weight_From_ZTT_MC = (NormZTTInclusive)/(NormEmbedInclusive-NormTTjetsEmbInclusive) ;
+	    cout<<"Weight_From_ZTT_MC=(NormZTTInclusive)/(NormEmbedInclusive-NormTTjetsEmbInclusive) = "<<"("<<NormZTTInclusive<<")"<<"/("<<NormEmbedInclusive<<"-"<<NormTTjetsEmbInclusive<<")"<<endl;
 	    cout<<"Weight_From_ZTT_MC = "<<Weight_From_ZTT_MC<<endl; 
 	    
 	    cout<<"     4) Compute category embedded data"<<endl;
@@ -3838,7 +3869,6 @@ void plotElecTau( Int_t mH_           = 120,
 	    drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_, RUN,currentTree, variable, NormEmbedNew,  Error, 1.0 , h1,  sbinEmbedding  ,1);
 	    cout<<"Embedded category integral = "<<h1->Integral()<<endl;
 	    cout<<"Scale embedded: "<<endl;
-	    h1->Scale(Weight_From_ZTT_MC);
 	    TH1F* h_Emb_category = (TH1F*)h1->Clone("h_Emb_category");
 	    h1->Reset();
 
@@ -3850,115 +3880,61 @@ void plotElecTau( Int_t mH_           = 120,
 	    TH1F* h_TTbarMC_Emb_category = (TH1F*)h1->Clone("h_TTbarMC_Emb_category");
 	    h1->Reset(); 
 
-	    cout<<"     6) Compute final number: ZTT Embedded_cat_i = Embedded data_cat_i*weight  - TTbar MC Embedded_cat_i"<<endl;
+	    cout<<"     6) Compute final number: ZTT Embedded_cat_i = (Embedded data_cat_i  - TTbar MC Embedded_cat_i)*weight"<<endl;
 	    TH1F* h_ZTT_Emb_category = (TH1F*)h_Emb_category->Clone("h_ZTT_Emb_category");
-	    h_ZTT_Emb_category->Add(h_TTbarMC_Emb_category,-1.);
-	    cout<<" ZTT Embedded_cat_i = "<<h_Emb_category->Integral()-h_TTbarMC_Emb_category->Integral()<<endl;
+	    EvaluateZTTEmb(NormEmbedInclusive, NormZTTInclusive, NormTTjetsEmbInclusive, h_ZTT_Emb_category, h_TTbarMC_Emb_category);
+
+	    cout<<" ZTT Embedded_cat_i = "<<(h_Emb_category->Integral()-h_TTbarMC_Emb_category->Integral())*Weight_From_ZTT_MC<<endl;
 	    cout<<"                    = "<<h_ZTT_Emb_category->Integral()<<endl;
 
 	    hDataEmb_NotSubtracted = (TH1F*)h_Emb_category->Clone("hDataEmb_NotSubtracted");
+	    hDataEmb_NotSubtracted->Scale(Weight_From_ZTT_MC);
+	    h_TTbarMC_Emb_category->Scale(Weight_From_ZTT_MC);
+	    hTTbEmb = (TH1F*)h_TTbarMC_Emb_category->Clone("hTTbEmb");
 	    hDataEmb = (TH1F*)h_ZTT_Emb_category->Clone("hDataEmb");
-	    //hDataEmb2 = (TH1F*)h_ZTT_Emb_category->Clone("hDataEmb2");
-	    //cout <<"Number of bins hDataEmb2 = "<<hDataEmb2->GetNbinsX()<<endl;
+
+	    Double_t Norm = hDataEmb->Integral();
+	    cout<<"hDataEmb->Integral() = "<<hDataEmb->Integral()<<endl;
 	  
 	    //fine binning for MSSM
-	    if(selection_.find("bTag")!=string::npos){ 
-
-	      hCleanerfb->Reset();
-	      float NormEmbedInclusive_fb = 0.;
-	      drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl,"Embed", version_, RUN,currentTree, variable, NormEmbedInclusive_fb,  Error, 1.0 , hCleanerfb,  sbinPZetaRelEmbeddingInclusive, 1);
-	      hCleanerfb->Reset();
-	    
-	      float NormZTTInclusive_fb = 0.;
-	      drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl,"MC", version_, RUN,mapAllTrees["DYToTauTau"], variable, NormZTTInclusive_fb,   Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinPZetaRelInclusive, 1);
-	      hCleanerfb->Reset();
-
-	      float NormTTjetsEmbInclusive_fb = 0.;
-	      drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJets",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbInclusive_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinPZetaRelEmbeddingInclusive, 1);
-	      hCleanerfb->Reset();
-
-	      float Weight_From_ZTT_MC = (NormZTTInclusive_fb+NormTTjetsEmbInclusive_fb)/NormEmbedInclusive_fb ;
+	    if(selection_.find("bTag")!=string::npos){
 
 	      float NormEmbedNew_fb = 0.;
 	      drawHistogram(sbinEmbeddingPresel,sbinCat,"Embed", version_, RUN,currentTree, variable, NormEmbedNew_fb,  Error, 1.0 , hCleanerfb,  sbinEmbedding  ,1);
-	      hCleanerfb->Scale(Weight_From_ZTT_MC);
 	      TH1F* h_Emb_category_fb = (TH1F*)hCleanerfb->Clone("h_Emb_category_fb");
 	      hCleanerfb->Reset();
 
 	      float NormTTjetsEmbNew_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
+	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
 	      TH1F* h_TTbarMC_Emb_category_fb = (TH1F*)hCleanerfb->Clone("h_TTbarMC_Emb_category_fb");
 	      hCleanerfb->Reset(); 
 
 	      TH1F* h_ZTT_Emb_category_fb = (TH1F*)h_Emb_category_fb->Clone("h_ZTT_Emb_category_fb");
-	      h_ZTT_Emb_category_fb->Add(h_TTbarMC_Emb_category_fb,-1.);
+	      EvaluateZTTEmb(NormEmbedInclusive, NormZTTInclusive, NormTTjetsEmbInclusive, h_ZTT_Emb_category_fb, h_TTbarMC_Emb_category_fb);
 
-	      //hDataEmb2_fb = (TH1F*)h_ZTT_Emb_category_fb->Clone("hDataEmb2_fb");
 	      hDataEmb_fb = (TH1F*)h_ZTT_Emb_category_fb->Clone("hDataEmb_fb");
 	      hDataEmb_NotSubtracted_fb = (TH1F*)h_Emb_category_fb->Clone("hDataEmb_NotSubtracted_fb");
-
-	      //cout<<"fine binning histogram hDataEmb2_fb = "<<hDataEmb2_fb->Integral()<<endl;
-	      //cout<<"fine binning histogram hDataEmb2_fb = "<<hDataEmb2_fb->GetName()<<endl;
-	     
-	    cout<<"END TEST TTbar Emb Olivier = "<<endl;
-	    cout<<"---------------"<<endl;
+	      hDataEmb_NotSubtracted_fb->Scale(Weight_From_ZTT_MC);
+	      h_TTbarMC_Emb_category_fb->Scale(Weight_From_ZTT_MC);
+	      hTTbEmb_fb = (TH1F*)h_TTbarMC_Emb_category_fb->Clone("hTTbEmb_fb");
 	    }
-	    /*
-	    float NormEmbed = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed,  Error, 1.0 , h1,  sbinEmbedding  ,1);
-	    h1->Scale( (ExtrapolationFactorZ*ExtrapDYInclusivePZetaRel*ExtrapolationFactorZFromSideband)/h1->Integral());
-	    hDataEmb->Add(h1, 1.0);
-	    //remove TTbar embedded contamination
-	    h1->Reset();
-	    float NormTTjetsEmb = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_, RUN, backgroundTTbarEmb, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
-	    hTTbEmb->Add(h1, 1.0);
-	    cout<<"TTbarEmbedded : "<<hTTbEmb->Integral()<<endl;
-	    hDataEmb->Add(hTTbEmb, -1.0);
-
-	    //Add ZTTLL
-	    float NormDYToTauTauLL = 0.;
-	    drawHistogram(sbinPresel,sbinCat,"MC", version_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleaner, sbin, 1);
-	    hDataEmb->Add(hCleaner, 1.0);
-
-	    //fine binning for MSSM
-	    if(selection_.find("bTag")!=string::npos){
-	      hCleanerfb->Reset(); float NormEmbed_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "Embed", version_, RUN, currentTree, variable, NormEmbed_fb,  Error, 1.0 , hCleanerfb,  sbinEmbedding  ,1);
-	      hDataEmb_fb->Add(hCleanerfb, hDataEmb->Integral()/hCleanerfb->Integral());
-	      float NormTTjetsEmb_fb = 0.;
-	      //remove TTbar embedded contamination
-	      hCleanerfb->Reset();
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_, RUN, backgroundTTbarEmb, variable, NormTTjetsEmb_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
-	      hTTbEmb_fb->Add(hCleanerfb, 1.0);
-	      cout<<"TTbarEmbedded : "<<hTTbEmb_fb->Integral()<<endl;
-	      hDataEmb_fb->Add(hTTbEmb_fb, -1.0);
-
-	      //Add ZTTLL
-	      float NormDYToTauTauLL_fb = 0.; 
-	      hCleanerfb->Reset();
-	      drawHistogram(sbinPresel,sbinCat,"MC", version_, RUN, backgroundDYTauTauLL, variable, NormDYToTauTauLL_fb, Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbin, 1);
-	      hDataEmb_fb->Add(hCleanerfb, 1.0);
-	      hDataEmb_fb->Scale(hDataEmb->Integral()/hDataEmb_fb->Integral());
-	    }
-	    */
 	  }
 	}
-	else {//TTbarEmbedded
-	  float NormTTjetsEmb = 0.;
-	  drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJets",version_, RUN, currentTree, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
-	  hTTbEmb->Add(h1, 1.0);
-	  cout<<"TTbarEmbedded : "<<hTTbEmb->Integral()<<endl;
+// 	else {//TTbarEmbedded
+// 	  float NormTTjetsEmb = 0.;
+// 	  drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_, RUN, currentTree, variable, NormTTjetsEmb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., h1, sbinEmbedding, 1);
+// 	  hTTbEmb->Add(h1, 1.0);
+// 	  cout<<"TTbarEmbedded : "<<hTTbEmb->Integral()<<endl;
 
-	  //fine binning for MSSM
-	  if(selection_.find("bTag")!=string::npos)
-	    { 
-	      hCleanerfb->Reset(); float NormTTjetsEmbNew_fb = 0.;
-	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
-	      hTTbEmb_fb->Add(hCleanerfb,1.);
-	      hCleanerfb->Reset(); 
-	    }
-	}
+// 	  //fine binning for MSSM
+// 	  if(selection_.find("bTag")!=string::npos)
+// 	    { 
+// 	      hCleanerfb->Reset(); float NormTTjetsEmbNew_fb = 0.;
+// 	      drawHistogram(sbinEmbeddingPresel,sbinCat, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, variable, NormTTjetsEmbNew_fb,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., hCleanerfb, sbinEmbedding, 1);
+// 	      hTTbEmb_fb->Add(hCleanerfb,1.);
+// 	      hCleanerfb->Reset(); 
+// 	    }
+// 	}
       }
     }
   
@@ -4421,6 +4397,8 @@ void plotElecTau( Int_t mH_           = 120,
   hTTb->Write();
   hTTbUp->Write();
   hTTbDown->Write();
+  hTTbTauFakeUp->Write();
+  hTTbTauFakeDown->Write();
   hTTbEmb->Write();
   hTTbEmb_fb->Write();
   hZtt->Write();
@@ -4540,7 +4518,7 @@ void plotElecTau( Int_t mH_           = 120,
 	}
   }
 
-  delete hQCD; delete hSS; delete hSSLooseVBF; delete hZmm; delete hZmj; delete hZfakes; delete hTTb; delete hTTbUp; delete hTTbDown; delete hTTbEmb; delete hZtt; delete hZmm_Up; delete hZmm_Down;
+  delete hQCD; delete hSS; delete hSSLooseVBF; delete hZmm; delete hZmj; delete hZfakes; delete hTTb; delete hTTbUp; delete hTTbDown; delete hTTbEmb; delete hZtt; delete hZmm_Up; delete hZmm_Down; delete hTTbTauFakeUp; delete hTTbTauFakeDown;
   delete hW; delete hWSS; delete hWMinusSS; delete hW3Jets; delete hAntiIso; delete hAntiIsoFR;
   delete hZmmLoose; delete hZmjLoose; delete hLooseIso1; delete hLooseIso2; delete hLooseIso3;
   delete hVV; delete hSgn; delete hSgn1; delete hSgn2; delete hSgn3; delete hData; delete hParameters;

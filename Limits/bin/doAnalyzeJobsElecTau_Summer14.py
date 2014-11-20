@@ -188,14 +188,17 @@ versionList=[
     ##for datacards 28/07/14
     #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
+    ##no W/QCD Corr 07/11/14
+    #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut__NoQCDCorr_NoLooseTightWCorr'
+
     ##for control plots 12/08/14
     #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
     ##for datacards 10/14
-    #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
+    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
     ##for control plots 21/10/14
-    'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
+    #'AntiMu3Loose_AntiEle5Medium_HPSMVA3oldDMwLTTight_TauOldDM_OldEleID_SVfitMassCut'
 
     ]
 
@@ -233,7 +236,16 @@ data = 'ABCD'
 #iteration = 'Datacards_FixedTTbarEmb'
 #iteration = 'ControlPlots_FixedTTbarEmb'
 #iteration = 'ControlPlots_WStitching'
-iteration = 'Datacards_WStitching'
+#iteration = 'Datacards_WStitching'
+#iteration = 'Datacards_071114'
+#iteration = 'ControlPlots_091114'
+#iteration = 'Datacards_091114'
+#iteration = 'ControlPlots_nBJets_101114'
+#iteration = 'Datacards_TauRecoCorrected_151114'
+#iteration = 'ControlPlots_TauRecoCorrected_151114'
+#iteration = 'ControlPlots_TauRecoCorrected_181114'
+#iteration = 'Datacards_TestTTbarChanges_191114'
+iteration = 'Datacards_TTbarCorrected_201114'
 
 useEmb=1
 
