@@ -3841,23 +3841,25 @@ void plotElecTau( Int_t mH_           = 120,
 	    TH1F* temp_histo_counter = new TH1F("temp_histo_counter","temp_histo_counter",1,-0.5,+0.5);
 	    temp_histo_counter->Reset();
 
-	    cout<<"     1) Compute inclusive embedded data"<<endl;
+	    cout<<"     1) Compute inclusive embedded data (no mT cut)"<<endl;
 	    float NormEmbedInclusive = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"Embed", version_, RUN,currentTree, "0", NormEmbedInclusive,  Error, 1.0 , temp_histo_counter,  sbinEmbeddingPresel, 1);
+	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl,"Embed", version_, RUN,currentTree, "0", NormEmbedInclusive,  Error, 1.0 , temp_histo_counter,  sbinPZetaRelEmbeddingInclusive, 1);
+// 	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"Embed", version_, RUN,currentTree, "0", NormEmbedInclusive,  Error, 1.0 , temp_histo_counter,  sbinEmbeddingPresel, 1);	
 	    cout<<"Embedded integral = "<<temp_histo_counter->Integral()<<endl;
 	    temp_histo_counter->Reset();
 	    h1->Reset();
 	    
-	    cout<<"     2) Compute inclusive ZTT MC"<<endl;
+	    cout<<"     2) Compute inclusive ZTT MC (no mT cut)"<<endl;
 	    float NormZTTInclusive = 0.;
 	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl,"MC", version_, RUN,mapAllTrees["DYToTauTau"], "0", NormZTTInclusive,   Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinPZetaRelInclusive, 1);
 	    cout <<"ZTT MC = "<<temp_histo_counter->Integral()<<endl;
 	    temp_histo_counter->Reset();
 	    h1->Reset();
 
-	    cout<<"     3) Compute inclusive TTbar MC Embedded"<<endl;
+	    cout<<"     3) Compute inclusive TTbar MC Embedded (no mT cut)"<<endl;
 	    float NormTTjetsEmbInclusive = 0.;
-	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, "0", NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinEmbeddingPresel, 1);
+	    drawHistogram(sbinPZetaRelEmbeddingInclusive,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, "0", NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinPZetaRelEmbeddingInclusive, 1);
+// 	    drawHistogram(sbinEmbeddingPresel,sbinCatIncl, "MCTTJetsEmb",version_,RUN, backgroundTTbarEmb, "0", NormTTjetsEmbInclusive,     Error,   Lumi*lumiCorrFactor*hltEff_/1000., temp_histo_counter, sbinEmbeddingPresel, 1);
 	    cout <<"TTbar MC Embed = "<<temp_histo_counter->Integral()<<endl;
 	    temp_histo_counter->Reset();
 	    h1->Reset();
