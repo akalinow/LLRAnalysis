@@ -2463,7 +2463,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	    if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	    if(removeMtCut) h1->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/h1->Integral());//added 021214
 	    else h1->Scale(OSWinSignalRegionDATAWJetsUp/h1->Integral());
 
 	    ////increase the error using loose to tight ratio
@@ -2505,7 +2505,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2541,7 +2541,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJetsUp/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2570,7 +2570,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2639,7 +2639,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	    ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	    if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	    if(removeMtCut) h1->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/h1->Integral());//added 021214
 	    else h1->Scale(OSWinSignalRegionDATAWJetsDown/h1->Integral());
 
 	    ////increase the error using loose to tight ratio
@@ -2681,7 +2681,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2718,7 +2718,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJetsDown/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2747,7 +2747,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2817,7 +2817,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	  ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	  if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	  if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	  if(removeMtCut) h1->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/h1->Integral());//added 021214
 	  else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
 	  
 	  ////increase the error using loose to tight ratio
@@ -2846,7 +2846,7 @@ void plotElecTau( Int_t mH_           = 120,
 	      
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJets/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2874,7 +2874,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJets/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2902,7 +2902,7 @@ void plotElecTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/hCleaner->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJets/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
