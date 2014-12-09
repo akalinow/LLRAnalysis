@@ -2701,7 +2701,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	    ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	    if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	    if(removeMtCut) h1->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/h1->Integral());//added 021214
 	    else h1->Scale(OSWinSignalRegionDATAWJetsUp/h1->Integral());
 
 	    ////increase the error using loose to tight ratio
@@ -2743,7 +2743,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2779,7 +2779,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJetsUp/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2808,7 +2808,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsUp 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsUp/OSWinSidebandRegionMCWJetsUp);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFUpTight->Integral()*OSWinSignalRegionDATAWJetsUp/OSWinSignalRegionMCWJetsUp)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsUp/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2877,7 +2877,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	    ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	    if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	    if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	    if(removeMtCut) h1->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/h1->Integral());//added 021214
 	    else h1->Scale(OSWinSignalRegionDATAWJetsDown/h1->Integral());
 
 	    ////increase the error using loose to tight ratio
@@ -2919,7 +2919,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2956,7 +2956,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJetsDown/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -2985,7 +2985,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJetsDown/OSWinSidebandRegionMCWJetsDown);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hW_TFDownTight->Integral()*OSWinSignalRegionDATAWJetsDown/OSWinSignalRegionMCWJetsDown)/hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJetsDown/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -3046,16 +3046,20 @@ void plotMuTau( Int_t mH_           = 120,
 
 	  hWTight->Add(h1,1.);
 
+	  cout<<"hWTight integral : "<<hWTight->Integral()<<endl;
+
 	  //Loose shape -- for nobtag and btag categories
 	  h1->Reset();
 	  drawHistogram(sbinLtisoPresel,sbinCat, "MC_WJet_LooseTightWCorr",version_,analysis_, RUN, currentTree, variable, NormWJets, Error,   Lumi*hltEff_/1000., h1, sbinLtiso, 1);
 	  
+	  cout<<"h1 integral : "<<h1->Integral()<<endl;
+
 	  ////loose to tight ratio
 	  Double_t LooseToTightRatio = h1->Integral()/hWTight->Integral();
 
 	  ////normalize to expectation from data = OSWinSignalRegionDATAWJetsDown 
 // 	  if(removeMtCut) h1->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	  if(removeMtCut) h1->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	  if(removeMtCut) h1->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/h1->Integral());//added 021214
 	  else h1->Scale(OSWinSignalRegionDATAWJets/h1->Integral());
 	  
 	  ////increase the error using loose to tight ratio
@@ -3063,6 +3067,8 @@ void plotMuTau( Int_t mH_           = 120,
 
 	  ////fill the histogram
 	  hW->Add(h1,1.);
+
+	  cout<<"hW integral : "<<hW->Integral()<<endl;
 
 	  //no-btag
 	  if(selection_.find("nobTag")!=string::npos)
@@ -3084,7 +3090,7 @@ void plotMuTau( Int_t mH_           = 120,
 	      
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/ hCleanerfb->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJets/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -3112,7 +3118,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleaner->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleaner->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleaner->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/hCleaner->Integral());//added 021214
 	      else hCleaner->Scale(OSWinSignalRegionDATAWJets/hCleaner->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -3121,6 +3127,8 @@ void plotMuTau( Int_t mH_           = 120,
 	      ////fill shape
 	      hWLooseBTag->Reset();
 	      hWLooseBTag->Add(hCleaner,1.);
+
+	      cout<<"hWLooseBTag integral : "<<hWLooseBTag->Integral()<<endl;
 
 	      //fine binning for MSSM
 	      hW_fb->Reset();hCleanerfb->Reset(); float NormWJetsBTag_fb = 0.;
@@ -3140,7 +3148,7 @@ void plotMuTau( Int_t mH_           = 120,
 
 	      ////normalize to expectation from data = OSWinSignalRegionDATAWJets 
 // 	      if(removeMtCut) hCleanerfb->Scale(OSWinSidebandRegionDATAWJets/OSWinSidebandRegionMCWJets);//comented 021214
-	      if(removeMtCut) hCleanerfb->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
+	      if(removeMtCut) hCleanerfb->Scale((hWTight->Integral()*OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets)/hCleaner->Integral());//added 021214
 	      else hCleanerfb->Scale(OSWinSignalRegionDATAWJets/hCleanerfb->Integral());
 
 	      ////increase the error using loose to tight ratio
@@ -3158,6 +3166,11 @@ void plotMuTau( Int_t mH_           = 120,
 	      hWMinusSS->Add(hWTight, (1-OStoSSRatioQCD*SSWinSidebandRegionDATA/OSWinSidebandRegionDATAWJets));
 	      if(removeMtCut) hWMinusSS->Scale(OSWinSignalRegionDATAWJets/OSWinSignalRegionMCWJets);//added 021214
 
+	      cout<<"Nominal/nobTag integrals : "<<endl;
+	      cout<<"hWTight integral : "<<hWTight->Integral()<<endl;
+	      cout<<"OSWinSignalRegionDATAWJets: "<<OSWinSignalRegionDATAWJets<<endl;
+	      cout<<"OSWinSignalRegionMCWJets: "<<OSWinSignalRegionMCWJets<<endl;
+	      cout<<"hW integral : "<<hW->Integral()<<endl;
 	      //hWMinusSS->Add(hWTight, (1-OStoSSRatioQCD*SSWinSidebandRegionDATA/OSWinSidebandRegionDATAWJets));//commented 261014
 	      //if(!USESSBKG) hEWK->Add(hWTight,1.0);//commented 261014
 	      //else hEWK->Add(hWMinusSS,1.0);//commented 261014
