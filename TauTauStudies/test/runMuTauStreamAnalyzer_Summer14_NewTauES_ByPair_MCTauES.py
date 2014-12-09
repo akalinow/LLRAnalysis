@@ -71,7 +71,9 @@ process.source = cms.Source(
     fileNames = cms.untracked.vstring(
         #'file:patTuples_LepTauStream_VBFH125.root'
         #'file:patTuples_LepTauStream.root'#was here
-        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
+        'file:patTuples_LepTauStream_130_5_Qon.root'
+        #'file:/data_CMS/cms/davignon/PAT/W1Jets/patTuples_LepTauStream_44_1_E0B.root'
+        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
         #'file:/data_CMS/cms/davignon/AOD/TauPolarOff/patTuples_LepTauStream_1000_1_pns.root'#testing TauSpinnerReco
         #'file:patTuples_LepTauStream.root'#Shalhout 2 events
         #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'#Shalhout jets
@@ -536,68 +538,68 @@ process.filterSequence = cms.Sequence(
 
 #######################################################################
 #######################################################################
-process.mssmHiggsPtReweightSequenceGluGlu = cms.Sequence()
+## process.mssmHiggsPtReweightSequenceGluGlu = cms.Sequence()
 
-def drange(start, stop, step):
-    r = float(start)
-    while r < stop:
-    	yield r
-     	r += step
+## def drange(start, stop, step):
+##     r = float(start)
+##     while r < stop:
+##     	yield r
+##      	r += step
 
-mssmHiggsPtReweights = []
+## mssmHiggsPtReweights = []
 
-mssm_models = [ "mhmax" , "mhmod+", "mhmod-", "low-mH" ]
-if applyHiggsMassCut:
-    for mssm_model in mssm_models:
-        inputFileName = None
-        mA_values = None
-        mu_values = None
-        moduleName = None
-        instanceLabel = None
-        if mssm_model in [ "mhmax" , "mhmod+", "mhmod-" ]:
-            if mssm_model == "mhmax":
-                inputFileName = "mssmHiggsPtReweightGluGlu_mhmax.root"
-                moduleName = "mhmaxHiggsPtReweightGluGlu"
-            elif mssm_model == "mhmod+":
-                inputFileName = "mssmHiggsPtReweightGluGlu_mhmod+.root"
-                moduleName = "mhmodPlusHiggsPtReweightGluGlu"                
-            elif mssm_model == "mhmod-":
-                inputFileName = "mssmHiggsPtReweightGluGlu_mhmod-.root"
-                moduleName = "mhmodMinusHiggsPtReweightGluGlu"
-            mA_values = [ 90, 100, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
-            mu_values = [ 200, ]
-            instanceLabel = "$higgsTypemA$mA$central_or_shift"
-        elif mssm_model in [ "low-mH" ]:
-            inputFileName = "mssmHiggsPtReweightGluGlu_low-mH.root"
-            moduleName = "lowmHHiggsPtReweightGluGlu"
-            mA_values = [ 110, ]
-            mu_values = [ mu_value for mu_value in drange(300, 3501, 200) ]
-            instanceLabel = "$higgsTypemu$mu$central_or_shift"
-        if not (inputFileName and mA_values and mu_values and moduleName and instanceLabel):
-            raise ValueError("Invalid MSSM model = %s !!" % mssm_model)        
-        mssmHiggsPtReweightProducerGluGlu = cms.EDProducer("MSSMHiggsPtReweightProducerGluGlu",
-            srcGenParticles = cms.InputTag('genParticles'),
-            inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/%s" % inputFileName),
-            lutName = cms.string("$higgsType_mA$mA_mu$mu/mssmHiggsPtReweight_$higgsType_mA$mA_mu$mu_$central_or_shift"),                                               
-            mA_values = cms.vdouble(mA_values),
-            mu_values = cms.vdouble(mu_values),
-            higgsTypes = cms.vstring("A", "H", "h"),
-            shifts = cms.vstring("HqTscaleUp", "HqTscaleDown", "HIGLUscaleUp", "HIGLUscaleDown", "tanBetaLow", "tanBetaHigh"),
-            instanceLabel = cms.string(instanceLabel)
-        )
-        setattr(process, moduleName, mssmHiggsPtReweightProducerGluGlu)
-        process.mssmHiggsPtReweightSequenceGluGlu += mssmHiggsPtReweightProducerGluGlu
-        for mA_value in mA_values:
-            for mu_value in mu_values:
-                for central_or_shift in [ "central", "HqTscaleUp", "HqTscaleDown", "HIGLUscaleUp", "HIGLUscaleDown", "tanBetaLow", "tanBetaHigh" ]:
-                    if (mA_value > (0.95*nomHiggsMass) and mA_value < (1.05*nomHiggsMass)) or mssm_model == "low-mH":
-                        branchName = "mssmHiggsPtReweightGluGlu_%s_%s_mA%1.0f_mu%1.0f_%s" % (mssm_model, "A", mA_value, mu_value, central_or_shift)
-                        instanceLabel_expanded = instanceLabel
-                        instanceLabel_expanded = instanceLabel_expanded.replace("$higgsType", "A")
-                        instanceLabel_expanded = instanceLabel_expanded.replace("$mA", "%1.0f" % mA_value)
-                        instanceLabel_expanded = instanceLabel_expanded.replace("$mu", "%1.0f" % mu_value)
-                        instanceLabel_expanded = instanceLabel_expanded.replace("$central_or_shift", "%s" % central_or_shift)
-                        mssmHiggsPtReweights.append([ branchName, "%s:%s" % (moduleName, instanceLabel_expanded) ])
+## mssm_models = [ "mhmax" , "mhmod+", "mhmod-", "low-mH" ]
+## if applyHiggsMassCut:
+##     for mssm_model in mssm_models:
+##         inputFileName = None
+##         mA_values = None
+##         mu_values = None
+##         moduleName = None
+##         instanceLabel = None
+##         if mssm_model in [ "mhmax" , "mhmod+", "mhmod-" ]:
+##             if mssm_model == "mhmax":
+##                 inputFileName = "mssmHiggsPtReweightGluGlu_mhmax.root"
+##                 moduleName = "mhmaxHiggsPtReweightGluGlu"
+##             elif mssm_model == "mhmod+":
+##                 inputFileName = "mssmHiggsPtReweightGluGlu_mhmod+.root"
+##                 moduleName = "mhmodPlusHiggsPtReweightGluGlu"                
+##             elif mssm_model == "mhmod-":
+##                 inputFileName = "mssmHiggsPtReweightGluGlu_mhmod-.root"
+##                 moduleName = "mhmodMinusHiggsPtReweightGluGlu"
+##             mA_values = [ 90, 100, 120, 130, 140, 160, 180, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000 ]
+##             mu_values = [ 200, ]
+##             instanceLabel = "$higgsTypemA$mA$central_or_shift"
+##         elif mssm_model in [ "low-mH" ]:
+##             inputFileName = "mssmHiggsPtReweightGluGlu_low-mH.root"
+##             moduleName = "lowmHHiggsPtReweightGluGlu"
+##             mA_values = [ 110, ]
+##             mu_values = [ mu_value for mu_value in drange(300, 3501, 200) ]
+##             instanceLabel = "$higgsTypemu$mu$central_or_shift"
+##         if not (inputFileName and mA_values and mu_values and moduleName and instanceLabel):
+##             raise ValueError("Invalid MSSM model = %s !!" % mssm_model)        
+##         mssmHiggsPtReweightProducerGluGlu = cms.EDProducer("MSSMHiggsPtReweightProducerGluGlu",
+##             srcGenParticles = cms.InputTag('genParticles'),
+##             inputFileName = cms.FileInPath("LLRAnalysis/HadTauStudies/data/%s" % inputFileName),
+##             lutName = cms.string("$higgsType_mA$mA_mu$mu/mssmHiggsPtReweight_$higgsType_mA$mA_mu$mu_$central_or_shift"),                                               
+##             mA_values = cms.vdouble(mA_values),
+##             mu_values = cms.vdouble(mu_values),
+##             higgsTypes = cms.vstring("A", "H", "h"),
+##             shifts = cms.vstring("HqTscaleUp", "HqTscaleDown", "HIGLUscaleUp", "HIGLUscaleDown", "tanBetaLow", "tanBetaHigh"),
+##             instanceLabel = cms.string(instanceLabel)
+##         )
+##         setattr(process, moduleName, mssmHiggsPtReweightProducerGluGlu)
+##         process.mssmHiggsPtReweightSequenceGluGlu += mssmHiggsPtReweightProducerGluGlu
+##         for mA_value in mA_values:
+##             for mu_value in mu_values:
+##                 for central_or_shift in [ "central", "HqTscaleUp", "HqTscaleDown", "HIGLUscaleUp", "HIGLUscaleDown", "tanBetaLow", "tanBetaHigh" ]:
+##                     if (mA_value > (0.95*nomHiggsMass) and mA_value < (1.05*nomHiggsMass)) or mssm_model == "low-mH":
+##                         branchName = "mssmHiggsPtReweightGluGlu_%s_%s_mA%1.0f_mu%1.0f_%s" % (mssm_model, "A", mA_value, mu_value, central_or_shift)
+##                         instanceLabel_expanded = instanceLabel
+##                         instanceLabel_expanded = instanceLabel_expanded.replace("$higgsType", "A")
+##                         instanceLabel_expanded = instanceLabel_expanded.replace("$mA", "%1.0f" % mA_value)
+##                         instanceLabel_expanded = instanceLabel_expanded.replace("$mu", "%1.0f" % mu_value)
+##                         instanceLabel_expanded = instanceLabel_expanded.replace("$central_or_shift", "%s" % central_or_shift)
+##                         mssmHiggsPtReweights.append([ branchName, "%s:%s" % (moduleName, instanceLabel_expanded) ])
     
 #######################################################################
 process.muTauStreamAnalyzer = cms.EDAnalyzer(
@@ -614,15 +616,18 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     vertices       = cms.InputTag("selectedPrimaryVertices"),
     triggerResults = cms.InputTag("patTriggerEvent"),
     genParticles   = cms.InputTag("genParticles"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
     genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
+    isPFEmb        = cms.bool(runOnEmbed),
     isRhEmb        = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet   = cms.untracked.double(0.5),
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
-    doIsoOrdering  = cms.untracked.bool(False),
+    doIsoOrdering  = cms.untracked.bool(True),
     doMuIsoMVA     = cms.untracked.bool( False ),
+    pileupSrc      = cms.InputTag("addPileupInfo"),
     evtWeights     =  cms.PSet()
     )
 
@@ -632,8 +637,8 @@ if usePFMEtMVA:
     else :
         process.muTauStreamAnalyzer.met = cms.InputTag("patPFMetByMVA00")
 
-for mssmHiggsPtReweight in mssmHiggsPtReweights:
-    setattr(process.muTauStreamAnalyzer.evtWeights, mssmHiggsPtReweight[0], cms.InputTag(mssmHiggsPtReweight[1]))
+## for mssmHiggsPtReweight in mssmHiggsPtReweights:
+##     setattr(process.muTauStreamAnalyzer.evtWeights, mssmHiggsPtReweight[0], cms.InputTag(mssmHiggsPtReweight[1]))
 
 process.muTauStreamAnalyzerMuUp    = process.muTauStreamAnalyzer.clone(
     diTaus   =  cms.InputTag("selectedDiTauMuUp"),
@@ -712,8 +717,8 @@ process.seqNominal = cms.Sequence(
     process.selectedDiTau*process.selectedDiTauCounter*
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
-    process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.mssmHiggsPtReweightSequenceGluGlu*
+    #process.TauSpinnerReco*
     process.muTauStreamAnalyzer
     )
 
@@ -740,8 +745,8 @@ process.seqMuUp = cms.Sequence(
     process.selectedDiTauMuUp*process.selectedDiTauMuUpCounter*
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
-    process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.mssmHiggsPtReweightSequenceGluGlu*
+    #process.TauSpinnerReco*
     process.muTauStreamAnalyzerMuUp
     )
 process.seqMuDown = cms.Sequence(
@@ -767,8 +772,8 @@ process.seqMuDown = cms.Sequence(
     process.selectedDiTauMuDown*process.selectedDiTauMuDownCounter*
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
-    process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.mssmHiggsPtReweightSequenceGluGlu*
+    #process.TauSpinnerReco*
     process.muTauStreamAnalyzerMuDown
     )
 
@@ -796,8 +801,8 @@ process.seqTauUp = cms.Sequence(
     process.selectedDiTauTauUp*process.selectedDiTauTauUpCounter*
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
-    process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.mssmHiggsPtReweightSequenceGluGlu*
+    #process.TauSpinnerReco*
     process.muTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -824,8 +829,8 @@ process.seqTauDown = cms.Sequence(
     process.selectedDiTauTauDown*process.selectedDiTauTauDownCounter*
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
-    process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.mssmHiggsPtReweightSequenceGluGlu*
+    #process.TauSpinnerReco*
     process.muTauStreamAnalyzerTauDown
     )
 
@@ -834,8 +839,8 @@ process.seqTauDown = cms.Sequence(
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
-    #process.pTauUp              = cms.Path( process.seqTauUp)#was commented
-    #process.pTauDown            = cms.Path( process.seqTauDown )#was commented
+    process.pTauUp              = cms.Path( process.seqTauUp)#was commented
+    process.pTauDown            = cms.Path( process.seqTauDown )#was commented
     #process.pMuUp                  = cms.Path( process.seqMuUp)    #NOT INTERESTING FOR ANALYSIS
     #process.pMuDown                = cms.Path( process.seqMuDown)  #NOT INTERESTING FOR ANALYSIS
     ####
