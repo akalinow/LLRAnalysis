@@ -458,8 +458,10 @@ if applyHiggsMassCut:
 process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     srcDiTau = cms.InputTag('selectedDiTau'),
     bestDiTauPreselection = cms.vstring("decayModeFindingOldDMs"),
-    bestDiTauRanking = cms.vstring("byCombinedIsolationDeltaBetaCorrRaw3Hits"),
-    invertRanking = cms.bool(True), # CV: set to False (True) if ranking taus by MVA output (isolation Pt-sum)
+    bestDiTauRanking = cms.vstring("byCombinedIsolationDeltaBetaCorrRaw3Hits"), # CV: agreed with Cecile that we will keep using 'byCombinedIsolationDeltaBetaCorrRaw3Hits' (2014/11/28)
+    invertRanking = cms.bool(True), # CV: set to False (True) if ranking taus by MVA output (isolation Pt-sum)                                          
+    ##bestDiTauRanking = cms.vstring("byIsolationMVA3oldDMwLTraw"),                                      
+    ##invertRanking = cms.bool(False), # CV: set to False (True) if ranking taus by MVA output (isolation Pt-sum)
     tauIdDiscriminators = cms.PSet(
         decayModeFinding = cms.string("decayModeFindingOldDMs"),                                        
         LooseDB3HIso = cms.string("byLooseCombinedIsolationDeltaBetaCorr3Hits"),

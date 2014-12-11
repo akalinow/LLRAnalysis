@@ -13,7 +13,7 @@ version = "v3_09"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_2/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_3/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -135,13 +135,15 @@ samples = {
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
         'inputFiles' : [ "pfEmbed_TTJetsFullLept" ],
-        'lumiScale' : getLumiScale('TTJetsFullLept'),
+        ##'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
+        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
         'addWeights' : [ "topPtWeightNom" ]
     },
     'HiggsGGH125' : {
-        'processes' : [ "singleH_SM125" ],
+        'processes' : [ "ggH_SM125" ],
         'inputFiles' : [ "HiggsGGH125" ],
-        'lumiScale' : getLumiScale('HiggsGGH125')
+        'lumiScale' : getLumiScale('HiggsGGH125'),
+        'addWeights' : [ "higgsPtWeightNom" ]
     },
     'HiggsVBF125' : {
         'processes' : [ "singleH_SM125" ],
@@ -299,6 +301,14 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
+    'CMS_htt_higgsPtReweightSM_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : [ "higgsPtWeightDown" ]
+    },
+    'CMS_htt_higgsPtReweightSM_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : [ "higgsPtWeightUp" ]
+    },    
     'CMS_htt_ttbarPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightUp" ]
@@ -312,6 +322,14 @@ central_or_shifts = {
         'addWeights_extension'    : []
     },
     'CMS_htt_WShape_tautau_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_scale_j_shape_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_scale_j_shape_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     }
@@ -334,7 +352,7 @@ execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])
 
 executable_FWLiteTauTauAnalyzer2b2tau   = execDir + 'FWLiteTauTauAnalyzer2b2tau'
 executable_determineJetToTauFakeRate    = execDir + 'determineJetToTauFakeRate'
-executable_addBackgroundZTT             = execDir + 'addBackgroundZTT'
+executable_addBackgroundZTT             = execDir + 'addBackgroundZTT2'
 executable_addBackgroundQCD             = execDir + 'addBackgroundQCD'
 executable_addBackgroundW               = execDir + 'addBackgroundW'
 executable_prepareTauTauDatacards2b2tau = execDir + 'prepareTauTauDatacards2b2tau'
@@ -521,6 +539,8 @@ for sample in samples.keys():
                 for central_or_shift in central_or_shifts_region.keys():
 
                     if (central_or_shift.find('CMS_htt_QCDfrNorm_tautau_8TeV') != -1 or central_or_shift.find('CMS_htt_QCDfrShape_tautau_8TeV') != -1) and isSignalMC:
+                        continue
+                    if central_or_shift.find('CMS_htt_higgsPtReweightSM_8TeV') != -1 and not sample in [ "HiggsGGH125" ]:
                         continue
                     if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
                         continue

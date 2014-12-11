@@ -89,9 +89,11 @@ double effDrop2012IsoParkedTau_Arun_cutMedium(double pt, double eta) // CV: drop
   else return ( (1. - 1.09474e-03*(pt - 140.) + 3.53097e-07*square(pt - 140.)) );
 }
 
-double eff2012IsoParkedTau_Arun_cutMedium(double pt, double eta) 
+double eff2012IsoParkedTau_Arun_cutMedium(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.919649 * 0.5 * (TMath::Erf((pt - 43.1776)/2./0.758213 /sqrt(pt)) + 1.) * (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta)) / 18.3); 
+  double eff = 0.919649 * 0.5 * (TMath::Erf((pt - 43.1776)/2./0.758213 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= ( (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta)) / 18.3 );
+  return eff;
 }
 
 double effDrop2012IsoParkedTau_Arun_mvaTight(double pt, double eta) // CV: drop of tau trigger efficiency due to bug in PFlow config discovered in Spring 2012 
@@ -101,9 +103,11 @@ double effDrop2012IsoParkedTau_Arun_mvaTight(double pt, double eta) // CV: drop 
   else return ( (1. - 1.10448e-03*(pt - 140.) + 4.09426e-07*square(pt - 140.)) );
 }
 
-double eff2012IsoParkedTau_Arun_mvaTight(double pt, double eta) 
+double eff2012IsoParkedTau_Arun_mvaTight(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.876313 * 0.5 * (TMath::Erf((pt - 42.8216)/2./0.754887 /sqrt(pt)) + 1.) * (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_mvaTight(pt, eta)) / 18.3);
+  double eff = 0.876313 * 0.5 * (TMath::Erf((pt - 42.8216)/2./0.754887 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= ( (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_mvaTight(pt, eta)) / 18.3 );
+  return eff;
 }
 
 double effDrop2012IsoParkedTau_Arun_mvaVTight(double pt, double eta) // CV: drop of tau trigger efficiency due to bug in PFlow config discovered in Spring 2012 
@@ -113,24 +117,32 @@ double effDrop2012IsoParkedTau_Arun_mvaVTight(double pt, double eta) // CV: drop
   else return ( (1. - 1.09226e-03*(pt - 140.) + 4.00873e-07*square(pt - 140.)) );
 }
 
-double eff2012IsoParkedTau_Arun_mvaVTight(double pt, double eta) 
+double eff2012IsoParkedTau_Arun_mvaVTight(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.896198 * 0.5 * (TMath::Erf((pt - 43.0466)/2./0.763838 /sqrt(pt)) + 1.) * (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_mvaTight(pt, eta)) / 18.3); 
+  double eff = 0.896198 * 0.5 * (TMath::Erf((pt - 43.0466)/2./0.763838 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= ( (7.3 + 11.0 * effDrop2012IsoParkedTau_Arun_mvaTight(pt, eta)) / 18.3 );
+  return eff;
 }
 
-double eff2012IsoParkedTauMC_Arun_cutMedium(double pt, double eta) 
+double eff2012IsoParkedTauMC_Arun_cutMedium(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.880128 * 0.5 * (TMath::Erf((pt - 41.8055)/2./0.800499 /sqrt(pt)) + 1.) * effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta));
+  double eff = 0.880128 * 0.5 * (TMath::Erf((pt - 41.8055)/2./0.800499 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta);
+  return eff;
 }
 
-double eff2012IsoParkedTauMC_Arun_mvaTight(double pt, double eta) 
+double eff2012IsoParkedTauMC_Arun_mvaTight(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.861041 * 0.5 * (TMath::Erf((pt - 41.5791)/2./0.768280 /sqrt(pt)) + 1.) * effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta)); 
+  double eff = 0.861041 * 0.5 * (TMath::Erf((pt - 41.5791)/2./0.768280 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= effDrop2012IsoParkedTau_Arun_mvaTight(pt, eta);
+  return eff;
 }
 
-double eff2012IsoParkedTauMC_Arun_mvaVTight(double pt, double eta) 
+double eff2012IsoParkedTauMC_Arun_mvaVTight(double pt, double eta, bool applyEffDrop) 
 {
-  return ( 0.877077 * 0.5 * (TMath::Erf((pt - 41.6020)/2./0.768319 /sqrt(pt)) + 1.) * effDrop2012IsoParkedTau_Arun_cutMedium(pt, eta)); 
+  double eff = 0.877077 * 0.5 * (TMath::Erf((pt - 41.6020)/2./0.768319 /sqrt(pt)) + 1.);
+  if ( applyEffDrop ) eff *= effDrop2012IsoParkedTau_Arun_mvaVTight(pt, eta);
+  return eff;
 }
 //-------------------------------------------------------------------------------
 

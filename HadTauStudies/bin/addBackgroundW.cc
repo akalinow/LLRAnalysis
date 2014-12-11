@@ -163,12 +163,12 @@ int main(int argc, char* argv[])
 	  std::cout << "histogram = " << (*histogram) << std::endl;
 	  for ( vstring::const_iterator central_or_shift = central_or_shifts.begin();
 		central_or_shift != central_or_shifts.end(); ++central_or_shift ) {
-	    TH1* histogramW_tmp_norm = getHistogram(dir_region_norm, processW_tmp, *histogram, "central", true);
+	    TH1* histogramW_tmp_norm = getHistogram(dir_region_norm, processW_tmp, *histogram, *central_or_shift, true);
 	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
 	      std::cout << " integral(W_tmp_norm) = " << histogramW_tmp_norm->Integral() << std::endl;
 	    }
 	    
-	    TH1* histogramW_tmp_shape = getHistogram(dir_region_shape, processW_tmp, *histogram, "central", true);
+	    TH1* histogramW_tmp_shape = getHistogram(dir_region_shape, processW_tmp, *histogram, *central_or_shift, true);
 	    if ( (*central_or_shift) == "" || (*central_or_shift) == "central" ) {
 	      std::cout << " integral(W_tmp_shape) = " << histogramW_tmp_shape->Integral() << std::endl;
 	    }

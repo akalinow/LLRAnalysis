@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
 
-def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=True, useMarkov=True, useRecoil=True, doSVFitReco=True, postfix="") :
+def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=True, useMarkov=True, useRecoil=True, doSVFitReco=True, postfix="", verbose=False) :
 
     ##print "<getDiTauMassByLeptonPair>:"
 
@@ -24,7 +24,8 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3")
     else:
         process.calibratedAK5PFJetsForPFMEtMVA.correctors = cms.vstring("ak5PFL1FastL2L3Residual")
-    ##process.pfMEtMVA.verbosity = cms.int32(1)
+    if verbose:
+        process.pfMEtMVA.verbosity = cms.int32(1)
         
     process.metRecoilCorrector = cms.EDProducer("MEtRecoilCorrectorProducer",
         genParticleTag      = cms.InputTag("genParticles"),
@@ -40,7 +41,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         inputFileNamehiggs  = cms.FileInPath("LLRAnalysis/Utilities/data/recoilv7/RecoilCorrector_v7/recoilfits/recoilfit_higgs53X_20pv_njet.root"),
         numOfSigmas         = cms.double(1.0),
         minJetPt            = cms.double(30.0),
-        verbose             = cms.bool(False),
+        verbose             = cms.bool(verbose),
         isMC                = cms.bool(runOnMC),
         idxTau              = cms.int32(-1),
     )
@@ -57,7 +58,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         electronShift  = cms.vdouble(0.01,0.025),
         jetThreshold   = cms.double(10),
         numOfSigmas    = cms.double(1.0),
-        verbose = cms.bool(False)
+        verbose        = cms.bool(verbose)
     )
 
     process.load("PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi")
@@ -88,7 +89,7 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
         process.diTau.srcLeg1 = cms.InputTag(tauColl)
         process.diTau.srcLeg2 = cms.InputTag(tauColl)
    
-    process.diTau.srcMET      = cms.InputTag("metRecoilCorrector",  "N")
+    process.diTau.srcMET      = cms.InputTag("metRecoilCorrector", "N")
     process.diTau.doPFMEtSign = cms.bool(False)
     process.diTau.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
     process.diTau.dRmin12     = cms.double(0.5)
@@ -111,11 +112,13 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 L = cms.uint32(1),
                 epsilon0 = cms.double(1.e-2),
                 nu = cms.double(0.71)
-                ),
+            ),
             max_or_median = cms.string("max"),
             verbosity = cms.int32(0)
         )
         process.diTau.nSVfit.psKine_MEt_int.config.event.srcPrimaryVertex = cms.InputTag("offlinePrimaryVertices")
+        if verbose:
+            process.diTau.nSVfit.psKine_MEt_int.algorithm.verbosity = cms.int32(1)
     delattr(process.diTau.nSVfit, "psKine_MEt_logM_fit")
     if not runOnMC:
         process.diTau.srcGenParticles = ""
@@ -131,8 +134,8 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 moduleNameLeg1 = "%sLeg1comb%i%i%s" % (muonColl, idxLeg1, idxLeg2, postfix)
                 moduleLeg1 = cms.EDProducer("SinglePatMuonPicker",
                     src = cms.InputTag(muonColl),
-                    itemNumber = cms.uint32(idxLeg1),
-                    verbose = cms.untracked.bool(False)
+                    itemNumber = cms.vuint32([ idxLeg1 ]),
+                    verbose = cms.untracked.bool(verbose)
                 )
                 setattr(process, moduleNameLeg1, moduleLeg1)
                 runMETByPairsSequence += moduleLeg1
@@ -141,8 +144,8 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 moduleNameLeg1 = "%sLeg1comb%i%i%s" % (electronColl, idxLeg1, idxLeg2, postfix)
                 moduleLeg1 = cms.EDProducer("SinglePatElectronPicker",
                     src = cms.InputTag(electronColl),
-                    itemNumber = cms.uint32(idxLeg1),
-                    verbose = cms.untracked.bool(False)
+                    itemNumber = cms.vuint32([ idxLeg1 ]),
+                    verbose = cms.untracked.bool(verbose)
                 )
                 setattr(process, moduleNameLeg1, moduleLeg1)
                 runMETByPairsSequence += moduleLeg1
@@ -153,8 +156,8 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 moduleNameLeg1 = "%sLeg1comb%i%i%s" % (tauColl, idxLeg1, idxLeg2, postfix)
                 moduleLeg1 = cms.EDProducer("SinglePatTauPicker",
                     src = cms.InputTag(tauColl),
-                    itemNumber = cms.uint32(idxLeg1),
-                    verbose = cms.untracked.bool(False)
+                    itemNumber = cms.vuint32([ idxLeg1 ]),
+                    verbose = cms.untracked.bool(verbose)
                 )
                 setattr(process, moduleNameLeg1, moduleLeg1)
                 runMETByPairsSequence += moduleLeg1
@@ -163,12 +166,24 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
             moduleNameLeg2 = "%sLeg2comb%i%i%s" % (tauColl, idxLeg1, idxLeg2, postfix)
             moduleLeg2 = cms.EDProducer("SinglePatTauPicker",
                 src = cms.InputTag(tauColl),
-                itemNumber = cms.uint32(idxLeg2),
-                verbose = cms.untracked.bool(False)
+                itemNumber = cms.vuint32([ idxLeg2 ]),
+                verbose = cms.untracked.bool(verbose)
             )
             setattr(process, moduleNameLeg2, moduleLeg2)
             runMETByPairsSequence += moduleLeg2
             srcLeg2 = moduleNameLeg2
+
+            srcLeg1plus2 = None
+            if not(isMuTau or isElecTau):
+                moduleNameLeg1plus2 = "%sLeg1plus2comb%i%i%s" % (tauColl, idxLeg1, idxLeg2, postfix)
+                moduleLeg1plus2 = cms.EDProducer("SinglePatTauPicker",
+                    src = cms.InputTag(tauColl),
+                    itemNumber = cms.vuint32([ idxLeg1, idxLeg2 ]),
+                    verbose = cms.untracked.bool(verbose)
+                )
+                setattr(process, moduleNameLeg1plus2, moduleLeg1plus2)
+                runMETByPairsSequence += moduleLeg1plus2
+                srcLeg1plus2 = moduleNameLeg1plus2
 
             moduleNameMVAMET = "pfMEtMVAcomb%i%i%s" % (idxLeg1, idxLeg2, postfix)
             moduleMVAMET = process.pfMEtMVA.clone(
@@ -198,13 +213,15 @@ def getDiTauMassByLeptonPair(process, muonColl, electronColl, tauColl, runOnMC=T
                 if isMuTau:
                     moduleRecoilMET.electronTag = cms.InputTag("")
                     moduleRecoilMET.muonTag = cms.InputTag(srcLeg1)
+                    moduleRecoilMET.tauTag = cms.InputTag(srcLeg2)
                 elif isElecTau:
                     moduleRecoilMET.electronTag = cms.InputTag(srcLeg1)
                     moduleRecoilMET.muonTag = cms.InputTag("")
+                    moduleRecoilMET.tauTag = cms.InputTag(srcLeg2)
                 else:
                     moduleRecoilMET.electronTag = cms.InputTag("")
                     moduleRecoilMET.muonTag = cms.InputTag("")
-                moduleRecoilMET.tauTag = cms.InputTag(srcLeg2)
+                    moduleRecoilMET.tauTag = cms.InputTag(srcLeg1plus2)
                 moduleRecoilMET.idxLeg2 = cms.int32(-1)
                 setattr(process, moduleNameRecoilMET, moduleRecoilMET)
                 runMETByPairsSequence += moduleRecoilMET

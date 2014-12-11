@@ -240,7 +240,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
     // Z/H->tautau, tau->tau_h, tau->l
     if(fabs(eventDecay)==23*15 || fabs(eventDecay)==25*15 || fabs(eventDecay)==35*15 || fabs(eventDecay)==36*15){
 
-      if(verbose_) cout << " ==> Z->tautau event" << endl;
+      if(verbose_) cout << " ==> Z->tautau or Higgs->tautau event" << endl;
       
       genVP4 = ((*genParticles)[bosonIndex]).p4();
 
@@ -256,7 +256,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 	  genLeg1P4    = daughter->p4();
 
 	  if(verbose_) 
-	    cout << " ==> tau- has pt,eta,phi= " << genLeg1P4.Pt() << ", " << genLeg1P4.Eta() << ", " << genLeg1P4.Phi() << endl;
+	    cout << " ==> gen. tau- has pt,eta,phi= " << genLeg1P4.Pt() << ", " << genLeg1P4.Eta() << ", " << genLeg1P4.Phi() << endl;
 
 	  genVisLeg1P4 = genLeg1P4;
 
@@ -275,7 +275,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 	  }
 
 	  if(verbose_) 
-	    cout << " ==> tau- has visible pt,eta,phi= " << genVisLeg1P4.Pt() << ", " << genVisLeg1P4.Eta() << ", " << genVisLeg1P4.Phi() << endl;
+	    cout << " ==> gen. tau- has visible pt,eta,phi= " << genVisLeg1P4.Pt() << ", " << genVisLeg1P4.Eta() << ", " << genVisLeg1P4.Phi() << endl;
 	}
 
 	else if( daughterPdgId==15 && daughterStatus==3){
@@ -283,7 +283,7 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 	  genLeg2P4 = daughter->p4();
 	  
 	  if(verbose_) 
-	    cout << " ==> tau+ has pt,eta,phi= " << genLeg2P4.Pt() << ", " << genLeg2P4.Eta() << ", " << genLeg2P4.Phi() << endl;
+	    cout << " ==> gen. tau+ has pt,eta,phi= " << genLeg2P4.Pt() << ", " << genLeg2P4.Eta() << ", " << genLeg2P4.Phi() << endl;
 	  
 	  genVisLeg2P4 = genLeg2P4;
 	  
@@ -302,11 +302,15 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
 	  }
 	  
 	  if(verbose_) 
-	    cout << " ==> tau+ has visible pt,eta,phi= " << genVisLeg1P4.Pt() << ", " << genVisLeg1P4.Eta() << ", " << genVisLeg1P4.Phi() << endl;
+	    cout << " ==> gen. tau+ has visible pt,eta,phi= " << genVisLeg1P4.Pt() << ", " << genVisLeg1P4.Eta() << ", " << genVisLeg1P4.Phi() << endl;
 	}
       }
-      
-      if(verbose_) cout << "Now let's match to reco objects" << endl;
+
+      if (verbose_) {
+	cout << "genVisLeg1P4: Pt = " << genVisLeg1P4.pt() << ", eta = " << genVisLeg1P4.eta() << ", phi = " << genVisLeg1P4.phi() << std::endl;
+	cout << "genVisLeg2P4: Pt = " << genVisLeg2P4.pt() << ", eta = " << genVisLeg2P4.eta() << ", phi = " << genVisLeg2P4.phi() << std::endl;
+	cout << "Now let's match to reco objects" << endl;
+      }
 
       bool leg1IsMatched       = false;
       bool leg1IsMatchedByLept = false;
@@ -316,48 +320,60 @@ void MEtRecoilCorrectorProducer::produce(edm::Event & iEvent, const edm::EventSe
       math::XYZTLorentzVectorD recoLeg2P4(0,0,0,0);
       
       for(unsigned int i = 0 ; muons!=0 && !leg1IsMatched && i <muons->size(); i++){
-	if( Geom::deltaR((*muons)[i].p4(), genLeg1P4)<0.3 ){
+	if( Geom::deltaR((*muons)[i].p4(), genVisLeg1P4)<0.3 ){
 	  leg1IsMatched       = true;
 	  leg1IsMatchedByLept = true;
 	  recoLeg1P4 = (*muons)[i].p4();
 	}
       }
       for(unsigned int i = 0 ; electrons!=0 && !leg1IsMatched && i <electrons->size(); i++){
-	if( Geom::deltaR((*electrons)[i].p4(), genLeg1P4)<0.3){
+	if( Geom::deltaR((*electrons)[i].p4(), genVisLeg1P4)<0.3){
 	  leg1IsMatched       = true;
 	  leg1IsMatchedByLept = true;
 	  recoLeg1P4 = (*electrons)[i].p4();
 	}
       }
       for(unsigned int i = 0 ; taus!=0 && !leg1IsMatched && i <taus->size(); i++){
-	if( Geom::deltaR((*taus)[i].p4(), genLeg1P4)<0.3){
+	double dR = Geom::deltaR((*taus)[i].p4(), genVisLeg1P4);
+	if(verbose_){
+	  cout << "rec tau #" << i << ": Pt = " << (*taus)[i].p4().pt() << ", eta = " << (*taus)[i].p4().eta() << ", phi = " << (*taus)[i].p4().phi() << endl;
+	  cout << " dR = " << dR << endl;
+	}
+	if(dR<0.3){
 	  leg1IsMatched       = true;
 	  leg1IsMatchedByLept = false;
 	  recoLeg1P4 = (*taus)[i].p4();
 	}
       }
+      if(verbose_) cout << "leg1IsMatched = " << leg1IsMatched << endl;
       
       for(unsigned int i = 0 ; muons!=0 && !leg2IsMatched && i <muons->size(); i++){
-	if( Geom::deltaR((*muons)[i].p4(), genLeg2P4)<0.3 ){
+	if( Geom::deltaR((*muons)[i].p4(), genVisLeg2P4)<0.3 ){
 	  leg2IsMatched       = true;
 	  leg2IsMatchedByLept = true;
 	  recoLeg2P4 = (*muons)[i].p4();
 	}
       }
       for(unsigned int i = 0 ; electrons!=0 && !leg2IsMatched && i <electrons->size(); i++){
-	if( Geom::deltaR((*electrons)[i].p4(), genLeg2P4)<0.3){
+	if( Geom::deltaR((*electrons)[i].p4(), genVisLeg2P4)<0.3){
 	  leg2IsMatched       = true;
 	  leg2IsMatchedByLept = true;
 	  recoLeg2P4 = (*electrons)[i].p4();
 	}
       }
       for(unsigned int i = 0 ; taus!=0 && !leg2IsMatched && i <taus->size(); i++){
-	if( Geom::deltaR((*taus)[i].p4(), genLeg2P4)<0.3){
+	double dR = Geom::deltaR((*taus)[i].p4(), genVisLeg2P4);
+	if(verbose_){
+	  cout << "rec tau #" << i << ": Pt = " << (*taus)[i].p4().pt() << ", eta = " << (*taus)[i].p4().eta() << ", phi = " << (*taus)[i].p4().phi() << endl;
+	  cout << " dR = " << dR << endl;
+	}
+	if(dR<0.3){
 	  leg2IsMatched       = true;
 	  leg2IsMatchedByLept = false;
 	  recoLeg2P4 = (*taus)[i].p4();
 	}
       }
+      if(verbose_) cout << "leg2IsMatched = " << leg2IsMatched << endl;
    
       double leptPt  = -99;
       double leptPhi = -99;

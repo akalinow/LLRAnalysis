@@ -368,8 +368,10 @@ int main(int argc, char* argv[])
   vstring addWeights_string = cfgFWLiteTauTauAnalyzer.getParameter<vstring>("addWeights");
 
   std::string central_or_shift = cfgFWLiteTauTauAnalyzer.getParameter<std::string>("central_or_shift");
-  bool applyHighPtTauIDeffUncertaintyUp   = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVUp");
-  bool applyHighPtTauIDeffUncertaintyDown = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVDown");
+  bool applyHighPtTauIDeffUncertaintyUp        = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVUp");
+  bool applyHighPtTauIDeffUncertaintyDown      = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVDown");
+  bool applyHighPtTauTriggerEffUncertaintyUp   = (central_or_shift == "CMS_htt_eff_trig_mssmHigh_tautau_8TeVUp");
+  bool applyHighPtTauTriggerEffUncertaintyDown = (central_or_shift == "CMS_htt_eff_trig_mssmHigh_tautau_8TeVDown");
   UInt_t bJetEff_shift = BtagSF::kNo;
   if ( central_or_shift == "CMS_eff_b_8TeVUp"    ) bJetEff_shift    = BtagSF::kUp;
   if ( central_or_shift == "CMS_eff_b_8TeVDown"  ) bJetEff_shift    = BtagSF::kDown;
@@ -704,25 +706,37 @@ int main(int argc, char* argv[])
     //---------------------------------------------------------------------------
     // CV: apply tau trigger efficiency turn-on curves measured by Arun for different tau ID discriminators
     
-    typedef double (*triggerTurnOnCurvePtr)(double, double);
-    triggerTurnOnCurvePtr tauTriggerEffData = 0;
-    triggerTurnOnCurvePtr tauTriggerEffMC   = 0;
+    typedef double (*triggerEffPtr)(double, double, bool);
+    triggerEffPtr tauTriggerEffData = 0;
+    triggerEffPtr tauTriggerEffMC   = 0;
+    typedef double (*triggerEffDropPtr)(double, double);
+    triggerEffDropPtr tauTriggerEffDrop = 0;
     if ( applyTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_cutMedium;
     } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsTight ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaTight;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_mvaTight;    
     } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaVTight;
-      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight;  
+      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight; 
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_mvaVTight;          
     } 
+    double triggerEffDrop_power = 1.;
+    if      ( applyHighPtTauTriggerEffUncertaintyUp   ) triggerEffDrop_power = 2.;
+    else if ( applyHighPtTauTriggerEffUncertaintyDown ) triggerEffDrop_power = 0.;
+    double triggerEffDropData_diTau = 1.;
     if ( applyTauTriggerTurnOn != kTree ) {
       assert(tauTriggerEffData);
       assert(tauTriggerEffMC);
-      triggerEffData_diTau = (*tauTriggerEffData)(tau1Pt, tau1Eta)*(*tauTriggerEffData)(tau2Pt, tau2Eta);
-      Float_t triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta)*(*tauTriggerEffMC)(tau2Pt, tau2Eta);
-      triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+      triggerEffData_diTau = (*tauTriggerEffData)(tau1Pt, tau1Eta, false)*(*tauTriggerEffData)(tau2Pt, tau2Eta, false);
+      triggerEffDropData_diTau = ((7.3 + 11.0*(*tauTriggerEffDrop)(tau1Pt, tau1Eta))/18.3)*((7.3 + 11.0*(*tauTriggerEffDrop)(tau2Pt, tau2Eta))/18.3);
+      double triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta, false)*(*tauTriggerEffMC)(tau2Pt, tau2Eta, false);
+      double triggerEffDropMC_diTau = (*tauTriggerEffDrop)(tau1Pt, tau1Eta)*(*tauTriggerEffDrop)(tau2Pt, tau2Eta);
+      triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;      
+      if ( triggerEffDropMC_diTau > 0. ) triggerWeight_diTau *= TMath::Power(triggerEffDropData_diTau, triggerEffDrop_power)/triggerEffDropMC_diTau;
     }
     
     double triggerWeight = 1.0;
@@ -741,7 +755,10 @@ int main(int argc, char* argv[])
 	if ( tau1Pt > tauPtForSwitchingTriggers || tau2Pt > tauPtForSwitchingTriggers ) {
 	  double triggerEffData_singleJet = (1. - (1. - effPFJet320(tau1Pt, tau1JetPt, tau1Eta))*(1. - effPFJet320(tau2Pt, tau2JetPt, tau2Eta)));
 	  evtWeight *= triggerEffData_singleJet;
-	} else evtWeight *= triggerEffData_diTau;
+	} else {
+	  evtWeight *= triggerEffData_diTau;
+	  evtWeight *= TMath::Power(triggerEffDropData_diTau, triggerEffDrop_power);
+	}
 	evtWeight *= embeddingWeight;
       } else if ( isMC ) {
 	evtWeight *= triggerWeight;
@@ -831,8 +848,10 @@ int main(int argc, char* argv[])
     if ( applyHiggsPtReweighting ) {
       evtWeight *= compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt);
     }
-    Float_t evtWeightErr = evtWeight*TMath::Sqrt(evtWeightErr2_relative);
 
+    Float_t evtWeightErr = evtWeight*TMath::Sqrt(evtWeightErr2_relative);
+    //std::cout << "evtWeight = " << evtWeight << " +/- " << evtWeightErr << std::endl;
+    
     //---------------------------------------------------------------------------
     // CV: process dependent  additional scale-factors
     double processSF_inclusive = 1.0;
@@ -870,8 +889,9 @@ int main(int argc, char* argv[])
 
     if ( selEventsFile_inclusive ) {
       (*selEventsFile_inclusive) << run << ":" << lumi << ":" << event << std::endl;
-      //(*selEventsFile_inclusive) << "weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
-      //			   << " svFitMass = " << svFitMass << std::endl;
+      //(*selEventsFile_inclusive) << " svFitMass = " << svFitMass << std::endl;
+      //(*selEventsFile_inclusive) << " weight = " << (evtWeight*processSF_btag) 
+      //			   << " (weights: trigger = " << triggerWeight << ", xSection = " << lumiScale << ", pu = " << pileupWeight << ")" << std::endl;
     }
 
     ++selectedEntries_inclusive;
@@ -892,8 +912,9 @@ int main(int argc, char* argv[])
 
       if ( selEventsFile_nobtag ) {
 	(*selEventsFile_nobtag) << run << ":" << lumi << ":" << event << std::endl;
-	//(*selEventsFile_nobtag) << "weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
-	//			  << " svFitMass = " << svFitMass << std::endl;
+	//(*selEventsFile_nobtag) << " svFitMass = " << svFitMass << std::endl;
+	//(*selEventsFile_nobtag) << " weight = " << (evtWeight*processSF_btag) 
+	//			  << " (weights: trigger = " << triggerWeight << ", xSection = " << lumiScale << ", pu = " << pileupWeight << ")" << std::endl;
       }
       
       ++selectedEntries_nobtag;
@@ -913,8 +934,9 @@ int main(int argc, char* argv[])
 
       if ( selEventsFile_btag ) {
 	(*selEventsFile_btag) << run << ":" << lumi << ":" << event << std::endl;
-	//(*selEventsFile_btag) << " weights: trigger = " << triggerWeight << ", higgsPt = " << compHiggsPtWeight(lutHiggsPtReweighting, genHiggsPt) << ", pu = " << pileupWeight << ";"
-	//		        << " svFitMass = " << svFitMass << std::endl;
+	//(*selEventsFile_btag) << " svFitMass = " << svFitMass << std::endl;
+	//(*selEventsFile_btag) << " weight = " << (evtWeight*processSF_btag) 
+	//		        << " (weights: trigger = " << triggerWeight << ", xSection = " << lumiScale << ", pu = " << pileupWeight << ")" << std::endl;
       }
       
       ++selectedEntries_btag;

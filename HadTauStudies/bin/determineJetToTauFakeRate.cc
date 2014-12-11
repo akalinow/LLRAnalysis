@@ -101,8 +101,9 @@ std::vector<EigenVector_and_Value> compEigenVectors_and_Values(const TMatrixD& c
     // CV: check that EigenVector is indeed an EigenVector,
     //     i.e. that we interpreted the ordering of columns and rows of the eigenVectors matrix correctly
     for ( int iComponent = 0; iComponent < dimension; ++iComponent ) {   
-      //std::cout << "component #" << iComponent << ": vec1 = " << vec1(iComponent) << ", vec2 = " << vec2(iComponent) << std::endl;
-      assert((vec1(iComponent) - vec2(iComponent)) < 1.e-3*(TMath::Abs(vec1(iComponent)) + TMath::Abs(vec2(iComponent))));
+      std::cout << "component #" << iComponent << ": vec1 = " << vec1(iComponent) << ", vec2 = " << vec2(iComponent) << std::endl;
+      std::cout << "assert(" << (vec1(iComponent) - vec2(iComponent)) << " < " << 1.e-3*(TMath::Abs(TMath::Max(1.e-6, vec1(iComponent))) + TMath::Abs(TMath::Max(1.e-6, vec2(iComponent)))) << ")" << std::endl;
+      assert((vec1(iComponent) - vec2(iComponent)) < 1.e-3*(TMath::Abs(TMath::Max(1.e-6, vec1(iComponent))) + TMath::Abs(TMath::Max(1.e-6, vec2(iComponent)))));
     }
     eigenVectors_and_Values.push_back(EigenVector_and_Value(eigenVector, eigenValue));
   }

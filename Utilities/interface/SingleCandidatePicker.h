@@ -26,10 +26,12 @@ class SingleCandidatePicker : public edm::EDProducer {
 
  public:
 
+  typedef std::vector<unsigned int> vuint;
+
   explicit SingleCandidatePicker(const edm::ParameterSet& cfg){
 
     src_           = cfg.getParameter<edm::InputTag>("src");
-    itemNumber_    = cfg.getParameter<unsigned int>("itemNumber");
+    itemNumber_    = cfg.getParameter<vuint>("itemNumber");
     verbose_       = cfg.getUntrackedParameter<bool>("verbose",false);
 
     produces<std::vector<T> >("");
@@ -44,28 +46,28 @@ class SingleCandidatePicker : public edm::EDProducer {
     evt.getByLabel(src_, collection);
     
     std::auto_ptr<std::vector<T> > newCollection(new std::vector<T>() );
-
-    if(itemNumber_ < collection->size() ){
-      T item = collection->at(itemNumber_);
-      newCollection->push_back(item);
-      if(verbose_)
-	std::cout<<"[SingleCandidatePicker:produce]: "
-		 <<"Item no. "<<itemNumber_<<" picked:"
-		 <<" Pt="<<item.pt()
-		 <<", eta="<<item.eta()
-		 <<", phi="<<item.phi()
-		 <<std::endl;
+    
+    for ( vuint::const_iterator itemNumber_it = itemNumber_.begin();
+	  itemNumber_it != itemNumber_.end(); ++itemNumber_it ) {
+      
+      if( (*itemNumber_it) < collection->size() ){
+	T item = collection->at(*itemNumber_it);
+	newCollection->push_back(item);
+	if ( verbose_ ) {
+	  std::cout << "[SingleCandidatePicker:produce]: Item no. " << (*itemNumber_it) << " picked:"
+		    << " Pt = " << item.pt() << ", eta = " << item.eta() << ", phi = " << item.phi() << std::endl;
+	} else if ( verbose_ ) {
+	  std::cout << "[SingleCandidatePicker:produce]: Item no. "<< (*itemNumber_it) <<" does not exist, empty collection produced"
+		    << std::endl;
+	}
+      }
     }
-    else if(verbose_)
-      std::cout<<"[SingleCandidatePicker:produce]: "
-	       <<"Item no. "<<itemNumber_<<" does not exist, empty collection produced"
-	       <<std::endl;
   
     evt.put(newCollection);
   }
 
   edm::InputTag src_;
-  unsigned int itemNumber_;
+  vuint itemNumber_;
   bool verbose_;
 
 };

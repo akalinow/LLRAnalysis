@@ -39,7 +39,7 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     tauPtForSwitchingTriggers = cms.double(350.),
 
     applyTauTriggerTurnOn = cms.string("tree"),
-
+    
     applyTightBtag = cms.bool(True),
 
     applyBJetLooseToTightWeight = cms.bool(False), # CV: ratio of probabilities for jets to pass tight/loose b-tag discriminators

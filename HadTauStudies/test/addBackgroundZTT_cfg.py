@@ -47,6 +47,8 @@ process.addBackgroundZTT = cms.PSet(
         "CMS_scale_t_tautau_8TeVUp",
         "CMS_scale_t_tautau_8TeVDown",
         "CMS_eff_t_mssmHigh_tautau_8TeVUp",
-        "CMS_eff_t_mssmHigh_tautau_8TeVDown"
+        "CMS_eff_t_mssmHigh_tautau_8TeVDown",
+        "CMS_htt_eff_trig_mssmHigh_tautau_8TeVUp",
+        "CMS_htt_eff_trig_mssmHigh_tautau_8TeVDown"
     )
 )

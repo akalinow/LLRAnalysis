@@ -34,21 +34,28 @@ process.makeTauTauPlots = cms.PSet(
     processW    = cms.string("W"),
     processVV   = cms.string("VV"),
     processQCD  = cms.string("QCD"),
-    
+
+    ##signal1 = cms.PSet(
+    ##    process_ggH = cms.string("ggH160"),
+    ##    sf_ggH = cms.double(0.18683 + 0.44517),
+    ##    process_bbH = cms.string("bbH160"),
+    ##    sf_bbH = cms.double(0.59374 + 0.41421),
+    ##    legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=160 GeV, tan#beta=8)"),
+    ##),
+    ##signal2 = cms.PSet(
+    ##    process_ggH = cms.string("ggH500"),
+    ##    sf_ggH = cms.double(0.00185 + 0.00127),
+    ##    process_bbH = cms.string("bbH500"),
+    ##    sf_bbH = cms.double(0.01541 + 0.01479),
+    ##    legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=500 GeV, tan#beta=20)"),
+    ##),
     signal1 = cms.PSet(
-        process_ggH = cms.string("ggH160"),
-        sf_ggH = cms.double(0.18683 + 0.44517),
-        process_bbH = cms.string("bbH160"),
-        sf_bbH = cms.double(0.59374 + 0.41421),
-        legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=160 GeV, tan#beta=8)"),
-    ),
-    signal2 = cms.PSet(
-        process_ggH = cms.string("ggH500"),
-        sf_ggH = cms.double(0.00185 + 0.00127),
-        process_bbH = cms.string("bbH500"),
-        sf_bbH = cms.double(0.01541 + 0.01479),
-        legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=500 GeV, tan#beta=20)"),
-    ),
+        process_ggH = cms.string("ggH350"),
+        sf_ggH = cms.double(0.03111 + 0.04429),
+        process_bbH = cms.string("bbH350"),
+        sf_bbH = cms.double(0.29595 + 0.33469),
+        legendEntry = cms.string("#Phi #rightarrow #tau#tau (m_{A}=350 GeV, tan#beta=30)"),
+    ),  
 
     categories = cms.VPSet(
         cms.PSet(

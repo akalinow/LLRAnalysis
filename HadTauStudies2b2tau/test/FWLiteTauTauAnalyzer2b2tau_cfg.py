@@ -61,6 +61,9 @@ process.FWLiteTauTauAnalyzer2b2tau = cms.PSet(
     applyJetToTauFakeRateCorrection = cms.bool(False), # CV: data/MC correction for for jet -> tau fake-rate (used for W+jets background estimation)
     jetToTauFakeRateCorrection = cms.string("1.0"),
 
+    jetCorrInputFileName = cms.FileInPath('PhysicsTools/PatUtils/data/Summer13_V1_DATA_UncertaintySources_AK5PF.txt'),
+    jetCorrUncertaintyTag = cms.string('SubTotalMC'),
+    
     lumiScale = cms.double(1.),
     stitchingWeights = cms.vdouble(),
     addWeights = cms.vstring(),

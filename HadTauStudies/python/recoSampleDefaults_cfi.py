@@ -7,7 +7,7 @@ SAMPLE_DEFAULTS = {
     'lumi_mask'               : '',
     'runselection'            : '',
     'SE_white_list'           : '',
-    'SE_black_list'           : 'T2_BE_IIHE, T2_UK_London_Brunel, T3_CH_PSI',
+    'SE_black_list'           : 'T2_BE_IIHE,T3_CH_PSI',
     'skim_eff'                : 1.,
     'parameters_to_overwrite' : {}   
 }

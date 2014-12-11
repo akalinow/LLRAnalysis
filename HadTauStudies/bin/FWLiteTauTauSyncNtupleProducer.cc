@@ -388,6 +388,8 @@ int main(int argc, char* argv[])
   Double_t ptvis;
   outputTree->Branch("ptvis", &ptvis, "ptvis/D");
 
+  Double_t higgsPtWeightNom_double;
+  outputTree->Branch("higgsPtWeightNom", &higgsPtWeightNom_double, "higgsPtWeightNom/D");  
   Double_t genFilter_double, tauSpin_double, zmumusel_double, muradcorr_double, genDiTauMassVsGenDiTauPt_double, genTau2EtaVsGenTau1Eta_double, genTau2PtVsGenTau1Pt_double;
   outputTree->Branch("genFilter", &genFilter_double, "genFilter/D");
   outputTree->Branch("tauSpin_double", &tauSpin_double, "tauSpin/D");
@@ -459,9 +461,9 @@ int main(int argc, char* argv[])
       triggerEffMC_diTau   = leg1triggerEffMC_diTau*leg2triggerEffMC_diTau;
       triggerWeight_diTau  = leg1triggerWeight_diTau*leg2triggerWeight_diTau;
     } else {
-      typedef double (*triggerTurnOnCurvePtr)(double, double);
-      triggerTurnOnCurvePtr tauTriggerEffData = 0;
-      triggerTurnOnCurvePtr tauTriggerEffMC   = 0;
+      typedef double (*triggerEffPtr)(double, double, bool);
+      triggerEffPtr tauTriggerEffData = 0;
+      triggerEffPtr tauTriggerEffMC   = 0;
       if ( takeTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
 	tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
 	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
@@ -470,13 +472,13 @@ int main(int argc, char* argv[])
 	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
       } else if ( takeTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
 	tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaVTight;
-	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight;  
+	tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight; 
       } 
       assert(tauTriggerEffData);
       assert(tauTriggerEffMC);
-      triggerEffData_diTau = (*tauTriggerEffData)(leg1P4.pt(), leg1P4.eta())*(*tauTriggerEffData)(leg2P4.pt(), leg2P4.eta());
-      triggerEffMC_diTau   = (*tauTriggerEffMC)(leg1P4.pt(), leg1P4.eta())*(*tauTriggerEffMC)(leg2P4.pt(), leg2P4.eta());
-      triggerWeight_diTau   = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+      triggerEffData_diTau = (*tauTriggerEffData)(leg1P4.pt(), leg1P4.eta(), true)*(*tauTriggerEffData)(leg2P4.pt(), leg2P4.eta(), true);
+      triggerEffMC_diTau   = (*tauTriggerEffMC)(leg1P4.pt(), leg1P4.eta(), true)*(*tauTriggerEffMC)(leg2P4.pt(), leg2P4.eta(), true);
+      triggerWeight_diTau  = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
     }
 
     effweight = 1.0;
@@ -522,6 +524,8 @@ int main(int argc, char* argv[])
     }
 
     ptvis = (leg1P4 + leg2P4).pt();
+
+    higgsPtWeightNom_double = higgsPtWeightNom;
 
     genFilter_double = genFilter;
     tauSpin_double = tauSpin;

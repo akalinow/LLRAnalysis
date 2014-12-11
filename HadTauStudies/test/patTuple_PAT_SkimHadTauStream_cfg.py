@@ -151,9 +151,7 @@ process.load('RecoJets.Configuration.RecoPFJets_cff')
 process.load('RecoBTag.Configuration.RecoBTag_cff')
 process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
 if runOnEmbed:
-    #process.load('RecoBTag.Configuration.RecoBTag_cff')
-    #process.load('RecoJets.JetAssociationProducers.ak5JTA_cff')
-    process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
+    process.ak5JetTracksAssociatorAtVertex.jets = cms.InputTag("ak5PFJets")
     if "PfEmbed" in embedType:
         process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
 
@@ -259,6 +257,11 @@ if runOnMC:
 #################### tau sequence #######################
 
 process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+if runOnEmbed:
+    if "PfEmbed" in embedType:
+        process.hpsPFTauPrimaryVertexProducer.TrackCollectionTag = cms.InputTag("tmfTracks")
+        process.ak5PFJetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
+        process.ak5PFJetsRecoTauChargedHadrons.builders[1].srcTracks = cms.InputTag("tmfTracks")
 
 from PhysicsTools.PatAlgos.tools.tauTools import *
 #MB needed??

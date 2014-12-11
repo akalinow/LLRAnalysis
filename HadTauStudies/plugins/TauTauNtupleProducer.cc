@@ -59,7 +59,7 @@
 // SVfit
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEt.h"
 #include "AnalysisDataFormats/TauAnalysis/interface/CompositePtrCandidateT1T2MEtFwd.h"
-#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 
 // Trigger turn-on curves
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
@@ -1161,44 +1161,64 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 	break;
       }
     }
+    //std::cout << "genZ_or_Gammastar = " << genZ_or_Gammastar << ": pdgId = ";
+    //if ( genZ_or_Gammastar ) std::cout << genZ_or_Gammastar->pdgId();
+    //else std::cout << "N/A";
+    //std::cout << std::endl;
+    std::vector<const reco::GenParticle*> allDaughters;  
+    bool isZdecay = false;
     if ( genZ_or_Gammastar ) {
-      std::vector<const reco::GenParticle*> allDaughters;
       findDaughters(genZ_or_Gammastar, allDaughters, -1);      
-      const reco::GenParticle* genLeptonPlus  = 0;
-      const reco::GenParticle* genLeptonMinus = 0;
-      for ( std::vector<const reco::GenParticle*>::const_iterator daughter = allDaughters.begin();
-	    daughter != allDaughters.end(); ++daughter ) {
-	int absPdgId = TMath::Abs((*daughter)->pdgId());
-	// CV: give preference to taus, since electrons and muons may either come from decay of Z-boson or from tau decay
-	if ( absPdgId == 15 && (*daughter)->charge() > +0.5 ) genLeptonPlus  = (*daughter);
-	if ( absPdgId == 15 && (*daughter)->charge() < -0.5 ) genLeptonMinus = (*daughter);
-	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() > +0.5 && !genLeptonPlus  ) genLeptonPlus  = (*daughter);
-	if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() < -0.5 && !genLeptonMinus ) genLeptonMinus = (*daughter);
-      }      
-      bool leg1isGenHadTau   = false;
-      bool leg1isGenMuon     = false;
-      bool leg1isGenElectron = false;
-      bool leg1isGenJet      = false;    
-      matchGenParticleFromZdecay(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
-      bool leg2isGenHadTau   = false;
-      bool leg2isGenMuon     = false;
-      bool leg2isGenElectron = false;
-      bool leg2isGenJet      = false;    
-      matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
-      if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 15 && 
-	   genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 15 ) {
-	if      ( leg1isGenHadTau && leg2isGenHadTau ) isZtt = true;
-	else if ( leg1isGenElectron || leg1isGenMuon || leg2isGenElectron || leg2isGenMuon ) isZttl = true;
-	else isZttj = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isGenElectron &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isGenElectron ) {
-	isZee = true;
-      } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isGenMuon &&
-		  genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isGenMuon ) {
-	isZmm = true;
-      } else {
-	isZj = true;
+      isZdecay = true;
+    } else {
+      for ( reco::GenParticleCollection::const_iterator genParticle = genParticles->begin();
+	    genParticle != genParticles->end(); ++genParticle ) {
+	allDaughters.push_back(&(*genParticle));
       }
+    }
+    //std::cout << "isZdecay = " << isZdecay << std::endl;
+    const reco::GenParticle* genLeptonPlus  = 0;
+    const reco::GenParticle* genLeptonMinus = 0;
+    for ( std::vector<const reco::GenParticle*>::const_iterator daughter = allDaughters.begin();
+	  daughter != allDaughters.end(); ++daughter ) {
+      int absPdgId = TMath::Abs((*daughter)->pdgId());
+      // CV: give preference to taus, since electrons and muons may either come from decay of Z-boson or from tau decay
+      if ( absPdgId == 15 && (*daughter)->charge() > +0.5 && (isZdecay || !genLeptonPlus)  ) genLeptonPlus  = (*daughter);
+      if ( absPdgId == 15 && (*daughter)->charge() < -0.5 && (isZdecay || !genLeptonMinus) ) genLeptonMinus = (*daughter);
+      if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() > +0.5 && !genLeptonPlus  ) genLeptonPlus  = (*daughter);
+      if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() < -0.5 && !genLeptonMinus ) genLeptonMinus = (*daughter);
+    }      
+    //std::cout << "genLeptonPlus = " << genLeptonPlus << ": pdgId = ";
+    //if ( genLeptonPlus ) std::cout << genLeptonPlus->pdgId();
+    //else std::cout << "N/A";
+    //std::cout << std::endl;
+    //std::cout << "genLeptonMinus = " << genLeptonMinus << ": pdgId = ";
+    //if ( genLeptonMinus ) std::cout << genLeptonMinus->pdgId();
+    //else std::cout << "N/A";
+    //std::cout << std::endl;
+    bool leg1isGenHadTau   = false; 
+    bool leg1isGenMuon     = false;
+    bool leg1isGenElectron = false;
+    bool leg1isGenJet      = false;    
+    matchGenParticleFromZdecay(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+    bool leg2isGenHadTau   = false;
+    bool leg2isGenMuon     = false;
+    bool leg2isGenElectron = false;
+    bool leg2isGenJet      = false;    
+    matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
+    if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 15 && 
+	 genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 15 ) {
+      if      ( leg1isGenHadTau && leg2isGenHadTau ) isZtt = true;
+      else if ( leg1isGenElectron || leg1isGenMuon || leg2isGenElectron || leg2isGenMuon ) isZttl = true;
+      else isZttj = true;
+    } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isGenElectron &&
+		genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isGenElectron ) {
+      isZee = true;
+    } else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isGenMuon &&
+		genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isGenMuon ) {
+      isZmm = true;
+    } else {
+      isZj = true;
     }
     setValueI("isZtt", isZtt);
     setValueI("isZttj", isZttj);
@@ -1249,11 +1269,14 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     reco::Candidate::LorentzVector higgsP4;
     isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
     if ( isHiggs ) {
+      genHiggsPt = higgsP4.pt();
       double higgsMass = higgsP4.mass();
+      //std::cout << "higgsMass = " << higgsMass << std::endl;
       std::string inputFileName;
       if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
       else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
       else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
+      //std::cout << "inputFileName = " << inputFileName << std::endl;
       if ( inputFileName != "" ) {
 	if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
 	  inputFileHiggsPtWeight_ = openFile(edm::FileInPath(inputFileName));
@@ -1265,8 +1288,8 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
 	higgsPtWeightNom = compHiggsPtWeight(lutHiggsPtWeightNom_, genHiggsPt);
 	higgsPtWeightUp = compHiggsPtWeight(lutHiggsPtWeightUp_, genHiggsPt);
 	higgsPtWeightDown = compHiggsPtWeight(lutHiggsPtWeightDown_, genHiggsPt);
-      }
-      genHiggsPt = higgsP4.pt();
+	//std::cout << "higgsPtWeight: Nom = " << higgsPtWeightNom << ", Up = " << higgsPtWeightUp << ", Down = " << higgsPtWeightDown << std::endl;
+      }     
     }
   }
   setValueF("genHiggsPt", genHiggsPt);
@@ -1657,25 +1680,26 @@ void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTa
 {
   const pat::Tau* leg1 = &(*diTau.leg1());
   const pat::Tau* leg2 = &(*diTau.leg2());
-  NSVfitStandalone::LorentzVector leg1P4(leg1->px(), leg1->py(), leg1->pz(), leg1->energy());
-  NSVfitStandalone::LorentzVector leg2P4(leg2->px(), leg2->py(), leg2->pz(), leg2->energy());
-  std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons;
+  svFitStandalone::LorentzVector leg1P4(leg1->px(), leg1->py(), leg1->pz(), leg1->energy());
+  svFitStandalone::LorentzVector leg2P4(leg2->px(), leg2->py(), leg2->pz(), leg2->energy());
+  std::vector<svFitStandalone::MeasuredTauLepton> measuredTauLeptons;
   if ( leg1->pt() > leg2->pt() ) {
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg1P4));
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg2P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2P4));
   } else {
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg2P4));
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg1P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1P4));
   }
   const reco::MET* met = &(*diTau.met());
   Vector measuredMEt(met->px(), met->py(), 0.);
-  NSVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons, measuredMEt, met->getSignificanceMatrix(), verbosity_);
+  SVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons, measuredMEt, met->getSignificanceMatrix(), verbosity_);
   svFitAlgorithm.addLogM(false);
   svFitAlgorithm.integrateVEGAS();
   if ( svFitAlgorithm.isValidSolution() ) {
     setValueF("svfitMass", svFitAlgorithm.getMass());
     setValueF("svfitMassErr", svFitAlgorithm.massUncert());
   }
+  svFitAlgorithm.addLogM(false);
   svFitAlgorithm.integrateMarkovChain();
   if ( svFitAlgorithm.isValidSolution() ) {
     math::PtEtaPhiMLorentzVectorD svFitP4(svFitAlgorithm.pt(), svFitAlgorithm.eta(), svFitAlgorithm.phi(), svFitAlgorithm.mass());

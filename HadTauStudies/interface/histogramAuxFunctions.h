@@ -18,13 +18,13 @@ void fillWithOverFlow2d(TH2*, double, double, double, double);
 
 void checkCompatibleBinning(const TH1*, const TH1*);
 
-TH1* addHistograms(const std::string&, const TH1*, const TH1*);
-TH1* addHistograms(const std::string&, const std::vector<TH1*>&);
+TH1* addHistograms(const std::string&, const TH1*, const TH1*, int = 0);
+TH1* addHistograms(const std::string&, const std::vector<TH1*>&, int = 0);
 
-TH1* subtractHistograms(const std::string&, const TH1*, const TH1*);
-TH1* subtractHistograms(const std::string&, const TH1*, const std::vector<TH1*>&);
+TH1* subtractHistograms(const std::string&, const TH1*, const TH1*, int = 0);
+TH1* subtractHistograms(const std::string&, const TH1*, const std::vector<TH1*>&, int = 0);
 
-void makeBinContentsPositive(TH1*, int);
+void makeBinContentsPositive(TH1*, int = 0);
 
 std::string getParticleEtaLabel(const std::string&, double, double, double, double);
 

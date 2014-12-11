@@ -95,6 +95,8 @@ process.addBackgroundW = cms.PSet(
         "CMS_fake_b_8TeVUp",
         "CMS_fake_b_8TeVDown",
         "CMS_htt_WShape_tautau_8TeVUp",
-        "CMS_htt_WShape_tautau_8TeVDown"
+        "CMS_htt_WShape_tautau_8TeVDown",
+        "CMS_htt_eff_trig_mssmHigh_tautau_8TeVUp",
+        "CMS_htt_eff_trig_mssmHigh_tautau_8TeVDown"
     )
 )

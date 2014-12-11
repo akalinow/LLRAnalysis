@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_09"
+version = "v3_10"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_3/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_2/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -125,23 +125,26 @@ samples = {
     'DYJets_Embedded' : {
         'processes' : [ "ZTT_Embedded" ],
         'inputFiles' : [
-            ##"pfEmbed_Run2012A_22Jan2013_v1",
-            "pfEmbed_Run2012B_22Jan2013_v1",
-            "pfEmbed_Run2012C_22Jan2013_v1",
-            "pfEmbed_Run2012D_22Jan2013_v1"
+            ##"pfEmbed_Run2012A_22Jan2013_v2",
+            "pfEmbed_Run2012B_22Jan2013_v2",
+            "pfEmbed_Run2012C_22Jan2013_v2",
+            "pfEmbed_Run2012D_22Jan2013_v2"
         ],
         'lumiScale'  : 1.0
     },
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
-        'inputFiles' : [ "pfEmbed_TTJetsFullLept" ],
-        'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from arXiv:1303.6254, need to multiply by branching fraction for both taus to decay hadronically 
-        'addWeights' : [ "topPtWeightNom" ]
+        'inputFiles' : [ "pfEmbed_TTJetsFullLept_v2" ],
+        ##'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
+        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'addWeights' : [ "topPtWeightNom" ],
+        'applyJetToTauFakeRateCorrection' : True
     },
     'HiggsGGH125' : {
         'processes' : [ "ggH_SM125" ],
         'inputFiles' : [ "HiggsGGH125" ],
-        'lumiScale' : getLumiScale('HiggsGGH125')
+        'lumiScale' : getLumiScale('HiggsGGH125'),
+        'addWeights' : [ "higgsPtWeightNom" ]
     },
     'HiggsVBF125' : {
         'processes' : [ "qqH_SM125" ],
@@ -154,12 +157,13 @@ samples = {
         'lumiScale' : getLumiScale('HiggsVH125')
     }
 }
-for sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept" ]:
+for sample in [ "TTJetsHadronic", "TTJetsSemiLept_tauola", "TTJetsFullLept_tauola" ]:
     samples[sample] = {
         'processes' : [ "TT" ],
         'inputFiles' : [ sample ],
         'lumiScale' : getLumiScale(sample),
-        'addWeights' : [ "topPtWeightNom" ]
+        'addWeights' : [ "topPtWeightNom" ],
+        'applyJetToTauFakeRateCorrection' : True
     }
 for sample in [ "WWJetsTo2L2Nu", "WZJetsTo3LNu", "WZJetsTo2L2Q", "ZZJetsTo4L", "ZZJetsTo2L2Nu", "ZZJetsTo2L2Q", "Tbar_tW", "T_tW" ]:
     samples[sample] = {
@@ -264,7 +268,15 @@ central_or_shifts = {
     'CMS_eff_t_mssmHigh_tautau_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
+    },    
+    'CMS_htt_eff_trig_mssmHigh_tautau_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
     },
+    'CMS_htt_eff_trig_mssmHigh_tautau_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },   
     'CMS_eff_b_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
@@ -297,6 +309,22 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
+    'CMS_htt_higgsPtReweightSM_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : [ "higgsPtWeightDown" ]
+    },
+    'CMS_htt_higgsPtReweightSM_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : [ "higgsPtWeightUp" ]
+    },
+    'CMS_htt_WShape_tautau_8TeVUp' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
+    'CMS_htt_WShape_tautau_8TeVDown' : {
+        'inputFilePath_extension' : "nom",
+        'addWeights_extension'    : []
+    },
     'CMS_htt_ttbarPtReweight_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightUp" ]
@@ -305,11 +333,11 @@ central_or_shifts = {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : [ "topPtWeightDown" ]
     },
-    'CMS_htt_WShape_tautau_8TeVUp' : {
+    'CMS_htt_ttbarJetFake_tautau_8TeVUp' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     },
-    'CMS_htt_WShape_tautau_8TeVDown' : {
+    'CMS_htt_ttbarJetFake_tautau_8TeVDown' : {
         'inputFilePath_extension' : "nom",
         'addWeights_extension'    : []
     }
@@ -357,7 +385,8 @@ execDir = "%s/bin/%s/" % (os.environ['CMSSW_BASE'], os.environ['SCRAM_ARCH'])
 
 executable_FWLiteTauTauAnalyzer      = execDir + 'FWLiteTauTauAnalyzer'
 executable_determineJetToTauFakeRate = execDir + 'determineJetToTauFakeRate'
-executable_addBackgroundZTT          = execDir + 'addBackgroundZTT'
+##executable_addBackgroundZTT          = execDir + 'addBackgroundZTT' # CV: 'old' TTbar MC Embedded subtraction
+executable_addBackgroundZTT          = execDir + 'addBackgroundZTT2' # CV: 'new' TTbar MC Embedded subtraction
 executable_addBackgroundQCD          = execDir + 'addBackgroundQCD'
 executable_addBackgroundW            = execDir + 'addBackgroundW'
 executable_prepareTauTauDatacards    = execDir + 'prepareTauTauDatacards'
@@ -550,13 +579,13 @@ for sample in samples.keys():
                     'CMS_htt_QCDfrShape_tautau_8TeVUp' : {
                         'inputFilePath_extension'    : "nom",
                         'addWeights_extension'       : [],
-                        'fitFunctionShapePower_tau1' : 2.0,
+                        'fitFunctionShapePower_tau1' : 0.,
                         'fitFunctionShapePower_tau2' : 0.
                     },
                     'CMS_htt_QCDfrShape_tautau_8TeVDown' : {
                         'inputFilePath_extension'    : "nom",
                         'addWeights_extension'       : [],
-                        'fitFunctionShapePower_tau1' : 0.,
+                        'fitFunctionShapePower_tau1' : 2.,
                         'fitFunctionShapePower_tau2' : 0.
                     }})
                 
@@ -566,10 +595,14 @@ for sample in samples.keys():
                     continue
                 if (central_or_shift.find('CMS_htt_higgsPtReweight_8TeV') != -1 or central_or_shift.find('CMS_htt_higgsPtReweight_scale_8TeV') != -1) and sample.find("HiggsSUSYGluGlu") == -1:
                     continue
-                if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept", "TTJetsFullLept", "TTJets_Embedded" ]:
+                if central_or_shift.find('CMS_htt_higgsPtReweightSM_8TeV') != -1 and not sample in [ "HiggsGGH125" ]:
                     continue
                 if central_or_shift.find('CMS_htt_WShape_tautau_8TeV') != -1 and not sample in [ "WJets", "WJetsExt", "W1Jets", "W2Jets", "W3Jets", "W4Jets" ]:
                     continue
+                if central_or_shift.find('CMS_htt_ttbarPtReweight_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept_tauola", "TTJetsFullLept_tauola", "TTJets_Embedded" ]:
+                    continue                
+                if central_or_shift.find('CMS_htt_ttbarJetFake_tautau_8TeV') != -1 and not sample in [ "TTJetsHadronic", "TTJetsSemiLept_tauola", "TTJetsFullLept_tauola", "TTJets_Embedded" ]:
+                    continue                
                 if sample.find("Data") != -1 and not (central_or_shift == "" or central_or_shift.find("CMS_htt_QCDfr") != -1):
                     continue
                 
@@ -592,9 +625,9 @@ for sample in samples.keys():
                     for discriminator in discriminators.keys():
 
                         jetToTauFakeRateCorrection = discriminators[discriminator]['jetToTauFakeRateCorrection']
-                        if central_or_shift == 'CMS_htt_WShape_tautau_8TeVUp':
+                        if central_or_shift == 'CMS_htt_WShape_tautau_8TeVUp' or central_or_shift == 'CMS_htt_ttbarJetFake_tautau_8TeVUp':
                             jetToTauFakeRateCorrection = "1.0"
-                        elif central_or_shift == 'CMS_htt_WShape_tautau_8TeVDown':
+                        elif central_or_shift == 'CMS_htt_WShape_tautau_8TeVDown' or central_or_shift == 'CMS_htt_ttbarJetFake_tautau_8TeVDown':
                             jetToTauFakeRateCorrection = "TMath::Power(%s, 2.)" % jetToTauFakeRateCorrection
 
                         initDict(FWLiteTauTauAnalyzer_inputFileNames, [ sample, process, central_or_shift, region, tauPtBin_label, discriminator ])
@@ -797,9 +830,9 @@ for sample in samples.keys():
                             elif central_or_shift == 'CMS_htt_higgsPtReweight_8TeVDown':
                                 lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaHigh")
                             elif central_or_shift == 'CMS_htt_higgsPtReweight_scale_8TeVUp':
-                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaLow")  # CV: replace by "_scaleUp" once ready
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_scaleUp")
                             elif central_or_shift == 'CMS_htt_higgsPtReweight_scale_8TeVDown':
-                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_tanBetaHigh") # CV: replace by "_scaleDown" once ready                    
+                                lutNameHiggsPtReweighting = lutNameHiggsPtReweighting.replace("_central", "_scaleDown")
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyHiggsPtReweighting = cms.bool(True)\n"
                             cfg_modified += "process.FWLiteTauTauAnalyzer.higgsPtReweighting.lutName = cms.string('%s')\n" % lutNameHiggsPtReweighting
                         else:
@@ -1214,7 +1247,7 @@ for discriminator in discriminators.keys():
 
 #--------------------------------------------------------------------------------
 #
-# build shell script for running 'hadd' in order to add histograms for ZTT and QCD
+# build shell script for running 'hadd' in order to add histograms for ZTT, QCD and W
 #
 hadd_stage5_inputFileNames  = {} # key = discriminator
 hadd_stage5_outputFileNames = {} # key = discriminator
