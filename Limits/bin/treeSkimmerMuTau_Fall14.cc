@@ -267,25 +267,44 @@ double deltaR(LV v1, LV v2) {
 float reweightHEPNUPWJets(int hepNUP, int set=0) {
 
   int nJets = hepNUP-5;
-  
-  //Winter13
+
+  //Fall14
   if(set==0) { // usual set of samples OLD
-    if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.184565169;
-    else if(nJets==2) return 0.056192256;
-    else if(nJets==3) return 0.03876607;
-    else if(nJets>=4) return 0.018970657;
+    if(nJets==0)      return 0.476420146;
+    else if(nJets==1) return 0.096920679;
+    else if(nJets==2) return 0.030195587;
+    else if(nJets==3) return 0.019295033;
+    else if(nJets>=4) return 0.018346669;
     else return 1 ;
   }
   else if(set==1) { // adding new high stat samples
-    if(nJets==0)      return 0.492871535;
-    else if(nJets==1) return 0.100267473;
-    else if(nJets==2) return 0.031238278;
-    else if(nJets==3) return 0.019961315;
-    else if(nJets>=4) return 0.018980202;
+    if(nJets==0)      return 0.476420146;
+    else if(nJets==1) return 0.096920679;
+    else if(nJets==2) return 0.030195587;
+    else if(nJets==3) return 0.019295033;
+    else if(nJets>=4) return 0.018346669;
     else return 1 ;
   }
   else return 1. ;
+  
+//   //Winter13
+//   if(set==0) { // usual set of samples OLD
+//     if(nJets==0)      return 0.492871535;
+//     else if(nJets==1) return 0.184565169;
+//     else if(nJets==2) return 0.056192256;
+//     else if(nJets==3) return 0.03876607;
+//     else if(nJets>=4) return 0.018970657;
+//     else return 1 ;
+//   }
+//   else if(set==1) { // adding new high stat samples
+//     if(nJets==0)      return 0.492871535;
+//     else if(nJets==1) return 0.100267473;
+//     else if(nJets==2) return 0.031238278;
+//     else if(nJets==3) return 0.019961315;
+//     else if(nJets>=4) return 0.018980202;
+//     else return 1 ;
+//   }
+//   else return 1. ;
 }
 
 float reweightHEPNUPDYJets(int hepNUP, int set=0) {
@@ -654,10 +673,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   //   CORRECTIONS  //
   ////////////////////
 
-  cout << "Using corrections from llrCorrections_Fall14_v10_MVAIso.root" << endl;
+  cout << "Using corrections from llrCorrections_Fall14_v12_MVAIso.root" << endl;
+//   cout << "Using corrections from llrCorrections_Fall14_v11_MVAIso.root" << endl;
+//   cout << "Using corrections from llrCorrections_Fall14_v10_MVAIso.root" << endl;
 //   cout << "Using corrections from llrCorrections_Summer14_v9_MVAIso.root" << endl;
   //cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
-  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root");
+  TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v12_MVAIso.root");
+//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
+//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root");
 //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root");
 //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
   //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
@@ -928,15 +951,21 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float HLTTau, HLTTauD, HLTTauABC;
   float HLTTauMC, HLTTauMCD, HLTTauMCABC;
   float HLTweightTau, HLTweightTauD, HLTweightTauABC, HLTweight2Triggers;
+  float HLTBugWeightTau, HLTBugWeightTauUp, HLTBugWeightTauDown, HLTBugTauData, HLTBugTauDataUp, HLTBugTauDataDown, HLTBugTauMC;
   float SFTau;
   float weightDecayMode_, weightTauFakeWJet_, weightTauFakeWJetUp_, weightTauFakeWJetDown_;
+  float weightTauFakeTTbarMC_, weightTauFakeTTbarMCUp_, weightTauFakeTTbarMCDown_;
+
   float weightJetFakeQCD_;
+  float weightJetFakeW_;
 
   // Other informations about mu/tau
   int isTauLegMatched_,muFlag_,isPFMuon_,isTightMuon_,genDecay_,leptFakeTau;
   int isTauLegMatchedToLep_;
   int vetoEventOld_;
   int vetoEventNew_;
+
+  bool isZtt_, isZttl_, isZll_, isZttj_;
   
   //Parton Info for W+NJet
   int parton_, genPartMult_, leadGenPartPdg_, hepNUP_;
@@ -1514,7 +1543,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("SFMuIso_ABCD",    &SFMuIso_ABCD,"SFMuIso_ABCD/F");
 
   // taus
-  outTreePtOrd->Branch("HLTweightTau", &HLTweightTau,"HLTweightTau/F");
+  outTreePtOrd->Branch("HLTweightTau", &HLTweightTau,"HLTweightTau/F");   ;
+  outTreePtOrd->Branch("HLTBugWeightTau", &HLTBugWeightTau,"HLTBugWeightTau/F"); 
+  outTreePtOrd->Branch("HLTBugWeightTauUp", &HLTBugWeightTauUp,"HLTBugWeightTauUp/F"); 
+  outTreePtOrd->Branch("HLTBugWeightTauDown", &HLTBugWeightTauDown,"HLTBugWeightTauDown/F"); 
+  outTreePtOrd->Branch("HLTBugTauData", &HLTBugTauData,"HLTBugTauData/F"); 
+  outTreePtOrd->Branch("HLTBugTauDataUp", &HLTBugTauDataUp,"HLTBugTauDataUp/F"); 
+  outTreePtOrd->Branch("HLTBugTauDataDown", &HLTBugTauDataDown,"HLTBugTauDataDown/F"); 
+  outTreePtOrd->Branch("HLTBugTauMC", &HLTBugTauMC,"HLTBugTauMC/F"); 
   outTreePtOrd->Branch("HLTweight2Triggers", &HLTweight2Triggers,"HLTweight2Triggers/F");
   outTreePtOrd->Branch("HLTweightTauD",&HLTweightTauD,"HLTweightTauD/F");
   outTreePtOrd->Branch("HLTweightTauABC",&HLTweightTauABC,"HLTweightTauABC/F");
@@ -1531,8 +1567,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("weightTauFakeWJetUp", &weightTauFakeWJetUp_, "weightTauFakeWJetUp/F");
   outTreePtOrd->Branch("weightTauFakeWJetDown", &weightTauFakeWJetDown_, "weightTauFakeWJetDown/F");
 
+  outTreePtOrd->Branch("weightTauFakeTTbarMC", &weightTauFakeTTbarMC_, "weightTauFakeTTbarMC/F");
+  outTreePtOrd->Branch("weightTauFakeTTbarMCUp", &weightTauFakeTTbarMCUp_, "weightTauFakeTTbarMCUp/F");
+  outTreePtOrd->Branch("weightTauFakeTTbarMCDown", &weightTauFakeTTbarMCDown_, "weightTauFakeTTbarMCDown/F");
+
   //jet->tau fake correction for antiiso events in the QCD estimation
   outTreePtOrd->Branch("weightJetFakeQCD", &weightJetFakeQCD_, "weightJetFakeQCD/F");
+  outTreePtOrd->Branch("weightJetFakeW", &weightJetFakeW_, "weightJetFakeW/F");
   //
   outTreePtOrd->Branch("isTauLegMatched", &isTauLegMatched_,"isTauLegMatched/I");
   outTreePtOrd->Branch("isTauLegMatchedToLep", &isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
@@ -1543,6 +1584,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("leptFakeTau",     &leptFakeTau,"leptFakeTau/I");
   outTreePtOrd->Branch("vetoEventOld",    &vetoEventOld_, "vetoEventOld/I");
   outTreePtOrd->Branch("vetoEventNew",    &vetoEventNew_, "vetoEventNew/I");
+
+  outTreePtOrd->Branch("isZtt",    &isZtt_, "isZtt/O");
+  outTreePtOrd->Branch("isZttl",    &isZttl_, "isZttl/O");
+  outTreePtOrd->Branch("isZll",    &isZll_, "isZll/O");
+  outTreePtOrd->Branch("isZttj",    &isZttj_, "isZttj/O");
 
   outTreePtOrd->Branch("parton", &parton_,"parton/I");
   outTreePtOrd->Branch("genPartMult", &genPartMult_,"genPartMult/I");
@@ -1740,6 +1786,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("gammadPhi"             ,1);
   currentTree->SetBranchStatus("gammaPt"               ,1);
   currentTree->SetBranchStatus("pfJetPt"               ,1);
+
+  currentTree->SetBranchStatus("isZtt"               ,1);
+  currentTree->SetBranchStatus("isZttl"               ,1);
+  currentTree->SetBranchStatus("isZll"               ,1);
+  currentTree->SetBranchStatus("isZttj"               ,1);
 
   // MET
   currentTree->SetBranchStatus("METP4"                 ,1);
@@ -1988,6 +2039,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   int signalPFChargedHadrCands, signalPFGammaCands;
   float mcPUweight,embeddingWeight;
   int isTauLegMatched,isTauLegMatchedToLep,muFlag,isPFMuon,isTightMuon,genDecay, vetoEvent;
+  bool isZtt, isZttl, isZll, isZttj;
   float nPUVertices, nPUVerticesM1, nPUVerticesP1;
   float rhoFastJet,rhoNeutralFastJet;
   float visibleTauMass, visibleGenTauMass;
@@ -2126,6 +2178,12 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("vetoEvent",            &vetoEvent);
   currentTree->SetBranchAddress("isTauLegMatched",      &isTauLegMatched);
   currentTree->SetBranchAddress("isTauLegMatchedToLep", &isTauLegMatchedToLep);
+
+  currentTree->SetBranchAddress("isZtt",      &isZtt);
+  currentTree->SetBranchAddress("isZttl",     &isZttl);
+  currentTree->SetBranchAddress("isZll",      &isZll);
+  currentTree->SetBranchAddress("isZttj",     &isZttj);
+
   currentTree->SetBranchAddress("visibleTauMass",       &visibleTauMass);
   currentTree->SetBranchAddress("visibleGenTauMass",    &visibleGenTauMass);
   currentTree->SetBranchAddress("leadPFChargedHadrP",   &leadPFChargedHadrCandP);
@@ -2474,20 +2532,45 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }
     else leptFakeTau = -99;
     //
+
+    isZtt_ = isZtt;
+    isZll_ = isZll;
+    isZttl_ = isZttl;
+    isZttj_ = isZttj;
+
     // final state selection //
     if( sample_.find("DYJets")!=string::npos  || 
 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
         ) {
       dyFinalState=false;
-      if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1 && isTauLegMatchedToLep==0); }
-      else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep>0); }
-      else if ( sample_.find("MuToTau") !=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau); }
-      else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau); }
-      else if(  sample_.find("ZTTJ")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0); }
+      if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=isZtt; }
+      else if(  sample_.find("MuToTau") !=string::npos ) { dyFinalState=isZll || isZttl; }
+      else if ( sample_.find("ZTTJ") !=string::npos ) { dyFinalState=isZttj; }
+      else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=!(isZtt || isZll || isZttl || isZttj); }
       else continue;
       if(!dyFinalState) continue;
     }
+
+    if(sample_.find("Emb")!=string::npos)
+      {
+	if(!isZtt) continue ;
+      }
+
+
+//     if( sample_.find("DYJets")!=string::npos  || 
+// 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+// 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+//         ) {
+//       dyFinalState=false;
+//       if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1 && isTauLegMatchedToLep==0); }
+//       else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep>0); }
+//       else if ( sample_.find("MuToTau") !=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau); }
+//       else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau); }
+//       else if(  sample_.find("ZTTJ")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0); }
+//       else continue;
+//       if(!dyFinalState) continue;
+//     }
     ///////////////////////////
 
     /////////////////////////    
@@ -2497,6 +2580,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     etaL2    = (*diTauLegsP4)[1].Eta();
     mL1      = (*diTauLegsP4)[0].M();
     //
+
+
     isDuplicated = checkEventIsDuplicated(mapDiTau, run, lumi, event, ptL1, ptL2, etaL1, etaL2);
     if(isDuplicated) continue;
     ///////////////////////
@@ -3334,35 +3419,43 @@ void fillTrees_MuTauStream(TChain* currentTree,
     weightHepNupHighStatW =1;
     weightHepNupDY = 1;
     weightTauFakeWJet_ = 1; weightTauFakeWJetUp_ = 1; weightTauFakeWJetDown_ = 1;
+    weightTauFakeTTbarMC_ = 1; weightTauFakeTTbarMCUp_ = 1; weightTauFakeTTbarMCDown_ = 1;
 
-    //jet->tau fake correction for antiiso events in the QCD estimation (taken from mutau measurements, see createCorrections_Summer14.C)
-    //new implementation by Olivier - July 14
+    //jet->tau fake correction for antiiso events in the QCD estimation (taken from mutau measurements, see createCorrections_Fall14.C)
 
-    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root");
+    //QCD -- new implementation by Olivier - Nov 14
+    TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v12_MVAIso.root");
+//     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
 
     //Get the functions
     TF1* QCDWeight_mutau_central = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_central");
     TF1* QCDWeight_mutau_medium = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_medium");
     TF1* QCDWeight_mutau_forward = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_forward");
 
-    //init
     weightJetFakeQCD_=1.;
 
     //compute the weights
-    if(TMath::Abs(etaL2)<=1.2 )
-      {
-	weightJetFakeQCD_=QCDWeight_mutau_central->Eval(ptL2);
-      }
-    else if(TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
-      {
-	weightJetFakeQCD_=QCDWeight_mutau_medium->Eval(ptL2);
-      }
-    else if(TMath::Abs(etaL2)>1.7)
-      {
-	weightJetFakeQCD_=QCDWeight_mutau_forward->Eval(ptL2);
-      } 
+    if(TMath::Abs(etaL2)<=1.2 )	weightJetFakeQCD_=QCDWeight_mutau_central->Eval(ptL2);
+    else if(TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7) weightJetFakeQCD_=QCDWeight_mutau_medium->Eval(ptL2);
+    else if(TMath::Abs(etaL2)>1.7) weightJetFakeQCD_=QCDWeight_mutau_forward->Eval(ptL2);
 
     if(weightJetFakeQCD_<0.) weightJetFakeQCD_=0.;
+
+    //W -- new implementation by Olivier - Nov 14
+
+    //Get the functions
+    TF1* WWeight_mutau_central = (TF1*)f_JetFakeCorrection.Get("WWeight_mutau_central");
+    TF1* WWeight_mutau_medium = (TF1*)f_JetFakeCorrection.Get("WWeight_mutau_medium");
+    TF1* WWeight_mutau_forward = (TF1*)f_JetFakeCorrection.Get("WWeight_mutau_forward");
+
+    weightJetFakeW_=1.;
+
+    //compute the weights
+    if(TMath::Abs(etaL2)<=1.2 )	weightJetFakeW_=WWeight_mutau_central->Eval(ptL2);
+    else if(TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7) weightJetFakeW_=WWeight_mutau_medium->Eval(ptL2);
+    else if(TMath::Abs(etaL2)>1.7) weightJetFakeW_=WWeight_mutau_forward->Eval(ptL2);
+
+    if(weightJetFakeW_<0.) weightJetFakeW_=0.;
     
 //     //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
 //     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
@@ -3412,6 +3505,18 @@ void fillTrees_MuTauStream(TChain* currentTree,
       weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
       weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
     }
+
+    if(sample_.find("TTJets")!=string::npos && sample_.find("Emb")==string::npos)
+      {
+	if((abs(genDecay)!=(23*15) && !leptFakeTau)||(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0))
+	  {
+	    float ptTau_ = ptL2;
+	    if(ptTau_ > 200.)ptTau_ = 200.;
+	    weightTauFakeTTbarMC_ = getTauFakeCorrection(ptTau_);
+	    weightTauFakeTTbarMCUp_ = weightTauFakeTTbarMC_*weightTauFakeTTbarMC_;
+	    weightTauFakeTTbarMCDown_ = 1.;
+	  }
+      }
 
     // Reweight DY+Jets
     if( sample_.find("DYJets")!=string::npos  || 
@@ -3833,6 +3938,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTweight2Triggers = 1.0;
       HLTweightTauD   = 1.0;
       HLTweightTauABC = 1.0;
+      HLTBugWeightTau = 1.0;
+      HLTBugWeightTauUp = 1.0;
+      HLTBugWeightTauDown = 1.0;
+      HLTBugTauData = 1.0;
+      HLTBugTauDataUp = 1.0;
+      HLTBugTauDataDown = 1.0;
+      HLTBugTauMC = 1.0;
       HLTMuA     = 1.0;
       HLTMuB     = 1.0;
       HLTMuC     = 1.0;
@@ -4061,8 +4173,50 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
       HLTweightTau    = HLTTauMC    != 0 ? HLTTau    / HLTTauMC    : 0;
       HLTweightTauD   = HLTTauMCD   != 0 ? HLTTauD   / HLTTauMCD   : 0;
-      HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;     
- 
+      HLTweightTauABC = HLTTauMCABC != 0 ? HLTTauABC / HLTTauMCABC : 0;   
+
+      //trigger bug weights --> compute here but apply at analysis level
+      TF1* TriggerWeightBarrel  = (TF1*)corrections.Get("AddTriggerWeightLeptonTauBarrel");
+      TF1* TriggerWeightEndcaps = (TF1*)corrections.Get("AddTriggerWeightLeptonTauEndcaps");
+
+      Double_t MCValBarrel_pt = TriggerWeightBarrel->Eval(ptL2);
+      Double_t MCValBarrel_800 = TriggerWeightBarrel->Eval(800.);
+      Double_t MCValEndcaps_pt = TriggerWeightEndcaps->Eval(ptL2);
+      Double_t MCValEndcaps_400 = TriggerWeightEndcaps->Eval(400.);
+
+      float dataABC_dataABCD = 12101.071/19375.071 ;
+      Double_t DataValBarrel_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightBarrel->Eval(ptL2);
+      Double_t DataValBarrel_800 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightBarrel->Eval(800.);	  
+      Double_t DataValEndcaps_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(ptL2);
+      Double_t DataValEndcaps_400 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(400.);
+      
+      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_pt;
+      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_pt;
+      else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_800;
+      else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_400;
+
+      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_pt;
+      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_pt;
+      else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_800;
+      else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_400;
+
+      if(HLTBugTauData<=0.)    HLTBugTauData = 0.;
+      if(HLTBugTauMC<=0.)      HLTBugTauMC = 0.;
+
+      if ( HLTBugTauMC > 0. )
+	{
+	  HLTBugWeightTau = HLTBugTauData/HLTBugTauMC;
+	  HLTBugWeightTauUp = 1./HLTBugTauMC;
+	  HLTBugWeightTauDown = HLTBugTauData*HLTBugTauData/HLTBugTauMC;
+	}
+      else
+	{
+	  HLTBugWeightTau = 1.; HLTBugWeightTauUp = 1.; HLTBugWeightTauDown = 1.;
+	}
+
+      HLTBugTauDataUp = 1.;
+      HLTBugTauDataDown = HLTBugTauData*HLTBugTauData;
+
       HLTweight2Triggers = 1.;
       if(ptL1 < 27.) HLTweight2Triggers = HLTweightTau ;
       else if(ptL1 >= 27.) HLTweight2Triggers = 1. ;

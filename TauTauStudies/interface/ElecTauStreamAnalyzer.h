@@ -73,7 +73,10 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   edm::InputTag verticesTag_;
   edm::InputTag triggerResultsTag_;
   edm::InputTag genParticlesTag_;
+  edm::InputTag genParticlesForTopPtReweightingTag_;
   edm::InputTag genTausTag_;
+  edm::InputTag pileupSrc_;
+
   const  TransientTrackBuilder *transientTrackBuilder_;
 
   std::string lastInputFileHiggsPtWeight_;
@@ -94,7 +97,7 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   };
 /*   std::vector<InputTagEntryType> evtWeightsToStore_; */
 
-  bool isMC_, isRhEmb_;
+  bool isMC_, isRhEmb_, isPFEmb_;
   bool verbose_;
   float minCorrPt_;
   float minJetID_;
@@ -323,6 +326,29 @@ class ElecTauStreamAnalyzer : public edm::EDAnalyzer{
   int vetoEvent_;
   float elecVetoRelIso_, elecVetoRelIsoSoft_;
   int hasKft_;
+
+  //New variables for matching  
+  bool isZdecay_;
+  bool isZtt_;
+  bool isZthth_;
+  bool isZttj_;
+  bool isZttl_;
+  bool isZj_;
+  bool isZee_;
+  bool isZmm_;
+  bool isZll_;
+
+  bool isLeg1MatchedToHadTau_ ;
+  bool isLeg1MatchedToMuon_ ;
+  bool isLeg1MatchedToElectron_ ;
+  bool isLeg1MatchedToLepton_ ;
+  bool isLeg1MatchedToJet_ ;
+  
+  bool isLeg2MatchedToHadTau_ ;
+  bool isLeg2MatchedToMuon_ ;
+  bool isLeg2MatchedToElectron_ ;
+  bool isLeg2MatchedToLepton_ ;
+  bool isLeg2MatchedToJet_ ;
 
   //Electrons for antiZee
   float elecAntiZeePt_[4];

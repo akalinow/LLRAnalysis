@@ -183,6 +183,114 @@ namespace
     return ( topPtWeight2 > 0. ) ? TMath::Sqrt(topPtWeight2) : 0.;
   }
   //-----------------------------------------------------------------------------
+
+  void matchGenParticle(const reco::Candidate::LorentzVector& p4, const std::vector<reco::GenParticle>& genParticles,
+			bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
+  {
+    bool matchesGenHadTau   = false;
+    bool matchesGenMuon     = false;
+    bool matchesGenElectron = false;
+
+    //loop on genParticles
+    for ( std::vector<reco::GenParticle>::const_iterator genParticle = genParticles.begin(); genParticle != genParticles.end(); ++genParticle )
+      {
+	int pdgId = TMath::Abs(genParticle->pdgId());
+	//reject genParticle if not tau, muon or electron
+	if ( !(pdgId == 11 || pdgId == 13 || pdgId == 15) ) continue;
+	reco::Candidate::LorentzVector visMomentum = getVisMomentum(&(*genParticle));  
+	//speed the loop --> visible transverse momentum should not be greater than true pt
+	if ( !(visMomentum.pt() > (0.5*p4.pt())) ) continue;
+
+	//matching in DR < 0.5
+	if ( deltaR(p4, visMomentum) < 0.5 )
+	  {
+	    //tau decays --> hadronic or electron or muon
+	    if ( pdgId == 15 )
+	      {
+		std::string genTauDecayMode = getGenTauDecayMode(&(*genParticle));
+		if ( genTauDecayMode == "electron" )
+		  {
+		    matchesGenElectron = true;
+		  }
+		else if ( genTauDecayMode == "muon" )
+		  {
+		    matchesGenMuon = true;
+		  }
+		else {
+		  matchesGenHadTau = true;
+		}
+	      }
+	    //muon
+	    else if ( pdgId == 13 )
+	      {
+		matchesGenMuon = true;
+	      }
+	    //electron
+	    else if ( pdgId == 11 )
+	      {
+		matchesGenElectron = true;
+	      } 
+	  }
+      }
+
+    if      ( matchesGenHadTau   ) isGenHadTau   = true;
+    else if ( matchesGenMuon     ) isGenMuon     = true;
+    else if ( matchesGenElectron ) isGenElectron = true;
+    else                           isGenJet      = true;
+  }
+
+  void matchGenParticleFromZdecay(const reco::Candidate::LorentzVector& p4, const reco::GenParticle* genLeptonPlus, const reco::GenParticle* genLeptonMinus,
+				bool& isGenHadTau, bool& isGenMuon, bool& isGenElectron, bool& isGenJet)
+  {
+    std::vector<int> pdgIds_ranked;
+    pdgIds_ranked.push_back(15);
+    pdgIds_ranked.push_back(13);
+    pdgIds_ranked.push_back(11);
+    for ( std::vector<int>::const_iterator pdgId = pdgIds_ranked.begin(); pdgId != pdgIds_ranked.end(); ++pdgId )
+      {
+	bool matchesGenLeptonPlus  = (genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == (*pdgId) && deltaR(p4, getVisMomentum(genLeptonPlus))  < 0.5);
+	bool matchesGenLeptonMinus = (genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == (*pdgId) && deltaR(p4, getVisMomentum(genLeptonMinus)) < 0.5);
+
+	if ( matchesGenLeptonPlus || matchesGenLeptonMinus )
+	  {
+	    if ( (*pdgId) == 15 ) 
+	      {
+// 		cout<<"GenLeptonPlus DR = "<<deltaR(p4, getVisMomentum(genLeptonPlus))<<endl;
+// 		cout<<"GenLeptonMinus DR = "<<deltaR(p4, getVisMomentum(genLeptonMinus))<<endl;
+
+// 		cout<<"GenLeptonPlus pt/eta/phi = "<<genLeptonPlus->pt()<<"/"<<genLeptonPlus->eta()<<"/"<<genLeptonPlus->phi()<<endl;
+// 		cout<<"GenLeptonMinus pt/eta/phi = "<<genLeptonMinus->pt()<<"/"<<genLeptonMinus->eta()<<"/"<<genLeptonMinus->phi()<<endl;
+
+		std::string genTauDecayModePlus  = ( matchesGenLeptonPlus )  ? getGenTauDecayMode(genLeptonPlus)  : "undefined";
+		std::string genTauDecayModeMinus = ( matchesGenLeptonMinus ) ? getGenTauDecayMode(genLeptonMinus) : "undefined";
+		if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "electron") || 
+		     (matchesGenLeptonMinus && genTauDecayModeMinus == "electron") ) {
+		  isGenElectron = true;
+		} 
+		if ( (matchesGenLeptonPlus  && genTauDecayModePlus  == "muon") || 
+		     (matchesGenLeptonMinus && genTauDecayModeMinus == "muon") ) {
+		  isGenMuon = true;
+		} 
+		if ( (matchesGenLeptonPlus  && !(genTauDecayModePlus  == "electron" || genTauDecayModePlus  == "muon")) || 
+		     (matchesGenLeptonMinus && !(genTauDecayModeMinus == "electron" || genTauDecayModeMinus == "muon")) ) {
+		  isGenHadTau = true;
+		} 
+	      }
+	    else if ( (*pdgId) == 13 )
+	      {
+		isGenMuon = true;
+	      }
+	    else if ( (*pdgId) == 11 )
+	      {
+		isGenElectron = true;
+	      }
+	    else assert(0);
+	    return;
+	  }
+      }
+    // CV: reconstructed tau neither matches generator level electron, muon nor tau
+    isGenJet = true;
+  }
 }
 
 
@@ -205,14 +313,17 @@ ElecTauStreamAnalyzer::ElecTauStreamAnalyzer(const edm::ParameterSet & iConfig)
   verticesTag_       = iConfig.getParameter<edm::InputTag>("vertices");
   triggerResultsTag_ = iConfig.getParameter<edm::InputTag>("triggerResults"); 
   isMC_              = iConfig.getParameter<bool>("isMC");
+  isPFEmb_           = iConfig.getParameter<bool>("isPFEmb");
   isRhEmb_           = iConfig.getUntrackedParameter<bool>("isRhEmb",false);
   genParticlesTag_   = iConfig.getParameter<edm::InputTag>("genParticles"); 
+  genParticlesForTopPtReweightingTag_ = iConfig.getParameter<edm::InputTag>("genParticlesForTopPtReweighting"); 
   genTausTag_        = iConfig.getParameter<edm::InputTag>("genTaus"); 
   deltaRLegJet_      = iConfig.getUntrackedParameter<double>("deltaRLegJet",0.3);
   minCorrPt_         = iConfig.getUntrackedParameter<double>("minCorrPt",10.);
   minJetID_          = iConfig.getUntrackedParameter<double>("minJetID",0.5);
   verbose_           = iConfig.getUntrackedParameter<bool>("verbose",false);
   doIsoOrdering_  = iConfig.getUntrackedParameter<bool>("doIsoOrdering", false);
+  pileupSrc_      = iConfig.getParameter<edm::InputTag>("pileupSrc");
   
   doElecIsoMVA_      = iConfig.getUntrackedParameter<bool>("doElecIsoMVA", false);
 //  if( doElecIsoMVA_ ){
@@ -675,6 +786,30 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("signalPFChargedHadrCands",&signalPFChargedHadrCands_,"signalPFChargedHadrCands/I");
   tree_->Branch("signalPFGammaCands",&signalPFGammaCands_,"signalPFGammaCands/I");
 
+  //new branches for truth matching (= booleans)
+  tree_->Branch("isZdecay",&isZdecay_,"isZdecay/O");
+
+  tree_->Branch("isZthth",&isZthth_,"isZthth/O");
+  tree_->Branch("isZtt",&isZtt_,"isZtt/O");
+  tree_->Branch("isZttj",&isZttj_,"isZttj/O");
+  tree_->Branch("isZttl",&isZttl_,"isZttl/O");
+  tree_->Branch("isZj",&isZj_,"isZj/O");
+  tree_->Branch("isZee",&isZee_,"isZee/O");
+  tree_->Branch("isZmm",&isZmm_,"isZmm/O");
+  tree_->Branch("isZll",&isZll_,"isZll/O");
+
+  tree_->Branch("isLeg1MatchedToHadTau",&isLeg1MatchedToHadTau_,"isLeg1MatchedToHadTau/O");
+  tree_->Branch("isLeg1MatchedToMuon",&isLeg1MatchedToMuon_,"isLeg1MatchedToMuon/O");
+  tree_->Branch("isLeg1MatchedToElectron",&isLeg1MatchedToElectron_,"isLeg1MatchedToElectron/O");
+  tree_->Branch("isLeg1MatchedToLepton",&isLeg1MatchedToLepton_,"isLeg1MatchedToLepton/O");
+  tree_->Branch("isLeg1MatchedToJet",&isLeg1MatchedToJet_,"isLeg1MatchedToJet/O");
+
+  tree_->Branch("isLeg2MatchedToHadTau",&isLeg2MatchedToHadTau_,"isLeg2MatchedToHadTau/O");
+  tree_->Branch("isLeg2MatchedToMuon",&isLeg2MatchedToMuon_,"isLeg2MatchedToMuon/O");
+  tree_->Branch("isLeg2MatchedToElectron",&isLeg2MatchedToElectron_,"isLeg2MatchedToElectron/O");
+  tree_->Branch("isLeg2MatchedToLepton",&isLeg2MatchedToLepton_,"isLeg2MatchedToLepton/O");
+  tree_->Branch("isLeg2MatchedToJet",&isLeg2MatchedToJet_,"isLeg2MatchedToJet/O");
+
   tree_->Branch("isTauLegMatched",&isTauLegMatched_,"isTauLegMatched/I");
   tree_->Branch("isTauLegMatchedToLep",&isTauLegMatchedToLep_,"isTauLegMatchedToLep/I");
   tree_->Branch("isElecLegMatched",&isElecLegMatched_,"isElecLegMatched/I");
@@ -693,9 +828,9 @@ void ElecTauStreamAnalyzer::beginJob(){
   tree_->Branch("nPUaverage",&nPUaverage_,"nPUaverage/F");
 
   //Higgs pT reweighting
-  tree_->Branch("higgsPtWeightNom",&higgsPtWeightNom_,"higgsPtWeightNom/F");
-  tree_->Branch("higgsPtWeightUp",&higgsPtWeightUp_,"higgsPtWeightUp/F");
-  tree_->Branch("higgsPtWeightDown",&higgsPtWeightDown_,"higgsPtWeightDown/F");
+//   tree_->Branch("higgsPtWeightNom",&higgsPtWeightNom_,"higgsPtWeightNom/F");
+//   tree_->Branch("higgsPtWeightUp",&higgsPtWeightUp_,"higgsPtWeightUp/F");
+//   tree_->Branch("higgsPtWeightDown",&higgsPtWeightDown_,"higgsPtWeightDown/F");
 
   //Top pT reweighting SM // IN
   tree_->Branch("topPtWeightNom",&topPtWeightNom_,"topPtWeightNom/F");
@@ -898,6 +1033,10 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   const reco::GenParticleCollection* genParticles = 0;
   iEvent.getByLabel(genParticlesTag_,genHandle);
 
+  edm::Handle<reco::GenParticleCollection> genHandleForTopPtReweighting;
+  const reco::GenParticleCollection* genParticlesForTopPtReweighting = 0;
+  iEvent.getByLabel(genParticlesForTopPtReweightingTag_,genHandleForTopPtReweighting); 
+
   if(genHandle.isValid()){
     genParticles = genHandle.product();
     int index1 = -99;
@@ -961,7 +1100,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     }
   }
 
-  if(isMC_){
+  if(isMC_ || isPFEmb_){
 
     edm::Handle<LHEEventProduct > LHEHandle;
     const LHEEventProduct* LHE = 0;
@@ -977,14 +1116,29 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	<< "No gen particles label available \n";
     genParticles = genHandle.product();
     for(unsigned int k = 0; k < genParticles->size(); k ++){
-      if( !( (*genParticles)[k].pdgId() == 23 || 
-	     abs((*genParticles)[k].pdgId()) == 24 || 
-	     (*genParticles)[k].pdgId() == 25 ||
-	     (*genParticles)[k].pdgId() == 35 ||
-             (*genParticles)[k].pdgId() == 36
-	     ) || 
-	  (*genParticles)[k].status()!=3)
-	continue;
+
+      if(isMC_)
+	{
+	  if( !( (*genParticles)[k].pdgId() == 23 || 
+		 abs((*genParticles)[k].pdgId()) == 24 || 
+		 (*genParticles)[k].pdgId() == 25 ||
+		 (*genParticles)[k].pdgId() == 35 ||
+		 (*genParticles)[k].pdgId() == 36
+		 ) || 
+	      (*genParticles)[k].status()!=3)
+	    continue;
+	}
+      else if(isPFEmb_ && !isMC_)
+	{
+	  if( !( (*genParticles)[k].pdgId() == 23 || 
+		 abs((*genParticles)[k].pdgId()) == 24 || 
+		 (*genParticles)[k].pdgId() == 25 ||
+		 (*genParticles)[k].pdgId() == 35 ||
+		 (*genParticles)[k].pdgId() == 36
+		 ) || 
+	      (*genParticles)[k].status()!=2) continue;
+	}
+
       if(verbose_) cout << "Boson status, pt,phi " << (*genParticles)[k].status() << "," << (*genParticles)[k].pt() << "," << (*genParticles)[k].phi() << endl;
       
       genVP4_->push_back( (*genParticles)[k].p4() );
@@ -1031,7 +1185,11 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   }//isMC_
 
   edm::Handle<reco::GenJetCollection> tauGenJetsHandle;
+
+  //edm::InputTag pileupSrc_;
   edm::Handle<std::vector<PileupSummaryInfo> > puInfoH;
+
+
   nPUVertices_       = -99.;
   nPUVerticesP1_     = -99.;
   nPUVerticesM1_     = -99.;
@@ -1047,14 +1205,19 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     tauGenJets = tauGenJetsHandle.product();
 
     // PU infos
-    iEvent.getByType(puInfoH);
+    //iEvent.getByType(puInfoH);
+    iEvent.getByLabel(pileupSrc_, puInfoH);
+
     if(puInfoH.isValid()){
       for(std::vector<PileupSummaryInfo>::const_iterator it = puInfoH->begin(); it != puInfoH->end(); it++){
 
-	//cout << "Bunc crossing " << it->getBunchCrossing() << endl;
+// 	cout << "Bunc crossing " << it->getBunchCrossing() << endl;
 	if(it->getBunchCrossing() == 0 ) 
-	  //nPUVertices_  = it->getPU_NumInteractions(); //old ICHEP
-	  nPUVertices_  = it->getTrueNumInteractions();
+	  {
+	    //nPUVertices_  = it->getPU_NumInteractions(); //old ICHEP
+// 	    cout<<"it->getTrueNumInteractions() = "<<it->getTrueNumInteractions()<<endl;
+	    nPUVertices_  = it->getTrueNumInteractions();
+	  }
 	else if(it->getBunchCrossing() == -1)  
 	  //nPUVerticesM1_= it->getPU_NumInteractions();
 	  nPUVerticesM1_= it->getTrueNumInteractions();
@@ -1066,6 +1229,16 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       }
     }
   }
+  else if(isPFEmb_)
+    {
+      // tag gen jets
+      iEvent.getByLabel(genTausTag_,tauGenJetsHandle);
+      if( !tauGenJetsHandle.isValid() )  
+	edm::LogError("DataNotAvailable")
+	  << "No gen jet label available \n";
+      tauGenJets = tauGenJetsHandle.product();
+    }
+
   if(verbose_){
     cout << "Num of PU = "          << nPUVertices_ << endl;
     cout << "Num of OOT PU = "      << nPUVerticesM1_+nPUVerticesP1_<< endl;
@@ -1677,13 +1850,17 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   for(unsigned int i=0; i< diTaus->size(); i++){
     float sumPt    = (((*diTaus)[i].leg1())->pt() + ((*diTaus)[i].leg2())->pt());
     int pairCharge = (((*diTaus)[i].leg1())->charge()*((*diTaus)[i].leg2())->charge());
-    float isoTau = ((*diTaus)[i].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
+    float isoTau = ((*diTaus)[i].leg2())->tauID("byIsolationMVA3oldDMwLTraw");
+//     float isoTau = ((*diTaus)[i].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits");
     float isoEle = ((*diTaus)[i].leg1())->userFloat("PFRelIsoDB04v3");
-    float sortVariable = (doIsoOrdering_) ? (isoTau-isoEle) : sumPt;
+    float ptEle = ((*diTaus)[i].leg1())->pt();
+    float sortVariable = (doIsoOrdering_) ? isoTau*ptEle : sumPt;
+//     float sortVariable = (doIsoOrdering_) ? (isoTau-isoEle) : sumPt
     const pat::Tau*  tau_i = dynamic_cast<const pat::Tau*>(  ((*diTaus)[i].leg2()).get() );
     if(//tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr")>0.5 || 
        //tau_i->tauID("byLooseIsolationMVA")>0.5 )
-       tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5 )
+       //tau_i->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")>0.5 )//was this before
+       tau_i->tauID("byLooseIsolationMVA3oldDMwLT")>0.5)
       sortedDiTausLooseIso.insert( make_pair( sortVariable, i ) );
     sortedDiTaus.insert( make_pair( sortVariable, i ) );
     if(pairCharge<0) 
@@ -1697,6 +1874,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     sortDiTauInfo.diTauCharge_ = pairCharge; 
     sortDiTauInfos.push_back(sortDiTauInfo); 
   }
+
 //   if( sortedDiTausOS.size()>0 ) 
 //     index = (sortedDiTausOS.begin())->second ;
 //   else
@@ -1706,6 +1884,26 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
   
   //sort diTaus, first OS and then according to sumPt  
   std::sort(sortDiTauInfos.begin(), sortDiTauInfos.end(), SortDiTauPairs()); 
+
+//   int dummy = 0 ;
+  
+//   if(sortedDiTaus.size()>2)
+//     {
+//       cout<<"run:lumi:event = "<<iEvent.run()<<":"<<iEvent.luminosityBlock()<<":"<<(iEvent.eventAuxiliary()).event()<<endl;
+
+//       for(std::vector<DiTauInfo>::iterator iter = sortDiTauInfos.begin();  iter != sortDiTauInfos.end() ; ++iter){
+	
+// 	cout<<"pair = "<<dummy<<endl;
+// 	cout<<"tau iso = "<<((*diTaus)[iter->index_].leg2())->tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits")<<endl;
+// 	cout<<"tau pt = "<<((*diTaus)[iter->index_].leg2())->pt()<<endl;
+// 	cout<<"tau eta = "<<((*diTaus)[iter->index_].leg2())->eta()<<endl;
+	
+// 	cout<<"lepton pt = "<<((*diTaus)[iter->index_].leg1())->pt()<<endl;
+// 	cout<<"lepton eta = "<<((*diTaus)[iter->index_].leg1())->eta()<<endl;
+// 	++dummy;
+
+//       }
+//     }
 
   ////////////////////////////////////////////////////////
 
@@ -1818,7 +2016,185 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     const pat::Electron* leg1 = dynamic_cast<const pat::Electron*>( (theDiTau->leg1()).get() );
     const pat::Tau*      leg2 = dynamic_cast<const pat::Tau*>(  (theDiTau->leg2()).get() );
+
+    isZdecay_ = false;
+
+    isLeg1MatchedToHadTau_ = false;
+    isLeg1MatchedToMuon_ = false;
+    isLeg1MatchedToElectron_ = false;
+    isLeg1MatchedToJet_ = false;
     
+    isLeg2MatchedToHadTau_ = false;
+    isLeg2MatchedToMuon_ = false;
+    isLeg2MatchedToElectron_ = false;
+    isLeg2MatchedToJet_ = false;
+
+    isLeg1MatchedToLepton_ = false;
+    isLeg2MatchedToLepton_ = false;
+
+    isZthth_ = false ;
+    isZtt_ = false ;
+    isZttj_= false ;
+    isZttl_= false ;
+    isZj_= false ;
+    isZee_= false ;
+    isZmm_= false ;
+    isZll_ = false;
+    
+    if ( isMC_ || isPFEmb_ )
+      {
+	//get Z or gamma*
+	const reco::GenParticle* genZ_or_Gammastar = 0;
+	for ( reco::GenParticleCollection::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); ++genParticle )
+	  {
+	    if ( (genParticle->pdgId() == 22 || genParticle->pdgId() == 23) && genParticle->mass() > 0. )
+// 	    if ( (genParticle->pdgId() == 22 || genParticle->pdgId() == 23) && genParticle->mass() > 50. )#removed for nMSSM
+	      {
+		genZ_or_Gammastar = &(*genParticle);
+		break;
+	      }
+	  }
+
+	//get Z or gamma* daughters
+	std::vector<const reco::GenParticle*> allDaughters;
+
+	//check Z or gamma* decay mode
+	if ( genZ_or_Gammastar )
+	  {
+	    isZdecay_ = true ;
+	    findDaughters(genZ_or_Gammastar, allDaughters, -1);      
+	  }
+	else // in the case a Z or gamma* is not found (inconsistency in DY MC or EmbedPF), still fill the daughters not to lose the events
+	  {
+	    for ( reco::GenParticleCollection::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); ++genParticle )
+	      {
+		allDaughters.push_back(&(*genParticle));
+	      }
+	  }
+
+	//loop on daughters to check decay mode
+	const reco::GenParticle* genLeptonPlus  = 0;
+	const reco::GenParticle* genLeptonMinus = 0;
+	for ( std::vector<const reco::GenParticle*>::const_iterator daughter = allDaughters.begin(); daughter != allDaughters.end(); ++daughter )
+	  {
+	    int absPdgId = TMath::Abs((*daughter)->pdgId());
+	    //if(absPdgId == 15) cout<<"daughter PDG = 15 pt/eta/phi = "<<(*daughter)->pt()<<"/"<<(*daughter)->eta()<<"/"<<(*daughter)->phi()<<endl;
+	    //give preference to taus, since electrons and muons may either come from decay of Z-boson or from tau decay
+	    //taus
+	    if ( absPdgId == 15 && (*daughter)->charge() > +0.5 && (isZdecay_ || !genLeptonPlus) ) genLeptonPlus  = (*daughter);
+	    if ( absPdgId == 15 && (*daughter)->charge() < -0.5 && (isZdecay_ || !genLeptonMinus) ) genLeptonMinus = (*daughter);
+	    //electrons or muons
+	    if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() > +0.5 && !genLeptonPlus  ) genLeptonPlus  = (*daughter);
+	    if ( (absPdgId == 11 || absPdgId == 13) && (*daughter)->charge() < -0.5 && !genLeptonMinus ) genLeptonMinus = (*daughter);
+	  }
+
+	//check if leg1 is matched to a Z decay product
+	bool leg1isGenHadTau   = false;
+	bool leg1isGenMuon     = false;
+	bool leg1isGenElectron = false;
+	bool leg1isGenJet      = false;
+	//cout<<"leg 1 ->"<<endl;
+	if(genLeptonPlus && genLeptonMinus) matchGenParticleFromZdecay(leg1->p4(), genLeptonPlus, genLeptonMinus, leg1isGenHadTau, leg1isGenMuon, leg1isGenElectron, leg1isGenJet);
+
+	//check if leg2 is matched to a Z decay product
+	bool leg2isGenHadTau   = false;
+	bool leg2isGenMuon     = false;
+	bool leg2isGenElectron = false;
+	bool leg2isGenJet      = false;
+	//cout<<"leg 2 ->"<<endl;
+	if(genLeptonPlus && genLeptonMinus) matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
+
+// 	cout<<"genLeptonPlus->pt() = "<<genLeptonPlus->pt()<<endl;
+// 	cout<<"genLeptonMinus->pt() = "<<genLeptonMinus->pt()<<endl;
+
+// 	cout<<"leg1isGenMuon = "<<leg1isGenMuon<<endl;
+// 	cout<<"leg2isGenMuon = "<<leg2isGenMuon<<endl;
+// 	cout<<"leg1isGenElectron = "<<leg1isGenElectron<<endl;
+// 	cout<<"leg2isGenElectron = "<<leg2isGenElectron<<endl;
+
+	//check decay modes
+
+	//Ztt --> both leg1 and leg2 matched to generator taus
+	if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 15 && genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 15 )
+	  {
+	    //Hadronic decay --> both legs matched to gen had tau
+	    if      ( leg1isGenHadTau && leg2isGenHadTau )                                          isZthth_ = true;
+	    //Semi-leptonic taus decays --> leg1 matched to lepton, leg2 matched to gen had tau
+	    else if ( (leg1isGenElectron || leg1isGenMuon) && leg2isGenHadTau)                      isZtt_   = true;
+	    //Fully-leptonic taus decays --> leg1 matched to gen lepton, leg2 matched to gen lepton
+	    else if ( (leg1isGenMuon || leg1isGenElectron) && (leg2isGenMuon || leg2isGenElectron)) isZttl_  = true;
+	    //Other cases (most are when a jet fakes a had. tau)
+	    else                                                                                    isZttj_  = true;
+	  }
+	//Zee --> both leg1 and leg2 matched to generator electrons
+	else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 11 && leg1isGenElectron && genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 11 && leg2isGenElectron )
+	  {
+	    isZee_ = true;
+	  }
+	//Zmm --> both leg1 and leg2 matched to generator muons
+	else if ( genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == 13 && leg1isGenMuon && genLeptonMinus && TMath::Abs(genLeptonMinus->pdgId()) == 13 && leg2isGenMuon )
+	  {
+	    isZmm_ = true;
+	  }
+	//Zj --> at least one leg matched to a jet, or legs not matched to same flavor lepton, or a leg is not matched at all
+	else
+	  {
+	    isZj_ = true;
+	  }
+      
+	//check truth matching
+	isLeg1MatchedToHadTau_ = false;
+	isLeg1MatchedToMuon_ = false;
+	isLeg1MatchedToElectron_ = false;
+	isLeg1MatchedToJet_ = false;
+	matchGenParticle(leg1->p4(), *genParticles, isLeg1MatchedToHadTau_, isLeg1MatchedToMuon_, isLeg1MatchedToMuon_, isLeg1MatchedToJet_);
+
+	isLeg2MatchedToHadTau_ = false;
+	isLeg2MatchedToMuon_ = false;
+	isLeg2MatchedToElectron_ = false;
+	isLeg2MatchedToJet_ = false;
+	matchGenParticle(leg2->p4(), *genParticles, isLeg2MatchedToHadTau_, isLeg2MatchedToMuon_, isLeg2MatchedToMuon_, isLeg2MatchedToJet_);
+    
+	isLeg1MatchedToLepton_ = isLeg1MatchedToElectron_ || isLeg1MatchedToMuon_ ;
+	isLeg2MatchedToLepton_ = isLeg2MatchedToElectron_ || isLeg2MatchedToMuon_ ;
+    
+	isZll_ = isZee_ || isZmm_;
+    
+	TString flag = "";
+	if(     isZtt_)   flag = "ZTT";
+	else if(isZll_ || isZttl_)   flag = "ZL";
+	else if(isZttj_)  flag = "ZTTJ";
+	else              flag = "ZJ";
+
+	if((iEvent.eventAuxiliary()).event()==21397738)
+	  {
+	    cout<<"leg1 pT/eta/phi = "<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<endl;
+	    cout<<"leg2 pT/eta/phi = "<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<endl;
+	
+	    cout<<""<<endl;
+
+	    cout<<"isZdecay = "<<isZdecay_<<endl;
+	    cout<<"isZtt = "<<isZtt_<<endl;
+	    cout<<"isZll = "<<isZll_<<endl;
+	    cout<<"isZttj = "<<isZttj_<<endl;
+	    cout<<"isZj = "<<isZj_<<endl;
+
+	    cout<<""<<endl;
+
+	    cout<<"isLeg2MatchedToHadTau = "<<isLeg2MatchedToHadTau_<<endl;
+	    cout<<"isLeg2MatchedToLepton = "<<isLeg2MatchedToLepton_<<endl;
+	    cout<<"isLeg2MatchedToJet = "<<isLeg2MatchedToJet_<<endl;
+	    cout<<"isLeg2MatchedToHadTau = "<<isLeg2MatchedToHadTau_<<endl;
+
+	    cout<<""<<endl;
+
+	    if(flag!="ZTTJ") cout<<"-----> flag = "<<flag<<endl;
+	    else             cout<<"-----> flag = ZJ"<<endl;
+	  }
+
+      }
+
+
     /*
     myfile<<""<<endl;
     myfile<<""<<endl;
@@ -1904,9 +2280,12 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
     for(iter_trigger = HLTfiltersElec.begin(); iter_trigger != HLTfiltersElec.end(); iter_trigger++)
       {
+	//cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
+
 	bool matched = false;
 	for(pat::TriggerObjectStandAloneCollection::const_iterator it = triggerObjs->begin() ; it !=triggerObjs->end() ; it++){
 	  pat::TriggerObjectStandAlone *aObj = const_cast<pat::TriggerObjectStandAlone*>(&(*it));
+
 	  if(verbose_) {
 	    if( Geom::deltaR( aObj->triggerObject().p4(), leg1->p4() )<0.5 ){
 	      for(unsigned int k =0; k < (aObj->filterLabels()).size() ; k++){
@@ -1968,6 +2347,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 
   for(iter_trigger = HLTfiltersTau.begin(); iter_trigger != HLTfiltersTau.end(); iter_trigger++)
     {
+      //cout<<"iter_trigger->first = "<<iter_trigger->first<<endl;
+
       bool matched = false;
       for(pat::TriggerObjectStandAloneCollection::const_iterator it = triggerObjs->begin() ; it !=triggerObjs->end() ; it++){
 	pat::TriggerObjectStandAlone *aObj = const_cast<pat::TriggerObjectStandAlone*>(&(*it));
@@ -1978,6 +2359,15 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	    }
 	  }
 	}
+
+// 	if(Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() ) < 0.5)
+// 	  {
+// 	    //cout<<"le2->p4() = "<<leg2->p4()<<endl;
+// 	    //cout<<"aObj->triggerObject().p4() = "<<aObj->triggerObject().p4()<<endl;
+// 	    //cout<<"aObj->hasFilterLabel(iter_trigger->first) ="<<aObj->hasFilterLabel(iter_trigger->first)<<endl;
+// 	    //cout<<"aObj->hasTriggerObjectType(trigger::TriggerTau) = "<<aObj->hasTriggerObjectType(trigger::TriggerTau)<<endl;
+// 	  }
+
 	if( Geom::deltaR( aObj->triggerObject().p4(), leg2->p4() )<0.5  && aObj->hasFilterLabel(iter_trigger->first) && aObj->hasTriggerObjectType(trigger::TriggerTau)){
 	  matched = true;
 	}
@@ -2206,7 +2596,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     leadGenPartPdg_  = -99;
     leadGenPartPt_   = -99;
 
-    if(isMC_){
+    if(isMC_ || isPFEmb_){
       if( (leg1->genParticleById(11,0,true)).isNonnull()  ){
 	genDiTauLegsP4_->push_back( leg1->genParticleById(11,0,true)->p4() );
 	isElecLegMatched_ = 1;
@@ -2262,10 +2652,19 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
       if(leg2IsFromMu || leg2IsFromElec)isTauLegMatchedToLep_ = 1;
 
       bool tauHadMatched = false;
+
+      //cout<<"tauGenJets->size() = "<<tauGenJets->size()<<endl;
+
       for(unsigned int k = 0; k < tauGenJets->size(); k++){
 	//if( Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.15 ) tauHadMatched = true;
 	if( Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.5 && (*tauGenJets)[k].p4().pt() > 8.0) tauHadMatched = true; //update to new prescription
+	//cout<<"Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.5 = "<<(Geom::deltaR( (*tauGenJets)[k].p4(),leg2->p4() ) < 0.5)<<endl;
+	//cout<<"(*tauGenJets)[k].p4().pt() = "<<(*tauGenJets)[k].p4().pt()<<endl;
       }
+
+      //cout<<"tauHadMatched= "<<tauHadMatched<<endl;
+      //cout<<"(leg2->genParticleById( 15,0,true)).isNonnull() = "<<(leg2->genParticleById( 15,0,true)).isNonnull()<<endl;
+      //cout<<"(leg2->genParticleById(-15,0,true)).isNonnull() = "<<(leg2->genParticleById( 15,0,true)).isNonnull()<<endl;
       
       if( ( (leg2->genParticleById( 15,0,true)).isNonnull() || 
 	    (leg2->genParticleById(-15,0,true)).isNonnull() ) 
@@ -3169,9 +3568,9 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 //     //////////////////////
 //     // Higgs pT Reweighting IN done at the treeSkimmer level
 
-    double higgsPtWeightNom  = 1.;
-    double higgsPtWeightUp   = 1.;
-    double higgsPtWeightDown = 1.;
+//     double higgsPtWeightNom  = 1.;
+//     double higgsPtWeightUp   = 1.;
+//     double higgsPtWeightDown = 1.;
 //     bool isHiggs = false;
 //     if ( isMC_ ) {
 //       //       edm::Handle<reco::GenParticleCollection> genParticles;
@@ -3209,11 +3608,14 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     //////////////////////IN
     // Top pT Reweighting
     if ( isMC_ ) {
+
+      if(genHandleForTopPtReweighting.isValid()) genParticlesForTopPtReweighting = genHandleForTopPtReweighting.product();
+    
       reco::Candidate::LorentzVector topPlusP4; 
-      bool topPlusFound = findGenParticle(*genParticles, +6, 0, 0, topPlusP4); 
+      bool topPlusFound = findGenParticle(*genParticlesForTopPtReweighting, +6, 0, 0, topPlusP4); 
       reco::Candidate::LorentzVector topMinusP4; 
-      bool topMinusFound = findGenParticle(*genParticles, -6, 0, 0, topMinusP4); 
-      
+      bool topMinusFound = findGenParticle(*genParticlesForTopPtReweighting, -6, 0, 0, topMinusP4); 
+  
       topPtWeightNom_ = 1.; 
       topPtWeightUp_ = 1.; 
       topPtWeightDown_ = 1.; 
