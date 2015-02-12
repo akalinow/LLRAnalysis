@@ -1,0 +1,16 @@
+[MULTICRAB]
+cfg=crab_run_etau_27Nov14_MCTauES.cfg
+
+[COMMON]
+USER.storage_element = T2_FR_GRIF_LLR
+USER.user_remote_dir = HTauTau/Analysis/Trees_27Nov14/EleTau/Backgrounds/
+
+#######################
+## MAIN BACKGROUNDS  ##
+#######################
+
+[DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1]
+# sigma 
+CMSSW.datasetpath= /DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball-tauola-tauPolarOff/davignon-DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_12Aug2014_PAT_v1-3d9f561c031a85df47466ee44cc71833/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
