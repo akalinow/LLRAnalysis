@@ -110,7 +110,11 @@ int main(int argc, char* argv[])
     assert(histogramTT_Embedded_inclusive);
     std::cout << " integral(TT_Embedded_inclusive) = " << histogramTT_Embedded_inclusive->Integral() << std::endl;
     
-    double sfZTTfromEmbedded = (histogramZTTmc_inclusive->Integral() + histogramTT_Embedded_inclusive->Integral())/histogramZTT_Embedded_inclusive->Integral();
+    if ( !((histogramZTT_Embedded_inclusive->Integral() - histogramTT_Embedded_inclusive->Integral()) > 0.) ) {
+      throw cms::Exception("addBackgroundZTT") 
+	<< "Difference between normalization of ZTT_Embedded and TT_Embedded in 'inclusive' event category is negative !!\n";
+    }
+    double sfZTTfromEmbedded = histogramZTTmc_inclusive->Integral()/(histogramZTT_Embedded_inclusive->Integral() - histogramTT_Embedded_inclusive->Integral());
     if ( sfZTTfromEmbedded < 0. ) sfZTTfromEmbedded = 0.;
     std::cout << " sfZTTfromEmbedded = " << sfZTTfromEmbedded << std::endl;
 
@@ -158,18 +162,14 @@ int main(int argc, char* argv[])
 
 	    TH1* histogramZTT_Embedded = getHistogram(dir, processZTT_Embedded, *histogram, *central_or_shift, true);
 	    if ( verbosity ) {
-	      std::cout << " integral(ZTT_Embedded, before sfZTTfromEmbedded) = " << histogramZTT_Embedded->Integral() << std::endl;
-	    }
-	    histogramZTT_Embedded->Scale(sfZTTfromEmbedded);
-	    if ( verbosity ) {
-	      std::cout << " integral(ZTT_Embedded, after sfZTTfromEmbedded) = " << histogramZTT_Embedded->Integral() << std::endl;
+	      std::cout << " integral(ZTT_Embedded) = " << histogramZTT_Embedded->Integral() << std::endl;
 	    }
 	    TH1* histogramTT_Embedded = getHistogram(dir, processTT_Embedded, *histogram, *central_or_shift, false);
 	    if ( !histogramTT_Embedded ) histogramTT_Embedded = getHistogram(dir, processTT_Embedded, *histogram, "central", true);
 	    if ( verbosity ) {
 	      std::cout << " integral(TT_Embedded) = " << histogramTT_Embedded->Integral() << std::endl;
 	    }
-	    
+
 	    std::string subdirName_output = getSubdirNameOutput(*region, *category, *tauPtBin, processZTT);
 	    TDirectory* subdir_output = createSubdirectory_recursively(fs, subdirName_output);
 	    subdir_output->cd();
@@ -179,11 +179,12 @@ int main(int argc, char* argv[])
 	    histogramNameZTTfromEmbedded.append("_").append(*histogram);
 	    TH1* histogramZTTfromEmbedded = subtractHistograms(histogramNameZTTfromEmbedded, histogramZTT_Embedded, histogramTT_Embedded, verbosity);
 	    makeBinContentsPositive(histogramZTTfromEmbedded, verbosity);
+	    histogramZTTfromEmbedded->Scale(sfZTTfromEmbedded);
 	    if ( histogramZTTfromEmbedded->Integral() < 1.e-3 ) {
 	      TH1* histogramZTTmc = getHistogram(dir, processZTTmc, *histogram, *central_or_shift, true);	      
 	      int numBins = histogramZTTmc->GetNbinsX();
 	      for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
-		histogramZTTfromEmbedded->SetBinError(iBin, histogramZTTmc->GetBinContent(iBin));
+		histogramZTTfromEmbedded->SetBinError(iBin, sfZTTfromEmbedded*histogramZTTmc->GetBinContent(iBin));
 	      }
 	    }
 	    if ( verbosity ) {

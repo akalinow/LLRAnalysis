@@ -12,8 +12,8 @@ import time
 configFile = 'patTuple_PAT_SkimHadTauStream_cfg.py'
 jobId = '2014Jun09'
 
-outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
-##outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
+##outputFilePath = 'CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
+outputFilePath = '/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/' % jobId
 
 samplesToAnalyze = [
     # CV: leave empty in order to submit jobs for all samples
@@ -47,7 +47,13 @@ samplesToAnalyze = [
     #'radion700Tohh',
     #'radion1000Tohh',
     #'HiggsWHbb125'
-    'HiggsBB125'
+    #'HiggsBB125',
+    #'TTJetsSemiLept_tauola',
+    #'TTJetsFullLept_tauola'
+    'pfEmbed_Run2012B_22Jan2013_v2',
+    'pfEmbed_Run2012C_22Jan2013_v2',
+    'pfEmbed_Run2012D_22Jan2013_v2',
+    'pfEmbed_TTJetsFullLept_v2'
 ]
 
 #--------------------------------------------------------------------------------

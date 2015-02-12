@@ -30,7 +30,8 @@ targetFilePath = sys.argv[2]
 
 tmpFilePath = "/tmp/veelken"
 
-maxNumConcurrentJobs = 100
+##maxNumConcurrentJobs = 100
+maxNumConcurrentJobs = 50
 
 def runCommand(commandLine):
     print(commandLine)

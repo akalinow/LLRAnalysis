@@ -263,11 +263,11 @@ int main(int argc, char* argv[])
 	    std::string histogramNameQCD = processQCD;
 	    if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) histogramNameQCD.append("_").append(*central_or_shift);
 	    histogramNameQCD.append("_").append(*histogram);
-	    TH1* histogramQCD_norm = subtractHistograms(Form("%s_norm", histogramNameQCD.data()), histogramData_norm, histogramsToSubtract_norm);
+	    TH1* histogramQCD_norm = subtractHistograms(Form("%s_norm", histogramNameQCD.data()), histogramData_norm, histogramsToSubtract_norm, verbosity);
 	    if ( verbosity ) {
 	      std::cout << " integral(QCD_norm) = " << histogramQCD_norm->Integral() << std::endl;
 	    }
-	    TH1* histogramQCD_shape = subtractHistograms(histogramNameQCD.data(), histogramData_shape, histogramsToSubtract_shape);
+	    TH1* histogramQCD_shape = subtractHistograms(histogramNameQCD.data(), histogramData_shape, histogramsToSubtract_shape, verbosity);
 	    if ( verbosity ) {
 	      std::cout << " integral(QCD_shape) = " << histogramQCD_shape->Integral() << std::endl;
 	    }

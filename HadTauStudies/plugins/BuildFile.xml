@@ -32,6 +32,7 @@
 <use   name="RecoVertex/KinematicFitPrimitives"/>
 <use   name="AnalysisDataFormats/TauAnalysis"/>
 <use   name="TauAnalysis/CandidateTools"/>
+<use   name="TauAnalysis/SVfitStandalone"/>
 <use   name="MagneticField/Records"/>
 <use   name="MagneticField/Engine"/>
 <use   name="DataFormats/EgammaCandidates"/>

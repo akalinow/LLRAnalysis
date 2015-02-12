@@ -18,10 +18,10 @@ import time
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
 jobId = '2014Jun09'
 
-version = "v3_09"
+version = "v3_10"
 
-##inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
-inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
+inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
+##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
 maxEventsPerJob = 10000
 
@@ -38,7 +38,7 @@ samplesToAnalyze = [
     ##'mssmH350tohh',
     ##'HiggsZHbb125',
     ##'HiggsWHbb125',
-    'HiggsBB125',
+    ##'HiggsBB125',
     ##'graviton270Tohh',
     ##'graviton300Tohh',
     ##'graviton500Tohh',
@@ -47,30 +47,39 @@ samplesToAnalyze = [
     ##'radion300Tohh',
     ##'radion500Tohh',
     ##'radion700Tohh',
-    ##'radion1000Tohh'
+    ##'radion1000Tohh',
+    ##'TTJetsSemiLept_tauola',
+    ##'TTJetsFullLept_tauola',    
+
+    'DY2JetsExt'
 ]
 
 samplesToSkip = [
     # CV: leave empty in order to produce Ntuples for all samples
-    ##'DYJets_noTauPolarization',
-    ##'hhTo2b2tau_v2',
-    ##'mssmH260tohh',
-    ##'mssmH300tohh',
-    ##'mssmH350tohh',
-    ##'abelianZprime300tohh',
-    ##'abelianZprime500tohh',
-    ##'abelianZprime700tohh',
-    ##'HiggsZHbb125',
-    ##'HiggsWHbb125',
-    ##'graviton270Tohh',
-    ##'graviton300Tohh',
-    ##'graviton500Tohh',
-    ##'graviton700Tohh',
-    ##'graviton1000Tohh',
-    ##'radion300Tohh',
-    ##'radion500Tohh',
-    ##'radion700Tohh',
-    ##'radion1000Tohh'
+    'DYJets_noTauPolarization',
+    'hhTo2b2tau_v2',
+    'mssmH260tohh',
+    'mssmH300tohh',
+    'mssmH350tohh',
+    'abelianZprime300tohh',
+    'abelianZprime500tohh',
+    'abelianZprime700tohh',
+    'HiggsZHbb125',
+    'HiggsWHbb125',
+    'HiggsBB125',
+    'graviton270Tohh',
+    'graviton300Tohh',
+    'graviton500Tohh',
+    'graviton700Tohh',
+    'graviton1000Tohh',
+    'radion300Tohh',
+    'radion500Tohh',
+    'radion700Tohh',
+    'radion1000Tohh',
+    'TTJetsSemiLept_tauola',
+    'TTJetsFullLept_tauola',
+
+    ##'DY2JetsExt'
 ]
 
 numEventsFileName = 'submitTauTauNtupleProduction.json'

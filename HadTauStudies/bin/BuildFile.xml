@@ -61,6 +61,18 @@
   <use   name="root"/>
   <use   name="roottmva"/>
 </bin>
+<bin   file="addBackgroundZTT2.cc" name="addBackgroundZTT2">
+  <use   name="FWCore/FWLite"/>
+  <use   name="FWCore/ParameterSet"/>
+  <use   name="FWCore/PythonParameterSet"/>
+  <use   name="FWCore/Utilities"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="LLRAnalysis/HadTauStudies"/>
+  <use   name="root"/>
+  <use   name="roottmva"/>
+</bin>
 <bin   file="addBackgroundQCD.cc" name="addBackgroundQCD">
   <use   name="FWCore/FWLite"/>
   <use   name="FWCore/ParameterSet"/>

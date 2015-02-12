@@ -15,10 +15,10 @@ SAMPLES_TO_ANALYZE = [
     'data_JetHT_Run2012C_22Jan2013ReReco_v1',
     'data_JetHT_Run2012D_22Jan2013ReReco_v1',
     ##'pfEmbed_Run2012A_22Jan2013_v1',
-    'pfEmbed_Run2012B_22Jan2013_v1',
-    'pfEmbed_Run2012C_22Jan2013_v1',
-    'pfEmbed_Run2012D_22Jan2013_v1',
-    'pfEmbed_TTJetsFullLept',
+    'pfEmbed_Run2012B_22Jan2013_v2',
+    'pfEmbed_Run2012C_22Jan2013_v2',
+    'pfEmbed_Run2012D_22Jan2013_v2',
+    'pfEmbed_TTJetsFullLept_v2',
     'DYJets',
     'DYJets_noTauPolarization',
     'DY1Jets',
@@ -37,7 +37,9 @@ SAMPLES_TO_ANALYZE = [
     'W4Jets',
     'TTJetsHadronic',
     'TTJetsSemiLept',
+    'TTJetsSemiLept_tauola',
     'TTJetsFullLept',
+    'TTJetsFullLept_tauola',
     'Tbar_tW',
     'T_tW',
     'WWJetsTo2L2Nu',
@@ -163,7 +165,27 @@ RECO_SAMPLES = {
         'lumis_per_job'    : 15,
         'type'             : 'pfEmbeddedData'
     },
+    'pfEmbed_Run2012B_22Jan2013_v2' : {
+        'datasetpath'      : '/DoubleMuParked/StoreResults-Run2012B_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+        'events_processed' : 1545816, # 2013/12/05
+        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+        'runselection'     : "193833-196531",
+        'conditions'       : 'FT_53_V6_AN2::All',
+        'lumis_per_job'    : 15,
+        'type'             : 'pfEmbeddedData'
+    },
     'pfEmbed_Run2012C_22Jan2013_v1' : {
+        'datasetpath'      : '/DoubleMuParked/StoreResults-Run2012C_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+        'events_processed' : 2358463, # 2013/12/05
+        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+        'runselection'     : "198022-203742",
+        'conditions'       : 'GR_P_V40::All',
+        'lumis_per_job'    : 15,
+        'type'             : 'pfEmbeddedData'
+    },
+    'pfEmbed_Run2012C_22Jan2013_v2' : {
         'datasetpath'      : '/DoubleMuParked/StoreResults-Run2012C_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
         'events_processed' : 2358463, # 2013/12/05
@@ -183,12 +205,32 @@ RECO_SAMPLES = {
         'lumis_per_job'    : 15,
         'type'             : 'pfEmbeddedData'
     },
+    'pfEmbed_Run2012D_22Jan2013_v2' : {
+        'datasetpath'      : '/DoubleMuParked/StoreResults-Run2012D_22Jan2013_v1_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER',
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",        
+        'events_processed' : 2460546, # 2013/12/05
+        'lumi_mask'        : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/Reprocessing/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+        'runselection'     : "203777-208686",
+        'conditions'       : 'GR_P_V40::All',
+        'lumis_per_job'    : 15,
+        'type'             : 'pfEmbeddedData'
+    },
     'pfEmbed_TTJetsFullLept' : {
         'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/StoreResults-Summer12_TTJets_FullLeptMGDecays_DR53X_PU_S10_START53_V7C_v2_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER",
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 468406,
         'events_per_job'   : 20000,
-        'x_sec'            : 245.8*_picobarns*0.1050*0.648*0.648, # CV: taken from arXiv:1303.6254, need to multiply by branching fraction for both taus to decay hadronically
+        ##'x_sec'            : 249.5*_picobarns*0.1050*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
+        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'type'             : 'pfEmbeddedMC'
+    },
+    'pfEmbed_TTJetsFullLept_v2' : {
+        'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/StoreResults-Summer12_TTJets_FullLeptMGDecays_DR53X_PU_S10_START53_V7C_v2_PFembedded_trans1_tau132_pthad1_30had2_30_v1-5ef1c0fd428eb740081f19333520fdc8/USER",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 468406,
+        'events_per_job'   : 20000,
+        ##'x_sec'            : 249.5*_picobarns*0.1050*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
+        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
         'type'             : 'pfEmbeddedMC'
     },
     'DYJets' : {
@@ -326,7 +368,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 31223821,
         'events_per_job'   : 20000,
-        'x_sec'            : 245.8*_picobarns*0.4570, # CV: taken from arXiv:1303.6254
+        'x_sec'            : 249.5*_picobarns*0.4570, # CV: taken from TOP-12-007
         'type'             : 'smMC'
     },
     'TTJetsSemiLept' : {
@@ -334,7 +376,15 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 25424818,
         'events_per_job'   : 20000,
-        'x_sec'            : 245.8*_picobarns*0.4380, # CV: taken from arXiv:1303.6254
+        'x_sec'            : 249.5*_picobarns*0.4380, # CV: taken from TOP-12-007
+        'type'             : 'smMC'
+    },
+    'TTJetsSemiLept_tauola' : {
+        'datasetpath'      : "/TTJets_SemiLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 24953451,
+        'events_per_job'   : 20000,
+        'x_sec'            : 249.5*_picobarns*0.4380, # CV: taken from TOP-12-007
         'type'             : 'smMC'
     },
     'TTJetsFullLept' : {
@@ -342,7 +392,15 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 12119013,
         'events_per_job'   : 20000,
-        'x_sec'            : 245.8*_picobarns*0.1050, # CV: taken from arXiv:1303.6254
+        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007
+        'type'             : 'smMC'
+    },
+    'TTJetsFullLept_tauola' : {
+        'datasetpath'      : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v2/AODSIM",
+        'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
+        'events_processed' : 12011428,
+        'events_per_job'   : 20000,
+        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007
         'type'             : 'smMC'
     },
     'Tbar_tW' : {

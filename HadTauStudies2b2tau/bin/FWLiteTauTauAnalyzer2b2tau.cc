@@ -20,6 +20,9 @@
 #include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/Math/interface/normalizedPhi.h"
 
+#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
+
 #include "LLRAnalysis/HadTauStudies2b2tau/interface/TauTauHistManager2b2tau.h"
 #include "LLRAnalysis/HadTauStudies/interface/histogramAuxFunctions.h"
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
@@ -138,6 +141,26 @@ struct jetType
   bool passesMediumWP_;
   bool passesTightWP_;
 };
+
+void addJet(std::vector<jetType>& jets, double minJetPt, double minJetBtagDiscr,
+	    double jetPt, double jetEta, JetCorrectionUncertainty* jecUncertainty, bool applyJetEnergyScaleShapeUp, bool applyJetEnergyScaleShapeDown,
+	    double jetPx, double jetPy, double jetPz, double jetE, double jetEnRegFactor, double jetBtagDiscr, double jetGenPartonFlavour)
+{
+  assert(!(applyJetEnergyScaleShapeUp && applyJetEnergyScaleShapeDown));
+  double sf = 1.;
+  if ( applyJetEnergyScaleShapeUp || applyJetEnergyScaleShapeDown ) {
+    assert(jecUncertainty);
+    jecUncertainty->setJetEta(jetEta);
+    jecUncertainty->setJetPt(jetPt);
+    double shift = jecUncertainty->getUncertainty(true);
+    if      ( applyJetEnergyScaleShapeUp   ) sf = (1. + shift);
+    else if ( applyJetEnergyScaleShapeDown ) sf = (1. - shift);
+    else assert(0);
+  }
+  if ( (sf*jetPt) > minJetPt && (jetBtagDiscr > minJetBtagDiscr || minJetBtagDiscr == -1.) ) {
+    jets.push_back(jetType(sf*jetPx, sf*jetPy, sf*jetPz, sf*jetE, jetEnRegFactor, jetBtagDiscr, jetGenPartonFlavour));
+  }
+}
 
 bool isHigherBtagDiscriminator(const jetType& bjet1, const jetType& bjet2)
 {
@@ -470,14 +493,28 @@ int main(int argc, char* argv[])
   vstring addWeights_string = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<vstring>("addWeights");
 
   std::string central_or_shift = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("central_or_shift");
-  bool applyHighPtTauIDeffUncertaintyUp   = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVUp");
-  bool applyHighPtTauIDeffUncertaintyDown = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVDown");
+  bool applyHighPtTauIDeffUncertaintyUp        = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVUp");
+  bool applyHighPtTauIDeffUncertaintyDown      = (central_or_shift == "CMS_eff_t_mssmHigh_tautau_8TeVDown");
+  bool applyHighPtTauTriggerEffUncertaintyUp   = (central_or_shift == "CMS_htt_eff_trig_mssmHigh_tautau_8TeVUp");
+  bool applyHighPtTauTriggerEffUncertaintyDown = (central_or_shift == "CMS_htt_eff_trig_mssmHigh_tautau_8TeVDown");
+  bool applyJetEnergyScaleShapeUp              = (central_or_shift == "CMS_scale_j_shape_8TeVUp");
+  bool applyJetEnergyScaleShapeDown            = (central_or_shift == "CMS_scale_j_shape_8TeVDown");
   UInt_t bJetEff_shift = BtagSF::kNo;
   if ( central_or_shift == "CMS_eff_b_8TeVUp"    ) bJetEff_shift    = BtagSF::kUp;
   if ( central_or_shift == "CMS_eff_b_8TeVDown"  ) bJetEff_shift    = BtagSF::kDown;
   UInt_t bJetMistag_shift = BtagSF::kNo;
   if ( central_or_shift == "CMS_fake_b_8TeVUp"   ) bJetMistag_shift = BtagSF::kUp;
   if ( central_or_shift == "CMS_fake_b_8TeVDown" ) bJetMistag_shift = BtagSF::kDown;
+
+  edm::FileInPath jetCorrInputFileName = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<edm::FileInPath>("jetCorrInputFileName");
+  if ( jetCorrInputFileName.location() == edm::FileInPath::Unknown ) 
+    throw cms::Exception("FWLiteTauTauAnalyzer2b2tau") 
+      << " Failed to find JEC parameter file = " << jetCorrInputFileName << " !!\n";
+  std::string jetCorrUncertaintyTag = cfgFWLiteTauTauAnalyzer2b2tau.getParameter<std::string>("jetCorrUncertaintyTag");
+  std::cout << "Reading JEC parameters = " << jetCorrUncertaintyTag
+	    << " from file = " << jetCorrInputFileName.fullPath() << "." << std::endl;
+  JetCorrectorParameters* jetCorrParameters = new JetCorrectorParameters(jetCorrInputFileName.fullPath().data(), jetCorrUncertaintyTag);
+  JetCorrectionUncertainty* jecUncertainty = new JetCorrectionUncertainty(*jetCorrParameters);
 
   std::vector<TFile*> inputFilesToDelete;
 
@@ -918,25 +955,36 @@ int main(int argc, char* argv[])
     //---------------------------------------------------------------------------
     // CV: apply tau trigger efficiency turn-on curves measured by Arun for different tau ID discriminators
     
-    typedef double (*triggerTurnOnCurvePtr)(double, double);
-    triggerTurnOnCurvePtr tauTriggerEffData = 0;
-    triggerTurnOnCurvePtr tauTriggerEffMC   = 0;
+    typedef double (*triggerEffPtr)(double, double, bool);
+    triggerEffPtr tauTriggerEffData = 0;
+    triggerEffPtr tauTriggerEffMC   = 0;
+    typedef double (*triggerEffDropPtr)(double, double);
+    triggerEffDropPtr tauTriggerEffDrop = 0;
     if ( applyTauTriggerTurnOn == kHPScombIso3HitsMedium ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_cutMedium;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_cutMedium;
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_cutMedium;
     } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsLoose || applyTauTriggerTurnOn == kMVAwLToldDMsMedium || applyTauTriggerTurnOn == kMVAwLToldDMsTight ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaTight;
       tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaTight;      
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_mvaTight;    
     } else if ( applyTauTriggerTurnOn == kMVAwLToldDMsVTight ) {
       tauTriggerEffData = eff2012IsoParkedTau_Arun_mvaVTight;
-      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight;  
+      tauTriggerEffMC   = eff2012IsoParkedTauMC_Arun_mvaVTight; 
+      tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_mvaVTight;          
     } 
     if ( applyTauTriggerTurnOn != kTree ) {
       assert(tauTriggerEffData);
       assert(tauTriggerEffMC);
-      triggerEffData_diTau = (*tauTriggerEffData)(tau1Pt, tau1Eta)*(*tauTriggerEffData)(tau2Pt, tau2Eta);
-      Float_t triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta)*(*tauTriggerEffMC)(tau2Pt, tau2Eta);
+      triggerEffData_diTau = (*tauTriggerEffData)(tau1Pt, tau1Eta, false)*(*tauTriggerEffData)(tau2Pt, tau2Eta, false);
+      double triggerEffDropData_diTau = ((7.3 + 11.0*(*tauTriggerEffDrop)(tau1Pt, tau1Eta))/18.3)*((7.3 + 11.0*(*tauTriggerEffDrop)(tau2Pt, tau2Eta))/18.3);
+      double triggerEffMC_diTau = (*tauTriggerEffMC)(tau1Pt, tau1Eta, false)*(*tauTriggerEffMC)(tau2Pt, tau2Eta, false);
+      double triggerEffDropMC_diTau = (*tauTriggerEffDrop)(tau1Pt, tau1Eta)*(*tauTriggerEffDrop)(tau2Pt, tau2Eta);
       triggerWeight_diTau = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+      double triggerEffDrop_power = 1.;
+      if      ( applyHighPtTauTriggerEffUncertaintyUp   ) triggerEffDrop_power = 2.;
+      else if ( applyHighPtTauTriggerEffUncertaintyDown ) triggerEffDrop_power = 0.;
+      if ( triggerEffDropMC_diTau > 0. ) triggerWeight_diTau *= TMath::Power(triggerEffDropData_diTau/triggerEffDropMC_diTau, triggerEffDrop_power);
     }
     //---------------------------------------------------------------------------
 
@@ -1047,10 +1095,14 @@ int main(int argc, char* argv[])
     int tau2GenMatch = getGenMatch(l2isGenHadTau, l2isGenMuon, l2isGenElectron, l2isGenJet);
  
     std::vector<jetType> bjets;
-    if ( bjet1Pt > 20. && bjet1BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet1Px, bjet1Py, bjet1Pz, bjet1E, bjet1EnRegFactor, bjet1BtagDiscr, bjet1GenPartonFlavour));
-    if ( bjet2Pt > 20. && bjet2BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet2Px, bjet2Py, bjet2Pz, bjet2E, bjet2EnRegFactor, bjet2BtagDiscr, bjet2GenPartonFlavour));
-    if ( bjet3Pt > 20. && bjet3BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet3Px, bjet3Py, bjet3Pz, bjet3E, bjet3EnRegFactor, bjet3BtagDiscr, bjet3GenPartonFlavour));
-    if ( bjet4Pt > 20. && bjet4BtagDiscr > 0.244 ) bjets.push_back(jetType(bjet4Px, bjet4Py, bjet4Pz, bjet4E, bjet4EnRegFactor, bjet4BtagDiscr, bjet4GenPartonFlavour));
+    addJet(bjets, 20., 0.244, bjet1Pt, bjet1Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      bjet1Px, bjet1Py, bjet1Pz, bjet1E, bjet1EnRegFactor, bjet1BtagDiscr, bjet1GenPartonFlavour);
+    addJet(bjets, 20., 0.244, bjet2Pt, bjet2Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      bjet2Px, bjet2Py, bjet2Pz, bjet2E, bjet2EnRegFactor, bjet2BtagDiscr, bjet2GenPartonFlavour);
+    addJet(bjets, 20., 0.244, bjet3Pt, bjet3Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      bjet3Px, bjet3Py, bjet3Pz, bjet3E, bjet3EnRegFactor, bjet3BtagDiscr, bjet3GenPartonFlavour);
+    addJet(bjets, 20., 0.244, bjet4Pt, bjet4Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      bjet4Px, bjet4Py, bjet4Pz, bjet4E, bjet4EnRegFactor, bjet4BtagDiscr, bjet4GenPartonFlavour);
     for ( std::vector<jetType>::iterator bjet = bjets.begin();
 	  bjet != bjets.end(); ++bjet ) {
       bjet->passesLooseWP_  = bjet->btagDiscr_ > 0.244;
@@ -1060,10 +1112,14 @@ int main(int argc, char* argv[])
     std::sort(bjets.begin(), bjets.end(), isHigherBtagDiscriminator);
 
     std::vector<jetType> jets;
-    if ( jet1Pt > 20. ) jets.push_back(jetType(jet1Px, jet1Py, jet1Pz, jet1E, 1., jet1BtagDiscr, -1));
-    if ( jet2Pt > 20. ) jets.push_back(jetType(jet2Px, jet2Py, jet2Pz, jet2E, 1., jet2BtagDiscr, -1));
-    if ( jet3Pt > 20. ) jets.push_back(jetType(jet3Px, jet3Py, jet3Pz, jet3E, 1., jet3BtagDiscr, -1));
-    if ( jet4Pt > 20. ) jets.push_back(jetType(jet4Px, jet4Py, jet4Pz, jet4E, 1., jet4BtagDiscr, -1));
+    addJet(jets, 20., -1., jet1Pt, jet1Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      jet1Px, jet1Py, jet1Pz, jet1E, 1., jet1BtagDiscr, -1);
+    addJet(jets, 20., -1., jet2Pt, jet2Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      jet2Px, jet2Py, jet2Pz, jet2E, 1., jet2BtagDiscr, -1);
+    addJet(jets, 20., -1., jet3Pt, jet3Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      jet3Px, jet3Py, jet3Pz, jet3E, 1., jet3BtagDiscr, -1);
+    addJet(jets, 20., -1., jet4Pt, jet4Eta, jecUncertainty, applyJetEnergyScaleShapeUp, applyJetEnergyScaleShapeDown, 
+      jet4Px, jet4Py, jet4Pz, jet4E, 1., jet4BtagDiscr, -1);
     std::sort(jets.begin(), jets.end(), isHigherPt);
 
     int nbJetsLoose  = 0;
@@ -1109,7 +1165,7 @@ int main(int argc, char* argv[])
       }
     }
     if ( !(bjet1_found && bjet2_found) ) continue;
-    
+
     reco::Candidate::LorentzVector HttP4(HttPx, HttPy, HttPz, HttE);
     reco::Candidate::LorentzVector HbbP4 = bjet1P4 + bjet2P4; 
     reco::Candidate::LorentzVector HbbRegP4 = bjet1RegP4 + bjet2RegP4;
