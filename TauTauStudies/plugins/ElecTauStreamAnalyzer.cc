@@ -79,7 +79,8 @@
 //#include "AnalysisDataFormats/TauAnalysis/interface/PFMEtSignCovMatrix.h"
 #include "DataFormats/METReco/interface/PFMEtSignCovMatrix.h"
 //Standalone SVFit
-#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+//#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 
 #include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
@@ -1597,6 +1598,8 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     (*triggerPaths_)["HLT_Ele27_WP80_v10"] = 0 ;//single electron trigger
     (*triggerPaths_)["HLT_PFJet320_v5"] = 0 ;
 
+    (*triggerPaths_)["HLT_Mu17_Mu8_v17"] = 0 ;
+
 //     // X-triggers
 //     XtriggerPaths.push_back("HLT_Ele22_eta2p1_WP90Rho_LooseIsoPFTau20_v*");//0
 //     XtriggerPaths.push_back("HLT_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v*");//1
@@ -1798,6 +1801,15 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
 	  if(triggerPath && triggerPath->wasRun()) cout << "Was run..." << endl;
 	  if(triggerPath && triggerPath->wasRun() && triggerPath->wasAccept()) cout << "Was accepted..." << endl;
 	}
+
+//       TString local(iter_trigger->first);
+//       if(local.Contains("HLT_Mu17_Mu8_v"))
+// 	{
+// 	  cout<<  "Testing " << iter_trigger->first << endl;
+// 	  if(triggerPath) cout << "Is there..." << endl;
+// 	  if(triggerPath && triggerPath->wasRun()) cout << "Was run..." << endl;
+// 	  if(triggerPath && triggerPath->wasRun() && triggerPath->wasAccept()) cout << "Was accepted..." << endl;
+// 	}
 
       if(triggerPath && triggerPath->wasRun() && 
 	 triggerPath->wasAccept() && 
@@ -3215,7 +3227,7 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     //diTauNSVfitPtErrDown_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
     //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrDown()   : -99;
    
-
+    /*OLD SVFit
     //Run Standalone SVFit
     std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons; 
     NSVfitStandalone::Vector measuredMET( theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), 0); 
@@ -3229,7 +3241,45 @@ void ElecTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventS
     diTauNSVfitMassErrUp_ = algo.massUncert(); 
     diTauNSVfitPt_ = algo.pt();  
     diTauNSVfitPtErrUp_ = algo.ptUncert();
+    */
 
+    svFitStandalone::LorentzVector leg1P4(leg1->px(), leg1->py(), leg1->pz(), leg1->energy());
+    svFitStandalone::LorentzVector leg2P4(leg2->px(), leg2->py(), leg2->pz(), leg2->energy());
+    std::vector<svFitStandalone::MeasuredTauLepton> measuredTauLeptons_new;
+    measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToElecDecay, leg1->pt(), leg1->eta(),  leg1->phi(), svFitStandalone::electronMass)); // tau -> electron decay (Pt, eta, phi, mass)
+    measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2->pt(), leg2->eta(),  leg2->phi(), leg2->mass())); // tau -> tau_h decay (Pt, eta, phi, mass)
+    SVfitStandaloneAlgorithm algo(measuredTauLeptons_new, theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), cov, 2);
+    algo.addLogM(true, 2.);
+    algo.integrateVEGAS();
+    diTauNSVfitMass_ = algo.getMass(); 
+    diTauNSVfitMassErrUp_ = algo.massUncert(); 
+    diTauNSVfitPt_ = algo.pt();  
+    diTauNSVfitPtErrUp_ = algo.ptUncert();
+    
+    
+    std::cout << "leg1->px() "<< std::setprecision(10) << leg1->px() << endl;
+    std::cout << "leg1->py() "<< std::setprecision(10) << leg1->py() << endl;
+    std::cout << "leg1->pz() "<< std::setprecision(10) << leg1->pz() << endl;
+    std::cout << "leg1->energy() "<< std::setprecision(10) << leg1->energy() << endl;
+
+    std::cout << "leg2->px() "<< std::setprecision(10) << leg2->px() << endl;
+    std::cout << "leg2->py() "<< std::setprecision(10) << leg2->py() << endl;
+    std::cout << "leg2->pz() "<< std::setprecision(10) << leg2->pz() << endl;
+    std::cout << "leg2->energy() "<< std::setprecision(10) << leg2->energy() << endl;
+    
+    std::cout<< "theDiTau->met()->p4().Px() = " << std::setprecision(10) << theDiTau->met()->p4().Px() << endl;
+    std::cout<< "theDiTau->met()->p4().Py() = " << std::setprecision(10) << theDiTau->met()->p4().Py() << endl;
+
+    cout<<"MET covariance matrix: "<<endl;
+    cout<<"            (0,0) = "<<std::setprecision(10) <<cov(0,0)<<endl;
+    cout<<"            (0,1) = "<<std::setprecision(10) <<cov(0,1)<<endl;
+    cout<<"            (1,0) = "<<std::setprecision(10) <<cov(1,0)<<endl;
+    cout<<"            (1,1) = "<<std::setprecision(10) <<cov(1,1)<<endl;
+
+    cout<<"--> New svFitMass = "<<std::setprecision(10) <<algo.getMass()<<endl;
+    cout<<"--> New svFitMass error = "<<std::setprecision(10) <<algo.massUncert()<<endl;
+    
+    
     std::map<double, math::XYZTLorentzVectorD ,ElecTauStreamAnalyzer::more> sortedJets;
     std::map<double, math::XYZTLorentzVectorD ,ElecTauStreamAnalyzer::more> sortedJetsIDL1Offset;
     std::map<double, math::XYZTLorentzVectorD ,ElecTauStreamAnalyzer::more> sortedJetsID;

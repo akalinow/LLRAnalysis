@@ -606,17 +606,18 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     vertices       = cms.InputTag("selectedPrimaryVertices"),
     triggerResults = cms.InputTag("patTriggerEvent"),
     genParticles   = cms.InputTag("genParticles"),
-    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),#::SIM for MC PF Emb
     genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
+    isPFEmb        = cms.bool(runOnEmbed),
     isRhEmb        = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet   = cms.untracked.double(0.5),
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
-    doIsoOrdering  = cms.untracked.bool(False),
+    doIsoOrdering  = cms.untracked.bool(True),
     doMuIsoMVA     = cms.untracked.bool( False ),
-    pileupSrc      = cms.InputTag('addPileupInfo::HLT'),#for NPU in MC PF Emb
+    pileupSrc      = cms.InputTag('addPileupInfo::HLT'),#::HLT for NPU in MC PF Emb
     evtWeights     =  cms.PSet()
     )
 

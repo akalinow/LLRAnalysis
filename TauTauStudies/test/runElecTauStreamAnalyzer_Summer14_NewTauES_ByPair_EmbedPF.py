@@ -74,7 +74,9 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
     #'file:patTuples_LepTauStream_VBFH125.root'
-    'file:/home/llr/cms/davignon/PAT/patTuples_LepTauStream_100_1_0zI.root'
+    'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'
+    #'file:/data_CMS/cms/davignon/PAT/EleTau_EmbedPF/patTuples_LepTauStream_1_1_5FA.root'
+    #'file:/home/llr/cms/davignon/PAT/patTuples_LepTauStream_100_1_0zI.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
@@ -770,17 +772,20 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     electronsAntiZee   = cms.InputTag("selectedPatElectronsUserEmbeddedIso"),
     vertices           = cms.InputTag("selectedPrimaryVertices"),
     triggerResults     = cms.InputTag("patTriggerEvent"),
-    genParticles       = cms.InputTag("genParticles"),
-    genTaus            = cms.InputTag("tauGenJetsSelectorAllHadrons"),
+    genParticles       = cms.InputTag("genParticles::EmbeddedRECO"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
+    genTaus            = cms.InputTag("tauGenJetsSelectorAllHadronsEmbeddedRECO"),
     isMC               = cms.bool(runOnMC),
+    isPFEmb            = cms.bool(runOnEmbed),    
     isRhEmb            = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet       = cms.untracked.double(0.5),
     minCorrPt          = cms.untracked.double(15.),
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose            = cms.untracked.bool( False ),
     doElecIsoMVA       = cms.untracked.bool( False ),
-    doIsoOrdering = cms.untracked.bool(False),
-    evtWeights     =  cms.PSet()
+    doIsoOrdering      = cms.untracked.bool(True),
+    pileupSrc          = cms.InputTag('addPileupInfo'),#for NPU in MC PF Emb    
+    evtWeights         =  cms.PSet()
     )
 
 if not useAntiZee:

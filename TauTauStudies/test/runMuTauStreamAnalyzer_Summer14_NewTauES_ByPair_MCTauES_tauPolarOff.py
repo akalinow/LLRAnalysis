@@ -12,14 +12,17 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC     = False
-runOnEmbed  = True
-embedType   = "PfEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
+runOnMC     = True
+runOnEmbed  = False
+embedType   = "RhEmbedMuTauHighPt" #"PfEmbed" or "RhEmbed","MuTau" or "EleTau","LowPt","HighPt","FullRange"
 reRunPatJets = True
-applyTauESCorr= True
+#applyTauESCorr= False 
+applyTauESCorr= True 
+#doSVFitReco = False
 doSVFitReco = True
 usePFMEtMVA = True
 useRecoil   = True
+#useRecoil   = False
 useMarkov   = False
 
 # CV: flags for cutting low mass tail from MSSM Higgs -> tautau samples
@@ -59,7 +62,7 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 1
+process.MessageLogger.cerr.FwkReport.reportEvery = 1#was 10
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
@@ -67,14 +70,15 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
         #'file:patTuples_LepTauStream_VBFH125.root'
+        #'file:patTuples_LepTauStream.root'#was here
+        #'file:patTuples_LepTauStream_130_5_Qon.root'
+        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream_DY_tauPolarOff_muTau_bTagLow_149Events.root'
+        #'file:/data_CMS/cms/davignon/PAT/W1Jets/patTuples_LepTauStream_44_1_E0B.root'
+        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
+        #'file:/data_CMS/cms/davignon/AOD/TauPolarOff/patTuples_LepTauStream_1000_1_pns.root'#testing TauSpinnerReco
+        #'file:patTuples_LepTauStream.root'#Shalhout 2 events
+        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'#Shalhout jets
         #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
-        #'file:PAT_without_correction/patTuples_LepTauStream.root'
-        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream_METCheck.root'
-        #'file:patTuples_LepTauStream_47_1_dPM.root'
-        #'file:PAT_with_correction/patTuples_LepTauStream_tmftracks.root'
-        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'
-        #'file:patTuples_LepTauStream.root'
-        #'file:/home/llr/cms/davignon/PAT/patTuples_LepTauStream_100_1_7WM.root'
         #'file:patTuples_LepTauStream.root'
         #'file:VBFH125.root'
         #'file:data2012D.root'        
@@ -91,7 +95,8 @@ process.source = cms.Source(
 #process.source.skipEvents = cms.untracked.uint32(90)
 
 ## process.source.eventsToProcess = cms.untracked.VEventRange(
-##    '190703:22:21674651'
+##    #'1:100511:30147126'
+##    # '1:104529:313524281'
 ##    )
 
 process.allEventsFilter = cms.EDFilter(
@@ -337,71 +342,27 @@ if reRunPatJets:
     process.runPatJets = cms.Sequence(process.makePatJets*process.selectedPatJets)
 
 ###################################################################################
-#Adding matching information for taus from embedding --> for T-ES
-
-process.applyTauES = cms.Sequence()
-
-uncorrectedTaus = "tauPtEtaIDAgMuAgElec"
-
-if runOnEmbed:
-   from PhysicsTools.PatAlgos.mcMatchLayer0.tauMatch_cfi import tauMatch, tauGenJetMatch
-   process.tauMatchEmbeddedRECO = tauMatch.clone(
-       src = cms.InputTag(uncorrectedTaus),
-       matched = cms.InputTag("genParticles::EmbeddedRECO")
-   )
-   process.applyTauES += process.tauMatchEmbeddedRECO
-
-   from PhysicsTools.JetMCAlgos.TauGenJets_cfi import tauGenJets
-   process.tauGenJetsEmbeddedRECO = tauGenJets.clone(
-       GenParticles = cms.InputTag("genParticles::EmbeddedRECO")
-   )
-   process.applyTauES += process.tauGenJetsEmbeddedRECO
-   from PhysicsTools.JetMCAlgos.TauGenJetsDecayModeSelectorAllHadrons_cfi import tauGenJetsSelectorAllHadrons
-   process.tauGenJetsSelectorAllHadronsEmbeddedRECO = tauGenJetsSelectorAllHadrons.clone(
-       src = cms.InputTag("tauGenJetsEmbeddedRECO")
-   )
-   process.applyTauES += process.tauGenJetsSelectorAllHadronsEmbeddedRECO
-   process.tauGenJetMatchEmbeddedRECO = tauGenJetMatch.clone(
-       src = cms.InputTag(uncorrectedTaus),
-       matched = cms.InputTag("tauGenJetsSelectorAllHadronsEmbeddedRECO")
-   )
-   process.applyTauES += process.tauGenJetMatchEmbeddedRECO
-
-   process.tauPtEtaIDGenMatched = cms.EDProducer("PATTauGenMatchEmbedder",
-       src = cms.InputTag(uncorrectedTaus),
-       srcGenParticleMatch = cms.InputTag("tauMatchEmbeddedRECO"),
-       srcGenJetMatch = cms.InputTag("tauGenJetMatchEmbeddedRECO")
-   )
-   process.applyTauES += process.tauPtEtaIDGenMatched
-
-   uncorrectedTaus = "tauPtEtaIDGenMatched"
-
-
-
-## ###################################################################################
-#deprecated --> now placed after T-ES correction
-
-## process.rescaledTaus = cms.EDProducer(
-##     "TauRescalerProducer",
-##     inputCollection = cms.InputTag("tauPtEtaIDAgMuAgElecIsoPtRel"),
-##     shift           = cms.vdouble(0.03,0.03),
-##     numOfSigmas     = cms.double(1.0),
-##     #verbose         = cms.bool(True)
-##     )
-## process.rescaledMuons = cms.EDProducer(
-##     "MuonRescalerProducer",
-##     inputCollection = cms.InputTag("muPtEtaIDIsoPtRel"),
-##     shift           = cms.vdouble(0.01,0.01),
-##     numOfSigmas     = cms.double(1.0),
-##     #verbose         = cms.bool(True)
-##     )
-## process.rescaledMuonsRel = cms.EDProducer(
-##     "MuonRescalerProducer",
-##     inputCollection = cms.InputTag("muPtEtaRelID"),
-##     shift           = cms.vdouble(0.01,0.01),
-##     numOfSigmas     = cms.double(1.0),
-##     #verbose         = cms.bool(True)
-##     )
+process.rescaledTaus = cms.EDProducer(
+    "TauRescalerProducer",
+    inputCollection = cms.InputTag("tauPtEtaIDAgMuAgElecIsoPtRel"),
+    shift           = cms.vdouble(0.03,0.03),
+    numOfSigmas     = cms.double(1.0),
+    #verbose         = cms.bool(True)
+    )
+process.rescaledMuons = cms.EDProducer(
+    "MuonRescalerProducer",
+    inputCollection = cms.InputTag("muPtEtaIDIsoPtRel"),
+    shift           = cms.vdouble(0.01,0.01),
+    numOfSigmas     = cms.double(1.0),
+    #verbose         = cms.bool(True)
+    )
+process.rescaledMuonsRel = cms.EDProducer(
+    "MuonRescalerProducer",
+    inputCollection = cms.InputTag("muPtEtaRelID"),
+    shift           = cms.vdouble(0.01,0.01),
+    numOfSigmas     = cms.double(1.0),
+    #verbose         = cms.bool(True)
+    )
 
 #######################################################################
 from LLRAnalysis.TauTauStudies.runMETByLeptonPairs_cfi import *
@@ -443,32 +404,20 @@ process.selectedDiTauMuDown = process.selectedDiTau.clone(src = cms.InputTag("Me
 process.selectedDiTauMuDownCounter = process.selectedDiTauCounter.clone(src =  cms.InputTag("selectedDiTauMuDown"))
 ########################################################################
 
-process.tauPtEtaIDScaled = cms.EDProducer("TauESCorrector",
-   tauTag = cms.InputTag(uncorrectedTaus),
-   ##verbose = cms.bool(True)                
-)
-process.applyTauES += process.tauPtEtaIDScaled
-
-correctedTaus = uncorrectedTaus
-if applyTauESCorr:
-   correctedTaus = "tauPtEtaIDScaled"
-
-process.tauPtEtaIDAgMuAgElec = cms.EDFilter( #apply AntiMuTight2 #this one is now T-ES scaled (was NOT before Summer14)
+process.tauPtEtaIDAgMuAgElec = cms.EDFilter( #apply AntiMuTight2
     "PATTauSelector",
-    src = cms.InputTag(correctedTaus),
-    #src = cms.InputTag("tauPtEtaIDAgMuAgElec"),#changed preselection --> now applied to T-ES corrected taus (see line above)
+    src = cms.InputTag("tauPtEtaIDAgMuAgElec"),
     cut = cms.string(" ( tauID('againstMuonLoose3')>0.5 || tauID('againstMuonLooseMVA')>0.5)"+### IN NewTauID
                      " && ( tauID('againstElectronLoose')>0.5 || tauID('againstElectronVLooseMVA5')>0.5 )"## IN NewTauID
                      ),
     filter = cms.bool(False)
     )
 
-#deprecated --> see blocks above
-## process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
-##     "TauESCorrector",
-##     tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
-##     #verbose         = cms.bool(True)
-##     )
+process.tauPtEtaIDAgMuAgElecScaled = cms.EDProducer(
+    "TauESCorrector",
+    tauTag = cms.InputTag("tauPtEtaIDAgMuAgElec"),
+    #verbose         = cms.bool(True)
+    )
 
 process.tauPtEtaIDAgMuAgElecIso  = cms.EDFilter(
     "PATTauSelector",
@@ -488,12 +437,9 @@ process.tauPtEtaIDAgMuAgElecIsoPtRel  = cms.EDFilter(
                      ),
     filter = cms.bool(False)
     )
-
-#deprecated --> tauPtEtaIDAgMuAgElec is already T-ES scaled
-## if applyTauESCorr:
-
-##     process.tauPtEtaIDAgMuAgElecIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
-##     process.tauPtEtaIDAgMuAgElecIsoPtRel.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+if applyTauESCorr:
+    process.tauPtEtaIDAgMuAgElecIso.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
+    process.tauPtEtaIDAgMuAgElecIsoPtRel.src = cms.InputTag("tauPtEtaIDAgMuAgElecScaled")
 
 process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
     "CandViewCountFilter",
@@ -501,32 +447,6 @@ process.tauPtEtaIDAgMuAgElecIsoCounter = cms.EDFilter(
     minNumber = cms.uint32(1),
     maxNumber = cms.uint32(999),
     )
-
-
-###################################################################################
-
-process.rescaledTaus = cms.EDProducer(
-    "TauRescalerProducer",
-    inputCollection = cms.InputTag("tauPtEtaIDAgMuAgElecIsoPtRel"),
-    shift           = cms.vdouble(0.03,0.03),
-    numOfSigmas     = cms.double(1.0),
-    #verbose         = cms.bool(True)
-    )
-process.rescaledMuons = cms.EDProducer(
-    "MuonRescalerProducer",
-    inputCollection = cms.InputTag("muPtEtaIDIsoPtRel"),
-    shift           = cms.vdouble(0.01,0.01),
-    numOfSigmas     = cms.double(1.0),
-    #verbose         = cms.bool(True)
-    )
-process.rescaledMuonsRel = cms.EDProducer(
-    "MuonRescalerProducer",
-    inputCollection = cms.InputTag("muPtEtaRelID"),
-    shift           = cms.vdouble(0.01,0.01),
-    numOfSigmas     = cms.double(1.0),
-    #verbose         = cms.bool(True)
-    )
-
 process.tauPtEtaIDAgMuAgElecIsoTauUp  =  process.tauPtEtaIDAgMuAgElecIso.clone(
     src = cms.InputTag("rescaledTaus", "U")
     )
@@ -697,10 +617,9 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     muonsRel       = cms.InputTag("muPtEtaRelID"),
     vertices       = cms.InputTag("selectedPrimaryVertices"),
     triggerResults = cms.InputTag("patTriggerEvent"),
-    genParticles   = cms.InputTag("genParticles::EmbeddedRECO"),
+    genParticles   = cms.InputTag("genParticles"),
     genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
-    genTaus        = cms.InputTag("tauGenJetsSelectorAllHadronsEmbeddedRECO"),
-    pileupSrc      = cms.InputTag("addPileupInfo"),#for NPU in MC PF Emb
+    genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
     isPFEmb        = cms.bool(runOnEmbed),
     isRhEmb        = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
@@ -710,6 +629,7 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     verbose        = cms.untracked.bool( False ),
     doIsoOrdering  = cms.untracked.bool(True),
     doMuIsoMVA     = cms.untracked.bool( False ),
+    pileupSrc      = cms.InputTag("addPileupInfo"),
     evtWeights     =  cms.PSet()
     )
 
@@ -775,13 +695,12 @@ if runOnEmbed:
                 process.embeddingKineReweightGENembedding.inputFileName = cms.FileInPath("TauAnalysis/MCEmbeddingTools/data/embeddingKineReweight_genEmbedding_etau.root")
                 
 #######################################################################
+process.load("TauSpinnerInterface.TauSpinnerInterface.TauSpinner_cfi")
 
 process.seqNominal = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
-    process.applyTauES*
-    #(process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
-    (process.tauPtEtaIDAgMuAgElec*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     (process.muPtEtaIDIso *process.muPtEtaIDIsoCounter) *
     process.muPtEtaRelID *
@@ -801,17 +720,16 @@ process.seqNominal = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.muTauStreamAnalyzer
     )
 
 process.seqMuUp = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
-    process.applyTauES*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElec*
-    #(process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
-    process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+     process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     #(process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
     process.puJetIdSequence *
@@ -830,15 +748,14 @@ process.seqMuUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.muTauStreamAnalyzerMuUp
     )
 process.seqMuDown = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
-    process.applyTauES*
     process.muPtEtaIDIsoPtRel *
-    (process.tauPtEtaIDAgMuAgElec*
-    #(process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+    (process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
      process.tauPtEtaIDAgMuAgElecIso*process.tauPtEtaIDAgMuAgElecIsoCounter)*
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*
     #(process.LeptonsForMVAMEt*process.puJetIdAndMvaMet)*
@@ -858,16 +775,15 @@ process.seqMuDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.muTauStreamAnalyzerMuDown
     )
 
 process.seqTauUp = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
-    process.applyTauES*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElec*
-    #process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
     process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.electronsForVeto *
@@ -888,15 +804,14 @@ process.seqTauUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.muTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
     process.allEventsFilter*
     process.runPatJets*
-    process.applyTauES*
     (process.muPtEtaIDIso*process.muPtEtaIDIsoCounter) *
-    process.tauPtEtaIDAgMuAgElec*
-    #process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
+    process.tauPtEtaIDAgMuAgElec*process.tauPtEtaIDAgMuAgElecScaled*
     process.tauPtEtaIDAgMuAgElecIsoPtRel*
     process.muPtEtaRelID *
     process.electronsForVeto *
@@ -917,6 +832,7 @@ process.seqTauDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     process.mssmHiggsPtReweightSequenceGluGlu*
+    process.TauSpinnerReco*
     process.muTauStreamAnalyzerTauDown
     )
 
@@ -925,8 +841,8 @@ process.seqTauDown = cms.Sequence(
 
 if runOnMC:
     process.pNominal            = cms.Path( process.seqNominal )
-    process.pTauUp              = cms.Path( process.seqTauUp)
-    process.pTauDown            = cms.Path( process.seqTauDown )
+    process.pTauUp              = cms.Path( process.seqTauUp)#was commented
+    process.pTauDown            = cms.Path( process.seqTauDown )#was commented
     #process.pMuUp                  = cms.Path( process.seqMuUp)    #NOT INTERESTING FOR ANALYSIS
     #process.pMuDown                = cms.Path( process.seqMuDown)  #NOT INTERESTING FOR ANALYSIS
     ####

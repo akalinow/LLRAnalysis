@@ -1,0 +1,136 @@
+[MULTICRAB]
+cfg=crab_run_mutau_27Nov14_MCTauES.cfg
+
+[COMMON]
+USER.storage_element = T2_FR_GRIF_LLR
+USER.user_remote_dir = HTauTau/Analysis/Trees_27Nov14/MuTau/Backgrounds/
+
+#######################
+## MAIN BACKGROUNDS  ##
+#######################
+
+[DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+# sigma 
+CMSSW.datasetpath= /DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/inaranjo-DYJets-50-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v2-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+
+[WJets-madgraph-PUS10-p1_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma
+CMSSW.datasetpath=  /WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/inaranjo-WJets-madgraph-PUS10-p1_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[WJets-madgraph-PUS10-p2_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma
+CMSSW.datasetpath= /WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/inaranjo-WJets-madgraph-PUS10-p2_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+# sigma
+CMSSW.datasetpath= /TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/inaranjo-TTJets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+########################
+## EXCLUSIVE DY+NJETS ##
+########################
+
+[DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+## sigma 
+CMSSW.datasetpath= /DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/inaranjo-DY1JetsToLL_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+## sigma 
+CMSSW.datasetpath= /DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/inaranjo-DY2JetsToLL_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+## sigma 
+CMSSW.datasetpath= /DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/inaranjo-DY3JetsToLL_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+### sigma 
+CMSSW.datasetpath= /DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/inaranjo-DY4JetsToLL_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+#######################
+## EXCLUSIVE W+NJETS ##
+#######################
+
+[W1Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+##sigma 
+CMSSW.datasetpath= /W1JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W1Jets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[W2Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+##sigma 
+CMSSW.datasetpath= /W2JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W2Jets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[W3Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma 
+CMSSW.datasetpath= /W3JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W3Jets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[W4Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+###sigma 
+CMSSW.datasetpath= /W4JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W4Jets-madgraph-PUS10_MC_Bkg_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+#################################
+## HIGH STAT EXCLUSIVE W+NJETS ##
+################################
+
+[W1Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma 
+CMSSW.datasetpath= /W1JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W1Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_09Oct2013_PAT_v2-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[W2Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma 
+CMSSW.datasetpath= /W2JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W2Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_09Oct2013_PAT_v2-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[W3Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_MuTau_v1]
+#sigma 
+CMSSW.datasetpath=  /W3JetsToLNu_TuneZ2Star_8TeV-madgraph/inaranjo-W3Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_09Oct2013_PAT_v2-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+################################
+## HIGH STAT TTBAR            ##
+################################
+
+[TT_Hadronic_ext_MC_HTT_19Dec14_Trees_MuTau_v1]
+#sigma
+CMSSW.datasetpath= /TTJets_HadronicMGDecays_8TeV-madgraph/inaranjo-TT_Hadronic_ext_MC_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[TT_SemiLept_MC_HTT_19Dec14_Trees_MuTau_v1]
+#sigma
+CMSSW.datasetpath= /TTJets_SemiLeptMGDecays_8TeV-madgraph-tauola/inaranjo-TT_SemiLept_MC_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+
+[TT_FullLept_MC_HTT_19Dec14_Trees_MuTau_v1]
+#sigma
+CMSSW.datasetpath= /TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/inaranjo-TT_FullLept_MC_HTT_09Oct2013_PAT_v1-91df7bea76c5e5c57e33843f3c738912/USER
+CMSSW.total_number_of_events= -1
+CMSSW.events_per_job = 5000
+

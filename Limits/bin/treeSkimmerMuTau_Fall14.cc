@@ -164,8 +164,8 @@ double rawEtL1Jet(double et, double eta){
   double TO_RETA[22] = {
     -4.5,   -4.0,   -3.5,   -3.0, //Forward-
     -2.172, -1.740, -1.392, -1.044, -0.696, -0.348,  0.000, //Central-
-     0.348,  0.696,  1.044,  1.392,  1.740,  2.172,  3.000, //Central+
-     3.5,    4.0,    4.5,    5.0 //Forward+ 
+    0.348,  0.696,  1.044,  1.392,  1.740,  2.172,  3.000, //Central+
+    3.5,    4.0,    4.5,    5.0 //Forward+ 
   };
   unsigned int reta = 12345;
   for(unsigned int i=0; i<22; ++i){
@@ -287,24 +287,24 @@ float reweightHEPNUPWJets(int hepNUP, int set=0) {
   }
   else return 1. ;
   
-//   //Winter13
-//   if(set==0) { // usual set of samples OLD
-//     if(nJets==0)      return 0.492871535;
-//     else if(nJets==1) return 0.184565169;
-//     else if(nJets==2) return 0.056192256;
-//     else if(nJets==3) return 0.03876607;
-//     else if(nJets>=4) return 0.018970657;
-//     else return 1 ;
-//   }
-//   else if(set==1) { // adding new high stat samples
-//     if(nJets==0)      return 0.492871535;
-//     else if(nJets==1) return 0.100267473;
-//     else if(nJets==2) return 0.031238278;
-//     else if(nJets==3) return 0.019961315;
-//     else if(nJets>=4) return 0.018980202;
-//     else return 1 ;
-//   }
-//   else return 1. ;
+  //   //Winter13
+  //   if(set==0) { // usual set of samples OLD
+  //     if(nJets==0)      return 0.492871535;
+  //     else if(nJets==1) return 0.184565169;
+  //     else if(nJets==2) return 0.056192256;
+  //     else if(nJets==3) return 0.03876607;
+  //     else if(nJets>=4) return 0.018970657;
+  //     else return 1 ;
+  //   }
+  //   else if(set==1) { // adding new high stat samples
+  //     if(nJets==0)      return 0.492871535;
+  //     else if(nJets==1) return 0.100267473;
+  //     else if(nJets==2) return 0.031238278;
+  //     else if(nJets==3) return 0.019961315;
+  //     else if(nJets>=4) return 0.018980202;
+  //     else return 1 ;
+  //   }
+  //   else return 1. ;
 }
 
 float reweightHEPNUPDYJets(int hepNUP, int set=0) {
@@ -385,7 +385,7 @@ void createReWeighting3D(){
     5.02393E-07,
     2.15311E-07,
     9.56938E-08
-   };
+  };
 
   for( int i=0; i<50; i++) {
     Fall11Lumi.push_back(Fall11Lumi_f[i]);
@@ -534,13 +534,13 @@ float getTauFakeCorrection(double pt)
   correction = p0+p1*X+p2*X*X+p3*X*X*X;
 
   //old corrections prior to Mar14 (old T-ES correction)
-//   float correction = 0;
-//   float p0 = 0.718127;
-//   float p1 = -0.143612;
-//   float p2 = -0.0431415;
-//   float p3 = -0.0981383;
-//   float X = (pt-163.7)/100;//(x-meanPt)/100
-//   correction = p0+p1*X+p2*X*X+p3*X*X*X;
+  //   float correction = 0;
+  //   float p0 = 0.718127;
+  //   float p1 = -0.143612;
+  //   float p2 = -0.0431415;
+  //   float p3 = -0.0981383;
+  //   float X = (pt-163.7)/100;//(x-meanPt)/100
+  //   correction = p0+p1*X+p2*X*X+p3*X*X*X;
 
   return correction;
 }
@@ -674,15 +674,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
   ////////////////////
 
   cout << "Using corrections from llrCorrections_Fall14_v12_MVAIso.root" << endl;
-//   cout << "Using corrections from llrCorrections_Fall14_v11_MVAIso.root" << endl;
-//   cout << "Using corrections from llrCorrections_Fall14_v10_MVAIso.root" << endl;
-//   cout << "Using corrections from llrCorrections_Summer14_v9_MVAIso.root" << endl;
+  //   cout << "Using corrections from llrCorrections_Fall14_v11_MVAIso.root" << endl;
+  //   cout << "Using corrections from llrCorrections_Fall14_v10_MVAIso.root" << endl;
+  //   cout << "Using corrections from llrCorrections_Summer14_v9_MVAIso.root" << endl;
   //cout << "Using corrections from llrCorrections_Winter13_v7_MVAIso.root" << endl;
   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v12_MVAIso.root");
-//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
-//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root");
-//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root");
-//   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
+  //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
+  //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v10_MVAIso.root");
+  //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer14_v9_MVAIso.root");
+  //   TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v8_MVAIso.root");
   //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Winter13_v7_MVAIso.root");
   //TFile corrections("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Summer13_v6.root");
   
@@ -1277,10 +1277,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("passL1etmCutABCDown", &passL1etmCutABCDown_,"passL1etmCutABCDown/F");//ND
 
   // CALO MET //
-//   outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
-//   outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
-//   outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
-//   outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
+  //   outTreePtOrd->Branch("caloMEtUncorrNoTau",   &caloMEtUncorrNoTau_,  "caloMEtUncorrNoTau/F");//MB
+  //   outTreePtOrd->Branch("caloMEtNoTau",         &caloMEtNoTau_,        "caloMEtNoTau/F");//MB
+  //   outTreePtOrd->Branch("caloMEtUncorrNoTauPhi",   &caloMEtUncorrNoTauPhi_,  "caloMEtUncorrNoTauPhi/F");//MB
+  //   outTreePtOrd->Branch("caloMEtNoTauPhi",         &caloMEtNoTauPhi_,        "caloMEtNoTauPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHF",          &caloMEtNoHF_,         "caloMEtNoHF/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFPhi",       &caloMEtNoHFPhi_,      "caloMEtNoHFPhi/F");//MB
   outTreePtOrd->Branch("caloMEtNoHFUncorr",    &caloMEtNoHFUncorr_,   "caloMEtNoHFUncorr/F");//MB
@@ -1299,7 +1299,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   outTreePtOrd->Branch("combRelIsoLeg1Rho",  &combRelIsoLeg1Rho,"combRelIsoLeg1Rho/F");
   outTreePtOrd->Branch("combRelIsoLeg1DBeta",&combRelIsoLeg1DBeta,"combRelIsoLeg1DBeta/F");
   outTreePtOrd->Branch("combRelIsoLeg1DBetav2",&combRelIsoLeg1DBetav2,"combRelIsoLeg1DBetav2/F");
-//   outTreePtOrd->Branch("isoLeg1MVA",         &isoLeg1MVA_,"isoLeg1MVA/F");
+  //   outTreePtOrd->Branch("isoLeg1MVA",         &isoLeg1MVA_,"isoLeg1MVA/F");
   outTreePtOrd->Branch("combIsoLeg2",        &combIsoLeg2,"combIsoLeg2/F");
   outTreePtOrd->Branch("rhoFastJet",         &rhoFastJet_,"rhoFastJet/F");
 
@@ -1633,8 +1633,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
   cout<< "crossSection " << crossSection << " pb ==> scaleFactor " << scaleFactor << endl;
 
   // jets
-//   currentTree->SetBranchStatus("l1JetsP4"  ,1);
-//   currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
+  //   currentTree->SetBranchStatus("l1JetsP4"  ,1);
+  //   currentTree->SetBranchStatus("caloJetsMatchedP4"  ,1);
   currentTree->SetBranchStatus("jetsP4"                ,0);
   currentTree->SetBranchStatus("jetsIDP4"              ,1);
   currentTree->SetBranchStatus("jetsIDUpP4"            ,1);
@@ -1690,7 +1690,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchStatus("chIsoPULeg1v2"         ,1);
   currentTree->SetBranchStatus("nhIsoPULeg1v2"         ,1);
   currentTree->SetBranchStatus("phIsoPULeg1v2"         ,1);
-//   currentTree->SetBranchStatus("isoLeg1MVA"            ,1);
+  //   currentTree->SetBranchStatus("isoLeg1MVA"            ,1);
 
   currentTree->SetBranchStatus("chIsoLeg2"             ,1);
   currentTree->SetBranchStatus("nhIsoLeg2"             ,0);
@@ -1825,7 +1825,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     currentTree->SetBranchStatus("vetoMuonsP4"        ,1);
     currentTree->SetBranchStatus("vetoElectronsP4"    ,1);
     currentTree->SetBranchStatus("vetoElectronsID"    ,1);//NewEleID
-  // currentTree->SetBranchStatus("vetoTausP4"         ,1);
+    // currentTree->SetBranchStatus("vetoTausP4"         ,1);
   }
 
   // event-dependent variables
@@ -1864,14 +1864,14 @@ void fillTrees_MuTauStream(TChain* currentTree,
       currentTree->SetBranchStatus("topPtWeightDown"      ,1);
     }
   // triggers
-//   currentTree->SetBranchStatus("tauXTriggers"          ,1);
-//   currentTree->SetBranchStatus("triggerBits"           ,1);
+  //   currentTree->SetBranchStatus("tauXTriggers"          ,1);
+  //   currentTree->SetBranchStatus("triggerBits"           ,1);
   currentTree->SetBranchStatus("triggerPaths"          ,1);
   currentTree->SetBranchStatus("HLTfiltersMu"          ,1);
   currentTree->SetBranchStatus("HLTfiltersTau"         ,1);
   currentTree->SetBranchStatus("HLTfiltersTauJet"      ,1);
-//   currentTree->SetBranchStatus("trgTaus"               ,1);//MB
-//   currentTree->SetBranchStatus("trgTauId"              ,1);//MB
+  //   currentTree->SetBranchStatus("trgTaus"               ,1);//MB
+  //   currentTree->SetBranchStatus("trgTauId"              ,1);//MB
 
   cout << "SetBranchStatus done" << endl;
 
@@ -1893,8 +1893,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
     currentTree->SetBranchAddress("jetsIDP4",          &jets);
 
   /*
-  std::vector< LV >* jets_v2        = new std::vector< LV >();
-  currentTree->SetBranchAddress("jetsIDL1OffsetP4",&jets_v2);
+    std::vector< LV >* jets_v2        = new std::vector< LV >();
+    currentTree->SetBranchAddress("jetsIDL1OffsetP4",&jets_v2);
   */
 
   std::vector< float >* jetPUMVA =  new std::vector< float >();
@@ -1909,11 +1909,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
   std::vector< float >* jetQuarkGluonGen =  new std::vector< float >();
   currentTree->SetBranchAddress("jetQuarkGluonGen", &jetQuarkGluonGen);
 
-//   std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
-//   currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
+  //   std::vector< LV >* caloJetsMatchedP4    = new std::vector< LV >();
+  //   currentTree->SetBranchAddress("caloJetsMatchedP4",     &caloJetsMatchedP4);
 
-//   std::vector< LV >* l1JetsP4    = new std::vector< LV >();
-//   currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
+  //   std::vector< LV >* l1JetsP4    = new std::vector< LV >();
+  //   currentTree->SetBranchAddress("l1JetsP4",     &l1JetsP4);
 
   std::vector< LV >* diTauLegsP4    = new std::vector< LV >();
   currentTree->SetBranchAddress("diTauLegsP4",     &diTauLegsP4);
@@ -1964,15 +1964,15 @@ void fillTrees_MuTauStream(TChain* currentTree,
   std::map< string, int >* HLTfiltersTauJet = new std::map< string, int >();
   currentTree->SetBranchAddress("HLTfiltersTauJet",    &HLTfiltersTauJet);
 
-//   std::vector< int >* tauXTriggers  = new std::vector< int >();
-//   currentTree->SetBranchAddress("tauXTriggers",    &tauXTriggers);
-//   std::vector< int >* triggerBits   = new std::vector< int >();
-//   currentTree->SetBranchAddress("triggerBits",     &triggerBits);
+  //   std::vector< int >* tauXTriggers  = new std::vector< int >();
+  //   currentTree->SetBranchAddress("tauXTriggers",    &tauXTriggers);
+  //   std::vector< int >* triggerBits   = new std::vector< int >();
+  //   currentTree->SetBranchAddress("triggerBits",     &triggerBits);
 
-//   std::vector< LV >* trgTaus        = new std::vector< LV >();//MB
-//   currentTree->SetBranchAddress("trgTaus",         &trgTaus);//MB
-//   std::vector< int >* trgTauId   = new std::vector< int >();//MB
-//   currentTree->SetBranchAddress("trgTauId",        &trgTauId);//MB
+  //   std::vector< LV >* trgTaus        = new std::vector< LV >();//MB
+  //   currentTree->SetBranchAddress("trgTaus",         &trgTaus);//MB
+  //   std::vector< int >* trgTauId   = new std::vector< int >();//MB
+  //   currentTree->SetBranchAddress("trgTauId",        &trgTauId);//MB
 
   std::vector< double >* jetsBtagHE = new std::vector< double >();
   currentTree->SetBranchAddress("jetsBtagHE",      &jetsBtagHE);
@@ -2049,7 +2049,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   float chIsoLeg1,nhIsoLeg1,phIsoLeg1; 
   float chIsoPULeg1,nhIsoPULeg1,phIsoPULeg1; 
   float allChIsoLeg1;
-//   float isoLeg1MVA;
+  //   float isoLeg1MVA;
   int parton, genPartMult, leadGenPartPdg, hepNUP; 
   float leadGenPartPt;
   ULong64_t event,run,lumi;
@@ -2073,7 +2073,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
   currentTree->SetBranchAddress("nhIsoPULeg1v2",        &nhIsoPULeg1);
   currentTree->SetBranchAddress("phIsoPULeg1v2",        &phIsoPULeg1);
   currentTree->SetBranchAddress("elecIsoLeg1v2",        &allChIsoLeg1);
-//   currentTree->SetBranchAddress("isoLeg1MVA",           &isoLeg1MVA);
+  //   currentTree->SetBranchAddress("isoLeg1MVA",           &isoLeg1MVA);
   currentTree->SetBranchAddress("rhoFastJet",           &rhoFastJet);
 
   currentTree->SetBranchAddress("dxy1",                 &dxy1);
@@ -2405,9 +2405,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //POWHEG
       TString HistoName_mhmodplusPOWHEG = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
       TString HistoName_mhmodplusPOWHEG_ScaleUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_scaleUp", MSSMmH, MSSMmH);
-//       TString HistoName_mhmodplusPOWHEG_ScaleUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
+      //       TString HistoName_mhmodplusPOWHEG_ScaleUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
       TString HistoName_mhmodplusPOWHEG_ScaleDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_scaleDown", MSSMmH, MSSMmH);
-//       TString HistoName_mhmodplusPOWHEG_ScaleDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
+      //       TString HistoName_mhmodplusPOWHEG_ScaleDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_central", MSSMmH, MSSMmH);
       TString HistoName_mhmodplusPOWHEG_tanBetaUp = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaHigh", MSSMmH, MSSMmH);
       TString HistoName_mhmodplusPOWHEG_tanBetaDown = Form("A_mA%d_mu200/mssmHiggsPtReweight_A_mA%d_mu200_tanBetaLow", MSSMmH, MSSMmH);
 
@@ -2491,21 +2491,21 @@ void fillTrees_MuTauStream(TChain* currentTree,
   MAPDITAU_run mapDiTau;
 
   // P4s for tau removal
-//   LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
+  //   LV caloMEtUncorrNoTauP4, caloMEtNoTauP4, L1etmNoTauP4;
 
   ///////////////////////
   // LOOP OVER ENTRIES //
   ///////////////////////
 
   for(int n = n1 ; n < n2 ; n++) {
-//     cout<<"n/n2 = "<<n<<"/"<<n2<<endl;
-//   for (int n = 0; n < nEntries ; n++) {
-//   for (int n = 0; n < 10000 ; n++) {
+    //     cout<<"n/n2 = "<<n<<"/"<<n2<<endl;
+    //   for (int n = 0; n < nEntries ; n++) {
+    //   for (int n = 0; n < 10000 ; n++) {
 
     currentTree->GetEntry(n);
-//     cout<<"n = "<<n<<endl;
+    //     cout<<"n = "<<n<<endl;
     if(n%1000==0) cout << n <<"/"<<(n2-n1)<< endl;
-//     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
+    //     if(n%1000==0) cout << n <<"/"<<nEntries<< endl;
 
     // APPLY JSON SELECTION //
     isGoodRun=true;
@@ -2558,19 +2558,19 @@ void fillTrees_MuTauStream(TChain* currentTree,
       }
 
 
-//     if( sample_.find("DYJets")!=string::npos  || 
-// 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
-// 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
-//         ) {
-//       dyFinalState=false;
-//       if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1 && isTauLegMatchedToLep==0); }
-//       else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep>0); }
-//       else if ( sample_.find("MuToTau") !=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau); }
-//       else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau); }
-//       else if(  sample_.find("ZTTJ")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0); }
-//       else continue;
-//       if(!dyFinalState) continue;
-//     }
+    //     if( sample_.find("DYJets")!=string::npos  || 
+    // 	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+    // 	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+    //         ) {
+    //       dyFinalState=false;
+    //       if(       sample_.find("TauTau")  !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==1 && isTauLegMatchedToLep==0); }
+    //       else if(  sample_.find("ZTTL")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep>0); }
+    //       else if ( sample_.find("MuToTau") !=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && leptFakeTau); }
+    //       else if ( sample_.find("JetToTau")!=string::npos ) { dyFinalState=(abs(genDecay)!=(23*15) && !leptFakeTau); }
+    //       else if(  sample_.find("ZTTJ")    !=string::npos ) { dyFinalState=(abs(genDecay)==(23*15) && isTauLegMatched==0 && isTauLegMatchedToLep==0); }
+    //       else continue;
+    //       if(!dyFinalState) continue;
+    //     }
     ///////////////////////////
 
     /////////////////////////    
@@ -2595,13 +2595,19 @@ void fillTrees_MuTauStream(TChain* currentTree,
       {
 	weightForHighPtTauEfficiencyMSSMSignalsUp = 1+0.20/1000.*(*genDiTauLegsP4)[1].Pt();
 	weightForHighPtTauEfficiencyMSSMSignalsDown = 1-0.20/1000.*(*genDiTauLegsP4)[1].Pt();
+// 	cout<<"(*genDiTauLegsP4)[1].Pt() = "<<(*genDiTauLegsP4)[1].Pt()<<endl;
+// 	if(event==400035)
+// 	  {
+// 	    cout<<"(*genDiTauLegsP4)[1].Pt() = "<<(*genDiTauLegsP4)[1].Pt()<<endl;
+// 	    cout<<"weightForHighPtTauEfficiencyMSSMSignalsUp = "<<weightForHighPtTauEfficiencyMSSMSignalsUp<<endl;
+// 	  }
       }
     else if(!SampleT.Contains("SUSY") && (SampleT.Contains("VBFH")||SampleT.Contains("GGFH")||SampleT.Contains("VH")))
       {
 	weightForHighPtTauEfficiencySMSignalsUp = 1+0.20/1000.*(*genDiTauLegsP4)[1].Pt();
 	weightForHighPtTauEfficiencySMSignalsDown = 1-0.20/1000.*(*genDiTauLegsP4)[1].Pt();
-// 	cout<<"weightForHighPtTauEfficiencySMSignalsUp = "<<weightForHighPtTauEfficiencySMSignalsUp<<endl;
-// 	cout<<"weightForHighPtTauEfficiencySMSignalsDown = "<<weightForHighPtTauEfficiencySMSignalsDown<<endl;
+	// 	cout<<"weightForHighPtTauEfficiencySMSignalsUp = "<<weightForHighPtTauEfficiencySMSignalsUp<<endl;
+	// 	cout<<"weightForHighPtTauEfficiencySMSignalsDown = "<<weightForHighPtTauEfficiencySMSignalsDown<<endl;
 
       }
 
@@ -2692,7 +2698,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	  nJets20BTaggedLoose++ ;
 	}
       if( (*jets)[indexes[v]].Pt() > 20 && TMath::Abs((*jets)[indexes[v]].Eta())<2.4){ 
-// 	int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
+	// 	int jetFlavour = ((*bQuark)[indexes[v]] > 0) ? 5 : 1;
 	int jetFlavour = int((*bQuark)[indexes[v]]);
         //bool isBtag = isbtagged(isbQuark, (*jetsBtagCSV)[indexes[v]], isData, kNo, kNo); 
 	bool isBtag = btsf->isbtagged((*jets)[indexes[v]].Pt(), (*jets)[indexes[v]].Eta(), (*jetsBtagCSV)[indexes[v]], jetFlavour, isData ,kNo, kNo, true);
@@ -2804,9 +2810,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       eta1 = (*jets)[lead].Eta();
       phi1 = (*jets)[lead].Phi();
       /*
-      eta1_v2 = (*jets_v2)[lead].Eta();
-      pt1_v2  = (*jets_v2)[lead].Pt();
-      phi1_v2 = (*jets_v2)[lead].Phi();
+	eta1_v2 = (*jets_v2)[lead].Eta();
+	pt1_v2  = (*jets_v2)[lead].Pt();
+	phi1_v2 = (*jets_v2)[lead].Phi();
       */      
       dPhiL1J1 =  abs((*diTauLegsP4)[0].Phi()-phi1) > TMath::Pi() ? 
 	-abs( (*diTauLegsP4)[0].Phi()-phi1 ) + 2*TMath::Pi()  :
@@ -2847,9 +2853,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	phi2 = (*jets)[trail].Phi();
 
 	/*
-	pt2_v2  = (*jets_v2)[trail].Pt();
-	eta2_v2 = (*jets_v2)[trail].Eta();
-	phi2_v2 = (*jets_v2)[trail].Phi();
+	  pt2_v2  = (*jets_v2)[trail].Pt();
+	  eta2_v2 = (*jets_v2)[trail].Eta();
+	  phi2_v2 = (*jets_v2)[trail].Phi();
 	*/
 	
 	dPhiL1J2 =  abs((*diTauLegsP4)[0].Phi()-phi2) > TMath::Pi() ? 
@@ -2867,11 +2873,11 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	Mjj  = ((*jets)[lead]+(*jets)[trail]).M();
 
 	/*
-	Deta_v2 = TMath::Abs(eta1-eta2);
-	Dphi_v2 = TMath::Abs((*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi()) > TMath::Pi() ? 
+	  Deta_v2 = TMath::Abs(eta1-eta2);
+	  Dphi_v2 = TMath::Abs((*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi()) > TMath::Pi() ? 
 	  -TMath::Abs( (*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi() ) + 2*TMath::Pi()  :
 	  TMath::Abs( (*jets_v2)[lead].Phi()-(*jets_v2)[trail].Phi() ) ;
-	Mjj_v2  = ((*jets_v2)[lead]+(*jets_v2)[trail]).M();
+	  Mjj_v2  = ((*jets_v2)[lead]+(*jets_v2)[trail]).M();
 	*/
 	
 	jetsBtagHE2 = (*jetsBtagHE)[trail];
@@ -2901,7 +2907,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	diJetPhi =  //((*jets)[lead]-(*jets)[trail]).Phi();
 	  TMath::Abs(  ((*jets)[lead] - (*jets)[trail]).Phi() ) > TMath::Pi() ? 
 	  -TMath::Abs( ((*jets)[lead] - (*jets)[trail]).Phi() ) + 2*TMath::Pi()  :
-	   TMath::Abs( ((*jets)[lead] - (*jets)[trail]).Phi() ) ;
+	  TMath::Abs( ((*jets)[lead] - (*jets)[trail]).Phi() ) ;
 	dPhiHjet =  //((*jets)[lead]+(*jets)[trail]).Phi() - ((*diTauVisP4)[0] + METP4[1]).Phi() ;
 	  TMath::Abs(  ((*jets)[lead]+(*jets)[trail]).Phi() - ((*diTauVisP4)[0] + (*METP4)[1]).Phi() ) > TMath::Pi() ? 
 	  -TMath::Abs( ((*jets)[lead]+(*jets)[trail]).Phi() - ((*diTauVisP4)[0] + (*METP4)[1]).Phi() ) + 2*TMath::Pi()  :
@@ -3052,22 +3058,22 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     // genMass
     /*
-    genMass = 0;
-    genTrueTau1Pt = -99.;
-    genTrueTau1Eta = -99.;
-    genTrueTau1Phi = -99.;
-    genTrueTau2Pt = -99.;
-    genTrueTau2Eta = -99.;
-    genTrueTau2Phi = -99.;
+      genMass = 0;
+      genTrueTau1Pt = -99.;
+      genTrueTau1Eta = -99.;
+      genTrueTau1Phi = -99.;
+      genTrueTau2Pt = -99.;
+      genTrueTau2Eta = -99.;
+      genTrueTau2Phi = -99.;
 
-    genTrueTau2DecaysLeptonically = -1 ;
-    genTrueTau1DecaysLeptonically = -1 ;
+      genTrueTau2DecaysLeptonically = -1 ;
+      genTrueTau1DecaysLeptonically = -1 ;
 
-    genTrueTau1Charge = -99 ;
-    genTrueTau2Charge = -99 ;
+      genTrueTau1Charge = -99 ;
+      genTrueTau2Charge = -99 ;
 
 
-    if(genTausP4->size()>1) {
+      if(genTausP4->size()>1) {
       genMass = ( (*genTausP4)[0] + (*genTausP4)[1] ).M();
 
       genTrueTau1Pt = (*genTausP4)[0].Pt();
@@ -3084,23 +3090,23 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
 
 
-    }
+      }
 
-    // genMu info
-    if(genDiTauLegsP4->size()>0) {
+      // genMu info
+      if(genDiTauLegsP4->size()>0) {
       genMuPt   = (*genDiTauLegsP4)[0].Pt();
       genMuEta  = (*genDiTauLegsP4)[0].Eta();
       genMuPhi  = (*genDiTauLegsP4)[0].Phi();
-    }
-    else genMuPt = genMuEta = -99;
+      }
+      else genMuPt = genMuEta = -99;
     
-    //genTau Info
-    if(genDiTauLegsP4->size()>1) {
+      //genTau Info
+      if(genDiTauLegsP4->size()>1) {
       genTauPt   = (*genDiTauLegsP4)[1].Pt();
       genTauEta  = (*genDiTauLegsP4)[1].Eta();
       genTauPhi  = (*genDiTauLegsP4)[1].Phi();
-    }
-    else genTauPt = genTauEta = -99;
+      }
+      else genTauPt = genTauEta = -99;
     */
 
     visGenTauMass = visibleGenTauMass;
@@ -3212,48 +3218,48 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }
 
 
-//     ////////////////////////////////////////////////
-//     // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
+    //     ////////////////////////////////////////////////
+    //     // Remove Tau contributions in L1/Calo MET using L1Jets/CaloJets matched to taus
 
-//     // use rawEtL1Jet(et,eta)
+    //     // use rawEtL1Jet(et,eta)
 
-//     // Initialization
-//     caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
-//     caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
+    //     // Initialization
+    //     caloMEtUncorrNoTauP4 = (*caloMETNoHFP4)[0];
+    //     caloMEtNoTauP4       = (*caloMETNoHFP4)[1];
 
-//     if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
-//     else                        L1etmNoTauP4 = (*l1ETMP4)[1];
+    //     if(!sample.Contains("Emb")) L1etmNoTauP4 = (*l1ETMP4)[0];
+    //     else                        L1etmNoTauP4 = (*l1ETMP4)[1];
 
-//     if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
+    //     if( SELTAU && tightestAntiMuWP>2 && hpsDB3H<1.5 ) {
 
-//       // L1Jets matching
-//       if(l1JetsP4->size()>0) {
-// 	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
-// 	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
-// 	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
-// 	}
-//       }
+    //       // L1Jets matching
+    //       if(l1JetsP4->size()>0) {
+    // 	for(uint iJ=0 ; iJ<l1JetsP4->size() ; iJ++) {
+    // 	  if( deltaR( (*l1JetsP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 )
+    // 	    L1etmNoTauP4 += unfoldL1JetP4( (*l1JetsP4)[iJ] );
+    // 	}
+    //       }
 
-//       // CaloJets matching
-//       if(caloJetsMatchedP4->size()>0) {
-// 	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
-// 	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
-// 	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
-// 	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
-// 	  }
-// 	}
-//       }
-//     }
+    //       // CaloJets matching
+    //       if(caloJetsMatchedP4->size()>0) {
+    // 	for(uint iJ=0 ; iJ<caloJetsMatchedP4->size() ; iJ++) {
+    // 	  if( deltaR( (*caloJetsMatchedP4)[iJ] , (*diTauLegsP4)[1] ) < 0.3 ) {
+    // 	    caloMEtNoTauP4       += (*caloJetsMatchedP4)[iJ];
+    // 	    caloMEtUncorrNoTauP4 += (*caloJetsMatchedP4)[iJ];
+    // 	  }
+    // 	}
+    //       }
+    //     }
 
-//     caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
-//     caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
-//     L1etmNoTau_         = L1etmNoTauP4.Et() ;
+    //     caloMEtNoTau_       = caloMEtNoTauP4.Et() ;
+    //     caloMEtUncorrNoTau_ = caloMEtUncorrNoTauP4.Et() ;
+    //     L1etmNoTau_         = L1etmNoTauP4.Et() ;
 
-//     caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
-//     caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
-//     L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
+    //     caloMEtNoTauPhi_       = caloMEtNoTauP4.Phi() ;
+    //     caloMEtUncorrNoTauPhi_ = caloMEtUncorrNoTauP4.Phi() ;
+    //     L1etmNoTauPhi_         = L1etmNoTauP4.Phi() ;
 
-//     ////////////////////////////////////////////////  
+    //     ////////////////////////////////////////////////  
     
 
     MEtCov00   = (*metSgnMatrix)[0]; 
@@ -3284,40 +3290,40 @@ void fillTrees_MuTauStream(TChain* currentTree,
     }
     //==========================================
 
-      /*
-    TMatrixD* metsig = new TMatrixD(2,2);
-    (*metsig)[0][0] = (*metSgnMatrix)[0]; 
-    (*metsig)[0][1] = (*metSgnMatrix)[1]; 
-    (*metsig)[1][0] = (*metSgnMatrix)[1]; 
-    (*metsig)[1][1] = (*metSgnMatrix)[2]; */
+    /*
+      TMatrixD* metsig = new TMatrixD(2,2);
+      (*metsig)[0][0] = (*metSgnMatrix)[0]; 
+      (*metsig)[0][1] = (*metSgnMatrix)[1]; 
+      (*metsig)[1][0] = (*metSgnMatrix)[1]; 
+      (*metsig)[1][1] = (*metSgnMatrix)[2]; */
 
     // NO NEED FOR STANDALONE
     /* 
-    NSVfitStandalone::Vector measuredMET( (*METP4)[1].Px(), (*METP4)[1].Py(), 0);
-    std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons;
-    NSVfitStandalone::LorentzVector p1( (*diTauLegsP4)[1] );
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,p1));    
-    NSVfitStandalone::LorentzVector p2( (*diTauLegsP4)[0] );
-    measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,p2));    
-    unsigned int flagSA = 0;
-    NSVfitStandaloneAlgorithm algo(measuredTauLeptons,measuredMET,*metsig,flagSA);
-    //algo.maxObjFunctionCalls(5000);
-    algo.addLogM(false);
-    if(DOSVFITSTANDALONE) {
-      //algo.fit();
-      algo.integrate();
-    }
-    if(DOSVFITSTANDALONE){
-      diTauSVFitMassSA    =  algo.getMass();//algo.fittedDiTauSystem().mass();
-      diTauSVFitMassErrSA = -99;//algo.massUncert();
-      etaTau1Fit          = -99;//((algo.fittedTauLeptons())[1]).Eta();
-      etaTau2Fit          = -99;//((algo.fittedTauLeptons())[0]).Eta();
-      phiTau1Fit          = -99;//((algo.fittedTauLeptons())[1]).Phi();
-      phiTau2Fit          = -99;//((algo.fittedTauLeptons())[0]).Phi();
-      ptTau1Fit           = -99;//((algo.fittedTauLeptons())[1]).Pt();
-      ptTau2Fit           = -99;//((algo.fittedTauLeptons())[0]).Pt();
-    }
-    else{
+       NSVfitStandalone::Vector measuredMET( (*METP4)[1].Px(), (*METP4)[1].Py(), 0);
+       std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons;
+       NSVfitStandalone::LorentzVector p1( (*diTauLegsP4)[1] );
+       measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,p1));    
+       NSVfitStandalone::LorentzVector p2( (*diTauLegsP4)[0] );
+       measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,p2));    
+       unsigned int flagSA = 0;
+       NSVfitStandaloneAlgorithm algo(measuredTauLeptons,measuredMET,*metsig,flagSA);
+       //algo.maxObjFunctionCalls(5000);
+       algo.addLogM(false);
+       if(DOSVFITSTANDALONE) {
+       //algo.fit();
+       algo.integrate();
+       }
+       if(DOSVFITSTANDALONE){
+       diTauSVFitMassSA    =  algo.getMass();//algo.fittedDiTauSystem().mass();
+       diTauSVFitMassErrSA = -99;//algo.massUncert();
+       etaTau1Fit          = -99;//((algo.fittedTauLeptons())[1]).Eta();
+       etaTau2Fit          = -99;//((algo.fittedTauLeptons())[0]).Eta();
+       phiTau1Fit          = -99;//((algo.fittedTauLeptons())[1]).Phi();
+       phiTau2Fit          = -99;//((algo.fittedTauLeptons())[0]).Phi();
+       ptTau1Fit           = -99;//((algo.fittedTauLeptons())[1]).Pt();
+       ptTau2Fit           = -99;//((algo.fittedTauLeptons())[0]).Pt();
+       }
+       else{
     */
     diTauSVFitMassSA    = -99; 
     diTauSVFitMassErrSA = -99;
@@ -3351,7 +3357,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	cout<<"END ISO FOR ABDOLLAH = "<<endl;
       }
 
-//     isoLeg1MVA_            = isoLeg1MVA;
+    //     isoLeg1MVA_            = isoLeg1MVA;
     float EffArea          = TMath::Pi()*0.4*0.4;
     combRelIsoLeg1Rho      = std::max(((chIsoLeg1+nhIsoLeg1+phIsoLeg1) - rhoNeutralFastJet*EffArea),float(0.0))/(*diTauLegsP4)[0].Pt();
     combIsoLeg2            =  ( chIsoLeg2 + std::max( phIsoLeg2 - rhoFastJet*TMath::Pi()*0.5*0.5, 0.0) ) ;    
@@ -3395,9 +3401,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
     if(sample.Contains("tauPolarOff")) TauSpinnerWeight_ = TauSpinnerWeight ;
     else TauSpinnerWeight_ = 1. ;
 
-//     cout<<"embedding weight = "<<embeddingWeight_<<endl;
-//     cout<<"tau spinner weight = "<<TauSpinnerWeight_<<endl;
-//     cout<<"ratio = "<<embeddingWeight_/TauSpinnerWeight_<<endl;
+    //     cout<<"embedding weight = "<<embeddingWeight_<<endl;
+    //     cout<<"tau spinner weight = "<<TauSpinnerWeight_<<endl;
+    //     cout<<"ratio = "<<embeddingWeight_/TauSpinnerWeight_<<endl;
 
     if(sample.Contains("Emb") && UnfoldDen1 && genTausP4->size()>1){
       float corrFactorEmbed = (UnfoldDen1->GetBinContent( UnfoldDen1->GetXaxis()->FindBin( (*genTausP4)[0].Eta() ) ,  UnfoldDen1->GetYaxis()->FindBin( (*genTausP4)[1].Eta() ) )); 
@@ -3425,7 +3431,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     //QCD -- new implementation by Olivier - Nov 14
     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v12_MVAIso.root");
-//     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
+    //     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/llrCorrections_Fall14_v11_MVAIso.root");
 
     //Get the functions
     TF1* QCDWeight_mutau_central = (TF1*)f_JetFakeCorrection.Get("QCDWeight_mutau_central");
@@ -3457,26 +3463,26 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     if(weightJetFakeW_<0.) weightJetFakeW_=0.;
     
-//     //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
-//     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
-//     if(f_JetFakeCorrection.IsZombie())
-//       cout << "Jet Fake correction file not available" << endl;   
-//     TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-//     TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-//     TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
-//     weightJetFakeQCD_=1;
-//     if( TMath::Abs(etaL2)<=1.2 )
-//       {
-// 	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
-//       }
-//     else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
-//       {
-// 	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
-//       }
-//     else if( TMath::Abs(etaL2)>1.7)
-//       {
-// 	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
-//       }
+    //     //jet->tau fake correction for antiiso events in the QCD estimation (taken from thth measurements
+    //     TFile f_JetFakeCorrection("/data_CMS/cms/htautau/PostMoriond/tools/QCDShapeCorrections/determineJetToTauFakeRate_MVAwLToldDMsTight.root");
+    //     if(f_JetFakeCorrection.IsZombie())
+    //       cout << "Jet Fake correction file not available" << endl;   
+    //     TF1 *JetFakeCorrectionEtaGt17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaGt17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    //     TF1 *JetFakeCorrectionEta12to17 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1Eta12to17/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    //     TF1 *JetFakeCorrectionEtaLt12 = (TF1*)f_JetFakeCorrection.Get("jetToTauFakeRate/inclusive/tau1EtaLt12/fitFunctionShape_tau1PtL_SSiso1_iso2_LooseBtag_div_SSrelaxed1_iso2_LooseBtag");
+    //     weightJetFakeQCD_=1;
+    //     if( TMath::Abs(etaL2)<=1.2 )
+    //       {
+    // 	weightJetFakeQCD_=JetFakeCorrectionEtaLt12->Eval(ptL2);
+    //       }
+    //     else if( TMath::Abs(etaL2)>1.2 && TMath::Abs(etaL2)<=1.7)
+    //       {
+    // 	weightJetFakeQCD_=JetFakeCorrectionEta12to17->Eval(ptL2);
+    //       }
+    //     else if( TMath::Abs(etaL2)>1.7)
+    //       {
+    // 	weightJetFakeQCD_=JetFakeCorrectionEtaGt17->Eval(ptL2);
+    //       }
 
     // Reweight W+Jets
     //cout << "SAMPLE : " << sample_ << endl;
@@ -3500,7 +3506,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       //Add a weight for tauPt reweighting , coefficiencts are from Andrew
       float ptTau_ = ptL2;
       if(ptTau_ > 200.)ptTau_ = 200.;
-//       weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
+      //       weightTauFakeWJet_ = 1.15743 - 0.00736136*ptTau_ + 0.000043699*ptTau_*ptTau_ - 0.0000001188*ptTau_*ptTau_*ptTau_;
       weightTauFakeWJet_ = getTauFakeCorrection(ptTau_);
       weightTauFakeWJetUp_ = weightTauFakeWJet_ + 0.50*(1.0 - weightTauFakeWJet_);
       weightTauFakeWJetDown_ = weightTauFakeWJet_ - 0.50*(1.0 - weightTauFakeWJet_);
@@ -3519,14 +3525,21 @@ void fillTrees_MuTauStream(TChain* currentTree,
       }
 
     // Reweight DY+Jets
-    if( sample_.find("DYJets")!=string::npos  || 
-	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
-	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
+    if( (sample_.find("DYJets")!=string::npos  || 
+	 sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	 sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos) && sample_.find("tauPolar")==string::npos
         ) {
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 1);//with TauSpinner weights - OD Sept 2014
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 0);//with buggy tauPolar - OD Sept 2014
+      //       weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 1);//with TauSpinner weights - OD Sept 2014
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
     }
+    else if(sample_.find("tauPolar")!=string::npos)
+      {
+	sampleWeight   = scaleFactor;
+	sampleWeightDY = 1; 
+// 	sampleWeightDY = scaleFactor; 
+      }
     ///////////////
 
     highPtWeightUp =1;
@@ -3771,10 +3784,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTIsoMu24_eta2p1 = isMatched ? 1. : 0. ;
 
       /*
-      isMatched = false;
-      for(int i=0 ; i<9 ; i++)
+	isMatched = false;
+	for(int i=0 ; i<9 ; i++)
 	isMatched = isMatched || (*triggerBits)[i]; // HLT_IsoMu18_eta2p1_LooseIsoPFTau20_v4-6 , HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v2-7
-      HLTx = isMatched ? 1.0 : 0.0 ;
+	HLTx = isMatched ? 1.0 : 0.0 ;
       */
 
       isMatched = false;
@@ -3791,10 +3804,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxQCD = isMatched ? 1.0 : 0.0 ;
 
       /*
-      isMatched = false;
-      for(int i=9 ; i<18 ; i++)
+	isMatched = false;
+	for(int i=9 ; i<18 ; i++)
 	isMatched = isMatched || (*triggerBits)[i]; // HLT_Mu18_eta2p1_LooseIsoPFTau20_v4-6 , HLT_Mu17_eta2p1_LooseIsoPFTau20_v2-7
-      HLTxQCD = isMatched ? 1.0 : 0.0 ;
+	HLTxQCD = isMatched ? 1.0 : 0.0 ;
       */
 
       HLTxSoft    = float((*triggerPaths)["HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1"]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1
@@ -3803,10 +3816,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxIsoMu8Tau20 = float((*triggerPaths)["HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v1"]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v1
 
       /*
-      HLTxSoft    = float((*triggerBits)[18]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1
-      HLTxQCDSoft = float((*triggerBits)[19]); // HLT_Mu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1
+	HLTxSoft    = float((*triggerBits)[18]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1
+	HLTxQCDSoft = float((*triggerBits)[19]); // HLT_Mu8_eta2p1_LooseIsoPFTau20_L1ETM26_v1
 
-      HLTxIsoMu8Tau20 = float((*triggerBits)[20]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v1
+	HLTxIsoMu8Tau20 = float((*triggerBits)[20]); // HLT_IsoMu8_eta2p1_LooseIsoPFTau20_v1
       */
 
       isMatched=false;
@@ -3818,10 +3831,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxIsoMu15ETM20 = isMatched ? 1.0 : 0.0 ;  // HLT_IsoMu15_eta2p1_L1ETM20_v3-7
 
       /*
-      isMatched=false;
-      for(int i=21 ; i<26 ; i++)
+	isMatched=false;
+	for(int i=21 ; i<26 ; i++)
 	isMatched = isMatched || (*triggerBits)[i];
-      HLTxIsoMu15ETM20 = isMatched ? 1.0 : 0.0 ;  // HLT_IsoMu15_eta2p1_L1ETM20_v3-7
+	HLTxIsoMu15ETM20 = isMatched ? 1.0 : 0.0 ;  // HLT_IsoMu15_eta2p1_L1ETM20_v3-7
       */
 
       isMatched = false; 
@@ -3836,10 +3849,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxDiTau = isMatched ? 1.0 : 0.0 ;
 
       /*
-      isMatched = false; 
-      for(int i=33 ; i<40 ; i++) 
+	isMatched = false; 
+	for(int i=33 ; i<40 ; i++) 
         isMatched = isMatched || (*triggerBits)[i]; // HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk5_eta2p1_v*, HLT_IsoMu18_eta2p1_MediumIsoPFTau25_Trk1_eta2p1_v*
-      HLTxDiTau = isMatched ? 1.0 : 0.0 ;
+	HLTxDiTau = isMatched ? 1.0 : 0.0 ;
       */
 
       // HLT filters matching
@@ -3849,9 +3862,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTmatch = isMatched ? 1.0 : 0.0 ;
 
       /*
-      isMatched = (((*tauXTriggers)[2]  && (*tauXTriggers)[20]) || // hltOverlapFilterIsoMu18LooseIsoPFTau20 (mu && tau)
-		   ((*tauXTriggers)[3]  && (*tauXTriggers)[21]));  // hltOverlapFilterIsoMu17LooseIsoPFTau20 (mu && tau)
-      HLTmatch = isMatched ? 1.0 : 0.0 ;
+	isMatched = (((*tauXTriggers)[2]  && (*tauXTriggers)[20]) || // hltOverlapFilterIsoMu18LooseIsoPFTau20 (mu && tau)
+	((*tauXTriggers)[3]  && (*tauXTriggers)[21]));  // hltOverlapFilterIsoMu17LooseIsoPFTau20 (mu && tau)
+	HLTmatch = isMatched ? 1.0 : 0.0 ;
       */
       
       //HLTmatchMu  = ((*tauXTriggers)[2] || (*tauXTriggers)[3]);
@@ -3860,8 +3873,8 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTmatchTau = ((*HLTfiltersTau)["hltOverlapFilterIsoMu18LooseIsoPFTau20"] || (*HLTfiltersTau)["hltOverlapFilterIsoMu17LooseIsoPFTau20"]);
 
       /*
-      HLTmatchMu  = ((*tauXTriggers)[14] || (*tauXTriggers)[18]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
-      HLTmatchTau = ((*tauXTriggers)[20] || (*tauXTriggers)[21]);
+	HLTmatchMu  = ((*tauXTriggers)[14] || (*tauXTriggers)[18]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+	HLTmatchTau = ((*tauXTriggers)[20] || (*tauXTriggers)[21]);
       */
 
       isMatched = (((*HLTfiltersMu)["hltOverlapFilterMu18LooseIsoPFTau20"]  && (*HLTfiltersTau)["hltOverlapFilterMu18LooseIsoPFTau20"]) || // hltOverlapFilterMu18LooseIsoPFTau20
@@ -3869,9 +3882,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTmatchQCD = isMatched ? 1.0 : 0.0 ;       
 
       /*
-      isMatched = (((*tauXTriggers)[4]  && (*tauXTriggers)[22]) || // hltOverlapFilterMu18LooseIsoPFTau20
-		   ((*tauXTriggers)[5]  && (*tauXTriggers)[23]));  // hltOverlapFilterMu17LooseIsoPFTau20
-      HLTmatchQCD = isMatched ? 1.0 : 0.0 ;   
+	isMatched = (((*tauXTriggers)[4]  && (*tauXTriggers)[22]) || // hltOverlapFilterMu18LooseIsoPFTau20
+	((*tauXTriggers)[5]  && (*tauXTriggers)[23]));  // hltOverlapFilterMu17LooseIsoPFTau20
+	HLTmatchQCD = isMatched ? 1.0 : 0.0 ;   
       */
 
       isMatched = (((*HLTfiltersMu)["hltOverlapFilterIsoMu8LooseIsoPFTau20"]  && (*HLTfiltersTau)["hltOverlapFilterIsoMu8LooseIsoPFTau20"]));  // hltOverlapFilterIsoMu8LooseIsoPFTau20
@@ -3879,9 +3892,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTmatchSoft = isMatched ? 1.0 : 0.0 ;
 
       /*
-      isMatched = (((*tauXTriggers)[7]  && (*tauXTriggers)[24]));  // hltOverlapFilterIsoMu8LooseIsoPFTau20
-      //isMatched &= (L1etm_>26); // MB is this x-check needed?
-      HLTmatchSoft = isMatched ? 1.0 : 0.0 ;
+	isMatched = (((*tauXTriggers)[7]  && (*tauXTriggers)[24]));  // hltOverlapFilterIsoMu8LooseIsoPFTau20
+	//isMatched &= (L1etm_>26); // MB is this x-check needed?
+	HLTmatchSoft = isMatched ? 1.0 : 0.0 ;
       */
 
       isMatched = (((*HLTfiltersMu)["hltOverlapFilterMu8LooseIsoPFTau20"]  && (*HLTfiltersTau)["hltOverlapFilterMu8LooseIsoPFTau20"]));  // hltOverlapFilterMu8LooseIsoPFTau20
@@ -3889,9 +3902,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;      
 
       /*
-      isMatched = (((*tauXTriggers)[11]  && (*tauXTriggers)[26]));  // hltOverlapFilterMu8LooseIsoPFTau20
-      //isMatched &= (L1etm_>26); // MB is this x-check needed?
-      HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;      
+	isMatched = (((*tauXTriggers)[11]  && (*tauXTriggers)[26]));  // hltOverlapFilterMu8LooseIsoPFTau20
+	//isMatched &= (L1etm_>26); // MB is this x-check needed?
+	HLTmatchQCDSoft = isMatched ? 1.0 : 0.0 ;      
       */
 
       HLTmatchIsoMu8Tau20  = float((*HLTfiltersMu)["hltOverlapFilterSingleIsoMu8LooseIsoPFTau20"] && (*HLTfiltersTau)["hltOverlapFilterSingleIsoMu8LooseIsoPFTau20"]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
@@ -3899,9 +3912,9 @@ void fillTrees_MuTauStream(TChain* currentTree,
 				    (*HLTfiltersMu)["hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15"] ); // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
 
       /*
-      HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9] && (*tauXTriggers)[25]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
-      HLTmatchIsoMu15ETM20 = float( (*tauXTriggers)[12] || // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10
-				    (*tauXTriggers)[13] ); // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
+	HLTmatchIsoMu8Tau20  = float((*tauXTriggers)[9] && (*tauXTriggers)[25]); // hltOverlapFilterSingleIsoMu8LooseIsoPFTau20
+	HLTmatchIsoMu15ETM20 = float( (*tauXTriggers)[12] || // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoFiltered10
+	(*tauXTriggers)[13] ); // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
       */
 
       //HLT matching for DiTau trigger measurement 
@@ -3919,7 +3932,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       /*
       //HLT matching for DiTau trigger measurement 
       HLTmatchDiTau       = float( ((*tauXTriggers)[16] && (*tauXTriggers)[27]) || // hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4 
-				   ((*tauXTriggers)[17] && (*tauXTriggers)[28])); //hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4
+      ((*tauXTriggers)[17] && (*tauXTriggers)[28])); //hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4
       HLTmatchDiTauMu     = float((*tauXTriggers)[15] || (*tauXTriggers)[18]); //hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10 
       HLTmatchDiTauTau    = float((*tauXTriggers)[27] || (*tauXTriggers)[28]); //hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4 or hltOverlapFilterIsoMu18PFTau25TrackPt1Prong4  
       HLTmatchDiTauL2     = float((*tauXTriggers)[29] && (*tauXTriggers)[30]); //hltL2Tau25eta2p1 and hltL2TauIsoFilter 
@@ -3994,7 +4007,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
       HLTxQCDSoft     = 1.0;
       HLTxIsoMu8Tau20 = 1.0;
 
-      if( !sample.Contains("Emb") || sample.Contains("TTJets-Embedded")  ) { // Check trigger matching only for MC
+      if( !sample.Contains("Emb")){// || sample.Contains("TTJets-Embedded")  ) { // Check trigger matching only for MC
 	
 	// L1 ETM
 	L1etmCorr_     = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
@@ -4068,32 +4081,32 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	HLTmatchDiTauL1     = float((*HLTfiltersTau)["l1tau1"]); //l1extra cenJet or TauJet
 
 	/*
-	HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[9]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
-	//HLTmatchMu           = float((*tauXTriggers)[2]);
-	HLTmatchMu           = float((*tauXTriggers)[1] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 || hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
-	HLTmatchTau          = float((*tauXTriggers)[9]);
-	HLTmatchIsoMu15ETM20 = float((*tauXTriggers)[4] && (L1etmCorr_>20));     // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
-	HLTmatchMu8          = float((*tauXTriggers)[3]); // hltL3fL1sMu3L3Filtered8
+	  HLTmatch             = float((*tauXTriggers)[2] && (*tauXTriggers)[9]) ; // hltOverlapFilterIsoMu17LooseIsoPFTau20
+	  //HLTmatchMu           = float((*tauXTriggers)[2]);
+	  HLTmatchMu           = float((*tauXTriggers)[1] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15 || hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+	  HLTmatchTau          = float((*tauXTriggers)[9]);
+	  HLTmatchIsoMu15ETM20 = float((*tauXTriggers)[4] && (L1etmCorr_>20));     // hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15
+	  HLTmatchMu8          = float((*tauXTriggers)[3]); // hltL3fL1sMu3L3Filtered8
 
-	HLTxMu17Mu8     = 1.0; // required only in embedded
+	  HLTxMu17Mu8     = 1.0; // required only in embedded
 
-	// emulate matching to SoftMu+L1ETM+Tau
-	isMatched = ( (*tauXTriggers)[3] &&  // HLT_Mu8 (hltL3fL1sMu3L3Filtered8)
-		      (*tauXTriggers)[8] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
-		      (*tauXTriggers)[13] );  // offline trgTau
+	  // emulate matching to SoftMu+L1ETM+Tau
+	  isMatched = ( (*tauXTriggers)[3] &&  // HLT_Mu8 (hltL3fL1sMu3L3Filtered8)
+	  (*tauXTriggers)[8] &&  // L1ExtraMu Pt>7, |eta|<2.1 (hltL3crIsoL1sMu12Eta2p1L1f0L2f12QL3f15QL3crIsoRhoFiltered0p15)
+	  (*tauXTriggers)[13] );  // offline trgTau
 
-	HLTmatchIsoMu8Tau20 = float(isMatched);
-	HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
-	//HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
-	HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
+	  HLTmatchIsoMu8Tau20 = float(isMatched);
+	  HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
+	  //HLTmatchSoft        = float(isMatched && L1etmCorr_>etmCut);
+	  HLTmatchQCDSoft     = float(isMatched && L1etmCorr_>etmCut);
 
 
-	//HLT matching for DiTau trigger measurement
-	HLTmatchDiTau       = float((*tauXTriggers)[6] && (*tauXTriggers)[10]) ; // hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
-        HLTmatchDiTauMu     = float((*tauXTriggers)[5] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
-        HLTmatchDiTauTau    = float((*tauXTriggers)[10]); //hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
-	HLTmatchDiTauL2     = float((*tauXTriggers)[11] && (*tauXTriggers)[12]); //hltL2Tau25eta2p1 and hltL2TauIsoFilter
-	HLTmatchDiTauL1     = float((*tauXTriggers)[13]); //l1extra cenJet or TauJet
+	  //HLT matching for DiTau trigger measurement
+	  HLTmatchDiTau       = float((*tauXTriggers)[6] && (*tauXTriggers)[10]) ; // hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
+	  HLTmatchDiTauMu     = float((*tauXTriggers)[5] || (*tauXTriggers)[7]); //hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoRhoFiltered0p15 or hltL3crIsoL1sMu16Eta2p1L1f0L2f16QL3f18QL3crIsoFiltered10
+	  HLTmatchDiTauTau    = float((*tauXTriggers)[10]); //hltOverlapFilterIsoMu18PFTau25TrackPt5Prong4
+	  HLTmatchDiTauL2     = float((*tauXTriggers)[11] && (*tauXTriggers)[12]); //hltL2Tau25eta2p1 and hltL2TauIsoFilter
+	  HLTmatchDiTauL1     = float((*tauXTriggers)[13]); //l1extra cenJet or TauJet
 	*/
 
 	passL1etmCut_       = float(L1etmCorr_>etmCut);
@@ -4108,6 +4121,22 @@ void fillTrees_MuTauStream(TChain* currentTree,
       }
       else { // embedded
 	HLTx = HLTxMu8 = HLTxIsoMu15ETM20 = HLTmatchMu = HLTmatchTau = HLTmatch = HLTmatchMu8 = HLTmatchSoft = HLTmatchQCDSoft = HLTmatchIsoMu15ETM20 = HLTmatchIsoMu8Tau20 = HLTmatchDiTau = HLTmatchDiTauL1 = HLTmatchDiTauL2 = HLTmatchDiTauMu = HLTmatchDiTauTau = 1.0;
+
+	if(sample.Contains("TTJets-Embedded"))
+	  {
+	    // Pile-Up
+	    puWeight2        = pileupWeight2(int(nPUVertices));  
+	    puWeight         = pileupWeight(nPUVertices, "");
+	    puWeightHCP      = pileupWeight(nPUVertices, "HCP");   
+	    puWeightD        = pileupWeight(nPUVertices, "D" );
+	    if(etmCut==20) {
+	      puWeightDLow  = pileupWeight(nPUVertices, "DLow" );
+	      puWeightDHigh = 1.0;
+	    } else {
+	      puWeightDLow  = 1.0;
+	      puWeightDHigh = pileupWeight(nPUVertices, "DHigh" );
+	    }
+	  }
 
 	HLTPFJet320 = 1. ;
 	HLTmatchPFJet320 = 1. ;
@@ -4138,7 +4167,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	// DoubleMu matching
 	isMatched = false;
 	isMatched = (*triggerPaths)["HLT_Mu17_Mu8_v16"]
-	  || (*triggerPaths)["HLT_Mu17_Mu8_v17"]
+	  || (*triggerPaths)["HLT_Mu17_Mu8_v17"]//this for MC Embedded
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v18"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v19"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v20"]
@@ -4150,7 +4179,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 	// DoubleMu matching
 	isMatched = false;
 	for(int i=26 ; i<33 ; i++)
-	  isMatched = isMatched || (*triggerBits)[i]; // 
+	isMatched = isMatched || (*triggerBits)[i]; // 
 	HLTxMu17Mu8 = isMatched ? 1.0 : 0.0 ;
 	*/
       }
@@ -4190,15 +4219,17 @@ void fillTrees_MuTauStream(TChain* currentTree,
       Double_t DataValEndcaps_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(ptL2);
       Double_t DataValEndcaps_400 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(400.);
       
-      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_pt;
-      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_pt;
+      if(ptL2>140. && ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_pt;
+      else if(ptL2>60. && ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_pt;
       else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_800;
       else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_400;
+      else HLTBugTauData = 1.;
 
-      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_pt;
-      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_pt;
+      if(ptL2>140. && ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_pt;
+      else if(ptL2>60. && ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_pt;
       else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_800;
       else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_400;
+      else HLTBugTauMC = 1.;
 
       if(HLTBugTauData<=0.)    HLTBugTauData = 0.;
       if(HLTBugTauMC<=0.)      HLTBugTauMC = 0.;
@@ -4225,13 +4256,13 @@ void fillTrees_MuTauStream(TChain* currentTree,
       weightDecayMode_ = 1.0;
 
       //Old Decay Mode correction (prior to Mar14)
-//       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
-// 	if(decayMode == 0) weightDecayMode_ = 0.88;
-//       }
-//       else{
-// 	if(isTauLegMatched>0 && decayMode == 0)
-// 	  weightDecayMode_ = 0.88; 
-//       }
+      //       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded")){
+      // 	if(decayMode == 0) weightDecayMode_ = 0.88;
+      //       }
+      //       else{
+      // 	if(isTauLegMatched>0 && decayMode == 0)
+      // 	  weightDecayMode_ = 0.88; 
+      //       }
 
       //Weight to correct for mis-modeling of the decay mode distribution between MC and data
       if( sample.Contains("Emb")  && !sample.Contains("TTJets-Embedded"))
@@ -4400,7 +4431,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     int nVetoLeptonNew = 0;
     for(size_t imu = 0; imu < vetoMuonsP4->size(); imu++){
       if(deltaR((*diTauLegsP4)[0], (*vetoMuonsP4)[imu]) > 0.3 && 
-// 	 deltaR((*diTauLegsP4)[1], (*vetoMuonsP4)[imu]) > 0.3 &&
+	 // 	 deltaR((*diTauLegsP4)[1], (*vetoMuonsP4)[imu]) > 0.3 &&
 	 (*vetoMuonsP4)[imu].Pt()>10){
 	nVetoLeptonOld++;
 	nVetoLeptonNew++;
@@ -4409,7 +4440,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
 
     for(size_t imu = 0; imu < vetoElectronsP4->size(); imu++){ 
       // if(deltaR((*diTauLegsP4)[0], (*vetoElectronsP4)[imu]) > 0.3 &&  
-//          deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 )
+      //          deltaR((*diTauLegsP4)[1], (*vetoElectronsP4)[imu]) > 0.3 )
       if((*vetoElectronsP4)[imu].Pt()>10&&
 	 ((*vetoElectronsID)[imu]==0 || (*vetoElectronsID)[imu]==2))
         nVetoLeptonOld++;
@@ -4440,7 +4471,7 @@ void fillTrees_MuTauStream(TChain* currentTree,
     isPFMuon_        = isPFMuon;
     isTightMuon_     = isTightMuon;
     muFlag_          = muFlag;
-//     vetoEvent_       = (nVetoLepton > 0) ? 1 : 0; //vetoEvent; 
+    //     vetoEvent_       = (nVetoLepton > 0) ? 1 : 0; //vetoEvent; 
     vetoEventOld_    = (nVetoLeptonOld > 0) ? 1 : 0; //vetoEvent; 
     vetoEventNew_    = (nVetoLeptonNew > 0) ? 1 : 0; //vetoEvent; //NewEleID
     parton_          = parton;
@@ -4489,21 +4520,21 @@ void fillTrees_MuTauStream(TChain* currentTree,
     //displaying Abdollah's info
     //run=1   lumi=353   event=187672   l1Pt=55.7683   l1eta=0.223352   l1Phi=1.14464   l2Pt=46.7634   l2Eta=0.108624   l2Phi=-1.29245   MVAMet=21.6821   numJet30=1   numBJet20=1   PU_Weight=1   npu=15   erightLepton_id_iso=0.973673   lepton_trg_Weight=0.985811   tau_Trg_Weight=0.985262
     cout<<"run="<<run
-	<<"\t event="<<event
-	<<"\t l1Pt="<<ptL1
-	<<"\t l1eta="<<etaL1
-	<<"\t l1Phi="<<phiL1
-	<<"\t l2Pt="<<ptL2
-	<<"\t l2eta="<<etaL2
-	<<"\t l2Phi="<<phiL2
- 	<<"\t MVAMet="<<MEtMVA
- 	<<"\t numJet30="<<nJets30
- 	<<"\t numBJet20="<<nJets20BTagged
- 	<<"\t PU_Weight="<<puWeight//OK
- 	<<"\t npu="<<nPUVertices_//OK
- 	<<"\t weightLepton_id_iso="<<SFMu//OK
- 	<<"\t lepton_trg_Weight="<<HLTweightMu
- 	<<"\t tau_Trg_Weight="<<HLTweightTau<<endl;
+    <<"\t event="<<event
+    <<"\t l1Pt="<<ptL1
+    <<"\t l1eta="<<etaL1
+    <<"\t l1Phi="<<phiL1
+    <<"\t l2Pt="<<ptL2
+    <<"\t l2eta="<<etaL2
+    <<"\t l2Phi="<<phiL2
+    <<"\t MVAMet="<<MEtMVA
+    <<"\t numJet30="<<nJets30
+    <<"\t numBJet20="<<nJets20BTagged
+    <<"\t PU_Weight="<<puWeight//OK
+    <<"\t npu="<<nPUVertices_//OK
+    <<"\t weightLepton_id_iso="<<SFMu//OK
+    <<"\t lepton_trg_Weight="<<HLTweightMu
+    <<"\t tau_Trg_Weight="<<HLTweightTau<<endl;
     */
 
     outTreePtOrd->Fill();
@@ -4544,17 +4575,17 @@ void fillTrees_MuTauStream(TChain* currentTree,
       delete h_lowmH_tanBetaDown ;
 
       //POWHEG
-//       delete h_mhmodplusPOWHEG ;
-//       delete h_mhmodplusPOWHEG_ScaleUp ;
-//       delete h_mhmodplusPOWHEG_ScaleDown ;
-//       delete h_mhmodplusPOWHEG_tanBetaUp ;
-//       delete h_mhmodplusPOWHEG_tanBetaDown ;
+      //       delete h_mhmodplusPOWHEG ;
+      //       delete h_mhmodplusPOWHEG_ScaleUp ;
+      //       delete h_mhmodplusPOWHEG_ScaleDown ;
+      //       delete h_mhmodplusPOWHEG_tanBetaUp ;
+      //       delete h_mhmodplusPOWHEG_tanBetaDown ;
     }
   
   delete jets; /*delete jets_v2;*/ delete diTauLegsP4; delete diTauVisP4; delete diTauSVfitP4; delete diTauCAP4; delete genDiTauLegsP4; delete genTausP4;
   delete genTausCharge; delete genTausDecayLeptonically;
   delete HLTfiltersMu; delete HLTfiltersTau, delete HLTfiltersTauJet ; delete triggerPaths;
-//   delete tauXTriggers; delete triggerBits;
+  //   delete tauXTriggers; delete triggerBits;
   delete METP4; delete jetsBtagHE; delete jetsBtagHP; delete jetsBtagCSV; delete jetsChNfraction; delete genVP4; delete genMETP4;
   delete gammadEta; delete gammadPhi; delete gammaPt; delete HqT;
   delete jetPUMVA; delete jetPUWP;
@@ -4578,10 +4609,10 @@ void fillTrees_MuTauStream(TChain* currentTree,
 //   ////////////// samples & x-sections & skim1 & skim2 /////////////
   
 
-  //samples.push_back("Run2011-MuTau-All_run");             crossSec.push_back( 0  );                          
-  //samples.push_back("Run2011-MuTau-LooseIso-All_run");    crossSec.push_back( 0  );                          
-  //samples.push_back("VBFH125-MuTau-8TeV-powheg-DR53X-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
-  //samples.push_back("DYJets-MuTau-50-madgraph-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
+//samples.push_back("Run2011-MuTau-All_run");             crossSec.push_back( 0  );                          
+//samples.push_back("Run2011-MuTau-LooseIso-All_run");    crossSec.push_back( 0  );                          
+//samples.push_back("VBFH125-MuTau-8TeV-powheg-DR53X-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
+//samples.push_back("DYJets-MuTau-50-madgraph-PUS10_run"); crossSec.push_back(1.578 * 0.0632 * 1.0 * 0.0780138080726);
 
 //   makeTrees_MuTau("",             samples[0], crossSec[0], 
 // 		  "/data_CMS/cms/htautau/PostMoriond/TREES/MuTau/HiggsSM/VBF125/", 
@@ -4668,13 +4699,13 @@ int main(int argc, const char* argv[])
   AutoLibraryLoader::enable();
   
 
-//--- parse command-line arguments
+  //--- parse command-line arguments
   if ( argc < 2 ) {
     std::cout << "Usage: " << argv[0] << " [parameters.py]" << std::endl;
     return 0;
   }
 
-//--- read python configuration parameters
+  //--- read python configuration parameters
   if ( !edm::readPSetsFrom(argv[1])->existsAs<edm::ParameterSet>("process") ) 
     throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
       << "No ParameterSet 'process' found in configuration file = " << argv[1] << " !!\n";
@@ -4711,7 +4742,7 @@ int main(int argc, const char* argv[])
   double nEventsRead = 0;
   for ( vstring::const_iterator inputFileName = inputFiles.files().begin();
 	inputFileName != inputFiles.files().end(); ++inputFileName ) {
-//--- open input file
+    //--- open input file
     TFile* inputFile = TFile::Open(inputFileName->data());
     if ( !inputFile ) 
       throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
@@ -4719,11 +4750,11 @@ int main(int argc, const char* argv[])
 
     TString histoName("allEventsFilter/totalEvents");
     TH1D* histo =(TH1D*)inputFile->Get(histoName);
-//     cout<<"histo "<<histo->GetEntries();
+    //     cout<<"histo "<<histo->GetEntries();
     if(histo)nEventsRead += histo->GetBinContent(1) ;
     else throw cms::Exception("TreeSkimmerMuTauAnalyzer") 
       << "Failed to read histogram "<<histoName<<" from inputFile = " << (*inputFileName) << " !!\n";
-//--- close input file
+    //--- close input file
     delete inputFile;
   }
   cout<< "nEventsRead " << nEventsRead << endl;
@@ -4746,7 +4777,7 @@ int main(int argc, const char* argv[])
 
 
   fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,true,iDiv,nDiv);
-//   fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts,iDiv,nDiv);
+  //   fillTrees_MuTauStream(currentTree,outTreePtOrd,nEventsRead,analysis,sample,xSection,skimEff,iJson,antiElecMVAcuts,iDiv,nDiv);
 
   return 0;
 }

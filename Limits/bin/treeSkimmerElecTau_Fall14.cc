@@ -3585,14 +3585,22 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 //       sampleWeightW= scaleFactor; 
 //     }
     // Reweight DY+Jets 
-    if( sample_.find("DYJets")!=string::npos  || 
-	sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
-	sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos
-        ) {
-      weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
+    if( (sample_.find("DYJets")!=string::npos  || 
+	 sample_.find("DY1Jets")!=string::npos || sample_.find("DY2Jets")!=string::npos || 
+	 sample_.find("DY3Jets")!=string::npos || sample_.find("DY4Jets")!=string::npos) && sample_.find("tauPolar")==string::npos
+	) {
+      weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 0);
+//       weightHepNupDY = reweightHEPNUPDYJets( hepNUP, 1);
+      //       weightHepNupDY = reweightHEPNUPDYJets( hepNUP );
       sampleWeight   = 1;
       sampleWeightDY = scaleFactor; 
     }
+    else if(sample_.find("tauPolar")!=string::npos)
+      {
+	sampleWeight   = scaleFactor;
+	sampleWeightDY = 1.; 
+// 	sampleWeightDY = scaleFactor; 
+      }
 
     highPtWeightUp =1;
     highPtWeightDown =1;
@@ -3886,7 +3894,7 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       HLTmatchQCD         = 1;
       HLTmatchIsoEle13Tau20 = 1;
       
-      if( !sample.Contains("Emb") || sample.Contains("TTJets-Embedded") ) { // Check trigger matching only for MC
+      if( !sample.Contains("Emb")){// || sample.Contains("TTJets-Embedded") ) { // Check trigger matching only for MC
 
 	// L1 ETM
 	L1etmCorr_  = correctL1etm(L1etm_, caloMEtNoHFUncorr_, caloMEtNoHF_);
@@ -3972,16 +3980,34 @@ void fillTrees_ElecTauStream( TChain* currentTree,
 	else etmCut=30;
 	passL1etmCut_ = float(L1etm_>etmCut);
 
+	if(sample.Contains("TTJets-Embedded"))
+	  {
+	    // Pile-Up
+	    puWeight2        = pileupWeight2(int(nPUVertices));  
+	    puWeight         = pileupWeight(nPUVertices, "");
+	    puWeightHCP      = pileupWeight(nPUVertices, "HCP");   
+	    puWeightD        = pileupWeight(nPUVertices, "D" );
+	    if(etmCut==20) {
+	      puWeightDLow  = pileupWeight(nPUVertices, "DLow" );
+	      puWeightDHigh = 1.0;
+	    } else {
+	      puWeightDLow  = 1.0;
+	      puWeightDHigh = pileupWeight(nPUVertices, "DHigh" );
+	    }
+	  }
+
 	// DoubleMu matching
 	isMatched = false;
 	isMatched = (*triggerPaths)["HLT_Mu17_Mu8_v16"]
-	  || (*triggerPaths)["HLT_Mu17_Mu8_v17"]
+	  || (*triggerPaths)["HLT_Mu17_Mu8_v17"]//this for MCEmb
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v18"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v19"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v20"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v21"]
 	  || (*triggerPaths)["HLT_Mu17_Mu8_v22"];
-	HLTxMu17Mu8 = isMatched ? 1 : 0 ;	
+	HLTxMu17Mu8 = isMatched ? 1 : 0 ;
+
+// 	cout<<"HLTxMu17Mu8 = "<<HLTxMu17Mu8<<endl;
 
 	/*
 	// DoubleMu matching
@@ -4027,15 +4053,17 @@ void fillTrees_ElecTauStream( TChain* currentTree,
       Double_t DataValEndcaps_pt = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(ptL2);
       Double_t DataValEndcaps_400 = (1.-dataABC_dataABCD)+dataABC_dataABCD*TriggerWeightEndcaps->Eval(400.);
       
-      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_pt;
-      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_pt;
+      if(ptL2>140. && ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_pt;
+      else if(ptL2>60. && ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_pt;
       else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauData = DataValBarrel_800;
       else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauData = DataValEndcaps_400;
+      else HLTBugTauData = 1.;
 
-      if(ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_pt;
-      else if(ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_pt;
+      if(ptL2>140. && ptL2<=800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_pt;
+      else if(ptL2>60. && ptL2<=400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_pt;
       else if(ptL2>800. && TMath::Abs(etaL2)<=1.5) HLTBugTauMC = MCValBarrel_800;
       else if(ptL2>400. && TMath::Abs(etaL2)>1.5) HLTBugTauMC = MCValEndcaps_400;
+      else HLTBugTauMC = 1.;
  
       if(HLTBugTauData<=0.)    HLTBugTauData = 0.;
       if(HLTBugTauMC<=0.)      HLTBugTauMC = 0.;

@@ -9,11 +9,11 @@ import subprocess
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_Abdollah/EleTau/'
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_TriggerCut/EleTau/'
 #WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_OlivierTES_CorrectedTES/EleTau/'
-WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_27Nov14/EleTau/'
-WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_27Nov14/EleTau/'
-WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_27Nov14/EleTau/'
-WorkdirLocEmb = '/data_CMS/cms/htautau/PostMoriond/TREES_27Nov14/EleTau/'
-OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_27Nov14/EleTau/temp/'
+WorkdirLoc = '/data_CMS/cms/htautau/PostMoriond/TREES_19Dec14/EleTau/'
+WorkdirLocSM = '/data_CMS/cms/htautau/PostMoriond/TREES_19Dec14/EleTau/'
+WorkdirLocData = '/data_CMS/cms/htautau/PostMoriond/TREES_19Dec14/EleTau/'
+WorkdirLocEmb = '/data_CMS/cms/htautau/PostMoriond/TREES_19Dec14/EleTau/'
+OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_19Dec14/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES_TriggerCut/EleTau/temp/'
 #OutDir   = '/data_CMS/cms/htautau/PostMoriond/NTUPLES_OlivierTES_Abdollah/EleTau/temp/'
@@ -23,7 +23,7 @@ options = {
 
     ##DATA
     'Run2012A-22Jan2013-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012A_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012A_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-22Jan2013-Data_ElecTau.root',
     'sample'         : 'Run2012A-22Jan2013-Data',
     'xSection'       : 0,
@@ -33,7 +33,7 @@ options = {
     'nDiv'           : 1
     },   
     'Run2012B-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p1-Data_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -43,7 +43,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p2-Data_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -53,7 +53,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p3-Data_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -63,7 +63,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p4-Data_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -73,7 +73,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012B_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p5-Data_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -83,7 +83,7 @@ options = {
     'nDiv'           : 1
     },   
     'Run2012C-22Jan2013-p0-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p0/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p0/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p0-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p0-Data',
     'xSection'       : 0,
@@ -93,7 +93,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p1-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -103,7 +103,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p2-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -113,7 +113,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p3-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -123,7 +123,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p4-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -133,7 +133,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p5-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -143,7 +143,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p6-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p6/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p6-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p6-Data',
     'xSection'       : 0,
@@ -153,7 +153,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p7-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p7/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012C_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p7-Data_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p7-Data',
     'xSection'       : 0,
@@ -163,7 +163,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p1-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p1/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-Data',
     'xSection'       : 0,
@@ -173,7 +173,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p2-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p2/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-Data',
     'xSection'       : 0,
@@ -183,7 +183,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p3-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p3/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-Data',
     'xSection'       : 0,
@@ -193,7 +193,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p4-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p4/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-Data',
     'xSection'       : 0,
@@ -203,7 +203,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p5-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p5/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-Data',
     'xSection'       : 0,
@@ -213,7 +213,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p6-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p6/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-Data',
     'xSection'       : 0,
@@ -223,7 +223,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p7-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p7/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-Data',
     'xSection'       : 0,
@@ -233,7 +233,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p8-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p8/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-Data',
     'xSection'       : 0,
@@ -243,7 +243,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p9-Data' : {
-    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_27Nov14_Trees_EleTau_v2_p9/',
+    'inputFilePath'  : WorkdirLocData+'Data/Data_2012D_ReReco22Jan_HTT_19Dec14_Trees_EleTau_v1_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-Data_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-Data',
     'xSection'       : 0,
@@ -254,7 +254,7 @@ options = {
     },
     ##Embedded
     'Run2012A-22Jan2013-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012A_ReReco22Jan_HTT_27Nov14_Trees_v1/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012A_ReReco22Jan_HTT_19Dec14_Trees_v1/',
     'outputFileName' : OutDir+'nTupleRun2012A-22Jan2013-Embedded_ElecTau.root',
     'sample'         : 'Run2012A-22Jan2013-Embedded',
     'xSection'       : 0,
@@ -264,7 +264,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_27Nov14_Trees_v1_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_19Dec14_Trees_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -274,7 +274,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_27Nov14_Trees_v1_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_19Dec14_Trees_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -284,7 +284,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_27Nov14_Trees_v1_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_19Dec14_Trees_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -294,7 +294,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_27Nov14_Trees_v1_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_19Dec14_Trees_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -304,7 +304,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012B-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_27Nov14_Trees_v1_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012B_ReReco22Jan_HTT_19Dec14_Trees_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012B-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012B-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -314,7 +314,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p0-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p0/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p0/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p0-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p0-Embedded',
     'xSection'       : 0,
@@ -324,7 +324,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -334,7 +334,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -344,7 +344,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -354,7 +354,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -364,7 +364,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -374,7 +374,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p6/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p6-Embedded',
     'xSection'       : 0,
@@ -384,7 +384,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012C-22Jan2013-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_27Nov14_Trees_v1_p7/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012C_ReReco22Jan_HTT_19Dec14_Trees_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012C-22Jan2013-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012C-22Jan2013-p7-Embedded',
     'xSection'       : 0,
@@ -394,7 +394,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p1-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p1/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p1/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p1-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p1-Embedded',
     'xSection'       : 0,
@@ -404,7 +404,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p2-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p2/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p2/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p2-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p2-Embedded',
     'xSection'       : 0,
@@ -414,7 +414,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p3-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p3/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p3/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p3-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p3-Embedded',
     'xSection'       : 0,
@@ -424,7 +424,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p4-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p4/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p4/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p4-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p4-Embedded',
     'xSection'       : 0,
@@ -434,7 +434,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p5-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p5/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p5/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p5-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p5-Embedded',
     'xSection'       : 0,
@@ -444,7 +444,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p6-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p6/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p6/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p6-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p6-Embedded',
     'xSection'       : 0,
@@ -454,7 +454,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p7-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p7/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p7/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p7-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p7-Embedded',
     'xSection'       : 0,
@@ -464,7 +464,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p8-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p8/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p8/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p8-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p8-Embedded',
     'xSection'       : 0,
@@ -474,7 +474,7 @@ options = {
     'nDiv'           : 1
     },
     'Run2012D-22Jan2013-p9-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_27Nov14_Trees_v1_p9/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_2012D_ReReco22Jan_HTT_19Dec14_Trees_v1_p9/',
     'outputFileName' : OutDir+'nTupleRun2012D-22Jan2013-p9-Embedded_ElecTau.root',
     'sample'         : 'Run2012D-22Jan2013-p9-Embedded',
     'xSection'       : 0,
@@ -485,58 +485,570 @@ options = {
     },
     ##Bkg MC
     'DYJetsTauTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsTauTau_ElecTau.root',
     'sample'         : 'DYJetsTauTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
     'DYJetsZTTL' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsZTTL_ElecTau.root',
     'sample'         : 'DYJetsZTTL',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
     'DYJetsZTTJ' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsZTTJ_ElecTau.root',
     'sample'         : 'DYJetsZTTJ',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
     'DYJetsEToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsEToTau_ElecTau.root',
     'sample'         : 'DYJetsEToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
     'DYJetsJetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsJetToTau_ElecTau.root',
     'sample'         : 'DYJetsJetToTau',
     'xSection'       : 3504,
-    'skimEff'        : 1.0 * 0.317439 * 2474447./9669034,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+
+    ##DYJets _p0
+    'DYJetsTauTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p0_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p0_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p0_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p0_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p0_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    ##DYJets _p1
+    'DYJetsTauTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p1_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p1_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p1_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p1_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p1_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    ##DYJets _p2
+    'DYJetsTauTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p2_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p2_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p2_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p2_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p2_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    ##DYJets _p3
+    'DYJetsTauTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p3_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p3_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p3_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p3_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p3_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    ##DYJets _p4
+    'DYJetsTauTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p4_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p4_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p4_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p4_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p4_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    ##DYJets _p5
+    'DYJetsTauTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p5_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p5_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p5_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p5_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p5_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    ##DYJets _p6
+    'DYJetsTauTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p6_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p6_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p6_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p6_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p6_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    ##DYJets _p7
+    'DYJetsTauTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p7_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p7_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p7_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p7_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p7_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    ##DYJets _p8
+    'DYJetsTauTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p8_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p8_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p8_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p8_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p8_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    ##DYJets _p9
+    'DYJetsTauTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_p9_ElecTau.root',
+    'sample'         : 'DYJetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTL_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_p9_ElecTau.root',
+    'sample'         : 'DYJetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJetsZTTJ_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_p9_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJetsEToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_p9_ElecTau.root',
+    'sample'         : 'DYJetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJetsJetToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_p9_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 0.317439 * 2716918./9669034,#2716918#2474447./9669034
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },       
+    
     ##DYJets tauPolarOff
     'DYJetsTauTau_tauPolarOff' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_ElecTau.root',
     'sample'         : 'DYJetsTauTau_tauPolarOff',
     'xSection'       : 3504,
@@ -546,7 +1058,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJetsZTTL_tauPolarOff' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_ElecTau.root',
     'sample'         : 'DYJetsZTTL_tauPolarOff',
     'xSection'       : 3504,
@@ -556,7 +1068,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJetsZTTJ_tauPolarOff' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_ElecTau.root',
     'sample'         : 'DYJetsZTTJ_tauPolarOff',
     'xSection'       : 3504,
@@ -566,7 +1078,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJetsEToTau_tauPolarOff' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_ElecTau.root',
     'sample'         : 'DYJetsEToTau_tauPolarOff',
     'xSection'       : 3504,
@@ -576,7 +1088,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJetsJetToTau_tauPolarOff' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_ElecTau.root',
     'sample'         : 'DYJetsJetToTau_tauPolarOff',
     'xSection'       : 3504,
@@ -584,10 +1096,265 @@ options = {
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
-    },    
+    },
+    ##DYJets tauPolarOff_p0
+    'DYJetsTauTau_tauPolarOff_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_p0_ElecTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTL_tauPolarOff_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_p0_ElecTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTJ_tauPolarOff_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_p0_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    'DYJetsEToTau_tauPolarOff_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_p0_ElecTau.root',
+    'sample'         : 'DYJetsEToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    'DYJetsJetToTau_tauPolarOff_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_p0_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    ##DYJets tauPolarOff_p1
+    'DYJetsTauTau_tauPolarOff_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_p1_ElecTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTL_tauPolarOff_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_p1_ElecTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTJ_tauPolarOff_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_p1_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    'DYJetsEToTau_tauPolarOff_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_p1_ElecTau.root',
+    'sample'         : 'DYJetsEToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    'DYJetsJetToTau_tauPolarOff_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_p1_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    ##DYJets tauPolarOff_p2
+    'DYJetsTauTau_tauPolarOff_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_p2_ElecTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTL_tauPolarOff_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_p2_ElecTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTJ_tauPolarOff_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_p2_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    'DYJetsEToTau_tauPolarOff_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_p2_ElecTau.root',
+    'sample'         : 'DYJetsEToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    'DYJetsJetToTau_tauPolarOff_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_p2_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    ##DYJets tauPolarOff_p3
+    'DYJetsTauTau_tauPolarOff_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_p3_ElecTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTL_tauPolarOff_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_p3_ElecTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTJ_tauPolarOff_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_p3_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    'DYJetsEToTau_tauPolarOff_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_p3_ElecTau.root',
+    'sample'         : 'DYJetsEToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    'DYJetsJetToTau_tauPolarOff_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_p3_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    ##DYJets tauPolarOff_p4
+    'DYJetsTauTau_tauPolarOff_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsTauTau_tauPolarOff_p4_ElecTau.root',
+    'sample'         : 'DYJetsTauTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTL_tauPolarOff_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTL_tauPolarOff_p4_ElecTau.root',
+    'sample'         : 'DYJetsZTTL_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },
+    'DYJetsZTTJ_tauPolarOff_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsZTTJ_tauPolarOff_p4_ElecTau.root',
+    'sample'         : 'DYJetsZTTJ_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },
+    'DYJetsEToTau_tauPolarOff_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsEToTau_tauPolarOff_p4_ElecTau.root',
+    'sample'         : 'DYJetsEToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },
+    'DYJetsJetToTau_tauPolarOff_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DYJets-50-madgraph-PUS10_MC_Bkg_HTT_tauPolarOff_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJetsJetToTau_tauPolarOff_p4_ElecTau.root',
+    'sample'         : 'DYJetsJetToTau_tauPolarOff',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 3048691./29426492.,#OK
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },             
     ##DY1Jets
     'DYJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1Jets_ElecTau.root',
     'sample'         : 'DYJets1Jets',
     'xSection'       : 3504,
@@ -597,7 +1364,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets1JetsTauTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_ElecTau.root',
     'sample'         : 'DYJets1JetsTauTau',
     'xSection'       : 3504,
@@ -607,7 +1374,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets1JetsZTTL' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_ElecTau.root',
     'sample'         : 'DYJets1JetsZTTL',
     'xSection'       : 3504,
@@ -617,7 +1384,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets1JetsZTTJ' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_ElecTau.root',
     'sample'         : 'DYJets1JetsZTTJ',
     'xSection'       : 3504,
@@ -627,7 +1394,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets1JetsEToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_ElecTau.root',
     'sample'         : 'DYJets1JetsEToTau',
     'xSection'       : 3504,
@@ -637,7 +1404,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets1JetsJetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_ElecTau.root',
     'sample'         : 'DYJets1JetsJetToTau',
     'xSection'       : 3504,
@@ -646,9 +1413,619 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    ##DY1Jets_p0
+    'DYJets1Jets_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p0_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p0_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p0_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p0_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p1
+    'DYJets1Jets_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p1_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p1_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p1_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p1_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p2
+    'DYJets1Jets_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p2_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p2_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p2_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p2_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p3
+    'DYJets1Jets_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p3_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p3_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p3_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p3_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p4
+    'DYJets1Jets_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p4_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p4_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p4_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p4_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p5
+    'DYJets1Jets_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p5_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p5_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p5_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p5_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p6
+    'DYJets1Jets_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p6_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p6_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p6_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p6_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p7
+    'DYJets1Jets_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p7_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p7_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p7_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p7_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p8
+    'DYJets1Jets_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p8_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p8_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p8_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p8_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    ##DY1Jets_p9
+    'DYJets1Jets_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1Jets_p9_ElecTau.root',
+    'sample'         : 'DYJets1Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsTauTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsTauTau_p9_ElecTau.root',
+    'sample'         : 'DYJets1JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTL_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTL_p9_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsZTTJ_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsZTTJ_p9_ElecTau.root',
+    'sample'         : 'DYJets1JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsEToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsEToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets1JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets1JetsJetToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY1JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets1JetsJetToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets1JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },    
     ##DY2Jets
     'DYJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2Jets_ElecTau.root',
     'sample'         : 'DYJets2Jets',
     'xSection'       : 3504,
@@ -658,7 +2035,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets2JetsTauTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_ElecTau.root',
     'sample'         : 'DYJets2JetsTauTau',
     'xSection'       : 3504,
@@ -668,7 +2045,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets2JetsZTTL' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_ElecTau.root',
     'sample'         : 'DYJets2JetsZTTL',
     'xSection'       : 3504,
@@ -678,7 +2055,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets2JetsZTTJ' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_ElecTau.root',
     'sample'         : 'DYJets2JetsZTTJ',
     'xSection'       : 3504,
@@ -688,7 +2065,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets2JetsEToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_ElecTau.root',
     'sample'         : 'DYJets2JetsEToTau',
     'xSection'       : 3504,
@@ -698,7 +2075,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets2JetsJetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_ElecTau.root',
     'sample'         : 'DYJets2JetsJetToTau',
     'xSection'       : 3504,
@@ -707,9 +2084,619 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    ##DY2Jets_p0
+    'DYJets2Jets_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p0_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p0_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p0_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p0_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p1
+    'DYJets2Jets_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p1_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p1_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p1_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p1_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p2
+    'DYJets2Jets_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p2_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p2_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p2_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p2_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p3
+    'DYJets2Jets_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p3_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p3_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p3_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p3_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p4
+    'DYJets2Jets_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p4_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p4_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p4_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p4_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p5
+    'DYJets2Jets_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p5_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p5_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p5_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p5_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p6
+    'DYJets2Jets_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p6_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p6_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p6_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p6_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p7
+    'DYJets2Jets_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p7_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p7_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p7_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p7_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p8
+    'DYJets2Jets_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p8_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p8_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p8_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p8_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    ##DY2Jets_p9
+    'DYJets2Jets_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2Jets_p9_ElecTau.root',
+    'sample'         : 'DYJets2Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsTauTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsTauTau_p9_ElecTau.root',
+    'sample'         : 'DYJets2JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTL_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTL_p9_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsZTTJ_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsZTTJ_p9_ElecTau.root',
+    'sample'         : 'DYJets2JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsEToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsEToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets2JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets2JetsJetToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY2JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets2JetsJetToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets2JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },    
     ##DY3Jets
     'DYJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3Jets_ElecTau.root',
     'sample'         : 'DYJets3Jets',
     'xSection'       : 3504,
@@ -719,7 +2706,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets3JetsTauTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_ElecTau.root',
     'sample'         : 'DYJets3JetsTauTau',
     'xSection'       : 3504,
@@ -729,7 +2716,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets3JetsZTTL' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_ElecTau.root',
     'sample'         : 'DYJets3JetsZTTL',
     'xSection'       : 3504,
@@ -739,7 +2726,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets3JetsZTTJ' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_ElecTau.root',
     'sample'         : 'DYJets3JetsZTTJ',
     'xSection'       : 3504,
@@ -749,7 +2736,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets3JetsEToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_ElecTau.root',
     'sample'         : 'DYJets3JetsEToTau',
     'xSection'       : 3504,
@@ -759,7 +2746,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets3JetsJetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_ElecTau.root',
     'sample'         : 'DYJets3JetsJetToTau',
     'xSection'       : 3504,
@@ -768,9 +2755,619 @@ options = {
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    ##DY3Jets_p0
+    'DYJets3Jets_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p0_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p0_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p0_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p0_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p0' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p0_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p1
+    'DYJets3Jets_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p1_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p1_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p1_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p1_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p1' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p1_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p2
+    'DYJets3Jets_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p2_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p2_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p2_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p2_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p2' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p2_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p3
+    'DYJets3Jets_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p3_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p3_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p3_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p3_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p3' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p3_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p4
+    'DYJets3Jets_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p4_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p4_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p4_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p4_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p4' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p4_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p5
+    'DYJets3Jets_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p5_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p5_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p5_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p5_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p5' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p5_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 5,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p6
+    'DYJets3Jets_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p6_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p6_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p6_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p6_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p6' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p6_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 6,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p7
+    'DYJets3Jets_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p7_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p7_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p7_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p7_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p7' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p7_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 7,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p8
+    'DYJets3Jets_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p8_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p8_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p8_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p8_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p8' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p8_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 8,
+    'nDiv'           : 10
+    },
+    ##DY3Jets_p9
+    'DYJets3Jets_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3Jets_p9_ElecTau.root',
+    'sample'         : 'DYJets3Jets',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsTauTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsTauTau_p9_ElecTau.root',
+    'sample'         : 'DYJets3JetsTauTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTL_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTL_p9_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTL',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsZTTJ_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsZTTJ_p9_ElecTau.root',
+    'sample'         : 'DYJets3JetsZTTJ',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsEToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsEToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets3JetsEToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },
+    'DYJets3JetsJetToTau_p9' : {
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY3JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
+    'outputFileName' : OutDir+'nTupleDYJets3JetsJetToTau_p9_ElecTau.root',
+    'sample'         : 'DYJets3JetsJetToTau',
+    'xSection'       : 3504,
+    'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
+    'iJson'          : -1,
+    'iDiv'           : 9,
+    'nDiv'           : 10
+    },      
     ##DY4Jets
     'DYJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4Jets_ElecTau.root',
     'sample'         : 'DYJets4Jets',
     'xSection'       : 3504,
@@ -780,7 +3377,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets4JetsTauTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4JetsTauTau_ElecTau.root',
     'sample'         : 'DYJets4JetsTauTau',
     'xSection'       : 3504,
@@ -790,7 +3387,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets4JetsZTTL' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4JetsZTTL_ElecTau.root',
     'sample'         : 'DYJets4JetsZTTL',
     'xSection'       : 3504,
@@ -800,7 +3397,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets4JetsZTTJ' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4JetsZTTJ_ElecTau.root',
     'sample'         : 'DYJets4JetsZTTJ',
     'xSection'       : 3504,
@@ -810,7 +3407,7 @@ options = {
     'nDiv'           : 1
     },
     'DYJets4JetsEToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4JetsEToTau_ElecTau.root',
     'sample'         : 'DYJets4JetsEToTau',
     'xSection'       : 3504,
@@ -820,18 +3417,18 @@ options = {
     'nDiv'           : 1
     },
     'DYJets4JetsJetToTau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/DY4JetsToLL_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleDYJets4JetsJetToTau_ElecTau.root',
     'sample'         : 'DYJets4JetsJetToTau',
     'xSection'       : 3504,
     'skimEff'        : 1.0 * 1.0 * 3308290./24045248 ,
     'iJson'          : -1,
-    'iDiv'           : 1,
+    'iDiv'           : 0,
     'nDiv'           : 1
     },
     ##WJets
     'WJets-p1' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WJets-madgraph-PUS10-p1_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets-p1_ElecTau.root',
     'sample'         : 'WJets-p1',
     'xSection'       : 36257,
@@ -841,7 +3438,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets-p2' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WJets-madgraph-PUS10-p2_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets-p2_ElecTau.root',
     'sample'         : 'WJets-p2',
     'xSection'       : 36257,
@@ -851,7 +3448,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets1Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets1Jets_ElecTau.root',
     'sample'         : 'WJets1Jets',
     'xSection'       : 36257,
@@ -861,7 +3458,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets2Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets2Jets_ElecTau.root',
     'sample'         : 'WJets2Jets',
     'xSection'       : 36257,
@@ -871,7 +3468,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets3Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets3Jets_ElecTau.root',
     'sample'         : 'WJets3Jets',
     'xSection'       : 36257,
@@ -882,7 +3479,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets4Jets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W4Jets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W4Jets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets4Jets_ElecTau.root',
     'sample'         : 'WJets4Jets',
     'xSection'       : 36257,
@@ -894,7 +3491,7 @@ options = {
     },
     # High stat samples V19
     'WJets1JetsV19' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W1Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets1JetsV19_ElecTau.root',
     'sample'         : 'WJets1JetsV19',
     'xSection'       : 36257,
@@ -904,7 +3501,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets2JetsV19' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W2Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets2JetsV19_ElecTau.root',
     'sample'         : 'WJets2JetsV19',
     'xSection'       : 36257,
@@ -914,7 +3511,7 @@ options = {
     'nDiv'           : 1
     },
     'WJets3JetsV19' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/W3Jets-madgraph-PUS10_START53_V19_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWJets3JetsV19_ElecTau.root',
     'sample'         : 'WJets3JetsV19',
     'xSection'       : 36257,
@@ -924,17 +3521,69 @@ options = {
     'nDiv'           : 1
     },
     'TTJets-Embedded' : {
-    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_v1/',
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    #'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v1/',
     'outputFileName' : OutDir+'nTupleTTJets-Embedded_ElecTau.root',
     'sample'         : 'TTJets-Embedded',
     'xSection'       : 26.229,#5.8869,#26.1975,#now accounting for BF
-    'skimEff'        : 1.0 * 758691./12011428., ##758691 #numerator 630093.
+    'skimEff'        : 1.0 * 630176./12011428., ##758691 #numerator 630093.#758691.
+    #'skimEff'        : 1.0 * 758691./12011428., ##758691 #numerator 630093.#630176
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 1
     },
+    'TTJets-Embedded_p0' : {
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_p0_ElecTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.229,
+    'skimEff'        : 1.0 * 630176./12011428.,
+    'iJson'          : -1,
+    'iDiv'           : 0,
+    'nDiv'           : 5
+    },
+    'TTJets-Embedded_p1' : {
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_p1_ElecTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.229,
+    'skimEff'        : 1.0 * 630176./12011428.,
+    'iJson'          : -1,
+    'iDiv'           : 1,
+    'nDiv'           : 5
+    },
+    'TTJets-Embedded_p2' : {
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_p2_ElecTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.229,
+    'skimEff'        : 1.0 * 630176./12011428.,
+    'iJson'          : -1,
+    'iDiv'           : 2,
+    'nDiv'           : 5
+    },
+    'TTJets-Embedded_p3' : {
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_p3_ElecTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.229,
+    'skimEff'        : 1.0 * 630176./12011428.,
+    'iJson'          : -1,
+    'iDiv'           : 3,
+    'nDiv'           : 5
+    },
+    'TTJets-Embedded_p4' : {
+    'inputFilePath'  : WorkdirLocEmb+'EmbeddedPF/PFEmbed_etau_TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_v2/',
+    'outputFileName' : OutDir+'nTupleTTJets-Embedded_p4_ElecTau.root',
+    'sample'         : 'TTJets-Embedded',
+    'xSection'       : 26.229,
+    'skimEff'        : 1.0 * 630176./12011428.,
+    'iJson'          : -1,
+    'iDiv'           : 4,
+    'nDiv'           : 5
+    },      
     'TTJets' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TTJets-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_ElecTau.root',
     'sample'         : 'TTJets',
     'xSection'       : 225.5,
@@ -944,10 +3593,10 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_SemiLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     #'xSection'       : 249.5,
     #'skimEff'        : 0.438 * 0.561995,
     #'skimEff'        : 0.438 * 13732045./23474208,
@@ -957,110 +3606,110 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_SemiLept_p0' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p0_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p1' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p1_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p2' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p2_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p3' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p3_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p4' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p4_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p5' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p5_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p6' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p6_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p7' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p7_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p8' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p8_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
     },
     'TTJets_SemiLept_p9' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_SemiLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_SemiLept_p9_ElecTau.root',
     'sample'         : 'TTJets_SemiLept',
-    'xSection'       : 109.281,
+    'xSection'       : 241.5*0.4380,
     'skimEff'        : 1.0 * 13732045./23474208,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
     },            
     'TTJets_FullLept' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     #'xSection'       : 249.5,
     #'skimEff'        : 0.105 * 0.648373,
     #'skimEff'        : 0.105 * 8187961./11921428,
@@ -1070,110 +3719,110 @@ options = {
     'nDiv'           : 1
     },
     'TTJets_FullLept_p0' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p0_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 0,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p1' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p1_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 1,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p2' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p2_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 2,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p3' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p3_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 3,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p4' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p4_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 4,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p5' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p5_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 5,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p6' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p6_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 6,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p7' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p7_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 7,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p8' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p8_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 8,
     'nDiv'           : 10
     },
     'TTJets_FullLept_p9' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_FullLept_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_FullLept_p9_ElecTau.root',
     'sample'         : 'TTJets_FullLept',
-    'xSection'       : 26.1975,
+    'xSection'       : 241.5*0.1050,
     'skimEff'        : 1.0 * 8187961./11921428,
     'iJson'          : -1,
     'iDiv'           : 9,
     'nDiv'           : 10
     },            
     'TTJets_Had' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/TT_Hadronic_ext_MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTTJets_Had_ElecTau.root',
     'sample'         : 'TTJets_Had',
-    'xSection'       : 114.0215,
+    'xSection'       : 241.5*0.4570,
     #'xSection'       : 249.5,
     #'skimEff'        : 0.457 * 0.120926,
     #'skimEff'        : 0.457 * 3847510./31023821,
@@ -1183,7 +3832,7 @@ options = {
     'nDiv'           : 1
     },
     'T-tW' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/T-tW-powheg-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/T-tW-powheg-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleT-tW_ElecTau.root',
     'sample'         : 'T-tW',
     'xSection'       : 11.1,
@@ -1194,7 +3843,7 @@ options = {
     'nDiv'           : 1
     },
     'Tbar-tW' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/Tbar-tW-powheg-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleTbar-tW_ElecTau.root',
     'sample'         : 'Tbar-tW',
     'xSection'       : 11.1,
@@ -1205,7 +3854,7 @@ options = {
     'nDiv'           : 1
     },
     'WWJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WWJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWWJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'WWJetsTo2L2Nu',
     'xSection'       : 5.824,
@@ -1216,7 +3865,7 @@ options = {
     'nDiv'           : 1
     },
     'WZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'WZJetsTo2L2Q',
     'xSection'       : 2.207,
@@ -1227,7 +3876,7 @@ options = {
     'nDiv'           : 1
     },
     'WZJetsTo3LNu' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WZJetsTo3LNu-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWZJetsTo3LNu_ElecTau.root',
     'sample'         : 'WZJetsTo3LNu',
     'xSection'       : 1.058,
@@ -1238,7 +3887,7 @@ options = {
     'nDiv'           : 1
     },
     'ZZJetsTo2L2Nu' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Nu-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Nu_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Nu',
     'xSection'       : 0.716,#2.502,
@@ -1249,7 +3898,7 @@ options = {
     'nDiv'           : 1
     },
     'ZZJetsTo2L2Q' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo2L2Q-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo2L2Q_ElecTau.root',
     'sample'         : 'ZZJetsTo2L2Q',
     'xSection'       : 2.502,
@@ -1260,7 +3909,7 @@ options = {
     'nDiv'           : 1
     },
     'ZZJetsTo4L' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/ZZJetsTo4L-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleZZJetsTo4L_ElecTau.root',
     'sample'         : 'ZZJetsTo4L',
     'xSection'       : 0.181,
@@ -1271,7 +3920,7 @@ options = {
     'nDiv'           : 1
     },
     'WGToLNuG' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGToLNuG-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGToLNuG-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWGToLNuG_ElecTau.root',
     'sample'         : 'WGToLNuG',
     'xSection'       : 461.6,
@@ -1281,7 +3930,7 @@ options = {
     'nDiv'           : 1
     },
     'WGstarToLNu2E' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2E-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2E-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWGstarToLNu2E_ElecTau.root',
     'sample'         : 'WGstarToLNu2E',
     'xSection'       : 5.873,
@@ -1291,7 +3940,7 @@ options = {
     'nDiv'           : 1
     },
     'WGstarToLNu2Mu' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Mu-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Mu-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWGstarToLNu2Mu_ElecTau.root',
     'sample'         : 'WGstarToLNu2Mu',
     'xSection'       : 1.914,
@@ -1301,7 +3950,7 @@ options = {
     'nDiv'           : 1
     },
     'WGstarToLNu2Tau' : {
-    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Tau-madgraph-PUS10_MC_Bkg_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLoc+'Backgrounds/WGstarToLNu2Tau-madgraph-PUS10_MC_Bkg_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleWGstarToLNu2Tau_ElecTau.root',
     'sample'         : 'WGstarToLNu2Tau',
     'xSection'       : 0.336,
@@ -1312,7 +3961,7 @@ options = {
     },
     ##Higgs MC
     'GGFH90' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-90_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH90_ElecTau.root',
     'sample'         : 'GGFH90',
     'xSection'       : 36.80 ,
@@ -1322,7 +3971,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH95' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-95_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH95_ElecTau.root',
     'sample'         : 'GGFH95',
     'xSection'       : 33.19 ,
@@ -1332,7 +3981,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH100' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-100_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH100_ElecTau.root',
     'sample'         : 'GGFH100',
     'xSection'       : 30.12 ,
@@ -1342,7 +3991,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH105' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-105_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH105_ElecTau.root',
     'sample'         : 'GGFH105',
     'xSection'       : 27.39 ,
@@ -1352,7 +4001,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH110' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-110_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH110_ElecTau.root',
     'sample'         : 'GGFH110',
     'xSection'       : 25.04 ,
@@ -1362,7 +4011,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH115' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-115_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH115_ElecTau.root',
     'sample'         : 'GGFH115',
     'xSection'       : 22.96 ,
@@ -1372,7 +4021,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH120' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-120_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH120_ElecTau.root',
     'sample'         : 'GGFH120',
     'xSection'       : 21.13 ,
@@ -1382,7 +4031,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-125_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH125_ElecTau.root',
     'sample'         : 'GGFH125',
     'xSection'       : 19.52,
@@ -1392,7 +4041,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFHH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHHTo2B2Tau_M-125_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHHTo2B2Tau_M-125_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFHH125_ElecTau.root',
     'sample'         : 'GGFHH125',
     'xSection'       : 0.00796,
@@ -1402,7 +4051,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH130' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-130_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH130_ElecTau.root',
     'sample'         : 'GGFH130',
     'xSection'       : 18.07 ,
@@ -1412,7 +4061,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH135' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-135_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH135_ElecTau.root',
     'sample'         : 'GGFH135',
     'xSection'       : 16.79,
@@ -1422,7 +4071,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH140' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-140_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH140_ElecTau.root',
     'sample'         : 'GGFH140',
     'xSection'       : 15.63,
@@ -1432,7 +4081,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH145' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-145_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH145_ElecTau.root',
     'sample'         : 'GGFH145',
     'xSection'       : 14.59,
@@ -1442,7 +4091,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH150' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-150_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH150_ElecTau.root',
     'sample'         : 'GGFH150',
     'xSection'       : 13.65,
@@ -1452,7 +4101,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH155' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-155_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH155_ElecTau.root',
     'sample'         : 'GGFH155',
     'xSection'       : 12.79,
@@ -1462,7 +4111,7 @@ options = {
     'nDiv'           : 1
     },
     'GGFH160' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/GluGluToHToTauTau_M-160_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleGGFH160_ElecTau.root',
     'sample'         : 'GGFH160',
     'xSection'       : 11.95,
@@ -1472,7 +4121,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH90' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-90_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH90_ElecTau.root',
     'sample'         : 'VBFH90',
     'xSection'       : 2.191 ,
@@ -1482,7 +4131,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH95' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-95_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH95_ElecTau.root',
     'sample'         : 'VBFH95',
     'xSection'       : 2.084 ,
@@ -1492,7 +4141,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH100' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-100_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH100_ElecTau.root',
     'sample'         : 'VBFH100',
     'xSection'       : 1.988,
@@ -1502,7 +4151,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH105' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-105_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH105_ElecTau.root',
     'sample'         : 'VBFH105',
     'xSection'       : 1.897,
@@ -1512,7 +4161,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH110' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-110_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH110_ElecTau.root',
     'sample'         : 'VBFH110',
     'xSection'       : 1.809,
@@ -1522,7 +4171,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH115' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-115_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH115_ElecTau.root',
     'sample'         : 'VBFH115',
     'xSection'       : 1.729,
@@ -1532,7 +4181,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH120' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-120_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH120_ElecTau.root',
     'sample'         : 'VBFH120',
     'xSection'       : 1.649,
@@ -1542,7 +4191,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-125_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVBFH125_ElecTau.root',
     'sample'         : 'VBFH125',
     'xSection'       : 1.578,
@@ -1552,7 +4201,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH130' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-130_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH130_ElecTau.root',
     'sample'         : 'VBFH130',
     'xSection'       : 1.511,
@@ -1562,7 +4211,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH135' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-135_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH135_ElecTau.root',
     'sample'         : 'VBFH135',
     'xSection'       : 1.448,
@@ -1572,7 +4221,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH140' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-140_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH140_ElecTau.root',
     'sample'         : 'VBFH140',
     'xSection'       : 1.389,
@@ -1582,7 +4231,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH145' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-145_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH145_ElecTau.root',
     'sample'         : 'VBFH145',
     'xSection'       : 1.333,
@@ -1592,7 +4241,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH150' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-150_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH150_ElecTau.root',
     'sample'         : 'VBFH150',
     'xSection'       : 1.280 ,
@@ -1602,7 +4251,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH155' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-155_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH155_ElecTau.root',
     'sample'         : 'VBFH155',
     'xSection'       : 1.231 ,
@@ -1612,7 +4261,7 @@ options = {
     'nDiv'           : 1
     },
     'VBFH160' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_27Nov14_Trees_EleTau_v1',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/VBF_HToTauTau_M-160_MC_H_HTT_19Dec14_Trees_EleTau_v1',
     'outputFileName' : OutDir+'nTupleVBFH160_ElecTau.root',
     'sample'         : 'VBFH160',
     'xSection'       : 1.185 ,
@@ -1622,7 +4271,7 @@ options = {
     'nDiv'           : 1
     },
     'VH90' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-90_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH90_ElecTau.root',
     'sample'         : 'VH90',
     'xSection'       : (1.972 + 1.057 + 0.3233) ,
@@ -1632,7 +4281,7 @@ options = {
     'nDiv'           : 1
     },
     'VH95' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-95_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH95_ElecTau.root',
     'sample'         : 'VH95',
     'xSection'       : (1.676 + 0.9060 + 0.2812) ,
@@ -1642,7 +4291,7 @@ options = {
     'nDiv'           : 1
     },
     'VH100' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-100_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH100_ElecTau.root',
     'sample'         : 'VH100',
     'xSection'       : (1.432 + 0.7807 + 0.2454) ,
@@ -1652,7 +4301,7 @@ options = {
     'nDiv'           : 1
     },
     'VH105' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-105_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH105_ElecTau.root',
     'sample'         : 'VH105',
     'xSection'       : (1.229 + 0.6750 + 0.2149) ,
@@ -1662,7 +4311,7 @@ options = {
     'nDiv'           : 1
     },
     'VH110' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-110_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH110_ElecTau.root',
     'sample'         : 'VH110',
     'xSection'       : (1.060+0.5869+0.1887) ,
@@ -1672,7 +4321,7 @@ options = {
     'nDiv'           : 1
     },
     'VH115' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-115_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH115_ElecTau.root',
     'sample'         : 'VH115',
     'xSection'       : (0.9165+0.5117+0.1663),
@@ -1682,7 +4331,7 @@ options = {
     'nDiv'           : 1
     },
     'VH120' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-120_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH120_ElecTau.root',
     'sample'         : 'VH120',
     'xSection'       : (0.7966+0.4483+0.1470),
@@ -1692,7 +4341,7 @@ options = {
     'nDiv'           : 1
     },
     'VH125' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-125_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH125_ElecTau.root',
     'sample'         : 'VH125',
     'xSection'       : (0.6966+0.3943+0.1302),
@@ -1702,7 +4351,7 @@ options = {
     'nDiv'           : 1
     },
     'VH130' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-130_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH130_ElecTau.root',
     'sample'         : 'VH130',
     'xSection'       : (0.6095+0.3473+0.1157),
@@ -1712,7 +4361,7 @@ options = {
     'nDiv'           : 1
     },
     'VH135' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-135_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH135_ElecTau.root',
     'sample'         : 'VH135',
     'xSection'       : (0.5351+0.3074+0.1031),
@@ -1722,7 +4371,7 @@ options = {
     'nDiv'           : 1
     },
     'VH140' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-140_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH140_ElecTau.root',
     'sample'         : 'VH140',
     'xSection'       : (0.4713+0.2728+0.09207),
@@ -1732,7 +4381,7 @@ options = {
     'nDiv'           : 1
     },
     'VH145' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-145_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH145_ElecTau.root',
     'sample'         : 'VH145',
     'xSection'       : (0.4164+0.2424+0.08246),
@@ -1742,7 +4391,7 @@ options = {
     'nDiv'           : 1
     },
     'VH150' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-150_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH150_ElecTau.root',
     'sample'         : 'VH150',
     'xSection'       : (0.3681 + 0.2159 + 0.07403),
@@ -1752,7 +4401,7 @@ options = {
     'nDiv'           : 1
     },
     'VH155' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-155_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH155_ElecTau.root',
     'sample'         : 'VH155',
     'xSection'       : (0.3252 + 0.1923 + 0.06664),
@@ -1762,7 +4411,7 @@ options = {
     'nDiv'           : 1
     },
     'VH160' : {
-    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_27Nov14_Trees_EleTau_v1/',
+    'inputFilePath'  : WorkdirLocSM+'HiggsSM/WH_ZH_TTH_HToTauTau_M-160_MC_H_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleVH160_ElecTau.root',
     'sample'         : 'VH160',
     'xSection'       : (0.2817 + 0.1687 + 0.06013),
@@ -1773,7 +4422,7 @@ options = {
     },
     ######MSSM
     'SUSYGGH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH80-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH80_ElecTau.root',
     'sample'         : 'SUSYGGH80',
     'xSection'       : 1.0,
@@ -1784,7 +4433,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH90-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH90_ElecTau.root',
     'sample'         : 'SUSYGGH90',
     'xSection'       : 1.0,
@@ -1795,7 +4444,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH100-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH100_ElecTau.root',
     'sample'         : 'SUSYGGH100',
     'xSection'       : 1.0,
@@ -1806,7 +4455,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH110-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH110_ElecTau.root',
     'sample'         : 'SUSYGGH110',
     'xSection'       : 1.0,
@@ -1817,7 +4466,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH120-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH120_ElecTau.root',
     'sample'         : 'SUSYGGH120',
     'xSection'       : 1.0,
@@ -1828,7 +4477,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH130-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH130_ElecTau.root',
     'sample'         : 'SUSYGGH130',
     'xSection'       : 1.0,
@@ -1839,7 +4488,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH140-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH140_ElecTau.root',
     'sample'         : 'SUSYGGH140',
     'xSection'       : 1.0,
@@ -1850,7 +4499,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH160-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH160_ElecTau.root',
     'sample'         : 'SUSYGGH160',
     'xSection'       : 1.0,
@@ -1861,7 +4510,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH180-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH180_ElecTau.root',
     'sample'         : 'SUSYGGH180',
     'xSection'       : 1.0,
@@ -1872,7 +4521,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH200-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH200_ElecTau.root',
     'sample'         : 'SUSYGGH200',
     'xSection'       : 1.0,
@@ -1883,7 +4532,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH250-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH250_ElecTau.root',
     'sample'         : 'SUSYGGH250',
     'xSection'       : 1.0,
@@ -1894,7 +4543,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH300-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH300_ElecTau.root',
     'sample'         : 'SUSYGGH300',
     'xSection'       : 1.0,
@@ -1905,7 +4554,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH350-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH350_ElecTau.root',
     'sample'         : 'SUSYGGH350',
     'xSection'       : 1.0,
@@ -1916,7 +4565,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH400-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH400_ElecTau.root',
     'sample'         : 'SUSYGGH400',
     'xSection'       : 1.0,
@@ -1927,7 +4576,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH450-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH450_ElecTau.root',
     'sample'         : 'SUSYGGH450',
     'xSection'       : 1.0,
@@ -1938,7 +4587,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH500-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH500_ElecTau.root',
     'sample'         : 'SUSYGGH500',
     'xSection'       : 1.0,
@@ -1949,7 +4598,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH600-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH600_ElecTau.root',
     'sample'         : 'SUSYGGH600',
     'xSection'       : 1.0,
@@ -1960,7 +4609,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH700-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH700_ElecTau.root',
     'sample'         : 'SUSYGGH700',
     'xSection'       : 1.0,
@@ -1971,7 +4620,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH800-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH800_ElecTau.root',
     'sample'         : 'SUSYGGH800',
     'xSection'       : 1.0,
@@ -1982,7 +4631,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH900-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH900_ElecTau.root',
     'sample'         : 'SUSYGGH900',
     'xSection'       : 1.0,
@@ -1993,7 +4642,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYGGH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYGGH1000-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYGGH1000_ElecTau.root',
     'sample'         : 'SUSYGGH1000',
     'xSection'       : 1.0,
@@ -2004,7 +4653,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH80' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH80-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH80_ElecTau.root',
     'sample'         : 'SUSYBBH80',
     'xSection'       : 1.0,
@@ -2015,7 +4664,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH90' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH90-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH90_ElecTau.root',
     'sample'         : 'SUSYBBH90',
     'xSection'       : 1.0,
@@ -2026,7 +4675,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH100' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH100-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH100_ElecTau.root',
     'sample'         : 'SUSYBBH100',
     'xSection'       : 1.0,
@@ -2037,7 +4686,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH110' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH110-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH110_ElecTau.root',
     'sample'         : 'SUSYBBH110',
     'xSection'       : 1.0,
@@ -2048,7 +4697,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH120' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH120-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH120_ElecTau.root',
     'sample'         : 'SUSYBBH120',
     'xSection'       : 1.0,
@@ -2059,7 +4708,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH130' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH130-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH130_ElecTau.root',
     'sample'         : 'SUSYBBH130',
     'xSection'       : 1.0,
@@ -2070,7 +4719,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH140' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH140-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH140_ElecTau.root',
     'sample'         : 'SUSYBBH140',
     'xSection'       : 1.0,
@@ -2081,7 +4730,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH160' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH160-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH160_ElecTau.root',
     'sample'         : 'SUSYBBH160',
     'xSection'       : 1.0,
@@ -2092,7 +4741,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH180' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH180-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH180_ElecTau.root',
     'sample'         : 'SUSYBBH180',
     'xSection'       : 1.0,
@@ -2103,7 +4752,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH200' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH200-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH200_ElecTau.root',
     'sample'         : 'SUSYBBH200',
     'xSection'       : 1.0,
@@ -2114,7 +4763,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH250' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH250-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH250_ElecTau.root',
     'sample'         : 'SUSYBBH250',
     'xSection'       : 1.0,
@@ -2125,7 +4774,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH300' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH300-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH300_ElecTau.root',
     'sample'         : 'SUSYBBH300',
     'xSection'       : 1.0,
@@ -2136,7 +4785,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH350' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH350-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH350_ElecTau.root',
     'sample'         : 'SUSYBBH350',
     'xSection'       : 1.0,
@@ -2147,7 +4796,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH400' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH400-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH400_ElecTau.root',
     'sample'         : 'SUSYBBH400',
     'xSection'       : 1.0,
@@ -2158,7 +4807,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH450' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH450-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH450_ElecTau.root',
     'sample'         : 'SUSYBBH450',
     'xSection'       : 1.0,
@@ -2169,7 +4818,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH500' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH500-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH500_ElecTau.root',
     'sample'         : 'SUSYBBH500',
     'xSection'       : 1.0,
@@ -2180,7 +4829,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH600' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH600-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH600_ElecTau.root',
     'sample'         : 'SUSYBBH600',
     'xSection'       : 1.0,
@@ -2191,7 +4840,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH700' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH700-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH700_ElecTau.root',
     'sample'         : 'SUSYBBH700',
     'xSection'       : 1.0,
@@ -2202,7 +4851,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH800' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH800-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH800_ElecTau.root',
     'sample'         : 'SUSYBBH800',
     'xSection'       : 1.0,
@@ -2213,7 +4862,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH900' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH900-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH900_ElecTau.root',
     'sample'         : 'SUSYBBH900',
     'xSection'       : 1.0,
@@ -2224,7 +4873,7 @@ options = {
     'nDiv'           : 1
     },
     'SUSYBBH1000' : {
-    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-MC_HTT_27Nov14_Trees_EleTau_v2/',
+    'inputFilePath'  : WorkdirLoc+'HiggsMSSM/SUSYBBH1000-MC_HTT_19Dec14_Trees_EleTau_v1/',
     'outputFileName' : OutDir+'nTupleSUSYBBH1000_ElecTau.root',
     'sample'         : 'SUSYBBH1000',
     'xSection'       : 1.0,
