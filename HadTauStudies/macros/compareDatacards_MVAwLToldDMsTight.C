@@ -18,6 +18,8 @@
 #include <iomanip>
 #include <assert.h>
 
+enum { kUndefined, kAbsolute, kRelative };
+
 TH1* compRatioHistogram(const std::string& ratioHistogramName, const TH1* numerator, const TH1* denominator)
 {
   TH1* histogramRatio = 0;
@@ -55,6 +57,8 @@ void showHistograms(double canvasSizeX, double canvasSizeY,
 		    double legendX0, double legendY0, 
 		    const std::string& outputFileName)
 {
+  if ( !(histogram_ref && histogram2) ) return;
+
   TCanvas* canvas = new TCanvas("canvas", "canvas", canvasSizeX, canvasSizeY);
   canvas->SetFillColor(10);
   canvas->SetBorderSize(2);
@@ -100,8 +104,9 @@ void showHistograms(double canvasSizeX, double canvasSizeY,
   histogram_ref->SetMarkerStyle(markerStyles[0]);
   histogram_ref->SetMarkerSize(markerSizes[0]);
   histogram_ref->Draw("e1p");
-  if ( integral_ref >= 0. ) legend->AddEntry(histogram_ref, Form("%s: %1.2f", legendEntry_ref.data(), integral_ref), "p");
-  else legend->AddEntry(histogram_ref, legendEntry_ref.data(), "p");
+  //if ( integral_ref >= 0. ) legend->AddEntry(histogram_ref, Form("%s: %1.2f", legendEntry_ref.data(), integral_ref), "p");
+  //else legend->AddEntry(histogram_ref, legendEntry_ref.data(), "p");
+  legend->AddEntry(histogram_ref, Form("%s: %1.2f", legendEntry_ref.data(), integral_ref), "p");
 
   TAxis* xAxis_top = histogram_ref->GetXaxis();
   xAxis_top->SetTitle(xAxisTitle.data());
@@ -120,8 +125,9 @@ void showHistograms(double canvasSizeX, double canvasSizeY,
     histogram2->SetMarkerStyle(markerStyles[1]);
     histogram2->SetMarkerSize(markerSizes[1]);
     histogram2->Draw("e1psame");
-    if ( integral2 >= 0. ) legend->AddEntry(histogram2, Form("%s: %1.2f", legendEntry2.data(), integral2), "p");
-    else legend->AddEntry(histogram2, legendEntry2.data(), "p");
+    //if ( integral2 >= 0. ) legend->AddEntry(histogram2, Form("%s: %1.2f", legendEntry2.data(), integral2), "p");
+    //else legend->AddEntry(histogram2, legendEntry2.data(), "p");
+    legend->AddEntry(histogram2, Form("%s: %1.2f", legendEntry2.data(), integral2), "p");
   }
 
   if ( histogram3 ) {
@@ -131,8 +137,9 @@ void showHistograms(double canvasSizeX, double canvasSizeY,
     histogram3->SetMarkerStyle(markerStyles[2]);
     histogram3->SetMarkerSize(markerSizes[2]);
     histogram3->Draw("e1psame");
-    if ( integral3 >= 0. ) legend->AddEntry(histogram3, Form("%s: %1.2f", legendEntry3.data(), integral3), "p");
-    else legend->AddEntry(histogram3, legendEntry3.data(), "p");
+    //if ( integral3 >= 0. ) legend->AddEntry(histogram3, Form("%s: %1.2f", legendEntry3.data(), integral3), "p");
+    //else legend->AddEntry(histogram3, legendEntry3.data(), "p");
+    legend->AddEntry(histogram3, Form("%s: %1.2f", legendEntry3.data(), integral3), "p");
   }
 
   if ( histogram4 ) {
@@ -299,8 +306,21 @@ void showHistograms(double canvasSizeX, double canvasSizeY,
   delete canvas;  
 }
 
+double compIntegral(const TH1* histogram)
+{
+  if ( !histogram ) return -1.;
+  double integral = 0.;
+  int numBins = histogram->GetNbinsX();
+  for ( int iBin = 1; iBin <= numBins; ++iBin ) {
+    double binContent = histogram->GetBinContent(iBin);
+    integral += binContent;
+  }
+  return integral;
+}
+
 void divideByBinWidth(TH1* histogram)
 {
+  if ( !histogram ) return;
   TAxis* xAxis = histogram->GetXaxis();
   int numBins = xAxis->GetNbins();
   for ( int iBin = 1; iBin <= numBins; ++iBin ) {
@@ -314,6 +334,8 @@ void divideByBinWidth(TH1* histogram)
 
 TH1* linearizeHistogram(TH1* histogram)
 {
+  if ( !histogram ) return 0;
+
   TH1* histogram2d = dynamic_cast<TH2*>(histogram);
   if ( !histogram2d ) return histogram;
 
@@ -341,6 +363,7 @@ TH1* linearizeHistogram(TH1* histogram)
 
 TH1* compHistogramErr(const TH1* histogram)
 {
+  if ( !histogram ) return 0;
   std::string histogramErrName = Form("%sErr", histogram->GetName());
   TH1* histogramErr = (TH1*)histogram->Clone();
   int numBins = histogram->GetNbinsX();
@@ -352,49 +375,44 @@ TH1* compHistogramErr(const TH1* histogram)
   return histogramErr;
 }
 
-void makePlot(const std::string& inputFilePath_ref, const std::string& inputFileName_ref, const std::string& histogramName_ref, const std::string& legendEntry_ref,
-	      const std::string& inputFilePath_test, const std::string& inputFileName_test, const std::string& histogramName_test, const std::string& legendEntry_test, 
-	      const std::string& inputFilePath_test2, const std::string& inputFileName_test2, const std::string& histogramName_test2, const std::string& legendEntry_test2,
-	      const std::string& outputFileName)
+TH1* loadHistogram(TFile* inputFile, const std::string& histogramName)
 {
+  std::cout << "loading histogram = " << histogramName << " from file = " << inputFile->GetName() << std::endl;
+  TH1* histogram = dynamic_cast<TH1*>(inputFile->Get(histogramName.data()));
+  std::cout << "histogram = " << histogram << std::endl;
+  if ( !histogram ) {
+    std::cerr << "Failed to load histogram = " << histogramName << " from file = " << inputFile->GetName() << " --> skipping !!" << std::endl;
+    return 0;
+  }
+  if ( !histogram->GetSumw2N() ) histogram->Sumw2();
+  if ( dynamic_cast<TH2*>(histogram) ) histogram = linearizeHistogram(histogram);
+  //else if ( histogram->GetNbinsX() >= 100 ) histogram->Rebin(5);
+  return histogram;
+}
+
+void makePlot(
+       const std::string& inputFilePath_ref, const std::string& inputFileName_ref, const std::string& histogramName_ref, const std::string& legendEntry_ref,
+       const std::string& inputFilePath_test, const std::string& inputFileName_test, const std::string& histogramName_test, const std::string& legendEntry_test, 
+       const std::string& inputFilePath_test2, const std::string& inputFileName_test2, const std::string& histogramName_test2, const std::string& legendEntry_test2,
+       const std::string& outputFileName)
+{
+  std::cout << "<makePlot_shift_minus_central>:" << std::endl;
+
   TString inputFileName_ref_full = inputFilePath_ref;
   if ( !inputFileName_ref_full.EndsWith("/") ) inputFileName_ref_full.Append("/");
   inputFileName_ref_full.Append(inputFileName_ref.data());
   TFile* inputFile_ref = new TFile(inputFileName_ref_full.Data());
-  
-  std::cout << "loading histogram = " << histogramName_ref << " from file = " << inputFile_ref->GetName() << std::endl;
-  TH1* histogram_ref = dynamic_cast<TH1*>(inputFile_ref->Get(histogramName_ref.data()));
-  std::cout << "histogram_ref = " << histogram_ref << std::endl;
-  if ( !histogram_ref ) {
-    std::cerr << "Failed to load histogram = " << histogramName_ref << " from file = " << inputFile_ref->GetName() << " --> skipping !!" << std::endl;
-    delete inputFile_ref;
-    return;
-  }
-  if ( !histogram_ref->GetSumw2N() ) histogram_ref->Sumw2();
-  if ( dynamic_cast<TH2*>(histogram_ref) ) histogram_ref = linearizeHistogram(histogram_ref);
-  //else if ( histogram_ref->GetNbinsX() >= 100 ) histogram_ref->Rebin(5);
-  double integral_ref = histogram_ref->Integral();
+  TH1* histogram_ref = loadHistogram(inputFile_ref, histogramName_ref);
+  double integral_ref = compIntegral(histogram_ref);
   divideByBinWidth(histogram_ref);
-  
+
   TString inputFileName_test_full = inputFilePath_test;
   if ( !inputFileName_test_full.EndsWith("/") ) inputFileName_test_full.Append("/");
   inputFileName_test_full.Append(inputFileName_test.data());
   TFile* inputFile_test = ( inputFileName_test_full != inputFileName_ref_full ) ? 
     new TFile(inputFileName_test_full.Data()) : inputFile_ref;
-  
-  std::cout << "loading histogram = " << histogramName_test << " from file = " << inputFile_test->GetName() << std::endl;
-  TH1* histogram_test = dynamic_cast<TH1*>(inputFile_test->Get(histogramName_test.data()));
-  std::cout << "histogram_test = " << histogram_test << std::endl;
-  if ( !histogram_test ) {
-    std::cerr << "Failed to load histogram = " << histogramName_test << " from file = " << inputFile_test->GetName() << " --> skipping !!" << std::endl;
-    delete inputFile_ref;
-    if ( inputFile_test != inputFile_ref ) delete inputFile_test;
-    return;
-  }
-  if ( !histogram_test->GetSumw2N() ) histogram_test->Sumw2();
-  if ( dynamic_cast<TH2*>(histogram_test) ) histogram_test = linearizeHistogram(histogram_test);
-  //else if ( histogram_test->GetNbinsX() >= 100 ) histogram_test->Rebin(5);
-  double integral_test = histogram_test->Integral();
+  TH1* histogram_test = loadHistogram(inputFile_test, histogramName_test);
+  double integral_test = compIntegral(histogram_test);
   divideByBinWidth(histogram_test);
   
   TFile* inputFile_test2 = 0;
@@ -406,21 +424,8 @@ void makePlot(const std::string& inputFilePath_ref, const std::string& inputFile
     inputFileName_test2_full.Append(inputFileName_test2.data());
     inputFile_test2 = ( inputFileName_test2_full != inputFileName_ref_full ) ? 
       new TFile(inputFileName_test2_full.Data()) : inputFile_ref;
-  
-    std::cout << "loading histogram = " << histogramName_test2 << " from file = " << inputFile_test2->GetName() << std::endl;
-    histogram_test2 = dynamic_cast<TH1*>(inputFile_test2->Get(histogramName_test2.data()));
-    std::cout << "histogram_test2 = " << histogram_test2 << std::endl;
-    if ( !histogram_test2 ) {
-      std::cerr << "Failed to load histogram = " << histogramName_test2 << " from file = " << inputFile_test2->GetName() << " --> skipping !!" << std::endl;
-      delete inputFile_ref;
-      if ( inputFile_test != inputFile_ref ) delete inputFile_test;
-      if ( inputFile_test2 != inputFile_ref && inputFile_test2 != inputFile_test ) delete inputFile_test2;
-      return;
-    }
-    if ( !histogram_test2->GetSumw2N() ) histogram_test2->Sumw2();
-    if ( dynamic_cast<TH2*>(histogram_test2) ) histogram_test2 = linearizeHistogram(histogram_test2);
-    //else if ( histogram_test2->GetNbinsX() >= 100 ) histogram_test2->Rebin(5);
-    integral_test2 = histogram_test2->Integral();
+    histogram_test2 = loadHistogram(inputFile_test2, histogramName_test2);
+    integral_test2 = compIntegral(histogram_test2);
     divideByBinWidth(histogram_test2);
   }
   
@@ -464,24 +469,181 @@ void makePlot(const std::string& inputFilePath_ref, const std::string& inputFile
   if ( inputFile_test2 != inputFile_ref && inputFile_test2 != inputFile_test ) delete inputFile_test2;
 }
 
+double square(double x)
+{
+  return x*x;
+}
+
+TH1* subtractHistograms(const std::string& newHistogramName, const TH1* histogram_central, const TH1* histogram_shift, int mode)
+{
+  const TH1* histogramMinuend = 0;
+  const TH1* histogramSubtrahend = 0;
+  if ( compIntegral(histogram_central) >= compIntegral(histogram_shift) ) {
+    histogramMinuend    = histogram_central;
+    histogramSubtrahend = histogram_shift;
+  } else {
+    histogramMinuend    = histogram_shift;
+    histogramSubtrahend = histogram_central;
+  }
+  if ( !(histogramMinuend && histogramSubtrahend) ) return 0;
+  TH1* newHistogram = (TH1*)histogramMinuend->Clone(newHistogramName.data());
+  newHistogram->Reset();
+  if ( !newHistogram->GetSumw2N() ) newHistogram->Sumw2();
+  int numBins = newHistogram->GetNbinsX();
+  for ( int iBin = 0; iBin <= (numBins + 1); ++iBin ) {
+    double newBinContent = histogramMinuend->GetBinContent(iBin) - histogramSubtrahend->GetBinContent(iBin);
+    double newBinError2 = square(histogramMinuend->GetBinError(iBin)) + square(histogramSubtrahend->GetBinError(iBin));
+    if ( mode == kRelative ) {
+      if ( histogram_central->GetBinContent(iBin) > 0. ) {
+	newBinContent /= histogram_central->GetBinContent(iBin);
+	newBinError2 /= square(histogram_central->GetBinContent(iBin));
+      } else {
+	newBinContent = 0.;
+	newBinError2 = 0.;
+      }
+    }
+    newHistogram->SetBinContent(iBin, newBinContent);
+    assert(newBinError2 >= 0.);
+    newHistogram->SetBinError(iBin, TMath::Sqrt(newBinError2));
+  }
+  return newHistogram;
+}
+
+void makePlot_shift_minus_central(
+       const std::string& inputFilePath_ref, const std::string& inputFileName_ref, 
+       const std::string& histogramName_ref_shift, const std::string& histogramName_ref_central, const std::string& legendEntry_ref,
+       const std::string& inputFilePath_test, const std::string& inputFileName_test, 
+       const std::string& histogramName_test_shift, const std::string& histogramName_test_central, const std::string& legendEntry_test, 
+       const std::string& inputFilePath_test2, const std::string& inputFileName_test2, 
+       const std::string& histogramName_test2_shift, const std::string& histogramName_test2_central, const std::string& legendEntry_test2,
+       const std::string& outputFileName)
+{
+  std::cout << "<makePlot_shift_minus_central>:" << std::endl;
+
+  TString inputFileName_ref_full = inputFilePath_ref;
+  if ( !inputFileName_ref_full.EndsWith("/") ) inputFileName_ref_full.Append("/");
+  inputFileName_ref_full.Append(inputFileName_ref.data());
+  TFile* inputFile_ref = new TFile(inputFileName_ref_full.Data());
+  TH1* histogram_ref_shift = loadHistogram(inputFile_ref, histogramName_ref_shift);
+  TH1* histogram_ref_central = loadHistogram(inputFile_ref, histogramName_ref_central);
+  TH1* histogram_ref_shift_minus_centralAbs = 0;
+  TH1* histogram_ref_shift_minus_centralRel = 0;
+  double integral_ref = -1.;
+  if ( histogram_ref_shift && histogram_ref_central ) {
+    std::string histogramName_ref_shift_minus_centralAbs = Form("%s_minus_%sAbs", histogram_ref_shift->GetName(), histogram_ref_central->GetName());
+    histogram_ref_shift_minus_centralAbs = subtractHistograms(histogramName_ref_shift_minus_centralAbs, histogram_ref_shift, histogram_ref_central, kAbsolute);
+    std::string histogramName_ref_shift_minus_centralRel = Form("%s_minus_%sRel", histogram_ref_shift->GetName(), histogram_ref_central->GetName());
+    histogram_ref_shift_minus_centralRel = subtractHistograms(histogramName_ref_shift_minus_centralRel, histogram_ref_shift, histogram_ref_central, kRelative);
+    integral_ref = compIntegral(histogram_ref_shift_minus_centralAbs);
+    std::cout << " integral_ref = " << integral_ref << std::endl;
+    divideByBinWidth(histogram_ref_shift_minus_centralAbs);
+  }
+
+  TString inputFileName_test_full = inputFilePath_test;
+  if ( !inputFileName_test_full.EndsWith("/") ) inputFileName_test_full.Append("/");
+  inputFileName_test_full.Append(inputFileName_test.data());
+  TFile* inputFile_test = ( inputFileName_test_full != inputFileName_ref_full ) ? 
+    new TFile(inputFileName_test_full.Data()) : inputFile_ref;
+  TH1* histogram_test_shift = loadHistogram(inputFile_test, histogramName_test_shift);
+  TH1* histogram_test_central = loadHistogram(inputFile_test, histogramName_test_central);
+  TH1* histogram_test_shift_minus_centralAbs = 0;
+  TH1* histogram_test_shift_minus_centralRel = 0;
+  double integral_test = -1.;
+  if ( histogram_test_shift && histogram_test_central ) {
+    std::string histogramName_test_shift_minus_centralAbs = Form("%s_minus_%sAbs", histogram_test_shift->GetName(), histogram_test_central->GetName());
+    histogram_test_shift_minus_centralAbs = subtractHistograms(histogramName_test_shift_minus_centralAbs, histogram_test_shift, histogram_test_central, kAbsolute);
+    std::string histogramName_test_shift_minus_centralRel = Form("%s_minus_%sRel", histogram_test_shift->GetName(), histogram_test_central->GetName());
+    histogram_test_shift_minus_centralRel = subtractHistograms(histogramName_test_shift_minus_centralRel, histogram_test_shift, histogram_test_central, kRelative);
+    integral_test = compIntegral(histogram_test_shift_minus_centralAbs);
+    std::cout << " integral_test = " << integral_test << std::endl;
+    divideByBinWidth(histogram_test_shift_minus_centralAbs);
+  }
+
+  TFile* inputFile_test2 = 0;
+  TH1* histogram_test2_shift_minus_centralAbs = 0;
+  TH1* histogram_test2_shift_minus_centralRel = 0;
+  double integral_test2 = -1.;
+  if ( inputFilePath_test2 != "" && inputFileName_test2 != "" && histogramName_test2_shift != "" && histogramName_test2_central != "" ) {
+    TString inputFileName_test2_full = inputFilePath_test2;
+    if ( !inputFileName_test2_full.EndsWith("/") ) inputFileName_test2_full.Append("/");
+    inputFileName_test2_full.Append(inputFileName_test2.data());
+    inputFile_test2 = ( inputFileName_test2_full != inputFileName_ref_full ) ? 
+      new TFile(inputFileName_test2_full.Data()) : inputFile_ref;
+    TH1* histogram_test2_shift = loadHistogram(inputFile_test2, histogramName_test2_shift);
+    TH1* histogram_test2_central = loadHistogram(inputFile_test2, histogramName_test2_central);
+    if ( histogram_test2_shift && histogram_test2_central ) {
+      std::string histogramName_test2_shift_minus_centralAbs = Form("%s_minus_%sAbs", histogram_test2_shift->GetName(), histogram_test2_central->GetName());
+      histogram_test2_shift_minus_centralAbs = subtractHistograms(histogramName_test2_shift_minus_centralAbs, histogram_test2_shift, histogram_test2_central, kAbsolute);
+      std::string histogramName_test2_shift_minus_centralRel = Form("%s_minus_%sRel", histogram_test2_shift->GetName(), histogram_test2_central->GetName());
+      histogram_test2_shift_minus_centralRel = subtractHistograms(histogramName_test2_shift_minus_centralRel, histogram_test2_shift, histogram_test2_central, kRelative);
+      integral_test2 = compIntegral(histogram_test2_shift_minus_centralAbs);
+      std::cout << " integral_test2 = " << integral_test2 << std::endl;
+      divideByBinWidth(histogram_test2_shift_minus_centralAbs);
+    }
+  }
+
+  size_t idx = outputFileName.find_last_of('.');
+  std::string outputFileName_abs = std::string(outputFileName, 0, idx);
+  outputFileName_abs.append("_absolute");
+  if ( idx != std::string::npos ) outputFileName_abs.append(std::string(outputFileName, idx));
+
+  showHistograms(800, 900, 
+		 histogram_ref_shift_minus_centralAbs, legendEntry_ref, integral_ref,
+		 histogram_test_shift_minus_centralAbs, legendEntry_test, integral_test, 
+		 histogram_test2_shift_minus_centralAbs, legendEntry_test2, integral_test2, 
+		 //NULL, "", 0.,
+		 NULL, "", 0.,
+		 NULL, "", 0.,
+		 NULL, "", 0.,
+		 "m_{#tau#tau} [GeV]", 1.10,
+		 true, 1.e-4, 1.e+4, "1/dm_{#tau#tau} [1/GeV]", 1.30,
+		 0.34, 0.72,
+		 outputFileName_abs.data());
+  
+  std::string outputFileName_rel = std::string(outputFileName, 0, idx);
+  outputFileName_rel.append("_relative");
+  if ( idx != std::string::npos ) outputFileName_rel.append(std::string(outputFileName, idx));
+  
+  showHistograms(800, 900, 
+		 histogram_ref_shift_minus_centralRel, legendEntry_ref, integral_ref,
+		 histogram_test_shift_minus_centralRel, legendEntry_test, integral_test, 
+		 histogram_test2_shift_minus_centralRel, legendEntry_test2, integral_test2, 
+		 //NULL, "", 0.,
+		 NULL, "", 0.,
+		 NULL, "", 0.,
+		 NULL, "", 0.,
+		 "m_{#tau#tau} [GeV]", 1.10,
+		 true, 1.e-4, 1.e+4, "#Delta 1/dm_{#tau#tau}", 1.30,
+		 0.34, 0.72,
+		 outputFileName_rel.data());
+
+  delete inputFile_ref;
+  if ( inputFile_test != inputFile_ref ) delete inputFile_test;
+  if ( inputFile_test2 != inputFile_ref && inputFile_test2 != inputFile_test ) delete inputFile_test2;
+}
+
 void compareDatacards_MVAwLToldDMsTight()
 {
   gROOT->SetBatch(true);
 
   TH1::AddDirectory(false);
 
-  std::string inputFilePath_ref = "/data1/veelken/tmp/tauTauAnalysis/v3_10_2/";
+  std::string inputFilePath_ref = "/data1/veelken/tmp/tauTauAnalysis/v3_13_7/";
   std::string inputFileName_ref = "htt_tt.inputs-mssm-8TeV-0_MVAwLToldDMsTight.root";
   std::string legendEntry_ref = "LLR";
 
-  std::string inputFilePath_test = "/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/LLRAnalysis/HadTauStudies/macros/";
-  std::string inputFileName_test = "fromRam/2014Nov16/DATACARD_MVAWLTTIGHT_smggh125_syst_included.root";
+  //std::string inputFilePath_test = "/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/LLRAnalysis/HadTauStudies/macros/";
+  //std::string inputFileName_test = "fromRam/2015Jan09/htt_tt.inputs-mssm-8TeV-0_old_fakerates_8Jan2015.root";
+  std::string inputFilePath_test = "/afs/cern.ch/user/v/veelken/scratch0/mssmHtautauLimits/CMSSW_6_1_1/src/auxiliaries/shapes/TIFR/";
+  std::string inputFileName_test = "htt_tt.inputs-mssm-8TeV-0_3Feb2015_Data_ggHSM125_syst_fix.root";
   //std::string inputFileName_test = "mergeDatacards.root";
   std::string legendEntry_test = "TIFR";
 
-  std::string inputFilePath_test2 = "/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/LLRAnalysis/HadTauStudies/macros/";
-  std::string inputFileName_test2 = "fromCecile/2014Dec01/htt_tt_mssm_mva_tailfit_1Dec.root";
+  std::string inputFilePath_test2 = "/afs/cern.ch/user/c/ccaillol/public/For_Christian/";
+  std::string inputFileName_test2 = "htt_tt_mssm_mva_tailfit_3Feb.root";
   std::string legendEntry_test2 = "ULB";
+
+  std::string outputFilePath = "/tmp/veelken/plots";
 
   std::string channel = "tauTau";
 
@@ -578,6 +740,7 @@ void compareDatacards_MVAwLToldDMsTight()
 	    process != processes[channel][*period].end(); ++process ) {
 	for ( std::vector<std::string>::const_iterator central_or_shift = sysShifts.begin();
 	      central_or_shift != sysShifts.end(); ++central_or_shift ) {
+	  std::cout << "processing: category = " << (*category_ref) << ", period = " << (*period) << ", process = " << (*process) << ", central_or_shift = " << (*central_or_shift) << std::endl;
 	  if ( central_or_shift->find("CMS_htt_QCDfr") != std::string::npos && (*process) != "QCD" ) continue;
 	  if ( central_or_shift->find("CMS_eff_t_mssmHigh") != std::string::npos && !((*process) != "ZTT" || process->find("ggH") != std::string::npos || process->find("bbH") != std::string::npos) ) continue;
 	  if ( central_or_shift->find("CMS_htt_ttbarPtReweight") != std::string::npos && (*process) != "TT" ) continue;
@@ -589,18 +752,41 @@ void compareDatacards_MVAwLToldDMsTight()
 	    histogramName_ref = Form("%s_%s/%s_%s", channel.data(), category_ref->data(), process->data(), central_or_shift->data());
 	    histogramName_test = Form("%s_%s/%s_%s", channel.data(), categories_test[*category_ref].data(), process->data(), central_or_shift->data());
 	    histogramName_test2 = Form("%s_%s/%s_%s", channel.data(), categories_test2[*category_ref].data(), process->data(), central_or_shift->data());
-	    outputFileName = Form("plots/compareDatacards_MVAwLToldDMsTight_%s_%s_%s_%s_%s.png", channel.data(), category_ref->data(), process->data(), central_or_shift->data(), period->data());
+	    outputFileName = Form("compareDatacards_MVAwLToldDMsTight_%s_%s_%s_%s_%s.png", channel.data(), category_ref->data(), process->data(), central_or_shift->data(), period->data());
 	  } else {
 	    histogramName_ref = Form("%s_%s/%s", channel.data(), category_ref->data(), process->data());
 	    histogramName_test = Form("%s_%s/%s", channel.data(), categories_test[*category_ref].data(), process->data());
 	    histogramName_test2 = Form("%s_%s/%s", channel.data(), categories_test2[*category_ref].data(), process->data());
-	    outputFileName = Form("plots/compareDatacards_MVAwLToldDMsTight_%s_%s_%s_%s.png", channel.data(), category_ref->data(), process->data(), period->data());
+	    outputFileName = Form("compareDatacards_MVAwLToldDMsTight_%s_%s_%s_%s.png", channel.data(), category_ref->data(), process->data(), period->data());
 	  }
 	  makePlot(inputFilePath_ref, inputFileName_ref, histogramName_ref, legendEntry_ref, 
-		   //inputFilePath_test, inputFileName_test, histogramName_test, legendEntry_test, 
+		   inputFilePath_test, inputFileName_test, histogramName_test, legendEntry_test, 
 		   inputFilePath_test2, inputFileName_test2, histogramName_test2, legendEntry_test2,
-		   "", "", "", "",
-		   outputFileName);
+		   //"", "", "", "",
+		   Form("%s/%s", outputFilePath.data(), outputFileName.data()));
+	  if ( !((*central_or_shift) == "" || (*central_or_shift) == "central") ) {
+	    std::string histogramName_ref_shift = Form("%s_%s/%s_%s", channel.data(), category_ref->data(), process->data(), central_or_shift->data());
+	    std::string histogramName_ref_central = Form("%s_%s/%s", channel.data(), category_ref->data(), process->data());
+	    std::string histogramName_test_shift = Form("%s_%s/%s_%s", channel.data(), categories_test[*category_ref].data(), process->data(), central_or_shift->data());
+	    std::string histogramName_test_central = Form("%s_%s/%s", channel.data(), categories_test[*category_ref].data(), process->data());;
+	    std::string histogramName_test2_shift = Form("%s_%s/%s_%s", channel.data(), categories_test2[*category_ref].data(), process->data(), central_or_shift->data()); 
+	    std::string histogramName_test2_central = Form("%s_%s/%s", channel.data(), categories_test2[*category_ref].data(), process->data()); 
+	    outputFileName = Form("compareDatacards_MVAwLToldDMsTight_%s_%s_%s_%s_minus_central_%s.png", channel.data(), category_ref->data(), process->data(), central_or_shift->data(), period->data());
+	    if ( central_or_shift->find("8TeVUp") != std::string::npos ) {
+	      makePlot_shift_minus_central(inputFilePath_ref, inputFileName_ref, histogramName_ref_shift, histogramName_ref_central, legendEntry_ref, 
+					   inputFilePath_test, inputFileName_test, histogramName_test_shift, histogramName_test_central, legendEntry_test, 
+					   inputFilePath_test2, inputFileName_test2, histogramName_test2_shift, histogramName_test2_central, legendEntry_test2,
+					   //"", "", "", "",
+					   Form("%s/%s", outputFilePath.data(), outputFileName.data()));
+	    } 
+	    if ( central_or_shift->find("8TeVDown") != std::string::npos ) {
+	      makePlot_shift_minus_central(inputFilePath_ref, inputFileName_ref, histogramName_ref_central, histogramName_ref_shift, legendEntry_ref, 
+					   inputFilePath_test, inputFileName_test, histogramName_test_central, histogramName_test_shift, legendEntry_test, 
+					   inputFilePath_test2, inputFileName_test2, histogramName_test2_central, histogramName_test2_shift, legendEntry_test2,
+					   //"", "", "", "",
+					   Form("%s/%s", outputFilePath.data(), outputFileName.data()));
+	    }
+	  }
 	}
       }
     }

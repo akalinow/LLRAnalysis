@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
   else if ( contains(process_string, "data2012run") ) process = kData; // CV: for checking event yield in individual data-taking periods
   else if ( (contains(process_string, "ggH") || contains(process_string, "bbH")) && !contains(process_string, "_SM125") ) process = kSignal;
   else if ( contains(process_string, "ggH_SM125") || contains(process_string, "qqH_SM125") || contains(process_string, "VH_SM125") ) process = kSM_Higgs;
-  else if ( process_string == "ZTTmc"        ) process = kZTTmc;
+  else if ( process_string == "ZTTmc" || process_string == "ZTTmc_tauPolarOff" || process_string == "ZTTmc_tauPolarOn" ) process = kZTTmc;
   else if ( process_string == "ZL"           ) process = kZL;
   else if ( process_string == "ZJ"           ) process = kZJ;
   else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
@@ -197,7 +197,9 @@ int main(int argc, char* argv[])
     << "Invalid Configuration parameter 'process' = " << process_string << " !!\n";
 
   bool isMC = !(process == kData || process == kZTT_Embedded);
+  std::cout << "isMC = " << isMC << std::endl;
   bool isEmbedded = (process == kZTT_Embedded || process == kTT_Embedded);
+  std::cout << "isEmbedded = " << isEmbedded << std::endl;
 
   double massPoint = ( process == kSignal ) ?
     cfgFWLiteTauTauAnalyzer.getParameter<double>("massPoint") : -1.;
@@ -510,7 +512,7 @@ int main(int argc, char* argv[])
   Float_t diTauCharge;
   inputTree->SetBranchAddress("diTauCharge", &diTauCharge);
   Float_t diTauGenMass;
-  if ( process == kSignal ) inputTree->SetBranchAddress("genMass", &diTauGenMass);
+  inputTree->SetBranchAddress("diTauGenMass", &diTauGenMass);
   Float_t dPhi, dEta, dR;
   inputTree->SetBranchAddress("dPhitt", &dPhi);
   inputTree->SetBranchAddress("dEtatt", &dEta);
@@ -570,6 +572,12 @@ int main(int argc, char* argv[])
   
   Int_t numVertices;
   inputTree->SetBranchAddress("nVert", &numVertices);
+  Float_t evtVertexZ, evtVertexRho, evtVertexNDoF;
+  inputTree->SetBranchAddress("vertexZ", &evtVertexZ);
+  inputTree->SetBranchAddress("vertexRho", &evtVertexRho);
+  inputTree->SetBranchAddress("vertexNDoF", &evtVertexNDoF);
+  Int_t evtVertex_isValid;
+  inputTree->SetBranchAddress("vertexIsValid", &evtVertex_isValid);
 
   Int_t isZtt, isZttj, isZttl, isZj, isZee, isZmm;
   inputTree->SetBranchAddress("isZtt", &isZtt);
@@ -589,8 +597,12 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("l2isGenElectron", &l2isGenElectron);
   inputTree->SetBranchAddress("l2isGenJet", &l2isGenJet);
   
-  Float_t genHiggsPt;
+  Float_t genMass;
+  inputTree->SetBranchAddress("genMass", &genMass);
+
+  Float_t genHiggsPt, genHiggsMass;
   inputTree->SetBranchAddress("genHiggsPt", &genHiggsPt);
+  inputTree->SetBranchAddress("genHiggsMass", &genHiggsMass);
 
   Float_t NUP;
   inputTree->SetBranchAddress("NUP", &NUP);
@@ -629,8 +641,10 @@ int main(int argc, char* argv[])
     ++analyzedEntries;
     
     inputTree->GetEntry(iEntry);
+    //std::cout << "processing Entry " << iEntry << ": run = " << run << ", ls = " << lumi << ", event = " << event << std::endl;
 
-    //if ( runLumiSectionEventNumberSelector && !(*runLumiSectionEventNumberSelector)(run, lumi, event) ) continue;
+    if ( runLumiSectionEventNumberSelector && !(*runLumiSectionEventNumberSelector)(run, lumi, event) ) continue;
+    //std::cout << "--> event passes run, lumi and event number selection." << std::endl;
 
     // CV: general phase-space cuts (driven by trigger requirements)
     if ( !(TMath::Abs(tau1Eta) < 2.1 && tau1Pt > 45. && 
@@ -638,6 +652,7 @@ int main(int argc, char* argv[])
     // CV: binning of events in tau Pt
     if ( !((tau1PtMin == -1. || tau1Pt > tau1PtMin) && (tau1PtMax == -1. || tau1Pt < tau1PtMax) &&
 	   (tau2PtMin == -1. || tau2Pt > tau2PtMin) && (tau2PtMax == -1. || tau2Pt < tau2PtMax)) ) continue;
+    //std::cout << "--> event passes tau Pt && eta cuts." << std::endl;
 
     if ( tau1Selection || tau2Selection ) {
       // CV: need to call TTreeFormula::UpdateFormulaLeaves whenever input files changes in TChain
@@ -652,9 +667,13 @@ int main(int argc, char* argv[])
       if ( tau1Selection && !(tau1Selection->EvalInstance() > 0.5) ) continue;
       if ( tau2Selection && !(tau2Selection->EvalInstance() > 0.5) ) continue;
     }
+    //std::cout << "--> event passes tau Pt selection." << std::endl;
 
     // CV: no need to require that both taus originate from the same vertex (cut already applied during Ntuple production)
     //if ( !(TMath::Abs(tau1VertexZ - tau2VertexZ) < 0.4) ) continue;
+
+    //std::cout << "tau1Pt = " << tau1Pt << ": tau1IsTriggerMatched_singleJet = " << tau1IsTriggerMatched_singleJet << std::endl;
+    //std::cout << "tau2Pt = " << tau2Pt << ": tau2IsTriggerMatched_singleJet = " << tau2IsTriggerMatched_singleJet << std::endl;
 
     if ( !isEmbedded ) {
       bool isTriggerMatched = false;
@@ -666,9 +685,11 @@ int main(int argc, char* argv[])
 	    (tau2Pt > tauPtForSwitchingTriggers && tau2IsTriggerMatched_singleJet)) ) isTriggerMatched = true;
       if ( !isTriggerMatched ) continue;
     }
- 
+    //std::cout << "--> event passes trigger matching." << std::endl;
+
     if ( diTauChargeSel == kOS && TMath::Abs(diTauCharge) > 0.5 ) continue;
     if ( diTauChargeSel == kSS && TMath::Abs(diTauCharge) < 0.5 ) continue;
+    //std::cout << "--> event passes charge requirement." << std::endl;
 
     int nbJets = 0;
     if ( bjet1Pt > 20. ) {
@@ -688,10 +709,14 @@ int main(int argc, char* argv[])
     if ( muon1Pt > 10. && TMath::Abs(muon1Eta) < 2.4 ) ++nMuons;
 
     if ( nElectrons > 0 || nMuons > 0 ) continue;
+    //std::cout << "--> event passes electron and muon vetos." << std::endl;
 
     //---------------------------------------------------------------------------
     // CV: process dependent selection criteria
-    if ( process == kSignal && !(diTauGenMass > 0.7*massPoint && diTauGenMass < 1.3*massPoint) ) continue;
+
+    // CV: cut on genHiggsMass does not need to be applied on analysis level anymore,
+    //     as it is already applied during Ntuple production
+    //if ( process == kSignal && !(genHiggsMass > 0.7*massPoint && genHiggsMass < 1.3*massPoint) ) continue;
 
     if ( (process == kZTTmc || process == kZTT_Embedded) && !isZtt ) continue;    
     bool isZL = (l1isGenElectron || l1isGenMuon) && (l2isGenElectron || l2isGenMuon);
@@ -700,7 +725,13 @@ int main(int argc, char* argv[])
     bool isZJ = !(is2RealTaus || isZL);
     if ( process == kZJ && !isZJ ) continue;
 
-    if ( process == kTT_Embedded && !is2RealTaus ) continue;
+    if ( isEmbedded && !is2RealTaus ) continue;
+
+    // CV: genMass not well defined for SS events ?!
+    //std::cout << "genMass = " << genMass << std::endl;
+    //if ( isEmbedded && diTauChargeSel == kOS && !(genMass > 50.) ) continue;
+
+    //std::cout << "--> event passes ZL, ZJ and ZTT flags." << std::endl;
     //---------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------
@@ -725,8 +756,8 @@ int main(int argc, char* argv[])
       tauTriggerEffDrop = effDrop2012IsoParkedTau_Arun_mvaVTight;          
     } 
     double triggerEffDrop_power = 1.;
-    if      ( applyHighPtTauTriggerEffUncertaintyUp   ) triggerEffDrop_power = 2.;
-    else if ( applyHighPtTauTriggerEffUncertaintyDown ) triggerEffDrop_power = 0.;
+    if      ( applyHighPtTauTriggerEffUncertaintyUp   ) triggerEffDrop_power = 0.;
+    else if ( applyHighPtTauTriggerEffUncertaintyDown ) triggerEffDrop_power = 2.;
     double triggerEffDropData_diTau = 1.;
     if ( applyTauTriggerTurnOn != kTree ) {
       assert(tauTriggerEffData);
@@ -838,7 +869,7 @@ int main(int argc, char* argv[])
       if ( jetToTauFakeRateLooseToTightWeight_tauEtaBin ) {
 	//std::cout << "tau1: Pt = " << tau1Pt << ", eta = " << tau1Eta << std::endl;
 	//std::cout << "tau2: Pt = " << tau2Pt << ", eta = " << tau2Eta << std::endl;
-	//std::cout << " --> jetToTauFakeRateLooseToTightWeight = " << (*jetToTauFakeRateLooseToTightWeight_tauEtaBin)(tau1Pt, tau2Pt) << std::endl;
+	//std::cout << " --> jetToTauFakeRateLooseToTightWeight = " << jetToTauFakeRateLooseToTightWeight_tauEtaBin->weight(tau1Pt, tau2Pt) << std::endl;
 	evtWeight *= jetToTauFakeRateLooseToTightWeight_tauEtaBin->weight(tau1Pt, tau2Pt);
         evtWeightErr2_relative += square(jetToTauFakeRateLooseToTightWeight_tauEtaBin->weightErr_relative(tau1Pt, tau2Pt));
       } else {
@@ -858,14 +889,11 @@ int main(int argc, char* argv[])
     double processSF_nobtag    = 1.0;
     double processSF_btag      = 1.0;
     if ( process == kTT || process == kTT_Embedded ) {
-      processSF_inclusive = 0.96; // CV: TTbar scale-factor obtained from emu sideband, provided by Valentina
-      processSF_nobtag    = 0.96;
-      processSF_btag      = 0.96;
+      processSF_inclusive = 1.033; // CV: TTbar scale-factor obtained from emu sideband, provided by Valentina;
+      processSF_nobtag    = 1.033; //     adjusted to new TTbar cross-section of TOP-14-016 of 241.5pb,
+      processSF_btag      = 1.033; //     such that cross-section times scale-factor remains the same as in HIG-13-021
     } 
     if ( process == kW ) {
-      //processSF_inclusive = 0.73; // CV: W+jets scale-factor provided by Aram
-      //processSF_nobtag    = 0.73;
-      //processSF_btag      = 1.50;
       processSF_inclusive = 1.00; // CV: new W+jets scale-factor determined by Olivier (compatible with 1.0 within uncertainties)
       processSF_nobtag    = 1.00;
       processSF_btag      = 1.00;
@@ -884,7 +912,7 @@ int main(int argc, char* argv[])
       jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
       bjet1Pt, bjet1Eta, bjet1Phi, 
       bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
-      met, numVertices, genHiggsPt, NUP,
+      met, numVertices, evtVertexZ, evtVertexRho, evtVertexNDoF, evtVertex_isValid, genHiggsPt, NUP,
       evtWeight*processSF_inclusive, evtWeightErr*processSF_inclusive);
 
     if ( selEventsFile_inclusive ) {
@@ -907,7 +935,7 @@ int main(int argc, char* argv[])
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
 	bjet1Pt, bjet1Eta, bjet1Phi, 
 	bjet2Pt, bjet2Eta, bjet2Phi, nbJets,
-	met, numVertices, genHiggsPt, NUP, 
+	met, numVertices, evtVertexZ, evtVertexRho, evtVertexNDoF, evtVertex_isValid, genHiggsPt, NUP, 
 	evtWeight*processSF_nobtag, evtWeightErr*processSF_nobtag);
 
       if ( selEventsFile_nobtag ) {
@@ -929,7 +957,7 @@ int main(int argc, char* argv[])
 	jet2Pt, jet2Eta, jet2Phi, jet2BtagDiscr, nJets,
 	bjet1Pt, bjet1Eta, bjet1Phi, 
 	bjet2Pt, bjet2Eta, bjet2Phi, nbJets, 
-	met, numVertices, genHiggsPt, NUP,
+	met, numVertices, evtVertexZ, evtVertexRho, evtVertexNDoF, evtVertex_isValid, genHiggsPt, NUP,
 	evtWeight*processSF_btag, evtWeightErr*processSF_btag);
 
       if ( selEventsFile_btag ) {

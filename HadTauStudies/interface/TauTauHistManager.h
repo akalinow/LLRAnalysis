@@ -42,7 +42,7 @@ class TauTauHistManager
 		      double, double, double, double, int,
 		      double, double, double, 
 		      double, double, double, int,
-		      double, int, double, double,
+		      double, int, double, double, double, int, double, double,
 		      double, double);
   
  protected:
@@ -92,6 +92,7 @@ class TauTauHistManager
   };
 
   TH1* histogramTau1PtS_;
+  TH1* histogramTau1PtM_;
   TH1* histogramTau1PtL_;
   std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramTau1Pt_inTauEtaBins_;
   TH1* histogramTau1Eta_;
@@ -102,6 +103,7 @@ class TauTauHistManager
   TH1* histogramTau1MVA_;
 
   TH1* histogramTau2PtS_;
+  TH1* histogramTau2PtM_;
   TH1* histogramTau2PtL_;
   std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramTau2Pt_inTauEtaBins_;
   TH1* histogramTau2Eta_;
@@ -112,22 +114,27 @@ class TauTauHistManager
   TH1* histogramTau2MVA_;
 
   TH1* histogramVisMassS_;
-  TH1* histogramVisMassL_;
+  TH1* histogramVisMassSwOverflow_;
+  TH1* histogramVisMassL_;  
   TH1* histogramSVfitMassS_;
+  TH1* histogramSVfitMassSwOverflow_;
   TH1* histogramSVfitMassL_;
   TH1* histogramMtTotalS_;
+  TH1* histogramMtTotalSwOverflow_;
   TH1* histogramMtTotalL_;
   TH1* histogramDeltaPhi_;
   TH1* histogramDeltaEta_;
   TH1* histogramDeltaR_;
   
   TH1* histogramJet1PtS_;
+  TH1* histogramJet1PtM_;
   TH1* histogramJet1PtL_;
   TH1* histogramJet1Eta_;
   TH1* histogramJet1Phi_;
   TH1* histogramJet1BtagDiscr_;
 
   TH1* histogramJet2PtS_;
+  TH1* histogramJet2PtM_;
   TH1* histogramJet2PtL_;
   TH1* histogramJet2Eta_;
   TH1* histogramJet2Phi_;
@@ -136,12 +143,14 @@ class TauTauHistManager
   TH1* histogramNumJets_;
 
   TH1* histogramBJet1PtS_;
+  TH1* histogramBJet1PtM_;
   TH1* histogramBJet1PtL_;
   std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet1Pt_inBJetEtaBins_;
   TH1* histogramBJet1Eta_;
   TH1* histogramBJet1Phi_;
 
   TH1* histogramBJet2PtS_;
+  TH1* histogramBJet2PtM_;
   TH1* histogramBJet2PtL_;
   std::vector<histogramIn1dParticleEtaBinsEntryType*> histogramBJet2Pt_inBJetEtaBins_;
   TH1* histogramBJet2Eta_;
@@ -150,9 +159,14 @@ class TauTauHistManager
   TH1* histogramNumBJets_;
 
   TH1* histogramMEtS_;
+  TH1* histogramMEtM_;
   TH1* histogramMEtL_;
 
   TH1* histogramNumVertices_;
+  TH1* histogramEvtVertexZ_;
+  TH1* histogramEvtVertexRho_;
+  TH1* histogramEvtVertexNDoF_;
+  TH1* histogramEvtVertex_isValid_;
 
   TH1* histogramGenHiggsPt_;
   TH1* histogramNUP_;

@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_10"
+version = "v3_15"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_2/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis/%s_1/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -83,8 +83,7 @@ samples = {
         ]
     },
     'DYJets' : {
-        'processes' : [ "ZL", "ZJ" ],
-        ##'processes' : [ "ZL", "ZJ", "ZTTmc" ],
+        'processes' : [ "ZL", "ZJ", "ZTTmc_tauPolarOn" ],
         'inputFiles' : [
             "DYJets",
             "DY1Jets",
@@ -97,13 +96,13 @@ samples = {
         'addWeights' : []
     },
     'DYJets_noTauPolarization' : {
-        'processes' : [ "ZTTmc" ],
+        'processes' : [ "ZTTmc_tauPolarOff" ],
         'inputFiles' : [
             "DYJets_noTauPolarization"
         ],
         'lumiScale' : lumiScale_DY_noTauPolarization,
         'stitchingWeights' : stitchingWeights_DY_noTauPolarization,
-        'addWeights' : [ 'tauSpin' ] # CV: to be changed to 'tauSpin' (branch used for tau polarization in RecHit Embedded samples by Riccardo) in the future
+        'addWeights' : [ 'tauSpin' ]
     },
     'WJets' : {
         'processes' : [ "Wtmp" ],
@@ -135,8 +134,7 @@ samples = {
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
         'inputFiles' : [ "pfEmbed_TTJetsFullLept_v2" ],
-        ##'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
-        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-14-016, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
         'addWeights' : [ "topPtWeightNom" ],
         'applyJetToTauFakeRateCorrection' : True
     },
@@ -227,6 +225,23 @@ discriminators = {
         # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
     },
+##     'MVAwLToldDMsTightPlatFR' : {
+##         'tau1Selection' : {
+##             'iso'      : "l1TightMVAwLTplatFR > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
+##             'relaxed'  : "l1LooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLTplatFR > 0.5)",
+##             'vrelaxed' : "l1VLooseMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5 && !(l1TightMVAwLTplatFR > 0.5)"
+##         },
+##         'tau2Selection' : {
+##             'iso'      : "l2TightMVAwLTplatFR > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5",
+##             'relaxed'  : "l2LooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2TightMVAwLTplatFR > 0.5)",
+##             'vrelaxed' : "l2VLooseMVAwLT > 0.5 && l2againstMuonLoose2 > 0.5 && l2againstElectronLoose > 0.5 && l2againstElectronLooseMVA3 > 0.5 && !(l2TightMVAwLTplatFR > 0.5)"
+##         },
+##         'tau1FRwEtaBins'             : [ -1., 1.2, 1.7, 9.9 ],
+##         ##'tau1FRwEtaBins'             : [ -1., 9.9 ],
+##         'tau2FRwEtaBins'             : [ -1., 9.9 ],
+##         # jetToTauFakeRateCorrectiontaken from https://indico.cern.ch/event/304725/contribution/1/material/slides/0.pdf
+##         'jetToTauFakeRateCorrection' : makeJetToTauFakeRateCorrection(7.58704e-1, -1.57025e-1, -2.40635e-2, -8.24741e-2)
+##     },
 ##     'MVAwLToldDMsVTight' : {
 ##         'tau1Selection' : {
 ##             'iso'      : "l1VTightMVAwLT > 0.5 && l1againstMuonLoose2 > 0.5 && l1againstElectronLoose > 0.5",
@@ -712,7 +727,8 @@ for sample in samples.keys():
                         else:
                             trigger = "TauPlusJet"
                         cfg_modified += "process.FWLiteTauTauAnalyzer.trigger = cms.string('%s')\n" % trigger
-                        cfg_modified += "process.FWLiteTauTauAnalyzer.applyTauTriggerTurnOn = cms.string('%s')\n" % discriminator                    
+                        applyTauTriggerTurnOn = discriminator.replace("PlatFR", "")
+                        cfg_modified += "process.FWLiteTauTauAnalyzer.applyTauTriggerTurnOn = cms.string('%s')\n" % applyTauTriggerTurnOn
                         if region.find("LooseBtag") != -1:
                             cfg_modified += "process.FWLiteTauTauAnalyzer.applyTightBtag = cms.bool(False)\n"
                         else: 

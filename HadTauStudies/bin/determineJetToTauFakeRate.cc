@@ -530,7 +530,7 @@ int main(int argc, char* argv[])
     std::vector<double> points_y;
     std::vector<double> points_yErrUp;
     std::vector<double> points_yErrDown;
-    for ( int iBin = 0; iBin < numBins; ++iBin ) {
+    for ( int iBin = 1; iBin <= numBins; ++iBin ) {
       double nPass = histogram_pass->GetBinContent(iBin);
       double nPassErr = histogram_pass->GetBinError(iBin);
       double nFail = histogram_fail->GetBinContent(iBin);

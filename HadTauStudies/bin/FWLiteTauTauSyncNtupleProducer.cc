@@ -20,6 +20,7 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 
 #include "LLRAnalysis/HadTauStudies/interface/triggerTurnOnCurves.h"
+#include "LLRAnalysis/HadTauStudies/interface/RunLumiSectionEventNumberSelector.h"
 
 #include <TFile.h>
 #include <TChain.h>
@@ -32,6 +33,8 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+
+enum { kData, kSignal, kSM_Higgs, kZTTmc, kZL, kZJ, kZTT_Embedded, kW, kTT, kTT_Embedded, kVV };
 
 enum { kTree, kHPScombIso3HitsMedium, kMVAwLToldDMsTight, kMVAwLToldDMsVTight };
 
@@ -148,6 +151,28 @@ typedef branchEntryFormulaType<Double_t> branchEntryFormulaTypeD;
 
 typedef std::vector<std::string> vstring;
 
+bool contains(const std::string& fullstring, const std::string& substring)
+{
+  return (fullstring.find(substring) != std::string::npos);
+}
+
+double compTauDecayModeWeight(double tauEta, int tauDecayMode)
+{
+  // CV: reweighting factors to correct data/MC differences observed in distribution of tau decay modes reconstructed by boosted tau ID,
+  //     cf. https://indico.cern.ch/event/308081/session/6/contribution/16/material/slides/0.pdf
+  double weight = 1.0;
+  if ( TMath::Abs(tauEta) < 1.47 ) {
+    if      ( tauDecayMode ==  0 ) weight = 0.87;
+    else if ( tauDecayMode ==  1 ) weight = 1.06;
+    else if ( tauDecayMode == 10 ) weight = 1.02;
+  } else {
+    if      ( tauDecayMode ==  0 ) weight = 0.96;
+    else if ( tauDecayMode ==  1 ) weight = 1.00;
+    else if ( tauDecayMode == 10 ) weight = 1.06;
+  }
+  return weight;
+}
+
 int main(int argc, char* argv[]) 
 {
 //--- parse command-line arguments
@@ -171,12 +196,29 @@ int main(int argc, char* argv[])
 
   edm::ParameterSet cfgProduceTauTauSyncNtuple = cfg.getParameter<edm::ParameterSet>("produceTauTauSyncNtuple");
 
-  bool isHiggsMC = cfgProduceTauTauSyncNtuple.getParameter<bool>("isHiggsMC");
+  std::string process_string = cfgProduceTauTauSyncNtuple.getParameter<std::string>("process");
+  int process = -1;
+  if      ( process_string == "data_obs"     ) process = kData;
+  else if ( contains(process_string, "data2012run") ) process = kData; // CV: for checking event yield in individual data-taking periods
+  else if ( (contains(process_string, "ggH") || contains(process_string, "bbH")) && !contains(process_string, "_SM125") ) process = kSignal;
+  else if ( contains(process_string, "ggH_SM125") || contains(process_string, "qqH_SM125") || contains(process_string, "VH_SM125") ) process = kSM_Higgs;
+  else if ( process_string == "ZTTmc"        ) process = kZTTmc;
+  else if ( process_string == "ZL"           ) process = kZL;
+  else if ( process_string == "ZJ"           ) process = kZJ;
+  else if ( process_string == "ZTT_Embedded" ) process = kZTT_Embedded;
+  else if ( process_string == "Wtmp"         ) process = kW;
+  else if ( process_string == "TT"           ) process = kTT;
+  else if ( process_string == "TT_Embedded"  ) process = kTT_Embedded;
+  else if ( process_string == "VV"           ) process = kVV;
+  else throw cms::Exception("produceTauTauSyncNtuple") 
+    << "Invalid Configuration parameter 'process' = " << process_string << " !!\n";
 
-  bool isEmbed = cfgProduceTauTauSyncNtuple.getParameter<bool>("isEmbed");
+  bool isMC = !(process == kData || process == kZTT_Embedded);
+  bool isEmbedded = (process == kZTT_Embedded || process == kTT_Embedded);
+
   enum { kPfEmbed, kRhEmbed };
   int embedType = -1;
-  if ( isEmbed ) {
+  if ( isEmbedded ) {
     std::string embedType_string = cfgProduceTauTauSyncNtuple.getParameter<std::string>("embedType");
     if      ( embedType_string == "PfEmbed" ) embedType = kPfEmbed;
     else if ( embedType_string == "RhEmbed" ) embedType = kRhEmbed;
@@ -240,6 +282,17 @@ int main(int argc, char* argv[])
       << "Invalid branch declaration = '" << inputBranchName_and_Type << "' for branch = '" << (*outputBranchName) << "' !!\n";
   }
 
+  std::string selEventsFileName_input = ( cfgProduceTauTauSyncNtuple.exists("selEventsFileName_input") ) ? 
+    cfgProduceTauTauSyncNtuple.getParameter<std::string>("selEventsFileName_input") : "";
+  std::cout << "selEventsFileName_input = " << selEventsFileName_input << std::endl;
+  RunLumiSectionEventNumberSelector* runLumiSectionEventNumberSelector = 0;
+  if ( selEventsFileName_input != "" ) {
+    edm::ParameterSet cfgRunLumiSectionEventNumberSelector;
+    cfgRunLumiSectionEventNumberSelector.addParameter<std::string>("inputFileName", selEventsFileName_input);
+    cfgRunLumiSectionEventNumberSelector.addParameter<std::string>("separator", ":");
+    runLumiSectionEventNumberSelector = new RunLumiSectionEventNumberSelector(cfgRunLumiSectionEventNumberSelector);
+  }
+
   fwlite::InputSource inputFiles(cfg); 
   int maxEvents = inputFiles.maxEvents();
   std::cout << " maxEvents = " << maxEvents << std::endl;
@@ -274,18 +327,26 @@ int main(int argc, char* argv[])
     (*branch)->setInputTree(inputTree);
   }
 
+  ULong_t run, event, lumi;
+  inputTree->SetBranchAddress("run", &run);
+  inputTree->SetBranchAddress("event", &event);
+  inputTree->SetBranchAddress("lumi", &lumi);
+
   Float_t leg1Px, leg1Py, leg1Pz, leg1En;
   inputTree->SetBranchAddress("l1Px", &leg1Px);
   inputTree->SetBranchAddress("l1Py", &leg1Py);
   inputTree->SetBranchAddress("l1Pz", &leg1Pz);
   inputTree->SetBranchAddress("l1E",  &leg1En);
-  Int_t leg1DecayMode;
+  Float_t leg1JetPt;
+  inputTree->SetBranchAddress("l1CorrJetPt", &leg1JetPt);
+  Float_t leg1DecayMode;
   inputTree->SetBranchAddress("l1DecayMode", &leg1DecayMode);
-  Float_t leg1GenPt;
-  inputTree->SetBranchAddress("l1GenPt", &leg1GenPt);
-  Float_t leg1decayModeFinding, leg1byIsolationMedium, leg1againstElectronLoose;
+  Int_t leg1isGenHadTau;
+  inputTree->SetBranchAddress("l1isGenHadTau", &leg1isGenHadTau);
+  Float_t leg1decayModeFinding, leg1byIsolationMedium, leg1byTightMVAwLT, leg1againstElectronLoose;
   inputTree->SetBranchAddress("l1decayModeFinding", &leg1decayModeFinding);
   inputTree->SetBranchAddress("l1MediumDB3HIso", &leg1byIsolationMedium);
+  inputTree->SetBranchAddress("l1TightMVAwLT", &leg1byTightMVAwLT);
   inputTree->SetBranchAddress("l1againstElectronLooseMVA3", &leg1againstElectronLoose);
   Int_t leg1TrigMatched;
   inputTree->SetBranchAddress("l1TrigMatched_diTau", &leg1TrigMatched);
@@ -299,13 +360,16 @@ int main(int argc, char* argv[])
   inputTree->SetBranchAddress("l2Py", &leg2Py);
   inputTree->SetBranchAddress("l2Pz", &leg2Pz);
   inputTree->SetBranchAddress("l2E",  &leg2En);
-  Int_t leg2DecayMode;
+  Float_t leg2JetPt;
+  inputTree->SetBranchAddress("l2CorrJetPt", &leg2JetPt);
+  Float_t leg2DecayMode;
   inputTree->SetBranchAddress("l2DecayMode", &leg2DecayMode);
-  Float_t leg2GenPt;
-  inputTree->SetBranchAddress("l2GenPt", &leg2GenPt);
-  Float_t leg2decayModeFinding, leg2byIsolationMedium, leg2againstElectronLoose;
+  Int_t leg2isGenHadTau;
+  inputTree->SetBranchAddress("l2isGenHadTau", &leg2isGenHadTau);
+  Float_t leg2decayModeFinding, leg2byIsolationMedium, leg2byTightMVAwLT, leg2againstElectronLoose;
   inputTree->SetBranchAddress("l2decayModeFinding", &leg2decayModeFinding);
   inputTree->SetBranchAddress("l2MediumDB3HIso", &leg2byIsolationMedium);
+  inputTree->SetBranchAddress("l2TightMVAwLT", &leg2byTightMVAwLT);
   inputTree->SetBranchAddress("l2againstElectronLooseMVA3", &leg2againstElectronLoose);
   Int_t leg2TrigMatched;
   inputTree->SetBranchAddress("l2TrigMatched_diTau", &leg2TrigMatched);
@@ -337,7 +401,7 @@ int main(int argc, char* argv[])
   Float_t genDiTauMassVsGenDiTauPt = 1.0;
   Float_t genTau2EtaVsGenTau1Eta = 1.0;
   Float_t genTau2PtVsGenTau1Pt = 1.0;
-  if ( isEmbed ) {
+  if ( isEmbedded ) {
     if ( embedType == kPfEmbed ) {
       inputTree->SetBranchAddress("genFilter", &genFilter);
     } else if ( embedType == kRhEmbed ) {
@@ -366,6 +430,10 @@ int main(int argc, char* argv[])
   outputTree->Branch("triggerWeight_diTau", &triggerWeight_diTau, "triggerWeight_diTau/D");
   outputTree->Branch("triggerEffMC_diTau", &triggerEffMC_diTau, "triggerEffMC_diTau/D");
   outputTree->Branch("triggerEffData_diTau", &triggerEffData_diTau, "triggerEffData_diTau/D");
+  Double_t triggerWeight_singleJet, triggerEffMC_singleJet, triggerEffData_singleJet;
+  outputTree->Branch("triggerWeight_singleJet", &triggerWeight_singleJet, "triggerWeight_singleJet/D");
+  outputTree->Branch("triggerEffMC_singleJet", &triggerEffMC_singleJet, "triggerEffMC_singleJet/D");
+  outputTree->Branch("triggerEffData_singleJet", &triggerEffData_singleJet, "triggerEffData_singleJet/D");
 
   Double_t antiele_1;
   Int_t passid_1, passiso_1;
@@ -415,6 +483,9 @@ int main(int argc, char* argv[])
 
     inputTree->GetEntry(iEntry);
 
+    if ( runLumiSectionEventNumberSelector && !(*runLumiSectionEventNumberSelector)(run, lumi, event) ) continue;
+    //std::cout << "--> event passes run, lumi and event number selection." << std::endl;
+
     // check if event passes sync-Ntuple selection
     reco::Candidate::LorentzVector leg1P4(leg1Px, leg1Py, leg1Pz, leg1En);
     if ( verbosity >= 2 ) {    
@@ -431,9 +502,9 @@ int main(int argc, char* argv[])
 
     bool isSelected = false;
     if ( leg1P4.pt() > 45. && TMath::Abs(leg1P4.eta()) < 2.1 &&
-	 leg1decayModeFinding > 0.5 && leg1byIsolationMedium > 0.5 && leg1TrigMatched &&
+	 leg1decayModeFinding > 0.5 && leg1byTightMVAwLT > 0.5 && (leg1TrigMatched || isEmbedded) &&
 	 leg2P4.pt() > 45. && TMath::Abs(leg2P4.eta()) < 2.1 &&
-	 leg2decayModeFinding > 0.5 && leg2byIsolationMedium > 0.5 && leg2TrigMatched &&
+	 leg2decayModeFinding > 0.5 && leg2byTightMVAwLT > 0.5 && (leg2TrigMatched || isEmbedded) &&
 	 (leg1againstElectronLoose > 0.5 || leg2againstElectronLoose > 0.5 ) ) isSelected = true;
     if ( !isSelected) continue;
        
@@ -445,17 +516,19 @@ int main(int argc, char* argv[])
     passid_2     = leg2decayModeFinding;
     passiso_2    = leg2byIsolationMedium;
 
-    mcweight = vertexWeight;
-    if ( isHiggsMC ) {
-      mcweight *= higgsPtWeightNom;
+    mcweight = 1.0;
+    if ( isMC ) {
+      mcweight *= vertexWeight;
+      if ( process == kSignal ) mcweight *= higgsPtWeightNom;
     }
-
+    
     puweight = vertexWeight;
 
     decaymodeweight = 1.0;
-    if ( leg1GenPt > 1. && leg1DecayMode == 0 ) decaymodeweight *= 0.88; // CV: data/MC difference for taus to be reconstructed in 1-prong 0pi0 decay mode, determined by Phil
-    if ( leg2GenPt > 1. && leg2DecayMode == 0 ) decaymodeweight *= 0.88;
+    if ( leg1isGenHadTau ) decaymodeweight *= compTauDecayModeWeight(leg1P4.eta(), TMath::Nint(leg1DecayMode));
+    if ( leg2isGenHadTau ) decaymodeweight *= compTauDecayModeWeight(leg2P4.eta(), TMath::Nint(leg2DecayMode));
 
+    double triggerWeight = 1.0;
     if ( takeTauTriggerTurnOn == kTree ) {
       triggerEffData_diTau = leg2triggerEffData_diTau*leg2triggerEffData_diTau;
       triggerEffMC_diTau   = leg1triggerEffMC_diTau*leg2triggerEffMC_diTau;
@@ -479,17 +552,27 @@ int main(int argc, char* argv[])
       triggerEffData_diTau = (*tauTriggerEffData)(leg1P4.pt(), leg1P4.eta(), true)*(*tauTriggerEffData)(leg2P4.pt(), leg2P4.eta(), true);
       triggerEffMC_diTau   = (*tauTriggerEffMC)(leg1P4.pt(), leg1P4.eta(), true)*(*tauTriggerEffMC)(leg2P4.pt(), leg2P4.eta(), true);
       triggerWeight_diTau  = ( triggerEffMC_diTau > 0. ) ? (triggerEffData_diTau/triggerEffMC_diTau) : 1.;
+      triggerWeight = triggerWeight_diTau;
+      if ( leg1P4.pt() > tauPtForSwitchingTriggers || leg2P4.pt() > tauPtForSwitchingTriggers ) {
+	triggerEffData_singleJet = (1. - (1. - effPFJet320(leg1P4.pt(), leg1JetPt, leg1P4.eta()))*(1. - effPFJet320(leg2P4.pt(), leg2JetPt, leg2P4.eta())));
+	triggerEffMC_singleJet   = (1. - (1. - effPFJet320MC(leg1P4.pt(), leg1JetPt, leg1P4.eta()))*(1. - effPFJet320MC(leg2P4.pt(), leg2JetPt, leg2P4.eta())));
+	triggerWeight_singleJet  = ( triggerEffMC_singleJet > 0. ) ? (triggerEffData_singleJet/triggerEffMC_singleJet) : 1.;
+	triggerWeight = triggerWeight_singleJet;
+      }
     }
-
+    
     effweight = 1.0;
-    if ( isEmbed ) {
-      effweight *= (triggerEffData_diTau);
+    if ( isEmbedded ) {
+      if ( leg1P4.pt() > tauPtForSwitchingTriggers || leg2P4.pt() > tauPtForSwitchingTriggers ) {
+	double triggerEffData_singleJet = (1. - (1. - effPFJet320(leg1P4.pt(), leg1JetPt, leg1P4.eta()))*(1. - effPFJet320(leg2P4.pt(), leg2JetPt, leg2P4.eta())));
+	effweight *= triggerEffData_singleJet;
+      } else effweight *= triggerEffData_diTau;
     } else {
-      effweight *= triggerWeight_diTau;
+      effweight *= triggerWeight;
     }
 
     embedweight = 1.0;
-    if ( isEmbed ) {
+    if ( isEmbedded ) {
       if ( embedType == kPfEmbed ) {
 	embedweight *= genFilter;
       } else if ( embedType == kRhEmbed ) {
@@ -560,6 +643,8 @@ int main(int argc, char* argv[])
   std::cout << "writing output Tree to file = " << outputFileName << "." << std::endl;
   outputFile->cd();
   outputTree->Write();
+
+  delete runLumiSectionEventNumberSelector;
 
   for ( std::vector<branchEntryBaseType*>::iterator it = addBranches.begin();
 	it != addBranches.end(); ++it ) {

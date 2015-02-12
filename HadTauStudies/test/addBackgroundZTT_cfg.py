@@ -27,7 +27,7 @@ process.addBackgroundZTT = cms.PSet(
     ),
 
     processZTT = cms.string("ZTT"),
-    processZTTmc = cms.string("ZTTmc"),
+    processZTTmc = cms.string("ZTTmc_tauPolarOff"),
     processZTT_Embedded = cms.string("ZTT_Embedded"),
     processTT_Embedded = cms.string("TT_Embedded"),
 

@@ -12,27 +12,27 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-runOnMC        = True
-runOnEmbed     = False
+runOnMC        = False
+runOnEmbed     = True
 embedType      = "PfEmbed" #"PfEmbed" or "RhEmbed"
 reRunPatJets   = True
 applyTauESCorr = True 
-doSVFitReco    = False
+doSVFitReco    = True
 usePFMEtMVA    = True
 useRecoil      = True
 useMarkov      = False
 
 # CV: flags for cutting low mass tail from MSSM Higgs -> tautau samples
 #    (cross-sections provided by LHC Higgs XS working group refer to nominal Higgs mass)
-applyHiggsMassCut = True
-nomHiggsMass = 130.
+applyHiggsMassCut = False
+nomHiggsMass = 80.
 
 # CV: flags that allow to run separate jobs
 #     for nominal tau energy scale and +1 sigma, -1 sigma shifts
 #     in order not to exceed computing time limits of lxbatch queues
 runNominal     = True
-runTauEnUp     = True
-runTauEnDown   = True
+runTauEnUp     = False
+runTauEnDown   = False
 
 sampleName = None
 
@@ -81,8 +81,8 @@ process.source = cms.Source("PoolSource",
         ##'/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/2013Dec10/HiggsSUSYGluGlu130/patTuple_HadTauStream_1_2_NrD.root'
         ##'file:/data1/veelken/tmp/patTuple_HadTauStream.root'
         ##'file:/data1/veelken/CMSSW_5_3_x/PATTuples/patTuple_HadTauStream_selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo.root'
-        ##'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/TauAnalysis/Skimming/test/selEvents_HiggsSUSYGluGlu130_fromCecile.root'
-        'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/LLRAnalysis/HadTauStudies/test/patTuple_HadTauStream.root'
+        ##'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/TauAnalysis/Skimming/test/selEvents_HiggsSUSYGluGlu80_fromCecile.root'
+        'file:/afs/cern.ch/user/v/veelken/scratch0/CMSSW_5_3_14/src/TauAnalysis/Skimming/test/selEvents_DYJets_Embedded_genMassEq0.root' 
         ##'file:/tmp/veelken/patTuple_HadTauStream_231_1_reu.root'                        
     ),
     ##eventsToProcess = cms.untracked.VEventRange(
@@ -202,10 +202,100 @@ process.runPatJets += process.selectedPatJetsBJetEnReg
 ###################################################################################
 
 #--------------------------------------------------------------------------------
+# CV: add extra working-points to pat::Tau collection
+
+uncorrectedTaus = "tauPtEtaID"
+
+process.uncorrectedTausAddedWPs = cms.EDProducer("PATTauWPEmbedder",
+    src = cms.InputTag(uncorrectedTaus),                                                
+    inputFileName = cms.FileInPath('LLRAnalysis/HadTauStudies/data/wpDiscriminationByIsolationMVA3_oldDMwLT_21Jan2015.root'),
+    mvaOutput_normalization = cms.string("mvaOutput_normalization_oldDMwLT"),
+    discriminator = cms.string("byIsolationMVA3oldDMwLTraw"),
+    WPs = cms.PSet(
+        byVLooseIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff90"),
+            variable = cms.string("pt")
+        ),
+        byLooseIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff80"),
+            variable = cms.string("pt")
+        ),
+        byMediumIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff70"),
+            variable = cms.string("pt")
+        ),
+        byTightIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff60"),
+            variable = cms.string("pt")
+        ),
+        byVTightIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff50"),
+            variable = cms.string("pt")
+        ),
+        byVVTightIsolationMVA3oldDMwLTconstEff = cms.PSet(
+            cut = cms.string("oldDMwLTEff40"),
+            variable = cms.string("pt")
+        ),                                                     
+        byVLooseIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR050"),
+            variable = cms.string("pt")
+        ),
+        byLooseIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR020"),
+            variable = cms.string("pt")
+        ),
+        byMediumIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR010"),
+            variable = cms.string("pt")
+        ),
+        byTightIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR005"),
+            variable = cms.string("pt")
+        ),
+        byVTightIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR002"),
+            variable = cms.string("pt")
+        ),
+        byVVTightIsolationMVA3oldDMwLTconstFR = cms.PSet(
+            cut = cms.string("oldDMwLTFR001"),
+            variable = cms.string("pt")
+        ),
+        byVLooseIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff90minFR0200"),
+            variable = cms.string("pt")
+        ),
+        byLooseIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff80minFR0100"),
+            variable = cms.string("pt")
+        ),
+        byMediumIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff70minFR0050"),
+            variable = cms.string("pt")
+        ),
+        byTightIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff60minFR0020"),
+            variable = cms.string("pt")
+        ),
+        byVTightIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff50minFR0010"),
+            variable = cms.string("pt")
+        ),
+        byVVTightIsolationMVA3oldDMwLTplatFR = cms.PSet(
+            cut = cms.string("oldDMwLTMinEff40minFR0005"),
+            variable = cms.string("pt")
+        )
+    ),
+    verbosity = cms.int32(0)
+)
+
+uncorrectedTaus = "uncorrectedTausAddedWPs"
+#--------------------------------------------------------------------------------    
+
+#--------------------------------------------------------------------------------
 # CV: rerun generator level matching for pat::Taus in Embedded samples
 process.applyTauES = cms.Sequence()
 
-uncorrectedTaus = "tauPtEtaID"
+##uncorrectedTaus = "tauPtEtaID"
 if runOnEmbed:
     from PhysicsTools.PatAlgos.mcMatchLayer0.tauMatch_cfi import tauMatch, tauGenJetMatch
     process.tauMatchEmbeddedRECO = tauMatch.clone(
@@ -343,7 +433,7 @@ process.electronsForVeto = cms.EDFilter("PATElectronSelector",
 )
 #########
 process.filterSequence = cms.Sequence(
-    process.applyTauES *
+    process.uncorrectedTausAddedWPs * process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauUp * process.tauPtEtaIDIsoTauDown
 )
@@ -482,6 +572,27 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
         VTightMVAwLT = cms.string("byVTightIsolationMVA3oldDMwLT"),
         VVTightMVAwLT = cms.string("byVVTightIsolationMVA3oldDMwLT"),
         RawMVAwLT = cms.string("byIsolationMVA3oldDMwLTraw"),
+        #--------------------------------------------------------------------------------
+        # CV: add extra working-points to pat::Tau collection
+        VLooseMVAwLTconstEff = cms.string("byVLooseIsolationMVA3oldDMwLTconstEff"),
+        LooseMVAwLTconstEff = cms.string("byLooseIsolationMVA3oldDMwLTconstEff"),
+        MediumMVAwLTconstEff = cms.string("byMediumIsolationMVA3oldDMwLTconstEff"),
+        TightMVAwLTconstEff = cms.string("byTightIsolationMVA3oldDMwLTconstEff"),
+        VTightMVAwLTconstEff = cms.string("byVTightIsolationMVA3oldDMwLTconstEff"),
+        VVTightMVAwLTconstEff = cms.string("byVVTightIsolationMVA3oldDMwLTconstEff"),
+        VLooseMVAwLTconstFR = cms.string("byVLooseIsolationMVA3oldDMwLTconstFR"),
+        LooseMVAwLTconstFR = cms.string("byLooseIsolationMVA3oldDMwLTconstFR"),
+        MediumMVAwLTconstFR = cms.string("byMediumIsolationMVA3oldDMwLTconstFR"),
+        TightMVAwLTconstFR = cms.string("byTightIsolationMVA3oldDMwLTconstFR"),
+        VTightMVAwLTconstFR = cms.string("byVTightIsolationMVA3oldDMwLTconstFR"),
+        VVTightMVAwLTconstFR = cms.string("byVVTightIsolationMVA3oldDMwLTconstFR"),
+        VLooseMVAwLTplatFR = cms.string("byVLooseIsolationMVA3oldDMwLTplatFR"),
+        LooseMVAwLTplatFR = cms.string("byLooseIsolationMVA3oldDMwLTplatFR"),
+        MediumMVAwLTplatFR = cms.string("byMediumIsolationMVA3oldDMwLTplatFR"),
+        TightMVAwLTplatFR = cms.string("byTightIsolationMVA3oldDMwLTplatFR"),
+        VTightMVAwLTplatFR = cms.string("byVTightIsolationMVA3oldDMwLTplatFR"),
+        VVTightMVAwLTplatFR = cms.string("byVVTightIsolationMVA3oldDMwLTplatFR"),
+        #--------------------------------------------------------------------------------
         againstElectronLoose = cms.string("againstElectronLoose"),                                                  
         againstElectronVLooseMVA3 = cms.string("againstElectronVLooseMVA5"), # CV: keep branchname used for old discriminator 
         againstElectronLooseMVA3 = cms.string("againstElectronLooseMVA5"),
@@ -509,7 +620,7 @@ process.tauTauNtupleProducer = cms.EDAnalyzer("TauTauNtupleProducer",
     srcL1Taus = cms.InputTag('l1extraParticles', 'Tau'),
     srcL1Jets = cms.InputTag('l1extraParticles', 'Central'),
     srcElectrons = cms.InputTag('electronsForVeto'),
-    srcMuons = cms.InputTag('muonsForVeto'),                                          
+    srcMuons = cms.InputTag('muonsForVeto'),
     srcJets = cms.InputTag('selectedPatJetsBJetEnReg'),
     srcPileupJetId = cms.InputTag('puJetMva', 'fullId'),
     wpPileupJetId = cms.string("Loose"),
@@ -665,7 +776,7 @@ process.seqNominal = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.applyTauES *
+    process.uncorrectedTausAddedWPs * process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.electronsForVeto *
     #(process.pfMEtMVAsequence*process.patPFMetByMVA)*    
@@ -689,7 +800,7 @@ process.seqTauUp = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.applyTauES *
+    process.uncorrectedTausAddedWPs * process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauUp * process.tauPtEtaIDIsoTauUpFilter * 
     process.electronsForVeto *
@@ -707,7 +818,7 @@ process.seqTauDown = cms.Sequence(
     process.allEventsFilter *
     process.genFilterSequence *
     process.runPatJets *
-    process.applyTauES *
+    process.uncorrectedTausAddedWPs * process.applyTauES *
     process.tauPtEtaIDIso * process.tauPtEtaIDIsoFilter * 
     process.rescaledTaus * process.tauPtEtaIDIsoTauDown * process.tauPtEtaIDIsoTauDownFilter * 
     process.electronsForVeto *

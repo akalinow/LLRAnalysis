@@ -140,7 +140,7 @@ void TauTauHistManager2b2tau::bookHistograms(TFileDirectory& dir)
   histogramDeltaEtatt_            = book1D(dir, "deltaEtatt",            "#Delta #eta (#tau_{1},#tau_{2})", 50, 0., 5.);
   histogramDeltaRtt_              = book1D(dir, "deltaRtt"  ,            "#Delta R (#tau_{1},#tau_{2})", 70, 0., 7.);
   histogramMbbS_                  = book1D(dir, "mbbS",                  "M_{bb} / GeV", numMassBinsS, massBinningS);
-  histogramMbbL_                  = book1D(dir, "mbbL",                  "M_{bb} / GeV", 400, 0., 2000.);
+  histogramMbbL_                  = book1D(dir, "mbbL",                  "M_{bb} / GeV", 400, 0., 2000.);  
   histogramMbbRegS_               = book1D(dir, "mbbRegS",               "M_{bb} / GeV", numMassBinsS, massBinningS);
   histogramMbbRegL_               = book1D(dir, "mbbRegL",               "M_{bb} / GeV", 400, 0., 2000.);
   histogramDeltaPhibb_            = book1D(dir, "deltaPhibb",            "#Delta #phi (b-Jet_{1},b-Jet_{2})", 36, -TMath::Pi(), TMath::Pi());

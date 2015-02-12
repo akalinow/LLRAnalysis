@@ -63,19 +63,15 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ),
         cms.PSet(
             name = cms.string("2bM"),
-            label = cms.string("2 B-Tags (Medium)")
-        ),
-        cms.PSet(
-            name = cms.string("2bL"),
-            label = cms.string("2 B-Tags (Loose)")
+            label = cms.string("2b")
         ),
         cms.PSet(
             name = cms.string("1b1j"),
-            label = cms.string("1 B-Tag (Medium)")
+            label = cms.string("1b1j")
         ),
         cms.PSet(
             name = cms.string("2j"),
-            label = cms.string("0 B-Tag (Medium)")
+            label = cms.string("2j")
         )
     ),
 
@@ -181,7 +177,7 @@ process.makeTauTauPlots2b2tau = cms.PSet(
     ),
     showBgrUncertainty = cms.bool(False),
 
-    labelOnTop = cms.string("CMS Preliminary, hh #rightarrow 2b2#tau, %1.1f fb^{-1} at 8 TeV"),    
+    labelOnTop = cms.string("CMS Preliminary, hh #rightarrow bb#tau#tau, %1.1f fb^{-1} at #sqrt{s} = 8 TeV"), 
     intLumiData = cms.double(18.3), # in units of fb^-1
 
     outputFileName = cms.string("plots/makeTauTauPlots2b2tau.png")

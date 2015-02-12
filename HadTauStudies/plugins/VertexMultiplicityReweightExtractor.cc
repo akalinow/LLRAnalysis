@@ -203,6 +203,9 @@ VertexMultiplicityReweightExtractor::VertexMultiplicityReweightExtractor(const e
       throw cms::Exception("VertexMultiplicityReweightExtractor") 
 	<< " Failed to load LUT = " << lutName.data() << " from file = " << inputFileName.fullPath().data() << " !!\n";
   }
+
+  verbosity_ = ( cfg.exists("verbosity") ) ?
+     cfg.getParameter<int>("verbosity") : 0;	
 }
 
 VertexMultiplicityReweightExtractor::~VertexMultiplicityReweightExtractor() 
@@ -230,7 +233,9 @@ double VertexMultiplicityReweightExtractor::operator()(const edm::Event& evt) co
       // CV: in-time PU is stored in getBunchCrossing = 0, 
       //    cf. https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupInformation
       int bx = genPileUpInfo->getBunchCrossing();
-      //std::cout << "bx = " << bx << ": numPileUpInteractions = " << genPileUpInfo->getPU_NumInteractions() << " (true = " << genPileUpInfo->getTrueNumInteractions() << ")" << std::endl;
+      if ( verbosity_ ) {
+        std::cout << "bx = " << bx << ": numPileUpInteractions = " << genPileUpInfo->getPU_NumInteractions() << " (true = " << genPileUpInfo->getTrueNumInteractions() << ")" << std::endl;
+      }
       float numPileUp = genPileUpInfo->getTrueNumInteractions();
       if      ( bx == bxPrevious_ ) numPileUp_bxPrevious = numPileUp;
       else if ( bx ==  0          ) numPileUp_inTime     = numPileUp;
@@ -243,15 +248,19 @@ double VertexMultiplicityReweightExtractor::operator()(const edm::Event& evt) co
     if      ( type_ == kGenLevel   ) weight = genLumiReweight_->weight(numPileUp_inTime);
     else if ( type_ == kGenLevel3d ) weight = genLumiReweight3d_->weight3D(numPileUp_bxPrevious, numPileUp_inTime, numPileUp_bxNext);
     else assert(0);
-    //std::cout << " numPileUp = {" << numPileUp_bxPrevious << ", " << numPileUp_inTime << ", " << numPileUp_bxNext << "}:" 
-    //	        << " weight = " << weight << std::endl;
+    if ( verbosity_ >= 1 ) {
+      std::cout << " numPileUp = {" << numPileUp_bxPrevious << ", " << numPileUp_inTime << ", " << numPileUp_bxNext << "}:" 
+                << " weight = " << weight << std::endl;
+    }
   } else if ( type_ == kRecLevel ) {
     edm::Handle<reco::VertexCollection> vertices;
     evt.getByLabel(src_, vertices);
     int binIdx = getBin(recVtxMultiplicityReweight_->GetXaxis(), vertices->size());
     weight = recVtxMultiplicityReweight_->GetBinContent(binIdx);
-    //std::cout << " numVertices = " << vertices->size() << ":" 
-    //	        << " weight = " << weight << std::endl;
+    if ( verbosity_ >= 1 ) {
+      std::cout << " numVertices = " << vertices->size() << ":" 
+      	        << " weight = " << weight << std::endl;
+    }
   }
 
   return weight;

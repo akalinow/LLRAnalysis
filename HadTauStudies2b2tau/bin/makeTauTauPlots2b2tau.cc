@@ -101,12 +101,14 @@ namespace
   {
     distributionEntryType(const edm::ParameterSet& cfg)
       : legendTextSize_(0.03),
-	legendPosX_(0.585),
+	legendPosX_(0.575),
 	legendPosY_(0.610),
 	legendSizeX_(0.355),
 	legendSizeY_(0.330)
     {
       histogramName_ = cfg.getParameter<std::string>("histogramName");
+      outputFileName_ = ( cfg.exists("outputFileName") ) ?
+	cfg.getParameter<std::string>("outputFileName") : histogramName_;
       xAxisTitle_ = cfg.getParameter<std::string>("xAxisTitle");
       yAxisTitle_ = cfg.getParameter<std::string>("yAxisTitle");
       if ( cfg.exists("keepBlinded") ) {
@@ -127,6 +129,7 @@ namespace
     }
     ~distributionEntryType() {}
     std::string histogramName_;
+    std::string outputFileName_;
     std::string xAxisTitle_;
     std::string yAxisTitle_;
     std::vector<pdouble> keepBlinded_;
@@ -570,40 +573,63 @@ namespace
   {
     TH1* histogramSignal1_density = 0;
     if ( histogramSignal1 ) {
-      checkCompatibleBinning(histogramSignal1, histogramData);
+      if ( histogramData ) checkCompatibleBinning(histogramSignal1, histogramData);
       histogramSignal1_density = divideHistogramByBinWidth(histogramSignal1);
     }
     TH1* histogramSignal2_density = 0;
     if ( histogramSignal2 ) {
-      checkCompatibleBinning(histogramSignal2, histogramData);
+      if ( histogramData ) checkCompatibleBinning(histogramSignal2, histogramData);
       histogramSignal2_density = divideHistogramByBinWidth(histogramSignal2);
     }
     TH1* histogramSignal3_density = 0;
     if ( histogramSignal3 ) {
-      checkCompatibleBinning(histogramSignal3, histogramData);
+      if ( histogramData ) checkCompatibleBinning(histogramSignal3, histogramData);
       histogramSignal3_density = divideHistogramByBinWidth(histogramSignal3);
     }
-    TH1* histogramData_density = divideHistogramByBinWidth(histogramData);
-    checkCompatibleBinning(histogramData_blinded, histogramData);
-    TH1* histogramData_blinded_density = divideHistogramByBinWidth(histogramData_blinded);
-    checkCompatibleBinning(histogramZTT, histogramData);
-    TH1* histogramZTT_density = divideHistogramByBinWidth(histogramZTT);
-    checkCompatibleBinning(histogramTT, histogramData);
-    TH1* histogramTT_density = divideHistogramByBinWidth(histogramTT);
-    checkCompatibleBinning(histogramEWK, histogramData);
-    TH1* histogramEWK_density = divideHistogramByBinWidth(histogramEWK);
-    checkCompatibleBinning(histogramQCD, histogramData);
-    TH1* histogramQCD_density = divideHistogramByBinWidth(histogramQCD);
-    checkCompatibleBinning(histogramSingleH, histogramData);
-    TH1* histogramSingleH_density = divideHistogramByBinWidth(histogramSingleH);    
+    TH1* histogramData_density = 0;
+    if ( histogramData ) {
+      histogramData_density = divideHistogramByBinWidth(histogramData);      
+    }
+    TH1* histogramData_blinded_density = 0;
+    if ( histogramData_blinded ) {
+      if ( histogramData ) checkCompatibleBinning(histogramData_blinded, histogramData);
+      histogramData_blinded_density = divideHistogramByBinWidth(histogramData_blinded);
+    }
+    TH1* histogramZTT_density = 0;
+    if ( histogramZTT ) {
+      if ( histogramData ) checkCompatibleBinning(histogramZTT, histogramData);
+      histogramZTT_density = divideHistogramByBinWidth(histogramZTT);
+    }    
+    assert(histogramData || histogramZTT);
+    TH1* histogramTT_density = 0;
+    if ( histogramTT ) {
+      if ( histogramData ) checkCompatibleBinning(histogramTT, histogramData);
+      histogramTT_density = divideHistogramByBinWidth(histogramTT);
+    }
+    TH1* histogramEWK_density = 0;
+    if ( histogramEWK ) {
+      if ( histogramData ) checkCompatibleBinning(histogramEWK, histogramData);
+      histogramEWK_density = divideHistogramByBinWidth(histogramEWK);
+    }    
+    TH1* histogramQCD_density = 0;
+    if ( histogramQCD ) {
+      if ( histogramData ) checkCompatibleBinning(histogramQCD, histogramData);
+      histogramQCD_density = divideHistogramByBinWidth(histogramQCD);
+    }
+    TH1* histogramSingleH_density = 0;
+    if ( histogramSingleH ) {
+      if ( histogramData ) checkCompatibleBinning(histogramSingleH, histogramData);
+      histogramSingleH_density = divideHistogramByBinWidth(histogramSingleH); 
+    }
+
     TH1* histogramBgrSum_density = (TH1*)histogramZTT_density->Clone("histogramBgrSum_density"); // CV: used for y-axis normalization only
-    histogramBgrSum_density->Add(histogramTT_density);
-    histogramBgrSum_density->Add(histogramEWK_density);
-    histogramBgrSum_density->Add(histogramQCD_density);
-    histogramBgrSum_density->Add(histogramSingleH_density);
+    if ( histogramTT_density      ) histogramBgrSum_density->Add(histogramTT_density);
+    if ( histogramEWK_density     ) histogramBgrSum_density->Add(histogramEWK_density);
+    if ( histogramQCD_density     ) histogramBgrSum_density->Add(histogramQCD_density);
+    if ( histogramSingleH_density ) histogramBgrSum_density->Add(histogramSingleH_density);
     TH1* histogramBgrUncertainty_density = 0;
     if ( histogramBgrUncertainty ) {
-      checkCompatibleBinning(histogramBgrUncertainty, histogramData);
+      if ( histogramData ) checkCompatibleBinning(histogramBgrUncertainty, histogramData);
       histogramBgrUncertainty_density = divideHistogramByBinWidth(histogramBgrUncertainty);
     }
 
@@ -636,13 +662,17 @@ namespace
     topPad->Draw();
     topPad->cd();
 
-    TAxis* xAxis_top = histogramData_blinded_density->GetXaxis();
+    TAxis* xAxis_top = 0;
+    if ( histogramData_blinded_density ) xAxis_top = histogramData_blinded_density->GetXaxis();
+    else xAxis_top = histogramZTT_density->GetXaxis();
     xAxis_top->SetTitle(xAxisTitle.data());
     xAxis_top->SetTitleOffset(xAxisOffset);
     xAxis_top->SetLabelColor(10);
     xAxis_top->SetTitleColor(10);
     
-    TAxis* yAxis_top = histogramData_blinded_density->GetYaxis();
+    TAxis* yAxis_top = 0;
+    if ( histogramData_blinded_density ) yAxis_top = histogramData_blinded_density->GetYaxis();
+    else yAxis_top = histogramZTT_density->GetYaxis();
     yAxis_top->SetTitle(yAxisTitle.data());
     yAxis_top->SetTitleOffset(yAxisOffset);
     yAxis_top->SetTitleSize(0.05);
@@ -658,65 +688,83 @@ namespace
     double yMax, yMin;
     if ( useLogScale ) {
       const double numOrdersOfMagnitude = 4.5;
-      yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude);
+      if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude);
+      else yMax = 1.;
       yMax = TMath::Max(yMax, compYmaxForClearance(histogramBgrSum_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
       if ( histogramSignal1_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal1_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
       if ( histogramSignal2_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal2_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
       if ( histogramSignal3_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal3_density, legendPosX, legendPosY, labelPosY, true, numOrdersOfMagnitude));
-      yMin = TMath::Power(10., -numOrdersOfMagnitude)*TMath::Max(1., histogramData_density->GetBinContent(histogramData_density->GetMaximumBin()));
+      yMin = TMath::Power(10., -numOrdersOfMagnitude)*TMath::Max(1., yMax);
     } else {
-      yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.);
+      if ( histogramData_density ) yMax = compYmaxForClearance(histogramData_density, legendPosX, legendPosY, labelPosY, false, -1.);
+      else yMax = 1.;
       yMax = TMath::Max(yMax, compYmaxForClearance(histogramBgrSum_density, legendPosX, legendPosY, labelPosY, false, -1.));
       if ( histogramSignal1_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal1_density, legendPosX, legendPosY, labelPosY, false, -1.));
       if ( histogramSignal2_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal2_density, legendPosX, legendPosY, labelPosY, false, -1.));
       if ( histogramSignal3_density ) yMax = TMath::Max(yMax, compYmaxForClearance(histogramSignal3_density, legendPosX, legendPosY, labelPosY, false, -1.));
       yMin = 0.;
     }
+    std::cout << "yMin = " << yMin << ", yMax = " << yMax << std::endl;
 
-    histogramData_blinded_density->SetTitle("");
-    histogramData_blinded_density->SetStats(false);
-    histogramData_blinded_density->SetMaximum(yMax);
-    histogramData_blinded_density->SetMinimum(yMin);
-    histogramData_blinded_density->SetMarkerStyle(20);
-    histogramData_blinded_density->SetMarkerSize(1.2);
-    histogramData_blinded_density->SetMarkerColor(kBlack);
-    histogramData_blinded_density->SetLineColor(kBlack);
-    legend->AddEntry(histogramData_blinded_density, "observed", "p");
+    if ( histogramData_blinded_density ) {
+      histogramData_blinded_density->SetTitle("");
+      histogramData_blinded_density->SetStats(false);
+      histogramData_blinded_density->SetMaximum(yMax);
+      histogramData_blinded_density->SetMinimum(yMin);
+      histogramData_blinded_density->SetMarkerStyle(20);
+      histogramData_blinded_density->SetMarkerSize(1.2);
+      histogramData_blinded_density->SetMarkerColor(kBlack);
+      histogramData_blinded_density->SetLineColor(kBlack);
+      legend->AddEntry(histogramData_blinded_density, "observed", "p");
 
-    histogramData_blinded_density->Draw("ep");
+      histogramData_blinded_density->Draw("ep");
+    }
 
+    histogramZTT_density->SetTitle("");
+    histogramZTT_density->SetStats(false);
+    histogramZTT_density->SetMaximum(yMax);
+    histogramZTT_density->SetMinimum(yMin);
     histogramZTT_density->SetFillColor(kOrange - 4);
     legend->AddEntry(histogramZTT_density, "Z #rightarrow #tau#tau", "f");
-    
-    histogramTT_density->SetFillColor(kBlue - 8); 
-    legend->AddEntry(histogramTT_density, "t#bar{t}", "f");
-    
-    histogramEWK_density->SetFillColor(kRed + 2);
-    legend->AddEntry(histogramEWK_density, "Electroweak", "f");
 
-    histogramQCD_density->SetFillColor(kMagenta - 10);
-    legend->AddEntry(histogramQCD_density, "QCD", "f");
+    if ( histogramTT_density ) {
+      histogramTT_density->SetFillColor(kBlue - 8); 
+      legend->AddEntry(histogramTT_density, "t#bar{t}", "f");
+    }
+    
+    if ( histogramEWK_density ) {
+      histogramEWK_density->SetFillColor(kRed + 2);
+      legend->AddEntry(histogramEWK_density, "Electroweak", "f");
+    }
 
-    histogramSingleH_density->SetFillColor(628);
-    legend->AddEntry(histogramSingleH_density, "SM single Higgs", "f");
+    if ( histogramQCD_density ) {
+      histogramQCD_density->SetFillColor(kMagenta - 10);
+      legend->AddEntry(histogramQCD_density, "QCD", "f");
+    }
+
+    if ( histogramSingleH_density ) {
+      histogramSingleH_density->SetFillColor(628);
+      legend->AddEntry(histogramSingleH_density, "SM single Higgs", "f");
+    }
 
     THStack* histogramStack_density = new THStack("stack", "");
-    histogramStack_density->Add(histogramSingleH_density);
-    histogramStack_density->Add(histogramQCD_density);
-    histogramStack_density->Add(histogramTT_density);
-    histogramStack_density->Add(histogramEWK_density);
-    histogramStack_density->Add(histogramZTT_density);
-    histogramStack_density->Draw("histsame");
-        
+    if ( histogramSingleH_density ) histogramStack_density->Add(histogramSingleH_density);
+    if ( histogramQCD_density     ) histogramStack_density->Add(histogramQCD_density);
+    if ( histogramTT_density      ) histogramStack_density->Add(histogramTT_density);
+    if ( histogramEWK_density     ) histogramStack_density->Add(histogramEWK_density);
+    if ( histogramZTT_density     ) histogramStack_density->Add(histogramZTT_density);
+    if ( histogramData_blinded_density ) histogramStack_density->Draw("histsame");
+    else histogramStack_density->Draw("hist");
+
     if ( histogramBgrUncertainty_density ) {
       int numBins_top = histogramBgrUncertainty_density->GetNbinsX();
       for ( int iBin = 1; iBin <= numBins_top; ++iBin ) {
 	double sumBinContents = 0.;
-	sumBinContents += histogramZTT_density->GetBinContent(iBin);
-	sumBinContents += histogramTT_density->GetBinContent(iBin);
-	sumBinContents += histogramEWK_density->GetBinContent(iBin);
-	sumBinContents += histogramQCD_density->GetBinContent(iBin);
-	sumBinContents += histogramSingleH_density->GetBinContent(iBin);
+	if ( histogramZTT_density     ) sumBinContents += histogramZTT_density->GetBinContent(iBin);
+	if ( histogramTT_density      ) sumBinContents += histogramTT_density->GetBinContent(iBin);
+	if ( histogramEWK_density     ) sumBinContents += histogramEWK_density->GetBinContent(iBin);
+	if ( histogramQCD_density     ) sumBinContents += histogramQCD_density->GetBinContent(iBin);
+	if ( histogramSingleH_density ) sumBinContents += histogramSingleH_density->GetBinContent(iBin);
 	histogramBgrUncertainty_density->SetBinContent(iBin, sumBinContents);
       }
       histogramBgrUncertainty_density->SetFillColor(kBlack);
@@ -747,8 +795,10 @@ namespace
       legend->AddEntry(histogramSignal3_density, legendEntrySignal3.data(), "l");
     }
 
-    histogramData_blinded_density->Draw("epsame");
-    histogramData_blinded_density->Draw("axissame");
+    if ( histogramData_blinded_density ) {
+      histogramData_blinded_density->Draw("epsame");
+      histogramData_blinded_density->Draw("axissame");
+    }
 
     legend->Draw();
 
@@ -781,83 +831,89 @@ namespace
     canvas->cd();
     bottomPad->Draw();
     bottomPad->cd();
-        
-    TH1* histogramBgr = (TH1*)histogramData->Clone("histogramBgr");
-    histogramBgr->Reset();
-    if ( !histogramBgr->GetSumw2N() ) histogramBgr->Sumw2();
-    histogramBgr->Add(histogramZTT);
-    histogramBgr->Add(histogramTT);
-    histogramBgr->Add(histogramEWK);
-    histogramBgr->Add(histogramQCD);
-    histogramBgr->Add(histogramSingleH);
-    TH1* histogramRatio = (TH1*)histogramData_blinded->Clone("histogramRatio");
-    if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
-    checkCompatibleBinning(histogramRatio, histogramBgr);
-    histogramRatio->Divide(histogramBgr);
-    int numBins_bottom = histogramRatio->GetNbinsX();
-    for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
-      double binContent = histogramRatio->GetBinContent(iBin);
-      if ( histogramData_blinded->GetBinContent(iBin) > 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
-      else histogramRatio->SetBinContent(iBin, -10.);
-    }
 
-    histogramRatio->SetTitle("");
-    histogramRatio->SetStats(false);
-    histogramRatio->SetMinimum(-0.50);
-    histogramRatio->SetMaximum(+0.50);
-    histogramRatio->SetMarkerStyle(histogramData_blinded_density->GetMarkerStyle());
-    histogramRatio->SetMarkerSize(histogramData_blinded_density->GetMarkerSize());
-    histogramRatio->SetMarkerColor(histogramData_blinded_density->GetMarkerColor());
-    histogramRatio->SetLineColor(histogramData_blinded_density->GetLineColor());
-
-    TAxis* xAxis_bottom = histogramRatio->GetXaxis();
-    xAxis_bottom->SetTitle(xAxis_top->GetTitle());
-    xAxis_bottom->SetLabelColor(1);
-    xAxis_bottom->SetTitleColor(1);
-    xAxis_bottom->SetTitleOffset(1.20);
-    xAxis_bottom->SetTitleSize(0.08);
-    xAxis_bottom->SetLabelOffset(0.02);
-    xAxis_bottom->SetLabelSize(0.08);
-    xAxis_bottom->SetTickLength(0.055);
-    
-    TAxis* yAxis_bottom = histogramRatio->GetYaxis();
-    yAxis_bottom->SetTitle("#frac{Data - Simulation}{Simulation}");
-    yAxis_bottom->SetTitleOffset(0.80);
-    yAxis_bottom->SetNdivisions(505);
-    yAxis_bottom->CenterTitle();
-    yAxis_bottom->SetTitleSize(0.08);
-    yAxis_bottom->SetLabelSize(0.08);
-    yAxis_bottom->SetTickLength(0.04);  
-
-    TH1* histogramRatioUncertainty = 0;
-    if ( histogramBgrUncertainty ) {
-      histogramRatioUncertainty = (TH1*)histogramBgrUncertainty->Clone("histogramBgrUncertainty_bottom");
-      if ( !histogramRatioUncertainty->GetSumw2N() ) histogramRatioUncertainty->Sumw2();
-      checkCompatibleBinning(histogramRatioUncertainty, histogramBgr);
-      histogramRatioUncertainty->Divide(histogramBgr);
-      int numBins = histogramRatioUncertainty->GetNbinsX();
-      for ( int iBin = 1; iBin <= numBins; ++iBin ) {
-	double binContent = histogramRatioUncertainty->GetBinContent(iBin);
-	histogramRatioUncertainty->SetBinContent(iBin, binContent - 1.0);
+    TH1* histogramBgr = 0;
+    TH1* histogramRatio = 0;
+    TF1* line = 0;
+    if ( histogramData && histogramData_blinded ) {
+      histogramBgr = (TH1*)histogramData->Clone("histogramBgr");
+      histogramBgr->Reset();
+      if ( !histogramBgr->GetSumw2N() ) histogramBgr->Sumw2();
+      if ( histogramZTT     ) histogramBgr->Add(histogramZTT);
+      if ( histogramTT      ) histogramBgr->Add(histogramTT);
+      if ( histogramEWK     ) histogramBgr->Add(histogramEWK);
+      if ( histogramQCD     ) histogramBgr->Add(histogramQCD);
+      if ( histogramSingleH ) histogramBgr->Add(histogramSingleH);
+      histogramRatio = (TH1*)histogramData->Clone("histogramRatio");
+      histogramRatio->Reset();
+      if ( !histogramRatio->GetSumw2N() ) histogramRatio->Sumw2();
+      checkCompatibleBinning(histogramRatio, histogramBgr);
+      histogramRatio->Divide(histogramBgr);
+      int numBins_bottom = histogramRatio->GetNbinsX();
+      for ( int iBin = 1; iBin <= numBins_bottom; ++iBin ) {
+	double binContent = histogramRatio->GetBinContent(iBin);
+	if ( histogramData_blinded && histogramData_blinded->GetBinContent(iBin) > 0. ) histogramRatio->SetBinContent(iBin, binContent - 1.0);
+	else histogramRatio->SetBinContent(iBin, -10.);
       }
-      histogramRatioUncertainty->SetFillColor(histogramBgrUncertainty_density->GetFillColor());
-      //histogramRatioUncertainty->SetFillStyle(histogramBgrUncertainty_density->GetFillStyle());    
-      histogramRatioUncertainty->SetFillStyle(3644);    
+
+      histogramRatio->SetTitle("");
+      histogramRatio->SetStats(false);
+      histogramRatio->SetMinimum(-0.50);
+      histogramRatio->SetMaximum(+0.50);
+      histogramRatio->SetMarkerStyle(histogramData_blinded_density->GetMarkerStyle());
+      histogramRatio->SetMarkerSize(histogramData_blinded_density->GetMarkerSize());
+      histogramRatio->SetMarkerColor(histogramData_blinded_density->GetMarkerColor());
+      histogramRatio->SetLineColor(histogramData_blinded_density->GetLineColor());
+
+      TAxis* xAxis_bottom = histogramRatio->GetXaxis();
+      xAxis_bottom->SetTitle(xAxis_top->GetTitle());
+      xAxis_bottom->SetLabelColor(1);
+      xAxis_bottom->SetTitleColor(1);
+      xAxis_bottom->SetTitleOffset(1.20);
+      xAxis_bottom->SetTitleSize(0.08);
+      xAxis_bottom->SetLabelOffset(0.02);
+      xAxis_bottom->SetLabelSize(0.08);
+      xAxis_bottom->SetTickLength(0.055);
+      
+      TAxis* yAxis_bottom = histogramRatio->GetYaxis();
+      yAxis_bottom->SetTitle("#frac{Data - Simulation}{Simulation}");
+      yAxis_bottom->SetTitleOffset(0.80);
+      yAxis_bottom->SetNdivisions(505);
+      yAxis_bottom->CenterTitle();
+      yAxis_bottom->SetTitleSize(0.08);
+      yAxis_bottom->SetLabelSize(0.08);
+      yAxis_bottom->SetTickLength(0.04);  
+      
+      TH1* histogramRatioUncertainty = 0;
+      if ( histogramBgrUncertainty ) {
+	histogramRatioUncertainty = (TH1*)histogramBgrUncertainty->Clone("histogramBgrUncertainty_bottom");
+	if ( !histogramRatioUncertainty->GetSumw2N() ) histogramRatioUncertainty->Sumw2();
+	checkCompatibleBinning(histogramRatioUncertainty, histogramBgr);
+	histogramRatioUncertainty->Divide(histogramBgr);
+	int numBins = histogramRatioUncertainty->GetNbinsX();
+	for ( int iBin = 1; iBin <= numBins; ++iBin ) {
+	  double binContent = histogramRatioUncertainty->GetBinContent(iBin);
+	  histogramRatioUncertainty->SetBinContent(iBin, binContent - 1.0);
+	}
+	histogramRatioUncertainty->SetFillColor(histogramBgrUncertainty_density->GetFillColor());
+	//histogramRatioUncertainty->SetFillStyle(histogramBgrUncertainty_density->GetFillStyle());    
+	histogramRatioUncertainty->SetFillStyle(3644);    
+      }
+      histogramRatio->Draw("ep");
+
+      line = new TF1("line","0", xAxis_bottom->GetXmin(), xAxis_bottom->GetXmax());
+      line->SetLineStyle(3);
+      line->SetLineWidth(1.5);
+      line->SetLineColor(kBlack);
+      line->Draw("same");
+      
+      if ( histogramRatioUncertainty ) {
+	//printHistogram(histogramRatioUncertainty);
+	histogramRatioUncertainty->Draw("e2same");
+      }
+      
+      histogramRatio->Draw("epsame");
     }
-    histogramRatio->Draw("ep");
-
-    TF1* line = new TF1("line","0", xAxis_bottom->GetXmin(), xAxis_bottom->GetXmax());
-    line->SetLineStyle(3);
-    line->SetLineWidth(1.5);
-    line->SetLineColor(kBlack);
-    line->Draw("same");
-
-    if ( histogramRatioUncertainty ) {
-      //printHistogram(histogramRatioUncertainty);
-      histogramRatioUncertainty->Draw("e2same");
-    }
-
-    histogramRatio->Draw("epsame");
 
     canvas->Update();
     size_t idx = outputFileName.find(".");
@@ -868,7 +924,7 @@ namespace
     canvas->Print(std::string(outputFileName_plot).append(".png").data());
     canvas->Print(std::string(outputFileName_plot).append(".pdf").data());
     canvas->Print(std::string(outputFileName_plot).append(".root").data());
-    
+
     delete histogramSignal1_density;
     delete histogramSignal2_density;
     delete histogramSignal3_density;
@@ -1017,7 +1073,8 @@ int main(int argc, char* argv[])
 	  TH1* histogramSignal3 = ( signal3 ) ? getHistogramSignal(dir, *signal3, (*distribution)->histogramName_, "central", false) : 0;  
 	  std::string legendEntrySignal3 = ( signal3 ) ? signal3->legendEntry_ : "";
 
-	  TH1* histogramData = getHistogram(dir, processData, (*distribution)->histogramName_, "central", true);
+	  TH1* histogramData = ( processData != "" ) ? 
+	    getHistogram(dir, processData, (*distribution)->histogramName_, "central", true) : 0;
 
 	  histogramManager.setDirectory(dir);
 	  histogramManager.setCategory((*category)->name_);
@@ -1047,7 +1104,7 @@ int main(int argc, char* argv[])
 	  histogramEWK->Add(histogramZJ);
 	  histogramEWK->Add(histogramVV);
 
-	  TH1* histogramData_blinded = ( (*distribution)->keepBlinded_.size() >= 1 ) ? blindHistogram(histogramData, (*distribution)->keepBlinded_) : histogramData;	  
+	  TH1* histogramData_blinded = ( histogramData && (*distribution)->keepBlinded_.size() >= 1 ) ? blindHistogram(histogramData, (*distribution)->keepBlinded_) : histogramData;	  
 
 	  TH1* histogramBgrUncertainty = 0;
 	  if ( showBgrUncertainty ) {
@@ -1066,7 +1123,7 @@ int main(int argc, char* argv[])
 	  size_t idx = outputFileName.find(".");
 	  std::string outputFileName_plot(outputFileName, 0, idx);
 	  outputFileName_plot.append(Form("_%s_%s_%s", (*region)->name_.data(), (*category)->name_.data(), (*tauPtBin)->name_.data()));
-	  outputFileName_plot.append(Form("_%s", (*distribution)->histogramName_.data()));
+	  outputFileName_plot.append(Form("_%s", (*distribution)->outputFileName_.data()));
 	  if ( idx != std::string::npos ) outputFileName_plot.append(std::string(outputFileName, idx));
 	  
 	  makePlot(800, 900,

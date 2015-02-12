@@ -127,7 +127,9 @@ particleIDlooseToTightWeightEntryType::~particleIDlooseToTightWeightEntryType()
 
 double particleIDlooseToTightWeightEntryType::weight(double particle1Pt, double particle2Pt) const
 {
+  //std::cout << "<particleIDlooseToTightWeightEntryType::weight>:" << std::endl;
   double weight = norm_->Eval(1.);
+  //std::cout << " norm = " << norm_->Eval(1.) << std::endl;
   double shapeCorr_particle1 = 1.;
   if ( applyFitFunction_or_graph_tau1_ == kGraph ) {
     assert(graphShapeCorr_particle1_);
@@ -140,6 +142,7 @@ double particleIDlooseToTightWeightEntryType::weight(double particle1Pt, double 
   } else if ( applyFitFunction_or_graph_tau1_ == kFitFunction ) {
     assert(fitFunctionShapeCorr_particle1_central_);
     shapeCorr_particle1 = fitFunctionShapeCorr_particle1_central_->Eval(particle1Pt);
+    //std::cout << " shape(tau1) = " << fitFunctionShapeCorr_particle1_central_->Eval(particle1Pt) << std::endl;
   }
   weight *= TMath::Power(TMath::Max(0., shapeCorr_particle1), shapeCorrPow_particle1_);
   double shapeCorr_particle2 = 1.;
@@ -154,6 +157,7 @@ double particleIDlooseToTightWeightEntryType::weight(double particle1Pt, double 
   } else if ( applyFitFunction_or_graph_tau2_ == kFitFunction ) {
     assert(fitFunctionShapeCorr_particle2_central_);
     shapeCorr_particle2 = fitFunctionShapeCorr_particle2_central_->Eval(particle2Pt);
+    //std::cout << " shape(tau2) = " << fitFunctionShapeCorr_particle2_central_->Eval(particle2Pt) << std::endl;
   }
   weight *= TMath::Power(TMath::Max(0., shapeCorr_particle2), shapeCorrPow_particle2_);
   if ( weight < 0.    ) weight = 0.;

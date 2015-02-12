@@ -724,7 +724,7 @@ namespace
     if ( histogramSignal2_density ) {      
       histogramSignal2_density->SetLineWidth(2);
       histogramSignal2_density->SetLineStyle(kDashed);
-      histogramSignal2_density->SetLineColor(kRed);
+      histogramSignal2_density->SetLineColor(797);
       histogramSignal2_density->Draw("histsame");
       legend->AddEntry(histogramSignal2_density, legendEntrySignal2.data(), "l");
     }

@@ -85,5 +85,6 @@ process.FWLiteTauTauAnalyzer = cms.PSet(
     addWeights = cms.vstring(),
 
     selEventsFileName_input = cms.string(""),
-    selEventsFileName_output = cms.string("")
+    selEventsFileName_output = cms.string(""),
+    failEventsFileName_output = cms.string("")
 )

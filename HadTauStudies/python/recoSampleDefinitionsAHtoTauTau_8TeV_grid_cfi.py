@@ -220,8 +220,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 468406,
         'events_per_job'   : 20000,
-        ##'x_sec'            : 249.5*_picobarns*0.1050*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
-        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'x_sec'            : 241.5*_picobarns*0.1050, # CV: taken from TOP-14-016, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
         'type'             : 'pfEmbeddedMC'
     },
     'pfEmbed_TTJetsFullLept_v2' : {
@@ -229,8 +228,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 468406,
         'events_per_job'   : 20000,
-        ##'x_sec'            : 249.5*_picobarns*0.1050*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
-        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'x_sec'            : 241.5*_picobarns*0.1050, # CV: taken from TOP-14-016, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
         'type'             : 'pfEmbeddedMC'
     },
     'DYJets' : {
@@ -368,7 +366,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 31223821,
         'events_per_job'   : 20000,
-        'x_sec'            : 249.5*_picobarns*0.4570, # CV: taken from TOP-12-007
+        'x_sec'            : 241.5*_picobarns*0.4570, # CV: taken from TOP-14-016
         'type'             : 'smMC'
     },
     'TTJetsSemiLept' : {
@@ -376,7 +374,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 25424818,
         'events_per_job'   : 20000,
-        'x_sec'            : 249.5*_picobarns*0.4380, # CV: taken from TOP-12-007
+        'x_sec'            : 241.5*_picobarns*0.4380, # CV: taken from TOP-14-016
         'type'             : 'smMC'
     },
     'TTJetsSemiLept_tauola' : {
@@ -384,7 +382,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 24953451,
         'events_per_job'   : 20000,
-        'x_sec'            : 249.5*_picobarns*0.4380, # CV: taken from TOP-12-007
+        'x_sec'            : 241.5*_picobarns*0.4380, # CV: taken from TOP-14-016
         'type'             : 'smMC'
     },
     'TTJetsFullLept' : {
@@ -392,7 +390,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 12119013,
         'events_per_job'   : 20000,
-        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007
+        'x_sec'            : 241.5*_picobarns*0.1050, # CV: taken from TOP-14-016
         'type'             : 'smMC'
     },
     'TTJetsFullLept_tauola' : {
@@ -400,7 +398,7 @@ RECO_SAMPLES = {
         'dbs_url'          : "http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet",
         'events_processed' : 12011428,
         'events_per_job'   : 20000,
-        'x_sec'            : 249.5*_picobarns*0.1050, # CV: taken from TOP-12-007
+        'x_sec'            : 241.5*_picobarns*0.1050, # CV: taken from TOP-14-016
         'type'             : 'smMC'
     },
     'Tbar_tW' : {

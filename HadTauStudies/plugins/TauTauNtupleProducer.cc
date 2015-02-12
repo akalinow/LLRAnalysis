@@ -338,8 +338,10 @@ void TauTauNtupleProducer::beginJob()
 	evtWeight != evtWeightsToStore_.end(); ++evtWeight ) {
     addBranchF(evtWeight->branchName_);
   }
+  addBranchF("genMass");
   addBranchF("genFilter");
   addBranchF("genHiggsPt");
+  addBranchF("genHiggsMass");
   addBranchF("higgsPtWeightNom");
   addBranchF("higgsPtWeightUp");
   addBranchF("higgsPtWeightDown");
@@ -380,6 +382,9 @@ void TauTauNtupleProducer::beginJob()
   }
   addBranchI("nVert");
   addBranch_XYZ("vertex");
+  addBranchF("vertexRho");
+  addBranchF("vertexNDoF");
+  addBranchF("vertexIsValid");
   addBranchF("rho");
   addBranchI("nPUbx0");
   addBranchI("nPUbxP1");
@@ -1109,6 +1114,9 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
   setValueI("nVert", vertices->size());
   if ( vertices->size() >= 1 ) {
     setValue_XYZ("vertex", vertices->front().position());
+    setValueF("vertexRho", vertices->front().position().Rho());
+    setValueF("vertexNDoF", vertices->front().ndof());
+    setValueI("vertexIsValid", vertices->front().isValid());
   }
 
   edm::Handle<double> rho;
@@ -1142,7 +1150,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
       setValueF("NUP", LHE->hepeup().NUP);
     } 
   }
-
+  
   if ( isMC_ || isEmbedded_ ) {
     edm::Handle<reco::GenParticleCollection> genParticles;
     evt.getByLabel(srcGenParticles_, genParticles);
@@ -1196,6 +1204,11 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     //if ( genLeptonMinus ) std::cout << genLeptonMinus->pdgId();
     //else std::cout << "N/A";
     //std::cout << std::endl;
+    double genMass = -1.;
+    if ( genLeptonPlus && genLeptonMinus ) {
+      genMass = (genLeptonPlus->p4() + genLeptonMinus->p4()).mass();
+    }
+    setValueF("genMass", genMass);
     bool leg1isGenHadTau   = false; 
     bool leg1isGenMuon     = false;
     bool leg1isGenElectron = false;
@@ -1225,7 +1238,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     setValueI("isZttl", isZttl);
     setValueI("isZj", isZj);
     setValueI("isZee", isZee);
-    setValueI("isZmm", isZmm);
+    setValueI("isZmm", isZmm);    
 
     reco::Candidate::LorentzVector zP4;
     bool hasZ = findGenParticle(*genParticles, 22, 23, 0, zP4);
@@ -1257,10 +1270,11 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     setValueF(evtWeight->branchName_, *evtWeightValue);
   }
 
-  double genHiggsPt = -1.;
-  double higgsPtWeightNom  = 1.;
-  double higgsPtWeightUp   = 1.;
-  double higgsPtWeightDown = 1.;
+  double genHiggsPt        = -1.;
+  double genHiggsMass      = -1.;  
+  double higgsPtWeightNom  =  1.;
+  double higgsPtWeightUp   =  1.;
+  double higgsPtWeightDown =  1.;
   bool isHiggs = false;
   if ( isMC_ ) {
     edm::Handle<reco::GenParticleCollection> genParticles;
@@ -1270,12 +1284,12 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     isHiggs = findGenParticle(*genParticles, 25, 35, 36, higgsP4);
     if ( isHiggs ) {
       genHiggsPt = higgsP4.pt();
-      double higgsMass = higgsP4.mass();
-      //std::cout << "higgsMass = " << higgsMass << std::endl;
+      genHiggsMass = higgsP4.mass();
+      //std::cout << "genHiggsMass = " << genHiggsMass << std::endl;
       std::string inputFileName;
-      if      ( higgsMass >=  90. && higgsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
-      else if ( higgsMass >= 115. && higgsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
-      else if ( higgsMass >= 140. && higgsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
+      if      ( genHiggsMass >=  90. && genHiggsMass <= 110. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH100_8TeV.root";
+      else if ( genHiggsMass >= 115. && genHiggsMass <= 135. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH125_8TeV.root";
+      else if ( genHiggsMass >= 140. && genHiggsMass <= 150. ) inputFileName = "LLRAnalysis/HadTauStudies/data/HqTWeights/HRes_weight_pTH_mH150_8TeV.root";
       //std::cout << "inputFileName = " << inputFileName << std::endl;
       if ( inputFileName != "" ) {
 	if ( inputFileName != lastInputFileHiggsPtWeight_ || !inputFileHiggsPtWeight_ ) {
@@ -1293,6 +1307,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     }
   }
   setValueF("genHiggsPt", genHiggsPt);
+  setValueF("genHiggsMass", genHiggsMass);
   setValueF("higgsPtWeightNom", higgsPtWeightNom);
   setValueF("higgsPtWeightUp", higgsPtWeightUp);
   setValueF("higgsPtWeightDown", higgsPtWeightDown);
@@ -1331,7 +1346,7 @@ void TauTauNtupleProducer::analyze(const edm::Event& evt, const edm::EventSetup&
     genFilter = embeddingWeight->filterEfficiency();
   }
   setValueF("genFilter", genFilter);
- 
+  
   edm::Handle<pat::TriggerEvent> triggerResults;
   evt.getByLabel(srcTriggerResults_, triggerResults);
 
@@ -1517,7 +1532,7 @@ void TauTauNtupleProducer::addBranch_diTau(const std::string& name)
   addBranch_EnPxPyPz(name);
   addBranch_PtEtaPhiMass(name);
   addBranchF(name + "Charge");
-  addBranchF("genMass");
+  addBranchF("diTauGenMass");
   addBranchF("visMass");
   addBranchF("svfitMass");
   addBranchF("svfitMassErr");
@@ -1680,25 +1695,24 @@ void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTa
 {
   const pat::Tau* leg1 = &(*diTau.leg1());
   const pat::Tau* leg2 = &(*diTau.leg2());
-  svFitStandalone::LorentzVector leg1P4(leg1->px(), leg1->py(), leg1->pz(), leg1->energy());
-  svFitStandalone::LorentzVector leg2P4(leg2->px(), leg2->py(), leg2->pz(), leg2->energy());
   std::vector<svFitStandalone::MeasuredTauLepton> measuredTauLeptons;
   if ( leg1->pt() > leg2->pt() ) {
-    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1P4));
-    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1->pt(), leg1->eta(), leg1->phi(), leg1->mass()));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2->pt(), leg2->eta(), leg2->phi(), leg2->mass()));
   } else {
-    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2P4));
-    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1P4));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2->pt(), leg2->eta(), leg2->phi(), leg2->mass()));
+    measuredTauLeptons.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg1->pt(), leg1->eta(), leg1->phi(), leg1->mass()));
   }
   const reco::MET* met = &(*diTau.met());
-  Vector measuredMEt(met->px(), met->py(), 0.);
-  SVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons, measuredMEt, met->getSignificanceMatrix(), verbosity_);
-  svFitAlgorithm.addLogM(false);
+  SVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons, met->px(), met->py(), met->getSignificanceMatrix(), verbosity_);
+  //svFitAlgorithm.addLogM(false);
+  svFitAlgorithm.addLogM(true, 2.);
   svFitAlgorithm.integrateVEGAS();
   if ( svFitAlgorithm.isValidSolution() ) {
     setValueF("svfitMass", svFitAlgorithm.getMass());
     setValueF("svfitMassErr", svFitAlgorithm.massUncert());
   }
+  //std::cout << "svfitMass = " << svFitAlgorithm.getMass() << " +/- " << svFitAlgorithm.massUncert() << std::endl;
   svFitAlgorithm.addLogM(false);
   svFitAlgorithm.integrateMarkovChain();
   if ( svFitAlgorithm.isValidSolution() ) {
@@ -1708,7 +1722,7 @@ void TauTauNtupleProducer::setValue_diTau(const std::string& name, const PATDiTa
   }
   setValueF(name + "Charge", leg1->charge() + leg2->charge());
   if ( leg1->genLepton() && leg2->genLepton() ) {
-    setValueF("genMass", (leg1->genLepton()->p4() + leg2->genLepton()->p4()).mass());
+    setValueF("diTauGenMass", (leg1->genLepton()->p4() + leg2->genLepton()->p4()).mass());
   }
   setValueF("visMass", (leg1->p4() + leg2->p4()).mass());
   // compute "total transverse mass" used in ATLAS MSSM Higgs -> tautau analysis,

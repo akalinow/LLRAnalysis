@@ -109,6 +109,11 @@ process.makeTauTauPlots = cms.PSet(
             yAxisTitle = cms.string("dN/dP_{T}^{#tau_{1}} [1/GeV]")
         ),
         cms.PSet(
+            histogramName = cms.string("tau1PtM"),
+            xAxisTitle = cms.string("P_{T}^{#tau_{1}} [GeV]"),
+            yAxisTitle = cms.string("dN/dP_{T}^{#tau_{1}} [1/GeV]")
+        ),
+        cms.PSet(
             histogramName = cms.string("tau1PtL"),
             xAxisTitle = cms.string("P_{T}^{#tau_{1}} [GeV]"),
             yAxisTitle = cms.string("dN/dP_{T}^{#tau_{1}} [1/GeV]")
@@ -125,6 +130,11 @@ process.makeTauTauPlots = cms.PSet(
         ),
         cms.PSet(
             histogramName = cms.string("tau2PtS"),
+            xAxisTitle = cms.string("P_{T}^{#tau_{2}} [GeV]"),
+            yAxisTitle = cms.string("dN/dP_{T}^{#tau_{2}} [1/GeV]")
+        ),
+        cms.PSet(
+            histogramName = cms.string("tau2PtM"),
             xAxisTitle = cms.string("P_{T}^{#tau_{2}} [GeV]"),
             yAxisTitle = cms.string("dN/dP_{T}^{#tau_{2}} [1/GeV]")
         ),
@@ -150,7 +160,19 @@ process.makeTauTauPlots = cms.PSet(
             ##keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
+            histogramName = cms.string("svFitMassSwOverflow"),
+            xAxisTitle = cms.string("m_{#tau#tau} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]"),
+            ##keepBlinded = cms.vstring("100:1500")
+        ),
+        cms.PSet(
             histogramName = cms.string("visMassS"),
+            xAxisTitle = cms.string("m_{vis} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
+            ##keepBlinded = cms.vstring("100:1500")
+        ),
+        cms.PSet(
+            histogramName = cms.string("visMassSwOverflow"),
             xAxisTitle = cms.string("m_{vis} [GeV]"),
             yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
             ##keepBlinded = cms.vstring("100:1500")
@@ -162,7 +184,18 @@ process.makeTauTauPlots = cms.PSet(
             ##keepBlinded = cms.vstring("100:1500")
         ),
         cms.PSet(
+            histogramName = cms.string("mTtotalSwOverflow"),
+            xAxisTitle = cms.string("m_{T}^{total} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{T}^{total} [1/GeV]"),
+            ##keepBlinded = cms.vstring("100:1500")
+        ),
+        cms.PSet(
             histogramName = cms.string("jet1PtS"),
+            xAxisTitle = cms.string("P_{T}^{jet} [GeV]"),
+            yAxisTitle = cms.string("dN/dP_{T}^{jet} [1/GeV]")
+        ),
+        cms.PSet(
+            histogramName = cms.string("jet1PtM"),
             xAxisTitle = cms.string("P_{T}^{jet} [GeV]"),
             yAxisTitle = cms.string("dN/dP_{T}^{jet} [1/GeV]")
         ),
@@ -191,6 +224,11 @@ process.makeTauTauPlots = cms.PSet(
             xAxisTitle = cms.string("P_{T}^{b-jet} [GeV]"),
             yAxisTitle = cms.string("dN/dP_{T}^{b-jet} [1/GeV]")
         ),
+         cms.PSet(
+            histogramName = cms.string("bJet1PtM"),
+            xAxisTitle = cms.string("P_{T}^{b-jet} [GeV]"),
+            yAxisTitle = cms.string("dN/dP_{T}^{b-jet} [1/GeV]")
+        ),
         cms.PSet(
             histogramName = cms.string("bJet1Eta"),
             xAxisTitle = cms.string("#eta_{b-jet}"),
@@ -208,6 +246,11 @@ process.makeTauTauPlots = cms.PSet(
         ),
         cms.PSet(
             histogramName = cms.string("metS"),
+            xAxisTitle = cms.string("E_{T}^{miss} [GeV]"),
+            yAxisTitle = cms.string("dN/dE_{T}^{miss} [1/GeV]")
+        ),
+        cms.PSet(
+            histogramName = cms.string("metM"),
             xAxisTitle = cms.string("E_{T}^{miss} [GeV]"),
             yAxisTitle = cms.string("dN/dE_{T}^{miss} [1/GeV]")
         ),

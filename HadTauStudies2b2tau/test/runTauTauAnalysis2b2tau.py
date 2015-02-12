@@ -9,11 +9,11 @@ import time
 
 jobId = '2014Jun09'
 
-version = "v3_09"
+version = "v3_13"
 
 inputFilePath  = "/data2/veelken/CMSSW_5_3_x/Ntuples/AHtoTauTau/%s/%s" % (jobId, version)
 
-outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_3/" % version
+outputFilePath = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_2/" % version
 
 _picobarns =  1.0
 _femtobarns = 1.0e-3
@@ -125,19 +125,20 @@ samples = {
     'DYJets_Embedded' : {
         'processes' : [ "ZTT_Embedded" ],
         'inputFiles' : [
-            ##"pfEmbed_Run2012A_22Jan2013_v1",
-            "pfEmbed_Run2012B_22Jan2013_v1",
-            "pfEmbed_Run2012C_22Jan2013_v1",
-            "pfEmbed_Run2012D_22Jan2013_v1"
+            ##"pfEmbed_Run2012A_22Jan2013_v2",
+            "pfEmbed_Run2012B_22Jan2013_v2",
+            "pfEmbed_Run2012C_22Jan2013_v2",
+            "pfEmbed_Run2012D_22Jan2013_v2"
         ],
         'lumiScale'  : 1.0
     },
     'TTJets_Embedded' : {
         'processes' : [ "TT_Embedded" ],
-        'inputFiles' : [ "pfEmbed_TTJetsFullLept" ],
-        ##'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from TOP-12-007, need to multiply by branching fraction for both taus to decay hadronically
-        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-12-007, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
-        'addWeights' : [ "topPtWeightNom" ]
+        'inputFiles' : [ "pfEmbed_TTJetsFullLept_v2" ],
+        ##'lumiScale' : getLumiScale('TTJetsFullLept')*0.648*0.648, # CV: taken from TOP-14-016, need to multiply by branching fraction for both taus to decay hadronically
+        'lumiScale' : getLumiScale('TTJetsFullLept'), # CV: taken from TOP-14-016, no need to multiply by branching fraction for both taus to decay hadronically when using addBackgroundZTT2
+        'addWeights' : [ "topPtWeightNom" ],
+        'applyJetToTauFakeRateCorrection' : True
     },
     'HiggsGGH125' : {
         'processes' : [ "ggH_SM125" ],
@@ -1274,27 +1275,29 @@ for discriminator in discriminators.keys():
             if categoryOption == "_nonresonant":
                 cfg_modified += "delattr(process.makeTauTauPlots2b2tau, 'signal2')\n"
             elif categoryOption == "_resonant":
+                ##cfg_modified += "process.makeTauTauPlots2b2tau.signal1 = cms.PSet(\n"
+                ##cfg_modified += "    process_ggH = cms.string('mssmH300tohh'),\n"
+                ##cfg_modified += "    sf_ggH = cms.double(1.*0.577*0.0632*2.),\n"
+                ##cfg_modified += "    process_bbH = cms.string(''),\n"
+                ##cfg_modified += "    sf_bbH = cms.double(0.),\n"
+                ##cfg_modified += "    legendEntry = cms.string('X #rightarrow hh #rightarrow 2b 2#tau (m=300 GeV)')\n"
+                ##cfg_modified += ")\n"
+                ##cfg_modified += "process.makeTauTauPlots2b2tau.signal2 = cms.PSet(\n"
+                ##cfg_modified += "    process_ggH = cms.string('graviton500Tohh'),\n"
+                ##cfg_modified += "    sf_ggH = cms.double(1.*0.577*0.0632*2.),\n"
+                ##cfg_modified += "    process_bbH = cms.string(''),\n"
+                ##cfg_modified += "    sf_bbH = cms.double(0.),\n"
+                ##cfg_modified += "    legendEntry = cms.string(\"X #rightarrow hh #rightarrow 2b 2#tau (m=500 GeV)\")\n"
+                ##cfg_modified += ")\n"
+                ##cfg_modified += "process.makeTauTauPlots2b2tau.signal3 = cms.PSet(\n"
                 cfg_modified += "process.makeTauTauPlots2b2tau.signal1 = cms.PSet(\n"
-                cfg_modified += "    process_ggH = cms.string('mssmH300tohh'),\n"
-                cfg_modified += "    sf_ggH = cms.double(1.*0.577*0.0632*2.),\n"
-                cfg_modified += "    process_bbH = cms.string(''),\n"
-                cfg_modified += "    sf_bbH = cms.double(0.),\n"
-                cfg_modified += "    legendEntry = cms.string('H #rightarrow hh #rightarrow 2b 2#tau (m=300 GeV)')\n"
-                cfg_modified += ")\n"
-                cfg_modified += "process.makeTauTauPlots2b2tau.signal2 = cms.PSet(\n"
-                cfg_modified += "    process_ggH = cms.string('graviton500Tohh'),\n"
-                cfg_modified += "    sf_ggH = cms.double(1.*0.577*0.0632*2.),\n"
-                cfg_modified += "    process_bbH = cms.string(''),\n"
-                cfg_modified += "    sf_bbH = cms.double(0.),\n"
-                cfg_modified += "    legendEntry = cms.string(\"G #rightarrow hh #rightarrow 2b 2#tau (m=500 GeV)\")\n"
-                cfg_modified += ")\n"
-                cfg_modified += "process.makeTauTauPlots2b2tau.signal3 = cms.PSet(\n"
                 cfg_modified += "    process_ggH = cms.string('radion700Tohh'),\n"
                 cfg_modified += "    sf_ggH = cms.double(1.*0.577*0.0632*2.),\n"
                 cfg_modified += "    process_bbH = cms.string(''),\n"
                 cfg_modified += "    sf_bbH = cms.double(0.),\n"
-                cfg_modified += "    legendEntry = cms.string(\"R #rightarrow hh #rightarrow 2b 2#tau (m=700 GeV)\")\n"
+                cfg_modified += "    legendEntry = cms.string(\"X #rightarrow hh #rightarrow 2b 2#tau (m=700 GeV)\")\n"
                 cfg_modified += ")\n"
+                cfg_modified += "delattr(process.makeTauTauPlots2b2tau, 'signal2')\n"
             cfg_modified += "process.makeTauTauPlots2b2tau.categories = cms.VPSet(\n"
             cfg_modified += "    cms.PSet(\n"
             cfg_modified += "        name = cms.string('inclusive_%s'),\n" % discriminator
@@ -1302,19 +1305,15 @@ for discriminator in discriminators.keys():
             cfg_modified += "    ),\n"
             cfg_modified += "    cms.PSet(\n"
             cfg_modified += "        name = cms.string('2bM_%s%s'),\n" % (discriminator, categoryOption)
-            cfg_modified += "        label = cms.string('2 B-Tags (Medium)')\n"
-            cfg_modified += "    ),\n"
-            cfg_modified += "    cms.PSet(\n"
-            cfg_modified += "        name = cms.string('2bL_%s%s'),\n" % (discriminator, categoryOption)
-            cfg_modified += "        label = cms.string('2 B-Tags (Loose)')\n"
+            cfg_modified += "        label = cms.string('2b')\n"
             cfg_modified += "    ),\n"
             cfg_modified += "    cms.PSet(\n"
             cfg_modified += "        name = cms.string('1b1j_%s%s'),\n" % (discriminator, categoryOption)
-            cfg_modified += "        label = cms.string('1 B-Tag (Medium)')\n"
+            cfg_modified += "        label = cms.string('1b1j')\n"
             cfg_modified += "    ),\n"
             cfg_modified += "    cms.PSet(\n"
             cfg_modified += "        name = cms.string('2j_%s%s'),\n" % (discriminator, categoryOption)
-            cfg_modified += "        label = cms.string('0 B-Tag (Medium)')\n"
+            cfg_modified += "        label = cms.string('2j')\n"
             cfg_modified += "    )\n"
             cfg_modified += ")\n"
             cfg_modified += "process.makeTauTauPlots2b2tau.nuisanceParameters.normalization = cms.PSet(\n"

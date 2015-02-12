@@ -52,6 +52,8 @@ class VertexMultiplicityReweightExtractor : public ObjValExtractorBase
 
   enum { kUndefined, kGenLevel, kGenLevel3d, kRecLevel };
   int type_;
+  
+  int verbosity_;
 };
 
 #endif

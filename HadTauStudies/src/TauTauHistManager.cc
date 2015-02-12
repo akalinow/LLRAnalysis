@@ -32,6 +32,12 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     0., 5., 10., 15., 20., 25., 30., 35., 40., 45., 50., 60., 70., 80., 90., 100., 120., 140., 160., 180., 200.
   };
 
+  const int numPtBinsM = 24;
+  float ptBinningM[numPtBinsM + 1] = { 
+    0., 5., 10., 15., 20., 25., 30., 35., 40., 45., 50., 60., 70., 80., 90., 100., 120., 140., 160., 180., 200.,
+    250., 300., 400., 500.
+  };
+
   const int numPtBinsL = 26;
   float ptBinningL[numPtBinsL + 1] = { 
     0., 5., 10., 15., 20., 25., 30., 35., 40., 45., 50., 60., 70., 80., 90., 100., 120., 140., 160., 180., 200.,
@@ -39,6 +45,7 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   };
 
   histogramTau1PtS_       = book1D(dir, "tau1PtS",       "#tau_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramTau1PtM_       = book1D(dir, "tau1PtM",       "#tau_{1} P_{T} / GeV", numPtBinsM, ptBinningM);
   histogramTau1PtL_       = book1D(dir, "tau1PtL",       "#tau_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
   for ( int idxTau1EtaBin = 0; idxTau1EtaBin < numTau1EtaBins_; ++idxTau1EtaBin ) {
     double tau1EtaMin = tau1EtaBins_[idxTau1EtaBin];
@@ -46,6 +53,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     std::string tauEtaBin_label = getParticleEtaLabel("tau", tau1EtaMin, tau1EtaMax, -1., 9.9);
     histogramTau1Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       tau1EtaMin, tau1EtaMax, book1D(dir, Form("tau1PtS_%s", tauEtaBin_label.data()), "#tau_{1} P_{T} / GeV", numPtBinsS, ptBinningS)));
+    histogramTau1Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
+      tau1EtaMin, tau1EtaMax, book1D(dir, Form("tau1PtM_%s", tauEtaBin_label.data()), "#tau_{1} P_{T} / GeV", numPtBinsM, ptBinningM)));
     histogramTau1Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       tau1EtaMin, tau1EtaMax, book1D(dir, Form("tau1PtL_%s", tauEtaBin_label.data()), "#tau_{1} P_{T} / GeV", numPtBinsL, ptBinningL)));
   }
@@ -57,6 +66,7 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
   histogramTau1MVA_       = book1D(dir, "tau1IsoDiscrS", "#tau_{1} MVA output", 105, -0.005, 1.045);
 
   histogramTau2PtS_       = book1D(dir, "tau2PtS",       "#tau_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramTau2PtM_       = book1D(dir, "tau2PtM",       "#tau_{2} P_{T} / GeV", numPtBinsM, ptBinningM);
   histogramTau2PtL_       = book1D(dir, "tau2PtL",       "#tau_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
   for ( int idxTau2EtaBin = 0; idxTau2EtaBin < numTau2EtaBins_; ++idxTau2EtaBin ) {
     double tau2EtaMin = tau2EtaBins_[idxTau2EtaBin];
@@ -64,6 +74,8 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     std::string tauEtaBin_label = getParticleEtaLabel("tau", -1., 9.9, tau2EtaMin, tau2EtaMax);
     histogramTau2Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       tau2EtaMin, tau2EtaMax, book1D(dir, Form("tau2PtS_%s", tauEtaBin_label.data()), "#tau_{2} P_{T} / GeV", numPtBinsS, ptBinningS)));
+    histogramTau2Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
+      tau2EtaMin, tau2EtaMax, book1D(dir, Form("tau2PtM_%s", tauEtaBin_label.data()), "#tau_{2} P_{T} / GeV", numPtBinsM, ptBinningM)));
     histogramTau2Pt_inTauEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       tau2EtaMin, tau2EtaMax, book1D(dir, Form("tau2PtL_%s", tauEtaBin_label.data()), "#tau_{2} P_{T} / GeV", numPtBinsL, ptBinningL)));
   }
@@ -79,48 +91,70 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     0., 10., 20., 30., 40., 50., 60., 70., 80., 90., 100., 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 
     225., 250., 275., 300., 325., 350., 400., 500., 700., 1000., 1500.
   };
+  const int numMassBins_inclusive_and_nobtag_wOverflow = 32;
+  float massBinning_inclusive_and_nobtag_wOverflow[numMassBins_inclusive_and_nobtag_wOverflow + 1] = { 
+    0., 10., 20., 30., 40., 50., 60., 70., 80., 90., 100., 110., 120., 130., 140., 150., 160., 170., 180., 190., 200., 
+    225., 250., 275., 300., 325., 350., 400., 500., 700., 1000., 1500., 2000.
+  };
   const int numMassBins_btag = 18;
   float massBinning_btag[numMassBins_btag + 1] = { 
     0., 20., 40., 60., 80., 100., 120., 140., 160., 180., 200.,
     250., 300., 350., 400., 500., 700., 1000., 1500.
   };
+  const int numMassBins_btag_wOverflow = 19;
+  float massBinning_btag_wOverflow[numMassBins_btag_wOverflow + 1] = { 
+    0., 20., 40., 60., 80., 100., 120., 140., 160., 180., 200.,
+    250., 300., 350., 400., 500., 700., 1000., 1500., 2000.
+  };
   int numMassBins = -1;
   float* massBinning = 0;
+  int numMassBins_wOverflow = -1;
+  float* massBinning_wOverflow = 0;
   if ( category_.find("_inclusive") != std::string::npos || category_.find("_nobtag") != std::string::npos ) {
     numMassBins = numMassBins_inclusive_and_nobtag;
     massBinning = massBinning_inclusive_and_nobtag;
+    numMassBins_wOverflow = numMassBins_inclusive_and_nobtag_wOverflow;
+    massBinning_wOverflow = massBinning_inclusive_and_nobtag_wOverflow;
   } else if ( category_.find("_btag") != std::string::npos ) {
     numMassBins = numMassBins_btag;
     massBinning = massBinning_btag;
+    numMassBins_wOverflow = numMassBins_btag_wOverflow;
+    massBinning_wOverflow = massBinning_btag_wOverflow;
   } else throw cms::Exception("TauTauHistManager") 
       << "Invalid Configuration parameter 'category' = " << category_ << " !!\n";
   
-  histogramVisMassS_      = book1D(dir, "visMassS",      "M_{vis} / GeV", numMassBins, massBinning);
-  histogramVisMassL_      = book1D(dir, "visMassL",      "M_{vis} / GeV", 400, 0., 2000.);
-  histogramSVfitMassS_    = book1D(dir, "svFitMassS",    "M_{#tau#tau} / GeV", numMassBins, massBinning);
-  histogramSVfitMassL_    = book1D(dir, "svFitMassL",    "M_{#tau#tau} / GeV", 400, 0., 2000.);
-  histogramMtTotalS_      = book1D(dir, "mTtotalS",      "m_{T}^{total} / GeV", numMassBins, massBinning);
-  histogramMtTotalL_      = book1D(dir, "mTtotalL",      "m_{T}^{total} / GeV", 400, 0., 2000.);
-  histogramDeltaPhi_      = book1D(dir, "deltaPhi",      "#Delta #phi (#tau_{1},#tau_{2})", 36, -TMath::Pi(), TMath::Pi());
-  histogramDeltaEta_      = book1D(dir, "deltaEta",      "#Delta #eta (#tau_{1},#tau_{2})", 50, 0., 5.);
-  histogramDeltaR_        = book1D(dir, "deltaR"  ,      "#Delta R (#tau_{1},#tau_{2})", 70, 0., 7.);
+  histogramVisMassS_            = book1D(dir, "visMassS",            "M_{vis} / GeV", numMassBins, massBinning);
+  histogramVisMassSwOverflow_   = book1D(dir, "visMassSwOverflow",   "M_{vis} / GeV", numMassBins_wOverflow, massBinning_wOverflow);
+  histogramVisMassL_            = book1D(dir, "visMassL",            "M_{vis} / GeV", 400, 0., 2000.);  
+  histogramSVfitMassS_          = book1D(dir, "svFitMassS",          "M_{#tau#tau} / GeV", numMassBins, massBinning);
+  histogramSVfitMassSwOverflow_ = book1D(dir, "svFitMassSwOverflow", "M_{#tau#tau} / GeV", numMassBins_wOverflow, massBinning_wOverflow);
+  histogramSVfitMassL_          = book1D(dir, "svFitMassL",          "M_{#tau#tau} / GeV", 400, 0., 2000.);
+  histogramMtTotalS_            = book1D(dir, "mTtotalS",            "m_{T}^{total} / GeV", numMassBins, massBinning);
+  histogramMtTotalSwOverflow_   = book1D(dir, "mTtotalSwOverflow",   "m_{T}^{total} / GeV", numMassBins, massBinning);
+  histogramMtTotalL_            = book1D(dir, "mTtotalL",            "m_{T}^{total} / GeV", 400, 0., 2000.);
+  histogramDeltaPhi_            = book1D(dir, "deltaPhi",            "#Delta #phi (#tau_{1},#tau_{2})", 36, -TMath::Pi(), TMath::Pi());
+  histogramDeltaEta_            = book1D(dir, "deltaEta",            "#Delta #eta (#tau_{1},#tau_{2})", 50, 0., 5.);
+  histogramDeltaR_              = book1D(dir, "deltaR"  ,            "#Delta R (#tau_{1},#tau_{2})", 70, 0., 7.);
 
-  histogramJet1PtS_       = book1D(dir, "jet1PtS",       "Jet_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramJet1PtL_       = book1D(dir, "jet1PtL",       "Jet_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramJet1Eta_       = book1D(dir, "jet1Eta",       "Jet_{1} #eta", 60, -3.0, +3.0);
-  histogramJet1Phi_       = book1D(dir, "jet1Phi",       "Jet_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
-  histogramJet1BtagDiscr_ = book1D(dir, "jet1BtagDiscr", "Jet_{1} b-tag Discriminator", 105, -0.005, 1.045);
+  histogramJet1PtS_             = book1D(dir, "jet1PtS",             "Jet_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramJet1PtM_             = book1D(dir, "jet1PtM",             "Jet_{1} P_{T} / GeV", numPtBinsM, ptBinningM);
+  histogramJet1PtL_             = book1D(dir, "jet1PtL",             "Jet_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
+  histogramJet1Eta_             = book1D(dir, "jet1Eta",             "Jet_{1} #eta", 60, -3.0, +3.0);
+  histogramJet1Phi_             = book1D(dir, "jet1Phi",             "Jet_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
+  histogramJet1BtagDiscr_       = book1D(dir, "jet1BtagDiscr",       "Jet_{1} b-tag Discriminator", 105, -0.005, 1.045);
 
-  histogramJet2PtS_       = book1D(dir, "jet2PtS",       "Jet_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramJet2PtL_       = book1D(dir, "jet2PtL",       "Jet_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
-  histogramJet2Eta_       = book1D(dir, "jet2Eta",       "Jet_{2} #eta", 60, -3.0, +3.0);
-  histogramJet2Phi_       = book1D(dir, "jet2Phi",       "Jet_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
-  histogramJet2BtagDiscr_ = book1D(dir, "jet2BtagDiscr", "Jet_{2} b-tag Discriminator", 105, -0.005, 1.045);
+  histogramJet2PtS_             = book1D(dir, "jet2PtS",             "Jet_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramJet2PtM_             = book1D(dir, "jet2PtM",             "Jet_{2} P_{T} / GeV", numPtBinsM, ptBinningM);
+  histogramJet2PtL_             = book1D(dir, "jet2PtL",             "Jet_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
+  histogramJet2Eta_             = book1D(dir, "jet2Eta",             "Jet_{2} #eta", 60, -3.0, +3.0);
+  histogramJet2Phi_             = book1D(dir, "jet2Phi",             "Jet_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
+  histogramJet2BtagDiscr_       = book1D(dir, "jet2BtagDiscr",       "Jet_{2} b-tag Discriminator", 105, -0.005, 1.045);
 
-  histogramNumJets_       = book1D(dir, "numJets",       "N_{Jet}", 10, -0.5, 9.5);
+  histogramNumJets_             = book1D(dir, "numJets",             "N_{Jet}", 10, -0.5, 9.5);
 
-  histogramBJet1PtS_      = book1D(dir, "bJet1PtS",      "b-Jet_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramBJet1PtL_      = book1D(dir, "bJet1PtL",      "b-Jet_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
+  histogramBJet1PtS_            = book1D(dir, "bJet1PtS",            "b-Jet_{1} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramBJet1PtM_            = book1D(dir, "bJet1PtM",            "b-Jet_{1} P_{T} / GeV", numPtBinsM, ptBinningM);
+  histogramBJet1PtL_            = book1D(dir, "bJet1PtL",            "b-Jet_{1} P_{T} / GeV", numPtBinsL, ptBinningL);
   for ( int idxBJet1EtaBin = 0; idxBJet1EtaBin < numBJet1EtaBins_; ++idxBJet1EtaBin ) {
     double bJet1EtaMin = bJet1EtaBins_[idxBJet1EtaBin];
     double bJet1EtaMax = bJet1EtaBins_[idxBJet1EtaBin + 1];
@@ -130,11 +164,12 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     histogramBJet1Pt_inBJetEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       bJet1EtaMin, bJet1EtaMax, book1D(dir, Form("bJet1PtL_%s", bJetEtaBin_label.data()), "#bJet_{1} P_{T} / GeV", numPtBinsL, ptBinningL)));
   }
-  histogramBJet1Eta_      = book1D(dir, "bJet1Eta",      "b-Jet_{1} #eta", 60, -3.0, +3.0);
-  histogramBJet1Phi_      = book1D(dir, "bJet1Phi",      "b-Jet_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
+  histogramBJet1Eta_            = book1D(dir, "bJet1Eta",            "b-Jet_{1} #eta", 60, -3.0, +3.0);
+  histogramBJet1Phi_            = book1D(dir, "bJet1Phi",            "b-Jet_{1} #phi", 36, -TMath::Pi(), TMath::Pi());
 
-  histogramBJet2PtS_      = book1D(dir, "bJet2PtS",      "b-Jet_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
-  histogramBJet2PtL_      = book1D(dir, "bJet2PtL",      "b-Jet_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
+  histogramBJet2PtS_            = book1D(dir, "bJet2PtS",            "b-Jet_{2} P_{T} / GeV", numPtBinsS, ptBinningS);
+  histogramBJet2PtM_            = book1D(dir, "bJet2PtM",            "b-Jet_{2} P_{T} / GeV", numPtBinsM, ptBinningM);
+  histogramBJet2PtL_            = book1D(dir, "bJet2PtL",            "b-Jet_{2} P_{T} / GeV", numPtBinsL, ptBinningL);
   for ( int idxBJet2EtaBin = 0; idxBJet2EtaBin < numBJet2EtaBins_; ++idxBJet2EtaBin ) {
     double bJet2EtaMin = bJet2EtaBins_[idxBJet2EtaBin];
     double bJet2EtaMax = bJet2EtaBins_[idxBJet2EtaBin + 1];
@@ -144,18 +179,23 @@ void TauTauHistManager::bookHistograms(TFileDirectory& dir)
     histogramBJet2Pt_inBJetEtaBins_.push_back(new histogramIn1dParticleEtaBinsEntryType(
       bJet2EtaMin, bJet2EtaMax, book1D(dir, Form("bJet2PtL_%s", bJetEtaBin_label.data()), "#bJet_{2} P_{T} / GeV", numPtBinsL, ptBinningL)));
   }
-  histogramBJet2Eta_      = book1D(dir, "bJet2Eta",      "b-Jet_{2} #eta", 60, -3.0, +3.0);
-  histogramBJet2Phi_      = book1D(dir, "bJet2Phi",      "b-Jet_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
+  histogramBJet2Eta_            = book1D(dir, "bJet2Eta",            "b-Jet_{2} #eta", 60, -3.0, +3.0);
+  histogramBJet2Phi_            = book1D(dir, "bJet2Phi",            "b-Jet_{2} #phi", 36, -TMath::Pi(), TMath::Pi());
 
-  histogramNumBJets_      = book1D(dir, "numBJets",      "N_{b-Jet}", 6, -0.5, 5.5);
+  histogramNumBJets_            = book1D(dir, "numBJets",            "N_{b-Jet}", 6, -0.5, 5.5);
 
-  histogramMEtS_          = book1D(dir, "metS",          "E_{T}^{miss} / GeV", numPtBinsS, ptBinningS);
-  histogramMEtL_          = book1D(dir, "metL",          "E_{T}^{miss} / GeV", numPtBinsL, ptBinningL);
+  histogramMEtS_                = book1D(dir, "metS",                "E_{T}^{miss} / GeV", numPtBinsS, ptBinningS);
+  histogramMEtM_                = book1D(dir, "metM",                "E_{T}^{miss} / GeV", numPtBinsM, ptBinningM);
+  histogramMEtL_                = book1D(dir, "metL",                "E_{T}^{miss} / GeV", numPtBinsL, ptBinningL);
 
-  histogramNumVertices_   = book1D(dir, "numVertices",   "N_{vtx}", 50, -0.5, 49.5);
+  histogramNumVertices_         = book1D(dir, "numVertices",         "N_{vtx}", 50, -0.5, 49.5);
+  histogramEvtVertexZ_          = book1D(dir, "evtVertexZ",          "vtx_{z}", 100, -50., +50.);
+  histogramEvtVertexRho_        = book1D(dir, "evtVertexRho",        "vtx_{#rho}", 100, 0., 10.);
+  histogramEvtVertexNDoF_       = book1D(dir, "evtVertexNDoF",       "vtx_{nDoF}", 100, 0., 100.);
+  histogramEvtVertex_isValid_   = book1D(dir, "evtVertexisValid",    "vtx_{z}", 2, -0.5, +1.5);
 
-  histogramGenHiggsPt_    = book1D(dir, "genHiggsPt",    "gen. P_{T}^{#Phi} / GeV", 100, 0., 500.);
-  histogramNUP_           = book1D(dir, "NUP",           "NUP", 15, -0.5, 14.5);
+  histogramGenHiggsPt_          = book1D(dir, "genHiggsPt",          "gen. P_{T}^{#Phi} / GeV", 100, 0., 500.);
+  histogramNUP_                 = book1D(dir, "NUP",                 "NUP", 15, -0.5, 14.5);
 
   histogramEventCounter_  = book1D(dir, "EventCounter",  "", 1, -0.5, +0.5);
   for ( int idxTau1EtaBin = 0; idxTau1EtaBin < numTau1EtaBins_; ++idxTau1EtaBin ) {
@@ -191,13 +231,14 @@ void TauTauHistManager::fillHistograms(
        double jet2Pt, double jet2Eta, double jet2Phi, double jet2BtagDiscr, int numJets,
        double bjet1Pt, double bjet1Eta, double bjet1Phi, 
        double bjet2Pt, double bjet2Eta, double bjet2Phi, int numBJets,
-       double met, int numVertices, double genHiggsPt, double NUP,
+       double met, int numVertices, double evtVertexZ, double evtVertexRho, double evtVertexNDoF, int evtVertex_isValid, double genHiggsPt, double NUP,
        double evtWeight, double evtWeightErr)
 {
   double absTau1Eta = TMath::Abs(tau1Eta);
   double absTau2Eta = TMath::Abs(tau2Eta);
 
   fillWithOverFlow(histogramTau1PtS_, tau1Pt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau1PtM_, tau1Pt, evtWeight, evtWeightErr);
   fillWithOverFlow(histogramTau1PtL_, tau1Pt, evtWeight, evtWeightErr);
   for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramTau1Pt = histogramTau1Pt_inTauEtaBins_.begin();
 	histogramTau1Pt != histogramTau1Pt_inTauEtaBins_.end(); ++histogramTau1Pt ) {
@@ -211,6 +252,7 @@ void TauTauHistManager::fillHistograms(
   fillWithOverFlow(histogramTau1MVA_, tau1MVA, evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogramTau2PtS_, tau2Pt, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramTau2PtM_, tau2Pt, evtWeight, evtWeightErr);
   fillWithOverFlow(histogramTau2PtL_, tau2Pt, evtWeight, evtWeightErr);
   for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramTau2Pt = histogramTau2Pt_inTauEtaBins_.begin();
 	histogramTau2Pt != histogramTau2Pt_inTauEtaBins_.end(); ++histogramTau2Pt ) {
@@ -224,8 +266,10 @@ void TauTauHistManager::fillHistograms(
   fillWithOverFlow(histogramTau2MVA_, tau2MVA, evtWeight, evtWeightErr);
 
   fill(histogramVisMassS_, visMass, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramVisMassSwOverflow_, visMass, evtWeight, evtWeightErr);
   fill(histogramVisMassL_, visMass, evtWeight, evtWeightErr);
   fill(histogramSVfitMassS_, svFitMass, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramSVfitMassSwOverflow_, svFitMass, evtWeight, evtWeightErr);
   fill(histogramSVfitMassL_, svFitMass, evtWeight, evtWeightErr);
   fill(histogramMtTotalS_, mTtotal, evtWeight, evtWeightErr); 
   fill(histogramMtTotalL_, mTtotal, evtWeight, evtWeightErr);
@@ -235,6 +279,7 @@ void TauTauHistManager::fillHistograms(
   
   if ( jet1Pt > 1. ) {
     fillWithOverFlow(histogramJet1PtS_, jet1Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet1PtM_, jet1Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet1PtL_, jet1Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet1Eta_, jet1Eta, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet1Phi_, jet1Phi, evtWeight, evtWeightErr);
@@ -243,6 +288,7 @@ void TauTauHistManager::fillHistograms(
 
   if ( jet2Pt > 1. ) {
     fillWithOverFlow(histogramJet2PtS_, jet2Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramJet2PtM_, jet2Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet2PtL_, jet2Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet2Eta_, jet2Eta, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramJet2Phi_, jet2Phi, evtWeight, evtWeightErr);
@@ -256,6 +302,7 @@ void TauTauHistManager::fillHistograms(
 
   if ( bjet1Pt > 1. ) {
     fillWithOverFlow(histogramBJet1PtS_, bjet1Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet1PtM_, bjet1Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramBJet1PtL_, bjet1Pt, evtWeight, evtWeightErr);
     for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramBJet1Pt = histogramBJet1Pt_inBJetEtaBins_.begin();
 	  histogramBJet1Pt != histogramBJet1Pt_inBJetEtaBins_.end(); ++histogramBJet1Pt ) {
@@ -267,6 +314,7 @@ void TauTauHistManager::fillHistograms(
 
   if ( bjet2Pt > 1. ) {
     fillWithOverFlow(histogramBJet2PtS_, bjet2Pt, evtWeight, evtWeightErr);
+    fillWithOverFlow(histogramBJet2PtM_, bjet2Pt, evtWeight, evtWeightErr);
     fillWithOverFlow(histogramBJet2PtL_, bjet2Pt, evtWeight, evtWeightErr);
     for ( std::vector<histogramIn1dParticleEtaBinsEntryType*>::iterator histogramBJet2Pt = histogramBJet2Pt_inBJetEtaBins_.begin();
 	  histogramBJet2Pt != histogramBJet2Pt_inBJetEtaBins_.end(); ++histogramBJet2Pt ) {
@@ -282,6 +330,10 @@ void TauTauHistManager::fillHistograms(
   fillWithOverFlow(histogramMEtL_, met, evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogramNumVertices_, numVertices, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramEvtVertexZ_, evtVertexZ, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramEvtVertexRho_, evtVertexRho, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramEvtVertexNDoF_, evtVertexNDoF, evtWeight, evtWeightErr);
+  fillWithOverFlow(histogramEvtVertex_isValid_, evtVertex_isValid, evtWeight, evtWeightErr);
 
   fillWithOverFlow(histogramGenHiggsPt_, genHiggsPt, evtWeight, evtWeightErr); 
   fillWithOverFlow(histogramNUP_, NUP, evtWeight, evtWeightErr); 

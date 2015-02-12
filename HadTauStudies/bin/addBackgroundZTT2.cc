@@ -97,6 +97,8 @@ int main(int argc, char* argv[])
   for ( vstring::const_iterator region = regions.begin();
 	region != regions.end(); ++region ) {
 
+    std::cout << "loading histograms for inclusive category, region = " << (*region) << std::endl;
+
     TDirectory* dir_inclusive = getDirectory(inputFile, *region, category_inclusive, tauPtBin_inclusive, true);
     assert(dir_inclusive);
     

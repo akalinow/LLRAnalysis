@@ -18,15 +18,15 @@ import time
 configFile = 'runTauTauNtupleProducer_PostMoriond2013_NewTauES_ByPair_cfg.py'
 jobId = '2014Jun09'
 
-version = "v3_10"
+version = "v3_15"
 
 inputFilePath = "/store/group/phys_higgs/cmshtt/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 ##inputFilePath = "/store/user/veelken/CMSSW_5_3_x/PATTuples/AHtoTauTau/%s/" % jobId
 
 maxEventsPerJob = 10000
 
-##lxbatch_queue = '1nw'
-lxbatch_queue = '1nd'
+lxbatch_queue = '1nw'
+##lxbatch_queue = '1nd'
 ##lxbatch_queue = '8nh'
 
 samplesToAnalyze = [
@@ -51,7 +51,7 @@ samplesToAnalyze = [
     ##'TTJetsSemiLept_tauola',
     ##'TTJetsFullLept_tauola',    
 
-    'DY2JetsExt'
+    ##'DY2JetsExt'
 ]
 
 samplesToSkip = [

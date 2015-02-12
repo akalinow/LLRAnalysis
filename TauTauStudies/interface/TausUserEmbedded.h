@@ -25,6 +25,8 @@ class TausUserEmbedded : public edm::EDProducer{
   edm::InputTag tauTag_;
   edm::InputTag vertexTag_;
 
+  int verbosity_;
+
 };
 
 

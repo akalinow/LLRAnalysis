@@ -16,9 +16,9 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
 postfix     = "PFlow"
-runOnMC     = True
-runOnEmbed  = False
-embedType   = "RhEmbed" #"PfEmbed" or "RhEmbed"
+runOnMC     = False
+runOnEmbed  = True
+embedType   = "PfEmbed" #"PfEmbed" or "RhEmbed"
 trigger     = "Tau"
 
 #from Configuration.PyReleaseValidation.autoCond import autoCond
@@ -49,7 +49,8 @@ process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         ##'/store/user/veelken/CMSSW_5_3_x/skims/simZprime2500toTauTau_RECO_2_2_0t6.root'
         ##'file:/data1/veelken/CMSSW_5_3_x/skims/selEvents_simHiggsSUSYGluGlu130_tautau_selEventFromRiccardo_AOD.root'
-        'file:/afs/cern.ch/user/a/abdollah/public/For_Olivier/pickevents_1_1_3Gd_SUSYBB_120GeV_285Events.root'                                 
+        ##'file:/afs/cern.ch/user/a/abdollah/public/For_Olivier/pickevents_1_1_3Gd_SUSYBB_120GeV_285Events.root'
+        'file:/afs/cern.ch/user/c/ccaillol/public/For_Christian/AOD_embedded.root'                
     ),
     dropDescendantsOfDroppedBranches=cms.untracked.bool(False),
     inputCommands=cms.untracked.vstring(

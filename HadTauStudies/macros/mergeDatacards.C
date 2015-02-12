@@ -60,7 +60,7 @@ void mergeDatacards()
 
   TH1::AddDirectory(false);
 
-  std::string inputFilePath_LLR = "/data1/veelken/tmp/tauTauAnalysis/v2_02_4/";
+  std::string inputFilePath_LLR = "/data1/veelken/tmp/tauTauAnalysis/v3_13_3/";
   std::string inputFileName_LLR = "htt_tt.inputs-mssm-8TeV-0_MVAwLToldDMsTight.root";
   TFile* inputFile_LLR = new TFile(Form("%s%s", inputFilePath_LLR.data(), inputFileName_LLR.data()));
 

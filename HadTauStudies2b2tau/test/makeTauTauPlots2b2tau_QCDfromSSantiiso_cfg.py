@@ -53,7 +53,7 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         sf_ggH = cms.double(1.*0.577*0.0632*2.),
         process_bbH = cms.string(""),
         sf_bbH = cms.double(0.),
-        legendEntry = cms.string("R #rightarrow hh #rightarrow 2b 2#tau (m=700 GeV)"),
+        legendEntry = cms.string("X #rightarrow hh #rightarrow 2b 2#tau (m=700 GeV)"),
     ),
 
     categories = cms.VPSet(
@@ -63,19 +63,15 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ),
         cms.PSet(
             name = cms.string("2bM"),
-            label = cms.string("2 B-Tags (Medium)")
-        ),
-        cms.PSet(
-            name = cms.string("2bL"),
-            label = cms.string("2 B-Tags (Loose)")
+            label = cms.string("2b")
         ),
         cms.PSet(
             name = cms.string("1b1j"),
-            label = cms.string("1 B-Tag (Medium)")
+            label = cms.string("1b1j")
         ),
         cms.PSet(
             name = cms.string("2j"),
-            label = cms.string("0 B-Tag (Medium)")
+            label = cms.string("2j")
         )
     ),
 
@@ -152,6 +148,12 @@ process.makeTauTauPlots2b2tau = cms.PSet(
             keepBlinded = cms.vstring("100:150")
         ),
         cms.PSet(
+            histogramName = cms.string("svFitMassS"),
+            outputFileName = cms.string("svFitMassS_unblinded"),
+            xAxisTitle = cms.string("m_{#tau#tau} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{#tau#tau} [1/GeV]")
+        ),
+        cms.PSet(
             histogramName = cms.string("visMassS"),
             xAxisTitle = cms.string("m_{vis} [GeV]"),
             yAxisTitle = cms.string("dN/dm_{vis} [1/GeV]"),
@@ -167,6 +169,18 @@ process.makeTauTauPlots2b2tau = cms.PSet(
             xAxisTitle = cms.string("m_{bb} [GeV]"),
             yAxisTitle = cms.string("dN/dm_{bb} [1/GeV]"),
             keepBlinded = cms.vstring("100:150")
+        ),
+        cms.PSet(
+            histogramName = cms.string("mbbS"),
+            outputFileName = cms.string("mbbS_unblinded"),
+            xAxisTitle = cms.string("m_{bb} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{bb} [1/GeV]")
+        ),
+        cms.PSet(
+            histogramName = cms.string("mbbS"),
+            outputFileName = cms.string("mjjS"),
+            xAxisTitle = cms.string("m_{jj} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{jj} [1/GeV]")
         ),
         cms.PSet(
             histogramName = cms.string("mbbRegS"),
@@ -186,9 +200,15 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ),
         cms.PSet(
             histogramName = cms.string("augMT2ed"),
-            xAxisTitle = cms.string("MT2 [GeV]"),
-            yAxisTitle = cms.string("dN/dMT2 [1/GeV]"),
-            keepBlinded = cms.vstring("150:350")
+            xAxisTitle = cms.string("m_{T2} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{T2} [1/GeV]"),
+            keepBlinded = cms.vstring("150:500")
+        ),
+        cms.PSet(
+            histogramName = cms.string("augMT2ed"),
+            outputFileName = cms.string("augMT2ed_unblinded"),
+            xAxisTitle = cms.string("m_{T2} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{T2} [1/GeV]")
         ),
         cms.PSet(
             histogramName = cms.string("pZetaComb"),
@@ -197,18 +217,27 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ),
         cms.PSet(
             histogramName = cms.string("HHMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
         ),
         cms.PSet(
             histogramName = cms.string("HHbRegMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
         ),
         cms.PSet(
             histogramName = cms.string("HH2bdyKinFitMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
+        ),
+        cms.PSet(
+            histogramName = cms.string("HH2bdyKinFitMassM"),
+            outputFileName = cms.string("HH2bdyKinFitMassM_unblinded"),
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]")
         ),
         cms.PSet(
             histogramName = cms.string("HH2bdyKinFitChi2"),
@@ -217,8 +246,9 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ),        
         cms.PSet(
             histogramName = cms.string("HHbReg2bdyKinFitMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
         ),
         cms.PSet(
             histogramName = cms.string("HHbReg2bdyKinFitChi2"),
@@ -227,8 +257,9 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ), 
         cms.PSet(
             histogramName = cms.string("HH4bdyKinFitMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
         ),
         cms.PSet(
             histogramName = cms.string("HH4bdyKinFitChi2"),
@@ -237,8 +268,9 @@ process.makeTauTauPlots2b2tau = cms.PSet(
         ), 
         cms.PSet(
             histogramName = cms.string("HHbReg4bdyKinFitMassM"),
-            xAxisTitle = cms.string("m_{2b2#tau} [GeV]"),
-            yAxisTitle = cms.string("dN/dm_{2b2#tau} [1/GeV]")
+            xAxisTitle = cms.string("m_{hh} [GeV]"),
+            yAxisTitle = cms.string("dN/dm_{hh} [1/GeV]"),
+            keepBlinded = cms.vstring("250:1500")
         ),
         cms.PSet(
             histogramName = cms.string("HHbReg4bdyKinFitChi2"),
@@ -406,7 +438,7 @@ process.makeTauTauPlots2b2tau = cms.PSet(
     ),
     showBgrUncertainty = cms.bool(False),
 
-    labelOnTop = cms.string("CMS Preliminary, hh #rightarrow 2b2#tau, %1.1f fb^{-1} at 8 TeV"),    
+    labelOnTop = cms.string("CMS Preliminary, hh #rightarrow bb#tau#tau, %1.1f fb^{-1} at #sqrt{s} = 8 TeV"),    
     intLumiData = cms.double(18.3), # in units of fb^-1
 
     outputFileName = cms.string("plots/makeTauTauPlots2b2tau.png")

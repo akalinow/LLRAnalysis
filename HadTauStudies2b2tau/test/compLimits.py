@@ -10,7 +10,7 @@ import subprocess
 
 jobId = '2014Jun09'
 
-version = "v3_09"
+version = "v3_13"
 
 inputFilePath  = "/data1/veelken/tmp/tauTauAnalysis2b2tau/%s_2/" % version
 
@@ -52,12 +52,12 @@ categoryOptions = {
         ],
         'histogramsToFit' : [
             "augMT2ed",
-            "svFitMassS",
-            "HHMassM",
-            "HHbRegMassM",
+            ##"svFitMassS",
+            ##"HHMassM",
+            ##"HHbRegMassM",
             "HH2bdyKinFitMassM",
-            "HHbReg2bdyKinFitMassM",
-            "HH4bdyKinFitMassM",
+            ##"HHbReg2bdyKinFitMassM",
+            ##"HH4bdyKinFitMassM",
             ##"HHbReg4bdyKinFitMassM"
         ]
     }
@@ -235,26 +235,56 @@ print "executing './%s'" % shellScriptFileName
 def makeGraph(categoryOption, category_and_discriminator, signal_processes, histogramToFit):
     numPoints = len(signal_processes)
     graph = ROOT.TGraph(numPoints)
-    expLimit_regex = r'Expected 50.0%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
-    expLimit_matcher = re.compile(expLimit_regex)
+    expLimit_p2sigma_regex = r'Expected 97.5%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
+    expLimit_p1sigma_regex = r'Expected 84.0%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
+    expLimit_median_regex  = r'Expected 50.0%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
+    expLimit_m1sigma_regex = r'Expected 16.0%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
+    expLimit_m2sigma_regex = r'Expected  2.5%: r < (?P<expLimit>[0-9.eE+-]+)\w*'
+    expLimit_p2sigma_matcher = re.compile(expLimit_p2sigma_regex)
+    expLimit_p1sigma_matcher = re.compile(expLimit_p1sigma_regex)
+    expLimit_median_matcher  = re.compile(expLimit_median_regex)
+    expLimit_m1sigma_matcher = re.compile(expLimit_m1sigma_regex)
+    expLimit_m2sigma_matcher = re.compile(expLimit_m2sigma_regex)    
     for iPoint in range(numPoints):
         ( signal_process, massPoint ) = signal_processes[iPoint]
         logFileName = limit_logFileNames[categoryOption][category_and_discriminator][signal_process][histogramToFit]
+        ##print "reading log-file = %s" % logFileName
         logFile = open(logFileName, "r") 
         lines = logFile.readlines()
-        expLimit = None
+        expLimit_p2sigma = None
+        expLimit_p1sigma = None
+        expLimit_median  = None
+        expLimit_m1sigma = None
+        expLimit_m2sigma = None
         for line in lines:
-            expLimit_match = expLimit_matcher.match(line)
-            if expLimit_match:
-                expLimit = float(expLimit_match.group('expLimit'))
-                br = 0.577*0.0632*2.
-                expLimit /= br 
+            expLimit_p2sigma_match = expLimit_p2sigma_matcher.match(line)
+            if expLimit_p2sigma_match:
+                expLimit_p2sigma = float(expLimit_p2sigma_match.group('expLimit'))
+            expLimit_p1sigma_match = expLimit_p1sigma_matcher.match(line)
+            if expLimit_p1sigma_match:
+                expLimit_p1sigma = float(expLimit_p1sigma_match.group('expLimit'))
+            expLimit_median_match = expLimit_median_matcher.match(line)
+            if expLimit_median_match:
+                expLimit_median = float(expLimit_median_match.group('expLimit'))
+            expLimit_m1sigma_match = expLimit_m1sigma_matcher.match(line)
+            if expLimit_m1sigma_match:
+                expLimit_m1sigma = float(expLimit_m1sigma_match.group('expLimit'))
+            expLimit_m2sigma_match = expLimit_m2sigma_matcher.match(line)
+            if expLimit_m2sigma_match:
+                expLimit_m2sigma = float(expLimit_m2sigma_match.group('expLimit'))    
         logFile.close()
-        if expLimit:
-            print "category/discriminator = %s, process = %s (M = %1.0f), histogramToFit = %s: expLimit = %1.3f pb" % (category_and_discriminator, signal_process, massPoint, histogramToFit, expLimit)
+        br = 0.577*0.0632*2.
+        expLimit_p2sigma /= br
+        expLimit_p1sigma /= br
+        expLimit_median  /= br
+        expLimit_m1sigma /= br
+        expLimit_m2sigma /= br        
+        if expLimit_median:
+            print "category/discriminator = %s, process = %s (M = %1.0f), histogramToFit = %s: expLimit = %1.3f pb" % (category_and_discriminator, signal_process, massPoint, histogramToFit, expLimit_median)
+            print " (-2sigma = %1.3f pb, -1sigma = %1.3f pb, +1sigma = %1.3f pb, +2sigma = %1.3f pb)" % (expLimit_m2sigma, expLimit_m1sigma, expLimit_p1sigma, expLimit_p2sigma)
         else:
             raise ValueError("Failed to read expected limit from log-file = %s !!" % logFileName)
-        graph.SetPoint(iPoint, massPoint, expLimit)
+        graph.SetPoint(iPoint, massPoint, expLimit_median)
     return graph
 
 for categoryOption in categoryOptions.keys():

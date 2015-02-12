@@ -25,7 +25,6 @@ process.addBackgroundQCD = cms.PSet(
             region_norm = cms.PSet(
                 category_inclusive = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
                 category_nobtag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag"),
-                ##category_btag = cms.string("OSvrelaxed1FRw2ndTauTight_iso2_LooseBtagFRw")
                 category_btag = cms.string("OSrelaxed1FRw2ndTauTight_iso2_TightBtag")
             ),        
             region_shape = cms.PSet(
