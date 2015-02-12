@@ -59,7 +59,7 @@ else:
     
     
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
@@ -67,7 +67,10 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
         #'file:patTuples_LepTauStream_VBFH125.root'
-        'file:patTuples_LepTauStream.root'
+        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream_517Events.root'
+        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream_2events_SVfitMass_test.root'
+        #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'
+        #'file:/home/llr/cms/davignon/patTuples_LepTauStream_220_1_ee3.root'
         #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
         #'file:patTuples_LepTauStream.root'
         #'file:VBFH125.root'
@@ -84,9 +87,9 @@ process.source = cms.Source(
 
 #process.source.skipEvents = cms.untracked.uint32(90)
 
-#process.source.eventsToProcess = cms.untracked.VEventRange(
-#    '1:69216'
-#    )
+## process.source.eventsToProcess = cms.untracked.VEventRange(
+##      '206596:111:131401715'
+## )
 
 process.allEventsFilter = cms.EDFilter(
     "AllEventsFilter"
@@ -94,9 +97,9 @@ process.allEventsFilter = cms.EDFilter(
 
 #######################################################################
 #quark/gluon jets
-process.load('QuarkGluonTagger.EightTeV.QGTagger_RecoJets_cff')  
-process.QGTagger.srcJets = cms.InputTag("selectedPatJets")
-process.QGTagger.isPatJet = cms.untracked.bool(True) 
+#process.load('QuarkGluonTagger.EightTeV.QGTagger_RecoJets_cff')  
+#process.QGTagger.srcJets = cms.InputTag("selectedPatJets")
+#process.QGTagger.isPatJet = cms.untracked.bool(True) 
 #Switch for when PFJets with CHS are used (only supported for LD):
 #process.QGTagger.useCHS  = cms.untracked.bool(True) 
 #If an uncorrected jet source is used as input, you can correct the pt on the fly inside the QGTagger:
@@ -546,15 +549,18 @@ process.muTauStreamAnalyzer = cms.EDAnalyzer(
     vertices       = cms.InputTag("selectedPrimaryVertices"),
     triggerResults = cms.InputTag("patTriggerEvent"),
     genParticles   = cms.InputTag("genParticles"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles"),
     genTaus        = cms.InputTag("tauGenJetsSelectorAllHadrons"),
     isMC           = cms.bool(runOnMC),
+    isPFEmb        = cms.bool(runOnEmbed),
     isRhEmb        = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet   = cms.untracked.double(0.5),
     minCorrPt      = cms.untracked.double(15.),
     minJetID       = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose        = cms.untracked.bool( False ),
-    doIsoOrdering  = cms.untracked.bool(False),
+    doIsoOrdering  = cms.untracked.bool(True),
     doMuIsoMVA     = cms.untracked.bool( False ),
+    pileupSrc      = cms.InputTag('addPileupInfo'),
     evtWeights     =  cms.PSet()
     )
 
@@ -641,7 +647,7 @@ process.seqNominal = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequence*
     process.selectedDiTau*process.selectedDiTauCounter*
-    process.QuarkGluonTagger* #quark/gluon jets
+    #process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
     process.muTauStreamAnalyzer
@@ -668,7 +674,7 @@ process.seqMuUp = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceMuUp*
     process.selectedDiTauMuUp*process.selectedDiTauMuUpCounter*
-    process.QuarkGluonTagger* #quark/gluon jets
+    #process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
     process.muTauStreamAnalyzerMuUp
@@ -694,7 +700,7 @@ process.seqMuDown = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceMuDown*
     process.selectedDiTauMuDown*process.selectedDiTauMuDownCounter*
-    process.QuarkGluonTagger* #quark/gluon jets
+    #process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
     process.muTauStreamAnalyzerMuDown
@@ -722,7 +728,7 @@ process.seqTauUp = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauUp*
     process.selectedDiTauTauUp*process.selectedDiTauTauUpCounter*
-    process.QuarkGluonTagger* #quark/gluon jets
+    #process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
     process.muTauStreamAnalyzerTauUp
@@ -749,7 +755,7 @@ process.seqTauDown = cms.Sequence(
     process.calibratedAK5PFJetsForPFMEtMVA*
     process.runMETByPairsSequenceTauDown*
     process.selectedDiTauTauDown*process.selectedDiTauTauDownCounter*
-    process.QuarkGluonTagger* #quark/gluon jets
+    #process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
     process.muTauStreamAnalyzerTauDown

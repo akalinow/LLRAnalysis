@@ -71,7 +71,8 @@ process.source = cms.Source(
     fileNames = cms.untracked.vstring(
         #'file:patTuples_LepTauStream_VBFH125.root'
         #'file:patTuples_LepTauStream.root'#was here
-        'file:patTuples_LepTauStream_130_5_Qon.root'
+        'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_NewPAT/src/LLRAnalysis/TauTauStudies/test/patTuples_LepTauStream.root'
+        #'file:patTuples_LepTauStream_130_5_Qon.root'
         #'file:/data_CMS/cms/davignon/PAT/W1Jets/patTuples_LepTauStream_44_1_E0B.root'
         #'file:/data_CMS/cms/davignon/NtuplesProduction_NewTrees_NewTriggers/CMSSW_5_3_11_p6_TauSpinner/src/LLRAnalysis/TauTauStudies/test/Abdollah_Weights/patTuples_LepTauStream.root'
         #'file:/data_CMS/cms/davignon/AOD/TauPolarOff/patTuples_LepTauStream_1000_1_pns.root'#testing TauSpinnerReco
@@ -93,9 +94,9 @@ process.source = cms.Source(
 
 #process.source.skipEvents = cms.untracked.uint32(90)
 
-#process.source.eventsToProcess = cms.untracked.VEventRange(
-#    '1:69216'
-#    )
+process.source.eventsToProcess = cms.untracked.VEventRange(
+    '1:212187:42420468'#Run 1, Event 42420468, LumiSection 212187
+    )
 
 process.allEventsFilter = cms.EDFilter(
     "AllEventsFilter"

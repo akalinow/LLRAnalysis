@@ -796,7 +796,7 @@ process.seqNominal = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.TauSpinnerReco*
     #process.printGenParticleList*#TBR
     process.elecTauStreamAnalyzer
     )
@@ -825,7 +825,7 @@ process.seqElecUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.TauSpinnerReco*
     process.elecTauStreamAnalyzerElecUp
     )
 process.seqElecDown = cms.Sequence(
@@ -853,7 +853,7 @@ process.seqElecDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.TauSpinnerReco*
     process.elecTauStreamAnalyzerElecDown
     )
 
@@ -882,7 +882,7 @@ process.seqTauUp = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.TauSpinnerReco*
     process.elecTauStreamAnalyzerTauUp
     )
 process.seqTauDown = cms.Sequence(
@@ -910,7 +910,7 @@ process.seqTauDown = cms.Sequence(
     process.QuarkGluonTagger* #quark/gluon jets
     process.kineWeightsForEmbed*#IN
     #process.mssmHiggsPtReweightSequenceGluGlu*
-    process.TauSpinnerReco*
+    #process.TauSpinnerReco*
     process.elecTauStreamAnalyzerTauDown
     )
 

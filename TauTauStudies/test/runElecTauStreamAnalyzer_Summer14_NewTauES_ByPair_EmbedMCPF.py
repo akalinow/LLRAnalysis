@@ -74,7 +74,8 @@ process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
     #'file:patTuples_LepTauStream_VBFH125.root'
-    'file:/home/llr/cms/davignon/PAT/patTuples_LepTauStream_100_2_05C.root'
+    'file:/data_CMS/cms/davignon/PAT/EleTau_EmbedMCPF/patTuples_LepTauStream_76_1_1yw.root'
+    #'file:/home/llr/cms/davignon/PAT/patTuples_LepTauStream_100_2_05C.root'
     #'file:/data_CMS/cms/htautau/PostMoriond/PAT/MC/VBFH125_NewTauID/patTuples_LepTauStream_56_1_42A.root'
     #'file:VBFH125.root'
     #'file:data2012D.root'    
@@ -676,17 +677,18 @@ process.elecTauStreamAnalyzer = cms.EDAnalyzer(
     vertices           = cms.InputTag("selectedPrimaryVertices"),
     triggerResults     = cms.InputTag("patTriggerEvent"),
     genParticles       = cms.InputTag("genParticles"),
-    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),
+    genParticlesForTopPtReweighting = cms.InputTag("genParticles::SIM"),#::SIM for MC PF Emb
     genTaus            = cms.InputTag("tauGenJetsSelectorAllHadrons"),
-    pileupSrc          = cms.InputTag("addPileupInfo::HLT"),#for NPU in MC PF Emb
+    pileupSrc          = cms.InputTag("addPileupInfo::HLT"),#::HLT for NPU in MC PF Emb
     isMC               = cms.bool(runOnMC),
+    isPFEmb            = cms.bool(runOnEmbed),    
     isRhEmb            = cms.untracked.bool(runOnEmbed and "RhEmbed" in embedType),
     deltaRLegJet       = cms.untracked.double(0.5),
     minCorrPt          = cms.untracked.double(15.),
     minJetID           = cms.untracked.double(0.5), # 1=loose,2=medium,3=tight
     verbose            = cms.untracked.bool( False ),
     doElecIsoMVA       = cms.untracked.bool( False ),
-    doIsoOrdering      = cms.untracked.bool(False),
+    doIsoOrdering      = cms.untracked.bool(True),
     evtWeights         =  cms.PSet()
     )
 
