@@ -52,8 +52,11 @@ public:
 	}
       }
 
-//       std::cout<<"shiftP = "<<shiftP<<std::endl;
       
+//       std::cout<<"shiftP = "<<shiftP<<std::endl;
+//       std::cout<<"unshifted px = "<<aTau.px()<<std::endl;
+//       std::cout<<"shifted px = "<<aTau.px()*shiftP<<std::endl;
+
       double pxS = aTau.px()*shiftP;
       double pyS = aTau.py()*shiftP;
       double pzS = aTau.pz()*shiftP;

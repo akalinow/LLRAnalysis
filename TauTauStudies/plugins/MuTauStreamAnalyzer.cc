@@ -80,7 +80,8 @@
 #include "DataFormats/METReco/interface/CaloMET.h"
 #include "DataFormats/METReco/interface/CaloMETFwd.h"
 //Standalone SVFit///
-#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+// #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"//old SVfitMass
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 
 #include <vector>
 #include <utility>
@@ -250,6 +251,11 @@ namespace
     pdgIds_ranked.push_back(15);
     pdgIds_ranked.push_back(13);
     pdgIds_ranked.push_back(11);
+
+    cout<<"genLeptonPlus->eta() = "<<genLeptonPlus->eta()<<endl;
+    cout<<"genLeptonMinus->eta() = "<<genLeptonMinus->eta()<<endl;
+    cout<<"candidate p4.Eta() = "<<p4.Eta()<<endl;
+
     for ( std::vector<int>::const_iterator pdgId = pdgIds_ranked.begin(); pdgId != pdgIds_ranked.end(); ++pdgId )
       {
 	bool matchesGenLeptonPlus  = (genLeptonPlus  && TMath::Abs(genLeptonPlus->pdgId())  == (*pdgId) && deltaR(p4, getVisMomentum(genLeptonPlus))  < 0.5);
@@ -1551,6 +1557,8 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     (*triggerPaths_)["HLT_IsoMu24_eta2p1_v13"] = 0 ;
     (*triggerPaths_)["HLT_PFJet320_v5"] = 0 ;
 
+    (*triggerPaths_)["HLT_Mu17_Mu8_v17"] = 0 ;    
+
     //mu filters
     HLTfiltersMu["hltL1sMu14erORMu16er"] = 0 ;
     HLTfiltersMu["hltL3crIsoL1sMu14erORMu16erL1f0L2f14QL3f17QL3crIsoRhoFiltered0p15"] = 0 ;
@@ -1852,6 +1860,16 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 //       if(triggerPath && triggerPath->wasRun() && triggerPath->wasAccept()) cout << "Was accepted..." << endl;
 //       cout<<"*************"<<endl;
 
+
+//       TString local(iter_trigger->first);
+//       if(local.Contains("HLT_Mu17_Mu8_v"))
+// 	{
+// 	  cout<<  "Testing " << iter_trigger->first << endl;
+// 	  if(triggerPath) cout << "Is there..." << endl;
+// 	  if(triggerPath && triggerPath->wasRun()) cout << "Was run..." << endl;
+// 	  if(triggerPath && triggerPath->wasRun() && triggerPath->wasAccept()) cout << "Was accepted..." << endl;
+// 	}
+      
       if(verbose_)
 	{
 	  cout<<  "Testing " << iter_trigger->first << endl;
@@ -2108,9 +2126,22 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
       {
 	//get Z or gamma*
 	const reco::GenParticle* genZ_or_Gammastar = 0;
+
+
+	for ( reco::GenParticleCollection::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); ++genParticle )
+	  {
+	    if((genParticle->pdgId() == 11 || genParticle->pdgId() == -11))
+	      {
+		cout<<"genParticle->pt() = "<<genParticle->pt()<<endl;
+		cout<<"genParticle->mother()->pdgId() = "<<genParticle->mother()->pdgId()<<endl;
+		cout<<"---"<<endl;
+	      }
+	  }
+
 	for ( reco::GenParticleCollection::const_iterator genParticle = genParticles->begin(); genParticle != genParticles->end(); ++genParticle )
 	  {
 	    if ( (genParticle->pdgId() == 22 || genParticle->pdgId() == 23) && genParticle->mass() > 0. )
+// 	    if ( (genParticle->pdgId() == 22 || genParticle->pdgId() == 23) && genParticle->mass() > 50. )#nMSSM --> removed
 // 	    if ( (genParticle->pdgId() == 22 || genParticle->pdgId() == 23) && genParticle->mass() > 50. )#nMSSM --> removed
 	      {
 		genZ_or_Gammastar = &(*genParticle);
@@ -2141,6 +2172,7 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	for ( std::vector<const reco::GenParticle*>::const_iterator daughter = allDaughters.begin(); daughter != allDaughters.end(); ++daughter )
 	  {
 	    int absPdgId = TMath::Abs((*daughter)->pdgId());
+// 	    cout<<"absPdgId = "<<absPdgId<<endl;
 	    //give preference to taus, since electrons and muons may either come from decay of Z-boson or from tau decay
 	    //taus
 	    if ( absPdgId == 15 && (*daughter)->charge() > +0.5 && (isZdecay_ || !genLeptonPlus) ) genLeptonPlus  = (*daughter);
@@ -2163,6 +2195,10 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	bool leg2isGenElectron = false;
 	bool leg2isGenJet      = false;
 	if(genLeptonPlus && genLeptonMinus) matchGenParticleFromZdecay(leg2->p4(), genLeptonPlus, genLeptonMinus, leg2isGenHadTau, leg2isGenMuon, leg2isGenElectron, leg2isGenJet);
+
+	cout<<"leg1isGenElectron = "<<leg1isGenElectron<<endl;
+	cout<<"leg1isGenMuon = "<<leg1isGenMuon<<endl;
+	cout<<"leg2isGenHadTau = "<<leg2isGenHadTau<<endl;
 
 	//check decay modes
 
@@ -2219,9 +2255,11 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
 	else if(isZttj_)  flag = "ZTTJ";
 	else              flag = "ZJ";
 
+	cout<<"isZdecay_ = "<<isZdecay_<<endl;
+	cout<<"flag = "<<flag<<endl;
+
       }
     
-//     cout<<"flag = "<<flag<<endl;
 
     /*
     myfile<<""<<endl;
@@ -2243,8 +2281,11 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     myfile<<"***********************"<<endl;
     */
 
-//     cout<<"                - mu     E/p/pt/eta/phi = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<endl;
-//     cout<<"                - tau    E/p/pt/eta/phi = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<endl;
+    
+
+
+
+
     if(leg2->pt()>30.)// && leg1->pt()>20.)
       {
 // 	cout<<"event = "<<(iEvent.eventAuxiliary()).event()<<endl;
@@ -3138,12 +3179,13 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     //diTauNSVfitPtErrDown_   = (theDiTau->hasNSVFitSolutions() && theDiTau->nSVfitSolution("psKine_MEt_int",&errFlag)!=0 && theDiTau->nSVfitSolution("psKine_MEt_int",0)->isValidSolution() ) 
     //  ? theDiTau->nSVfitSolution("psKine_MEt_int",0)->ptErrDown()   : -99;
     
+    /*
     //Run Standalone SVFit  
     std::vector<NSVfitStandalone::MeasuredTauLepton> measuredTauLeptons; 
     NSVfitStandalone::Vector measuredMET( theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), 0); 
     measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay, leg1->p4())); 
     measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay, leg2->p4())); 
-    NSVfitStandaloneAlgorithm algo(measuredTauLeptons, measuredMET, cov, 0); 
+    NSVfitStandaloneAlgorithm algo(measuredTauLeptons, measuredMET, cov, 2); 
     algo.addLogM(false); 
     //algo.integrateMarkovChain(); 
     algo.integrateVEGAS(); 
@@ -3151,6 +3193,95 @@ void MuTauStreamAnalyzer::analyze(const edm::Event & iEvent, const edm::EventSet
     diTauNSVfitMassErrUp_ = algo.massUncert(); 
     diTauNSVfitPt_ = algo.pt();  
     diTauNSVfitPtErrUp_ = algo.ptUncert();
+
+
+    // SVmass (leptons, mvaMET, mvaMET cov)
+    cout<<"****** OLD SVFIT ********"<<endl;
+    cout<<"- mu     E/p/pt/eta/phi/m = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<"/"<<leg1->mass()<<endl;
+    cout<<"- tau    E/p/pt/eta/phi/m = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<"/"<<leg2->mass()<<endl;
+    cout<<"measuredMET = "<<measuredMET<<endl;
+    cout<<"MET covariance matrix: "<<endl;
+    cout<<"            (0,0) = "<<cov(0,0)<<endl;
+    cout<<"            (0,1) = "<<cov(0,1)<<endl;
+    cout<<"            (1,0) = "<<cov(1,0)<<endl;
+    cout<<"            (1,1) = "<<cov(1,1)<<endl;
+    cout<<"SVfitMass = "<<diTauNSVfitMass_<<endl;
+    cout<<"****** END SVFIT ********"<<endl;
+    */
+
+    svFitStandalone::LorentzVector leg1P4(leg1->px(), leg1->py(), leg1->pz(), leg1->energy());
+    svFitStandalone::LorentzVector leg2P4(leg2->px(), leg2->py(), leg2->pz(), leg2->energy());
+    std::vector<svFitStandalone::MeasuredTauLepton> measuredTauLeptons_new;
+    measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToMuDecay, leg1->pt(), leg1->eta(),  leg1->phi(), svFitStandalone::muonMass)); // tau -> electron decay (Pt, eta, phi, mass)
+    measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2->pt(), leg2->eta(),  leg2->phi(), leg2->mass())); // tau -> tau_h decay (Pt, eta, phi, mass)
+//     measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToMuDecay, leg1P4));
+//     measuredTauLeptons_new.push_back(svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, leg2P4));
+    SVfitStandaloneAlgorithm algo(measuredTauLeptons_new, theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), cov, 2);
+    algo.addLogM(true, 2.);
+    algo.integrateVEGAS();
+
+    /*
+    //const reco::MET* met = theDiTau->met();
+    svFitStandalone::Vector measuredMET( theDiTau->met()->p4().Px(), theDiTau->met()->p4().Py(), 0); 
+    SVfitStandaloneAlgorithm svFitAlgorithm(measuredTauLeptons_new, measuredMET, cov, 2);
+    svFitAlgorithm.addLogM(true, 5.);
+    svFitAlgorithm.integrateVEGAS();
+    */
+    diTauNSVfitMass_ = algo.getMass(); 
+    diTauNSVfitMassErrUp_ = algo.massUncert(); 
+    diTauNSVfitPt_ = algo.pt();  
+    diTauNSVfitPtErrUp_ = algo.ptUncert();
+    
+    
+    std::cout << "leg1->px() "<< std::setprecision(10) << leg1->px() << endl;
+    std::cout << "leg1->py() "<< std::setprecision(10) << leg1->py() << endl;
+    std::cout << "leg1->pz() "<< std::setprecision(10) << leg1->pz() << endl;
+    std::cout << "leg1->energy() "<< std::setprecision(10) << leg1->energy() << endl;
+
+    std::cout << "leg2->px() "<< std::setprecision(10) << leg2->px() << endl;
+    std::cout << "leg2->py() "<< std::setprecision(10) << leg2->py() << endl;
+    std::cout << "leg2->pz() "<< std::setprecision(10) << leg2->pz() << endl;
+    std::cout << "leg2->energy() "<< std::setprecision(10) << leg2->energy() << endl;
+    
+    std::cout<< "theDiTau->met()->p4().Px() = " << std::setprecision(10) << theDiTau->met()->p4().Px() << endl;
+    std::cout<< "theDiTau->met()->p4().Py() = " << std::setprecision(10) << theDiTau->met()->p4().Py() << endl;
+    std::cout<< "theDiTau->met()->p4().Pt() = " << std::setprecision(10) << theDiTau->met()->p4().Pt() << endl;
+    std::cout<< " sqrt(Px*Px+Py*Py) = " << std::setprecision(10) << sqrt(theDiTau->met()->p4().Px()*theDiTau->met()->p4().Px()+theDiTau->met()->p4().Py()*theDiTau->met()->p4().Py())<<endl;
+    std::cout<< "theDiTau->met()->p4().Eta() = " << std::setprecision(10) << theDiTau->met()->p4().Eta() << endl;
+    std::cout<< "theDiTau->met()->p4().Phi() = " << std::setprecision(10) << theDiTau->met()->p4().Phi() << endl;
+
+    cout<<"MET covariance matrix: "<<endl;
+    cout<<"            (0,0) = "<<std::setprecision(10) <<cov(0,0)<<endl;
+    cout<<"            (0,1) = "<<std::setprecision(10) <<cov(0,1)<<endl;
+    cout<<"            (1,0) = "<<std::setprecision(10) <<cov(1,0)<<endl;
+    cout<<"            (1,1) = "<<std::setprecision(10) <<cov(1,1)<<endl;
+
+    cout<<"--> New svFitMass = "<<std::setprecision(10) <<algo.getMass()<<endl;
+    cout<<"--> New svFitMass error = "<<std::setprecision(10) <<algo.massUncert()<<endl;
+    
+    /*
+    if ( svFitAlgorithm.isValidSolution() )
+      {
+	cout<<"****** NEW SVFIT ********"<<endl;
+
+	cout<<"- mu     E/p/pt/eta/phi/m = "<<(leg1->p4()).E()<<"/"<<leg1->p()<<"/"<<leg1->pt()<<"/"<<leg1->eta()<<"/"<<leg1->phi()<<"/"<<leg1->mass()<<endl;
+	cout<<"- tau    E/p/pt/eta/phi/m = "<<(leg2->p4()).E()<<"/"<<leg2->p()<<"/"<<leg2->pt()<<"/"<<leg2->eta()<<"/"<<leg2->phi()<<"/"<<leg2->mass()<<endl;
+	cout<<"measuredMET = "<<measuredMET<<endl;
+	cout<<"MET covariance matrix: "<<endl;
+	cout<<"            (0,0) = "<<cov(0,0)<<endl;
+	cout<<"            (0,1) = "<<cov(0,1)<<endl;
+	cout<<"            (1,0) = "<<cov(1,0)<<endl;
+	cout<<"            (1,1) = "<<cov(1,1)<<endl;
+	cout<<"--> New svFitMass = "<<svFitAlgorithm.getMass()<<endl;
+	cout<<"--> New svFitMass error = "<<svFitAlgorithm.massUncert()<<endl;
+	cout<<"****** END NEW SVFIT ********"<<endl;
+
+// 	setValueF("svfitMass", svFitAlgorithm.getMass());     // CV: this is how I set the svFit mass branch in my Ntuple; please adapt to your Ntuple filling code
+// 	setValueF("svfitMassErr", svFitAlgorithm.massUncert());
+      }
+    */
+
+
   
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJets;
     std::map<double, math::XYZTLorentzVectorD ,MuTauStreamAnalyzer::more> sortedJetsIDL1Offset;
